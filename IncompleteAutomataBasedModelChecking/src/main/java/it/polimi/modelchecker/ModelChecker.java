@@ -88,19 +88,21 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 			return 0;
 		}
 		else{
-			Brzozowski<S1,T1,S,T> brzozowski=new Brzozowski<S1,T1,S,T>(ris);
-			long startConstraintTime = System.nanoTime();   
-			returnConstraint=brzozowski.getConstraint();
-			long stopConstraintTime = System.nanoTime(); 
-			this.parameters.setConstraintComputationTime((stopConstraintTime-startConstraintTime)/1000000000.0);
-			this.parameters.setTotalTime(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime());
-			System.out.println("Total time: "+(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime()));
-			if(returnConstraint instanceof EmptyPredicate){
-				this.parameters.setResult(1);
+			startEmptyTime = System.nanoTime();   
+			boolean resComplete=ris.isCompleteEmpty();
+			 stopEmptyTime = System.nanoTime();   
+			if(resComplete){
+				this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
 				return 1;
 			}
 			else{
-				this.parameters.setResult(-1);
+				Brzozowski<S1,T1,S,T> brzozowski=new Brzozowski<S1,T1,S,T>(ris);
+				long startConstraintTime = System.nanoTime();   
+				returnConstraint=brzozowski.getConstraint();
+				long stopConstraintTime = System.nanoTime(); 
+				this.parameters.setConstraintComputationTime((stopConstraintTime-startConstraintTime)/1000000000.0);
+				this.parameters.setTotalTime(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime());
+				System.out.println("Total time: "+(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime()));
 				return -1;
 			}
 		}

@@ -41,15 +41,17 @@ public class BuchiAutomatonIntersectionTest {
 	 */
 	@Test
 	public void testIntersection2() throws JAXBException, SAXException, IOException, ParserConfigurationException {
-		
+		 // creates the alphabet
 		 Set<String> alphabet=new HashSet<String>();
+		 // creates the model of the system
 		 IncompleteBuchiAutomaton<State, Transition<State>> model =new  IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		 // add the state s1 to the model
 		 model.addState(new State("s1"));
+		 // creates the specification of the system
 		 BuchiAutomaton<State, Transition<State>>  specification =new  BuchiAutomaton<State, Transition<State>>();
 		 IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
 				 new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
-		 model.addState(new State("s1"));
-			
+		 	
 		 assertTrue(ris.isEmpty());
 		 assertTrue(ris.getStates().isEmpty());
 	}
