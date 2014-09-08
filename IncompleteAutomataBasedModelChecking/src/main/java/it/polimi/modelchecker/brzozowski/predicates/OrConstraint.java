@@ -16,7 +16,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 	 * @param secondConstraint is the second constraint included in the orConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public OrConstraint(AbstractConstraint<S> firstConstraint, AbstractConstraint<S> secondConstraint){
+	 public OrConstraint(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint){
 		 super(firstConstraint, secondConstraint);
 	 }
 	 /**
@@ -31,7 +31,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 	 * @param secondConstraint is the set of constraints to be included in the OrConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public OrConstraint(AbstractConstraint<S> firstConstraint, List<AbstractConstraint<S>> secondConstraint) {
+	 public OrConstraint(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
 		super(firstConstraint, secondConstraint);   
 	 }
 	 /**
@@ -47,7 +47,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -61,19 +61,19 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 		}
 		// if a is an EpsilonConstraint concatenation of the or constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonConstraint){
-			return new AndConstraint<S>(this, new EpsilonConstraint<S>());
+			return new AndPredicate<S>(this, new EpsilonConstraint<S>());
 		}
 		// if a is a Predicate the concatenation of the or constraint and Predicate is returned
 		if(a instanceof Predicate){
-			return new AndConstraint<S>(this, a);
+			return new AndPredicate<S>(this, a);
 		}
 		// if a is an AndConstraint the concatenation of the or constraint and the AndConstraint is returned
-		if(a instanceof AndConstraint){
-			return new AndConstraint<S>(this, ((AndConstraint<S>) a).getConstraints());
+		if(a instanceof AndPredicate){
+			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getConstraints());
 		}
 		// if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
 		if(a instanceof OrConstraint){
-			return new AndConstraint<S>(this, a);
+			return new AndPredicate<S>(this, a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
@@ -83,7 +83,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 	 * @return the or constraint
 	 */
 	@Override
-	public AbstractConstraint<S> star() {
+	public AbstractPredicate<S> star() {
 		return this;
 	}
 
@@ -99,7 +99,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
@@ -124,14 +124,14 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 			return new OrConstraint<S>(this,a);
 		}
 		// the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
-		if(a instanceof AndConstraint){
+		if(a instanceof AndPredicate){
 			return new OrConstraint<S>(this,a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
 
 	/**
-	 * see {@link AbstractConstraint}
+	 * see {@link AbstractPredicate}
 	 */
 	@Override
 	public String toString() {
@@ -154,7 +154,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 		}
 	}
 	@Override
-	public AbstractConstraint<S> omega() {
+	public AbstractPredicate<S> omega() {
 		return this;
 	}
 

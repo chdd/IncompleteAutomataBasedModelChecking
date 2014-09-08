@@ -6,7 +6,7 @@ import it.polimi.model.State;
  * @author Claudio Menghi
  * contains an empty constraint
  */
-public class EmptyConstraint<S extends State> extends AbstractConstraint<S> {
+public class EmptyConstraint<S extends State> extends AbstractPredicate<S> {
 
 	/**
 	 * the concatenation of an empty constraint with another constraint is an empty constraint
@@ -15,7 +15,7 @@ public class EmptyConstraint<S extends State> extends AbstractConstraint<S> {
 	 * @throws IllegalArgumentException the constraint a cannot be null
 	 */
 	@Override
-	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("cannot concatenate an empty contraint with a null element");
 		}
@@ -27,7 +27,7 @@ public class EmptyConstraint<S extends State> extends AbstractConstraint<S> {
 	 * @return a new Lambda constraint
 	 */
 	@Override
-	public AbstractConstraint<S> star() {
+	public AbstractPredicate<S> star() {
 		return new LambdaConstraint<S>();
 	}
 
@@ -37,7 +37,7 @@ public class EmptyConstraint<S extends State> extends AbstractConstraint<S> {
 	 * @throws IllegalArgumentException the constraint a cannot be null
 	 */
 	@Override
-	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("cannot make the union of an empty contraint with a null element");
 		}
@@ -45,7 +45,7 @@ public class EmptyConstraint<S extends State> extends AbstractConstraint<S> {
 	}
 
 	/**
-	 * @see AbstractConstraint
+	 * @see AbstractPredicate
 	 */
 	@Override
 	public String toString() {
@@ -65,7 +65,7 @@ public class EmptyConstraint<S extends State> extends AbstractConstraint<S> {
 	}
 
 	@Override
-	public AbstractConstraint<S> omega() {
+	public AbstractPredicate<S> omega() {
 		return this;
 	}
 	

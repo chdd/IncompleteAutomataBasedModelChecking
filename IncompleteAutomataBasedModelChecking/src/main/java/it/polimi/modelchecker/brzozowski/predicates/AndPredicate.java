@@ -8,7 +8,7 @@ import java.util.List;
  * @author Claudio Menghi
  * contains an AndConstraint
  */
-public class AndConstraint<S extends State> extends Constraint<S>{
+public class AndPredicate<S extends State> extends Constraint<S>{
 	
 	/**
 	 * creates a new AndConstraint that contains the two Constraints firstConstraint, secondConstraint 
@@ -16,13 +16,13 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 	 * @param secondConstraint is the second constraint included in the AndConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public AndConstraint(AbstractConstraint<S> firstConstraint, AbstractConstraint<S> secondConstraint){
+	 public AndPredicate(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint){
 		 super(firstConstraint, secondConstraint);
 	 }
 	 /**
      * Initializes a newly created AndConstraint 
      */
-	 public AndConstraint() {
+	 public AndPredicate() {
 		 super();
 	 }
 	 /**
@@ -31,22 +31,22 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 	 * @param secondConstraint is the set of constraints to be included in the AndConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public AndConstraint(AbstractConstraint<S> firstConstraint, List<AbstractConstraint<S>> secondConstraint) {
+	 public AndPredicate(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
 		super(firstConstraint, secondConstraint);   
 	 }
 	 
-	 public AndConstraint(List<AbstractConstraint<S>> firstConstraint, AbstractConstraint<S> secondConstraint) {
+	 public AndPredicate(List<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
 	        super(firstConstraint, secondConstraint);
 	 }
-	 public AndConstraint(List<AbstractConstraint<S>> firstConstraint, List<AbstractConstraint<S>> secondConstraint) {
+	 public AndPredicate(List<AbstractPredicate<S>> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
 		 super(firstConstraint, secondConstraint);
 	 }
 		   
 	
-    public AbstractConstraint<S> getFistPredicate(){
+    public AbstractPredicate<S> getFistPredicate(){
     	return value.get(0);
     }
-    public AbstractConstraint<S> getLastPredicate(){
+    public AbstractPredicate<S> getLastPredicate(){
     	return value.get(value.size()-1);
     }
     
@@ -69,7 +69,7 @@ public class AndConstraint<S extends State> extends Constraint<S>{
    	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
    	 */
 	@Override
-	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -83,7 +83,7 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 		}
 		// if a is an EpsilonConstraint the concatenation of the and constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonConstraint){
-			return new AndConstraint<S>(this.getConstraints(), a);
+			return new AndPredicate<S>(this.getConstraints(), a);
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
 		// 		the regular expression of p is modified and concatenated to the one of the predicate a
@@ -93,35 +93,35 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 			if(this.getLastPredicate() instanceof Predicate &&
 					((Predicate<S>)a).getState().equals(((Predicate<S>)this.getLastPredicate()).getState())){
 						
-						AndConstraint<S> cret=new AndConstraint<S>();
+						AndPredicate<S> cret=new AndPredicate<S>();
 						cret.addConstraints(this.getConstraints().subList(0, this.getConstraints().size()-1));
 						cret.addConstraint(new Predicate<S>(((Predicate<S>)this.getLastPredicate()).getState(), ((Predicate<S>)this.getLastPredicate()).getRegularExpression().concat(((Predicate<S>)a).getRegularExpression())));
 						return cret;
 				}
 			else{
-				return new AndConstraint<S>(this.getConstraints(), a);
+				return new AndPredicate<S>(this.getConstraints(), a);
 			}
 		}
 		// if a is an or constraint a new and constraint that contains the constraint of this and constraint and the or constraint is generated
 		if(a instanceof OrConstraint){
-			return new AndConstraint<S>(this.getConstraints(), a);
+			return new AndPredicate<S>(this.getConstraints(), a);
 		}
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of a have the same state, their regular expressions are merged
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of do not have the same state, a new and constraint
 		// that contains all of the constraints of these two and constraints is generated.
-		if(a instanceof AndConstraint){
-			AndConstraint<S> c=(AndConstraint<S>)a;
+		if(a instanceof AndPredicate){
+			AndPredicate<S> c=(AndPredicate<S>)a;
 			
 			if((c.getFistPredicate() instanceof Predicate) && (this.getLastPredicate() instanceof Predicate) &&
 				((Predicate<S>)c.getFistPredicate()).getState().equals(((Predicate<S>)this.getLastPredicate()).getState())){
-				AndConstraint<S> cret=new AndConstraint<S>();
+				AndPredicate<S> cret=new AndPredicate<S>();
 				cret.addConstraints(this.getConstraints().subList(0, this.getConstraints().size()-1));
 				cret.addConstraint(new Predicate<S>(((Predicate<S>)this.getLastPredicate()).getState(), ((Predicate<S>)this.getLastPredicate()).getRegularExpression()+((Predicate<S>)c.getFistPredicate()).getRegularExpression()));
 				cret.addConstraints(c.getConstraints().subList(1, c.getConstraints().size()));
 				return cret;
 			}
 			else{
-				return new AndConstraint<S>(this.getConstraints(), ((Constraint<S>) a).getConstraints());
+				return new AndPredicate<S>(this.getConstraints(), ((Constraint<S>) a).getConstraints());
 			}
 			
 		}
@@ -134,7 +134,7 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 	 * @return the and constraint
 	 */
 	@Override
-	public AbstractConstraint<S> star() {
+	public AbstractPredicate<S> star() {
 		return this;
 	}
 	
@@ -150,7 +150,7 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
@@ -176,7 +176,7 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 			return new OrConstraint<S>(this, a);
 		}
 		// the union of an and constraint and an andConstraint is a new orConstraint that contains the two and constraints
-		if(a instanceof AndConstraint){
+		if(a instanceof AndPredicate){
 			return new OrConstraint<S>(this, a);
 		}
 
@@ -203,7 +203,7 @@ public class AndConstraint<S extends State> extends Constraint<S>{
 		}
 	}
 	@Override
-	public AbstractConstraint<S> omega() {
+	public AbstractPredicate<S> omega() {
 		return this;
 	}
 	

@@ -5,13 +5,13 @@ import it.polimi.model.State;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Constraint<S extends State> extends AbstractConstraint<S> {
+public abstract class Constraint<S extends State> extends AbstractPredicate<S> {
 
 	 /** The value is used for character storage. */
-    protected List<AbstractConstraint<S>> value;
+    protected List<AbstractPredicate<S>> value;
 
     public Constraint() {
-        this.value = new ArrayList<AbstractConstraint<S>>();
+        this.value = new ArrayList<AbstractPredicate<S>>();
     }
 
 	/**
@@ -20,29 +20,29 @@ public abstract class Constraint<S extends State> extends AbstractConstraint<S> 
 	 * @param secondConstraint is the second constraint included in the orConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-    public Constraint(AbstractConstraint<S> firstConstraint, AbstractConstraint<S> secondConstraint) {
+    public Constraint(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint) {
     	if(firstConstraint==null){
     		throw new IllegalArgumentException("The first constraint cannot be null");
     	}
     	if(secondConstraint==null){
     		throw new IllegalArgumentException("The second constraint cannot be null");
     	}
-        this.value = new ArrayList<AbstractConstraint<S>>();
+        this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.add(firstConstraint);
         this.value.add(secondConstraint);
     }
-    public Constraint(AbstractConstraint<S> firstConstraint, List<AbstractConstraint<S>> secondConstraint) {
-        this.value = new ArrayList<AbstractConstraint<S>>();
+    public Constraint(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
+        this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.add(firstConstraint);
         this.value.addAll(secondConstraint);
     }
-    public Constraint(List<AbstractConstraint<S>> firstConstraint, AbstractConstraint<S> secondConstraint) {
-        this.value = new ArrayList<AbstractConstraint<S>>();
+    public Constraint(List<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
+        this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.addAll(firstConstraint);
         this.value.add(secondConstraint);
     }
-    public Constraint(List<AbstractConstraint<S>> firstConstraint, List<AbstractConstraint<S>> secondConstraint) {
-        this.value = new ArrayList<AbstractConstraint<S>>();
+    public Constraint(List<AbstractPredicate<S>> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
+        this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.addAll(firstConstraint);
         this.value.addAll(secondConstraint);
     }
@@ -52,7 +52,7 @@ public abstract class Constraint<S extends State> extends AbstractConstraint<S> 
 	 * @param constraint the constraint to be added
 	 * @throws IllegalArgumentException if the constraint to be added is null
 	 */
-    public void addConstraint(AbstractConstraint<S> constraint){
+    public void addConstraint(AbstractPredicate<S> constraint){
     	if(constraint==null){
     		throw new IllegalArgumentException("The constraint to be added cannot be null");
     	}
@@ -63,13 +63,13 @@ public abstract class Constraint<S extends State> extends AbstractConstraint<S> 
      * @param constraints the constraint to be added
      * @throws IllegalArgumentException if the set of constraints to be added is null
      */
-    public void addConstraints(List<AbstractConstraint<S>> constraints){
+    public void addConstraints(List<AbstractPredicate<S>> constraints){
     	if(constraints==null){
     		throw new IllegalArgumentException("The constraint to be added cannot be null");
     	}
     	this.value.addAll(constraints);
     }
-   public List<AbstractConstraint<S>> getConstraints(){
+   public List<AbstractPredicate<S>> getConstraints(){
 	   return this.value;
    }
 

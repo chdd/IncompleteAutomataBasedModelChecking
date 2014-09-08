@@ -6,7 +6,7 @@ import it.polimi.model.State;
  * @author Claudio Menghi
  * contains a lambda constraint
  */
-public class LambdaConstraint<S extends State> extends AbstractConstraint<S> {
+public class LambdaConstraint<S extends State> extends AbstractPredicate<S> {
 
 	/**
 	 * the concatenation of a lambda constraint with another constraint is equal to the other constraint
@@ -15,7 +15,7 @@ public class LambdaConstraint<S extends State> extends AbstractConstraint<S> {
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -27,7 +27,7 @@ public class LambdaConstraint<S extends State> extends AbstractConstraint<S> {
 	 * @return the lambda constraint
 	 */
 	@Override
-	public AbstractConstraint<S> star() {
+	public AbstractPredicate<S> star() {
 		return this;
 	}
 
@@ -39,7 +39,7 @@ public class LambdaConstraint<S extends State> extends AbstractConstraint<S> {
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -52,7 +52,7 @@ public class LambdaConstraint<S extends State> extends AbstractConstraint<S> {
 	}
 
 	/**
-	 * see {@link AbstractConstraint}
+	 * see {@link AbstractPredicate}
 	 */
 	@Override
 	public String toString() {
@@ -75,7 +75,7 @@ public class LambdaConstraint<S extends State> extends AbstractConstraint<S> {
 	}
 
 	@Override
-	public AbstractConstraint<S> omega() {
+	public AbstractPredicate<S> omega() {
 		return this;
 	}
 	

@@ -6,7 +6,7 @@ import it.polimi.model.State;
  * @author Claudio Menghi
  * contains the epsilon constraint
  */
-public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
+public class EpsilonConstraint<S extends State> extends AbstractPredicate<S>{
 
 	/**
 	 * the concatenation of a epsilon constraint is defined as follows:
@@ -24,7 +24,7 @@ public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
@@ -42,17 +42,17 @@ public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
 		}
 		// the concatenation of an epsilon constraint and a predicate is a new and constraint that contains the epsilon constraint and the predicate
 		if(a instanceof Predicate){
-			return new AndConstraint<S>(this, a);
+			return new AndPredicate<S>(this, a);
 		}
 		// the concatenation of an epsilon constraint and an and constraint is a new and constraint that contains the epsilon constraint
 		// and the original and constraint
-		if(a instanceof AndConstraint){
-			return new AndConstraint<S>(new EpsilonConstraint<S>(), a);
+		if(a instanceof AndPredicate){
+			return new AndPredicate<S>(new EpsilonConstraint<S>(), a);
 		}
 		// the concatenation of an epsilon constraint and an or constraint is a new and constraint that contains the epsilon constraint
 		// and the original or constraint
 		if(a instanceof OrConstraint){
-			return new AndConstraint<S>(this, a);
+			return new AndPredicate<S>(this, a);
 		}
 
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
@@ -64,7 +64,7 @@ public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
 	 * @return the epsilon constraint
 	 */
 	@Override
-	public AbstractConstraint<S> star() {
+	public AbstractPredicate<S> star() {
 		return new EpsilonConstraint<S>();
 	}
 
@@ -79,7 +79,7 @@ public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
@@ -104,14 +104,14 @@ public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
 			return new OrConstraint<S>(this, a);
 		}
 		//  the union of an epsilon constraint and an and constraint is an or constraint that contains the epsilon constraint and the and constraint 
-		if(a instanceof AndConstraint){
-			return new OrConstraint<S>(this, ((AndConstraint<S>) a).getConstraints());
+		if(a instanceof AndPredicate){
+			return new OrConstraint<S>(this, ((AndPredicate<S>) a).getConstraints());
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
 
 	/**
-	 * see {@link AbstractConstraint}
+	 * see {@link AbstractPredicate}
 	 */
 	@Override
 	public String toString() {
@@ -132,7 +132,7 @@ public class EpsilonConstraint<S extends State> extends AbstractConstraint<S>{
 
 
 	@Override
-	public AbstractConstraint<S> omega() {
+	public AbstractPredicate<S> omega() {
 		return this;
 	}
 

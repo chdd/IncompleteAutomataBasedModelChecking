@@ -6,7 +6,7 @@ import it.polimi.model.State;
  * @author Claudio Menghi
  * contains a predicate constraint
  */
-public class Predicate<S extends State> extends AbstractConstraint<S>{
+public class Predicate<S extends State> extends AbstractPredicate<S>{
 
 	/**
 	 * contains the state of the predicate
@@ -88,7 +88,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 	 * @throws IllegalArgumentException if a is null or if the constraint type is not supported
 	 */
 	@Override
-	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint a to be concatenated cannot be null");
 		}
@@ -109,7 +109,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 			}
 			// the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
 			else{
-				AndConstraint<S> cret=new AndConstraint<S>();
+				AndPredicate<S> cret=new AndPredicate<S>();
 				cret.addConstraint(this);
 				cret.addConstraint(a);
 				return cret;
@@ -121,11 +121,11 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 		 * -	the concatenation of a predicate and an AndConstraint add the predicate to the and constraint if this predicate and
 		 *  	the first predicate of the and constraint have a different state
 		 */
-		if(a instanceof AndConstraint){
-			AndConstraint<S> atmp=(AndConstraint<S>)a;
+		if(a instanceof AndPredicate){
+			AndPredicate<S> atmp=(AndPredicate<S>)a;
 			if(atmp.getFistPredicate() instanceof Predicate &&
 					this.state.equals(((Predicate<S>)atmp.getFistPredicate()).state)){
-						AndConstraint<S> cret=new AndConstraint<S>();
+						AndPredicate<S> cret=new AndPredicate<S>();
 						cret.addConstraint(new Predicate<S>(this.state, this.regularExpression.concat(((Predicate<S>)atmp.getFistPredicate()).regularExpression)));
 						cret.addConstraints(atmp.getConstraints().subList(1, atmp.getConstraints().size()));
 						return cret;
@@ -133,7 +133,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 			
 			else{
 				
-				AndConstraint<S> cret=new AndConstraint<S>();
+				AndPredicate<S> cret=new AndPredicate<S>();
 				cret.addConstraint(this);
 				cret.addConstraints(atmp.getConstraints());
 				return cret;
@@ -143,7 +143,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 		 * 		and the second one is the or constraint
 		*/
 		if(a instanceof OrConstraint){
-			AndConstraint<S> cret=new AndConstraint<S>();
+			AndPredicate<S> cret=new AndPredicate<S>();
 			cret.addConstraint(this);
 			cret.addConstraint(a);
 			return cret;
@@ -153,7 +153,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 		 * 		and the second one is the EpsilonConstraint
 		 */
 		if(a instanceof EpsilonConstraint){
-			AndConstraint<S> cret=new AndConstraint<S>();
+			AndPredicate<S> cret=new AndPredicate<S>();
 			cret.addConstraint(this);
 			cret.addConstraint(new EpsilonConstraint<S>());
 			return cret;
@@ -167,7 +167,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 	 * @return the new constraint where the star operator is applied to the predicate
 	 */
 	@Override
-	public AbstractConstraint<S> star() {
+	public AbstractPredicate<S> star() {
 		return new Predicate<S>(this.state, "("+this.regularExpression+")*");
 	}
 	
@@ -186,7 +186,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 	 * @throws IllegalArgumentException id the constraint a is null or the type of constraint is not supported
 	 */
 	@Override
-	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint a cannot be null");
 		}
@@ -217,7 +217,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 			return new OrConstraint<S>(this,a);
 		}
 		// the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
-		if(a instanceof AndConstraint){
+		if(a instanceof AndPredicate){
 			return new OrConstraint<S>(this,a);
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
@@ -228,7 +228,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 	}
 	
 	/**
-	 * see {@link AbstractConstraint}
+	 * see {@link AbstractPredicate}
 	 */
 	public String toString(){
 		return "<"+state+","+this.regularExpression+">";
@@ -273,7 +273,7 @@ public class Predicate<S extends State> extends AbstractConstraint<S>{
 		return true;
 	}
 	@Override
-	public AbstractConstraint<S> omega() {
+	public AbstractPredicate<S> omega() {
 		return new Predicate<S>(this.getState(), "("+this.getRegularExpression()+")ω");
 	}
 	
