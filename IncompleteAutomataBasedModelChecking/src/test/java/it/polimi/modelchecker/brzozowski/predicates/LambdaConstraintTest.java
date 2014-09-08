@@ -1,4 +1,4 @@
-package it.polimi.browzozky.predicates;
+package it.polimi.modelchecker.brzozowski.predicates;
 
 import static org.junit.Assert.*;
 import it.polimi.model.State;
