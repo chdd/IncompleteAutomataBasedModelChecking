@@ -3,9 +3,6 @@ package it.polimi.model;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,22 +76,6 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	
 	
 	
-	protected AbstractPredicate<S1> [] getConstraintS(S init, S accept, S[] statesOrdered){
-		@SuppressWarnings("unchecked")
-		AbstractPredicate<S1>[] s=new AbstractPredicate[statesOrdered.length];
-		
-		for(int i=0; i< statesOrdered.length; i++){
-			
-			if(accept.equals(statesOrdered[i])){
-				s[i]=new LambdaPredicate<S1>();
-			}
-			else{
-				s[i]=new EmptyPredicate<S1>();
-			}
-		}
-
-		return s;
-	}
 	
 	
 	
@@ -128,9 +109,9 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				S[] statesOrdered1=this.getOrderedStates(init, accept);
 				S[] statesOrdered2=this.getOrderedStates(accept, accept);
 				AbstractPredicate<S1>[][] cnsT1=b.getConstraintT(statesOrdered1);
-				AbstractPredicate<S1>[] cnsS1=this.getConstraintS(init, accept, statesOrdered1);
+				AbstractPredicate<S1>[] cnsS1=b.getConstraintS(accept, statesOrdered1);
 				AbstractPredicate<S1>[][] cnsT2=b.getConstraintT(statesOrdered2);
-				AbstractPredicate<S1>[] cnsS2=this.getConstraintS(accept, accept, statesOrdered2);
+				AbstractPredicate<S1>[] cnsS2=b.getConstraintS(accept, statesOrdered2);
 				
 				
 				AbstractPredicate<S1> newconstraint=b.getConstraints(

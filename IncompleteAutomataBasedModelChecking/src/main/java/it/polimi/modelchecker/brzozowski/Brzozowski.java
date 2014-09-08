@@ -7,6 +7,7 @@ import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 /**
@@ -130,5 +131,28 @@ extends Transition<S>> {
 		}
 		return A;
 	}
+	/**
+	 * returns the matrix S associated with the intersection automaton a
+	 * @param accept is the accepting states of the automaton considered
+	 * @param statesOrdered contains the states of a ordered
+	 * @return the matrix S associated with the automaton a
+	 */
+	public AbstractPredicate<S1> [] getConstraintS(S accept, S[] statesOrdered){
+		@SuppressWarnings("unchecked")
+		AbstractPredicate<S1>[] s=new AbstractPredicate[statesOrdered.length];
+		
+		for(int i=0; i< statesOrdered.length; i++){
+			
+			if(accept.equals(statesOrdered[i])){
+				s[i]=new LambdaPredicate<S1>();
+			}
+			else{
+				s[i]=new EmptyPredicate<S1>();
+			}
+		}
+
+		return s;
+	}
+	
 }
 
