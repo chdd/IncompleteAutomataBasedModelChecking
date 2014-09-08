@@ -1,9 +1,5 @@
 package it.polimi.model;
 
-import it.polimi.modelchecker.brzozowski.Brzozowski;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
