@@ -25,6 +25,15 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+/**
+ * contains an intersection automaton
+ * @author claudiomenghi
+ *
+ * @param <S1> is the type of the states of the original Buchi automata
+ * @param <T1> is the type of the transitions of the original Buchi automata
+ * @param <S> is the type of the state in the intersection automaton
+ * @param <T> is the type of the transition in the intersection automaton
+ */
 @XmlRootElement
 public class IntersectionAutomaton<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
 extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
@@ -43,6 +52,9 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return this.mixedStates;
 	}
 	
+	/**
+	 * creates a new Intersection automaton
+	 */
 	protected IntersectionAutomaton(){
 		super();
 		this.mixedStates=new HashSet<S>();
@@ -168,12 +180,12 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				AbstractPredicate<S1>[] cnsS2=this.getConstraintS(accept, accept, statesOrdered2);
 				
 				
-				
-				AbstractPredicate<S1> newconstraint=Brzozowski.getConstraints(
+				Brzozowski<S1> b=new Brzozowski<S1>();
+				AbstractPredicate<S1> newconstraint=b.getConstraints(
 						cnsT1, 
 						cnsS1).
 						concatenate(
-						Brzozowski.getConstraints(
+						b.getConstraints(
 								cnsT2,
 								cnsS2
 								).omega());
