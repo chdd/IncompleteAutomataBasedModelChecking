@@ -38,6 +38,8 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	private IncompleteBuchiAutomaton<S1, T1> model;
 	@SuppressWarnings("unused")
 	private BuchiAutomaton<S1, T1> specification;
+	
+	
 	@XmlElementWrapper(name="mixedStates")
 	@XmlElements({
 	    @XmlElement(name="mixedState", type=State.class)
@@ -157,13 +159,15 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				return true;
 			}
 		}
+		visitedStates.clear();
 		return res;
 	}
 	/**
 	 * returns true if an accepting path is found
-	 * @param visitedStates
-	 * @param currState
-	 * @return
+	 * @param visitedStates contains the set of the visited states during the first DFS
+	 * @param currState is the state that is currently analyzed
+	 * @param statesOfThePath contains the states of the path that is currently analyzed
+	 * @return true if an accepting path is found, false otherwise
 	 */
 	public boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
 		if(this.isMixed(currState) && completeEmptiness){
@@ -174,7 +178,11 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		}
 	}
 	/**
-	 * 
+	 * returns true if an accepting path is found during the second DFS
+	 * @param visitedStates contains the set of the visited states during the second DFS
+	 * @param currState is the state that is currently analyzed
+	 * @param statesOfThePath contains the states of the path that is currently analyzed
+	 * @return true if an accepting path is found during the second DFS, false otherwise
 	 */
 	public boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
 		if(this.isMixed(currState) && completeEmptiness){
