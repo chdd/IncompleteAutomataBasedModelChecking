@@ -97,55 +97,7 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 	
 	
-	protected AbstractPredicate<S1> [][] getConstraintT(S init, S accept, S[] statesOrdered){
-		@SuppressWarnings("unchecked")
-		AbstractPredicate<S1> [][] A=new AbstractPredicate[statesOrdered.length][statesOrdered.length];
-		for(int i=0; i< statesOrdered.length; i++){
-			for(int j=0; j< statesOrdered.length; j++){
-				boolean setted=false;
-				if(i!=statesOrdered.length-1){
-					for(T t: this.getTransitionsWithSource(statesOrdered[i])){
-						if(t.getDestination().equals(statesOrdered[j])){
-							if(statesOrdered[i].getS1().equals(statesOrdered[j].getS1()) && a1.isTransparent(statesOrdered[j].getS1())){
-								if(!setted){
-									A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+"");
-								}
-								else{
-									A[i][j]=A[i][j].union(new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+""));
-								}
-								
-							}
-							else{
-								if(a1.isTransparent(statesOrdered[i].getS1())){
-									if(!setted){
-										A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(), "ε");
-									}
-									else{
-										A[i][j]=A[i][j].union(new Predicate<S1>(statesOrdered[i].getS1(), "ε"));
-									}
-								}
-								else{
-									if(!setted){
-										A[i][j]=new EpsilonPredicate<S1>();
-									}
-									else{
-										A[i][j]=A[i][j].union(new EpsilonPredicate<S1>());
-									}
-										
-								}
-							}
-							setted=true;
-							
-						}
-					}
-				}
-				if(!setted){
-					A[i][j]=new EmptyPredicate<S1>();
-				}
-			}
-		}
-		return A;
-	}
+	
 
 	@SuppressWarnings("unchecked")
 	public S[] getOrderedStates(S init, S end){
@@ -167,6 +119,7 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	public AbstractPredicate<S1> getConstraint(){
 		
 		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
+		Brzozowski<S1,T1,S,T> b=new Brzozowski<S1,T1,S,T>(this);
 		
 		for(S init: this.getInitialStates()){
 			for(S accept: this.getAcceptStates()){
@@ -174,13 +127,12 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				
 				S[] statesOrdered1=this.getOrderedStates(init, accept);
 				S[] statesOrdered2=this.getOrderedStates(accept, accept);
-				AbstractPredicate<S1>[][] cnsT1=this.getConstraintT(init, accept, statesOrdered1);
+				AbstractPredicate<S1>[][] cnsT1=b.getConstraintT(statesOrdered1);
 				AbstractPredicate<S1>[] cnsS1=this.getConstraintS(init, accept, statesOrdered1);
-				AbstractPredicate<S1>[][] cnsT2=this.getConstraintT(accept, accept, statesOrdered2);
+				AbstractPredicate<S1>[][] cnsT2=b.getConstraintT(statesOrdered2);
 				AbstractPredicate<S1>[] cnsS2=this.getConstraintS(accept, accept, statesOrdered2);
 				
 				
-				Brzozowski<S1> b=new Brzozowski<S1>();
 				AbstractPredicate<S1> newconstraint=b.getConstraints(
 						cnsT1, 
 						cnsS1).
@@ -317,6 +269,14 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return true;
 	}
 
+	/**
+	 * @return the a1
+	 */
+	public IncompleteBuchiAutomaton<S1, T1> getA1() {
+		return a1;
+	}
+
+	
 	
 	
 }
