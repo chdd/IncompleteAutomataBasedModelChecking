@@ -35,9 +35,9 @@ import org.xml.sax.SAXException;
 public class IntersectionAutomaton<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
 extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 
-	private IncompleteBuchiAutomaton<S1, T1> a1;
+	private IncompleteBuchiAutomaton<S1, T1> model;
 	@SuppressWarnings("unused")
-	private BuchiAutomaton<S1, T1> a2;
+	private BuchiAutomaton<S1, T1> specification;
 	@XmlElementWrapper(name="mixedStates")
 	@XmlElements({
 	    @XmlElement(name="mixedState", type=State.class)
@@ -55,15 +55,26 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	protected IntersectionAutomaton(){
 		super();
 		this.mixedStates=new HashSet<S>();
-		this.a2=new BuchiAutomaton<S1, T1>();
+		this.specification=new BuchiAutomaton<S1, T1>();
 	}
-	
-	public IntersectionAutomaton(Set<String> alphabet, IncompleteBuchiAutomaton<S1, T1> a1, BuchiAutomaton<S1, T1> a2) {
+	/**
+	 * creates a new Intersection automaton
+	 * @param alphabet is the alphabet of the automaton
+	 * @param model is the model to be considered
+	 * @param specification is the specification under analysis
+	 * @throws IllegalArgumentException when the alphabet, the model of the specification is null
+	 */
+	public IntersectionAutomaton(Set<String> alphabet, IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1, T1> specification) {
 		super(alphabet);
-		this.a1=a1;
-		this.a2=a2;
+		if(model==null){
+			throw new IllegalArgumentException("The model to be considered cannot be null");
+		}
+		if(specification==null){
+			throw new IllegalArgumentException("The specification cannot be null");
+		}
+		this.model=model;
+		this.specification=specification;
 		mixedStates=new HashSet<S>();
-		
 	}
 	
 	public void addMixedState(S s){
@@ -74,12 +85,6 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return this.mixedStates.contains(s);
 	}
 	
-	
-	
-	
-	
-	
-
 	@SuppressWarnings("unchecked")
 	public S[] getOrderedStates(S init, S end){
 		int size=this.getStates().size();
@@ -251,10 +256,10 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 
 	/**
-	 * @return the a1
+	 * @return the model that generates the intersection automaton
 	 */
-	public IncompleteBuchiAutomaton<S1, T1> getA1() {
-		return a1;
+	public IncompleteBuchiAutomaton<S1, T1> getModel() {
+		return model;
 	}
 
 	

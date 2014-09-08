@@ -95,7 +95,7 @@ extends Transition<S>> {
 				if(i!=statesOrdered.length-1){
 					for(T t: a.getTransitionsWithSource(statesOrdered[i])){
 						if(t.getDestination().equals(statesOrdered[j])){
-							if(statesOrdered[i].getS1().equals(statesOrdered[j].getS1()) && a.getA1().isTransparent(statesOrdered[j].getS1())){
+							if(statesOrdered[i].getS1().equals(statesOrdered[j].getS1()) && a.getModel().isTransparent(statesOrdered[j].getS1())){
 								if(!setted){
 									A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+"");
 								}
@@ -105,7 +105,7 @@ extends Transition<S>> {
 								
 							}
 							else{
-								if(a.getA1().isTransparent(statesOrdered[i].getS1())){
+								if(a.getModel().isTransparent(statesOrdered[i].getS1())){
 									if(!setted){
 										A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(), "ε");
 									}
