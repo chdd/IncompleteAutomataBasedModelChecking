@@ -97,7 +97,7 @@ public class IntersectionAutJPanel<S1 extends State, T1 extends Transition<S1>,
 			
 			IncompleteBuchiAutomaton<S1,T1> a1=this.panel1.getAutomaton();
 			BuchiAutomaton<S1,T1> a2=this.panel2.getAutomaton();
-			ModelChecker<S1, T1> mc=new ModelChecker<S1, T1>(a1, a2, new ModelCheckerParameters());
+			ModelChecker<S1, T1, S,T> mc=new ModelChecker<S1, T1, S,T>(a1, a2, new ModelCheckerParameters());
 			AbstractPredicate<S1> constraints=new EmptyPredicate<>();
 			int result=mc.check(constraints);
 			

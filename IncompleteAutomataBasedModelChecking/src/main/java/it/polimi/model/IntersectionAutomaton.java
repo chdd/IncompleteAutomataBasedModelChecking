@@ -106,36 +106,7 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		}
 		return ret;
 	}
-	public AbstractPredicate<S1> getConstraint(){
-		
-		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
-		Brzozowski<S1,T1,S,T> b=new Brzozowski<S1,T1,S,T>(this);
-		
-		for(S init: this.getInitialStates()){
-			for(S accept: this.getAcceptStates()){
-				
-				
-				S[] statesOrdered1=this.getOrderedStates(init, accept);
-				S[] statesOrdered2=this.getOrderedStates(accept, accept);
-				AbstractPredicate<S1>[][] cnsT1=b.getConstraintT(statesOrdered1);
-				AbstractPredicate<S1>[] cnsS1=b.getConstraintS(accept, statesOrdered1);
-				AbstractPredicate<S1>[][] cnsT2=b.getConstraintT(statesOrdered2);
-				AbstractPredicate<S1>[] cnsS2=b.getConstraintS(accept, statesOrdered2);
-				
-				
-				AbstractPredicate<S1> newconstraint=b.getConstraints(
-						cnsT1, 
-						cnsS1).
-						concatenate(
-						b.getConstraints(
-								cnsT2,
-								cnsS2
-								).omega());
-				ret=ret.union(newconstraint);
-			}
-		}
-		return ret;
-	}
+	
 	
 	/** 
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty

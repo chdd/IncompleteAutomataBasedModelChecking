@@ -2,6 +2,7 @@ package it.polimi.performance;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
+import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelChecker;
@@ -70,7 +71,7 @@ public class PerformanceEvaluator{
 					
 					BuchiAutomaton<State, Transition<State>>  a2 = BuchiAutomaton.loadAutomaton("src/main/resources/Automaton2.xml");
 					
-					ModelChecker<State, Transition<State>> mc=new ModelChecker<State, Transition<State>>(a1, a2, mp);
+					ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2, mp);
 					
 					mc.check(new EmptyPredicate<State>());
 					

@@ -6,6 +6,7 @@ import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 
@@ -16,7 +17,7 @@ import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
  * @param <S1> is the type of the states of the specification and of the  model
  * @param <T1> is the type of the transition of the specification and the model
  */
-public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
+public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> {
 	
 	/**
 	 * contains the specification to be checked
@@ -30,7 +31,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
 	 */
-	private IntersectionAutomaton<S1,T1, IntersectionState<S1>, Transition<IntersectionState<S1>>> ris;
+	private IntersectionAutomaton<S1,T1, S, T> ris;
 	
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
@@ -67,7 +68,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 		this.parameters.setNumTransparentStatesModel(this.model.getTransparentStates().size());
 		
 		long startIntersectionTime = System.nanoTime();   
-		this.ris=this.model.computeIntersection(this.specification);
+		this.ris=(IntersectionAutomaton<S1, T1, S, T>) this.model.computeIntersection(this.specification);
 		long stopTime = System.nanoTime(); 
 		
 		this.parameters.setIntersectionTime((stopTime-startIntersectionTime)/1000000000.0);
@@ -87,8 +88,9 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 			return 0;
 		}
 		else{
+			Brzozowski<S1,T1,S,T> brzozowski=new Brzozowski<S1,T1,S,T>(ris);
 			long startConstraintTime = System.nanoTime();   
-			returnConstraint=ris.getConstraint();
+			returnConstraint=brzozowski.getConstraint();
 			long stopConstraintTime = System.nanoTime(); 
 			this.parameters.setConstraintComputationTime((stopConstraintTime-startConstraintTime)/1000000000.0);
 			this.parameters.setTotalTime(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime());
@@ -104,7 +106,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 		}
 	}
 	
-	public IntersectionAutomaton<S1,T1, IntersectionState<S1>, Transition<IntersectionState<S1>>> getIntersection(){
+	public IntersectionAutomaton<S1,T1, S, T> getIntersection(){
 		return this.ris;
 	}
 	/**
