@@ -56,12 +56,12 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 			return a;
 		}
 		// if a is an lambda constraint the or constraint is returned
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return this;
 		}
 		// if a is an EpsilonConstraint concatenation of the or constraint and EpsilonConstraint is returned
-		if(a instanceof EpsilonConstraint){
-			return new AndPredicate<S>(this, new EpsilonConstraint<S>());
+		if(a instanceof EpsilonPredicate){
+			return new AndPredicate<S>(this, new EpsilonPredicate<S>());
 		}
 		// if a is a Predicate the concatenation of the or constraint and Predicate is returned
 		if(a instanceof Predicate){
@@ -108,11 +108,11 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 			return this;
 		}
 		// the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return new OrConstraint<>(this,a);
 		}
 		// the union of an or constraint and an EpsilonConstrain is a new orConstraint that contains the or constraint and the EpsilonConstrain
-		if(a instanceof EpsilonConstraint){
+		if(a instanceof EpsilonPredicate){
 			return new OrConstraint<>(this,a);
 		}
 		// the union of an or constraint and a Predicate is a new orConstraint that contains the or constraint and the Predicate
