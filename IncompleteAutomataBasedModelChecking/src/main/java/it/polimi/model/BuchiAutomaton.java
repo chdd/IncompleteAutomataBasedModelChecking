@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -588,6 +589,91 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 			it.next();
 		}
 		return it.next();
+	}
+	/**
+	 * returns true if the automaton is empty
+	 * @return true if the automaton is empty
+	 */
+	public boolean isEmpty(){
+		boolean res=true;
+		Set<S> visitedStates=new HashSet<S>();
+		for(S init: this.getInitialStates()){
+			if(firstDFS(visitedStates, init, new Stack<S>())){
+				return false;
+			}
+		}
+		// clear the set of the visited states
+		visitedStates.clear();
+		return res;
+	}
+	
+	/**
+	 * returns true if an accepting path is found
+	 * @param visitedStates contains the set of the visited states by the algorithm
+	 * @param currState is the current states under analysis
+	 * @return true if an accepting path is found, false otherwise
+	 */
+	protected boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+		// if the current state have been already visited (and the second DFS has not been started) it means that the path is not accepting
+		if(visitedStates.contains(currState)){
+			return false;
+		}
+		else{
+			// I add the state in the set of visited states
+			visitedStates.add(currState);
+			// I add the state in the state of the path
+			statesOfThePath.push(currState);
+			// if the state is accepting
+			if(this.isAccept(currState)){
+				// I start the second DFS if the answer of the second DFS is true I return true
+				if(this.secondDFS(new HashSet<S>(), currState, statesOfThePath)){
+					return true;
+				}
+			}
+			// otherwise, I check each transition that leaves the state currState
+			for(T t: this.getTransitionsWithSource(currState)){
+				// I call the first DFS method, If the answer is true I return true
+				if(firstDFS(visitedStates, t.getDestination(), statesOfThePath)){
+					return true;
+				}
+			}
+			// I remove the state from the stack of the states of the current path
+			statesOfThePath.pop();
+			return false;
+		}
+	}
+	/**
+	 * contains the second DFS procedure
+	 * @param visitedStates contains the set of the states visited in the SECOND DFS procedure 
+	 * @param currState is the current state under analysis
+	 * @param statesOfThePath is the state of the path that is currently analyzed
+	 * @return true if an accepting path is found (a path that contains a state in the set of the states statesOfThePath), false otherwise
+	 */
+	// note that at the beginning the visited states do not contain the current state
+	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+		// if the state is in the set of the states on the path the an accepting path is found
+		if(statesOfThePath.contains(currState)){
+			return true;
+		}
+		else{
+			// if the state is in the set of the visited states of the second DFS, the path is not accepting
+			if(visitedStates.contains(currState)){
+				return false;
+			}
+			else{
+				// add the state into the set of the visited states
+				visitedStates.add(currState);
+				// for each transition that leaves the current state
+				for(T t: this.getTransitionsWithSource(currState)){
+					// if the second DFS returns a true answer than the accepting path has been found
+					if(secondDFS(visitedStates, t.getDestination(), statesOfThePath)){
+						return true;
+					}
+				}
+				// otherwise the path is not accepting
+				return false;
+			}
+		}
 	}
 
 	

@@ -49,6 +49,8 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return this.mixedStates;
 	}
 	
+	private boolean completeEmptiness=true;
+	
 	/**
 	 * creates a new Intersection automaton
 	 */
@@ -134,6 +136,13 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 	
 	
+	public boolean isNotCompleteEmpty(){
+		this.completeEmptiness=true;
+		boolean res=this.isNotEmpty();
+		this.completeEmptiness=false;
+		return res;
+	}
+	
 	public boolean isNotEmpty(){
 		boolean res=false;
 		Set<S> visitedStates=new HashSet<S>();
@@ -151,45 +160,22 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	 * @return
 	 */
 	public boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
-		if(visitedStates.contains(currState) || this.isMixed(currState)){
+		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
 		else{
-			visitedStates.add(currState);
-			statesOfThePath.push(currState);
-			if(this.isAccept(currState)){
-				if(this.secondDFS(new HashSet<S>(), currState, statesOfThePath)){
-					return true;
-				}
-			}
-			for(T t: this.getTransitionsWithSource(currState)){
-				if(firstDFS(visitedStates, t.getDestination(), statesOfThePath)){
-					return true;
-				}
-			}
-			statesOfThePath.pop();
-			return false;
+			return super.firstDFS(visitedStates, currState, statesOfThePath);
 		}
 	}
+	/**
+	 * 
+	 */
 	public boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
-		if(visitedStates.contains(currState) || this.isMixed(currState)){
+		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
 		else{
-			if(statesOfThePath.contains(currState)){
-				return true;
-			}
-			else{
-				visitedStates.add(currState);
-				statesOfThePath.push(currState);
-				for(T t: this.getTransitionsWithSource(currState)){
-					if(secondDFS(visitedStates, t.getDestination(), statesOfThePath)){
-						return true;
-					}
-				}
-				statesOfThePath.pop();
-				return false;
-			}
+			return super.secondDFS(visitedStates, currState, statesOfThePath);
 		}
 	}
 
