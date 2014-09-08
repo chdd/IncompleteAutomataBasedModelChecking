@@ -22,6 +22,11 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
 
+/**
+ * evaluates the performances of the model checking tool, it generates a set of random models (BA) with an increasing number of states and transparent states
+ * and evaluates the verification time
+ * @author claudiomenghi
+ */
 public class PerformanceEvaluator{
 
 
@@ -44,14 +49,8 @@ public class PerformanceEvaluator{
 		
 		ModelCheckerParameters mp=new ModelCheckerParameters();
 		
-		int counter=0;
-		//System.out.println(mp.toStringHeader());
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
-			counter++;
 			
-			/*for(int i=0;i<n;i=i+3){
-				alphabet.add("s"+i);
-			}*/
 			for(int i=initialNumberOfTransparentStates; i<=maxNumberTransparentStates;i=i+incrementNumberOfTransparentStates){
 				
 				for(int j=0;j<numeroProve;j++){
@@ -59,15 +58,6 @@ public class PerformanceEvaluator{
 					alphabetModel.add("a");
 					alphabetModel.add("b");
 					
-					//if(counter%3==0){
-					//	for(int e=0; e<n; e=e+3){
-					//		alphabetModel.add("s"+e);
-					//	}
-					//}
-					//Set<String> alphabetSpecification=new HashSet<String>();
-					//	alphabetSpecification.add("a");
-					//	alphabetSpecification.add("c");
-					//alphabetSpecification.add("d");
 					PrintWriter writer=null;
 					if(j==0){
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", false)));
@@ -77,19 +67,15 @@ public class PerformanceEvaluator{
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", true)));
 					}
 					IncompleteBuchiAutomaton<State, Transition<State>> a1 = IncompleteBuchiAutomaton.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
-					//ExtendedAutomaton<State, Transition<State>> a1 = ExtendedAutomaton.getRandomAutomaton(n, 2*Math.log(n)/n, probabilityOfAStateToBeInitial, probabilityOfAStateToBeAccepting, i, alphabet);
-					int numStateSpecification=Math.min(n%10+5, 15);
 					
 					BuchiAutomaton<State, Transition<State>>  a2 = BuchiAutomaton.loadAutomaton("src/main/resources/Automaton2.xml");
-					//BuchiAutomaton<State, Transition<State>>  a2 = BuchiAutomaton.getRandomAutomaton2(numStateSpecification, 0.5, numInitialStates, numAcceptingStates, alphabetSpecification);
 					
 					ModelChecker<State, Transition<State>> mc=new ModelChecker<State, Transition<State>>(a1, a2, mp);
 					
 					mc.check(new EmptyConstraint<State>());
 					
-					//System.out.println(mp.toString());
 					writer.println(mp.toString());
-					System.out.println("Prova Numero: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
+					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
 					
 					
 					a1.toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"a1-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
