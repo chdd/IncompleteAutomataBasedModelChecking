@@ -71,6 +71,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 		this.ris=new IntersectionAutomaton<S1,T1, S, T>(this.model, this.specification);
 		long stopTime = System.nanoTime(); 
 		
+		
 		this.parameters.setIntersectionTime((stopTime-startIntersectionTime)/1000000000.0);
 		this.parameters.setNumAcceptingStatesIntersection(this.ris.getAcceptStates().size());
 		this.parameters.setNumInitialStatesIntersection(this.ris.getInitialStates().size());
@@ -90,9 +91,11 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 		else{
 			startEmptyTime = System.nanoTime();   
 			boolean resComplete=ris.isCompleteEmpty();
-			 stopEmptyTime = System.nanoTime();   
-			if(!resComplete){
-				this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
+			stopEmptyTime = System.nanoTime();   
+			this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
+				
+			if(resComplete){
+				this.parameters.setResult(1);
 				return 1;
 			}
 			else{
