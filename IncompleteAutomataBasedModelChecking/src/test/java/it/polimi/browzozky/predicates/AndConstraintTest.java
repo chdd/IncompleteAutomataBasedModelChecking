@@ -1,13 +1,14 @@
 package it.polimi.browzozky.predicates;
 
 import static org.junit.Assert.*;
-import it.polimi.browzozky.predicates.types.AndConstraint;
-import it.polimi.browzozky.predicates.types.EmptyConstraint;
-import it.polimi.browzozky.predicates.types.EpsilonConstraint;
-import it.polimi.browzozky.predicates.types.LambdaConstraint;
-import it.polimi.browzozky.predicates.types.OrConstraint;
-import it.polimi.browzozky.predicates.types.Predicate;
 import it.polimi.model.State;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AndConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EpsilonConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.LambdaConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.OrConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import org.junit.Test;
 

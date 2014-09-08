@@ -1,11 +1,11 @@
 package it.polimi.model;
 
-import it.polimi.browzozky.Browzozky;
-import it.polimi.browzozky.predicates.AbstractConstraint;
-import it.polimi.browzozky.predicates.types.EmptyConstraint;
-import it.polimi.browzozky.predicates.types.EpsilonConstraint;
-import it.polimi.browzozky.predicates.types.LambdaConstraint;
-import it.polimi.browzozky.predicates.types.Predicate;
+import it.polimi.modelchecker.brzozowski.Browzozky;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EpsilonConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.LambdaConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import java.io.File;
 import java.io.IOException;

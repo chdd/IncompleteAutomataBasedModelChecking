@@ -1,7 +1,7 @@
-package it.polimi.browzozky;
+package it.polimi.modelchecker.brzozowski;
 
-import it.polimi.browzozky.predicates.AbstractConstraint;
 import it.polimi.model.State;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
 
 /**
  * @author Claudio Menghi

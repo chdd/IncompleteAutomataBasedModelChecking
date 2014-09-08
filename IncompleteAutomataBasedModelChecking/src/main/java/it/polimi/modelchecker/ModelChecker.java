@@ -1,13 +1,13 @@
 package it.polimi.modelchecker;
 
-import it.polimi.browzozky.predicates.AbstractConstraint;
-import it.polimi.browzozky.predicates.types.EmptyConstraint;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
 
 public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 	

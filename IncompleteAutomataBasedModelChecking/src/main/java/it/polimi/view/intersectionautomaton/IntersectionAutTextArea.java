@@ -1,10 +1,10 @@
 package it.polimi.view.intersectionautomaton;
 
-import it.polimi.browzozky.predicates.AbstractConstraint;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
 
 import java.awt.Dimension;
 import java.awt.Point;

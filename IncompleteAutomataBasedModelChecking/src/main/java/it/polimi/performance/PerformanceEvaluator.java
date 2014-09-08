@@ -1,12 +1,12 @@
 package it.polimi.performance;
 
-import it.polimi.browzozky.predicates.types.EmptyConstraint;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.modelchecking.ModelChecker;
-import it.polimi.modelchecking.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelChecker;
+import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;

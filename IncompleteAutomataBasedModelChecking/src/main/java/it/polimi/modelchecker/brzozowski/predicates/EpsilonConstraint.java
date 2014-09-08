@@ -1,6 +1,5 @@
-package it.polimi.browzozky.predicates.types;
+package it.polimi.modelchecker.brzozowski.predicates;
 
-import it.polimi.browzozky.predicates.AbstractConstraint;
 import it.polimi.model.State;
 
 /**

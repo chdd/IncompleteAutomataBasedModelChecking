@@ -1,15 +1,15 @@
 package it.polimi.view.intersectionautomaton;
 
-import it.polimi.browzozky.predicates.AbstractConstraint;
-import it.polimi.browzozky.predicates.types.EmptyConstraint;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.modelchecking.ModelChecker;
-import it.polimi.modelchecking.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelChecker;
+import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
 import it.polimi.view.automaton.AutXMLTextArea;
 import it.polimi.view.automaton.AutomatonJPanel;
 import it.polimi.view.extendedautomaton.ExtendedAutomatonJPanel;
