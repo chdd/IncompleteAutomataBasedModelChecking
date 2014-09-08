@@ -135,14 +135,20 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return ret;
 	}
 	
-	
+	/** 
+	 * returns true if the complete version (without mixed states) of the intersection automaton is not empty
+	 * @return true if the complete version (without mixed states) of the intersection automaton is not empty
+	 */
 	public boolean isNotCompleteEmpty(){
 		this.completeEmptiness=true;
 		boolean res=this.isNotEmpty();
 		this.completeEmptiness=false;
 		return res;
 	}
-	
+	/**
+	 * returns true if the intersection automaton including its mixed states is empty
+	 * @return true if the intersection automaton including its mixed states is empty
+	 */
 	public boolean isNotEmpty(){
 		boolean res=false;
 		Set<S> visitedStates=new HashSet<S>();
