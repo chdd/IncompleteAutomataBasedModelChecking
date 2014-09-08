@@ -31,8 +31,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 /**
- * @author Claudio Menghi
- * contains a not incomplete automaton
+ * 
+ * @author claudiomenghi
+ * contains a complete Buchi Automaton
+ * @param <S> the type of the states
+ * @param <T> the type of the transitions
  */
 @XmlRootElement
 public class BuchiAutomaton<S extends State, T extends Transition<S>>{
