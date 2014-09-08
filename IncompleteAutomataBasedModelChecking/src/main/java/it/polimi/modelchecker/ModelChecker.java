@@ -83,7 +83,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 		this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
 		
 		
-		if(res){
+		if(!res){
 			this.parameters.setResult(0);
 			return 0;
 		}
@@ -91,7 +91,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 			startEmptyTime = System.nanoTime();   
 			boolean resComplete=ris.isCompleteEmpty();
 			 stopEmptyTime = System.nanoTime();   
-			if(resComplete){
+			if(!resComplete){
 				this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
 				return 1;
 			}
