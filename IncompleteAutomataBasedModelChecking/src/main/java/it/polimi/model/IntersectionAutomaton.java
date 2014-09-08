@@ -180,15 +180,6 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 
 	
-	
-	public void printStatesOrdered(S[] states){
-		String toPrint="";
-		for(int i=0; i<=states.length-1 ;i++){
-			toPrint+=states[i]+"\t";
-		}
-		System.out.println(toPrint);
-	}
-	
 	public static<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> IntersectionAutomaton<S1, T1, S, T> loadIntAutomaton(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{
 		
 		IncompleteBuchiAutomaton.validate(filePath);
