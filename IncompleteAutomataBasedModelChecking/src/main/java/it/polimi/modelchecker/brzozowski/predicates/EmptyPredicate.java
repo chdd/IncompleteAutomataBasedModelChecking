@@ -6,7 +6,7 @@ import it.polimi.model.State;
  * @author Claudio Menghi
  * contains an empty constraint
  */
-public class EmptyConstraint<S extends State> extends AbstractPredicate<S> {
+public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 
 	/**
 	 * the concatenation of an empty constraint with another constraint is an empty constraint
@@ -53,7 +53,7 @@ public class EmptyConstraint<S extends State> extends AbstractPredicate<S> {
 	}
 	@Override
 	public boolean equals(Object o){
-		if(o instanceof EmptyConstraint){
+		if(o instanceof EmptyPredicate){
 			return true;
 		}
 		return false;

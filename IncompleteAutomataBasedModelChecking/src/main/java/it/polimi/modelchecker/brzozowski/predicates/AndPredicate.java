@@ -74,7 +74,7 @@ public class AndPredicate<S extends State> extends Constraint<S>{
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
 		// if a is an empty constraint the empty constraint is returned
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return a;
 		}
 		// if a is an lambda constraint the and constraint is returned
@@ -156,7 +156,7 @@ public class AndPredicate<S extends State> extends Constraint<S>{
 		}
 		
 		// the union of an and constraint and an empty constraint returns the or constraint
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return this;
 		}
 		// the union of an and constraint and a LambdaConstraint is a new orConstraint that contains the and constraint and lambda

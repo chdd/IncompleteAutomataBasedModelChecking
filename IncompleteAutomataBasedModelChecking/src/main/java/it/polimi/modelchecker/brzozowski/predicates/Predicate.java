@@ -93,7 +93,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			throw new IllegalArgumentException("The constraint a to be concatenated cannot be null");
 		}
 		// the concatenation of the predicate and the empty constraint is empty
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return a;
 		}
 		// the concatenation of the predicate and lambda is equal to the predicate
@@ -191,7 +191,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			throw new IllegalArgumentException("The constraint a cannot be null");
 		}
 		// the union of a predicate and the empty constraint is equal to the predicate
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return this;
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda

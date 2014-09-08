@@ -52,7 +52,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
 		// if a is an empty constraint the or constraint is returned
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return a;
 		}
 		// if a is an lambda constraint the or constraint is returned
@@ -104,7 +104,7 @@ public class OrConstraint<S extends State> extends Constraint<S> {
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
 		// the union of an or constraint and an empty constraint returns the or constraint
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return this;
 		}
 		// the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda

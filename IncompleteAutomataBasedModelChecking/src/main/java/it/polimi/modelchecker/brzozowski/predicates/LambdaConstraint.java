@@ -43,7 +43,7 @@ public class LambdaConstraint<S extends State> extends AbstractPredicate<S> {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
-		if(a instanceof EmptyConstraint){
+		if(a instanceof EmptyPredicate){
 			return this;
 		}
 		else{
