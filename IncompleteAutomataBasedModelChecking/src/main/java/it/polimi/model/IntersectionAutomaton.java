@@ -47,9 +47,7 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	@XmlIDREF
 	private Set<S> mixedStates;
 	
-	public Set<S> getMixedStates(){
-		return this.mixedStates;
-	}
+	
 	
 	private boolean completeEmptiness=true;
 	
@@ -81,12 +79,36 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		mixedStates=new HashSet<S>();
 	}
 	
+	/**
+	 * add a mixed state in the intersection automaton
+	 * @param s the state to be added in the set of the mixed states
+	 * @throws IllegalArgumentException if the state s is null
+	 */
 	public void addMixedState(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state to be added cannot be null");
+		}
 		this.mixedStates.add(s);
 		super.addState(s);
 	}
+	/**
+	 * returns true if the state s is mixed, false otherwise
+	 * @param s the state to be checked if transparent or not
+	 * @return true if the state s is mixed, false otherwise
+	 * @throws IllegalArgumentException if the state s is null
+	 */
 	public boolean isMixed(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s cannot be null");
+		}
 		return this.mixedStates.contains(s);
+	}
+	/**
+	 * returns the set of the mixed states
+	 * @return the set of the mixed states
+	 */
+	public Set<S> getMixedStates(){
+		return this.mixedStates;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -107,6 +129,12 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return ret;
 	}
 	
+	/**
+	 * @return the model that generates the intersection automaton
+	 */
+	public IncompleteBuchiAutomaton<S1, T1> getModel() {
+		return model;
+	}
 	
 	/** 
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
@@ -202,15 +230,4 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 			return false;
 		return true;
 	}
-
-	/**
-	 * @return the model that generates the intersection automaton
-	 */
-	public IncompleteBuchiAutomaton<S1, T1> getModel() {
-		return model;
-	}
-
-	
-	
-	
 }
