@@ -4,11 +4,17 @@ import it.polimi.model.State;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 
 /**
- * @author Claudio Menghi
- * contains a not incomplete automaton
+ * @author claudiomenghi
+ * contains the Brzozowski algorithm
  */
-public class Browzozky {
+public class Brzozowski {
 
+		/**
+		 * returns the constraint associated with the automaton
+		 * @param t: is the matrix t which describes the transition relation of the automaton
+		 * @param s: is the matrix s which describes the accepting states of the automaton
+		 * @return the constraint associated with the Buchi automaton
+		 */
 		public static<S extends State> AbstractPredicate<S> getConstraints(AbstractPredicate<S> [][] t, AbstractPredicate<S> [] s) {
 			
 			for(int n=s.length-1; n>=0; n--)

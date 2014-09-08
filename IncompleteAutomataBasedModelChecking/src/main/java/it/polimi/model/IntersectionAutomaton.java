@@ -1,6 +1,6 @@
 package it.polimi.model;
 
-import it.polimi.modelchecker.brzozowski.Browzozky;
+import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
@@ -169,11 +169,11 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				
 				
 				
-				AbstractPredicate<S1> newconstraint=Browzozky.getConstraints(
+				AbstractPredicate<S1> newconstraint=Brzozowski.getConstraints(
 						cnsT1, 
 						cnsS1).
 						concatenate(
-						Browzozky.getConstraints(
+						Brzozowski.getConstraints(
 								cnsT2,
 								cnsS2
 								).omega());
