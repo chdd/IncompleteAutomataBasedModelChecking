@@ -32,7 +32,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * @author claudiomenghi
  * contains a complete Buchi Automaton
  * @param <S> the type of the states
@@ -79,7 +78,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 */
 	@XmlElementWrapper(name="alphabet")
 	@XmlElement(name="character")
-	private Set<String> alphabet;
+	protected Set<String> alphabet;
 	
 	/**
 	 * creates a new empty automaton
@@ -675,6 +674,4 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 			}
 		}
 	}
-
-	
 }

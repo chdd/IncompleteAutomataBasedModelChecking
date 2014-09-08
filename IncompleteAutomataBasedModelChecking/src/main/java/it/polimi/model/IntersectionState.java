@@ -105,40 +105,5 @@ public class IntersectionState<S extends State> extends State{
 		} else if (!s2.equals(other.s2))
 			return false;
 		return true;
-	}
-
-	/**
-	 * generates a new intersection state
-	 * @param a1: is the first automata which contains the state s1
-	 * @param a2: is the automaton that contains the state s2
-	 * @param s1: is the state of the automaton a1 to be included in the intersection state
-	 * @param s2: is the state of the automaton a2 to be included in the intersection state
-	 * @param currentState: is the current state to be considered in the generation of the automaton state
-	 * @return a new intersection state
-	 */
-	protected static<S extends State,  T extends Transition<S>, A extends BuchiAutomaton<S,T>> IntersectionState<S> generateIntersectionState( A a1, A a2, S s1, S s2, IntersectionState<S> currentState){
-		int num=0;
-		if(currentState!=null){
-			num=currentState.getNumber();
-		}
-		if(num==0 && a1.isAccept(s1)){
-			num=1;
-		}
-		else{
-			if(num==1 && a2.isAccept(s2)){
-				num=2;
-			}
-			else{
-				if(num==2){
-					num=0;
-				}
-			}
-		}
-		
-		IntersectionState<S> p = new IntersectionState<S>(s1, s2, num);
-		
-		return p;
-	}
-	
-	
+	}	
 }

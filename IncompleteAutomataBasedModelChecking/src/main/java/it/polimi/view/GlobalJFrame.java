@@ -71,7 +71,8 @@ public class GlobalJFrame<S1 extends State, T1 extends Transition<S1>, S extends
 		IncompleteBuchiAutomaton<State, Transition<State>> a1 = IncompleteBuchiAutomaton.loadAutomaton(arg0);
 		
 		BuchiAutomaton<State, Transition<State>>  a2 = BuchiAutomaton.loadAutomaton(arg1);
-		IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=a1.computeIntersection(a2);
+		IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
+				new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2);
 		
 		GlobalJFrame<State, Transition<State>, IntersectionState<State>,Transition<IntersectionState<State>>> frame=
 				  new GlobalJFrame<State, Transition<State>, IntersectionState<State>,Transition<IntersectionState<State>>>(a1, a2, ris);
