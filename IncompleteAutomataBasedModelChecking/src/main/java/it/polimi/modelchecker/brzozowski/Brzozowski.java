@@ -21,6 +21,7 @@ public class Brzozowski<S extends State> {
 		 * @param t: is the matrix t which describes the transition relation of the automaton
 		 * @param s: is the matrix s which describes the accepting states of the automaton
 		 * @return the constraint associated with the Buchi automaton
+		 * @throws
 		 */
 		public  AbstractPredicate<S> getConstraints(AbstractPredicate<S> [][] t, AbstractPredicate<S> [] s) {
 			
