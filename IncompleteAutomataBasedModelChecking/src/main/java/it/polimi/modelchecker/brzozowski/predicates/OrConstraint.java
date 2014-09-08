@@ -8,7 +8,7 @@ import java.util.List;
  * @author Claudio Menghi
  * contains an OrConstraint
  */
-public class OrConstraint<S extends State> extends Constraint<S> {
+public class OrConstraint<S extends State> extends ConstraintLanguage<S> {
 
 	/**
 	 * creates a new OrConstraint that contains the two Constraints firstConstraint, secondConstraint 

@@ -8,7 +8,7 @@ import java.util.List;
  * @author Claudio Menghi
  * contains an AndConstraint
  */
-public class AndPredicate<S extends State> extends Constraint<S>{
+public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 	
 	/**
 	 * creates a new AndConstraint that contains the two Constraints firstConstraint, secondConstraint 
@@ -121,7 +121,7 @@ public class AndPredicate<S extends State> extends Constraint<S>{
 				return cret;
 			}
 			else{
-				return new AndPredicate<S>(this.getConstraints(), ((Constraint<S>) a).getConstraints());
+				return new AndPredicate<S>(this.getConstraints(), ((ConstraintLanguage<S>) a).getConstraints());
 			}
 			
 		}

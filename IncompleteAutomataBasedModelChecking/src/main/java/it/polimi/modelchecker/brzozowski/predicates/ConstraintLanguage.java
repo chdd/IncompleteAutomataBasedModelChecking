@@ -5,12 +5,12 @@ import it.polimi.model.State;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Constraint<S extends State> extends AbstractPredicate<S> {
+public abstract class ConstraintLanguage<S extends State> extends AbstractPredicate<S> {
 
 	 /** The value is used for character storage. */
     protected List<AbstractPredicate<S>> value;
 
-    public Constraint() {
+    public ConstraintLanguage() {
         this.value = new ArrayList<AbstractPredicate<S>>();
     }
 
@@ -20,7 +20,7 @@ public abstract class Constraint<S extends State> extends AbstractPredicate<S> {
 	 * @param secondConstraint is the second constraint included in the orConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-    public Constraint(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint) {
+    public ConstraintLanguage(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint) {
     	if(firstConstraint==null){
     		throw new IllegalArgumentException("The first constraint cannot be null");
     	}
@@ -31,17 +31,17 @@ public abstract class Constraint<S extends State> extends AbstractPredicate<S> {
         this.value.add(firstConstraint);
         this.value.add(secondConstraint);
     }
-    public Constraint(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
+    public ConstraintLanguage(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
         this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.add(firstConstraint);
         this.value.addAll(secondConstraint);
     }
-    public Constraint(List<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
+    public ConstraintLanguage(List<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
         this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.addAll(firstConstraint);
         this.value.add(secondConstraint);
     }
-    public Constraint(List<AbstractPredicate<S>> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
+    public ConstraintLanguage(List<AbstractPredicate<S>> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
         this.value = new ArrayList<AbstractPredicate<S>>();
         this.value.addAll(firstConstraint);
         this.value.addAll(secondConstraint);
@@ -96,7 +96,7 @@ public abstract class Constraint<S extends State> extends AbstractPredicate<S> {
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		Constraint<S> other = (Constraint<S>) obj;
+		ConstraintLanguage<S> other = (ConstraintLanguage<S>) obj;
 		if (value == null) {
 			if (other.value != null)
 				return false;
