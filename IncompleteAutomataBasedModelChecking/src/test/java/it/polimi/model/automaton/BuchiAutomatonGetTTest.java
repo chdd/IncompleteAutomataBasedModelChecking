@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class AutomatonGetTTest {
+public class BuchiAutomatonGetTTest {
 
 	@Test
 	public void testGetT1() {

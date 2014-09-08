@@ -7,7 +7,7 @@ import it.polimi.model.Transition;
 
 import org.junit.Test;
 
-public class AutomatonGetSTest {
+public class BuchiAutomatonGetSTest {
 
 	@Test
 	public void testOrderedStates1() {

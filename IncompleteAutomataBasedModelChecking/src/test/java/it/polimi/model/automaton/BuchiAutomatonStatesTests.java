@@ -7,7 +7,7 @@ import it.polimi.model.Transition;
 
 import org.junit.Test;
 
-public class AutomatonStatesTests {
+public class BuchiAutomatonStatesTests {
 
 	/**
 	 * tests the adding the state in the set of the states of the automaton

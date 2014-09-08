@@ -16,7 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class AutomatonIntersectionTest {
+public class BuchiAutomatonIntersectionTest {
 
 	@Test
 	public void test() throws JAXBException, SAXException, IOException, ParserConfigurationException {
