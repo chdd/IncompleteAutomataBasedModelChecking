@@ -1,4 +1,4 @@
-package it.polimi.modelchecking;
+package it.polimi.modelchecker;
 
 /**
  * @author Claudio Menghi

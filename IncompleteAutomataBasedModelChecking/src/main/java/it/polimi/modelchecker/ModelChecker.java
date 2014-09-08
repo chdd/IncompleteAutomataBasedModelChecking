@@ -1,4 +1,4 @@
-package it.polimi.modelchecking;
+package it.polimi.modelchecker;
 
 import it.polimi.browzozky.predicates.AbstractConstraint;
 import it.polimi.browzozky.predicates.types.EmptyConstraint;
