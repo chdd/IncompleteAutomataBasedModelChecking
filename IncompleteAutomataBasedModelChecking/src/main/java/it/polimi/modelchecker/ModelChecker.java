@@ -77,7 +77,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 		this.parameters.setNumMixedStatesIntersection(this.ris.getMixedStates().size());
 		
 		long startEmptyTime = System.nanoTime();   
-		boolean res=ris.isNotEmpty();
+		boolean res=ris.isEmpty();
 		long stopEmptyTime = System.nanoTime();   
 		this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
 		

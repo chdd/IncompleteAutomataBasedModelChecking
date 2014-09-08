@@ -138,30 +138,16 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 	
 	/** 
-	 * returns true if the complete version (without mixed states) of the intersection automaton is not empty
-	 * @return true if the complete version (without mixed states) of the intersection automaton is not empty
+	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
+	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isNotCompleteEmpty(){
+	public boolean isEmpty(){
 		this.completeEmptiness=true;
-		boolean res=this.isNotEmpty();
+		boolean res=this.isEmpty();
 		this.completeEmptiness=false;
 		return res;
 	}
-	/**
-	 * returns true if the intersection automaton including its mixed states is empty
-	 * @return true if the intersection automaton including its mixed states is empty
-	 */
-	public boolean isNotEmpty(){
-		boolean res=false;
-		Set<S> visitedStates=new HashSet<S>();
-		for(S init: this.getInitialStates()){
-			if(firstDFS(visitedStates, init, new Stack<S>())){
-				return true;
-			}
-		}
-		visitedStates.clear();
-		return res;
-	}
+	
 	/**
 	 * returns true if an accepting path is found
 	 * @param visitedStates contains the set of the visited states during the first DFS
