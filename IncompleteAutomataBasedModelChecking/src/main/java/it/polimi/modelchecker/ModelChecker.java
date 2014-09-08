@@ -9,17 +9,45 @@ import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 
+/**
+ * contains the model checking algorithm
+ * @author claudiomenghi
+ *
+ * @param <S1> is the type of the states of the specification and of the  model
+ * @param <T1> is the type of the transition of the specification and the model
+ */
 public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 	
+	/**
+	 * contains the specification to be checked
+	 */
 	private BuchiAutomaton<S1,T1> specification;
+	/**
+	 * contains the model to be checked
+	 */
 	private  IncompleteBuchiAutomaton<S1, T1> model;
+	
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
 	 */
 	private IntersectionAutomaton<S1,T1, IntersectionState<S1>, Transition<IntersectionState<S1>>> ris;
+	
+	/**
+	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
+	 * @throws IllegalArgumentException is generated when the model, the specification or the modelcheckingParameters are null
+	 */
 	private ModelCheckerParameters parameters;
 	
 	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters mp){
+		if(model==null){
+			throw new IllegalArgumentException("The model to be checked cannot be null");
+		}
+		if(specification==null){
+			throw new IllegalArgumentException("The specification to be checked cannot be null");
+		}
+		if(mp==null){
+			throw new IllegalArgumentException("The model checking parameters cannot be null");
+		}
 		this.specification=specification;
 		this.model=model;
 		this.parameters=mp;
