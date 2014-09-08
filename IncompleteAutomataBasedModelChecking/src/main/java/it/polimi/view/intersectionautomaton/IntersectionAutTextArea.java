@@ -4,7 +4,7 @@ import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -22,7 +22,7 @@ public class IntersectionAutTextArea<S1 extends State, T1 extends Transition<S1>
 		super();
 		this.setSize(d);
 		this.setLocation(p);
-		AbstractConstraint<S1> s=a.getConstraint();
+		AbstractPredicate<S1> s=a.getConstraint();
 		this.setText("Constraint:\n "+s.toString());
 	}
 
@@ -44,7 +44,7 @@ public class IntersectionAutTextArea<S1 extends State, T1 extends Transition<S1>
 			else{
 				if(result==-1){
 					this.setText("-1 - the property is satisfied with constraints \n");
-					AbstractConstraint<S1> s=a.getConstraint();
+					AbstractPredicate<S1> s=a.getConstraint();
 					this.append("Constraint:\n "+s.toString());
 				}
 			}

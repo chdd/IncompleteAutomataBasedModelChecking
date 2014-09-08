@@ -1,10 +1,10 @@
 package it.polimi.model;
 
 import it.polimi.modelchecker.brzozowski.Browzozky;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import java.io.File;
@@ -67,17 +67,17 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	
 	
 	
-	protected AbstractConstraint<S1> [] getConstraintS(S init, S accept, S[] statesOrdered){
+	protected AbstractPredicate<S1> [] getConstraintS(S init, S accept, S[] statesOrdered){
 		@SuppressWarnings("unchecked")
-		AbstractConstraint<S1>[] s=new AbstractConstraint[statesOrdered.length];
+		AbstractPredicate<S1>[] s=new AbstractPredicate[statesOrdered.length];
 		
 		for(int i=0; i< statesOrdered.length; i++){
 			
 			if(accept.equals(statesOrdered[i])){
-				s[i]=new LambdaConstraint<S1>();
+				s[i]=new LambdaPredicate<S1>();
 			}
 			else{
-				s[i]=new EmptyConstraint<S1>();
+				s[i]=new EmptyPredicate<S1>();
 			}
 		}
 
@@ -85,9 +85,9 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 	
 	
-	protected AbstractConstraint<S1> [][] getConstraintT(S init, S accept, S[] statesOrdered){
+	protected AbstractPredicate<S1> [][] getConstraintT(S init, S accept, S[] statesOrdered){
 		@SuppressWarnings("unchecked")
-		AbstractConstraint<S1> [][] A=new AbstractConstraint[statesOrdered.length][statesOrdered.length];
+		AbstractPredicate<S1> [][] A=new AbstractPredicate[statesOrdered.length][statesOrdered.length];
 		for(int i=0; i< statesOrdered.length; i++){
 			for(int j=0; j< statesOrdered.length; j++){
 				boolean setted=false;
@@ -114,10 +114,10 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 								}
 								else{
 									if(!setted){
-										A[i][j]=new EpsilonConstraint<S1>();
+										A[i][j]=new EpsilonPredicate<S1>();
 									}
 									else{
-										A[i][j]=A[i][j].union(new EpsilonConstraint<S1>());
+										A[i][j]=A[i][j].union(new EpsilonPredicate<S1>());
 									}
 										
 								}
@@ -128,7 +128,7 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 					}
 				}
 				if(!setted){
-					A[i][j]=new EmptyConstraint<S1>();
+					A[i][j]=new EmptyPredicate<S1>();
 				}
 			}
 		}
@@ -152,9 +152,9 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		}
 		return ret;
 	}
-	public AbstractConstraint<S1> getConstraint(){
+	public AbstractPredicate<S1> getConstraint(){
 		
-		AbstractConstraint<S1> ret=new EmptyConstraint<S1>();
+		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
 		
 		for(S init: this.getInitialStates()){
 			for(S accept: this.getAcceptStates()){
@@ -162,14 +162,14 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				
 				S[] statesOrdered1=this.getOrderedStates(init, accept);
 				S[] statesOrdered2=this.getOrderedStates(accept, accept);
-				AbstractConstraint<S1>[][] cnsT1=this.getConstraintT(init, accept, statesOrdered1);
-				AbstractConstraint<S1>[] cnsS1=this.getConstraintS(init, accept, statesOrdered1);
-				AbstractConstraint<S1>[][] cnsT2=this.getConstraintT(accept, accept, statesOrdered2);
-				AbstractConstraint<S1>[] cnsS2=this.getConstraintS(accept, accept, statesOrdered2);
+				AbstractPredicate<S1>[][] cnsT1=this.getConstraintT(init, accept, statesOrdered1);
+				AbstractPredicate<S1>[] cnsS1=this.getConstraintS(init, accept, statesOrdered1);
+				AbstractPredicate<S1>[][] cnsT2=this.getConstraintT(accept, accept, statesOrdered2);
+				AbstractPredicate<S1>[] cnsS2=this.getConstraintS(accept, accept, statesOrdered2);
 				
 				
 				
-				AbstractConstraint<S1> newconstraint=Browzozky.getConstraints(
+				AbstractPredicate<S1> newconstraint=Browzozky.getConstraints(
 						cnsT1, 
 						cnsS1).
 						concatenate(

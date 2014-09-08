@@ -2,11 +2,11 @@ package it.polimi.browzozky.predicates;
 
 import static org.junit.Assert.*;
 import it.polimi.model.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.AndConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.AndPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.OrConstraint;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
@@ -49,7 +49,7 @@ public class PredicateConstraintTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testConcat0() {
-		AbstractConstraint<State> a=new Predicate<State>(new State("s1"), "aab");
+		AbstractPredicate<State> a=new Predicate<State>(new State("s1"), "aab");
 		a.concatenate(null);
 	}
 	
@@ -58,7 +58,7 @@ public class PredicateConstraintTest {
 	 */
 	@Test
 	public void testConcat1() {
-		AbstractConstraint<State> a=new EmptyConstraint<State>();
+		AbstractPredicate<State> a=new EmptyPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
 		assertTrue(p.concatenate(a).equals(a));
 	}
@@ -67,7 +67,7 @@ public class PredicateConstraintTest {
 	 */
 	public void testConcat2() {
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		assertTrue(p.concatenate(a).equals(p));
 	}
 	/**
@@ -89,8 +89,8 @@ public class PredicateConstraintTest {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s1"), "cdd");
 		
-		assertTrue(p1.concatenate(p2) instanceof AndConstraint);
-		AndConstraint<State> a=(AndConstraint<State>) p1.concatenate(p2);
+		assertTrue(p1.concatenate(p2) instanceof AndPredicate);
+		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(p2);
 		
 		assertTrue(a.getConstraints().contains(p1));
 		assertTrue(a.getConstraints().contains(p2));
@@ -103,14 +103,14 @@ public class PredicateConstraintTest {
 	public void testConcat5() {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		AndConstraint<State> c1=new AndConstraint<State>();
+		AndPredicate<State> c1=new AndPredicate<State>();
 		c1.addConstraint(p1);
 		c1.addConstraint(p2);
 		Predicate<State> p3=new Predicate<State>(new State("s1"), "sss");
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndConstraint);
-		AndConstraint<State> a=(AndConstraint<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
+		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getConstraints().contains(p3));
 		assertTrue(a.getFistPredicate().equals(new Predicate<State>(new State("s1"), "sssabb")));
@@ -122,14 +122,14 @@ public class PredicateConstraintTest {
 	public void testConcat6() {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		AndConstraint<State> c1=new AndConstraint<State>();
+		AndPredicate<State> c1=new AndPredicate<State>();
 		c1.addConstraint(p1);
 		c1.addConstraint(p2);
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "sss");
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndConstraint);
-		AndConstraint<State> a=(AndConstraint<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
+		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getConstraints().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
@@ -149,8 +149,8 @@ public class PredicateConstraintTest {
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "sss");
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndConstraint);
-		AndConstraint<State> a=(AndConstraint<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
+		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getConstraints().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
@@ -162,10 +162,10 @@ public class PredicateConstraintTest {
 	 * */
 	public void testConcat8() {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		EpsilonConstraint<State> eps=new EpsilonConstraint<State>();
+		EpsilonPredicate<State> eps=new EpsilonPredicate<State>();
 		
-		assertTrue(p1.concatenate(eps) instanceof AndConstraint);
-		AndConstraint<State> a=(AndConstraint<State>) p1.concatenate(eps);
+		assertTrue(p1.concatenate(eps) instanceof AndPredicate);
+		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(eps);
 		
 		assertTrue(a.getFistPredicate().equals(p1));
 		assertTrue(a.getLastPredicate().equals(eps));
@@ -176,7 +176,7 @@ public class PredicateConstraintTest {
 	@Test
 	public void testStar() {
 		
-		AbstractConstraint<State> p=new Predicate<State>(new State("s1"), "abb");
+		AbstractPredicate<State> p=new Predicate<State>(new State("s1"), "abb");
 		assertTrue(p.star() instanceof Predicate);
 		Predicate<State> a=(Predicate<State>) p.star();
 		
@@ -188,7 +188,7 @@ public class PredicateConstraintTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testUnion0() {
-		AbstractConstraint<State> a=new Predicate<State>(new State("s1"), "aab");
+		AbstractPredicate<State> a=new Predicate<State>(new State("s1"), "aab");
 		a.union(null);
 	}
 	
@@ -197,7 +197,7 @@ public class PredicateConstraintTest {
 	 */
 	@Test
 	public void testUnion1() {
-		AbstractConstraint<State> a=new EmptyConstraint<State>();
+		AbstractPredicate<State> a=new EmptyPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
 		assertTrue(p.union(a).equals(p));
 	}
@@ -206,7 +206,7 @@ public class PredicateConstraintTest {
 	 */
 	public void testUnion2() {
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		
 		assertTrue(p.union(a) instanceof OrConstraint);
 		OrConstraint<State> o=(OrConstraint<State>) p.union(a);
@@ -235,7 +235,7 @@ public class PredicateConstraintTest {
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
 		
 		assertTrue(p1.union(p2) instanceof OrConstraint);
-		AndConstraint<State> a=(AndConstraint<State>) p1.union(p2);
+		AndPredicate<State> a=(AndPredicate<State>) p1.union(p2);
 		
 		assertTrue(a.getConstraints().contains(p1));
 		assertTrue(a.getConstraints().contains(p2));
@@ -264,7 +264,7 @@ public class PredicateConstraintTest {
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
 		
-		AndConstraint<State> c1=new AndConstraint<State>(p2, p3);
+		AndPredicate<State> c1=new AndPredicate<State>(p2, p3);
 		assertTrue(p1.union(c1) instanceof OrConstraint);
 		OrConstraint<State> a=(OrConstraint<State>) p1.union(c1);
 		
@@ -276,7 +276,7 @@ public class PredicateConstraintTest {
 	 * */
 	public void testUnion7() {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		EpsilonConstraint<State> eps=new EpsilonConstraint<State>();
+		EpsilonPredicate<State> eps=new EpsilonPredicate<State>();
 		
 		assertTrue(p1.union(eps) instanceof Predicate);
 		assertTrue(p1.union(eps).equals(p1));

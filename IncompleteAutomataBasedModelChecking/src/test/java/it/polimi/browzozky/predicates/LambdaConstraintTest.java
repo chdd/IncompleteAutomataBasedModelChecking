@@ -2,9 +2,9 @@ package it.polimi.browzozky.predicates;
 
 import static org.junit.Assert.*;
 import it.polimi.model.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.OrConstraint;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
@@ -15,26 +15,26 @@ public class LambdaConstraintTest {
 	@Test
 	public void testConcat0() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
 		assertTrue(a.concatenate(p).equals(p));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testConcat1() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		a.concatenate(null);
 	}
 	@Test
 	public void testStar() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
-		assertTrue(a.star() instanceof LambdaConstraint);
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
+		assertTrue(a.star() instanceof LambdaPredicate);
 	}
 	@Test
 	public void testUnion0() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
 		assertTrue(((OrConstraint<State>)a.union(p)).getConstraints().contains(a));
 		assertTrue(((OrConstraint<State>)a.union(p)).getConstraints().contains(p));
@@ -42,20 +42,20 @@ public class LambdaConstraintTest {
 	@Test
 	public void testUnion1() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
-		AbstractConstraint<State> p=new EmptyConstraint<State>();
-		assertTrue(a.union(p) instanceof LambdaConstraint);
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
+		AbstractPredicate<State> p=new EmptyPredicate<State>();
+		assertTrue(a.union(p) instanceof LambdaPredicate);
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testUnion2() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		a.union(null);
 	}
 	@Test
 	public void testToString() {
 		
-		AbstractConstraint<State> a=new LambdaConstraint<State>();
+		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		assertTrue(a.toString().equals("λ"));
 	}
 

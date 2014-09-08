@@ -97,7 +97,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			return a;
 		}
 		// the concatenation of the predicate and lambda is equal to the predicate
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return this;
 		}
 		
@@ -152,10 +152,10 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		 * -	the concatenation of a predicate and an EpsilonConstraint creates a new AndConstraint where the first element is the predicate 
 		 * 		and the second one is the EpsilonConstraint
 		 */
-		if(a instanceof EpsilonConstraint){
+		if(a instanceof EpsilonPredicate){
 			AndPredicate<S> cret=new AndPredicate<S>();
 			cret.addConstraint(this);
-			cret.addConstraint(new EpsilonConstraint<S>());
+			cret.addConstraint(new EpsilonPredicate<S>());
 			return cret;
 		}
 
@@ -195,7 +195,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			return this;
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return new OrConstraint<S>(this, a);
 		}
 		// if a is a predicate
@@ -221,7 +221,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			return new OrConstraint<S>(this,a);
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
-		if(a instanceof EpsilonConstraint){
+		if(a instanceof EpsilonPredicate){
 			return this;
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");

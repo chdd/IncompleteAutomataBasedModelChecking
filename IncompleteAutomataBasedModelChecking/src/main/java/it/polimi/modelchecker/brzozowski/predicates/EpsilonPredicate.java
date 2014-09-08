@@ -33,7 +33,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 			return a;
 		}
 		// the concatenation of an epsilon constraint and the lambda constraint is equal to the epsilon constraint
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return this;
 		}
 		// the concatenation of an epsilon constraint and an epsilon constraint is equal to the epsilon constraint
@@ -84,8 +84,8 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
 		// the union of an epsilon constraint and a lambda constraint is the lambda constraint
-		if(a instanceof LambdaConstraint){
-			return new LambdaConstraint<S>();
+		if(a instanceof LambdaPredicate){
+			return new LambdaPredicate<S>();
 		}
 		//  the union of an epsilon constraint and an EmptyConstraint is the epsilon constraint
 		if(a instanceof EmptyPredicate){

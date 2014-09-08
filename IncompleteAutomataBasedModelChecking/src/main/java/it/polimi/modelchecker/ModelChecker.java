@@ -6,8 +6,8 @@ import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 
 public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 	
@@ -29,7 +29,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 	 * @param returnConstraint contains the computed constraints (if any) after the verification procedure
 	 * @return 0 if the property is not satisfied, 1 if the property is satisfied, -1 if the property is satisfied with constraints.
 	 */
-	public int check(AbstractConstraint<S1> returnConstraint){
+	public int check(AbstractPredicate<S1> returnConstraint){
 		this.parameters.reset();
 		
 		this.parameters.setNumStatesSpecification(this.specification.getStates().size());
@@ -65,7 +65,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>> {
 			this.parameters.setConstraintComputationTime((stopConstraintTime-startConstraintTime)/1000000000.0);
 			this.parameters.setTotalTime(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime());
 			System.out.println("Total time: "+(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime()));
-			if(returnConstraint instanceof EmptyConstraint){
+			if(returnConstraint instanceof EmptyPredicate){
 				this.parameters.setResult(1);
 				return 1;
 			}

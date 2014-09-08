@@ -78,11 +78,11 @@ public class AndPredicate<S extends State> extends Constraint<S>{
 			return a;
 		}
 		// if a is an lambda constraint the and constraint is returned
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return this;
 		}
 		// if a is an EpsilonConstraint the concatenation of the and constraint and EpsilonConstraint is returned
-		if(a instanceof EpsilonConstraint){
+		if(a instanceof EpsilonPredicate){
 			return new AndPredicate<S>(this.getConstraints(), a);
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
@@ -160,11 +160,11 @@ public class AndPredicate<S extends State> extends Constraint<S>{
 			return this;
 		}
 		// the union of an and constraint and a LambdaConstraint is a new orConstraint that contains the and constraint and lambda
-		if(a instanceof LambdaConstraint){
+		if(a instanceof LambdaPredicate){
 			return new OrConstraint<S>(this,a);
 		}
 		// the union of an and constraint and an EpsilonConstrain is a new orConstraint that contains the and constraint and the EpsilonConstrain
-		if(a instanceof EpsilonConstraint){
+		if(a instanceof EpsilonPredicate){
 			return new OrConstraint<S>(this, a);
 		}
 		// the union of an and constraint and a Predicate is a new orConstraint that contains the and constraint and the Predicate

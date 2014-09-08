@@ -1,7 +1,7 @@
 package it.polimi.modelchecker.brzozowski;
 
 import it.polimi.model.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 
 /**
  * @author Claudio Menghi
@@ -9,7 +9,7 @@ import it.polimi.modelchecker.brzozowski.predicates.AbstractConstraint;
  */
 public class Browzozky {
 
-		public static<S extends State> AbstractConstraint<S> getConstraints(AbstractConstraint<S> [][] t, AbstractConstraint<S> [] s) {
+		public static<S extends State> AbstractPredicate<S> getConstraints(AbstractPredicate<S> [][] t, AbstractPredicate<S> [] s) {
 			
 			for(int n=s.length-1; n>=0; n--)
 			{

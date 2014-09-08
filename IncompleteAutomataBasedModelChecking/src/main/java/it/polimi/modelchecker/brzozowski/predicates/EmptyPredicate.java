@@ -28,7 +28,7 @@ public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 	 */
 	@Override
 	public AbstractPredicate<S> star() {
-		return new LambdaConstraint<S>();
+		return new LambdaPredicate<S>();
 	}
 
 	/**

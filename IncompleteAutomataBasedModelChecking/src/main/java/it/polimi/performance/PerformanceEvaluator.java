@@ -6,7 +6,7 @@ import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -72,7 +72,7 @@ public class PerformanceEvaluator{
 					
 					ModelChecker<State, Transition<State>> mc=new ModelChecker<State, Transition<State>>(a1, a2, mp);
 					
-					mc.check(new EmptyConstraint<State>());
+					mc.check(new EmptyPredicate<State>());
 					
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
