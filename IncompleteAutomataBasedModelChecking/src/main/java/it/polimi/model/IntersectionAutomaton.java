@@ -1,0 +1,310 @@
+package it.polimi.model;
+
+import it.polimi.browzozky.Browzozky;
+import it.polimi.browzozky.predicates.AbstractConstraint;
+import it.polimi.browzozky.predicates.types.EmptyConstraint;
+import it.polimi.browzozky.predicates.types.EpsilonConstraint;
+import it.polimi.browzozky.predicates.types.LambdaConstraint;
+import it.polimi.browzozky.predicates.types.Predicate;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
+@XmlRootElement
+public class IntersectionAutomaton<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
+extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
+
+	private IncompleteBuchiAutomaton<S1, T1> a1;
+	@SuppressWarnings("unused")
+	private BuchiAutomaton<S1, T1> a2;
+	@XmlElementWrapper(name="mixedStates")
+	@XmlElements({
+	    @XmlElement(name="mixedState", type=State.class)
+	  })
+	@XmlIDREF
+	private Set<S> mixedStates;
+	
+	public Set<S> getMixedStates(){
+		return this.mixedStates;
+	}
+	
+	protected IntersectionAutomaton(){
+		super();
+		this.mixedStates=new HashSet<S>();
+		this.a2=new BuchiAutomaton<S1, T1>();
+	}
+	
+	public IntersectionAutomaton(Set<String> alphabet, IncompleteBuchiAutomaton<S1, T1> a1, BuchiAutomaton<S1, T1> a2) {
+		super(alphabet);
+		this.a1=a1;
+		this.a2=a2;
+		mixedStates=new HashSet<S>();
+		
+	}
+	
+	public void addMixedState(S s){
+		this.mixedStates.add(s);
+		super.addState(s);
+	}
+	public boolean isMixed(S s){
+		return this.mixedStates.contains(s);
+	}
+	
+	
+	
+	protected AbstractConstraint<S1> [] getConstraintS(S init, S accept, S[] statesOrdered){
+		@SuppressWarnings("unchecked")
+		AbstractConstraint<S1>[] s=new AbstractConstraint[statesOrdered.length];
+		
+		for(int i=0; i< statesOrdered.length; i++){
+			
+			if(accept.equals(statesOrdered[i])){
+				s[i]=new LambdaConstraint<S1>();
+			}
+			else{
+				s[i]=new EmptyConstraint<S1>();
+			}
+		}
+
+		return s;
+	}
+	
+	
+	protected AbstractConstraint<S1> [][] getConstraintT(S init, S accept, S[] statesOrdered){
+		@SuppressWarnings("unchecked")
+		AbstractConstraint<S1> [][] A=new AbstractConstraint[statesOrdered.length][statesOrdered.length];
+		for(int i=0; i< statesOrdered.length; i++){
+			for(int j=0; j< statesOrdered.length; j++){
+				boolean setted=false;
+				if(i!=statesOrdered.length-1){
+					for(T t: this.getTransitionsWithSource(statesOrdered[i])){
+						if(t.getDestination().equals(statesOrdered[j])){
+							if(statesOrdered[i].getS1().equals(statesOrdered[j].getS1()) && a1.isTransparent(statesOrdered[j].getS1())){
+								if(!setted){
+									A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+"");
+								}
+								else{
+									A[i][j]=A[i][j].union(new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+""));
+								}
+								
+							}
+							else{
+								if(a1.isTransparent(statesOrdered[i].getS1())){
+									if(!setted){
+										A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(), "ε");
+									}
+									else{
+										A[i][j]=A[i][j].union(new Predicate<S1>(statesOrdered[i].getS1(), "ε"));
+									}
+								}
+								else{
+									if(!setted){
+										A[i][j]=new EpsilonConstraint<S1>();
+									}
+									else{
+										A[i][j]=A[i][j].union(new EpsilonConstraint<S1>());
+									}
+										
+								}
+							}
+							setted=true;
+							
+						}
+					}
+				}
+				if(!setted){
+					A[i][j]=new EmptyConstraint<S1>();
+				}
+			}
+		}
+		return A;
+	}
+
+	@SuppressWarnings("unchecked")
+	public S[] getOrderedStates(S init, S end){
+		int size=this.getStates().size();
+		S[] ret=(S[]) new IntersectionState[size];
+		int i=1;
+		ret[0]=init;
+		if(!init.equals(end)){
+			ret[size-1]=end;
+		}
+		for(S s: this.getStates()){
+			if(!s.equals(init) && !s.equals(end)){
+				ret[i]=s;
+				i++;
+			}
+		}
+		return ret;
+	}
+	public AbstractConstraint<S1> getConstraint(){
+		
+		AbstractConstraint<S1> ret=new EmptyConstraint<S1>();
+		
+		for(S init: this.getInitialStates()){
+			for(S accept: this.getAcceptStates()){
+				
+				
+				S[] statesOrdered1=this.getOrderedStates(init, accept);
+				S[] statesOrdered2=this.getOrderedStates(accept, accept);
+				AbstractConstraint<S1>[][] cnsT1=this.getConstraintT(init, accept, statesOrdered1);
+				AbstractConstraint<S1>[] cnsS1=this.getConstraintS(init, accept, statesOrdered1);
+				AbstractConstraint<S1>[][] cnsT2=this.getConstraintT(accept, accept, statesOrdered2);
+				AbstractConstraint<S1>[] cnsS2=this.getConstraintS(accept, accept, statesOrdered2);
+				
+				
+				
+				AbstractConstraint<S1> newconstraint=Browzozky.getConstraints(
+						cnsT1, 
+						cnsS1).
+						concatenate(
+						Browzozky.getConstraints(
+								cnsT2,
+								cnsS2
+								).omega());
+				ret=ret.union(newconstraint);
+			}
+		}
+		return ret;
+	}
+	
+	
+	public boolean isNotEmpty(){
+		boolean res=false;
+		Set<S> visitedStates=new HashSet<S>();
+		for(S init: this.getInitialStates()){
+			if(firstDFS(visitedStates, init, new Stack<S>())){
+				return true;
+			}
+		}
+		return res;
+	}
+	/**
+	 * returns true if an accepting path is found
+	 * @param visitedStates
+	 * @param currState
+	 * @return
+	 */
+	public boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+		if(visitedStates.contains(currState) || this.isMixed(currState)){
+			return false;
+		}
+		else{
+			visitedStates.add(currState);
+			statesOfThePath.push(currState);
+			if(this.isAccept(currState)){
+				if(this.secondDFS(new HashSet<S>(), currState, statesOfThePath)){
+					return true;
+				}
+			}
+			for(T t: this.getTransitionsWithSource(currState)){
+				if(firstDFS(visitedStates, t.getDestination(), statesOfThePath)){
+					return true;
+				}
+			}
+			statesOfThePath.pop();
+			return false;
+		}
+	}
+	public boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+		if(visitedStates.contains(currState) || this.isMixed(currState)){
+			return false;
+		}
+		else{
+			if(statesOfThePath.contains(currState)){
+				return true;
+			}
+			else{
+				visitedStates.add(currState);
+				statesOfThePath.push(currState);
+				for(T t: this.getTransitionsWithSource(currState)){
+					if(secondDFS(visitedStates, t.getDestination(), statesOfThePath)){
+						return true;
+					}
+				}
+				statesOfThePath.pop();
+				return false;
+			}
+		}
+	}
+
+	
+	
+	public void printStatesOrdered(S[] states){
+		String toPrint="";
+		for(int i=0; i<=states.length-1 ;i++){
+			toPrint+=states[i]+"\t";
+		}
+		System.out.println(toPrint);
+	}
+	
+	public static<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> IntersectionAutomaton<S1, T1, S, T> loadIntAutomaton(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{
+		
+		IncompleteBuchiAutomaton.validate(filePath);
+        
+		File file = new File(filePath);
+		JAXBContext jaxbContext = JAXBContext.newInstance(IncompleteBuchiAutomaton.class);
+ 
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		@SuppressWarnings("unchecked")
+		IntersectionAutomaton<S1,T1, S, T> automaton = (IntersectionAutomaton<S1,T1, S, T>) jaxbUnmarshaller.unmarshal(file);
+		return automaton;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString()
+				+ "mixedStates: "+this.mixedStates+ "\n";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((mixedStates == null) ? 0 : mixedStates.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IntersectionAutomaton<S1, T1, S, T> other = (IntersectionAutomaton<S1, T1, S, T>) obj;
+		if (mixedStates == null) {
+			if (other.mixedStates != null)
+				return false;
+		} else if (!mixedStates.equals(other.mixedStates))
+			return false;
+		return true;
+	}
+
+	
+	
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE buchiAutomaton SYSTEM "automaton.dtd">
+<buchiAutomaton>
+    <initialStates>
+        <initialState>s4</initialState>
+    </initialStates>
+    <states>
+        <state id="s4"/>
+        <state id="s5"/>
+        <state id="s6"/>
+    </states>
+    <acceptingStates>
+    	<acceptingState>s6</acceptingState>
+    </acceptingStates>
+   
+    <transitionRelation>
+        <element>
+            <sourceState>s4</sourceState>
+            <transitions>
+            	 <transition>
+                	<character>a</character>
+                	<destinationState>s4</destinationState>
+                </transition> 
+                 <transition>
+                	<character>b</character>
+                	<destinationState>s5</destinationState>
+                </transition> 
+            </transitions>
+        </element>
+        <element>
+            <sourceState>s5</sourceState>
+            <transitions>
+            	 <transition>
+                	<character>b</character>
+                	<destinationState>s5</destinationState>
+                </transition> 
+                <transition>
+                	<character>c</character>
+                	<destinationState>s6</destinationState>
+                </transition> 
+            </transitions>
+        </element>
+         <element>
+            <sourceState>s6</sourceState>
+            <transitions>
+            	 <transition>
+                	<character>a</character>
+                	<destinationState>s6</destinationState>
+                </transition>
+            	 <transition>
+                	<character>b</character>
+                	<destinationState>s6</destinationState>
+                </transition> 
+                <transition>
+                	<character>c</character>
+                	<destinationState>s6</destinationState>
+                </transition> 
+            </transitions>
+        </element>
+    </transitionRelation>
+    <alphabet>
+        <character>a</character>
+        <character>b</character>
+        <character>c</character>
+    </alphabet>
+      <transparentStates>
+    </transparentStates>
+</buchiAutomaton>

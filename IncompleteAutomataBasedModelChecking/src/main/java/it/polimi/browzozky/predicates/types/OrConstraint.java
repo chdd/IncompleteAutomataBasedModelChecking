@@ -1,0 +1,163 @@
+package it.polimi.browzozky.predicates.types;
+
+import it.polimi.browzozky.predicates.AbstractConstraint;
+import it.polimi.browzozky.predicates.Constraint;
+import it.polimi.model.State;
+
+import java.util.List;
+
+/**
+ * @author Claudio Menghi
+ * contains an OrConstraint
+ */
+public class OrConstraint<S extends State> extends Constraint<S> {
+
+	/**
+	 * creates a new OrConstraint that contains the two Constraints firstConstraint, secondConstraint 
+	 * @param firstConstraint is the first constraint to be included in the OrConstraint
+	 * @param secondConstraint is the second constraint included in the orConstraint
+	 * @throws IllegalArgumentException is the first or the second constraint are null
+	 */
+	 public OrConstraint(AbstractConstraint<S> firstConstraint, AbstractConstraint<S> secondConstraint){
+		 super(firstConstraint, secondConstraint);
+	 }
+	 /**
+	  * creates a new empty constraint
+	  */
+	 public OrConstraint() {
+		 super();
+	 }
+	 /**
+	 * creates a new OrConstraint that contains the constraint firstConstraint and the set of constraint secondConstraint 
+	 * @param firstConstraint is the first constraint to be included in the OrConstraint
+	 * @param secondConstraint is the set of constraints to be included in the OrConstraint
+	 * @throws IllegalArgumentException is the first or the second constraint are null
+	 */
+	 public OrConstraint(AbstractConstraint<S> firstConstraint, List<AbstractConstraint<S>> secondConstraint) {
+		super(firstConstraint, secondConstraint);   
+	 }
+	 /**
+	 * the concatenation of an or constraint is defined as follows:
+	 * -	if a is an empty constraint the empty constraint is returned
+	 * -	if a is an lambda constraint the or constraint is returned
+	 * -	if a is an EpsilonConstraint concatenation of the or constraint and EpsilonConstraint is returned
+	 * -	if a is a Predicate the concatenation of the or constraint and Predicate is returned
+	 * -	if a is an AndConstraint the concatenation of the or constraint and the AndConstraint is returned
+	 * -	if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
+	 * @param a: is the constraint to be concatenated
+	 * @return the constraint which is the concatenation of the or constraint and a
+	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
+	 */
+	@Override
+	public AbstractConstraint<S> concatenate(AbstractConstraint<S> a) {
+		if(a==null){
+			throw new IllegalArgumentException("the constraint a cannot be null");
+		}
+		// if a is an empty constraint the or constraint is returned
+		if(a instanceof EmptyConstraint){
+			return a;
+		}
+		// if a is an lambda constraint the or constraint is returned
+		if(a instanceof LambdaConstraint){
+			return this;
+		}
+		// if a is an EpsilonConstraint concatenation of the or constraint and EpsilonConstraint is returned
+		if(a instanceof EpsilonConstraint){
+			return new AndConstraint<S>(this, new EpsilonConstraint<S>());
+		}
+		// if a is a Predicate the concatenation of the or constraint and Predicate is returned
+		if(a instanceof Predicate){
+			return new AndConstraint<S>(this, a);
+		}
+		// if a is an AndConstraint the concatenation of the or constraint and the AndConstraint is returned
+		if(a instanceof AndConstraint){
+			return new AndConstraint<S>(this, ((AndConstraint<S>) a).getConstraints());
+		}
+		// if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
+		if(a instanceof OrConstraint){
+			return new AndConstraint<S>(this, a);
+		}
+		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
+	}
+
+	/**
+	 * the star operator when applied to an or constraint does not produce any effect
+	 * @return the or constraint
+	 */
+	@Override
+	public AbstractConstraint<S> star() {
+		return this;
+	}
+
+	/** the union operator applied to an or constraint is defined as follows:
+	 * -	the union of an or constraint and an empty constraint returns the or constraint
+	 * -	the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda
+	 * -	the union of an or constraint and an EpsilonConstrain is a new orConstraint that contains the or constraint and the EpsilonConstrain
+	 * -	the union of an or constraint and a Predicate is a new orConstraint that contains the or constraint and the Predicate
+	 * -	the union of an or constraint and an orConstraint is a new orConstraint that contains the two or constraints 
+	 * -	the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
+	 * @param a: is the constraint to be unified
+	 * @return the constraint which is the union of the or constraint and a
+	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
+	 */
+	@Override
+	public AbstractConstraint<S> union(AbstractConstraint<S> a) {
+		if(a==null){
+			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
+		}
+		// the union of an or constraint and an empty constraint returns the or constraint
+		if(a instanceof EmptyConstraint){
+			return this;
+		}
+		// the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda
+		if(a instanceof LambdaConstraint){
+			return new OrConstraint<>(this,a);
+		}
+		// the union of an or constraint and an EpsilonConstrain is a new orConstraint that contains the or constraint and the EpsilonConstrain
+		if(a instanceof EpsilonConstraint){
+			return new OrConstraint<>(this,a);
+		}
+		// the union of an or constraint and a Predicate is a new orConstraint that contains the or constraint and the Predicate
+		if(a instanceof Predicate){
+			return new OrConstraint<S>(this,a);
+		}
+		// the union of an or constraint and an orConstraint is a new orConstraint that contains the two or constraints
+		if(a instanceof OrConstraint){
+			return new OrConstraint<S>(this,a);
+		}
+		// the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
+		if(a instanceof AndConstraint){
+			return new OrConstraint<S>(this,a);
+		}
+		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
+	}
+
+	/**
+	 * see {@link AbstractConstraint}
+	 */
+	@Override
+	public String toString() {
+		String ret="";
+		boolean inserted=false;
+		for(int i=0; i<this.value.size()-1;i++){
+			if(inserted){
+				ret="("+ret+")v("+value.get(i)+")";
+			}
+			else{
+				inserted=true;
+				ret=value.get(i).toString();
+			}
+		}
+		if(inserted){
+			return "("+ret+"v("+value.get(this.value.size()-1)+")"+")";
+		}
+		else{
+			return "("+value.get(this.value.size()-1).toString()+")";
+		}
+	}
+	@Override
+	public AbstractConstraint<S> omega() {
+		return this;
+	}
+
+}

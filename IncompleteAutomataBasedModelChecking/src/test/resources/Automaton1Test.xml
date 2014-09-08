@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE automaton SYSTEM "automaton.dtd">
+<automaton>
+    <initialStates>
+        <initialState>s4</initialState>
+    </initialStates>
+    <states>
+        <state id="s4"/>
+    </states>
+    <acceptingStates>
+    	<acceptingState>s4</acceptingState>
+    </acceptingStates>
+   
+    <transitionRelation>
+        <element>
+            <sourceState>s4</sourceState>
+            <transitions>
+            	 <transition>
+                	<character>a</character>
+                	<destinationState>s4</destinationState>
+                </transition> 
+            </transitions>
+        </element>
+    </transitionRelation>
+    <alphabet>
+        <character>a</character>
+    </alphabet>
+      <transparentStates>
+    </transparentStates>
+</automaton>
