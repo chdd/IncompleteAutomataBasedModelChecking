@@ -81,8 +81,12 @@ extends Transition<S>> {
 	 * @param a is the intersection automaton to be converted into a matrix t
 	 * @param statesOrdered is an ordered version of the states in a
 	 * @return the matrix that represents the automaton a
+	 * @throws IllegalArgumentException when the array of the states ordered is null
 	 */
 	public AbstractPredicate<S1> [][] getConstraintT(S[] statesOrdered){
+		if(statesOrdered==null){
+			throw new IllegalArgumentException("When the array of the ordered states is null");
+		}
 		@SuppressWarnings("unchecked")
 		AbstractPredicate<S1> [][] A=new AbstractPredicate[statesOrdered.length][statesOrdered.length];
 		for(int i=0; i< statesOrdered.length; i++){
@@ -136,8 +140,15 @@ extends Transition<S>> {
 	 * @param accept is the accepting states of the automaton considered
 	 * @param statesOrdered contains the states of a ordered
 	 * @return the matrix S associated with the automaton a
+	 * @throws IllegalArgumentException when the accepting state or the ordered set of states is null
 	 */
 	public AbstractPredicate<S1> [] getConstraintS(S accept, S[] statesOrdered){
+		if(accept==null){
+			throw new IllegalArgumentException("The accepting state cannot be null");
+		}
+		if(statesOrdered==null){
+			throw new IllegalArgumentException("The array of the state ordered annot be null");
+		}
 		@SuppressWarnings("unchecked")
 		AbstractPredicate<S1>[] s=new AbstractPredicate[statesOrdered.length];
 		
