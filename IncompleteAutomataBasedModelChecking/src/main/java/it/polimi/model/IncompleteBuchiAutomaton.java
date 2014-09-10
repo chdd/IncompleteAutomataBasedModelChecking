@@ -25,8 +25,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * @author Claudio Menghi
- * contains a possibly incomplete automaton which extends classical automaton with transparent states
+ * @author claudiomenghi
+ * contains a possibly incomplete Buchi automaton which extends classical automaton with transparent states
+ * @param <S> contains the type of the states of the automaton
+ * @param <T> contains the type of the transitions of the automaton
  */
 @XmlRootElement
 public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> extends BuchiAutomaton<S,T>{
@@ -50,7 +52,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> 
 	}
 	
 	/**
-	 * creates a new extended automaton with the specified alphabet (see {@link BuchiAutomaton}
+	 * creates a new extended automaton with the specified alphabet (see {@link BuchiAutomaton})
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
