@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class BuchiAutomatonTransitionTest {
+public class BAtransitionTest {
 
 	/**
 	 * tests the correct addition of the transition 
