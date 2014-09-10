@@ -1,4 +1,4 @@
-package it.polimi.view;
+package it.polimi;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
@@ -23,7 +23,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.xml.sax.SAXException;
 
-public class GlobalJFrame<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> extends JFrame {
+public class Main<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> extends JFrame {
 
 	private static final String arg0="src//main//resources//ExtendedAutomaton1.xml";
 	private static final String arg1="src//main//resources//Automaton2.xml";
@@ -34,7 +34,7 @@ public class GlobalJFrame<S1 extends State, T1 extends Transition<S1>, S extends
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("static-access")
-	public GlobalJFrame(IncompleteBuchiAutomaton<S1, T1>  a1, BuchiAutomaton<S1, T1>  a2, IntersectionAutomaton<S1, T1, S, T> a) throws JAXBException{
+	public Main(IncompleteBuchiAutomaton<S1, T1>  a1, BuchiAutomaton<S1, T1>  a2, IntersectionAutomaton<S1, T1, S, T> a) throws JAXBException{
 		
 		 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		 this.setSize(new Dimension(screenSize.width, screenSize.height));
@@ -74,8 +74,8 @@ public class GlobalJFrame<S1 extends State, T1 extends Transition<S1>, S extends
 		IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
 				new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2);
 		
-		GlobalJFrame<State, Transition<State>, IntersectionState<State>,Transition<IntersectionState<State>>> frame=
-				  new GlobalJFrame<State, Transition<State>, IntersectionState<State>,Transition<IntersectionState<State>>>(a1, a2, ris);
+		Main<State, Transition<State>, IntersectionState<State>,Transition<IntersectionState<State>>> frame=
+				  new Main<State, Transition<State>, IntersectionState<State>,Transition<IntersectionState<State>>>(a1, a2, ris);
 	}
 		
 	

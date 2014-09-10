@@ -56,6 +56,11 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	 */
 	private boolean completeEmptiness=true;
 	
+	protected IntersectionAutomaton(){
+		this.model=new IncompleteBuchiAutomaton<S1, T1>();
+		this.specification=new BuchiAutomaton<S1, T1>();
+		this.mixedStates=new HashSet<S>(); 
+	}
 	/**
 	 * creates a new Intersection automaton starting from the model and its specification
 	 * @param model: is the model to be considered
@@ -72,7 +77,6 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		this.model=model;
 		this.specification=specification;
 		this.mixedStates=new HashSet<S>();
-		this.specification=new BuchiAutomaton<S1, T1>();
 		this.computeIntersection();
 	}
 	
