@@ -15,7 +15,7 @@ import org.junit.Test;
  * This class tests the correct behavior of the constructor of the IncompleteBuchiAutomaton
  * @author claudiomenghi
  */
-public class IncompleteBuchiAutomatonConstructorTest {
+public class IBAconstructorTest {
 
 	@Test
 	public void test1() {
