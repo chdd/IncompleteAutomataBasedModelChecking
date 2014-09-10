@@ -8,7 +8,6 @@ import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 
 /**
  * contains the model checking algorithm
@@ -35,10 +34,16 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
-	 * @throws IllegalArgumentException is generated when the model, the specification or the modelcheckingParameters are null
 	 */
 	private ModelCheckerParameters parameters;
 	
+	/**
+	 * creates a new model checker
+	 * @param model is the model to be analyzed by the model checker
+	 * @param specification is the specification to be considered by the model checker
+	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
+	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
+	 */
 	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
@@ -110,12 +115,17 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 			}
 		}
 	}
-	
+	/**
+	 * returns the intersection between the model and the specification
+	 * @return the intersection automaton that contains the intersection of the model and the specification
+	 */
 	public IntersectionAutomaton<S1,T1, S, T> getIntersection(){
 		return this.ris;
 	}
 	/**
-	 * @return the parameters
+	 * returns the verification results, the time required from the verification procedure, the number of states generated etc
+	 * @return the resulting parameters of the verification, the number of the states of the intersection automaton the time required 
+	 * from the verification procedure etc
 	 */
 	public ModelCheckerParameters getParameters() {
 		return parameters;
