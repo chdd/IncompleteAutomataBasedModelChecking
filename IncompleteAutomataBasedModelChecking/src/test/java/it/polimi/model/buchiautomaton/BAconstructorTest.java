@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author Claudio Menghi
  * contains the tests that are related with the class Automaton
  */
-public class BAConstructorTest {
+public class BAconstructorTest {
 
 	/**
 	 * tests the correct creation of the state (the correct setting of the field name)
