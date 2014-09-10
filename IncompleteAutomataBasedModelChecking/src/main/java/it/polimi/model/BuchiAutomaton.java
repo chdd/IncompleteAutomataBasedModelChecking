@@ -255,7 +255,13 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		if(s==null){
 			throw new IllegalArgumentException("The state s of the source of a transitions cannot be null");
 		}
-		return this.transitionRelation.get(s);
+		if(!this.transitionRelation.containsKey(s)){
+			return new HashSet<T>();
+		}
+		else{
+			return this.transitionRelation.get(s);
+		}
+		
 	}
 	
 	/**
@@ -535,12 +541,15 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		return automaton;
 	}
 	
-	public void clear(){
-		this.acceptStates.clear();
-		this.alphabet.clear();
+	/**
+	 * resets the automaton, removes its states, its initial states, the accepting states, the transitions and the alphabet
+	 */
+	public void reset(){
 		this.initialStates.clear();
-		this.transitionRelation.clear();
 		this.states.clear();
+		this.acceptStates.clear();
+		this.transitionRelation.clear();
+		this.alphabet.clear();
 	}
 	
 	/**

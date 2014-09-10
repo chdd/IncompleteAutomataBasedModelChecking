@@ -82,9 +82,9 @@ public class PerformanceEvaluator{
 					a1.toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"a1-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
 					mc.getIntersection().toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"ris-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
 					writer.close();
-					a1.clear();
-					a2.clear();
-					mc.getIntersection().clear();
+					a1.reset();
+					a2.reset();
+					mc.getIntersection().reset();
 				}
 			}
 			PrintWriter confWriter = new PrintWriter("/Users/Claudio1/Desktop/LTLLover/conf.dat", "UTF-8");

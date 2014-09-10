@@ -86,6 +86,10 @@ public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> 
 		}
 		return this.transparentStates.contains(s);
 	}
+	/**
+	 * returns the set of the transparent states of the automaton
+	 * @return the set of the transparent states of the automaton (if no transparent states are present an empty set is returned)
+	 */
 	public Set<S>  getTransparentStates(){
 		return this.transparentStates;
 	}
