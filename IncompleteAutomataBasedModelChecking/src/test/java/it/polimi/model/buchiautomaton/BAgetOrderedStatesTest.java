@@ -7,7 +7,7 @@ import it.polimi.model.Transition;
 
 import org.junit.Test;
 
-public class BAGetOrderedStatesTest {
+public class BAgetOrderedStatesTest {
 
 	@Test
 	public void testOrderedStates1() {
