@@ -287,6 +287,15 @@ public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> 
 			return false;
 		return true;
 	}
+	/**
+	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.
+	 * @see it.polimi.model.BuchiAutomaton#reset()
+	 */	
+	@Override
+	public void reset(){
+		this.transparentStates.clear();
+		super.reset();
+	}
 	
 	
 }
