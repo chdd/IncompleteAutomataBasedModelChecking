@@ -11,6 +11,10 @@ import it.polimi.model.Transition;
 
 import org.junit.Test;
 
+/**
+ * tests the correct behavior of the reset method of the buchi automaton
+ * @author claudiomenghi
+ */
 public class BAresetTest {
 
 	@Test
