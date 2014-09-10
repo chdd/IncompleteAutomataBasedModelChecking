@@ -98,12 +98,10 @@ public class AutomatonJPanel<S extends State, T extends Transition<S>, A extends
 		 b.addActionListener(this);
 		
 	}
-	
-	@SuppressWarnings({ "static-access", "unchecked" })
 	protected A loadAutomatonFromText(String automaton) throws JAXBException{
-		System.out.println("Entro automaton");
+		AutomatonBuilder<S, T, A> builderBA=new AutomatonBuilder<S,T,A>();
 		
-		return (A) a.loadAutomatonFromText(automaton);
+		return (A) builderBA.loadAutomatonFromText(a.getClass(), automaton);
 	}
 	@SuppressWarnings("unchecked")
 	protected A loadAutomatonFromFile(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{

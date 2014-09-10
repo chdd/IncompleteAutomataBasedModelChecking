@@ -2,7 +2,6 @@ package it.polimi.model;
 
 import it.polimi.model.io.MapAdapter;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,7 +17,6 @@ import java.util.Stack;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
@@ -520,14 +518,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 				+ "transitionRelation: " + transitionRelation+ "\n"
 				+ "alphabet: "+ alphabet + "\n";
 	}
-	public static<S extends State, T extends Transition<S>> BuchiAutomaton<S, T> loadAutomatonFromText(String automatonText) throws JAXBException{
-		JAXBContext jaxbContext = JAXBContext.newInstance(BuchiAutomaton.class);
-		 
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		@SuppressWarnings("unchecked")
-		BuchiAutomaton<S, T> automaton = (BuchiAutomaton<S, T>) jaxbUnmarshaller.unmarshal(new ByteArrayInputStream(automatonText.getBytes()));
-		return automaton;
-	}
+	
 	
 	/**
 	 * resets the automaton, removes its states, its initial states, the accepting states, the transitions and the alphabet
