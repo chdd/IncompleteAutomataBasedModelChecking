@@ -20,7 +20,12 @@ public class BuchiAutomatonStatesTests {
 		a.addState(s1);
 		assertTrue(a.isContained(s1));
 		assertFalse(a.isContained(s2));
+	}
+	@Test(expected=IllegalArgumentException.class)
+	public void testStateAddition3(){
+		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>();
 		assertFalse(a.isContained(null));
+		
 	}
 	/**
 	 * tests the adding the state in the set of the states of the automaton
@@ -53,12 +58,12 @@ public class BuchiAutomatonStatesTests {
 		a.addInitialState(s1);
 		assertTrue(a.isContained(s1));
 		assertFalse(a.isContained(s2));
-		assertFalse(a.isContained(null));
 		a.addInitialState(s1);
 		a.addInitialState(s2);
 		assertTrue(a.isContained(s1));
 		assertTrue(a.isContained(s2));
 	}
+	
 	/**
 	 * tests the adding the state in the set of the states of the automaton
 	 */
@@ -92,7 +97,6 @@ public class BuchiAutomatonStatesTests {
 		a.addAcceptState(s1);
 		assertTrue(a.isContained(s1));
 		assertFalse(a.isContained(s2));
-		assertFalse(a.isContained(null));
 		a.addAcceptState(s1);
 		a.addAcceptState(s2);
 		assertTrue(a.isContained(s1));
