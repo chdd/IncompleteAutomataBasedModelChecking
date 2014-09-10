@@ -412,42 +412,41 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		BuchiAutomaton<S,T> automaton = (BuchiAutomaton<S,T>) jaxbUnmarshaller.unmarshal(file);
 		return automaton;
 	}
-
-	public String toXMLString() throws JAXBException{
-		try {
-			StringWriter sw = new StringWriter();
-			// create JAXB context and initializing Marshaller
-			JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			
-			// for getting nice formatted output
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			
-			// Writing to console
-			jaxbMarshaller.marshal(this, sw);
-			return sw.toString();
-		} catch (JAXBException e) {
+	/**
+	 * returns a String which contains the XML description of the BuchiAutomaton
+	 * @return a String which contains the XML description of the BuchiAutomaton
+	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
+	 */
+	public String toXMLString() throws JAXBException {
+	
+		StringWriter sw = new StringWriter();
+		// create JAXB context and initializing Marshaller
+		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		
-			// some exception occured
-			e.printStackTrace();
-			return null;
-		}
+		// for getting nice formatted output
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		
+		// Writing to console
+		jaxbMarshaller.marshal(this, sw);
+		return sw.toString();
+		
 	}
-	public void toFile(String filePath) throws JAXBException, FileNotFoundException{
+	/**
+	 * writes the BuchiAutomaton to the file with path filePath
+	 * @param filePath is the path of the file where the BuchiAutomaton must be written
+	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
+	 * @throws IOException - if an I/O error occurs.
+	 */
+	public void toFile(String filePath) throws JAXBException, IOException{
 		JAXBContext context = JAXBContext.newInstance(this.getClass());
 		 
         Marshaller m = context.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
            
-        try {
-        	OutputStream os = new FileOutputStream(filePath);
-            m.marshal( this, os ); 
-			os.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
+    	OutputStream os = new FileOutputStream(filePath);
+        m.marshal( this, os ); 
+		os.close();
 	}
 	
 	
