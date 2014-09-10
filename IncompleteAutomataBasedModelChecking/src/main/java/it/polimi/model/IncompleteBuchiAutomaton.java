@@ -1,7 +1,6 @@
 package it.polimi.model;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -131,18 +130,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> 
 		builder.parse(filePath);
 	}
 	
-	public static<S extends State, T extends Transition<S>> IncompleteBuchiAutomaton<S,T> loadAutomaton(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{
-		
-		//ExtendedAutomaton.validate(filePath);
-        
-		File file = new File(filePath);
-		JAXBContext jaxbContext = JAXBContext.newInstance(IncompleteBuchiAutomaton.class);
- 
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		@SuppressWarnings("unchecked")
-		IncompleteBuchiAutomaton<S,T> automaton = (IncompleteBuchiAutomaton<S,T>) jaxbUnmarshaller.unmarshal(file);
-		return automaton;
-	}
+	
 	
 	public static<S extends State, T extends Transition<S>> IncompleteBuchiAutomaton<S, T> loadAutomatonFromText(String automatonText) throws JAXBException{
 		JAXBContext jaxbContext = JAXBContext.newInstance(IncompleteBuchiAutomaton.class);

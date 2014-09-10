@@ -1,5 +1,6 @@
 package it.polimi.view.extendedautomaton;
 
+import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
@@ -60,9 +61,12 @@ public class ExtendedAutomatonJPanel<S extends State, T extends Transition<S>, A
 		
 		return (A) a.loadAutomatonFromText(automaton);
 	}
-	@SuppressWarnings({ "static-access", "unchecked" })
+	@SuppressWarnings("unchecked")
 	protected A loadAutomatonFromFile(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{
-		return (A) a.loadAutomaton(filePath);
+		AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>> builderIBA=
+				new AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>>();
+		return (A) builderIBA.loadAutomaton(IncompleteBuchiAutomaton.class, filePath);
+		
 	}
 	protected void addAcationListener(JButton b){
 		 b.addActionListener(this);

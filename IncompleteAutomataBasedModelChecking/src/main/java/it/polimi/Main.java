@@ -68,13 +68,14 @@ public class Main<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	@SuppressWarnings("unused")
 	public static void main(String args[]) throws JAXBException, FileNotFoundException, XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		
+		AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>> builderIBA=
+				new AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>>();
+		IncompleteBuchiAutomaton<State, Transition<State>> a1 = builderIBA.loadAutomaton(IncompleteBuchiAutomaton.class, arg0);
 		
-		IncompleteBuchiAutomaton<State, Transition<State>> a1 = IncompleteBuchiAutomaton.loadAutomaton(arg0);
-		
-		AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builder=
+		AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builderBA=
 				new AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>>();
 		
-		BuchiAutomaton<State, Transition<State>>  a2=builder.loadAutomaton(BuchiAutomaton.class, arg1);
+		BuchiAutomaton<State, Transition<State>>  a2=builderBA.loadAutomaton(BuchiAutomaton.class, arg1);
 		IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
 				new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2);
 		
