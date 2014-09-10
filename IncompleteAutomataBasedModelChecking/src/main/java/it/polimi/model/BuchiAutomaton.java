@@ -408,15 +408,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	}
 	
 	
-		public static<S extends State, T extends Transition<S>> BuchiAutomaton<S,T> loadAutomaton(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{
-		File file = new File(filePath);
-		JAXBContext jaxbContext = JAXBContext.newInstance(BuchiAutomaton.class);
- 
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		@SuppressWarnings("unchecked")
-		BuchiAutomaton<S,T> automaton = (BuchiAutomaton<S,T>) jaxbUnmarshaller.unmarshal(file);
-		return automaton;
-	}
+	
 	/**
 	 * returns a String which contains the XML description of the BuchiAutomaton
 	 * @return a String which contains the XML description of the BuchiAutomaton

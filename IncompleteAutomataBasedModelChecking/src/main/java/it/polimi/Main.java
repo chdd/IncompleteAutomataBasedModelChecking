@@ -1,5 +1,6 @@
 package it.polimi;
 
+import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
@@ -70,7 +71,10 @@ public class Main<S1 extends State, T1 extends Transition<S1>, S extends Interse
 		
 		IncompleteBuchiAutomaton<State, Transition<State>> a1 = IncompleteBuchiAutomaton.loadAutomaton(arg0);
 		
-		BuchiAutomaton<State, Transition<State>>  a2 = BuchiAutomaton.loadAutomaton(arg1);
+		AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builder=
+				new AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>>();
+		
+		BuchiAutomaton<State, Transition<State>>  a2=builder.loadAutomaton(BuchiAutomaton.class, arg1);
 		IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
 				new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2);
 		

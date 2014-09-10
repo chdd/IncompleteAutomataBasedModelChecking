@@ -1,5 +1,6 @@
 package it.polimi.performance;
 
+import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
@@ -69,7 +70,10 @@ public class PerformanceEvaluator{
 					}
 					IncompleteBuchiAutomaton<State, Transition<State>> a1 = IncompleteBuchiAutomaton.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
 					
-					BuchiAutomaton<State, Transition<State>>  a2 = BuchiAutomaton.loadAutomaton("src/main/resources/Automaton2.xml");
+					AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builder=
+							new AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>>();
+					
+					BuchiAutomaton<State, Transition<State>>  a2=builder.loadAutomaton(BuchiAutomaton.class, "src/main/resources/Automaton2.xml");
 					
 					ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2, mp);
 					
