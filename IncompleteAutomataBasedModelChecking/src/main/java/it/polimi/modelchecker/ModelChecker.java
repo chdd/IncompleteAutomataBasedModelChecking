@@ -65,7 +65,6 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	 */
 	public int check(AbstractPredicate<S1> returnConstraint){
 		this.parameters.reset();
-		
 		this.parameters.setNumStatesSpecification(this.specification.getStates().size());
 		this.parameters.setNumAcceptStatesSpecification(this.specification.getAcceptStates().size());
 		this.parameters.setNumStatesModel(this.model.getStates().size());

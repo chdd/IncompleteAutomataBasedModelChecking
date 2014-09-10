@@ -71,9 +71,9 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		}
 		this.model=model;
 		this.specification=specification;
-		this.computeIntersection();
 		this.mixedStates=new HashSet<S>();
 		this.specification=new BuchiAutomaton<S1, T1>();
+		this.computeIntersection();
 	}
 	
 	
