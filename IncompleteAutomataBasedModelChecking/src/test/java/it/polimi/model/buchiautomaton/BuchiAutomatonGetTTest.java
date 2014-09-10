@@ -1,4 +1,4 @@
-package it.polimi.model.automaton;
+package it.polimi.model.buchiautomaton;
 
 import static org.junit.Assert.*;
 import it.polimi.model.BuchiAutomaton;
