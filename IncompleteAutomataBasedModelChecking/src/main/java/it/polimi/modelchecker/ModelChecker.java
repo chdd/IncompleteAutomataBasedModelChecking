@@ -64,52 +64,83 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	 * @return 0 if the property is not satisfied, 1 if the property is satisfied, -1 if the property is satisfied with constraints.
 	 */
 	public int check(AbstractPredicate<S1> returnConstraint){
+		// resets the value of the verification parameters
 		this.parameters.reset();
+		
+		// SPECIFICATION
+		// updates the set of the number of the states in the specification
 		this.parameters.setNumStatesSpecification(this.specification.getStates().size());
+		// updates the number of accepting states of the specification
 		this.parameters.setNumAcceptStatesSpecification(this.specification.getAcceptStates().size());
+		
+		// MODEL
+		// updates the number of the states of the model
 		this.parameters.setNumStatesModel(this.model.getStates().size());
+		// updates the number of accepting states of the model
 		this.parameters.setNumAcceptStatesModel(this.model.getAcceptStates().size());
+		// updates the number of transparent states in the model
 		this.parameters.setNumTransparentStatesModel(this.model.getTransparentStates().size());
 		
+		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		long startIntersectionTime = System.nanoTime();   
 		this.ris=new IntersectionAutomaton<S1,T1, S, T>(this.model, this.specification);
 		long stopTime = System.nanoTime(); 
 		
-		
+		// updates the time required to compute the intersection between the model and the specification
 		this.parameters.setIntersectionTime((stopTime-startIntersectionTime)/1000000000.0);
-		this.parameters.setNumAcceptingStatesIntersection(this.ris.getAcceptStates().size());
-		this.parameters.setNumInitialStatesIntersection(this.ris.getInitialStates().size());
+		
+		// INTERSECTION
+		// sets the number of the states in the intersection
 		this.parameters.setNumStatesIntersection(this.ris.getStates().size());
+		
+		// sets the number of accepting states of the intersection
+		this.parameters.setNumAcceptingStatesIntersection(this.ris.getAcceptStates().size());
+		// sets the number of initial states in the intersection
+		this.parameters.setNumInitialStatesIntersection(this.ris.getInitialStates().size());
+		// sets the number of mixed states in the intersection
 		this.parameters.setNumMixedStatesIntersection(this.ris.getMixedStates().size());
 		
+		// verifies if the intersection is empty
 		long startEmptyTime = System.nanoTime();   
 		boolean res=ris.isEmpty();
 		long stopEmptyTime = System.nanoTime();   
+		// sets the time required to verify if the intersection is empty (without mixed states)
 		this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
 		
-		
+		// if the intersection is not empty it means that the property is not satisfied
 		if(!res){
+			// set the verification result to zero
 			this.parameters.setResult(0);
+			// returns the verification result
 			return 0;
 		}
 		else{
+			// check if the automaton including its mixed states is empty
 			startEmptyTime = System.nanoTime();   
 			boolean resComplete=ris.isCompleteEmpty();
 			stopEmptyTime = System.nanoTime();   
-			this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
-				
+			// sets the time required from the emptiness procedure
+			this.parameters.setEmptyTime(this.parameters.getEmptyTime()+((stopEmptyTime-startEmptyTime)/1000000000.0));
+			// if the intersection is empty it means the the property is satisfied (no constrained accepting path are present)
 			if(resComplete){
+				// sets the result of the verification to 1
 				this.parameters.setResult(1);
+				// returns the result of the verification
 				return 1;
 			}
 			else{
+				// sets the result of the verification
+				this.parameters.setResult(-1);
+				// compute the constraints
 				Brzozowski<S1,T1,S,T> brzozowski=new Brzozowski<S1,T1,S,T>(ris);
 				long startConstraintTime = System.nanoTime();   
 				returnConstraint=brzozowski.getConstraint();
 				long stopConstraintTime = System.nanoTime(); 
+				// sets the time required to compute the constraints
 				this.parameters.setConstraintComputationTime((stopConstraintTime-startConstraintTime)/1000000000.0);
+				// sets the total time required by the verification procedure
 				this.parameters.setTotalTime(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime());
-				System.out.println("Total time: "+(this.parameters.getIntersectionTime()+this.parameters.getEmptyTime()+this.parameters.getConstraintComputationTime()));
+				// returns -1 which indicates that the property is possibly satisfied
 				return -1;
 			}
 		}
