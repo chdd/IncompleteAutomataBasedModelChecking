@@ -135,13 +135,17 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * check is the state s is contained into the set of the states of the automaton
 	 * @param s the state to be checked if present
 	 * @return true if the state s is contained into the set of the states of the automaton, false otherwise
+	 * @throws IllegalArgumentException when the state s is null
 	 */
 	public boolean isContained(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s cannot be null");
+		}
 		return this.states.contains(s);
 	}
 	
 	/** 
-	 * Returns the set of states of the graph.
+	 * Returns the set of states of the graph. If no states are present an empty set is returned
 	 * @return the set of the states of the graph see {@link State}
 	 */
 	public Set<S> getStates() {
@@ -165,8 +169,12 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * check is the state s is contained into the set of the initial states of the automaton
 	 * @param s the state to be checked if present
 	 * @return true if the state s is contained into the set of the initial states of the automaton, false otherwise
+	 * @throws IllegalArgumentException if the state s is null
 	 */
 	public boolean isInitial(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s cannot be null");
+		}
 		return this.initialStates.contains(s);
 	}
 	/** 
@@ -193,8 +201,12 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * check is the state s is contained into the set of the accept states of the automaton
 	 * @param s the state to be checked if present
 	 * @return true if the state s is contained into the set of the accept states of the automaton, false otherwise
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
 	 */
 	public boolean isAccept(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
 		return this.acceptStates.contains(s);
 	}
 
@@ -325,7 +337,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	}
 	/**
 	 * returns the matrix that describes the transition relation of the automaton. 
-	 * @param init is the init state which is considered as a source
+	 * @param init is the initial state which is considered as a source
 	 * @param accept is the accept state 
 	 * @param statesOrdered is the ordered set of the states
 	 * @return the matrix which describes the transition relation of the automaton
