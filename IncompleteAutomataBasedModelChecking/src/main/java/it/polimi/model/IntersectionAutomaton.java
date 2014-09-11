@@ -120,9 +120,9 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return super.isEmpty();
 	}
 	public boolean isCompleteEmpty(){
-		this.completeEmptiness=true;
-		boolean res=this.isEmpty();
 		this.completeEmptiness=false;
+		boolean res=this.isEmpty();
+		this.completeEmptiness=true;
 		return res;
 	}
 	

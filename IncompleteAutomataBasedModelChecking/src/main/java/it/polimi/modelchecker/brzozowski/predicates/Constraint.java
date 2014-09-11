@@ -29,7 +29,8 @@ public class Constraint<S extends State> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Constraint other = (Constraint) obj;
+		@SuppressWarnings("unchecked")
+		Constraint<S> other = (Constraint<S>) obj;
 		if (p == null) {
 			if (other.p != null)
 				return false;
