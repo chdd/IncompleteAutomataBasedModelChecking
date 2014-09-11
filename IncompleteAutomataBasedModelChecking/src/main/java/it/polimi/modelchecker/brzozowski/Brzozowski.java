@@ -1,5 +1,6 @@
 package it.polimi.modelchecker.brzozowski;
 
+import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
@@ -20,7 +21,7 @@ extends Transition<S>> {
 	/**
 	 * contains the intersection automaton to be analyzed
 	 */
-	private IntersectionAutomaton<S1, T1, S, T> a;
+	private final IntersectionAutomaton<S1, T1, S, T> a;
 	
 	/**
 	 * creates a new Brzozowski object which is responsible to find the constraints associated with a particular (I)BA

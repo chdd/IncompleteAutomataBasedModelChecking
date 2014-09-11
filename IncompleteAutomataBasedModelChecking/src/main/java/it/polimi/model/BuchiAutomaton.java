@@ -309,8 +309,8 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * @param statesOrdered contains the ordered set of states
 	 * @return the vector S where the position which corresponds to the state accept is marked with λ meaning that the state 
 	 * is accepting. All the other states are marked with the empty set ∅
-	 * @throws IllegalArgumentException is generated if the state accept or the statesOrdered vector is null or if a state in the state ordered set is not 
-	 * contained into the set of the states of the automaton
+	 * @throws IllegalArgumentException is generated if the state accept is null or the statesOrdered vector does not contains all the states
+	 * of the automaton and vice-versa 
 	 */
 	public String[] getS(S accept, S[] statesOrdered){
 		if(accept==null){
@@ -318,6 +318,12 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		}
 		if(statesOrdered==null){
 			throw new IllegalArgumentException("The vector of the ordered states cannot be null");
+		}
+		if(this.states.size()!=statesOrdered.length){
+			throw new IllegalArgumentException("The lenght of the statesOrdered must be equal to the number of the states in the automaton");
+		}
+		if(!this.acceptStates.contains(accept)){
+			throw new IllegalArgumentException("The state to be marked with λ must be accepting. The state: "+accept.getName()+" is not accepting");
 		}
 		String [] s=new String[statesOrdered.length];
 		

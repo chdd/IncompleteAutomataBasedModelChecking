@@ -1,7 +1,6 @@
 package it.polimi.model.incompletebuchiautomaton;
 
-import static org.junit.Assert.*;
-import it.polimi.model.BuchiAutomaton;
+import static org.junit.Assert.assertTrue;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
