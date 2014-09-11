@@ -143,6 +143,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		 * 		and the second one is the or constraint
 		*/
 		if(a instanceof OrPredicate){
+			
 			AndPredicate<S> cret=new AndPredicate<S>();
 			cret.addConstraint(this);
 			cret.addConstraint(a);
@@ -196,7 +197,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
 		if(a instanceof LambdaPredicate){
-			return new OrPredicate<S>(this, a);
+			return new Predicate<S>(this.getState(), "("+this.getRegularExpression()+")+"+"(λ)");
 		}
 		// if a is a predicate
 		if(a instanceof Predicate){
@@ -222,7 +223,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
 		if(a instanceof EpsilonPredicate){
-			return this;
+			return new Predicate<S>(this.getState(), "("+this.getRegularExpression()+")+"+"(λ)");
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}

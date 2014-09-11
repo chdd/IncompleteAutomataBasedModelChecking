@@ -95,20 +95,20 @@ public class BrzozowskiGetConstrainedT {
 		
 		Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>> brzozowski=
 				new Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>>(ris);
-		Hashtable<IntersectionState<State>,Hashtable<IntersectionState<State>, AbstractPredicate<State>>> constraintT=brzozowski.getConstraintT();
+		AbstractPredicate<State>[][] constraintT=brzozowski.getConstraintT();
 		
 		
-		assertTrue(constraintT.get(s1s40)!=null);
-		assertTrue(constraintT.get(s1s40).size()==ris.getStates().size());
-		assertTrue(constraintT.get(s1s40).get(s4s40).equals(lambdaPredicate));
-		assertTrue(constraintT.get(s1s40).get(s2s40).equals(lambdaPredicate));
-		for(IntersectionState<State> s: ris.getStates()){
-			if(!(s.equals(s4s40)) && !(s.equals(s2s40))){
-				assertTrue(constraintT.get(s1s40).get(s).equals(new EmptyPredicate<>()));
+		assertTrue(constraintT[ris.statePosition(s1s40)]!=null);
+		assertTrue(constraintT[ris.statePosition(s1s40)][ris.statePosition(s4s40)].equals(lambdaPredicate));
+		assertTrue(constraintT[ris.statePosition(s1s40)][ris.statePosition(s2s40)].equals(lambdaPredicate));
+		for(int i=0; i<ris.getStates().size();i++){
+			
+			if((i!=ris.statePosition(s4s40)) && (i!=ris.statePosition(s2s40))){
+				assertTrue(constraintT[ris.statePosition(s1s40)][i].equals(new EmptyPredicate<>()));
 			}
 		}
 		
-		assertTrue(constraintT.get(s4s40)!=null);
+	/*	assertTrue(constraintT.get(s4s40)!=null);
 		assertTrue(constraintT.get(s4s40).size()==ris.getStates().size());
 		assertTrue(constraintT.get(s4s40).get(s3s51).equals(lambdaPredicate));
 		for(IntersectionState<State> s: ris.getStates()){
@@ -192,7 +192,7 @@ public class BrzozowskiGetConstrainedT {
 			}
 		}
 		
-		
+		*/
 
 	}
 }

@@ -12,7 +12,6 @@ import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Set;
 
 import org.junit.Before;
@@ -82,13 +81,21 @@ public class BrzozowskiGetConstrainedS {
 	 */
 	@Test
 	public void testGetS2() {
-		Hashtable<IntersectionState<State>, AbstractPredicate<State>> ret=brzozowski.getConstrainedS(new IntersectionState<State>(s4, s4, 2));
-		assertTrue(ret.get(new IntersectionState<State>(s1, s1, 0)).equals(emptyPredicate));
-		assertTrue(ret.get(new IntersectionState<State>(s2, s2, 0)).equals(emptyPredicate));
-		assertTrue(ret.get(new IntersectionState<State>(s3, s3, 0)).equals(emptyPredicate));
-		assertTrue(ret.get(new IntersectionState<State>(s4, s4, 0)).equals(emptyPredicate));
-		assertTrue(ret.get(new IntersectionState<State>(s4, s4, 1)).equals(emptyPredicate));
-		assertTrue(ret.get(new IntersectionState<State>(s4, s4, 2)).equals(lambdaPredicate));
+		AbstractPredicate<State>[] ret=brzozowski.getConstrainedS(new IntersectionState<State>(s4, s4, 2));
+		int i=0;
+		for(IntersectionState<State> s: this.intersectBA.getStates()){
+			if(s.equals(new IntersectionState<State>(s1, s1, 0)) ||
+					s.equals(new IntersectionState<State>(s2, s2, 0))||
+					s.equals(new IntersectionState<State>(s3, s3, 0))||
+					s.equals(new IntersectionState<State>(s4, s4, 0))||
+					s.equals(new IntersectionState<State>(s4, s4, 1))){
+				assertTrue(ret[i].equals(emptyPredicate));
+			}
+			if(s.equals(new IntersectionState<State>(s4, s4, 2))){
+				assertTrue(ret[i].equals(lambdaPredicate));
+			}
+			i++;
+		}
 	}
 	/**
 	 * Tests the correct behavior of the method when a null pointr parameter is passed

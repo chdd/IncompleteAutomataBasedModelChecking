@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 */
 	@XmlElementWrapper(name="states")
 	@XmlElement(name="state")
-	private Set<S> states;
+	private LinkedHashSet<S> states;
 	
 	/**
 	 * contains the accepting states of the automaton
@@ -78,7 +79,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * creates a new empty automaton
 	 */
 	public BuchiAutomaton() {
-		this.states=new HashSet<S>();
+		this.states=new LinkedHashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.acceptStates=new HashSet<S>();
 		this.transitionRelation=new HashMap<S, HashSet<T>>();
@@ -95,7 +96,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		if(alphabet==null){
 			throw new IllegalArgumentException();
 		}
-		this.states=new HashSet<S>();
+		this.states=new LinkedHashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.acceptStates=new HashSet<S>();
 		this.transitionRelation=new HashMap<S, HashSet<T>>();
@@ -142,8 +143,20 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * Returns the set of states of the graph. If no states are present an empty set is returned
 	 * @return the set of the states of the graph see {@link State}
 	 */
-	public Set<S> getStates() {
+	public LinkedHashSet<S> getStates() {
 		return this.states;
+	}
+	public int statePosition(State s){
+		
+		int i=0;
+		for(State tmp: this.states){
+			if(tmp.equals(s)){
+				return i;
+			}
+			i++;
+		}
+		return -1;
+		
 	}
 	
 	/** 
@@ -261,110 +274,6 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	
 
 
-	/**
-	 * returns the vector S where the position which corresponds to the state accept is marked with λ meaning that the state 
-	 * is accepting. All the other states are marked with the empty set ∅
-	 * @param accept is the state to be marked with λ
-	 * @param statesOrdered contains the ordered set of states
-	 * @return the vector S where the position which corresponds to the state accept is marked with λ meaning that the state 
-	 * is accepting. All the other states are marked with the empty set ∅
-	 * @throws IllegalArgumentException is generated if the state accept is null or the statesOrdered vector does not contains all the states
-	 * of the automaton and vice-versa 
-	 */
-	public String[] getS(S accept, S[] statesOrdered){
-		if(accept==null){
-			throw new IllegalArgumentException("The state accept cannot be null");
-		}
-		if(statesOrdered==null){
-			throw new IllegalArgumentException("The vector of the ordered states cannot be null");
-		}
-		if(this.states.size()!=statesOrdered.length){
-			throw new IllegalArgumentException("The lenght of the statesOrdered must be equal to the number of the states in the automaton");
-		}
-		if(!this.acceptStates.contains(accept)){
-			throw new IllegalArgumentException("The state to be marked with λ must be accepting. The state: "+accept.getName()+" is not accepting");
-		}
-		String [] s=new String[statesOrdered.length];
-		
-		for(int i=0; i< statesOrdered.length; i++){
-			if(!this.states.contains(statesOrdered[i])){
-				throw new IllegalArgumentException("The state "+statesOrdered[i]+" which is contained into the state ordered set is not contained into the set of the states of the automaton");
-			}
-			if(accept.equals(statesOrdered[i])){
-				s[i]="λ";
-			}
-			else{
-				s[i]="∅";
-			}
-		}
-		return s;
-	}
-	/**
-	 * returns the matrix that describes the transition relation of the automaton. 
-	 * @param init is the initial state which is considered as a source
-	 * @param accept is the accept state 
-	 * @param statesOrdered is the ordered set of the states
-	 * @return the matrix which describes the transition relation of the automaton
-	 * @throws IllegalArgumentException is generated when one of the following conditions holds:
-	 * 				when the state init is null
-	 * 				when the state s is null
-	 * 				when the state init or s is not in the set of the states of the automaton
-	 * 				when a state in the state ordered set is not in the set of the states of the automaton
-	 * 				when a state in the state ordered set is null
-	 */
-	public String [][] getT(S init, S accept, S[] statesOrdered){
-		if(init==null){
-			throw new IllegalArgumentException("The state init cannot be null");
-		}
-		if(accept==null){
-			throw new IllegalArgumentException("The state accept cannot be null");
-		}
-		if(!this.states.contains(init)){
-			throw new IllegalArgumentException("The state init: "+init+" must be included into the set of the states of the automaton");
-		}
-		if(!this.states.contains(accept)){
-			throw new IllegalArgumentException("The state accept: "+accept+" must be included into the set of the states of the automaton");
-		}
-		if(statesOrdered==null){
-			throw new IllegalArgumentException("The stateOrdered set cannot be null");
-		}
-		for(int i=0; i < statesOrdered.length; i++){
-			if(statesOrdered[i]==null){
-				throw new IllegalArgumentException("The stateOrdered set contains a null element in position: "+i+" be null");
-			}
-			if(!this.states.contains(statesOrdered[i])){
-				throw new IllegalArgumentException("The state "+statesOrdered[i]+" is not contained into the set of the states of the automaton");
-			}
-			
-		}
-		
-		
-		// creates the matrix to be returned
-		String [][] t=new String[statesOrdered.length][statesOrdered.length];
-		// for each state i
-		for(int i=0; i< statesOrdered.length; i++){
-			// for each state j
-			for(int j=0; j< statesOrdered.length; j++){
-				// this flag is created and setted to true if there is a connection from the state i to the state j
-				boolean setted=false;
-				for(T trans: this.getTransitionsWithSource(statesOrdered[i])){
-					if(trans.getDestination().equals(statesOrdered[j])){
-						setted=true;
-						if(t[i][j]!=null){
-							t[i][j]=t[i][j]+"+"+trans.getCharacter();
-						}
-						else{
-							t[i][j]=""+trans.getCharacter();
-						}
-					}
-				}
-				if(!setted){
-					t[i][j]="∅";
-				}
-			}
-		}
-		return t;
-	}
 	
 	
 	
@@ -386,7 +295,6 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		// Writing to console
 		jaxbMarshaller.marshal(this, sw);
 		return sw.toString();
-		
 	}
 	/**
 	 * writes the BuchiAutomaton to the file with path filePath

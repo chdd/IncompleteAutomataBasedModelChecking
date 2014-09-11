@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
  * contains an automata state. The state is identified by its name
  */
 @XmlType
-public class State {
+public class State implements Comparable<State>{
 	
 	/**
 	 * contains the name of the state
@@ -105,6 +105,12 @@ public class State {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(State o) {
+
+		return this.name.compareTo(o.name);
 	}
 	
 }

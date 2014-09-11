@@ -8,10 +8,10 @@ import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
-import java.util.Hashtable;
 
 /**
  * @author claudiomenghi
@@ -37,18 +37,23 @@ extends Transition<S>> {
 		
 		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
 		
-		for(S init: a.getInitialStates()){
-			for(S accept: a.getAcceptStates()){
-				
-				Hashtable<S,Hashtable<S, AbstractPredicate<S1>>> cnsT1=this.getConstraintT();
-				Hashtable<S, AbstractPredicate<S1>> cnsS1=this.getConstrainedS(accept);
-				
-				this.getConstraints(cnsT1, cnsS1);
-				
-				AbstractPredicate<S1> newconstraint=cnsS1.get(init).concatenate(cnsS1.get(accept).omega());
+		for(S accept: a.getAcceptStates()){
+			
+			AbstractPredicate<S1>[][] cnsT1=this.getConstraintT();
+			AbstractPredicate<S1>[] cnsS1=this.getConstrainedS(accept);
+			
+			this.getConstraints(cnsT1, cnsS1);
+			System.out.println(cnsT1);
+			System.out.println(cnsS1);
+			
+			
+			for(S init: a.getInitialStates()){
+				AbstractPredicate<S1> newconstraint=cnsS1[a.statePosition(init)].concatenate(cnsS1[a.statePosition(accept)].omega());
 				ret=ret.union(newconstraint);
 			}
+			
 		}
+	
 		return new Constraint<S1>(ret);
 	}
 	
@@ -59,30 +64,22 @@ extends Transition<S>> {
 	 * @return the constraint associated with the Buchi automaton
 	 * @throws
 	 */
-	protected  void getConstraints(Hashtable<S,Hashtable<S, AbstractPredicate<S1>>> t, Hashtable<S, AbstractPredicate<S1>> s) {
+	protected  void getConstraints(AbstractPredicate<S1>[][] t, AbstractPredicate<S1>[] s) {
 		
-		
-		for(S state1: a.getStates())
-		{
-			s.put(state1, t.get(state1).get(state1).star().concatenate(s.get(state1)));
-			
-			for(S state2: a.getStates()){
-				if(!state1.equals(state2)){
-					t.get(state1).put(state2, t.get(state1).get(state1).star().concatenate(t.get(state1).get(state2)));
-				}
+		int m=a.getStates().size();
+		for(int n=m-1; n>=0; n--){
+			s[n]=t[n][n].star().concatenate(s[n]);
+			for(int j=0; j<n;j++){
+				t[n][j]=t[n][n].star().concatenate(t[n][j]);
 			}
-			for(S state2: a.getStates()){
-				if(!state2.equals(state1)){
-					s.put(state2, s.get(state2).union(t.get(state2).get(state1).concatenate(s.get(state1))));
-					for(S state3: a.getStates()){
-						if(!state3.equals(state1)){
-							t.get(state2).put(state3, t.get(state2).get(state3).union(t.get(state2).get(state1).concatenate(t.get(state1).get(state3))));
-						}
-					}
+			for(int i=0;i<n;i++){
+				s[i]=s[i].union(t[i][n].concatenate(s[n]));
+				for(int j=0; j<n; j++){
+					t[i][j]=t[i][j].union(t[i][n].concatenate(t[n][j]));
 				}
 			}
 		}
-	}
+}
 	/**
 	 * returns the matrix associated with the Buchi automaton a
 	 * @param a is the intersection automaton to be converted into a matrix t
@@ -90,48 +87,52 @@ extends Transition<S>> {
 	 * @return the matrix that represents the automaton a
 	 * @throws IllegalArgumentException when the array of the states ordered is null
 	 */
-	protected Hashtable<S,Hashtable<S, AbstractPredicate<S1>>>  getConstraintT(){
+	protected AbstractPredicate<S1>[][]  getConstraintT(){
 		
-		Hashtable<S, Hashtable<S, AbstractPredicate<S1>>>  ret=new Hashtable<S, Hashtable<S, AbstractPredicate<S1>>>();
+		AbstractPredicate<S1>[][]  ret=new AbstractPredicate[a.getStates().size()][a.getStates().size()];
+		int i=0;
 		for(S s1: a.getStates()){
-			ret.put(s1, new Hashtable<S, AbstractPredicate<S1>>());
-			for(T t: a.getTransitionsWithSource(s1)){
-				// if the first state of s1 does not change and the state is transparent
-				if(t instanceof ConstrainedTransition){
-					if(!ret.get(s1).containsKey(t.getDestination())){
-						ret.get(s1).put(t.getDestination(), new Predicate<S1>(s1.getS1(),t.getCharacter()+""));
-					}
-					else{
-						ret.get(s1).put(t.getDestination(), 
-								ret.get(s1).get(t.getDestination()).union(new Predicate<S1>(s1.getS1(),t.getCharacter()+"")));
-					}
-				}
-				else{
-					if(a.isMixed(s1)){
-						if(!ret.get(s1).containsKey(t.getDestination())){
-							ret.get(s1).put(t.getDestination(), new Predicate<S1>(s1.getS1(), "λ"));
-						}
-						else{
-							ret.get(s1).put(t.getDestination(),
-									ret.get(s1).get(t.getDestination()).union(new Predicate<S1>(s1.getS1(), "λ")));
-						}
-					}
-					else{
-						if(!ret.get(s1).containsKey(t.getDestination())){
-							ret.get(s1).put(t.getDestination(), new LambdaPredicate<S1>());
-						}
-						else{
-							ret.get(s1).put(t.getDestination(), 
-									ret.get(s1).get(t.getDestination()).union(new LambdaPredicate<S1>()));
-						}
-					}
-				}
-			}
+			int j=0;
 			for(S s2: a.getStates()){
-				if(!ret.get(s1).containsKey(s2)){
-					ret.get(s1).put(s2, new EmptyPredicate<S1>());
+				boolean setted=false;
+				for(T t: a.getTransitionsWithSource(s1)){
+					if(t.getDestination().equals(s2)){
+						// if the first state of s1 does not change and the state is transparent
+						if(t instanceof ConstrainedTransition){
+							if(!setted){
+								ret[i][j]=new Predicate<S1>(s1.getS1(),t.getCharacter()+"");
+							}
+							else{
+								ret[i][j]=ret[i][j].union(new Predicate<S1>(s1.getS1(),t.getCharacter()+""));
+							}
+						}
+						else{
+							if(a.isMixed(s1)){
+								if(!setted){
+									ret[i][j]=new Predicate<S1>(s1.getS1(), "λ");
+								}
+								else{
+									ret[i][j]=ret[i][j].union(new Predicate<S1>(s1.getS1(), "λ"));
+								}
+							}
+							else{
+								if(!setted){
+									ret[i][j]=new EpsilonPredicate<S1>();
+								}
+								else{
+									ret[i][j]=ret[i][j].union(new EpsilonPredicate<S1>());
+								}
+							}
+						}
+						setted=true;
+					}	
 				}
+				if(!setted){
+					ret[i][j]=new EmptyPredicate<S1>();
+				}
+				j++;
 			}
+			i++;
 		}
 		return ret;
 	}
@@ -144,27 +145,29 @@ extends Transition<S>> {
 	 * if the array of the ordered states does not contains all the states of the automaton and vice-versa
 	 * if the state accept is not in the set of accepting states of the intersection automaton
 	 */
-	protected Hashtable<S, AbstractPredicate<S1>> getConstrainedS(S accept){
+	protected AbstractPredicate<S1>[] getConstrainedS(S accept){
 		if(accept==null){
 			throw new IllegalArgumentException("The accepting state cannot be null");
 		}
 		if(!a.isAccept(accept)){
 			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
 		}
-		Hashtable<S, AbstractPredicate<S1>> ret=new Hashtable<S, AbstractPredicate<S1>>();
+		AbstractPredicate<S1>[] ret=new AbstractPredicate[a.getStates().size()];
 		
+		int i=0;
 		// for each state in the stateOrdered vector
 		for(S s: a.getStates()){
 			
 			// if the state is equal to the state accept
 			if(accept.equals(s)){
 				// I add the lambda predicate in the s[i] cell of the vector
-				ret.put(s, new LambdaPredicate<S1>());
+				ret[i]=new LambdaPredicate<S1>();
 			}
 			else{
 				// I add the empty predicate in the s[i] cell of the vector
-				ret.put(s, new EmptyPredicate<S1>());
+				ret[i]=new EmptyPredicate<S1>();
 			}
+			i++;
 		}
 		// returns the vector s
 		return ret;
