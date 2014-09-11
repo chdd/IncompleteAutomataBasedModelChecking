@@ -14,18 +14,22 @@ public class Transition<S extends State>{
 	 * the character that labels the transition
 	 */
 	@XmlElement(name="character")
-	private String character;
+	private final String character;
 	
 	/**
 	 * the destination state of the transition
 	 */
 	@XmlElement(name="destinationState", type=State.class)
 	@XmlIDREF
-	private S state;
+	private final S state;
 	
+	/**
+	 * creates a new empty transition
+	 */
 	@SuppressWarnings("unused")
 	private Transition(){
-		
+		this.character=null;
+		this.state=null;
 	}
 	
 	/** 

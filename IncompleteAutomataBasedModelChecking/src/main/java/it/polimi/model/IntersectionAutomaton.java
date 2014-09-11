@@ -1,22 +1,14 @@
 package it.polimi.model;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 /**
  * contains an intersection automaton
