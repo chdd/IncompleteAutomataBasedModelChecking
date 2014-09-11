@@ -105,24 +105,6 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 		return this.mixedStates;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public S[] getOrderedStates(S init, S end){
-		int size=this.getStates().size();
-		S[] ret=(S[]) new IntersectionState[size];
-		int i=1;
-		ret[0]=init;
-		if(!init.equals(end)){
-			ret[size-1]=end;
-		}
-		for(S s: this.getStates()){
-			if(!s.equals(init) && !s.equals(end)){
-				ret[i]=s;
-				i++;
-			}
-		}
-		return ret;
-	}
-	
 	/**
 	 * @return the model that generates the intersection automaton
 	 */

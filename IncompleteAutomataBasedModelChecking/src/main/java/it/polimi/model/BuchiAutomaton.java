@@ -258,49 +258,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		
 	}
 	
-	/**
-	 * returns the states ordered in an array.
-	 * @param init the initial state is placed in the first position of the array
-	 * @param end the end state is positioned in the last position of the array
-	 * @return the set of the states ordered in an arbitrary way with the initial and the end states placed in the first and last
-	 * position of the array, respectively
-	 * if the init and the end states are equal, the state is placed in the first position of the array
-	 * @throws IllegalArgumentException is generated in one of the following cases: <br/>
-	 * 				the init state is null <br/>
-	 * 				the end state is null <br/>
-	 * 				the init state is not in the set of the states of the automaton <br/>
-	 * 				the end state is not in the set of the states of the automaton <br/>
-	 */
-	@SuppressWarnings("unchecked")
-	public S[] getOrderedStates(S init, S end){
-		if(init==null){
-			throw new IllegalArgumentException("The init state cannot be null");
-		}
-		if(end==null){
-			throw new IllegalArgumentException("the end state cannot be null");
-		}
-		if(!this.states.contains(init)){
-			throw new IllegalArgumentException("The init state is not in the set of the states of the automaton");
-		}
-		if(!this.states.contains(end)){
-			throw new IllegalArgumentException("The end state is not in the set of the states of the automaton");
-		}
-		int size=this.getStates().size();
-		S[] ret=(S[]) new State[size];
-		int i=1;
-		ret[0]=init;
-		if(!init.equals(end)){
-			ret[size-1]=end;
-		}
-		for(S s: this.getStates()){
-			if(!s.equals(init) && !s.equals(end)){
-				ret[i]=s;
-				i++;
-			}
-		}
-		return ret;
-	}
-	
+
 
 	/**
 	 * returns the vector S where the position which corresponds to the state accept is marked with λ meaning that the state 

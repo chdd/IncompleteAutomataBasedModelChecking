@@ -1,15 +1,16 @@
 package it.polimi.modelchecker.brzozowski;
 
-import it.polimi.model.BuchiAutomaton;
+import it.polimi.model.ConstrainedTransition;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
+
+import java.util.Hashtable;
 
 /**
  * @author claudiomenghi
@@ -38,23 +39,12 @@ extends Transition<S>> {
 		for(S init: a.getInitialStates()){
 			for(S accept: a.getAcceptStates()){
 				
+				Hashtable<S,Hashtable<S, AbstractPredicate<S1>>> cnsT1=this.getConstraintT();
+				Hashtable<S, AbstractPredicate<S1>> cnsS1=this.getConstrainedS(accept);
 				
-				S[] statesOrdered1=a.getOrderedStates(init, accept);
-				S[] statesOrdered2=a.getOrderedStates(accept, accept);
-				AbstractPredicate<S1>[][] cnsT1=this.getConstraintT(statesOrdered1);
-				AbstractPredicate<S1>[] cnsS1=this.getConstraintS(accept, statesOrdered1);
-				AbstractPredicate<S1>[][] cnsT2=this.getConstraintT(statesOrdered2);
-				AbstractPredicate<S1>[] cnsS2=this.getConstraintS(accept, statesOrdered2);
+				this.getConstraints(cnsT1, cnsS1);
 				
-				
-				AbstractPredicate<S1> newconstraint=this.getConstraints(
-						cnsT1, 
-						cnsS1).
-						concatenate(
-						this.getConstraints(
-								cnsT2,
-								cnsS2
-								).omega());
+				AbstractPredicate<S1> newconstraint=cnsS1.get(init).concatenate(cnsS1.get(accept).omega());
 				ret=ret.union(newconstraint);
 			}
 		}
@@ -68,35 +58,29 @@ extends Transition<S>> {
 	 * @return the constraint associated with the Buchi automaton
 	 * @throws
 	 */
-	public  AbstractPredicate<S1> getConstraints(AbstractPredicate<S1> [][] t, AbstractPredicate<S1> [] s) {
+	protected  void getConstraints(Hashtable<S,Hashtable<S, AbstractPredicate<S1>>> t, Hashtable<S, AbstractPredicate<S1>> s) {
 		
-		for(int n=s.length-1; n>=0; n--)
+		
+		for(S state1: a.getStates())
 		{
-			s[n]= t[n][n].star().concatenate(s[n]);
-			if(s[n]==null){
-				throw new IllegalArgumentException("The vector s cannot contain null elements (s["+n+"])");
-			}	
+			s.put(state1, t.get(state1).get(state1).star().concatenate(s.get(state1)));
 			
-			for(int j=0;j<=n;j++){
-				t[n][j]=t[n][n].star().concatenate(t[n][j]); 
-				if(t[n][j]==null){
-					throw new IllegalArgumentException("The matrix t cannot contain null elements (t["+n+"]["+j+"])");
+			for(S state2: a.getStates()){
+				if(!state1.equals(state2)){
+					t.get(state1).put(state2, t.get(state1).get(state1).star().concatenate(t.get(state1).get(state2)));
 				}
 			}
-			for(int i=0;i<=n-1;i++){
-				s[i] = s[i].union(t[i][n].concatenate(s[n]));
-				if(s[i]==null){
-					throw new IllegalArgumentException("The matrix t cannot contain null elements (t["+i+"]["+n+"])");
-				}
-				for(int j=0;j<=n-1; j++){ 
-					t[i][j]  =t[i][j].union(t[i][n].concatenate(t[n][j]));
-					if(t[i][j]==null){
-						throw new IllegalArgumentException("The matrix t cannot contain null elements (t["+i+"]["+j+"])");
+			for(S state2: a.getStates()){
+				if(!state2.equals(state1)){
+					s.put(state2, s.get(state2).union(t.get(state2).get(state1).concatenate(s.get(state1))));
+					for(S state3: a.getStates()){
+						if(!state3.equals(state1)){
+							t.get(state2).put(state3, t.get(state2).get(state3).union(t.get(state2).get(state1).concatenate(t.get(state1).get(state3))));
+						}
 					}
 				}
 			}
 		}
-		return s[0];
 	}
 	/**
 	 * returns the matrix associated with the Buchi automaton a
@@ -105,57 +89,50 @@ extends Transition<S>> {
 	 * @return the matrix that represents the automaton a
 	 * @throws IllegalArgumentException when the array of the states ordered is null
 	 */
-	public AbstractPredicate<S1> [][] getConstraintT(S[] statesOrdered){
-		if(statesOrdered==null){
-			throw new IllegalArgumentException("When the array of the ordered states is null");
-		}
-		@SuppressWarnings("unchecked")
-		AbstractPredicate<S1> [][] A=new AbstractPredicate[statesOrdered.length][statesOrdered.length];
-		for(int i=0; i< statesOrdered.length; i++){
-			for(int j=0; j< statesOrdered.length; j++){
-				boolean setted=false;
-				if(i!=statesOrdered.length-1){
-					for(T t: a.getTransitionsWithSource(statesOrdered[i])){
-						if(t.getDestination().equals(statesOrdered[j])){
-							if(statesOrdered[i].getS1().equals(statesOrdered[j].getS1()) && a.getModel().isTransparent(statesOrdered[j].getS1())){
-								if(!setted){
-									A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+"");
-								}
-								else{
-									A[i][j]=A[i][j].union(new Predicate<S1>(statesOrdered[i].getS1(),t.getCharacter()+""));
-								}
-								
-							}
-							else{
-								if(a.getModel().isTransparent(statesOrdered[i].getS1())){
-									if(!setted){
-										A[i][j]=new Predicate<S1>(statesOrdered[i].getS1(), "ε");
-									}
-									else{
-										A[i][j]=A[i][j].union(new Predicate<S1>(statesOrdered[i].getS1(), "ε"));
-									}
-								}
-								else{
-									if(!setted){
-										A[i][j]=new EpsilonPredicate<S1>();
-									}
-									else{
-										A[i][j]=A[i][j].union(new EpsilonPredicate<S1>());
-									}
-										
-								}
-							}
-							setted=true;
-							
+	protected Hashtable<S,Hashtable<S, AbstractPredicate<S1>>>  getConstraintT(){
+		
+		Hashtable<S, Hashtable<S, AbstractPredicate<S1>>>  ret=new Hashtable<S, Hashtable<S, AbstractPredicate<S1>>>();
+		for(S s1: a.getStates()){
+			ret.put(s1, new Hashtable<S, AbstractPredicate<S1>>());
+			for(T t: a.getTransitionsWithSource(s1)){
+				// if the first state of s1 does not change and the state is transparent
+				if(t instanceof ConstrainedTransition){
+					if(!ret.get(s1).containsKey(t.getDestination())){
+						ret.get(s1).put(t.getDestination(), new Predicate<S1>(s1.getS1(),t.getCharacter()+""));
+					}
+					else{
+						ret.get(s1).put(t.getDestination(), 
+								ret.get(s1).get(t.getDestination()).union(new Predicate<S1>(s1.getS1(),t.getCharacter()+"")));
+					}
+				}
+				else{
+					if(a.isMixed(s1)){
+						if(!ret.get(s1).containsKey(t.getDestination())){
+							ret.get(s1).put(t.getDestination(), new Predicate<S1>(s1.getS1(), "λ"));
+						}
+						else{
+							ret.get(s1).put(t.getDestination(),
+									ret.get(s1).get(t.getDestination()).union(new Predicate<S1>(s1.getS1(), "λ")));
+						}
+					}
+					else{
+						if(!ret.get(s1).containsKey(t.getDestination())){
+							ret.get(s1).put(t.getDestination(), new LambdaPredicate<S1>());
+						}
+						else{
+							ret.get(s1).put(t.getDestination(), 
+									ret.get(s1).get(t.getDestination()).union(new LambdaPredicate<S1>()));
 						}
 					}
 				}
-				if(!setted){
-					A[i][j]=new EmptyPredicate<S1>();
+			}
+			for(S s2: a.getStates()){
+				if(!ret.get(s1).containsKey(s2)){
+					ret.get(s1).put(s2, new EmptyPredicate<S1>());
 				}
 			}
 		}
-		return A;
+		return ret;
 	}
 	/**
 	 * returns the matrix S associated with the intersection automaton a
@@ -163,28 +140,33 @@ extends Transition<S>> {
 	 * @param statesOrdered contains the states of a ordered
 	 * @return the matrix S associated with the automaton a
 	 * @throws IllegalArgumentException when the accepting state or the ordered set of states is null
+	 * if the array of the ordered states does not contains all the states of the automaton and vice-versa
+	 * if the state accept is not in the set of accepting states of the intersection automaton
 	 */
-	public AbstractPredicate<S1> [] getConstraintS(S accept, S[] statesOrdered){
+	protected Hashtable<S, AbstractPredicate<S1>> getConstrainedS(S accept){
 		if(accept==null){
 			throw new IllegalArgumentException("The accepting state cannot be null");
 		}
-		if(statesOrdered==null){
-			throw new IllegalArgumentException("The array of the state ordered annot be null");
+		if(!a.isAccept(accept)){
+			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
 		}
-		@SuppressWarnings("unchecked")
-		AbstractPredicate<S1>[] s=new AbstractPredicate[statesOrdered.length];
+		Hashtable<S, AbstractPredicate<S1>> ret=new Hashtable<S, AbstractPredicate<S1>>();
 		
-		for(int i=0; i< statesOrdered.length; i++){
+		// for each state in the stateOrdered vector
+		for(S s: a.getStates()){
 			
-			if(accept.equals(statesOrdered[i])){
-				s[i]=new LambdaPredicate<S1>();
+			// if the state is equal to the state accept
+			if(accept.equals(s)){
+				// I add the lambda predicate in the s[i] cell of the vector
+				ret.put(s, new LambdaPredicate<S1>());
 			}
 			else{
-				s[i]=new EmptyPredicate<S1>();
+				// I add the empty predicate in the s[i] cell of the vector
+				ret.put(s, new EmptyPredicate<S1>());
 			}
 		}
-
-		return s;
+		// returns the vector s
+		return ret;
 	}
 	
 }

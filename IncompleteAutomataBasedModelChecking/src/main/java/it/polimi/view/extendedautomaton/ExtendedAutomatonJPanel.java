@@ -55,11 +55,9 @@ public class ExtendedAutomatonJPanel<S extends State, T extends Transition<S>, A
 		 this.setVisible(true);
 		 
 	}	
-	@SuppressWarnings({ "static-access", "unchecked" })
 	protected A loadAutomatonFromText(String automaton) throws JAXBException{
-		System.out.println("Entro extended");
-		
-		return (A) a.loadAutomatonFromText(automaton);
+		AutomatonBuilder<S, T, A> autb=new AutomatonBuilder<S, T, A>();
+		return autb.loadAutomatonFromText(a.getClass(), automaton);
 	}
 	@SuppressWarnings("unchecked")
 	protected A loadAutomatonFromFile(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{

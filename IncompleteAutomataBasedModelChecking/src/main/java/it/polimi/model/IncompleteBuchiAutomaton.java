@@ -1,15 +1,11 @@
 package it.polimi.model;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
@@ -45,7 +41,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> 
 	/**
 	 * creates a new extended automaton
 	 */
-	protected IncompleteBuchiAutomaton(){
+	public IncompleteBuchiAutomaton(){
 		super();
 		this.transparentStates=new HashSet<S>();
 	}
@@ -128,17 +124,6 @@ public class IncompleteBuchiAutomaton<S extends State, T extends Transition<S>> 
 		    }
 		});
 		builder.parse(filePath);
-	}
-	
-	
-	
-	public static<S extends State, T extends Transition<S>> IncompleteBuchiAutomaton<S, T> loadAutomatonFromText(String automatonText) throws JAXBException{
-		JAXBContext jaxbContext = JAXBContext.newInstance(IncompleteBuchiAutomaton.class);
-		 
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		@SuppressWarnings("unchecked")
-		IncompleteBuchiAutomaton<S, T> automaton = (IncompleteBuchiAutomaton<S, T>) jaxbUnmarshaller.unmarshal(new ByteArrayInputStream(automatonText.getBytes()));
-		return automaton;
 	}
 	
 	/**

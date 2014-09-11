@@ -47,7 +47,11 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 			return this;
 		}
 		else{
-			return new OrConstraint<>(this, a);
+			if(a instanceof LambdaPredicate)
+				return this;
+			else{
+				return new OrConstraint<>(this, a);
+			}
 		}
 	}
 
