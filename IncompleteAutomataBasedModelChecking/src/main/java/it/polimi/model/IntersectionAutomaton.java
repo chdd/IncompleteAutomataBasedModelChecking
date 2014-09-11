@@ -159,7 +159,8 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	 * @param statesOfThePath contains the states of the path that is currently analyzed
 	 * @return true if an accepting path is found, false otherwise
 	 */
-	public boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+	@Override
+	protected boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
 		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
@@ -174,7 +175,8 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	 * @param statesOfThePath contains the states of the path that is currently analyzed
 	 * @return true if an accepting path is found during the second DFS, false otherwise
 	 */
-	public boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+	@Override
+	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
 		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
@@ -184,19 +186,6 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	}
 
 	
-	public static<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> IntersectionAutomaton<S1, T1, S, T> loadIntAutomaton(String filePath) throws JAXBException, SAXException, IOException, ParserConfigurationException{
-		
-		IncompleteBuchiAutomaton.validate(filePath);
-        
-		File file = new File(filePath);
-		JAXBContext jaxbContext = JAXBContext.newInstance(IncompleteBuchiAutomaton.class);
- 
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		@SuppressWarnings("unchecked")
-		IntersectionAutomaton<S1,T1, S, T> automaton = (IntersectionAutomaton<S1,T1, S, T>) jaxbUnmarshaller.unmarshal(file);
-		return automaton;
-	}
-
 	@Override
 	public String toString() {
 		return super.toString()
