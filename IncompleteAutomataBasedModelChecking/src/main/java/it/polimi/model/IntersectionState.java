@@ -1,7 +1,7 @@
 package it.polimi.model;
 
 /**
- * @author Claudio Menghi
+ * @author claudiomenghi
  * contains an intersection state. The intersection state is a state that results from the intersection of two automata states.
  * The state is identified by the states of the two original automata and a number (0,1,2) that specifies if the state is accepting (2),
  * or not accepting (0 ,1)
@@ -11,15 +11,15 @@ public class IntersectionState<S extends State> extends State{
 	/**
 	 * is the state of the fist automaton
 	 */
-	private S s1;
+	private final S s1;
 	/**
 	 * is the state of the second automaton
 	 */
-	private S s2;
+	private final S s2;
 	/**
 	 * is the number (0,1,2) that identifies if the state is accepting (2) or not accepting (0,1)
 	 */
-	private int number;
+	private final int number;
 	
 	/**
 	 * creates a new intersection state
@@ -29,17 +29,8 @@ public class IntersectionState<S extends State> extends State{
 	 * @throws IllegalArgumentException is generated if the state s1 or the state s2 is null or if the number is different from 0,1,2
 	 */
 	public IntersectionState(S s1, S s2, int number) {
-		super("");
-		if(s1==null){
-			throw new IllegalArgumentException("The state s1 cannot be null");
-		}
-		if(s2==null){
-			throw new IllegalArgumentException("The state s2 cannot be null");
-		}
-		if(!(number>=0 && number<=2)){
-			throw new IllegalArgumentException("the number of the state must be equal to 0,1 or 2");
-		}
-		super.setName(s1.getName()+"-"+s2.getName()+"-"+number);
+		super(s1, s2, number);
+	
 		this.s1=s1;
 		this.s2=s2;
 		this.number=number;

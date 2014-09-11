@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * @author Claudio Menghi
+ * @author claudiomenghi
  * contains an automata state. The state is identified by its name
  */
 @XmlType
@@ -16,11 +16,33 @@ public class State {
 	 */
 	@XmlAttribute(name="id")
 	@XmlID
-	private String name;
+	protected final String name;
+	
+	
 	
 	@SuppressWarnings("unused")
 	private State(){
 		this.name="";
+	}
+	
+	/**
+	 * creates a new intersection state
+	 * @param s1 is the state of the first automaton
+	 * @param s2 is the state of the second automaton
+	 * @param number is the number of the state
+	 * @throws IllegalArgumentException is generated if the state s1 or the state s2 is null or if the number is different from 0,1,2
+	 */
+	protected State(State s1, State s2, int number) {
+		if(s1==null){
+			throw new IllegalArgumentException("The state s1 cannot be null");
+		}
+		if(s2==null){
+			throw new IllegalArgumentException("The state s2 cannot be null");
+		}
+		if(!(number>=0 && number<=2)){
+			throw new IllegalArgumentException("the number of the state must be equal to 0,1 or 2");
+		}
+		this.name=s1.getName()+"-"+s2.getName()+"-"+number;
 	}
 	
 	/**
@@ -42,14 +64,6 @@ public class State {
 	 */
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * sets the name of the state
-	 * @param is the new name of the state
-	 */
-	protected void setName(String name){
-		this.name=name;
 	}
 	
 	@Override

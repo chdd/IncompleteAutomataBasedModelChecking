@@ -65,8 +65,7 @@ public class StateTest {
 	@Test
 	public void testSetName() {
 		State s1=new State("s1");
-		s1.setName("s2");
-		assertTrue(s1.getName().equals("s2"));
+		assertFalse(s1.getName().equals("s2"));
 	}
 
 
