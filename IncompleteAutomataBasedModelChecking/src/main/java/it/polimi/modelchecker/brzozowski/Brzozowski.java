@@ -43,9 +43,6 @@ extends Transition<S>> {
 			AbstractPredicate<S1>[] cnsS1=this.getConstrainedS(accept);
 			
 			this.getConstraints(cnsT1, cnsS1);
-			System.out.println(cnsT1);
-			System.out.println(cnsS1);
-			
 			
 			for(S init: a.getInitialStates()){
 				AbstractPredicate<S1> newconstraint=cnsS1[a.statePosition(init)].concatenate(cnsS1[a.statePosition(accept)].omega());

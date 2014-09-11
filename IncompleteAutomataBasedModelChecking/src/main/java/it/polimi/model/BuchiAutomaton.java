@@ -309,7 +309,6 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
            
         File baFile = new File(filePath);
-        System.out.println(filePath);
         if(!baFile.exists()) {
             baFile.createNewFile();
         } 

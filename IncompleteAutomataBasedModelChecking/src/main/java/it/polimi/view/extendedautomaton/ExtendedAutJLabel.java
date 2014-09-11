@@ -35,7 +35,6 @@ public class ExtendedAutJLabel<S extends State, T extends Transition<S>, A exten
 	
 	public void updateGraph(A  a ){
 		this.a=a;
-		System.out.println(a);
 		this.removeGraph();
 		mxGraphComponent graphComponent = new mxGraphComponent(graph);
 		graphComponent.getViewport().setOpaque(true);
