@@ -2,6 +2,7 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import it.polimi.model.State;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -158,4 +159,20 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		return this;
 	}
 
+	public AbstractPredicate<S> simplify(){
+		OrPredicate<S> ret=new OrPredicate<S>();
+		List<AbstractPredicate<S>> value=new ArrayList<AbstractPredicate<S>>();
+		for(AbstractPredicate<S> p: this.value){
+			if(!p.equals(new EpsilonPredicate<S>()) && !p.equals(new LambdaPredicate<S>())){
+				value.add(p.simplify());
+			}
+		}
+		if(value.size()>1){
+			ret.addConstraints(value);
+			return ret;
+		}
+		else{
+			return value.get(0);
+		}
+	}
 }

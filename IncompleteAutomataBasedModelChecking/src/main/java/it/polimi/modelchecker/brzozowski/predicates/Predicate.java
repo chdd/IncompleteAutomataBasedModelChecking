@@ -197,7 +197,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
 		if(a instanceof LambdaPredicate){
-			return new Predicate<S>(this.getState(), "("+this.getRegularExpression()+")+"+"(λ)");
+			return this;
 		}
 		// if a is a predicate
 		if(a instanceof Predicate){
@@ -223,7 +223,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
 		if(a instanceof EpsilonPredicate){
-			return new Predicate<S>(this.getState(), "("+this.getRegularExpression()+")+"+"(λ)");
+			return this;
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
@@ -276,6 +276,10 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 	@Override
 	public AbstractPredicate<S> omega() {
 		return new Predicate<S>(this.getState(), "("+this.getRegularExpression()+")ω");
+	}
+	@Override
+	public AbstractPredicate<S> simplify() {
+		return this;
 	}
 	
 }

@@ -97,7 +97,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		//  the union of an epsilon constraint and an epsilon constraint is an or constraint that contains the epsilon constraint and the predicate
 		if(a instanceof Predicate){
-			return new Predicate<S>(((Predicate<S>) a).getState(), "("+((Predicate<S>) a).getRegularExpression()+")+"+"(λ)");
+			return new OrPredicate<S>(this, a);
 		}
 		//  the union of an epsilon constraint and an or constraint is an or constraint that contains the epsilon constraint and the or constraint 
 		if(a instanceof OrPredicate){
@@ -133,6 +133,12 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 
 	@Override
 	public AbstractPredicate<S> omega() {
+		return this;
+	}
+
+
+	@Override
+	public AbstractPredicate<S> simplify() {
 		return this;
 	}
 

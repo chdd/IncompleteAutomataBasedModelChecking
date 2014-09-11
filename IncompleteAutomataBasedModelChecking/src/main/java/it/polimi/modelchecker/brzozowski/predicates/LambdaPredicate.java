@@ -50,12 +50,7 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 			if(a instanceof LambdaPredicate)
 				return this;
 			else{
-				if(a instanceof Predicate){
-					return new Predicate<S>(((Predicate<S>) a).getState(), "("+((Predicate<S>) a).getRegularExpression()+")+"+"(λ)");
-				}
-				else{
-					return new OrPredicate<S>(this, a);
-				}
+				return new OrPredicate<S>(this, a);
 			}
 		}
 	}
@@ -85,6 +80,11 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 
 	@Override
 	public AbstractPredicate<S> omega() {
+		return this;
+	}
+
+	@Override
+	public AbstractPredicate<S> simplify() {
 		return this;
 	}
 	

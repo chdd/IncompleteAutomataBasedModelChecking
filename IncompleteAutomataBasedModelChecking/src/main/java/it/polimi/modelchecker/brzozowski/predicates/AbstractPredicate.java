@@ -15,6 +15,7 @@ public abstract class  AbstractPredicate<S extends State>{
 	public abstract AbstractPredicate<S> star();
 	public abstract AbstractPredicate<S> omega();
 	public abstract AbstractPredicate<S> union(AbstractPredicate<S> a);
+	public abstract AbstractPredicate<S> simplify();
 	/**
 	 * returns the empty string
 	 * @return the empty string

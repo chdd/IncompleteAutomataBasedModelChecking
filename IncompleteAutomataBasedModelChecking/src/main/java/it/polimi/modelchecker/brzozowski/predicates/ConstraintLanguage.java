@@ -103,7 +103,5 @@ public abstract class ConstraintLanguage<S extends State> extends AbstractPredic
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
-	}
-   
-   
+	}  
 }

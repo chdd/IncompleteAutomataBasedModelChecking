@@ -46,7 +46,7 @@ extends Transition<S>> {
 			
 			for(S init: a.getInitialStates()){
 				AbstractPredicate<S1> newconstraint=cnsS1[a.statePosition(init)].concatenate(cnsS1[a.statePosition(accept)].omega());
-				ret=ret.union(newconstraint);
+				ret=ret.union(newconstraint.simplify());
 			}
 			
 		}

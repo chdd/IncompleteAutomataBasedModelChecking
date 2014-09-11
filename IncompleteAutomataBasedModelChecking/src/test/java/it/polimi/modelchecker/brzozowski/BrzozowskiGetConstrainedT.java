@@ -10,6 +10,7 @@ import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
@@ -49,6 +50,7 @@ public class BrzozowskiGetConstrainedT {
 	private State s6=null;
 	
 	private AbstractPredicate<State> lambdaPredicate=null;
+	private AbstractPredicate<State> epsilonPredicate=null;
 	
 	@Before
 	public void setUp() throws JAXBException, SAXException, IOException, ParserConfigurationException{
@@ -79,6 +81,7 @@ public class BrzozowskiGetConstrainedT {
 		s3s62=new IntersectionState<State>(s3, s6, 2);
 		
 		lambdaPredicate=new LambdaPredicate<State>();
+		epsilonPredicate=new EpsilonPredicate<State>();
 
 	}
 	
@@ -99,8 +102,8 @@ public class BrzozowskiGetConstrainedT {
 		
 		
 		assertTrue(constraintT[ris.statePosition(s1s40)]!=null);
-		assertTrue(constraintT[ris.statePosition(s1s40)][ris.statePosition(s4s40)].equals(lambdaPredicate));
-		assertTrue(constraintT[ris.statePosition(s1s40)][ris.statePosition(s2s40)].equals(lambdaPredicate));
+		assertTrue(constraintT[ris.statePosition(s1s40)][ris.statePosition(s4s40)].equals(epsilonPredicate));
+		assertTrue(constraintT[ris.statePosition(s1s40)][ris.statePosition(s2s40)].equals(epsilonPredicate));
 		for(int i=0; i<ris.getStates().size();i++){
 			
 			if((i!=ris.statePosition(s4s40)) && (i!=ris.statePosition(s2s40))){

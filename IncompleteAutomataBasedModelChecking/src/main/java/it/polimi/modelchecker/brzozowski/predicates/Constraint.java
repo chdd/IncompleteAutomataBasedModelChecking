@@ -18,6 +18,8 @@ public class Constraint<S extends State> {
 		result = prime * result + ((p == null) ? 0 : p.hashCode());
 		return result;
 	}
+	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

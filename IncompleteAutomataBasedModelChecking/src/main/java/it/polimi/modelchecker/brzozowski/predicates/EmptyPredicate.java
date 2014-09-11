@@ -68,5 +68,10 @@ public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 	public AbstractPredicate<S> omega() {
 		return this;
 	}
+
+	@Override
+	public AbstractPredicate<S> simplify() {
+		return this;
+	}
 	
 }
