@@ -57,7 +57,6 @@ public class BrzozowskiGetConstraintsTest {
 		Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>> brzozowski=
 				new Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>>(ris);
 		Constraint<State> con=brzozowski.getConstraint();
-		
 		assertTrue(
 				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(c)))+(b)))*λ")))||
 				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(b)))+(c)))*λ")))||
