@@ -1,10 +1,13 @@
 package it.polimi.modelchecker;
 
+import it.polimi.model.State;
+import it.polimi.modelchecker.brzozowski.predicates.Constraint;
+
 /**
  * @author Claudio Menghi
  * contains the report of the model checking parameters
  */
-public class ModelCheckerParameters {
+public class ModelCheckerParameters<S extends State> {
 	
 
 	/**
@@ -38,6 +41,11 @@ public class ModelCheckerParameters {
 	 * contains the number of the transitions of the specification
 	 */
 	private int numTransitionSpecification;
+	
+	/**
+	 * contains the constraint computed by the model checking procedure
+	 */
+	private Constraint<S> constraint;
 	
 	private double totalTime;
 	
@@ -360,4 +368,20 @@ public class ModelCheckerParameters {
 	public void setTotalTime(double totalTime) {
 		this.totalTime = totalTime;
 	}
+
+	/**
+	 * @return the constraint
+	 */
+	public Constraint<S> getConstraint() {
+		return constraint;
+	}
+
+	/**
+	 * @param constraint the constraint to set
+	 */
+	public void setConstraint(Constraint<S> constraint) {
+		this.constraint = constraint;
+	}
+
+	
 }

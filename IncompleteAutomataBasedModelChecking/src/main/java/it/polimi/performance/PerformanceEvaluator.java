@@ -8,7 +8,6 @@ import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -49,7 +48,7 @@ public class PerformanceEvaluator{
 
 	public static void main(String args[]) throws JAXBException, FileNotFoundException, XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		
-		ModelCheckerParameters mp=new ModelCheckerParameters();
+		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
 			
@@ -77,7 +76,7 @@ public class PerformanceEvaluator{
 					
 					ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2, mp);
 					
-					mc.check(new EmptyPredicate<State>());
+					mc.check();
 					
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());

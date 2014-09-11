@@ -8,7 +8,7 @@ import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import java.io.IOException;
@@ -56,14 +56,14 @@ public class BrzozowskiGetConstraintsTest {
 		
 		Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>> brzozowski=
 				new Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>>(ris);
-		AbstractPredicate<State> con=brzozowski.getConstraint();
+		Constraint<State> con=brzozowski.getConstraint();
 		
 		assertTrue(
-				con.equals(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(c)))+(b)))*λ"))||
-				con.equals(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(b)))+(c)))*λ"))||
-				con.equals(new Predicate<State>(s2,"(a)*b(b)*c(((((b)+(a)))+(c)))*λ"))||
-				con.equals(new Predicate<State>(s2,"(a)*b(b)*c(((((b)+(c)))+(a)))*λ"))||
-				con.equals(new Predicate<State>(s2,"(a)*b(b)*c(((((c)+(a)))+(b)))*λ"))||
-				con.equals(new Predicate<State>(s2,"(a)*b(b)*c(((((c)+(b)))+(a)))*λ")));
+				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(c)))+(b)))*λ")))||
+				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(b)))+(c)))*λ")))||
+				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((b)+(a)))+(c)))*λ")))||
+				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((b)+(c)))+(a)))*λ")))||
+				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((c)+(a)))+(b)))*λ")))||
+				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((c)+(b)))+(a)))*λ"))));
 	}
 }

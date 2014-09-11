@@ -8,8 +8,6 @@ import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.view.automaton.AutXMLTextArea;
 import it.polimi.view.automaton.AutomatonJPanel;
 import it.polimi.view.extendedautomaton.ExtendedAutomatonJPanel;
@@ -97,9 +95,8 @@ public class IntersectionAutJPanel<S1 extends State, T1 extends Transition<S1>,
 			
 			IncompleteBuchiAutomaton<S1,T1> a1=this.panel1.getAutomaton();
 			BuchiAutomaton<S1,T1> a2=this.panel2.getAutomaton();
-			ModelChecker<S1, T1, S,T> mc=new ModelChecker<S1, T1, S,T>(a1, a2, new ModelCheckerParameters());
-			AbstractPredicate<S1> constraints=new EmptyPredicate<>();
-			int result=mc.check(constraints);
+			ModelChecker<S1, T1, S,T> mc=new ModelChecker<S1, T1, S,T>(a1, a2, new ModelCheckerParameters<S1>());
+			int result=mc.check();
 			
 			A ris=(A) mc.getIntersection();
 			 

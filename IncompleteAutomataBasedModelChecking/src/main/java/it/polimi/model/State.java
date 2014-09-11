@@ -18,8 +18,9 @@ public class State {
 	@XmlID
 	protected final String name;
 	
-	
-	
+	/**
+	 * creates a new empty state 
+	 */
 	@SuppressWarnings("unused")
 	private State(){
 		this.name="";

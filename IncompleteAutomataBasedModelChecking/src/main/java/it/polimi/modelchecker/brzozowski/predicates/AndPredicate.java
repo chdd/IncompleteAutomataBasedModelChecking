@@ -103,7 +103,7 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 			}
 		}
 		// if a is an or constraint a new and constraint that contains the constraint of this and constraint and the or constraint is generated
-		if(a instanceof OrConstraint){
+		if(a instanceof OrPredicate){
 			return new AndPredicate<S>(this.getConstraints(), a);
 		}
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of a have the same state, their regular expressions are merged
@@ -161,23 +161,23 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 		}
 		// the union of an and constraint and a LambdaConstraint is a new orConstraint that contains the and constraint and lambda
 		if(a instanceof LambdaPredicate){
-			return new OrConstraint<S>(this,a);
+			return new OrPredicate<S>(this,a);
 		}
 		// the union of an and constraint and an EpsilonConstrain is a new orConstraint that contains the and constraint and the EpsilonConstrain
 		if(a instanceof EpsilonPredicate){
-			return new OrConstraint<S>(this, a);
+			return new OrPredicate<S>(this, a);
 		}
 		// the union of an and constraint and a Predicate is a new orConstraint that contains the and constraint and the Predicate
 		if(a instanceof Predicate){
-			return new OrConstraint<S>(this, a);
+			return new OrPredicate<S>(this, a);
 		}
 		// the union of an and constraint and an orConstraint is a new orConstraint that contains the and and the or constraints 
-		if(a instanceof OrConstraint){
-			return new OrConstraint<S>(this, a);
+		if(a instanceof OrPredicate){
+			return new OrPredicate<S>(this, a);
 		}
 		// the union of an and constraint and an andConstraint is a new orConstraint that contains the two and constraints
 		if(a instanceof AndPredicate){
-			return new OrConstraint<S>(this, a);
+			return new OrPredicate<S>(this, a);
 		}
 
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");

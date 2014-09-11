@@ -6,6 +6,7 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
@@ -32,7 +33,7 @@ extends Transition<S>> {
 		this.a=a;
 	}
 	
-	public AbstractPredicate<S1> getConstraint(){
+	public Constraint<S1> getConstraint(){
 		
 		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
 		
@@ -48,7 +49,7 @@ extends Transition<S>> {
 				ret=ret.union(newconstraint);
 			}
 		}
-		return ret;
+		return new Constraint<S1>(ret);
 	}
 	
 	/**

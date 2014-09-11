@@ -8,7 +8,7 @@ import java.util.List;
  * @author Claudio Menghi
  * contains an OrConstraint
  */
-public class OrConstraint<S extends State> extends ConstraintLanguage<S> {
+public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 
 	/**
 	 * creates a new OrConstraint that contains the two Constraints firstConstraint, secondConstraint 
@@ -16,13 +16,13 @@ public class OrConstraint<S extends State> extends ConstraintLanguage<S> {
 	 * @param secondConstraint is the second constraint included in the orConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public OrConstraint(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint){
+	 public OrPredicate(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint){
 		 super(firstConstraint, secondConstraint);
 	 }
 	 /**
 	  * creates a new empty constraint
 	  */
-	 public OrConstraint() {
+	 public OrPredicate() {
 		 super();
 	 }
 	 /**
@@ -31,7 +31,7 @@ public class OrConstraint<S extends State> extends ConstraintLanguage<S> {
 	 * @param secondConstraint is the set of constraints to be included in the OrConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public OrConstraint(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
+	 public OrPredicate(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
 		super(firstConstraint, secondConstraint);   
 	 }
 	 /**
@@ -72,7 +72,7 @@ public class OrConstraint<S extends State> extends ConstraintLanguage<S> {
 			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getConstraints());
 		}
 		// if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
-		if(a instanceof OrConstraint){
+		if(a instanceof OrPredicate){
 			return new AndPredicate<S>(this, a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
@@ -109,23 +109,23 @@ public class OrConstraint<S extends State> extends ConstraintLanguage<S> {
 		}
 		// the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda
 		if(a instanceof LambdaPredicate){
-			return new OrConstraint<>(this,a);
+			return new OrPredicate<>(this,a);
 		}
 		// the union of an or constraint and an EpsilonConstrain is a new orConstraint that contains the or constraint and the EpsilonConstrain
 		if(a instanceof EpsilonPredicate){
-			return new OrConstraint<>(this,a);
+			return new OrPredicate<>(this,a);
 		}
 		// the union of an or constraint and a Predicate is a new orConstraint that contains the or constraint and the Predicate
 		if(a instanceof Predicate){
-			return new OrConstraint<S>(this,a);
+			return new OrPredicate<S>(this,a);
 		}
 		// the union of an or constraint and an orConstraint is a new orConstraint that contains the two or constraints
-		if(a instanceof OrConstraint){
-			return new OrConstraint<S>(this,a);
+		if(a instanceof OrPredicate){
+			return new OrPredicate<S>(this,a);
 		}
 		// the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
 		if(a instanceof AndPredicate){
-			return new OrConstraint<S>(this,a);
+			return new OrPredicate<S>(this,a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}

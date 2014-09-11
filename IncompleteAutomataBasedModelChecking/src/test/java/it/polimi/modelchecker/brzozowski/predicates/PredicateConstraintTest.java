@@ -7,7 +7,7 @@ import it.polimi.modelchecker.brzozowski.predicates.AndPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.OrConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.OrPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import org.junit.Test;
@@ -143,7 +143,7 @@ public class PredicateConstraintTest {
 	public void testConcat7() {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		OrConstraint<State> c1=new OrConstraint<State>();
+		OrPredicate<State> c1=new OrPredicate<State>();
 		c1.addConstraint(p1);
 		c1.addConstraint(p2);
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "sss");
@@ -208,8 +208,8 @@ public class PredicateConstraintTest {
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
 		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		
-		assertTrue(p.union(a) instanceof OrConstraint);
-		OrConstraint<State> o=(OrConstraint<State>) p.union(a);
+		assertTrue(p.union(a) instanceof OrPredicate);
+		OrPredicate<State> o=(OrPredicate<State>) p.union(a);
 		assertTrue(o.getConstraints().contains(p));
 		assertTrue(o.getConstraints().contains(a));
 	}
@@ -234,7 +234,7 @@ public class PredicateConstraintTest {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
 		
-		assertTrue(p1.union(p2) instanceof OrConstraint);
+		assertTrue(p1.union(p2) instanceof OrPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p1.union(p2);
 		
 		assertTrue(a.getConstraints().contains(p1));
@@ -249,9 +249,9 @@ public class PredicateConstraintTest {
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
 		
-		OrConstraint<State> c1=new OrConstraint<State>(p2, p3);
-		assertTrue(p1.union(c1) instanceof OrConstraint);
-		OrConstraint<State> a=(OrConstraint<State>) p1.union(c1);
+		OrPredicate<State> c1=new OrPredicate<State>(p2, p3);
+		assertTrue(p1.union(c1) instanceof OrPredicate);
+		OrPredicate<State> a=(OrPredicate<State>) p1.union(c1);
 		
 		assertTrue(a.getConstraints().contains(p1));
 		assertTrue(a.getConstraints().contains(c1));
@@ -265,8 +265,8 @@ public class PredicateConstraintTest {
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
 		
 		AndPredicate<State> c1=new AndPredicate<State>(p2, p3);
-		assertTrue(p1.union(c1) instanceof OrConstraint);
-		OrConstraint<State> a=(OrConstraint<State>) p1.union(c1);
+		assertTrue(p1.union(c1) instanceof OrPredicate);
+		OrPredicate<State> a=(OrPredicate<State>) p1.union(c1);
 		
 		assertTrue(a.getConstraints().contains(p1));
 		assertTrue(a.getConstraints().contains(c1));

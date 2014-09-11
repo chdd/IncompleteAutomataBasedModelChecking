@@ -142,7 +142,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		/* -	the concatenation of a predicate and an OrConstraint creates a new AndConstraint where the first element is the predicate 
 		 * 		and the second one is the or constraint
 		*/
-		if(a instanceof OrConstraint){
+		if(a instanceof OrPredicate){
 			AndPredicate<S> cret=new AndPredicate<S>();
 			cret.addConstraint(this);
 			cret.addConstraint(a);
@@ -196,7 +196,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
 		if(a instanceof LambdaPredicate){
-			return new OrConstraint<S>(this, a);
+			return new OrPredicate<S>(this, a);
 		}
 		// if a is a predicate
 		if(a instanceof Predicate){
@@ -209,16 +209,16 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			}
 			// the union of two predicates <s1, reg1>, <s2, reg2> with a different state is a new or constraint that contains the two predicates 
 			else{
-				return new OrConstraint<S>(this, a1);
+				return new OrPredicate<S>(this, a1);
 			}
 		}
 		// the union of the predicate and an or constraint is a new or constraint where the predicate is added
-		if(a instanceof OrConstraint){
-			return new OrConstraint<S>(this,a);
+		if(a instanceof OrPredicate){
+			return new OrPredicate<S>(this,a);
 		}
 		// the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
 		if(a instanceof AndPredicate){
-			return new OrConstraint<S>(this,a);
+			return new OrPredicate<S>(this,a);
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
 		if(a instanceof EpsilonPredicate){

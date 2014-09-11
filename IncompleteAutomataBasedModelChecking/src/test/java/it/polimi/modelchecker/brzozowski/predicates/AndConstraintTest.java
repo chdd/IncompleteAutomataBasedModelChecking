@@ -7,7 +7,7 @@ import it.polimi.modelchecker.brzozowski.predicates.AndPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.OrConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.OrPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import org.junit.Test;
@@ -90,7 +90,7 @@ public class AndConstraintTest {
 		AbstractPredicate<State> p=new AndPredicate<State>(p0,p1);
 		AbstractPredicate<State> a1=new Predicate<State>(new State("s1"),"aab");
 		AbstractPredicate<State> a2=new Predicate<State>(new State("s1"),"aab");
-		AbstractPredicate<State> a=new OrConstraint<State>(a1, a2);
+		AbstractPredicate<State> a=new OrPredicate<State>(a1, a2);
 		assertTrue(p.concatenate(a) instanceof AndPredicate);
 		assertTrue(((AndPredicate<State>)p.concatenate(a)).getConstraints().contains(p0));
 		assertTrue(((AndPredicate<State>)p.concatenate(a)).getConstraints().contains(p1));
@@ -241,8 +241,8 @@ public class AndConstraintTest {
 		AbstractPredicate<State> p1=new AndPredicate<State>(b1,b2);
 		
 		
-		assertTrue(p1.union(p2) instanceof OrConstraint);
-		OrConstraint<State> o=(OrConstraint<State>) p1.union(p2);
+		assertTrue(p1.union(p2) instanceof OrPredicate);
+		OrPredicate<State> o=(OrPredicate<State>) p1.union(p2);
 		assertTrue(o.getConstraints().contains(p1));
 		assertTrue(o.getConstraints().contains(p2));
 	}

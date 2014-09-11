@@ -34,8 +34,8 @@ public class Transition<S extends State>{
 	
 	/** 
 	 * Constructs a new singleton interval transition. 
-	 * @param c transition character
-	 * @param to destination state
+	 * @param c transition character: is the character that labels the transition
+	 * @param to destination state: is the destination of the transition
 	 * @throws IllegalArgumentException is generated is the character that labels the transition is null or if the destination state is null
 	 */
 	public Transition(String c, S to)	{

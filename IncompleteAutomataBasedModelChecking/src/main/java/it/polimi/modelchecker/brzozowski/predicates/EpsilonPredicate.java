@@ -51,7 +51,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the concatenation of an epsilon constraint and an or constraint is a new and constraint that contains the epsilon constraint
 		// and the original or constraint
-		if(a instanceof OrConstraint){
+		if(a instanceof OrPredicate){
 			return new AndPredicate<S>(this, a);
 		}
 
@@ -97,15 +97,15 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		//  the union of an epsilon constraint and an epsilon constraint is an or constraint that contains the epsilon constraint and the predicate
 		if(a instanceof Predicate){
-			return new OrConstraint<>(this,a);
+			return new OrPredicate<>(this,a);
 		}
 		//  the union of an epsilon constraint and an or constraint is an or constraint that contains the epsilon constraint and the or constraint 
-		if(a instanceof OrConstraint){
-			return new OrConstraint<S>(this, a);
+		if(a instanceof OrPredicate){
+			return new OrPredicate<S>(this, a);
 		}
 		//  the union of an epsilon constraint and an and constraint is an or constraint that contains the epsilon constraint and the and constraint 
 		if(a instanceof AndPredicate){
-			return new OrConstraint<S>(this, ((AndPredicate<S>) a).getConstraints());
+			return new OrPredicate<S>(this, ((AndPredicate<S>) a).getConstraints());
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}

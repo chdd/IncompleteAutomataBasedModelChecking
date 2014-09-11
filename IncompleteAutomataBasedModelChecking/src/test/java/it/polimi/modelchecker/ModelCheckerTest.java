@@ -1,17 +1,14 @@
 package it.polimi.modelchecker;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import static org.junit.Assert.assertTrue;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -52,15 +49,14 @@ public class ModelCheckerTest {
 		specification.addTransition(s4, new Transition<State>("b", s4));
 		
 		// creates the model checking parameters
-		ModelCheckerParameters mp=new ModelCheckerParameters();
+		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
 		// creates the model checker
 		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mck=
 				new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification, mp);
-		AbstractPredicate<State> returnConstraint=new EmptyPredicate<State>();
 		
 		// the property is not satisfied since the intersection between the model and the specification is not empty
-		assertTrue(mck.check(returnConstraint)==0);
+		assertTrue(mck.check()==0);
 	}
 	/** 
 	 * contains a simple test where the property is satisfied.
@@ -94,15 +90,14 @@ public class ModelCheckerTest {
 		specification.addTransition(s4, new Transition<State>("c", s4));
 		
 		// creates the model checking parameters
-		ModelCheckerParameters mp=new ModelCheckerParameters();
+		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
 		// creates the model checker
 		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mck=
 				new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification, mp);
-		AbstractPredicate<State> returnConstraint=new EmptyPredicate<State>();
 		
 		// the property the intersection between the model and the specification is empty the property is satisfied
-		assertTrue(mck.check(returnConstraint)==1);
+		assertTrue(mck.check()==1);
 	}
 
 }

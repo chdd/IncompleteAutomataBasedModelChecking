@@ -5,7 +5,7 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -24,20 +24,15 @@ public class IntersectionAutTextArea<S1 extends State, T1 extends Transition<S1>
 		super();
 		this.setSize(d);
 		this.setLocation(p);
-		Brzozowski<S1, T1,S,T> b=new Brzozowski<>(a);
-		AbstractPredicate<S1> s=b.getConstraint();
+		Brzozowski<S1, T1,S,T> b=new Brzozowski<S1, T1,S,T>(a);
+		Constraint<S1> s=b.getConstraint();
 		this.setText("Constraint:\n "+s.toString());
 	}
 
 	public void update(A a, int result){
 		
-		try {
-			Brzozowski<S1, T1,S,T> b=new Brzozowski<>(a);
-			System.out.println(b.getConstraint().toXMLString());
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Brzozowski<S1, T1,S,T> b=new Brzozowski<S1, T1,S,T>(a);
+		
 		if(result==1){
 			this.setText("1 - the property is satisfied \n");
 		}
@@ -48,8 +43,7 @@ public class IntersectionAutTextArea<S1 extends State, T1 extends Transition<S1>
 			else{
 				if(result==-1){
 					this.setText("-1 - the property is satisfied with constraints \n");
-					Brzozowski<S1, T1,S,T> b=new Brzozowski<>(a);
-					AbstractPredicate<S1> s=b.getConstraint();
+					Constraint<S1> s=b.getConstraint();
 					this.append("Constraint:\n "+s.toString());
 				}
 			}

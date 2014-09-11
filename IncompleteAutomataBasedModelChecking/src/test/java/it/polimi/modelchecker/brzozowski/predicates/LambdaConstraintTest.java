@@ -5,7 +5,7 @@ import it.polimi.model.State;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.OrConstraint;
+import it.polimi.modelchecker.brzozowski.predicates.OrPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import org.junit.Test;
@@ -36,8 +36,8 @@ public class LambdaConstraintTest {
 		
 		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		assertTrue(((OrConstraint<State>)a.union(p)).getConstraints().contains(a));
-		assertTrue(((OrConstraint<State>)a.union(p)).getConstraints().contains(p));
+		assertTrue(((OrPredicate<State>)a.union(p)).getConstraints().contains(a));
+		assertTrue(((OrPredicate<State>)a.union(p)).getConstraints().contains(p));
 	}
 	@Test
 	public void testUnion1() {

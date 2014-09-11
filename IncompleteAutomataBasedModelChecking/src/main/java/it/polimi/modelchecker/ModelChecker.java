@@ -7,7 +7,7 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
+import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 
 /**
  * contains the model checking algorithm
@@ -35,7 +35,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
 	 */
-	private ModelCheckerParameters parameters;
+	private ModelCheckerParameters<S1> parameters;
 	
 	/**
 	 * creates a new model checker
@@ -44,7 +44,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters mp){
+	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters<S1> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}
@@ -63,7 +63,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	 * @param returnConstraint contains the computed constraints (if any) after the verification procedure
 	 * @return 0 if the property is not satisfied, 1 if the property is satisfied, -1 if the property is satisfied with constraints.
 	 */
-	public int check(AbstractPredicate<S1> returnConstraint){
+	public int check(){
 		// resets the value of the verification parameters
 		this.parameters.reset();
 		
@@ -133,9 +133,11 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 				this.parameters.setResult(-1);
 				// compute the constraints
 				Brzozowski<S1,T1,S,T> brzozowski=new Brzozowski<S1,T1,S,T>(ris);
+				Constraint<S1> returnConstraint;
 				long startConstraintTime = System.nanoTime();   
 				returnConstraint=brzozowski.getConstraint();
-				long stopConstraintTime = System.nanoTime(); 
+				long stopConstraintTime = System.nanoTime();
+				this.parameters.setConstraint(returnConstraint);
 				// sets the time required to compute the constraints
 				this.parameters.setConstraintComputationTime((stopConstraintTime-startConstraintTime)/1000000000.0);
 				// sets the total time required by the verification procedure
@@ -157,7 +159,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	 * @return the resulting parameters of the verification, the number of the states of the intersection automaton the time required 
 	 * from the verification procedure etc
 	 */
-	public ModelCheckerParameters getParameters() {
+	public ModelCheckerParameters<S1> getParameters() {
 		return parameters;
 	}
 	
