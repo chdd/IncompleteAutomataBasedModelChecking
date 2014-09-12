@@ -54,7 +54,6 @@ public class PerformanceEvaluator{
 			
 			for(int i=initialNumberOfTransparentStates; i<=maxNumberTransparentStates;i=i+incrementNumberOfTransparentStates){
 				
-				System.out.println("ci passo");
 				for(int j=0;j<numeroProve;j++){
 					Set<String> alphabetModel=new HashSet<String>();
 					alphabetModel.add("a");

@@ -57,7 +57,7 @@ public class ModelCheckerTest2 {
 		assertTrue(mck.check()==-1);
 		
 		Constraint<State> con=mck.getParameters().getConstraint();
-
+		System.out.println(con);
 		assertTrue(
 				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(c)))+(b)))*λ")))||
 				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(b)))+(c)))*λ")))||

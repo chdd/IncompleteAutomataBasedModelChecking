@@ -47,7 +47,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		// the concatenation of an epsilon constraint and an and constraint is a new and constraint that contains the epsilon constraint
 		// and the original and constraint
 		if(a instanceof AndPredicate){
-			return new AndPredicate<S>(new EpsilonPredicate<S>(), a);
+			return new AndPredicate<S>(new EpsilonPredicate<S>(), ((AndPredicate<S>) a).getConstraints());
 		}
 		// the concatenation of an epsilon constraint and an or constraint is a new and constraint that contains the epsilon constraint
 		// and the original or constraint

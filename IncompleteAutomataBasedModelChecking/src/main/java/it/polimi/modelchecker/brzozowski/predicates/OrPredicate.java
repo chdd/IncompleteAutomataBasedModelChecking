@@ -164,7 +164,7 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		List<AbstractPredicate<S>> value=new ArrayList<AbstractPredicate<S>>();
 		for(AbstractPredicate<S> p: this.value){
 			if(!p.equals(new EpsilonPredicate<S>()) && !p.equals(new LambdaPredicate<S>())){
-				value.add(p.simplify());
+				value.add(p);
 			}
 		}
 		if(value.size()>1){

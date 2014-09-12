@@ -84,7 +84,12 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 		}
 		// if a is an EpsilonConstraint the concatenation of the and constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonPredicate){
-			return new AndPredicate<S>(this.getConstraints(), a);
+			if(this.getLastPredicate() instanceof EpsilonPredicate){
+				return this;
+			}
+			else{
+				return new AndPredicate<S>(this.getConstraints(), a);
+			}
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
 		// 		the regular expression of p is modified and concatenated to the one of the predicate a
@@ -213,7 +218,7 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 		List<AbstractPredicate<S>> value=new ArrayList<AbstractPredicate<S>>();
 		for(AbstractPredicate<S> p: this.value){
 			if(!p.equals(new EpsilonPredicate<S>()) && !p.equals(new LambdaPredicate<S>())){
-				value.add(p.simplify());
+				value.add(p);
 			}
 		}
 		if(value.size()>1){
