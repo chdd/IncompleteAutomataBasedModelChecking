@@ -3,40 +3,31 @@ package it.polimi.modelchecker.brzozowski.predicates;
 import it.polimi.model.State;
 
 /**
- * @author Claudio Menghi
- * contains a lambda constraint
+ * @author claudiomenghi
+ * contains a lambda predicate. The lambda predicate is used to identify states that are accepting in the BA (final in the FSA)
  */
 public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 
 	/**
-	 * the concatenation of a lambda constraint with another constraint is equal to the other constraint
-	 * @param a: is the constraint to be concatenated
-	 * @return the constraint a since the lambda operator has no effect
-	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
+	 * the concatenation of a lambda predicate with another predicate is equal to the other predicate
+	 * @param a: is the predicate to be concatenated
+	 * @return the predicate a since the lambda operator has no effect
+	 * @throws IllegalArgumentException is generated when the predicate to be concatenated is null
 	 */
 	@Override
 	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
 		if(a==null){
-			throw new IllegalArgumentException("the constraint a cannot be null");
+			throw new IllegalArgumentException("The predicate to be concatenated cannot be null");
 		}
 		return a;
 	}
 
 	/**
-	 * the star operator when applied to a lambda constraint returns the lambda constraint
-	 * @return the lambda constraint
-	 */
-	@Override
-	public AbstractPredicate<S> star() {
-		return this;
-	}
-
-	/**
-	 * the union of a lambda constraint and the constraint a is
-	 *  equal to the lambda constraint if a is empty
-	 *  is equal to a new OrConstraint that contains the lambda constraint and the constraint a in the other cases
-	 *	@param the constraint a to be concatenated with the Lambda constraint
-	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
+	 * the union of a lambda predicate and the predicate a is equal to the lambda predicate if a is an {@link EmptyPredicate} or 
+	 * to a {@link LambdaPredicate} while is equal to a new {@link OrPredicate} that contains the {@link LambdaPredicate} 
+	 * and the predicate a in the other cases
+	 * @param the {@link AbstractPredicate} a to be concatenated with the {@link LambdaPredicate}
+	 * @throws IllegalArgumentException is generated if the constraint to be concatenated is null
 	 */
 	@Override
 	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
@@ -54,7 +45,34 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 			}
 		}
 	}
-
+	
+	/**
+	 * the star operator when applied to a {@link LambdaPredicate} returns the {@link LambdaPredicate}
+	 * @return the {@link LambdaPredicate}
+	 */
+	@Override
+	public AbstractPredicate<S> star() {
+		return this;
+	}
+	
+	/**
+	 * The omega operator applied to a {@link LambdaPredicate} returns the {@link LambdaPredicate}
+	 * @return the {@link LambdaPredicate}
+	 */
+	@Override
+	public AbstractPredicate<S> omega() {
+		return this;
+	}
+	
+	/**
+	 * The simplify operator applied to a {@link LambdaPredicate} returns the {@link LambdaPredicate}
+	 * @return the {@link LambdaPredicate}
+	 */
+	@Override
+	public AbstractPredicate<S> simplify() {
+		return this;
+	}
+	
 	/**
 	 * see {@link AbstractPredicate}
 	 */
@@ -78,15 +96,7 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 		return 555;
 	}
 
-	@Override
-	public AbstractPredicate<S> omega() {
-		return this;
-	}
-
-	@Override
-	public AbstractPredicate<S> simplify() {
-		return this;
-	}
+	
 	
 
 }
