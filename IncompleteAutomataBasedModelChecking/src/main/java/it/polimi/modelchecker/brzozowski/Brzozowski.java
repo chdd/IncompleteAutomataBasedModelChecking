@@ -15,42 +15,64 @@ import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 /**
  * @author claudiomenghi
- * contains the Brzozowski algorithm
+ * implements the modified Brzozowski algorithm, given a possibly empty intersection automaton computes the corresponding
+ * constraint
+ * 
+ * @param <S1> the type of the states of the original BA, (I)BA
+ * @param <T1> the type of the transitions of the original BA, (I)BA
+ * @param <S> the type of the states  of the intersection automaton
+ * @param <T> the type of the transitions of the intersection automaton
  */
 public class Brzozowski<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
 extends Transition<S>> {
 
 	/**
-	 * contains the intersection automaton to be analyzed
+	 * contains the {@link IntersectionAutomaton} to be analyzed
 	 */
 	private final IntersectionAutomaton<S1, T1, S, T> a;
 	
 	/**
-	 * creates a new Brzozowski object which is responsible to find the constraints associated with a particular (I)BA
-	 * @param a is the intersection automaton to be analyzed
+	 * creates a new modified Brzozowski solved which is responsible for finding the constraints associated with a particular {@link IntersectionAutomaton}
+	 * @param a is the {@link IntersectionAutomaton} to be analyzed
+	 * @throws IllegalArgumentException is generated if a is null
 	 */
 	public Brzozowski(IntersectionAutomaton<S1, T1, S, T> a){
+		if(a==null){
+			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
+		}
 		this.a=a;
 	}
-	
+	/**
+	 * returns the constraint associated with the intersection automaton a
+	 * @return the constraint associated with the intersection automaton a
+	 */
 	public Constraint<S1> getConstraint(){
 		
+		// contains the predicates that will be inserted in the final constraint
 		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
 		
+		// for each accepting states
 		for(S accept: a.getAcceptStates()){
 			
-			AbstractPredicate<S1>[][] cnsT1=this.getConstraintT();
-			AbstractPredicate<S1>[] cnsS1=this.getConstrainedS(accept);
+			// the matrixes t and s are computed
+			AbstractPredicate<S1>[][] t=this.getConstraintT();
+			AbstractPredicate<S1>[] s=this.getConstrainedS(accept);
 			
-			this.getConstraints(cnsT1, cnsS1);
+			// the system of equations described by the matrixes t and s is solved 
+			this.solveSystem(t, s);
 			
+			// each initial state is analyzed
 			for(S init: a.getInitialStates()){
-				AbstractPredicate<S1> newconstraint=cnsS1[a.statePosition(init)].concatenate(cnsS1[a.statePosition(accept)].omega());
+				
+				// 	the language (constraint) associated with the initial state is concatenated with the language associated
+				// with the accepting state to the omega
+				AbstractPredicate<S1> newconstraint=s[a.statePosition(init)].concatenate(s[a.statePosition(accept)].omega());
+				
+				// the language (is added to the set of predicates that will generate the final constraint)
 				ret=ret.union(newconstraint.simplify());
 			}
-			
 		}
-	
+		// creates the final constraint to be returned
 		return new Constraint<S1>(ret);
 	}
 	
@@ -61,7 +83,7 @@ extends Transition<S>> {
 	 * @return the constraint associated with the Buchi automaton
 	 * @throws
 	 */
-	protected  void getConstraints(AbstractPredicate<S1>[][] t, AbstractPredicate<S1>[] s) {
+	protected  void solveSystem(AbstractPredicate<S1>[][] t, AbstractPredicate<S1>[] s) {
 		
 		int m=a.getStates().size();
 		for(int n=m-1; n>=0; n--){
