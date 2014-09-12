@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Claudio Menghi
+ * @author claudiomenghi
  * contains an OrConstraint
  */
 public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
@@ -35,6 +35,15 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 	 public OrPredicate(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
 		super(firstConstraint, secondConstraint);   
 	 }
+	 
+	 public OrPredicate(List<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
+		super(firstConstraint, secondConstraint);   
+	 }
+	 
+	 public OrPredicate(List<AbstractPredicate<S>> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
+		super(firstConstraint, secondConstraint);   
+	 }
+	 
 	 /**
 	 * the concatenation of an or constraint is defined as follows:
 	 * -	if a is an empty constraint the empty constraint is returned
@@ -110,23 +119,23 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		}
 		// the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda
 		if(a instanceof LambdaPredicate){
-			return new OrPredicate<>(this,a);
+			return new OrPredicate<>(this.getPredicates(),a);
 		}
 		// the union of an or constraint and an EpsilonConstrain is a new orConstraint that contains the or constraint and the EpsilonConstrain
 		if(a instanceof EpsilonPredicate){
-			return new OrPredicate<>(this,a);
+			return new OrPredicate<>(this.getPredicates(),a);
 		}
 		// the union of an or constraint and a Predicate is a new orConstraint that contains the or constraint and the Predicate
 		if(a instanceof Predicate){
-			return new OrPredicate<S>(this,a);
+			return new OrPredicate<S>(this.getPredicates(),a);
 		}
 		// the union of an or constraint and an orConstraint is a new orConstraint that contains the two or constraints
 		if(a instanceof OrPredicate){
-			return new OrPredicate<S>(this,a);
+			return new OrPredicate<S>(this.getPredicates(),((OrPredicate<S>) a).getPredicates());
 		}
 		// the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
 		if(a instanceof AndPredicate){
-			return new OrPredicate<S>(this,a);
+			return new OrPredicate<S>(this.getPredicates(), a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
@@ -140,7 +149,7 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		boolean inserted=false;
 		for(int i=0; i<this.value.size()-1;i++){
 			if(inserted){
-				ret="("+ret+")v("+value.get(i)+")";
+				ret=ret+"("+value.get(i)+")";
 			}
 			else{
 				inserted=true;
@@ -160,19 +169,6 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 	}
 
 	public AbstractPredicate<S> simplify(){
-		OrPredicate<S> ret=new OrPredicate<S>();
-		List<AbstractPredicate<S>> value=new ArrayList<AbstractPredicate<S>>();
-		for(AbstractPredicate<S> p: this.value){
-			if(!p.equals(new EpsilonPredicate<S>()) && !p.equals(new LambdaPredicate<S>())){
-				value.add(p);
-			}
-		}
-		if(value.size()>1){
-			ret.addConstraints(value);
-			return ret;
-		}
-		else{
-			return value.get(0);
-		}
+		return this;
 	}
 }

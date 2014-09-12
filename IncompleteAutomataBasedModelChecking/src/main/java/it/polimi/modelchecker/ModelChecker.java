@@ -13,8 +13,10 @@ import it.polimi.modelchecker.brzozowski.predicates.Constraint;
  * contains the model checking algorithm
  * @author claudiomenghi
  *
- * @param <S1> is the type of the states of the specification and of the  model
- * @param <T1> is the type of the transition of the specification and the model
+ * @param <S1> is the type of the states of the specification ({@link BuchiAutomaton}) and of the  model ({@link IncompleteBuchiAutomaton})
+ * @param <T1> is the type of the transition of the specification ({@link BuchiAutomaton}) and of the  model ({@link IncompleteBuchiAutomaton})
+ * @param <S>  is the type of the states of the {@link IntersectionAutomaton}
+ * @param <T>  is the type of the states of the {@link IntersectionAutomaton}
  */
 public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> {
 	
@@ -38,7 +40,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 	private ModelCheckerParameters<S1> parameters;
 	
 	/**
-	 * creates a new model checker
+	 * creates a new {@link ModelChecker}
 	 * @param model is the model to be analyzed by the model checker
 	 * @param specification is the specification to be considered by the model checker
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)

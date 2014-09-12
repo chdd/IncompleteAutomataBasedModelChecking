@@ -179,7 +179,7 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 		}
 		// the union of an and constraint and an orConstraint is a new orConstraint that contains the and and the or constraints 
 		if(a instanceof OrPredicate){
-			return new OrPredicate<S>(this, a);
+			return new OrPredicate<S>(this, ((OrPredicate<S>) a).getPredicates());
 		}
 		// the union of an and constraint and an andConstraint is a new orConstraint that contains the two and constraints
 		if(a instanceof AndPredicate){

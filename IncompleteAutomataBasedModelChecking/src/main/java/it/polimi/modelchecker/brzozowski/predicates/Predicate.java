@@ -215,7 +215,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of the predicate and an or constraint is a new or constraint where the predicate is added
 		if(a instanceof OrPredicate){
-			return new OrPredicate<S>(this,a);
+			return new OrPredicate<S>(this,((OrPredicate<S>) a).getPredicates());
 		}
 		// the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
 		if(a instanceof AndPredicate){

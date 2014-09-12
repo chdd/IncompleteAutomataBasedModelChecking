@@ -95,7 +95,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		//  the union of an epsilon predicate and an or predicate is an or predicate that contains the epsilon predicate and the or predicate 
 		if(a instanceof OrPredicate){
-			return new OrPredicate<S>(this, a);
+			return new OrPredicate<S>(this, ((OrPredicate<S>) a).getPredicates());
 		}
 		//  the union of an epsilon predicate and an and predicate is an or predicate that contains the epsilon predicate and the and predicate 
 		if(a instanceof AndPredicate){
