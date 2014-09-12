@@ -49,9 +49,9 @@ public class EpsilonConstraintTest {
 		assertTrue(p1.concatenate(p2) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(p2);
 		
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(p2));
-		assertTrue(a.getConstraints().size()==2);
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(p2));
+		assertTrue(a.getPredicates().size()==2);
 	}
 	/**
 	 *	the concatenation of an epsilon constraint and an and constraint predicate is a new and constraint that contains the epsilon constraint
@@ -69,10 +69,10 @@ public class EpsilonConstraintTest {
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
-		assertTrue(a.getConstraints().contains(p3));
+		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(p2));
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(p2));
 	}
 	/**
 	 * the concatenation of an epsilon constraint and an or constraint is a new and constraint that contains the epsilon constraint
@@ -89,9 +89,9 @@ public class EpsilonConstraintTest {
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
-		assertTrue(a.getConstraints().contains(p3));
+		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
-		assertTrue(a.getConstraints().contains(c1));
+		assertTrue(a.getPredicates().contains(c1));
 	}
 	
 	/**
@@ -149,9 +149,9 @@ public class EpsilonConstraintTest {
 		assertTrue(a1.union(p2) instanceof OrPredicate);
 		OrPredicate<State> a=(OrPredicate<State>) a1.union(p2);
 		
-		assertTrue(a.getConstraints().contains(a1));
-		assertTrue(a.getConstraints().contains(p2));
-		assertTrue(a.getConstraints().size()==2);
+		assertTrue(a.getPredicates().contains(a1));
+		assertTrue(a.getPredicates().contains(p2));
+		assertTrue(a.getPredicates().size()==2);
 	}
 	/**
 	 *	the union of an epsilon constraint and an epsilon constraint is an or constraint that contains the epsilon constraint and the predicate
@@ -165,8 +165,8 @@ public class EpsilonConstraintTest {
 		assertTrue(a1.union(c1) instanceof OrPredicate);
 		OrPredicate<State> a=(OrPredicate<State>) a1.union(c1);
 		
-		assertTrue(a.getConstraints().contains(a1));
-		assertTrue(a.getConstraints().contains(c1));
+		assertTrue(a.getPredicates().contains(a1));
+		assertTrue(a.getPredicates().contains(c1));
 	}
 	/**
 	 *	the union of an epsilon constraint and an and constraint is an or constraint that contains the epsilon constraint and the and constraint 
@@ -180,8 +180,8 @@ public class EpsilonConstraintTest {
 		assertTrue(a1.union(c1) instanceof OrPredicate);
 		OrPredicate<State> a=(OrPredicate<State>) a1.union(c1);
 		
-		assertTrue(a.getConstraints().contains(a1));
-		assertTrue(a.getConstraints().contains(c1));
+		assertTrue(a.getPredicates().contains(a1));
+		assertTrue(a.getPredicates().contains(c1));
 	}
 	
 	@Test

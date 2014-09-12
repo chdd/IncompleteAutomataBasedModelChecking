@@ -69,7 +69,7 @@ public abstract class ConstraintLanguage<S extends State> extends AbstractPredic
     	}
     	this.value.addAll(constraints);
     }
-   public List<AbstractPredicate<S>> getConstraints(){
+   public List<AbstractPredicate<S>> getPredicates(){
 	   return this.value;
    }
 

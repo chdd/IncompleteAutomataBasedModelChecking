@@ -88,7 +88,7 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 				return this;
 			}
 			else{
-				return new AndPredicate<S>(this.getConstraints(), a);
+				return new AndPredicate<S>(this.getPredicates(), a);
 			}
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
@@ -100,17 +100,17 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 					((Predicate<S>)a).getState().equals(((Predicate<S>)this.getLastPredicate()).getState())){
 						
 						AndPredicate<S> cret=new AndPredicate<S>();
-						cret.addConstraints(this.getConstraints().subList(0, this.getConstraints().size()-1));
+						cret.addConstraints(this.getPredicates().subList(0, this.getPredicates().size()-1));
 						cret.addConstraint(new Predicate<S>(((Predicate<S>)this.getLastPredicate()).getState(), ((Predicate<S>)this.getLastPredicate()).getRegularExpression().concat(((Predicate<S>)a).getRegularExpression())));
 						return cret;
 				}
 			else{
-				return new AndPredicate<S>(this.getConstraints(), a);
+				return new AndPredicate<S>(this.getPredicates(), a);
 			}
 		}
 		// if a is an or constraint a new and constraint that contains the constraint of this and constraint and the or constraint is generated
 		if(a instanceof OrPredicate){
-			return new AndPredicate<S>(this.getConstraints(), a);
+			return new AndPredicate<S>(this.getPredicates(), a);
 		}
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of a have the same state, their regular expressions are merged
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of do not have the same state, a new and constraint
@@ -121,13 +121,13 @@ public class AndPredicate<S extends State> extends ConstraintLanguage<S>{
 			if((c.getFistPredicate() instanceof Predicate) && (this.getLastPredicate() instanceof Predicate) &&
 				((Predicate<S>)c.getFistPredicate()).getState().equals(((Predicate<S>)this.getLastPredicate()).getState())){
 				AndPredicate<S> cret=new AndPredicate<S>();
-				cret.addConstraints(this.getConstraints().subList(0, this.getConstraints().size()-1));
+				cret.addConstraints(this.getPredicates().subList(0, this.getPredicates().size()-1));
 				cret.addConstraint(new Predicate<S>(((Predicate<S>)this.getLastPredicate()).getState(), ((Predicate<S>)this.getLastPredicate()).getRegularExpression()+((Predicate<S>)c.getFistPredicate()).getRegularExpression()));
-				cret.addConstraints(c.getConstraints().subList(1, c.getConstraints().size()));
+				cret.addConstraints(c.getPredicates().subList(1, c.getPredicates().size()));
 				return cret;
 			}
 			else{
-				return new AndPredicate<S>(this.getConstraints(), ((ConstraintLanguage<S>) a).getConstraints());
+				return new AndPredicate<S>(this.getPredicates(), ((ConstraintLanguage<S>) a).getPredicates());
 			}
 			
 		}

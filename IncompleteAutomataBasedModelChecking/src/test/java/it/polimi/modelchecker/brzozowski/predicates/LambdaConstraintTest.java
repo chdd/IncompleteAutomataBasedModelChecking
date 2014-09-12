@@ -36,8 +36,8 @@ public class LambdaConstraintTest {
 		
 		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		assertTrue(((OrPredicate<State>)a.union(p)).getConstraints().contains(a));
-		assertTrue(((OrPredicate<State>)a.union(p)).getConstraints().contains(p));
+		assertTrue(((OrPredicate<State>)a.union(p)).getPredicates().contains(a));
+		assertTrue(((OrPredicate<State>)a.union(p)).getPredicates().contains(p));
 	}
 	@Test
 	public void testUnion1() {

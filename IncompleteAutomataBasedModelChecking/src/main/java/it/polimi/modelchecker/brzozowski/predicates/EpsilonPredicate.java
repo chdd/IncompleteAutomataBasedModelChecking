@@ -48,7 +48,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		// the concatenation of an epsilon predicate and an and predicate is a new and predicate that contains the epsilon predicate
 		// and the original and predicate
 		if(a instanceof AndPredicate){
-			return new AndPredicate<S>(new EpsilonPredicate<S>(), ((AndPredicate<S>) a).getConstraints());
+			return new AndPredicate<S>(new EpsilonPredicate<S>(), ((AndPredicate<S>) a).getPredicates());
 		}
 		// the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
 		// and the original or predicate
@@ -99,7 +99,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		//  the union of an epsilon predicate and an and predicate is an or predicate that contains the epsilon predicate and the and predicate 
 		if(a instanceof AndPredicate){
-			return new OrPredicate<S>(this, ((AndPredicate<S>) a).getConstraints());
+			return new OrPredicate<S>(this, ((AndPredicate<S>) a).getPredicates());
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");
 	}

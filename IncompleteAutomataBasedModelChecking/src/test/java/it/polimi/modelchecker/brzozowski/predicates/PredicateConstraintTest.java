@@ -92,9 +92,9 @@ public class PredicateConstraintTest {
 		assertTrue(p1.concatenate(p2) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(p2);
 		
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(p2));
-		assertTrue(a.getConstraints().size()==2);
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(p2));
+		assertTrue(a.getPredicates().size()==2);
 	}
 	/**
 	 * the concatenation of a predicate and an AndConstraint mixes the regular expression of this predicate of the regular expression of 
@@ -112,7 +112,7 @@ public class PredicateConstraintTest {
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
-		assertTrue(a.getConstraints().contains(p3));
+		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(new Predicate<State>(new State("s1"), "sssabb")));
 	}
 	/**
@@ -131,10 +131,10 @@ public class PredicateConstraintTest {
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
-		assertTrue(a.getConstraints().contains(p3));
+		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(p2));
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(p2));
 	}
 	/**
 	 * the concatenation of a predicate and an OrConstraint is a new AndConstraint where the first element is the predicate and the second 
@@ -152,9 +152,9 @@ public class PredicateConstraintTest {
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
 		
-		assertTrue(a.getConstraints().contains(p3));
+		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
-		assertTrue(a.getConstraints().contains(c1));
+		assertTrue(a.getPredicates().contains(c1));
 	}
 	/**
 	 * the concatenation of a predicate and an EpsilonConstraint creates a new AndConstraint where the first element is the predicate 
@@ -210,8 +210,8 @@ public class PredicateConstraintTest {
 		
 		assertTrue(p.union(a) instanceof OrPredicate);
 		OrPredicate<State> o=(OrPredicate<State>) p.union(a);
-		assertTrue(o.getConstraints().contains(p));
-		assertTrue(o.getConstraints().contains(a));
+		assertTrue(o.getPredicates().contains(p));
+		assertTrue(o.getPredicates().contains(a));
 	}
 	/**
 	 * if a is a predicate the union of two predicates <s, reg1>, <s, reg2> with the same state s is a new predicate that contains the or combination 
@@ -237,9 +237,9 @@ public class PredicateConstraintTest {
 		assertTrue(p1.union(p2) instanceof OrPredicate);
 		AndPredicate<State> a=(AndPredicate<State>) p1.union(p2);
 		
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(p2));
-		assertTrue(a.getConstraints().size()==2);
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(p2));
+		assertTrue(a.getPredicates().size()==2);
 	}
 	/**
 	 *	the union of the predicate and an or constraint is a new or constraint where the predicate is added
@@ -253,8 +253,8 @@ public class PredicateConstraintTest {
 		assertTrue(p1.union(c1) instanceof OrPredicate);
 		OrPredicate<State> a=(OrPredicate<State>) p1.union(c1);
 		
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(c1));
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(c1));
 	}
 	/**
 	 * the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
@@ -268,8 +268,8 @@ public class PredicateConstraintTest {
 		assertTrue(p1.union(c1) instanceof OrPredicate);
 		OrPredicate<State> a=(OrPredicate<State>) p1.union(c1);
 		
-		assertTrue(a.getConstraints().contains(p1));
-		assertTrue(a.getConstraints().contains(c1));
+		assertTrue(a.getPredicates().contains(p1));
+		assertTrue(a.getPredicates().contains(c1));
 	}
 	/**
 	 * the union of a predicate and epsilon is a new or constraint that contains the predicate

@@ -70,7 +70,7 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		}
 		// if a is an AndConstraint the concatenation of the or constraint and the AndConstraint is returned
 		if(a instanceof AndPredicate){
-			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getConstraints());
+			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getPredicates());
 		}
 		// if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
 		if(a instanceof OrPredicate){

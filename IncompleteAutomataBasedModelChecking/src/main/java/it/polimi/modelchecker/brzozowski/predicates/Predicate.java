@@ -127,7 +127,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 					this.state.equals(((Predicate<S>)atmp.getFistPredicate()).state)){
 						AndPredicate<S> cret=new AndPredicate<S>();
 						cret.addConstraint(new Predicate<S>(this.state, this.regularExpression.concat(((Predicate<S>)atmp.getFistPredicate()).regularExpression)));
-						cret.addConstraints(atmp.getConstraints().subList(1, atmp.getConstraints().size()));
+						cret.addConstraints(atmp.getPredicates().subList(1, atmp.getPredicates().size()));
 						return cret;
 				}
 			
@@ -135,7 +135,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 				
 				AndPredicate<S> cret=new AndPredicate<S>();
 				cret.addConstraint(this);
-				cret.addConstraints(atmp.getConstraints());
+				cret.addConstraints(atmp.getPredicates());
 				return cret;
 			}
 		}
