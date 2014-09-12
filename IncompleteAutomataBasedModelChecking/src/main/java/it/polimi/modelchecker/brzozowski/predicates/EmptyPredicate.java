@@ -3,16 +3,16 @@ package it.polimi.modelchecker.brzozowski.predicates;
 import it.polimi.model.State;
 
 /**
- * @author Claudio Menghi
- * contains an empty constraint
+ * @author claudiomenghi
+ * contains an empty predicate.  This predicate is used when no transitions of the (I)BA are present to connect two states
  */
 public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 
 	/**
-	 * the concatenation of an empty constraint with another constraint is an empty constraint
-	 * @param a: is the constraint to be concatenated with this
-	 * @return the concatenation of this constraint with the empty constraint
-	 * @throws IllegalArgumentException the constraint a cannot be null
+	 * the concatenation of an empty predicate with another predicate is an empty predicate
+	 * @param a: is the predicate to be concatenated with this
+	 * @return the concatenation of this predicate with the empty predicate
+	 * @throws IllegalArgumentException is generated when the predicate a is null
 	 */
 	@Override
 	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
@@ -23,18 +23,27 @@ public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 	}
 
 	/**
-	 * the star operator applied to an empty constraint returns a Lambda constraint
-	 * @return a new Lambda constraint
+	 * the star operator applied to an empty predicate returns a Lambda predicate
+	 * @return a new Lambda predicate
 	 */
 	@Override
 	public AbstractPredicate<S> star() {
 		return new LambdaPredicate<S>();
 	}
+	
+	/**
+	 * the omega operator applied to an empty predicate returns a Lambda predicate
+	 * @return a new LambdaPredicate
+	 */
+	@Override
+	public AbstractPredicate<S> omega() {
+		return new LambdaPredicate<S>();
+	}
 
 	/**
-	 * The union operator of an empty constraint and another constraint a returns the other constraint
-	 * @return the constraint a
-	 * @throws IllegalArgumentException the constraint a cannot be null
+	 * The union operator of an empty predicate and another predicate a returns the other predicate
+	 * @return the predicate a
+	 * @throws IllegalArgumentException the predicate a cannot be null
 	 */
 	@Override
 	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
@@ -43,7 +52,16 @@ public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 		}
 		return a;
 	}
-
+	
+	/**
+	 * the simplification of the empty predicate is the empty predicate its-self
+	 * @return the {@link EmptyPredicate}
+	 */
+	@Override
+	public AbstractPredicate<S> simplify() {
+		return this;
+	}
+	
 	/**
 	 * @see AbstractPredicate
 	 */
@@ -63,15 +81,4 @@ public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 	public int hashCode() {
 		return 0;
 	}
-
-	@Override
-	public AbstractPredicate<S> omega() {
-		return this;
-	}
-
-	@Override
-	public AbstractPredicate<S> simplify() {
-		return this;
-	}
-	
 }
