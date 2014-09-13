@@ -20,7 +20,7 @@ public class AndConstraintTest {
 	public void testConcat1() {
 		AbstractPredicate<State> a=new EmptyPredicate<State>();
 		AbstractPredicate<State> p1=new Predicate<State>(new State("s1"),"aab");
-		AbstractPredicate<State> p2=new Predicate<State>(new State("s1"),"aab");
+		AbstractPredicate<State> p2=new Predicate<State>(new State("s2"),"aab");
 		AbstractPredicate<State> or=new AndPredicate<State>(p1, p2);
 		assertTrue(or.concatenate(a).equals(a));
 	}
@@ -31,7 +31,7 @@ public class AndConstraintTest {
 	public void testConcat2() {
 		AbstractPredicate<State> a=new LambdaPredicate<State>();
 		AbstractPredicate<State> p1=new Predicate<State>(new State("s1"),"aab");
-		AbstractPredicate<State> p2=new Predicate<State>(new State("s1"),"aab");
+		AbstractPredicate<State> p2=new Predicate<State>(new State("s2"),"aab");
 		AbstractPredicate<State> or=new AndPredicate<State>(p1, p2);
 		assertTrue(or.concatenate(a).equals(or));
 	}
@@ -42,7 +42,7 @@ public class AndConstraintTest {
 	public void testConcat3() {
 		AbstractPredicate<State> a=new EpsilonPredicate<State>();
 		AbstractPredicate<State> p1=new Predicate<State>(new State("s1"),"aab");
-		AbstractPredicate<State> p2=new Predicate<State>(new State("s1"),"aab");
+		AbstractPredicate<State> p2=new Predicate<State>(new State("s2"),"aab");
 		AbstractPredicate<State> or=new AndPredicate<State>(p1, p2);
 		assertTrue(or.concatenate(a) instanceof AndPredicate);
 		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(a));
@@ -85,15 +85,15 @@ public class AndConstraintTest {
 	 */
 	@Test
 	public void testConcat6() {
-		AbstractPredicate<State> p0=new Predicate<State>(new State("s2"),"aab");
-		AbstractPredicate<State> p1=new Predicate<State>(new State("s2"),"aab");
+		AbstractPredicate<State> p0=new Predicate<State>(new State("s1"),"aab");
+		AbstractPredicate<State> p1=new Predicate<State>(new State("s2"),"ccc");
 		AbstractPredicate<State> p=new AndPredicate<State>(p0,p1);
-		AbstractPredicate<State> a1=new Predicate<State>(new State("s1"),"aab");
-		AbstractPredicate<State> a2=new Predicate<State>(new State("s1"),"aab");
+		AbstractPredicate<State> a1=new Predicate<State>(new State("s3"),"aab");
+		AbstractPredicate<State> a2=new Predicate<State>(new State("s4"),"aab");
 		AbstractPredicate<State> a=new OrPredicate<State>(a1, a2);
+		
 		assertTrue(p.concatenate(a) instanceof AndPredicate);
-		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(p0));
-		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(p1));
+		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(p));
 		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(a));
 	}
 	/**
@@ -162,7 +162,7 @@ public class AndConstraintTest {
 	public void testUnion1() {
 		AbstractPredicate<State> a=new EmptyPredicate<State>();
 		AbstractPredicate<State> a1=new Predicate<State>(new State("s1"), "aab");
-		AbstractPredicate<State> b1=new Predicate<State>(new State("s1"), "aab");
+		AbstractPredicate<State> b1=new Predicate<State>(new State("s2"), "aab");
 		AbstractPredicate<State> p=new AndPredicate<State>(a1,b1);
 		assertTrue(p.union(a).equals(p));
 	}
@@ -253,7 +253,7 @@ public class AndConstraintTest {
 		AbstractPredicate<State> a1=new Predicate<State>(new State("s1"), "aab");
 		AbstractPredicate<State> a2=new Predicate<State>(new State("s1"), "aac");
 		AbstractPredicate<State> p=new AndPredicate<State>(a1,a2);
-		assertTrue(p.toString().equals("(<s1,aab>^(<s1,aac>))"));
+		assertTrue(p.toString().equals("(<s1,aab>)^(<s1,aac>)"));
 	}
 
 }

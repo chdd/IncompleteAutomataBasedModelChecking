@@ -1,6 +1,6 @@
 package it.polimi.modelchecker.brzozowski;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
@@ -12,10 +12,8 @@ import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import java.io.IOException;
-import java.util.Hashtable;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;

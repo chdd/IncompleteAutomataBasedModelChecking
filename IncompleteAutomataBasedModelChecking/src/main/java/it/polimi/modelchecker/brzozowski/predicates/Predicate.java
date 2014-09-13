@@ -2,8 +2,11 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import it.polimi.model.State;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * @author Claudio Menghi
+ * @author claudiomenghi
  * contains a predicate constraint
  */
 public class Predicate<S extends State> extends AbstractPredicate<S>{
@@ -109,9 +112,10 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			}
 			// the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
 			else{
-				AndPredicate<S> cret=new AndPredicate<S>();
-				cret.addConstraint(this);
-				cret.addConstraint(a);
+				List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
+				l.add(this);
+				l.add(a);
+				AndPredicate<S> cret=new AndPredicate<S>(l);
 				return cret;
 			}
 			
@@ -125,17 +129,19 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			AndPredicate<S> atmp=(AndPredicate<S>)a;
 			if(atmp.getFistPredicate() instanceof Predicate &&
 					this.state.equals(((Predicate<S>)atmp.getFistPredicate()).state)){
-						AndPredicate<S> cret=new AndPredicate<S>();
-						cret.addConstraint(new Predicate<S>(this.state, this.regularExpression.concat(((Predicate<S>)atmp.getFistPredicate()).regularExpression)));
-						cret.addConstraints(atmp.getPredicates().subList(1, atmp.getPredicates().size()));
+						List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
+						l.add(new Predicate<S>(this.state, this.regularExpression.concat(((Predicate<S>)atmp.getFistPredicate()).regularExpression)));
+						l.addAll(atmp.getPredicates().subList(1, atmp.getPredicates().size()));
+						AndPredicate<S> cret=new AndPredicate<S>(l);;
 						return cret;
 				}
 			
 			else{
+				List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
+				l.add(this);
+				l.addAll(atmp.getPredicates());
 				
-				AndPredicate<S> cret=new AndPredicate<S>();
-				cret.addConstraint(this);
-				cret.addConstraints(atmp.getPredicates());
+				AndPredicate<S> cret=new AndPredicate<S>(l);
 				return cret;
 			}
 		}
@@ -143,10 +149,13 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		 * 		and the second one is the or constraint
 		*/
 		if(a instanceof OrPredicate){
+			List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
 			
-			AndPredicate<S> cret=new AndPredicate<S>();
-			cret.addConstraint(this);
-			cret.addConstraint(a);
+			for(AbstractPredicate<S> s: ((OrPredicate<S>) a).getPredicates()){
+				l.add(this.concatenate(s));
+			}
+			
+			AndPredicate<S> cret=new AndPredicate<S>(l);
 			return cret;
 		}
 		/*
@@ -154,9 +163,11 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		 * 		and the second one is the EpsilonConstraint
 		 */
 		if(a instanceof EpsilonPredicate){
-			AndPredicate<S> cret=new AndPredicate<S>();
-			cret.addConstraint(this);
-			cret.addConstraint(new EpsilonPredicate<S>());
+			List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
+			l.add(this);
+			l.add(new EpsilonPredicate<S>());
+			
+			AndPredicate<S> cret=new AndPredicate<S>(l);
 			return cret;
 		}
 

@@ -1,14 +1,12 @@
 package it.polimi.modelchecker.brzozowski.predicates;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import it.polimi.model.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.AndPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.OrPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.Predicate;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -57,12 +55,16 @@ public class EpsilonConstraintTest {
 	 *	the concatenation of an epsilon constraint and an and constraint predicate is a new and constraint that contains the epsilon constraint
 	 *	and the original and constraint
 	 */
-		public void testConcat5() {
+	public void testConcat5() {
+		
+			
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		AndPredicate<State> c1=new AndPredicate<State>();
-		c1.addConstraint(p1);
-		c1.addConstraint(p2);
+		
+		List<AbstractPredicate<State>> l=new ArrayList<AbstractPredicate<State>>();
+		l.add(p1);
+		l.add(p2);
+		AndPredicate<State> c1=new AndPredicate<State>(l);
 		EpsilonPredicate<State> p3=new EpsilonPredicate<State>();
 		
 		
@@ -81,9 +83,11 @@ public class EpsilonConstraintTest {
 	public void testConcat6() {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		OrPredicate<State> c1=new OrPredicate<State>();
-		c1.addConstraint(p1);
-		c1.addConstraint(p2);
+
+		Set<AbstractPredicate<State>> l=new HashSet<AbstractPredicate<State>>();
+		l.add(p1);
+		l.add(p2);
+		OrPredicate<State> c1=new OrPredicate<State>(l);
 		EpsilonPredicate<State> p3=new EpsilonPredicate<State>();
 		
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);

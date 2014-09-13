@@ -2,15 +2,19 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import it.polimi.model.State;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author claudiomenghi
  * contains an OrConstraint
  */
-public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
+public class OrPredicate<S extends State> extends AbstractPredicate<S> {
 
+	
+	private final String type="v";
+	
+	 private Set<AbstractPredicate<S>> value;
 	/**
 	 * creates a new OrConstraint that contains the two Constraints firstConstraint, secondConstraint 
 	 * @param firstConstraint is the first constraint to be included in the OrConstraint
@@ -18,13 +22,22 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
 	 public OrPredicate(AbstractPredicate<S> firstConstraint, AbstractPredicate<S> secondConstraint){
-		 super(firstConstraint, secondConstraint);
+		 value=new HashSet<AbstractPredicate<S>>();
+		 value.add(firstConstraint);
+		 value.add(secondConstraint);
+		 if(this.value.size()<=1){
+	        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
+	     }
 	 }
 	 /**
 	  * creates a new empty constraint
 	  */
-	 public OrPredicate() {
-		 super();
+	 public OrPredicate(Set<AbstractPredicate<S>> l) {
+		 this.value = new HashSet<AbstractPredicate<S>>();
+	        this.value.addAll(l);
+	        if(this.value.size()<=1){
+	        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
+	        }
 	 }
 	 /**
 	 * creates a new OrConstraint that contains the constraint firstConstraint and the set of constraint secondConstraint 
@@ -32,16 +45,31 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 	 * @param secondConstraint is the set of constraints to be included in the OrConstraint
 	 * @throws IllegalArgumentException is the first or the second constraint are null
 	 */
-	 public OrPredicate(AbstractPredicate<S> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
-		super(firstConstraint, secondConstraint);   
+	 public OrPredicate(AbstractPredicate<S> firstConstraint, Set<AbstractPredicate<S>> secondConstraint) {
+		 this.value = new HashSet<AbstractPredicate<S>>();
+		 this.value.add(firstConstraint);
+		 this.value.addAll(secondConstraint);
+		 if(this.value.size()<=1){
+        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
+		 }  
 	 }
 	 
-	 public OrPredicate(List<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
-		super(firstConstraint, secondConstraint);   
+	 public OrPredicate(Set<AbstractPredicate<S>> firstConstraint, AbstractPredicate<S> secondConstraint) {
+		 this.value = new HashSet<AbstractPredicate<S>>();
+	        this.value.addAll(firstConstraint);
+	        this.value.add(secondConstraint);
+	        if(this.value.size()<=1){
+	        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
+	        }
 	 }
 	 
-	 public OrPredicate(List<AbstractPredicate<S>> firstConstraint, List<AbstractPredicate<S>> secondConstraint) {
-		super(firstConstraint, secondConstraint);   
+	 public OrPredicate(Set<AbstractPredicate<S>> firstConstraint, Set<AbstractPredicate<S>> secondConstraint) {
+		 this.value = new HashSet<AbstractPredicate<S>>();
+	        this.value.addAll(firstConstraint);
+	        this.value.addAll(secondConstraint);
+	        if(this.value.size()<=1){
+	        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
+	        }
 	 }
 	 
 	 /**
@@ -58,6 +86,7 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 	 */
 	@Override
 	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
+		//System.out.println("or concatenate");
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -75,15 +104,21 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		}
 		// if a is a Predicate the concatenation of the or constraint and Predicate is returned
 		if(a instanceof Predicate){
-			return new AndPredicate<S>(this, a);
+			
+			Set<AbstractPredicate<S>> l=new HashSet<AbstractPredicate<S>>();
+			
+			for(AbstractPredicate<S> s: this.getPredicates()){
+				l.add(s.concatenate(a));
+			}
+			return new OrPredicate<S>(l);
 		}
 		// if a is an AndConstraint the concatenation of the or constraint and the AndConstraint is returned
 		if(a instanceof AndPredicate){
-			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getPredicates());
+			return new AndPredicate<S>(this, a);
 		}
 		// if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
 		if(a instanceof OrPredicate){
-			return new AndPredicate<S>(this, a);
+			return new AndPredicate<>(this, a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
@@ -110,6 +145,8 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 	 */
 	@Override
 	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
+		//System.out.println("or union");
+		
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
 		}
@@ -131,38 +168,18 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 		}
 		// the union of an or constraint and an orConstraint is a new orConstraint that contains the two or constraints
 		if(a instanceof OrPredicate){
+			//System.out.println("or union a");
 			return new OrPredicate<S>(this.getPredicates(),((OrPredicate<S>) a).getPredicates());
 		}
 		// the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
 		if(a instanceof AndPredicate){
+			//System.out.println("or union b");
 			return new OrPredicate<S>(this.getPredicates(), a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
 
-	/**
-	 * see {@link AbstractPredicate}
-	 */
-	@Override
-	public String toString() {
-		String ret="";
-		boolean inserted=false;
-		for(int i=0; i<this.value.size()-1;i++){
-			if(inserted){
-				ret=ret+"("+value.get(i)+")";
-			}
-			else{
-				inserted=true;
-				ret=value.get(i).toString();
-			}
-		}
-		if(inserted){
-			return "("+ret+"v("+value.get(this.value.size()-1)+")"+")";
-		}
-		else{
-			return "("+value.get(this.value.size()-1).toString()+")";
-		}
-	}
+
 	@Override
 	public AbstractPredicate<S> omega() {
 		return this;
@@ -170,5 +187,66 @@ public class OrPredicate<S extends State> extends ConstraintLanguage<S> {
 
 	public AbstractPredicate<S> simplify(){
 		return this;
+	}
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+	
+	 public Set<AbstractPredicate<S>> getPredicates(){
+		   return this.value;
+	   }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		OrPredicate<S> other = (OrPredicate<S>) obj;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+	@Override
+	public String toString() {
+		String ret="";
+		boolean inserted=false;
+		for(AbstractPredicate<S> p: this.value){
+			if(inserted){
+				ret=ret+this.getType()+"("+p+")";
+			}
+			else{
+				inserted=true;
+				ret="("+p+")";
+			}
+		}
+		return ret;
 	}
 }

@@ -21,8 +21,8 @@ import org.xml.sax.SAXException;
 
 public class ModelCheckerTest3 {
 
-	private static final String arg0="src//main//resources//modelchecker//model3.xml";
-	private static final String arg1="src//main//resources//modelchecker//specification3.xml";
+	private static final String arg0="src//test//resources//modelchecker//model3.xml";
+	private static final String arg1="src//test//resources//modelchecker//specification3.xml";
 	
 	private IncompleteBuchiAutomaton<State, Transition<State>> model =null;
 	private BuchiAutomaton<State, Transition<State>>  specification=null;
