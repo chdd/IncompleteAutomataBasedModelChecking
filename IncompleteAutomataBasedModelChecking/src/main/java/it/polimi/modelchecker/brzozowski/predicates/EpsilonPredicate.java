@@ -4,25 +4,25 @@ import it.polimi.model.State;
 
 /**
  * @author claudiomenghi
- * contains an epsilon Predicate. This predicate is associated with regular transitions of the (I)BA since these transitions
- * are not relevant in the predicate computation
+ * contains an {@link EpsilonPredicate} Predicate. This predicate is associated with regular transitions of the (I)BA since these transitions
+ * are not relevant in the {@link Constraint} computation
  */
 public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 
 	/**
-	 * the concatenation of a epsilon predicate is defined as follows:
-	 * -	if a is an empty predicate the empty predicate is returned
-	 * -	the concatenation of an epsilon predicate and the lambda predicate is equal to the epsilon predicate
-	 * -	the concatenation of an epsilon predicate and an epsilon predicate is equal to the epsilon predicate
-	 * -	the concatenation of an epsilon predicate and a predicate is a new and predicate that contains the epsilon predicate
-	 * 		and the predicate
-	 * -	the concatenation of an epsilon predicate and an and predicate is a new and predicate that contains the epsilon predicate
-	 *		and the original and predicate
-	 * -	the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
-	 * 		and the original or predicate
-	 * @param a: is the predicate to be concatenated
-	 * @return the predicate which is the concatenation of the epsilon predicate and a
-	 * @throws IllegalArgumentException is generated when the predicate to be concatenated is null
+	 * the concatenation of an {@link EmptyPredicate} is defined as follows:
+	 * -	if a is an {@link EmptyPredicate} the {@link EmptyPredicate} is returned
+	 * -	the concatenation of an {@link EpsilonPredicate} and the {@link LambdaPredicate} is equal to the {@link EpsilonPredicate}
+	 * -	the concatenation of an {@link EpsilonPredicate} and an {@link EpsilonPredicate} is equal to the {@link EpsilonPredicate}
+	 * -	the concatenation of an {@link EpsilonPredicate} and a {@link Predicate} is a new {@link AndPredicate} that contains the {@link EpsilonPredicate}
+	 * 		and the {@link Predicate}
+	 * -	the concatenation of an {@link EpsilonPredicate} and an {@link AndPredicate} is a new {@link AndPredicate} that contains the {@link EpsilonPredicate}
+	 *		and the original {@link AndPredicate}
+	 * -	the concatenation of an {@link EpsilonPredicate} and an {@link OrPredicate} is a new {@link AndPredicate} that contains the {@link EpsilonPredicate}
+	 * 		and the original {@link OrPredicate}
+	 * @param a: is the {@link AbstractPredicate} to be concatenated
+	 * @return the {@link AbstractPredicate} which is the concatenation of the {@link EpsilonPredicate} and the {@link AbstractPredicate} a
+	 * @throws IllegalArgumentException is generated when the {@link AbstractPredicate} to be concatenated is null
 	 */
 	@Override
 	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
@@ -48,7 +48,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		// the concatenation of an epsilon predicate and an and predicate is a new and predicate that contains the epsilon predicate
 		// and the original and predicate
 		if(a instanceof AndPredicate){
-			return new AndPredicate<S>(new EpsilonPredicate<S>(), ((AndPredicate<S>) a).getPredicates());
+			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getPredicates());
 		}
 		// the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
 		// and the original or predicate
@@ -59,18 +59,15 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");
 	}
 
-	
-	
-
-	/** the union operator applied to an epsilon predicate is defined as follows:
-	 * -	the union of an epsilon predicate and a lambda predicate is the lambda predicate
-	 * -	the union of an epsilon predicate and an EmptyPredicate is the epsilon predicate
-	 * -	the union of an epsilon predicate and an epsilon predicate is the epsilon predicate
-	 * -	the union of an epsilon predicate and an epsilon predicate is an or predicate that contains the epsilon predicate and the predicate
-	 * -	the union of an epsilon predicate and an and predicate is an or predicate that contains the epsilon predicate and the and predicate 
-	 * @param a: is the predicate to be unified
-	 * @return the predicate which is the union of the epsilon predicate and a
-	 * @throws IllegalArgumentException is generated when the predicate to be concatenated is null
+	/** the union operator applied to an {@link EpsilonPredicate} is defined as follows:
+	 * -	the union of an {@link EpsilonPredicate} and a {@link LambdaPredicate} is the {@link LambdaPredicate}
+	 * -	the union of an {@link EpsilonPredicate} and an {@link EmptyPredicate} is the {@link EpsilonPredicate}
+	 * -	the union of an {@link EpsilonPredicate} and an {@link EpsilonPredicate} is the {@link EpsilonPredicate}
+	 * -	the union of an {@link EpsilonPredicate} and an {@link Predicate} is an {@link OrPredicate} that contains the {@link EpsilonPredicate} and the {@link Predicate}
+	 * -	the union of an {@link EpsilonPredicate} and an {@link AndPredicate} is an {@link OrPredicate} that contains the {@link EpsilonPredicate} and the {@link AndPredicate} 
+	 * @param a: is the {@link AbstractPredicate} to be unified
+	 * @return the {@link AbstractPredicate} which is the union of the {@link EpsilonPredicate} and the {@link AbstractPredicate} a
+	 * @throws IllegalArgumentException is generated when the {@link AbstractPredicate} to be concatenated is null
 	 */
 	@Override
 	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
@@ -79,7 +76,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of an epsilon predicate and a lambda predicate is the lambda predicate
 		if(a instanceof LambdaPredicate){
-			return new LambdaPredicate<S>();
+			return a;
 		}
 		//  the union of an epsilon predicate and an EmptyPredicate is the epsilon predicate
 		if(a instanceof EmptyPredicate){
@@ -95,7 +92,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		//  the union of an epsilon predicate and an or predicate is an or predicate that contains the epsilon predicate and the or predicate 
 		if(a instanceof OrPredicate){
-			return new OrPredicate<S>(this, ((OrPredicate<S>) a).getPredicates());
+			return new OrPredicate<S>(this, a);
 		}
 		//  the union of an epsilon predicate and an and predicate is an or predicate that contains the epsilon predicate and the and predicate 
 		if(a instanceof AndPredicate){
@@ -104,29 +101,22 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");
 	}
 	/**
-	 * the star operator applied to an epsilon predicate returns the epsilon predicate
-	 * @return the epsilon predicate
+	 * the star operator applied to an {@link EpsilonPredicate} returns the {@link EpsilonPredicate}
+	 * @return the {@link EpsilonPredicate}
 	 */
 	@Override
 	public AbstractPredicate<S> star() {
 		return new EpsilonPredicate<S>();
 	}
 	/**
-	 * the omega operator applied to an epsilon predicate returns the epsilon predicate
-	 * @return the epsilon predicate
+	 * the omega operator applied to an {@link EpsilonPredicate} returns the {@link EpsilonPredicate}
+	 * @return the {@link EpsilonPredicate}
 	 */
 	@Override
 	public AbstractPredicate<S> omega() {
 		return this;
 	}
-	/**
-	 * simplify the predicate. The simplification of the epsilon predicate is the epsilon predicate its-self
-	 * @return the epsilon predicate
-	 */
-	@Override
-	public AbstractPredicate<S> simplify() {
-		return this;
-	}
+	
 
 	/**
 	 * see {@link AbstractPredicate}
@@ -135,6 +125,9 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 	public String toString() {
 		return "ε";
 	}
+	/**
+	 * see {@link Object}
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof EpsilonPredicate){
@@ -142,7 +135,9 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		return false;
 	}
-
+	/**
+	 * see {@link Object}
+	 */
 	@Override
 	public int hashCode() {
 		return 132;
