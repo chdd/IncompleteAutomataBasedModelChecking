@@ -2,47 +2,54 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import it.polimi.model.State;
 
-import java.io.StringWriter;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
-
+/**
+ * @author claudiomenghi
+ * Is the abstract class which specifies the abstract behavior (methods) of the predicates
+ * @param <S> is the type of the states that are involved in the constraints
+ */
 public abstract class  AbstractPredicate<S extends State>{
 	
-	public abstract AbstractPredicate<S> concatenate(AbstractPredicate<S> a);
-	public abstract AbstractPredicate<S> star();
-	public abstract AbstractPredicate<S> omega();
-	public abstract AbstractPredicate<S> union(AbstractPredicate<S> a);
-	public abstract AbstractPredicate<S> simplify();
 	/**
-	 * returns the empty string
-	 * @return the empty string
+	 * the concatenate method generates the concatenation of the this {@link AbstractPredicate}  with the 
+	 * {@link AbstractPredicate} a
+	 * @param a is the {@link AbstractPredicate} to be concatenated
+	 * @return a new predicate which is the concatenation of this {@link AbstractPredicate} and the {@link AbstractPredicate} a
+	 */
+	public abstract AbstractPredicate<S> concatenate(AbstractPredicate<S> a);
+	
+	/**
+	 * generates the union of this {@link AbstractPredicate} and the {@link AbstractPredicate} a
+	 * @param a the predicate to be "unified" with this
+	 * @return a new {@link AbstractPredicate} which is equivalent to the union of this {@link AbstractPredicate} and the {@link AbstractPredicate} a
+	 */
+	public abstract AbstractPredicate<S> union(AbstractPredicate<S> a);
+	
+	/**
+	 * applies the star operator to this {@link AbstractPredicate}
+	 * @return a new {@link AbstractPredicate} that is equivalent to this {@link AbstractPredicate} where the star operator is applied
+	 */
+	public abstract AbstractPredicate<S> star();
+	
+	/**
+	 * applies the omega operator to this {@link AbstractPredicate}
+	 * @return a new {@link AbstractPredicate} that is equivalent to this {@link AbstractPredicate} where the omega operator is applied
+	 */
+	public abstract AbstractPredicate<S> omega();
+	
+	/**
+	 * returns the String representation of this {@link AbstractPredicate} 
+	 * @return the String representation of this {@link AbstractPredicate}
 	 */
 	public abstract String toString();
 	
+	/**
+	 * @see {@link Object} 
+	 */
+	@Override
 	public abstract boolean equals(Object obj);
+	/**
+	 * @see {@link Object}
+	 */
+	@Override
 	public abstract int hashCode();
-	
-	public String toXMLString() throws JAXBException{
-		try {
-			StringWriter sw = new StringWriter();
-			// create JAXB context and initializing Marshaller
-			JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			
-			// for getting nice formatted output
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			
-			// Writing to console
-			jaxbMarshaller.marshal(this, sw);
-			return sw.toString();
-		} catch (JAXBException e) {
-		
-			// some exception occured
-			e.printStackTrace();
-			return null;
-		}
-	}
 }
