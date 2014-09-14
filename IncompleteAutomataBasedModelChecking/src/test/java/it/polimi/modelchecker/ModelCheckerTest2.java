@@ -8,7 +8,6 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
-import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
 import java.io.IOException;
 
@@ -28,7 +27,6 @@ public class ModelCheckerTest2 {
 	private BuchiAutomaton<State, Transition<State>>  specification=null;
 	private ModelChecker<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>> mck;
 	private ModelCheckerParameters<State> mp;
-	private State s2=new State("s2");
 	
 	@Before
 	public void setUp() throws JAXBException, SAXException, IOException, ParserConfigurationException{
@@ -59,12 +57,12 @@ public class ModelCheckerTest2 {
 		Constraint<State> con=mck.getParameters().getConstraint();
 		System.out.println(con);
 		assertTrue(
-				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(c)))+(b)))*λ")))||
-				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((a)+(b)))+(c)))*λ")))||
-				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((b)+(a)))+(c)))*λ")))||
-				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((b)+(c)))+(a)))*λ")))||
-				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((c)+(a)))+(b)))*λ")))||
-				con.equals(new Constraint<State>(new Predicate<State>(s2,"(a)*b(b)*c(((((c)+(b)))+(a)))*λ"))));
+				con.toString().equals("¬(<s2,(a)*b(b)*c(((((a)+(c)))+(b)))*λ>)")||
+				con.toString().equals("¬(<s2,(a)*b(b)*c(((((a)+(b)))+(c)))*λ>)")||
+				con.toString().equals("¬(<s2,(a)*b(b)*c(((((b)+(a)))+(c)))*λ>)")||
+				con.toString().equals("¬(<s2,(a)*b(b)*c(((((b)+(c)))+(a)))*λ>)")||
+				con.toString().equals("¬(<s2,(a)*b(b)*c(((((c)+(a)))+(b)))*λ>)")||
+				con.toString().equals("¬(<s2,(a)*b(b)*c(((((c)+(b)))+(a)))*λ>)"));
 	}
 
 }

@@ -3,9 +3,7 @@ package it.polimi.modelchecker.brzozowski.predicates;
 import it.polimi.model.State;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author claudiomenghi
@@ -105,10 +103,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			}
 			// the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
 			else{
-				List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
-				l.add(this);
-				l.add(a);
-				AndPredicate<S> cret=new AndPredicate<S>(l);
+				AndPredicate<S> cret=new AndPredicate<S>(this, a);
 				return cret;
 			}
 		}
@@ -130,11 +125,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 				}
 			
 			else{
-				List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
-				l.add(this);
-				l.addAll(andPredicate.getPredicates());
-				
-				AndPredicate<S> cret=new AndPredicate<S>(l);
+				AndPredicate<S> cret=new AndPredicate<S>(this,a);
 				return cret;
 			}
 		}
@@ -142,11 +133,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		 * 		and the second one is the or constraint
 		*/
 		if(a instanceof OrPredicate){
-			List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
-			l.add(this);
-			l.add(a);
-			
-			AndPredicate<S> cret=new AndPredicate<S>(l);
+			AndPredicate<S> cret=new AndPredicate<S>(this, a);
 			return cret;
 		}
 		/*
@@ -154,11 +141,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		 * 		and the second one is the EpsilonConstraint
 		 */
 		if(a instanceof EpsilonPredicate){
-			List<AbstractPredicate<S>> l=new ArrayList<AbstractPredicate<S>>();
-			l.add(this);
-			l.add(new EpsilonPredicate<S>());
-			
-			AndPredicate<S> cret=new AndPredicate<S>(l);
+			AndPredicate<S> cret=new AndPredicate<S>(this, a);
 			return cret;
 		}
 
@@ -190,10 +173,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
 		if(a instanceof LambdaPredicate){
-			Set<AbstractPredicate<S>> predicates=new HashSet<AbstractPredicate<S>>();
-			predicates.add(this);
-			predicates.add(a);
-			return new OrPredicate<>(predicates);
+			return new OrPredicate<S>(this, a);
 		}
 		// if a is a predicate
 		if(a instanceof Predicate){
@@ -214,7 +194,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of the predicate and an or constraint is a new or constraint where the predicate is added
 		if(a instanceof OrPredicate){
-			return new OrPredicate<S>(this,((OrPredicate<S>) a).getPredicates());
+			return new OrPredicate<S>(this,a);
 		}
 		// the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
 		if(a instanceof AndPredicate){

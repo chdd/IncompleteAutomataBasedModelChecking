@@ -48,7 +48,7 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 		// the concatenation of an epsilon predicate and an and predicate is a new and predicate that contains the epsilon predicate
 		// and the original and predicate
 		if(a instanceof AndPredicate){
-			return new AndPredicate<S>(this, ((AndPredicate<S>) a).getPredicates());
+			return new AndPredicate<S>(this, a);
 		}
 		// the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
 		// and the original or predicate

@@ -46,9 +46,7 @@ public class AndConstraintTest {
 		AbstractPredicate<State> or=new AndPredicate<State>(p1, p2);
 		assertTrue(or.concatenate(a) instanceof AndPredicate);
 		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(a));
-		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(p1));
-		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(p2));
-		assertTrue(!((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(or));
+		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(or));
 	}
 	/**
 	 *	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a,
@@ -77,8 +75,7 @@ public class AndConstraintTest {
 		AbstractPredicate<State> or=new AndPredicate<State>(p1, p2);
 		assertTrue(or.concatenate(a) instanceof AndPredicate);
 		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(a));
-		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(p1));
-		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(p2));
+		assertTrue(((AndPredicate<State>)or.concatenate(a)).getPredicates().contains(or));
 	}
 	/**
 	 *	if a is an or constraint a new and constraint that contains the constraint of this and constraint and the or constraint is generated
@@ -126,10 +123,8 @@ public class AndConstraintTest {
 		Predicate<State> a2=new Predicate<State>(new State("s4"), "cdd");
 		AndPredicate<State> a=new AndPredicate<State>(a1,a2);
 		assertTrue(p.concatenate(a) instanceof AndPredicate);
-		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(p0));
-		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(p1));
-		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(a1));
-		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(a2));
+		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(p));
+		assertTrue(((AndPredicate<State>)p.concatenate(a)).getPredicates().contains(a));
 	}
 	/**
 	 * the star operator when applied to an and constraint does not produce any effect

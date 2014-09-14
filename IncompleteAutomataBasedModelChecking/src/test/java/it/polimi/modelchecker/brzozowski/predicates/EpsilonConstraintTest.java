@@ -4,9 +4,7 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.model.State;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -84,10 +82,8 @@ public class EpsilonConstraintTest {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
 
-		Set<AbstractPredicate<State>> l=new HashSet<AbstractPredicate<State>>();
-		l.add(p1);
-		l.add(p2);
-		OrPredicate<State> c1=new OrPredicate<State>(l);
+
+		OrPredicate<State> c1=new OrPredicate<State>(p1,p2);
 		EpsilonPredicate<State> p3=new EpsilonPredicate<State>();
 		
 		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
@@ -122,7 +118,7 @@ public class EpsilonConstraintTest {
 	public void testUnion1() {
 		AbstractPredicate<State> a=new EpsilonPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		assertTrue(p.union(a).equals(p));
+		assertTrue(p.union(a).equals(new OrPredicate<>(a, p)));
 	}
 	/**
 	 * the union of an epsilon constraint and an EmptyConstraint is the epsilon constraint

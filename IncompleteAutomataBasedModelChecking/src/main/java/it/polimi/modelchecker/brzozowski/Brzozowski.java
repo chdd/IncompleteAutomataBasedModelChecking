@@ -54,24 +54,33 @@ extends Transition<S>> {
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
 			
+			//System.out.println("computing the matrixes");
+			
 			// the matrixes t and s are computed
 			AbstractPredicate<S1>[][] t=this.getConstraintT();
 			AbstractPredicate<S1>[] s=this.getConstrainedS(accept);
 			
-			// the system of equations described by the matrixes t and s is solved 
+			// the system of equations described by the matrixes t and s is solved
+			//System.out.println("solving the system");
 			this.solveSystem(t, s);
+			//System.out.println("system solved");
 			
 			// each initial state is analyzed
 			for(S init: a.getInitialStates()){
 				
+				//System.out.println("analyzing the initial state: computing the constraint");
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
 				AbstractPredicate<S1> newconstraint=s[a.statePosition(init)].concatenate(s[a.statePosition(accept)].omega());
 				
+				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
-				ret=ret.union(newconstraint.simplify());
+				ret=ret.union(newconstraint);
 			}
+			
+			
 		}
+		//System.out.println("returnig the constraints");
 		// creates the final constraint to be returned
 		return new Constraint<S1>(ret);
 	}

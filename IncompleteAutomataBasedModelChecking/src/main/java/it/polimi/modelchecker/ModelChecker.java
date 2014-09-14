@@ -115,6 +115,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 			this.parameters.setResult(0);
 			// returns the verification result
 			return 0;
+			
 		}
 		else{
 			// check if the automaton including its mixed states is empty

@@ -4,9 +4,7 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.model.State;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -29,15 +27,13 @@ public class PredicateConstraintTest {
 	@Test
 	public void testGetterAndSetters1() {
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		p.setState(new State("s2"));
 		p.setRegularExpression("cdd");
-		assertTrue(p.getState().equals(new State("s2")));
+		assertTrue(p.getState().equals(new State("s1")));
 		assertTrue(p.getRegularExpression().equals("cdd"));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetterAndSetters2() {
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		p.setState(null);
+		new Predicate<State>(null, "abb");
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetterAndSetters3() {
@@ -146,11 +142,8 @@ public class PredicateConstraintTest {
 		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
 		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
 		
-		Set<AbstractPredicate<State>> l=new HashSet<AbstractPredicate<State>>();
-		l.add(p1);
-		l.add(p2);
 		
-		OrPredicate<State> c1=new OrPredicate<State>(l);
+		OrPredicate<State> c1=new OrPredicate<State>(p1,p2);
 		
 		Predicate<State> p3=new Predicate<State>(new State("s3"), "sss");
 		

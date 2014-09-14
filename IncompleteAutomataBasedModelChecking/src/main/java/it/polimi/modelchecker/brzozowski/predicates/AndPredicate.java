@@ -10,10 +10,9 @@ import java.util.List;
  * contains an {@link AndPredicate}, which is a set of {@link AbstractPredicate} that must be simultaneously satisfied to get the final property
  * satisfied
  */
-public class AndPredicate<S extends State> extends AbstractPredicate<S>{
+public class AndPredicate<S extends State> extends LogicalPredicate<S>{
 	
-	/** The value is used for character storage. */
-    private List<AbstractPredicate<S>> value;
+	private final String type="^";
 	
 	/**
 	 * creates a new {@link AndPredicate} that contains the two {@link AbstractPredicate} firstPredicate, secondPredicate 
@@ -22,18 +21,7 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
 	 * @throws IllegalArgumentException is the first or the second {@link AbstractPredicate} are null
 	 */
 	 public AndPredicate(AbstractPredicate<S> firstPredicate, AbstractPredicate<S> secondPredicate){
-	 	if(firstPredicate==null){
-    		throw new IllegalArgumentException("The first constraint cannot be null");
-    	}
-    	if(secondPredicate==null){
-    		throw new IllegalArgumentException("The second constraint cannot be null");
-    	}
-        this.value = new ArrayList<AbstractPredicate<S>>();
-        this.value.add(firstPredicate);
-        this.value.add(secondPredicate);
-        if(this.value.size()<=1){
-        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
-        }
+	 	super(firstPredicate, secondPredicate);
 	 }
 	 /**
      * Initializes a newly created {@link AndPredicate} starting from the list l of {@link AbstractPredicate} 
@@ -41,73 +29,9 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
      * @throws IllegalArgumentException if the list of the {@link AbstractPredicate} contains less than 2 {@link AbstractPredicate}
      */
 	 public AndPredicate(List<AbstractPredicate<S>> l) {
-		this.value = new ArrayList<AbstractPredicate<S>>();
-        this.value.addAll(l);
-        if(this.value.size()<=1){
-        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
-        }
+		super(l);
 	 }
-	 /**
-	 * creates a new {@link AndPredicate} that contains the {@link AbstractPredicate} predicate and the set of {@link AbstractPredicate} predicates 
-	 * @param predicate is the first {@link AbstractPredicate} to be included in the {@link AndPredicate}
-	 * @param predicates is the set of {@link AbstractPredicate} to be included in the {@link AndPredicate}
-	 * @throws IllegalArgumentException is the first or the second {@link AbstractPredicate} are null or if the resulting set of {@link AbstractPredicate} contains
-	 * less than two predicates
-	 */
-	 public AndPredicate(AbstractPredicate<S> predicate, List<AbstractPredicate<S>> predicates) {
-		 if(predicate==null){
-			 throw new IllegalArgumentException("The predicate cannot be null");
-		 }
-		 if(predicates==null){
-			 throw new IllegalArgumentException("The list of predicates cannot be null");
-		 }
-		 this.value = new ArrayList<AbstractPredicate<S>>();
-		 this.value.add(predicate);
-		 this.value.addAll(predicates);
-		 if(this.value.size()<=1){
-        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
-		 }   
-	 }
-	 /**
-	  * creates a new {@link AndPredicate} starting from the {@link List}s of {@link AbstractPredicate} firstList and the {@link AbstractPredicate} predicate
-	  * @param firstList contains the first {@link List} of {@link AbstractPredicate}
-	  * @param predicate contains an {@link AbstractPredicate}
-	  * @throws IllegalArgumentException if the {@link List} or the {@link AbstractPredicate} is null or if the resulting {@link List} of {@link AbstractPredicate} contains less than two {@link AbstractPredicate}
-	  */
-	 public AndPredicate(List<AbstractPredicate<S>> firstList, AbstractPredicate<S> predicate) {
-		 if(firstList==null){
-			 throw new IllegalArgumentException("The first list of predicates cannot be null");
-		 }
-		 if(predicate==null){
-			 throw new IllegalArgumentException("The second list of predicates cannot be null");
-		 }
-		 this.value = new ArrayList<AbstractPredicate<S>>();
-        this.value.addAll(firstList);
-        this.value.add(predicate);
-        if(this.value.size()<=1){
-        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
-        }
-	 }
-	 /**
-	  * creates a new {@link AndPredicate} starting from the {@link List}s firsList and secondList
-	  * @param firstList is the first {@link List} of {@link AbstractPredicate}s
-	  * @param secondList is the second {@link List} of {@link AbstractPredicate}s
-	  * @throws IllegalArgumentException if one of these two {@link List} is null or if the resulting {@link List} of {@link AbstractPredicate} contains less than two {@link AbstractPredicate}
-	 */
-	 public AndPredicate(List<AbstractPredicate<S>> firstList, List<AbstractPredicate<S>> secondList) {
-		 if(firstList==null){
-			 throw new IllegalArgumentException("The first list of predicates cannot be null");
-		 }
-		 if(secondList==null){
-			 throw new IllegalArgumentException("The second list of predicates cannot be null");
-		 }
-		this.value = new ArrayList<AbstractPredicate<S>>();
-        this.value.addAll(firstList);
-        this.value.addAll(secondList);
-        if(this.value.size()<=1){
-        	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
-        }
-	 }
+	
 	 
     /**
    	 * the concatenation of an {@link AndPredicate}  is defined as follows:
@@ -129,6 +53,8 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
    	 */
 	@Override
 	public AbstractPredicate<S> concatenate(AbstractPredicate<S> a) {
+		//System.out.println("and concatenate");
+		
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -142,7 +68,12 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// if a is an EpsilonConstraint the concatenation of the and constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonPredicate){
-			return new AndPredicate<S>(this, a);
+			if(this.getLastPredicate() instanceof EpsilonPredicate){
+				return this;
+			}
+			else{
+				return new AndPredicate<S>(this, a);
+			}
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
 		// 		the regular expression of p is modified and concatenated to the one of the predicate a
@@ -203,6 +134,7 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
 	 */
 	@Override
 	public AbstractPredicate<S> union(AbstractPredicate<S> a) {
+		//System.out.println("and union");
 		
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
@@ -230,12 +162,7 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
 		}
 		// the union of an and constraint and an andConstraint is a new orConstraint that contains the two and constraints
 		if(a instanceof AndPredicate){
-			if(this.equals(a)){
-				return this;
-			}
-			else{
-				return new OrPredicate<S>(this, a);
-			}
+			return new OrPredicate<S>(this, a);
 		}
 
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
@@ -259,59 +186,36 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
 		return this;
 	}
 	
-	/**
-	 * returns the list of the {@link AbstractPredicate} associated with the {@link AndPredicate}
-	 * @return the list of the {@link AbstractPredicate} associated with the {@link AndPredicate}
-	 */
-	public List<AbstractPredicate<S>> getPredicates(){
-	   return this.value;
-    }
+	
 	 
 	/**
 	 * returns the first {@link AbstractPredicate} of the {@link List}
 	 * @return the first {@link AbstractPredicate} of the {@link List}
 	 */
 	public AbstractPredicate<S> getFistPredicate(){
-    	return value.get(0);
+    	return this.getPredicates().get(0);
     }
 	/**
 	 * returns the last {@link AbstractPredicate} of the {@link List}
 	 * @return the last {@link AbstractPredicate} of the {@link List}
 	 */
     public AbstractPredicate<S> getLastPredicate(){
-    	return value.get(value.size()-1);
+    	return this.getPredicates().get(this.getPredicates().size()-1);
     }
     
-    /**
-	 * @see {@link AbstractPredicate}
-	 */
-    @Override
-	public String toString() {
-		String ret="";
-		boolean inserted=false;
-		for(int i=0; i<this.value.size();i++){
-			if(inserted){
-				ret=ret+"^("+value.get(i)+")";
-			}
-			else{
-				inserted=true;
-				ret="("+value.get(i).toString()+")";
-			}
-		}
-		return ret;
-	}
-    /**
-	 * @see {@link Object}
+   
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-	/**
-	 * @see {@link Object}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -323,11 +227,18 @@ public class AndPredicate<S extends State> extends AbstractPredicate<S>{
 			return false;
 		@SuppressWarnings("unchecked")
 		AndPredicate<S> other = (AndPredicate<S>) obj;
-		if (value == null) {
-			if (other.value != null)
+		if (type == null) {
+			if (other.type != null)
 				return false;
-		} else if (!value.equals(other.value))
+		} else if (!type.equals(other.type))
 			return false;
 		return true;
 	}
+	
+	public String getType(){
+		return this.type;
+	}
+    
+    
+  
 }
