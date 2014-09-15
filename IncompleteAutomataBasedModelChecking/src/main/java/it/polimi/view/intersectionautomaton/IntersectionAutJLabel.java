@@ -5,17 +5,13 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.view.extendedautomaton.ExtendedAutJLabel;
+import it.polimi.view.stylesheets.IntersectionAutomatonStyleSheet;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.util.Hashtable;
 import java.util.Map;
 
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
-import com.mxgraph.view.mxStylesheet;
 
 @SuppressWarnings("serial")
 public class IntersectionAutJLabel<S1 extends State, T1 extends Transition<S1>,
@@ -25,21 +21,26 @@ public class IntersectionAutJLabel<S1 extends State, T1 extends Transition<S1>,
 
 	public IntersectionAutJLabel(Dimension d, A a) {
 		super(d,a);
+
+	}
+	protected void setStyleSheet(){
+		this.graph.setStylesheet(new IntersectionAutomatonStyleSheet());
 	}
 	
-	protected void printState(Map<State, Object> vertexMap, S s, Point position, mxGraph graph, Object defaultParent){
+	
+	protected void addState(Map<State, Object> vertexMap, S s, Point position, mxGraph graph, Object defaultParent){
 		
 		  if(a.isMixed(s)){
         	  
         	  if(a.isAccept(s)){
-      			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "MixedFinalState"));
+      			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "MixedFinalState"));
       		  }
       		  else{
-      			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "MixedState"));
+      			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "MixedState"));
       		  }
           }
 		  else{
-			  super.printState(vertexMap, s, position, graph, defaultParent);
+			  super.addState(vertexMap, s, position, graph, defaultParent);
 		  }
 	}
 	protected void printTransition(Map<State, Object> vertexMap, T t, S s, mxGraph graph, Object defaultParent){
@@ -50,36 +51,4 @@ public class IntersectionAutJLabel<S1 extends State, T1 extends Transition<S1>,
 			 super.printTransition(vertexMap, t, s, graph, defaultParent);
 		 }
 	}
-	 protected void settingStyle(mxStylesheet stylesheet){
-		 super.settingStyle(stylesheet);
-   	  
-         Hashtable<String, Object> stylemixedState = new Hashtable<String, Object>();
-         stylemixedState.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
-         stylemixedState.put(mxConstants.STYLE_STROKEWIDTH, 1.5);
-         stylemixedState.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
-         stylemixedState.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_ELLIPSE);
-         stylemixedState.put(mxConstants.STYLE_PERIMETER, mxConstants.PERIMETER_ELLIPSE);
-         stylemixedState.put(mxConstants.STYLE_DASHED, true);
-         
-         
-         Hashtable<String, Object> styleMixedEdges = new Hashtable<String, Object>();
-         styleMixedEdges.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
-         styleMixedEdges.put(mxConstants.STYLE_DASHED, true);
-         
-         
-         Hashtable<String, Object> styleMixedFinalState = new Hashtable<String, Object>();
-         styleMixedFinalState.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
-         styleMixedFinalState.put(mxConstants.STYLE_STROKEWIDTH, 1.5);
-         styleMixedFinalState.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
-         styleMixedFinalState.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_DOUBLE_ELLIPSE);
-         styleMixedFinalState.put(mxConstants.STYLE_PERIMETER, mxConstants.PERIMETER_ELLIPSE);
-         styleMixedFinalState.put(mxConstants.STYLE_DASHED, true);
-         
-         
-         stylesheet.putCellStyle("StyleMixedEdges", styleMixedEdges);
-         stylesheet.putCellStyle("MixedState", stylemixedState);
-         stylesheet.putCellStyle("MixedFinalState", styleMixedFinalState);
-     }
-
-
 }
