@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * @author claudiomenghi
- * contains a complete Buchi Automaton
+ * contains a complete {@link BuchiAutomaton}
  * @param <S> the type of the states
  * @param <T> the type of the transitions
  */
@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	
 	/**
-	 * contains the initial states of the automaton
+	 * contains the initial states of the {@link BuchiAutomaton}
 	 */
 	@XmlElementWrapper(name="initialStates")
 	@XmlElements({
@@ -46,14 +46,14 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	private Set<S> initialStates;
 	
 	/**
-	 * contains the states of the automaton
+	 * contains the states of the {@link BuchiAutomaton}
 	 */
 	@XmlElementWrapper(name="states")
 	@XmlElement(name="state")
 	private LinkedHashSet<S> states;
 	
 	/**
-	 * contains the accepting states of the automaton
+	 * contains the accepting states of the {@link BuchiAutomaton}
 	 */
 	@XmlElementWrapper(name="acceptingStates")
 	@XmlElements({
@@ -69,14 +69,14 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	private Map<S, HashSet<T>> transitionRelation;
 	
 	/**
-	 * contains the set of the character of the automaton
+	 * contains the set of the character of the {@link BuchiAutomaton}
 	 */
 	@XmlElementWrapper(name="alphabet")
 	@XmlElement(name="character")
 	protected Set<String> alphabet;
 	
 	/**
-	 * creates a new empty automaton
+	 * creates a new empty {@link BuchiAutomaton}
 	 */
 	public BuchiAutomaton() {
 		this.states=new LinkedHashSet<S>();
@@ -88,9 +88,9 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	
 	
 	/** 
-	 * Constructs a new automaton
-	 * @param alphabet: is the alphabet of the automaton
-	 * @throws NullPointerException is generated if the alphabet of the automaton is null
+	 * Constructs a new {@link BuchiAutomaton} with the specified alphabet
+	 * @param alphabet: is the alphabet of the {@link BuchiAutomaton}
+	 * @throws NullPointerException is generated if the alphabet of the {@link BuchiAutomaton} is null
 	 */
 	public BuchiAutomaton(Set<String> alphabet) {
 		if(alphabet==null){
@@ -104,17 +104,17 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	}
 	
 	/**
-	 * Returns the alphabet of the automaton
-	 * @return the alphabet of the automaton
+	 * Returns the alphabet of the {@link BuchiAutomaton}
+	 * @return the alphabet of the {@link BuchiAutomaton}
 	 */
 	public Set<String> getAlphabet() {
 		return alphabet;
 	}
 	
 	/**
-	 * add the state s in the set of the states of the automaton. If s is already present in the set of the states it is not added in the graph
-	 * @param s the state to be added in the set of the states of the automaton
-	 * @throws IllegalArgumentException is generated if the state s to be added is null
+	 * add the {@link State} s in the set of the states of the automaton. If s is already present in the set of the states it is not added in the graph
+	 * @param s the {@link State} to be added in the set of the states of the {@link BuchiAutomaton}
+	 * @throws IllegalArgumentException is generated if the {@link State} s to be added is null
 	 */
 	public void addState(S s){
 		if(s==null){
@@ -127,10 +127,10 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	}
 	
 	/**
-	 * check is the state s is contained into the set of the states of the automaton
-	 * @param s the state to be checked if present
-	 * @return true if the state s is contained into the set of the states of the automaton, false otherwise
-	 * @throws IllegalArgumentException when the state s is null
+	 * check is the {@link State} s is contained into the set of the {@link State}s of the {@link BuchiAutomaton}
+	 * @param s the {@link State} to be checked if present
+	 * @return true if the {@link State} s is contained into the set of the {@link State}s of the {@link BuchiAutomaton}, false otherwise
+	 * @throws IllegalArgumentException when the {@link State} s is null
 	 */
 	public boolean isContained(S s){
 		if(s==null){
@@ -271,10 +271,6 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 		}
 		
 	}
-	
-
-
-	
 	
 	
 	/**
