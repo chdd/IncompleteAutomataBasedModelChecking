@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import javax.swing.JLabel;
 
 import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
@@ -76,6 +77,14 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
 		
 		this.add(graphComponent);
 		this.loadAutomata(graph);
+		mxOrganicLayout fo=new mxOrganicLayout(graph);
+		Object cell = graph.getDefaultParent();
+		graph.getModel().beginUpdate();
+		try {
+			fo.execute(cell);
+		} finally {
+			graph.getModel().endUpdate();
+		}
 		this.setVisible(true);
 		this.setEnabled(false);
 	}
