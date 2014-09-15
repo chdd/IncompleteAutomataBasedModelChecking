@@ -1,4 +1,4 @@
-package it.polimi.view.stylesheets;
+package it.polimi.view.style;
 
 import it.polimi.model.BuchiAutomaton;
 
@@ -19,6 +19,7 @@ public class BuchiAutomatonStyleSheet extends mxStylesheet {
 	 * creates a new {@link mxStylesheet} of a {@link BuchiAutomaton}
 	 */
 	public BuchiAutomatonStyleSheet(){
+		
 		
 		// sets the style of regular states
 		Hashtable<String, Object> styleRegularState = new Hashtable<String, Object>();

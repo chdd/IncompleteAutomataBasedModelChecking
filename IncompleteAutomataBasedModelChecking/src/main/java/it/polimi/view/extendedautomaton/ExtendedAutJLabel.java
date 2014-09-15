@@ -4,7 +4,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.view.automaton.AutJLabel;
-import it.polimi.view.stylesheets.IncompleteBuchiAutomatonStyleSheet;
+import it.polimi.view.style.IncompleteBuchiAutomatonStyleSheet;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -41,18 +41,13 @@ public class ExtendedAutJLabel<S extends State, T extends Transition<S>, A exten
 		graphComponent.setDragEnabled(true);
 		graphComponent.setEventsEnabled(false);
 		graphComponent.setSize(d);
-		this.graph.setStylesheet(new IncompleteBuchiAutomatonStyleSheet());
+	    this.settingStyle();
 		this.loadAutomata(graph);
 		this.setVisible(true);
 		this.setEnabled(false);
 		this.repaint();
 		
 	}
-	
-	protected void setStyleSheet(){
-		this.graph.setStylesheet(new IncompleteBuchiAutomatonStyleSheet());
-	}
-	
 	private void removeGraph(){
 		Object[] cells=new Object[this.vertexMap.size()];
 		int i=0;
@@ -66,18 +61,18 @@ public class ExtendedAutJLabel<S extends State, T extends Transition<S>, A exten
 		return new Point(num%numPerRow*nodeXstep,num/numPerRow*nodeYstep);
 	}
 	
-	protected void addState(Map<State, Object> vertexMap, S s, Point position, mxGraph graph, Object defaultParent){
+	protected void printState(Map<State, Object> vertexMap, S s, Point position, mxGraph graph, Object defaultParent){
 		if(a.isTransparent(s)){
     		  
     		  if(a.isAccept(s)){
-    			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "TransparentFinalState"));
+    			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "TransparentFinalState"));
     		  }
     		  else{
-    			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "TransparentState"));
+    			  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "TransparentState"));
     		  }
     	  }
     	  else{
-    		 super.addState(vertexMap, s, position, graph, defaultParent);
+    		 super.printState(vertexMap, s, position, graph, defaultParent);
     	  }
 
 	}
@@ -92,7 +87,7 @@ public class ExtendedAutJLabel<S extends State, T extends Transition<S>, A exten
 	  	  for(S s: a.getStates()){
 	  		  
 	  		  Point position=this.calculatePosition(index);
-	  		  this.addState(vertexMap, s, position, graph, defaultParent);
+	  		  this.printState(vertexMap, s, position, graph, defaultParent);
 			  index++;
 	      }
 	      for(S s: a.getStates()){
@@ -108,6 +103,8 @@ public class ExtendedAutJLabel<S extends State, T extends Transition<S>, A exten
 	 	  graph.insertEdge(defaultParent, null, t.getCharacter(), vertexMap.get(s), vertexMap.get(t.getDestination()), "EdgesStyle");
 	       
 	}
-	
+	 protected void settingStyle(){
+		 this.graph.setStylesheet(new IncompleteBuchiAutomatonStyleSheet());
+	 }
 
 }

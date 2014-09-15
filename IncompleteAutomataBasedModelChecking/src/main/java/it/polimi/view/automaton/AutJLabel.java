@@ -3,12 +3,13 @@ package it.polimi.view.automaton;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.view.stylesheets.BuchiAutomatonStyleSheet;
+import it.polimi.view.style.BuchiAutomatonStyleSheet;
 
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JLabel;
 
@@ -16,91 +17,34 @@ import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
-/**
- * is used to print the {@link BuchiAutomaton}
- * @author claudiomenghi
- *
- * @param <S> is the type of the {@link State} of the {@link BuchiAutomaton}
- * @param <T> is the type of the {@link Transition} of the {@link BuchiAutomaton}
- * @param <A> is the {@link BuchiAutomaton} to be printed
- */
 public class AutJLabel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JLabel {
 
-	/**
-	 * contains the width of the {@link State}
-	 */
-	protected int stateWidth;
+	protected static int nodeXsize=80;
+	protected static int nodeYsize=30;
+	protected static int nodeXstep=120;
+	protected static int nodeYstep=60;
+	protected int numPerRow=3;
 	
-	/**
-	 * contains the height of the {@link State}
-	 */
-	protected int stateHeigth;
-	
-	/**
-	 * contains the distance between the {@link State} over the X axis
-	 */
-	protected int nodeXstep;
-	
-	/**
-	 * contains the distance between the {@link State} over the Y axis
-	 */
-	protected int nodeYstep;
-	
-	/**
-	 * contains the number of the states for each row
-	 */
-	protected int numPerRow;
-	
-	/**
-	 * contains the Automaton to be printed
-	 */
 	protected A  a=null;
-	
-	/**
-	 * contains the {@link Dimension} of the {@link JLabel}
-	 */
 	protected Dimension d;
 	
-	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * contains the graphical version of the {@link BuchiAutomaton} which is printed
-	 */
 	protected mxGraph graph;
 	protected Map<State, Object> vertexMap;
 	
-	/**
-	 * creates a new {@link JLabel} which is used to show the {@link BuchiAutomaton}
-	 * @param d is the {@link Dimension} of the {@link JLabel}
-	 * @param a is the {@link BuchiAutomaton} to be printed
-	 * @throws IllegalArgumentException if the {@link Dimension} d or the {@link BuchiAutomaton} a is null
-	 */
+	
+	
 	public AutJLabel(Dimension d, A  a){
-		if(d==null){
-			throw new IllegalArgumentException("The dimension d cannot be null");
-		}
-		if(a==null){
-			throw new IllegalArgumentException("The automaton a cannot be null");
-		}
-		
 		this.a=a;
 		this.d=d;
-		
-		// computes the width of the states 
-		this.stateWidth=d.width/10;
-		// computes the height of the states
-		this.stateHeigth=d.height/10;
-		// computes the distance on the x axis between the states
-		this.nodeXstep=d.width/5;
-		// computes the distance on the y axis between the states
-		this.nodeYstep=d.width/5;
-		// computes the number of the nodes for each row
-		numPerRow=d.width/(nodeXstep+stateWidth)+1;
-		
-		// creates the mxGraph
+		numPerRow=d.width/nodeXstep;
 		this.graph = new mxGraph();
-		
+		graph.getModel().beginUpdate();
+		graph.getModel().endUpdate();
 		graph.setGridEnabled(true);
 		graph.setCellsEditable(false);
 		graph.setCellsBendable(false);
@@ -120,17 +64,15 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
         
 		mxGraphComponent graphComponent = new mxGraphComponent(graph);
 		graphComponent.getViewport().setOpaque(true);
+		//graphComponent.getViewport().setBackground(Color.lightGray);
 		graphComponent.setGridVisible(true);
 		graphComponent.setGridStyle(mxGraphComponent.GRID_STYLE_LINE);
 		graphComponent.setAutoscrolls(true);
 		graphComponent.setDragEnabled(true);
 		graphComponent.setEventsEnabled(false);
 		graphComponent.setSize(d);
-		
-		// sets the style sheet for the current automata
-		this.setStyleSheet();
-		
-	   
+		this.settingStyle();
+	     
 		
 		this.add(graphComponent);
 		this.loadAutomata(graph);
@@ -138,9 +80,6 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
 		this.setEnabled(false);
 	}
 	
-	protected void setStyleSheet(){
-		this.graph.setStylesheet(new BuchiAutomatonStyleSheet());
-	}
 	
 	
 	public void updateGraph(A  a ){
@@ -155,8 +94,7 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
 		graphComponent.setDragEnabled(true);
 		graphComponent.setEventsEnabled(false);
 		graphComponent.setSize(d);
-		this.graph.setStylesheet(new BuchiAutomatonStyleSheet());
-		   
+		this.settingStyle();
 		this.loadAutomata(graph);
 		this.setVisible(true);
 		this.setEnabled(false);
@@ -164,23 +102,29 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
 		
 	}
 	private void removeGraph(){
-		this.graph.removeCells();
+		Object[] cells=new Object[this.vertexMap.size()];
+		int i=0;
+		for(Entry<State, Object> e: this.vertexMap.entrySet()){
+			cells[i]=e.getValue();
+			i++;
+		}
+		this.graph.removeCells(cells);
 	}
 	private Point calculatePosition(int num){
 		return new Point(num%numPerRow*nodeXstep,num/numPerRow*nodeYstep);
 	}
 	
-	protected void addState(Map<State, Object> vertexMap, S s, Point position, mxGraph graph, Object defaultParent){
+	protected void printState(Map<State, Object> vertexMap, S s, Point position, mxGraph graph, Object defaultParent){
 		  if(a.isAccept(s)){
-    		  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "RegularFinalState"));
+    		  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "RegularFinalState"));
           }
 		  else{
 			  if(a.isInitial(s)){
-				  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "InitialState"));
+				  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "InitialState"));
 					
 			  }
 			  else{
-				  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, stateWidth, stateHeigth, "RegularState"));
+				  vertexMap.put(s, graph.insertVertex(defaultParent, s.getName(), s.getName(), position.x, position.y, nodeXsize, nodeYsize, "RegularState"));
 			  }
 		 }
 	}
@@ -195,7 +139,7 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
 	  	  for(S s: a.getStates()){
 	  		  
 	  		  Point position=this.calculatePosition(index);
-	  		  this.addState(vertexMap, s, position, graph, defaultParent);
+	  		  this.printState(vertexMap, s, position, graph, defaultParent);
 			  index++;
 	      }
 	      for(S s: a.getStates()){
@@ -211,6 +155,8 @@ public class AutJLabel<S extends State, T extends Transition<S>, A extends Buchi
 	 	  graph.insertEdge(defaultParent, null, t.getCharacter(), vertexMap.get(s), vertexMap.get(t.getDestination()), "EdgesStyle");
 	       
 	}
-	 
+	protected void settingStyle(){
+		this.graph.setStylesheet(new BuchiAutomatonStyleSheet());
+    }
 
 }

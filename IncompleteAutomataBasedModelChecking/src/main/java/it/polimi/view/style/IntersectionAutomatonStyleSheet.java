@@ -1,6 +1,6 @@
-package it.polimi.view.stylesheets;
+package it.polimi.view.style;
 
-import it.polimi.model.IncompleteBuchiAutomaton;
+import it.polimi.model.IntersectionAutomaton;
 
 import java.awt.Color;
 import java.util.Hashtable;

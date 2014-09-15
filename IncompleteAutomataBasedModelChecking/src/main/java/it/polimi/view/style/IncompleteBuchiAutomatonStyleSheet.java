@@ -1,4 +1,4 @@
-package it.polimi.view.stylesheets;
+package it.polimi.view.style;
 
 import it.polimi.model.IncompleteBuchiAutomaton;
 

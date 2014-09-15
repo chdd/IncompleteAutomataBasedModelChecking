@@ -43,14 +43,14 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	    @XmlElement(name="initialState", type=State.class)
 	  })
 	@XmlIDREF
-	private Set<S> initialStates;
+	protected Set<S> initialStates;
 	
 	/**
 	 * contains the states of the {@link BuchiAutomaton}
 	 */
 	@XmlElementWrapper(name="states")
 	@XmlElement(name="state")
-	private LinkedHashSet<S> states;
+	protected LinkedHashSet<S> states;
 	
 	/**
 	 * contains the accepting states of the {@link BuchiAutomaton}
@@ -60,13 +60,13 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	    @XmlElement(name="acceptingState", type=State.class)
 	  })
 	@XmlIDREF
-	private Set<S> acceptStates;
+	protected Set<S> acceptStates;
 	
 	/** 
 	 * contains the transition relation
 	 */
 	@XmlJavaTypeAdapter(MapAdapter.class)
-	private Map<S, HashSet<T>> transitionRelation;
+	protected Map<S, HashSet<T>> transitionRelation;
 	
 	/**
 	 * contains the set of the character of the {@link BuchiAutomaton}
