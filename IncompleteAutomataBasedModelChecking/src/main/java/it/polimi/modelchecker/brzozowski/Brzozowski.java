@@ -12,16 +12,15 @@ import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Predicate;
 
-
 /**
  * @author claudiomenghi
- * implements the modified Brzozowski algorithm, given a possibly empty intersection automaton computes the corresponding
- * constraint
+ * implements the modified Brzozowski algorithm, given a possibly empty {@link IntersectionAutomaton} computes the corresponding
+ * {@link Constraint}
  * 
- * @param <S1> the type of the states of the original BA, (I)BA
- * @param <T1> the type of the transitions of the original BA, (I)BA
- * @param <S> the type of the states  of the intersection automaton
- * @param <T> the type of the transitions of the intersection automaton
+ * @param <S1> the type of the {@link State}s of the original BA, (I)BA
+ * @param <T1> the type of the {@link Transition}s of the original BA, (I)BA
+ * @param <S> the type of the {@link State}s  of the intersection automaton
+ * @param <T> the type of the {@link Transition}s of the intersection automaton
  */
 public class Brzozowski<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
 extends Transition<S>> {
@@ -32,9 +31,9 @@ extends Transition<S>> {
 	private final IntersectionAutomaton<S1, T1, S, T> a;
 	
 	/**
-	 * creates a new modified Brzozowski solved which is responsible for finding the constraints associated with a particular {@link IntersectionAutomaton}
+	 * creates a new modified Brzozowski solved which is responsible for finding the {@link Constraint} associated with a particular {@link IntersectionAutomaton}
 	 * @param a is the {@link IntersectionAutomaton} to be analyzed
-	 * @throws IllegalArgumentException is generated if a is null
+	 * @throws IllegalArgumentException is generated if the {@link IntersectionAutomaton} a is null
 	 */
 	public Brzozowski(IntersectionAutomaton<S1, T1, S, T> a){
 		if(a==null){
@@ -43,8 +42,8 @@ extends Transition<S>> {
 		this.a=a;
 	}
 	/**
-	 * returns the constraint associated with the intersection automaton a
-	 * @return the constraint associated with the intersection automaton a
+	 * returns the {@link Constraint} associated with the {@link IntersectionAutomaton} a
+	 * @return the {@link Constraint} associated with the {@link IntersectionAutomaton} a
 	 */
 	public Constraint<S1> getConstraint(){
 		
@@ -86,13 +85,19 @@ extends Transition<S>> {
 	}
 	
 	/**
-	 * returns the constraint associated with the automaton
-	 * @param t: is the matrix t which describes the transition relation of the automaton
-	 * @param s: is the matrix s which describes the accepting states of the automaton
-	 * @return the constraint associated with the Buchi automaton
-	 * @throws
+	 * returns the {@link Constraint} associated with the {@link IntersectionAutomaton}
+	 * @param t: is the matrix t which describes the transition relation of the {@link IntersectionAutomaton}
+	 * @param s: is the matrix s which describes the accepting states of the {@link IntersectionAutomaton}
+	 * @return the constraint associated with the {@link IntersectionAutomaton}
+	 * @throws IllegalArgumentException if the matrix t or s is null
 	 */
 	protected  void solveSystem(AbstractPredicate<S1>[][] t, AbstractPredicate<S1>[] s) {
+		if(t==null){
+			throw new IllegalArgumentException("The matrix t cannot be null");
+		}
+		if(s==null){
+			throw new IllegalArgumentException("The vector s cannot be null");
+		}
 		
 		int m=a.getStates().size();
 		for(int n=m-1; n>=0; n--){
@@ -109,10 +114,10 @@ extends Transition<S>> {
 		}
 }
 	/**
-	 * returns the matrix associated with the Buchi automaton a
-	 * @param a is the intersection automaton to be converted into a matrix t
-	 * @param statesOrdered is an ordered version of the states in a
-	 * @return the matrix that represents the automaton a
+	 * returns the matrix associated with the {@link IntersectionAutomaton} a
+	 * @param a is the {@link IntersectionAutomaton} to be converted into a matrix t
+	 * @param statesOrdered is an ordered version of the {@link State}s in a
+	 * @return the matrix that represents the {@link IntersectionAutomaton} a
 	 * @throws IllegalArgumentException when the array of the states ordered is null
 	 */
 	protected AbstractPredicate<S1>[][]  getConstraintT(){
@@ -165,13 +170,13 @@ extends Transition<S>> {
 		return ret;
 	}
 	/**
-	 * returns the matrix S associated with the intersection automaton a
-	 * @param accept is the accepting states of the automaton considered
-	 * @param statesOrdered contains the states of a ordered
-	 * @return the matrix S associated with the automaton a
+	 * returns the matrix S associated with the {@link IntersectionAutomaton} a
+	 * @param accept is the accepting states of the {@link IntersectionAutomaton} considered
+	 * @param statesOrdered contains the states of the {@link IntersectionAutomaton} a ordered
+	 * @return the matrix S associated with the {@link IntersectionAutomaton} a
 	 * @throws IllegalArgumentException when the accepting state or the ordered set of states is null
 	 * if the array of the ordered states does not contains all the states of the automaton and vice-versa
-	 * if the state accept is not in the set of accepting states of the intersection automaton
+	 * if the state accept is not in the set of accepting states of the {@link IntersectionAutomaton}
 	 */
 	protected AbstractPredicate<S1>[] getConstrainedS(S accept){
 		if(accept==null){
@@ -200,6 +205,5 @@ extends Transition<S>> {
 		// returns the vector s
 		return ret;
 	}
-	
 }
 
