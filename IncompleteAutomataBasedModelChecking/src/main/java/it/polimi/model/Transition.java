@@ -68,7 +68,7 @@ public class Transition<S extends State>{
 	 */
 	@Override
 	public String toString() {
-		return character + "->"+ state;
+		return character;
 	}
 	
 }

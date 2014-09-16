@@ -44,6 +44,6 @@ public class ConstrainedTransition<S1 extends State,S extends IntersectionState<
 	
 	@Override
 	public String toString() {
-		return "<"+constrainedState.getName()+","+super.getCharacter()+">" + "->"+ this.getDestination();
+		return "<"+constrainedState.getName()+","+super.getCharacter()+">";
 	}
 }

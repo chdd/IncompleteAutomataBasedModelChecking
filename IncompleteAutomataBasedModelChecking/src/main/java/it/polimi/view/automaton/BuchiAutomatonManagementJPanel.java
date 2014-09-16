@@ -1,99 +1,60 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.FlowLayout;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.filechooser.FileSystemView;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 @SuppressWarnings("serial")
-public class AutomatonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S, T>> extends JPanel implements ActionListener {
+public class BuchiAutomatonManagementJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S, T>> extends JPanel {
 
-	protected AutJLabel<S,T,A> label;
-	protected AutXMLTextArea<S,T,A> area;
-	protected A  a;
+	private BuchiAutomatonLoadingJPanel<S, T, A> loadingPanel;
+	private BuchiAutomatonJPanel<S,T, A> automatonPanel;
 	
-	public A getAutomaton(){
-		return this.a;
-	}
-	public AutomatonJPanel(){
-		super(null);
+	public BuchiAutomatonManagementJPanel(){
+		super(new FlowLayout());
 	}
 	
 	protected void addGraph(){
 		
 	}
-	public AutomatonJPanel(Dimension d, A  a ) throws JAXBException{
-	
-		 super(null);
-		 this.a=a;
-		 this.setSize(d);
-		 this.setBorder(BorderFactory.createLineBorder(Color.black));
-		 label=new AutJLabel<S,T,A>(new Dimension(d.width/2,d.height/2), a);
-		 label.setVisible(true);
-		 label.setSize(new Dimension(d.width/2,d.height/2));
-		 this.add(label); 
-		 this.label.setVisible(true);
-		 
+	public BuchiAutomatonManagementJPanel(Dimension d) throws JAXBException{
 		
-		 this.createButtons(d);
+		 super();
+		 this.setBackground(Color.getColor("myColor"));
+		 this.setSize(d);
+		 this.setMinimumSize(d);
+		 this.setMaximumSize(d);
+		 this.setPreferredSize(d);
+		 this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
 		 
-		 area=new AutXMLTextArea<S,T,A>(new Dimension(d.width/3,d.height/4), a);
-		 //this.add(area);
-		 JScrollPane scroll = new JScrollPane(area);
-		 scroll.setSize(new Dimension(d.width/3+200,d.height/4));
-		 scroll.setLocation(d.width/2, d.height/2/5+2*d.height/2/5/20);
-		 scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		 Dimension automatonJPanelDimension=new Dimension(d.width/2, d.height);
+		 automatonPanel=this.getAutomatonPanel(automatonJPanelDimension);
+		 this.add(automatonPanel);
+		 
+		 Dimension automatonLoadingPanelDimension=new Dimension(d.width/2, d.height);
+		 loadingPanel=new BuchiAutomatonLoadingJPanel<S,T,A>(automatonLoadingPanelDimension);
+		 this.add(loadingPanel);
+		 
+	}
+	
+	public void update(A a) throws JAXBException{
+		this.automatonPanel.update(a);
+		this.loadingPanel.update(a);
+	}
+	
+	protected BuchiAutomatonJPanel<S,T, A> getAutomatonPanel(Dimension automatonJPanelDimension){
+		 return new  BuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension);
+	}
 
-		 this.add(scroll); 
-		  this.revalidate();
-		 this.setVisible(true);
-		 
-	}
-	protected void createButtons(Dimension d){
-		 Dimension buttonDimension=new Dimension(d.width/2/4, d.height/2/5);
-		 JButton btnInsert = new JButton("Update Automaton");
-		 btnInsert.setSize(buttonDimension);
-		 btnInsert.setOpaque(true);
-		 btnInsert.setLocation(d.width/2, d.height/3/5/20);
-		 btnInsert.setVisible(true);
-		 this.addAcationListener(btnInsert);
-		 this.add(btnInsert);
-		 
-		 JButton btnLoad = new JButton("Open");
-		 btnLoad.setSize(buttonDimension);
-		 btnLoad.setOpaque(true);
-		 btnLoad.setLocation(d.width/2+buttonDimension.width, d.height/2/5/20);
-		 btnLoad.setVisible(true);
-		 this.addAcationListener(btnLoad);
-		 this.add(btnLoad);
-		 
-		 JButton btnSave = new JButton("Save");
-		 btnSave.setSize(buttonDimension);
-		 btnSave.setOpaque(true);
-		 btnSave.setLocation(d.width/2+(buttonDimension.width*2), d.height/2/5/20);
-		 btnSave.setVisible(true);
-		 this.addAcationListener(btnSave);
-		 this.add(btnSave);
-	}
+  /*
 	protected void addAcationListener(JButton b){
 		 b.addActionListener(this);
 		
@@ -157,5 +118,5 @@ public class AutomatonJPanel<S extends State, T extends Transition<S>, A extends
 		else{
 			JOptionPane.showMessageDialog(null, "event: "+e.getActionCommand()+" not supported");
 		}
-	}
+	}*/
 }

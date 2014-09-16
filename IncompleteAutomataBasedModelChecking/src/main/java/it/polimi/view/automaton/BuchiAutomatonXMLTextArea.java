@@ -9,20 +9,24 @@ import java.awt.TextArea;
 
 import javax.xml.bind.JAXBException;
 
-public class AutXMLTextArea<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends TextArea {
+public class BuchiAutomatonXMLTextArea<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends TextArea {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public AutXMLTextArea(){
+	public BuchiAutomatonXMLTextArea(){
 		super();
 	}
-	public AutXMLTextArea(Dimension d, A  a) throws JAXBException{
+	public BuchiAutomatonXMLTextArea(Dimension d) throws JAXBException{
 		super();
 		this.setSize(d);
-		this.setText(a.toXMLString());
+		this.setMinimumSize(d);
+		this.setMaximumSize(d);
 		this.setVisible(true);
+	}
+	public void update(A a) throws JAXBException{
+		this.setText(a.toXMLString());
 	}
 }
