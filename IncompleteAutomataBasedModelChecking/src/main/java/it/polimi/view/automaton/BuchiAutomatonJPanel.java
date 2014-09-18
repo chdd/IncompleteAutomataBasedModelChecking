@@ -34,6 +34,9 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 	 */
 	protected Graph<S, T> graph;
 	
+	private Layout<S,T> layout;
+	private VisualizationViewer<S, T> vv;
+	
 	/**
 	 * 
 	 */
@@ -53,34 +56,20 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		this.setSize(d);
 		this.setMinimumSize(d);
 		this.setMaximumSize(d);
-		 this.setPreferredSize(d);
+		this.setPreferredSize(d);
 		
 		this.setBackground(Color.WHITE);
-		
-		
-		
-	}
-	
-	public void update(A  a){
 		this.graph = new SparseMultigraph<S,T>();
-		this.loadAutomata(a);
-		Layout<S,T> layout=new CircleLayout<S,T>(this.graph);
+		this.layout=new CircleLayout<S,T>(this.graph);
 		Dimension size=new Dimension(this.getSize().width-50, this.getSize().height-50);
 		layout.setSize(size);
-		VisualizationViewer<S, T> vv=new VisualizationViewer<S,T>(layout);
-		vv.setSize(this.getSize());
-		vv.setMinimumSize(size);
-		vv.setMaximumSize(size);
-		vv.setPreferredSize(size);
+		this.vv=new VisualizationViewer<S,T>(layout);
+		vv.setSize(d);
+		vv.setMinimumSize(d);
+		vv.setMaximumSize(d);
+		vv.setPreferredSize(d);
 		vv.setVisible(true);
 		vv.setFocusable(true);
-		vv.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
-		vv.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
-		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<T>());
-		vv.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
-		vv.getRenderContext().setVertexStrokeTransformer(this.getStrokeTransformer(a));
-		vv.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeTransformer(a));
 		vv.setBackground(Color.WHITE);
 		vv.setBorder(new LineBorder(Color.getColor("myColor")));
 		vv.setAutoscrolls(true);
@@ -88,8 +77,26 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		DefaultModalGraphMouse<S, T> gm=new DefaultModalGraphMouse<S,T>();
 		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
 		vv.setGraphMouse(gm);
-		
 		this.add(vv);
+		
+	}
+	
+	public void update(A  a){
+		
+		this.loadAutomata(a);
+		this.layout.reset();
+		this.layout=new CircleLayout<S,T>(this.graph);
+		this.vv.setGraphLayout(layout);
+		
+		vv.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
+		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
+		vv.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
+		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<T>());
+		vv.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
+		vv.getRenderContext().setVertexStrokeTransformer(this.getStrokeTransformer(a));
+		vv.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeTransformer(a));
+		vv.repaint();
+		
 		this.repaint();
 	}
 	
@@ -109,24 +116,19 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		return new BuchiAutomatonEdgeStrokeTransormer<S, T>();
 	}
 	
-	
-	
-	
-	
 	protected void loadAutomata(A a){
-	 	 
+		this.graph = new SparseMultigraph<S,T>();
 		for(S s: a.getStates()){
-			graph.addVertex(s);
+			this.graph.addVertex(s);
 		}
 		for(S s: a.getStates()){
 			if(a.getTransitionsWithSource(s)!=null){
 				for(T t: a.getTransitionsWithSource(s)){
-					graph.addEdge(t, s, t.getDestination(), EdgeType.DIRECTED);
+					this.graph.addEdge(t, s, t.getDestination(), EdgeType.DIRECTED);
 				}  
 			}
-		}
+		}	
 	}
 
-	
 	
 }

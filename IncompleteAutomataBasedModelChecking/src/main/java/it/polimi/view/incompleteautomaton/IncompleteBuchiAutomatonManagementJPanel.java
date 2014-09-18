@@ -7,6 +7,7 @@ import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.BuchiAutomatonManagementJPanel;
 
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.xml.bind.JAXBException;
@@ -23,8 +24,8 @@ import javax.xml.bind.JAXBException;
 public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends Transition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiAutomatonManagementJPanel<S, T, A>  {
 
 
-	public IncompleteBuchiAutomatonManagementJPanel(Dimension d ) throws JAXBException{
-		 super(d);		 
+	public IncompleteBuchiAutomatonManagementJPanel(Dimension d, ActionListener container) throws JAXBException{
+		 super(d, container);		 
 	}	
 	
 	protected BuchiAutomatonJPanel<S,T, A> getAutomatonPanel(Dimension automatonJPanelDimension){
@@ -34,4 +35,11 @@ public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends
 	public void updateAutomatonPanel(A a) throws JAXBException{
 		super.updateAutomatonPanel(a);
 	}
+	protected void addLoadingPanel(Dimension d, ActionListener container) throws JAXBException{
+		 Dimension automatonLoadingPanelDimension=new Dimension(d.width, d.height);
+		 loadingPanel=new IncompleteBuchiAutomatonLoadingPanel<S,T,A>(automatonLoadingPanelDimension, container);
+		 this.add(loadingPanel);
+	}
+
+	
 }

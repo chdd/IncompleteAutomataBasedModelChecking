@@ -7,6 +7,7 @@ import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -16,7 +17,7 @@ import javax.xml.bind.JAXBException;
 public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel {
 
 	private BuchiAutomatonXMLTextArea<S,T,A> xmlArea;
-	public BuchiAutomatonLoadingJPanel(Dimension d) throws JAXBException{
+	public BuchiAutomatonLoadingJPanel(Dimension d, ActionListener container) throws JAXBException{
 		 super();
 		 this.setBackground(Color.getColor("myColor"));
 		 this.setSize(d);
@@ -27,12 +28,16 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		 this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		 Dimension buttonPanelDimension=new Dimension(d.width, d.height/4);
-		 BuchiButtonJPanel buttonPanel=new BuchiButtonJPanel(buttonPanelDimension);
+		 BuchiButtonJPanel buttonPanel=this.createButtonPanel(buttonPanelDimension, container);
 		 this.add(buttonPanel);
 		 
 		 Dimension xmlAreaDimension=new Dimension(d.width, d.height/4*3);
 		 xmlArea=new BuchiAutomatonXMLTextArea<S,T,A>(xmlAreaDimension);
 		 this.add(xmlArea);
+	}
+	
+	public BuchiButtonJPanel createButtonPanel(Dimension buttonPanelDimension, ActionListener container){
+		return new BuchiButtonJPanel(buttonPanelDimension, container);
 	}
 	
 	public void update(A a) throws JAXBException{
@@ -51,5 +56,10 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 			this.xmlArea.setText(this.xmlArea.getText()+"Constraint:\n"+results.getConstraint());
 		}
 
+	}
+
+	public String getAutomatonXML() {
+		return this.xmlArea.getText();
+		
 	}
 }

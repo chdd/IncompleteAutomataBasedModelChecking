@@ -3,6 +3,7 @@ package it.polimi;
 import it.polimi.controller.Controller;
 import it.polimi.controller.ControllerInterface;
 import it.polimi.model.IntersectionState;
+import it.polimi.model.Model;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.view.View;
@@ -20,8 +21,8 @@ import org.xml.sax.SAXException;
 
 public class Main extends JFrame {
 
-	private static final String model="src//main//resources//ExtendedAutomaton1.xml";
-	private static final String specification="src//main//resources//Automaton2.xml";
+	private static final String modelPath="src//main//resources//ExtendedAutomaton1.xml";
+	private static final String specificationPath="src//main//resources//Automaton2.xml";
 	
 	/**
 	 * 
@@ -31,8 +32,9 @@ public class Main extends JFrame {
 
 	public static void main(String args[]) throws JAXBException, FileNotFoundException, XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 		
-		ViewInterface view=new View<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>>();
-		ControllerInterface controller=new Controller(model, specification, view);
-		
+		Model model=new Model(modelPath, specificationPath);
+		ViewInterface<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>> view=new View<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>>();
+		ControllerInterface controller=new Controller(model, view);
+		view.addObserver(controller);
 	}
 }

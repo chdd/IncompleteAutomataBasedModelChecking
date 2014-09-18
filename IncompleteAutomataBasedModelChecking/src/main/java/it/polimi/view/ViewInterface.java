@@ -1,5 +1,7 @@
 package it.polimi.view;
 
+import java.util.Observer;
+
 import javax.xml.bind.JAXBException;
 
 import it.polimi.model.BuchiAutomaton;
@@ -16,4 +18,10 @@ public interface ViewInterface<S1 extends State, T1 extends Transition<S1>, S ex
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification) throws JAXBException;
 	public void updateIntersection(IntersectionAutomaton<S1,T1,S,T> intersection) throws JAXBException;
 	public void updateVerificationResults(ModelCheckerParameters<S1> verificationResults);
+	public String getFile();
+	public void addObserver(Observer o);
+	public String createFile();
+	public String getModelXML();
+	public String getSpecificationXML();
+	
 }

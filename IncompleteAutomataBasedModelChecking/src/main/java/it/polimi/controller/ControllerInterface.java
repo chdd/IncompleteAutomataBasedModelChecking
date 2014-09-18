@@ -1,5 +1,9 @@
 package it.polimi.controller;
 
-public interface ControllerInterface {
+import java.util.Observer;
+
+
+public interface ControllerInterface extends Observer
+{
 
 }
