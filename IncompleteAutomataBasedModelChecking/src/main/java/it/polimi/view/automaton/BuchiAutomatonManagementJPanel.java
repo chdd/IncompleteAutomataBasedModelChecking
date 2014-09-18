@@ -15,8 +15,8 @@ import javax.xml.bind.JAXBException;
 @SuppressWarnings("serial")
 public class BuchiAutomatonManagementJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S, T>> extends JPanel {
 
-	private BuchiAutomatonLoadingJPanel<S, T, A> loadingPanel;
-	private BuchiAutomatonJPanel<S,T, A> automatonPanel;
+	protected BuchiAutomatonLoadingJPanel<S, T, A> loadingPanel;
+	protected BuchiAutomatonJPanel<S,T, A> automatonPanel;
 	
 	public BuchiAutomatonManagementJPanel(){
 		super(new FlowLayout());
@@ -38,15 +38,20 @@ public class BuchiAutomatonManagementJPanel<S extends State, T extends Transitio
 		 Dimension automatonJPanelDimension=new Dimension(d.width/2, d.height);
 		 automatonPanel=this.getAutomatonPanel(automatonJPanelDimension);
 		 this.add(automatonPanel);
-		 
-		 Dimension automatonLoadingPanelDimension=new Dimension(d.width/2, d.height);
-		 loadingPanel=new BuchiAutomatonLoadingJPanel<S,T,A>(automatonLoadingPanelDimension);
-		 this.add(loadingPanel);
-		 
+		 this.addLoadingPanel(automatonJPanelDimension);
 	}
 	
-	public void update(A a) throws JAXBException{
+	protected void addLoadingPanel(Dimension d) throws JAXBException{
+		 Dimension automatonLoadingPanelDimension=new Dimension(d.width, d.height);
+		 loadingPanel=new BuchiAutomatonLoadingJPanel<S,T,A>(automatonLoadingPanelDimension);
+		 this.add(loadingPanel);
+	}
+	
+	public void updateAutomatonPanel(A a) throws JAXBException{
 		this.automatonPanel.update(a);
+		
+	}
+	public void updateLoadingPanel(A a) throws JAXBException{
 		this.loadingPanel.update(a);
 	}
 	

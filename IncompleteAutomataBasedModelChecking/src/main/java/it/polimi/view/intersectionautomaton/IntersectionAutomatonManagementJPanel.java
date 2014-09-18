@@ -4,6 +4,7 @@ import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
 
 import java.awt.Dimension;
@@ -22,7 +23,10 @@ IncompleteBuchiAutomatonManagementJPanel<S1, T1, A> {
 		 return new  IntersectionAutomatonJPanel<S,T, S1,T1, A>(automatonJPanelDimension);
 	}
 	
-	public void update(A a) throws JAXBException{
-		super.update(a);
+	public void updateAutomatonPanel(A a) throws JAXBException{
+		super.updateAutomatonPanel(a);
+	}
+	public void updateVerificationResults(ModelCheckerParameters verificationResults){
+		this.loadingPanel.updateResults(verificationResults);
 	}
 }

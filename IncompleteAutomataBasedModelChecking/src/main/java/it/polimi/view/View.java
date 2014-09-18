@@ -1,5 +1,16 @@
 package it.polimi.view;
 
+import it.polimi.model.BuchiAutomaton;
+import it.polimi.model.IncompleteBuchiAutomaton;
+import it.polimi.model.IntersectionAutomaton;
+import it.polimi.model.IntersectionState;
+import it.polimi.model.State;
+import it.polimi.model.Transition;
+import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.view.automaton.BuchiAutomatonManagementJPanel;
+import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
+import it.polimi.view.intersectionautomaton.IntersectionAutomatonManagementJPanel;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
@@ -9,18 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.xml.bind.JAXBException;
-
-import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.IntersectionAutomaton;
-import it.polimi.model.IntersectionState;
-import it.polimi.model.State;
-import it.polimi.model.Transition;
-import it.polimi.view.automaton.BuchiAutomatonManagementJPanel;
-import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
-import it.polimi.view.intersectionautomaton.IntersectionAutomatonManagementJPanel;
 
 @SuppressWarnings("serial")
 public class View<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> extends JFrame implements ViewInterface{
@@ -79,17 +79,25 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	
 	@Override
 	public void updateModel(IncompleteBuchiAutomaton model) throws JAXBException {
-		this.modelPanel.update(model);
+		this.modelPanel.updateAutomatonPanel(model);
+		this.modelPanel.updateLoadingPanel(model);
 		
 	}
 	@Override
 	public void updateSpecification(BuchiAutomaton specification) throws JAXBException {
-		this.specificationPanel.update(specification);
+		this.specificationPanel.updateAutomatonPanel(specification);
+		this.specificationPanel.updateLoadingPanel(specification);
 	}
 
 	@Override
 	public void updateIntersection(IntersectionAutomaton intersection) throws JAXBException {
-		this.intersectionPanel.update(intersection);
+		this.intersectionPanel.updateAutomatonPanel(intersection);
+	}
+
+	@Override
+	public void updateVerificationResults(ModelCheckerParameters verificationResults) {
+		this.intersectionPanel.updateVerificationResults(verificationResults);
+		
 	}
 	
 	

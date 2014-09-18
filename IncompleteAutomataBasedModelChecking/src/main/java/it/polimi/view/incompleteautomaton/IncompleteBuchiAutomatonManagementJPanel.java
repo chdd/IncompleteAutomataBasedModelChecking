@@ -31,7 +31,7 @@ public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends
 		 return new  IncompleteBuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension);
 	}
 	
-	public void update(A a) throws JAXBException{
-		super.update(a);
+	public void updateAutomatonPanel(A a) throws JAXBException{
+		super.updateAutomatonPanel(a);
 	}
 }

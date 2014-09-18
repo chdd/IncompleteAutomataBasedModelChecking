@@ -3,6 +3,7 @@ package it.polimi.view.automaton;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -38,4 +39,17 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		this.xmlArea.update(a);
 	}
 		
+	public void updateResults(ModelCheckerParameters results){
+		if(results.getResult()==1){
+			this.xmlArea.setText("The property is satisfied");
+		}
+		if(results.getResult()==0){
+			this.xmlArea.setText("The property is not satisfied");
+		}
+		if(results.getResult()==-1){
+			this.xmlArea.setText("The property is possibly satisfied\n\n");
+			this.xmlArea.setText(this.xmlArea.getText()+"Constraint:\n"+results.getConstraint());
+		}
+
+	}
 }

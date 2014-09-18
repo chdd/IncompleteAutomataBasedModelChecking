@@ -7,6 +7,8 @@ import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.modelchecker.ModelChecker;
+import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.ViewInterface;
 
 import java.io.IOException;
@@ -33,10 +35,17 @@ public class Controller implements Observer, ControllerInterface{
 		BuchiAutomaton<State, Transition<State>>  specification=builderBA.loadAutomaton(BuchiAutomaton.class, specificationFilePath);
 		IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> intersection=
 				new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+		
+		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
+		
+		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification, mp);
+		mc.check();
+		
 		this.view=view;
 		this.view.updateModel(model);
 		this.view.updateSpecification(specification);
 		this.view.updateIntersection(intersection);
+		this.view.updateVerificationResults(mp);
 		
 	}
 	@Override

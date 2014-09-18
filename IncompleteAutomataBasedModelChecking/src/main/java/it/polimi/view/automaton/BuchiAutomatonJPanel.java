@@ -13,7 +13,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -28,12 +27,8 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 
-
 public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel  {
 
-	
-
-	
 	/**
 	 * contains the {@link Graph} to be inserted in the component
 	 */
@@ -61,8 +56,7 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		 this.setPreferredSize(d);
 		
 		this.setBackground(Color.WHITE);
-		JOptionPane.showMessageDialog(this, "Download completed", "Question",
-		        JOptionPane.INFORMATION_MESSAGE);
+		
 		
 		
 	}
