@@ -44,7 +44,7 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		this.xmlArea.update(a);
 	}
 		
-	public void updateResults(ModelCheckerParameters results){
+	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){
 		if(results.getResult()==1){
 			this.xmlArea.setText("The property is satisfied");
 		}

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout2;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
@@ -85,7 +86,8 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		
 		this.loadAutomata(a);
 		this.layout.reset();
-		this.layout=new CircleLayout<S,T>(this.graph);
+		//this.layout=new CircleLayout<S,T>(this.graph);
+		this.layout=new FRLayout2<S,T>(this.graph);
 		this.vv.setGraphLayout(layout);
 		
 		vv.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
