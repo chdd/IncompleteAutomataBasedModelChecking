@@ -1,12 +1,13 @@
 package it.polimi.modelchecker;
 
 import static org.junit.Assert.assertTrue;
-import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.model.io.AutomatonBuilder;
+import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class ModelCheckerTest2 {
 	private ModelCheckerParameters<State> mp;
 	
 	@Before
-	public void setUp() throws JAXBException, SAXException, IOException, ParserConfigurationException{
+	public void setUp() throws BuilderException {
 		AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>> builderIBA=
 				new AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>>();
 		model = builderIBA.loadAutomaton(IncompleteBuchiAutomaton.class, arg0);

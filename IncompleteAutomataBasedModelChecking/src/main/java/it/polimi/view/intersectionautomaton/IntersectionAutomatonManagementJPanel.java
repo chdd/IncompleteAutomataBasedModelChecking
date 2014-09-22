@@ -24,7 +24,7 @@ IncompleteBuchiAutomatonManagementJPanel<S1, T1, A> {
 		 return new  IntersectionAutomatonJPanel<S,T, S1,T1, A>(automatonJPanelDimension);
 	}
 	
-	public void updateAutomatonPanel(A a) throws JAXBException{
+	public void updateAutomatonPanel(A a){
 		super.updateAutomatonPanel(a);
 	}
 	public void updateVerificationResults(ModelCheckerParameters<S> verificationResults){

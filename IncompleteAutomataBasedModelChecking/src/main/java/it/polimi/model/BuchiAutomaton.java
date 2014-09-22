@@ -278,19 +278,27 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * @return a String which contains the XML description of the BuchiAutomaton
 	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
 	 */
-	public String toXMLString() throws JAXBException {
+	public String toXMLString() {
 	
 		StringWriter sw = new StringWriter();
 		// create JAXB context and initializing Marshaller
-		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
-		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		JAXBContext jaxbContext;
+		try {
+			jaxbContext = JAXBContext.newInstance(this.getClass());
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+			
+			// for getting nice formatted output
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			// Writing to console
+			jaxbMarshaller.marshal(this, sw);
+			return sw.toString();
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 		
-		// for getting nice formatted output
-		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		
-		// Writing to console
-		jaxbMarshaller.marshal(this, sw);
-		return sw.toString();
 	}
 	/**
 	 * writes the BuchiAutomaton to the file with path filePath

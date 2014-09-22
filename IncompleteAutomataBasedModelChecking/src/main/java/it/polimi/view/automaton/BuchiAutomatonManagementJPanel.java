@@ -48,11 +48,11 @@ public class BuchiAutomatonManagementJPanel<S extends State, T extends Transitio
 		 this.add(loadingPanel);
 	}
 	
-	public void updateAutomatonPanel(A a) throws JAXBException{
+	public void updateAutomatonPanel(A a){
 		this.automatonPanel.update(a);
 		
 	}
-	public void updateLoadingPanel(A a) throws JAXBException{
+	public void updateLoadingPanel(A a){
 		this.loadingPanel.update(a);
 	}
 	

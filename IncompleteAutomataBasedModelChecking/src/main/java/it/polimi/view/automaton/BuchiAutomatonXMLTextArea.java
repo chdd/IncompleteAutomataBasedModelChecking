@@ -26,7 +26,7 @@ public class BuchiAutomatonXMLTextArea<S extends State, T extends Transition<S>,
 		this.setMaximumSize(d);
 		this.setVisible(true);
 	}
-	public void update(A a) throws JAXBException{
+	public void update(A a){
 		this.setText(a.toXMLString());
 	}
 }

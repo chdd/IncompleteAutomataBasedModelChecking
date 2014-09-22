@@ -63,7 +63,7 @@ public class Transition<S extends State>{
 		return state;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

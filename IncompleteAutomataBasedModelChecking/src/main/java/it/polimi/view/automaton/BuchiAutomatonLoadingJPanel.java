@@ -40,7 +40,7 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		return new BuchiButtonJPanel(buttonPanelDimension, container);
 	}
 	
-	public void update(A a) throws JAXBException{
+	public void update(A a){
 		this.xmlArea.update(a);
 	}
 		

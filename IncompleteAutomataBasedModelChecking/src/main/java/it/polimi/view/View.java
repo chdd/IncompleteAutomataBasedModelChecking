@@ -26,7 +26,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.filechooser.FileSystemView;
 import javax.xml.bind.JAXBException;
 
 public class View<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> extends Observable implements ViewInterface<S1,T1,S,T>, ActionListener{
@@ -35,7 +34,7 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	private BuchiAutomatonManagementJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanel;
 	private IntersectionAutomatonManagementJPanel<S1, T1, S, T, IntersectionAutomaton<S1, T1, S, T>> intersectionPanel;
 	private JFrame jframe;
-	public View() throws JAXBException{
+	public View() throws JAXBException {
 		 jframe=new JFrame();
 		 
 		 System.setProperty("myColor", "0XAABBCC");
@@ -89,13 +88,13 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	}
 	
 	@Override
-	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model) throws JAXBException {
+	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model){
 		this.modelPanel.updateAutomatonPanel(model);
 		this.modelPanel.updateLoadingPanel(model);
 		jframe.repaint();
 	}
 	@Override
-	public void updateSpecification(BuchiAutomaton<S1, T1> specification) throws JAXBException {
+	public void updateSpecification(BuchiAutomaton<S1, T1> specification){
 		this.specificationPanel.updateAutomatonPanel(specification);
 		this.specificationPanel.updateLoadingPanel(specification);
 		jframe.repaint();
@@ -103,7 +102,7 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	}
 
 	@Override
-	public void updateIntersection(IntersectionAutomaton<S1, T1,S,T> intersection) throws JAXBException {
+	public void updateIntersection(IntersectionAutomaton<S1, T1,S,T> intersection){
 		this.intersectionPanel.updateAutomatonPanel(intersection);
 		jframe.repaint();
 		

@@ -1,30 +1,41 @@
 package it.polimi.controller;
 
 import it.polimi.model.IntersectionState;
-import it.polimi.model.Model;
+import it.polimi.model.ModelInterface;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.Actions;
 import it.polimi.view.ViewInterface;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.Observable;
+import java.util.Observer;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
+/**
+ * Is the controller of the application, manages the model (model of the system and its specification) and the view (the graphical interface of the application)
+ * 
+ * @author claudiomenghi
+ */
+public class Controller implements Observer{
 
-import org.xml.sax.SAXException;
-
-public class Controller implements ControllerInterface{
-
+	/**
+	 * is the (graphical) interface of the application
+	 */
 	private ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view;
-	private Model model;
+	/**
+	 * is the interface to the model of the application
+	 */
+	private ModelInterface model;
 	
-	public Controller(Model model, ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view) throws JAXBException, SAXException, IOException, ParserConfigurationException{
-		
+	/**
+	 * creates a new controller with the specified model and view 
+	 * @param model is the model of the application
+	 * @param view is the view of the application
+	 */
+	public Controller(ModelInterface model, ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view) {
 		this.model=model;
 		this.view=view;
 		this.update();
@@ -47,29 +58,25 @@ public class Controller implements ControllerInterface{
 			}
 			if(e.getActionCommand()==Actions.SAVEMODEL.name()){
 				String filePath=this.view.createFile();
-				this.model.loadModel(this.view.getModelXML());
+				this.model.loadModelFromXML(this.view.getModelXML());
 				this.model.saveModel(filePath);
 			}
 			if(e.getActionCommand()==Actions.SAVESPECIFICATION.name()){
 				String filePath=this.view.createFile();
-				this.model.loadSpecification(this.view.getSpecificationXML());
+				this.model.loadSpecificationFromXML(this.view.getSpecificationXML());
 				this.model.saveSpecification(filePath);
+				this.update();
 			}
-		} catch (JAXBException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SAXException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ParserConfigurationException e1) {
+		} catch (BuilderException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
-	private void update() throws JAXBException{
+	
+	/**
+	 * run the model checker and updates the view with the current model of the system 
+	 */
+	private void update(){
 		
 		this.view.updateModel(model.getModel());
 		this.view.updateSpecification(model.getSpecification());

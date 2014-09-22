@@ -1,16 +1,16 @@
 package it.polimi.performance;
 
-import it.polimi.model.AutomatonBuilder;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.model.io.AutomatonBuilder;
+import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,10 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
-
-import org.xml.sax.SAXException;
 
 /**
  * evaluates the performances of the model checking tool, it generates a set of random models (BA) with an increasing number of states and transparent states
@@ -46,7 +42,7 @@ public class PerformanceEvaluator{
 	
 	private static final String resultsPath="/Users/Claudio1/Desktop/LTLLover/Performance/";
 
-	public static void main(String args[]) throws JAXBException, FileNotFoundException, XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+	public static void main(String args[]) throws BuilderException, IOException, JAXBException {
 		
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
