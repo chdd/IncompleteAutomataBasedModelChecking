@@ -1,5 +1,8 @@
 package it.polimi.modelchecker.brzozowski;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import it.polimi.model.ConstrainedTransition;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
@@ -50,6 +53,8 @@ extends Transition<S>> {
 		// contains the predicates that will be inserted in the final constraint
 		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
 		
+		Set<AbstractPredicate<S1>> predicates=new HashSet<AbstractPredicate<S1>>();
+		
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
 			
@@ -74,10 +79,11 @@ extends Transition<S>> {
 				
 				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
-				ret=ret.union(newconstraint);
+				if(!predicates.contains(newconstraint)){
+					predicates.add(newconstraint);
+					ret=ret.union(newconstraint);
+				}
 			}
-			
-			
 		}
 		//System.out.println("returnig the constraints");
 		// creates the final constraint to be returned
