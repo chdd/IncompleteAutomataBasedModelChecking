@@ -28,7 +28,7 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		 this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		 Dimension buttonPanelDimension=new Dimension(d.width, d.height/4);
-		 BuchiButtonJPanel buttonPanel=this.createButtonPanel(buttonPanelDimension, container);
+		 JPanel buttonPanel=this.createButtonPanel(buttonPanelDimension, container);
 		 this.add(buttonPanel);
 		 
 		 Dimension xmlAreaDimension=new Dimension(d.width, d.height/4*3);
@@ -36,7 +36,7 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		 this.add(xmlArea);
 	}
 	
-	public BuchiButtonJPanel createButtonPanel(Dimension buttonPanelDimension, ActionListener container){
+	public JPanel createButtonPanel(Dimension buttonPanelDimension, ActionListener container){
 		return new BuchiButtonJPanel(buttonPanelDimension, container);
 	}
 	

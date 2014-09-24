@@ -4,9 +4,11 @@ import it.polimi.view.Actions;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
@@ -17,6 +19,7 @@ public class BuchiButtonJPanel  extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	protected JLabel label;
 	protected JButton btnLoad;
 	protected JButton btnSave;
 	public BuchiButtonJPanel(Dimension d, ActionListener container){
@@ -26,8 +29,16 @@ public class BuchiButtonJPanel  extends JPanel{
 		 this.setMinimumSize(d);
 		this.setMaximumSize(d);
 		this.setPreferredSize(d);
+		
 		 Dimension buttonDimension=new Dimension(d.width/2/4, d.height/2/5);
-		  
+		 
+		 this.label=new JLabel();
+		 this.label.setSize(buttonDimension);
+		 this.label.setForeground(Color.white);
+		 this.label.setFont(new Font("Verdana", Font.BOLD, 32));
+		 this.setLabelText();
+		 this.add(label);
+		 
 		 btnLoad = new JButton("Open");
 		 btnLoad.setSize(buttonDimension);
 		 btnLoad.setOpaque(true);
@@ -47,6 +58,9 @@ public class BuchiButtonJPanel  extends JPanel{
 		 btnSave.addActionListener(container);
 		 this.add(btnSave);
 		 this.setSaveActionCommand();
+	}
+	protected void setLabelText(){
+		this.label.setText("Specification");
 	}
 	
 	protected void setLoadActionCommand(){

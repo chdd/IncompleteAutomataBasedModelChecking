@@ -30,4 +30,9 @@ IncompleteBuchiAutomatonManagementJPanel<S1, T1, A> {
 	public void updateVerificationResults(ModelCheckerParameters<S> verificationResults){
 		this.loadingPanel.updateResults(verificationResults);
 	}
+	protected void addLoadingPanel(Dimension d, ActionListener container) throws JAXBException{
+		 Dimension automatonLoadingPanelDimension=new Dimension(d.width, d.height);
+		 loadingPanel=new IntersectionAutomatonLoadingPanel<S,T,S1,T1,A>(automatonLoadingPanelDimension, container);
+		 this.add(loadingPanel);
+	}
 }

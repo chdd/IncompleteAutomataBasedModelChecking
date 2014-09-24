@@ -18,4 +18,7 @@ public class IncompleteBuchiButtonJPanel extends BuchiButtonJPanel {
 	protected void setSaveActionCommand(){
 		btnSave.setActionCommand(Actions.SAVEMODEL.name());
 	}
+	protected void setLabelText(){
+		this.label.setText("Model");
+	}
 }
