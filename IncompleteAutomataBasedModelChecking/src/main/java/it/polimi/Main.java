@@ -15,13 +15,10 @@ import it.polimi.view.ViewInterface;
 
 public class Main{
 
-	private static final String modelPath="src//main//resources//ExtendedAutomaton1.xml";
-	private static final String specificationPath="src//main//resources//Automaton2.xml";
-	
-		public static void main(String args[]) throws BuilderException, JAXBException {
+	public static void main(String args[]) throws BuilderException, JAXBException {
 		
 		// creates the model of the application starting from the model of the system contained in modelPath and the specification contained in the specificationPath
-		ModelInterface model=new Model(modelPath, specificationPath);
+		ModelInterface model=new Model();
 		
 		// contains the view of the application
 		ViewInterface<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>> view=new View<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>>();

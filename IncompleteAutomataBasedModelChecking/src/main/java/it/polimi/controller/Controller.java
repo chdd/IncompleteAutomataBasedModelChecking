@@ -38,7 +38,6 @@ public class Controller implements Observer{
 	public Controller(ModelInterface model, ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view) {
 		this.model=model;
 		this.view=view;
-		this.update();
 	}
 
 	@Override

@@ -10,14 +10,18 @@ import it.polimi.view.automaton.transformers.BuchiAutomatonStrokeTransformer;
 import it.polimi.view.automaton.transformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout2;
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
@@ -26,6 +30,11 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
+import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
+import edu.uci.ics.jung.visualization.renderers.Renderer.EdgeLabel;
+import edu.uci.ics.jung.visualization.renderers.VertexLabelRenderer;
 
 
 public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel  {
@@ -87,7 +96,8 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		this.loadAutomata(a);
 		this.layout.reset();
 		//this.layout=new CircleLayout<S,T>(this.graph);
-		this.layout=new FRLayout2<S,T>(this.graph);
+		this.layout=new FRLayout<S,T>(this.graph);
+		//this.layout=new KKLayout<S,T>(this.graph);
 		this.vv.setGraphLayout(layout);
 		
 		vv.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
@@ -97,6 +107,11 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		vv.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
 		vv.getRenderContext().setVertexStrokeTransformer(this.getStrokeTransformer(a));
 		vv.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeTransformer(a));
+		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
+		EdgeLabelRenderer edgeLabelRenderer=vv.getRenderContext().getEdgeLabelRenderer();
+		edgeLabelRenderer.setRotateEdgeLabels(true);
+		vv.getRenderContext().setLabelOffset(20);
+		
 		vv.repaint();
 		
 		this.repaint();

@@ -29,7 +29,12 @@ public class Model implements ModelInterface{
 	 * contains the intersection between the model and the specification
 	 */
 	private IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> intersection;
-			
+	
+	public Model(){
+		this.model=new IncompleteBuchiAutomaton<State, Transition<State>>();
+		this.specification=new BuchiAutomaton<State, Transition<State>>();
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>();
+	}
 	/**
 	 * creates a new model of the application: the model of the system is loaded from the file with path modelFilePath, its specification is loaded from the 
 	 * file with path specificationFilePath 
