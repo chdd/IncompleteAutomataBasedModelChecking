@@ -133,7 +133,6 @@ public class Controller implements Observer{
 		
 		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model.getModel(), model.getSpecification(), mp);
 		mc.check();
-		System.out.println(model.getIntersection());
 		this.view.updateIntersection(model.getIntersection());
 		
 		this.view.updateVerificationResults(mp);

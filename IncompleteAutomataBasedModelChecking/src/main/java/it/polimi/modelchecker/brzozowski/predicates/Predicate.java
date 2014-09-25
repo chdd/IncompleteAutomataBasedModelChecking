@@ -231,8 +231,8 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 	public String toString(){
 		return "<"+state+","+this.regularExpression+">";
 	}
-	/** 
-	 * @see {@link Object}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
@@ -245,8 +245,8 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		return result;
 	}
-	/** 
-	 * @see {@link Object}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -256,8 +256,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		Predicate<S> other = (Predicate<S>) obj;
+		Predicate other = (Predicate) obj;
 		if (regularExpression == null) {
 			if (other.regularExpression != null)
 				return false;
@@ -270,4 +269,7 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			return false;
 		return true;
 	}
+	
+	
+	
 }

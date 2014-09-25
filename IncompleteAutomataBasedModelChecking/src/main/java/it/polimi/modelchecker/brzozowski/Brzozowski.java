@@ -75,14 +75,14 @@ extends Transition<S>> {
 				//System.out.println("analyzing the initial state: computing the constraint");
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
-				AbstractPredicate<S1> newconstraint=s[a.statePosition(init)].concatenate(s[a.statePosition(accept)].omega());
+				AbstractPredicate<S1> newconstraint=s[a.statePosition(init)].omega();
 				
 				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
-				if(!predicates.contains(newconstraint)){
-					predicates.add(newconstraint);
+				//if(!predicates.contains(newconstraint)){
+					//predicates.add(newconstraint);
 					ret=ret.union(newconstraint);
-				}
+				//}
 			}
 		}
 		//System.out.println("returnig the constraints");

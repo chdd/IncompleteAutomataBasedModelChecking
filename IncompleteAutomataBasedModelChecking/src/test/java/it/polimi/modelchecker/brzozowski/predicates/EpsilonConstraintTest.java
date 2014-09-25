@@ -118,7 +118,7 @@ public class EpsilonConstraintTest {
 	public void testUnion1() {
 		AbstractPredicate<State> a=new EpsilonPredicate<State>();
 		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		assertTrue(p.union(a).equals(new OrPredicate<>(a, p)));
+		assertTrue(p.union(a).equals(new OrPredicate<State>(p, a)));
 	}
 	/**
 	 * the union of an epsilon constraint and an EmptyConstraint is the epsilon constraint

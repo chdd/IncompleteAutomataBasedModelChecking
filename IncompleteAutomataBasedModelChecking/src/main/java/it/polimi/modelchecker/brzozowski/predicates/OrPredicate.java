@@ -134,30 +134,29 @@ public class OrPredicate<S extends State> extends LogicalPredicate<S> {
 		return this.type;
 	}
 
-	/**
-	 * @see {@link Object}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
-	/**
-	 * @see {@link Object}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		OrPredicate<S> other = (OrPredicate<S>) obj;
+		OrPredicate other = (OrPredicate) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;
@@ -165,6 +164,8 @@ public class OrPredicate<S extends State> extends LogicalPredicate<S> {
 			return false;
 		return true;
 	}
+
+	
 	
 		
 }

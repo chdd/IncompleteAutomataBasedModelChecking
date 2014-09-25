@@ -8,6 +8,8 @@ import it.polimi.model.State;
  */
 public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 
+	private final String ret="λ";
+	
 	/**
 	 * the concatenation of a {@link LambdaPredicate} predicate with another {@link AbstractPredicate} is equal to the other {@link AbstractPredicate}
 	 * @param a: is the {@link AbstractPredicate} to be concatenated
@@ -69,27 +71,41 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 	 */
 	@Override
 	public String toString() {
-		return "λ";
+		return ret;
 	}
-	
-	/**
-	 * @see {@link Object}
-	 */
-	@Override
-	public boolean equals(Object o){
-		if(o instanceof LambdaPredicate){
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * @see {@link Object}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return 555;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ret == null) ? 0 : ret.hashCode());
+		return result;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LambdaPredicate other = (LambdaPredicate) obj;
+		if (ret == null) {
+			if (other.ret != null)
+				return false;
+		} else if (!ret.equals(other.ret))
+			return false;
+		return true;
+	}
+	
+	
 
 	
 	

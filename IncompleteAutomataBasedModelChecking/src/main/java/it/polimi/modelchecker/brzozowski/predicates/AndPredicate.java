@@ -203,14 +203,16 @@ public class AndPredicate<S extends State> extends LogicalPredicate<S>{
     	return this.getPredicates().get(this.getPredicates().size()-1);
     }
     
-   
+    public String getType(){
+		return this.type;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -221,12 +223,11 @@ public class AndPredicate<S extends State> extends LogicalPredicate<S>{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		AndPredicate<S> other = (AndPredicate<S>) obj;
+		AndPredicate other = (AndPredicate) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;
@@ -234,10 +235,8 @@ public class AndPredicate<S extends State> extends LogicalPredicate<S>{
 			return false;
 		return true;
 	}
-	
-	public String getType(){
-		return this.type;
-	}
+    
+    
     
     
   
