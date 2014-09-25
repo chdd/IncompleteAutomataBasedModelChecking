@@ -87,6 +87,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	}
 	
 	
+	
 	/** 
 	 * Constructs a new {@link BuchiAutomaton} with the specified alphabet
 	 * @param alphabet: is the alphabet of the {@link BuchiAutomaton}
@@ -109,6 +110,21 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 */
 	public Set<String> getAlphabet() {
 		return alphabet;
+	}
+	
+	/**
+	 * adds the character character in the alphabet of the automaton 
+	 * @param character is the character to be added in the alphabet of the automaton
+	 * @throws IllegalArgumentException if the character is null or if the character is already contained into the alphabet of the automaton
+	 */
+	public void addCharacter(String character){
+		if(character==null){
+			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
+		}
+		if(this.alphabet.contains(character)){
+			throw new IllegalArgumentException("The character "+character+"is already contained in the alphabet of the automaton");
+		}
+		this.alphabet.add(character);
 	}
 	
 	/**

@@ -21,5 +21,6 @@ public interface ViewInterface<S1 extends State, T1 extends Transition<S1>, S ex
 	public String createFile();
 	public String getModelXML();
 	public String getSpecificationXML();
+	public void displayErrorMessage(String message);
 	
 }

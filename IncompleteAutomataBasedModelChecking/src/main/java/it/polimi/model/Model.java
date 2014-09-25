@@ -130,5 +130,51 @@ public class Model implements ModelInterface{
 			new BuilderException(e.toString());
 		}
 	}
+	@Override
+	public void addRegularStateToTheModel(State s, boolean regular, boolean initial, boolean accepting) {
+		if(!regular){
+			this.model.addTransparentState(s);
+		}
+		if(initial){
+			this.model.addInitialState(s);
+		}
+		if(accepting){
+			this.model.addAcceptState(s);
+		}
+		this.model.addState(s);
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+	}
+	@Override
+	public void addTransitionToTheModel(State source, State destination, String character){
+		this.model.addTransition(source, new Transition<State>(character, destination));
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+	}
+	@Override
+	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting) {
+		if(initial){
+			this.specification.addInitialState(s);
+		}
+		if(accepting){
+			this.specification.addAcceptState(s);
+		}
+		this.specification.addState(s);
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+	}
+	@Override
+	public void addTransitionToTheSpecification(State source, State destination, String character) {
+		this.specification.addTransition(source, new Transition<State>(character, destination));
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+	}
+	@Override
+	public void addCharacterToTheModed(String character) {
+		this.model.addCharacter(character);
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+		
+	}
+	@Override
+	public void addCharacterToTheSpecification(String character) {
+		this.specification.addCharacter(character);
+		this.intersection=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+	}
 	
 }

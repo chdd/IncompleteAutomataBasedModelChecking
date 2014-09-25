@@ -24,6 +24,7 @@ import java.util.Observable;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
@@ -149,6 +150,11 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	public String getSpecificationXML() {
 		return this.specificationPanel.getAutomatonXML();
 	}
+	
+	public void displayErrorMessage(String message){
+		JOptionPane.showMessageDialog(null, message);
+	}
+	
 	
 	
 }

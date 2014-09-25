@@ -19,6 +19,7 @@ public class BuchiAutomatonManagementJPanel<S extends State, T extends Transitio
 	protected BuchiAutomatonLoadingJPanel<S, T, A> loadingPanel;
 	protected BuchiAutomatonJPanel<S,T, A> automatonPanel;
 	
+	protected ActionListener container;
 	public BuchiAutomatonManagementJPanel(){
 		super(new FlowLayout());
 	}
@@ -29,6 +30,7 @@ public class BuchiAutomatonManagementJPanel<S extends State, T extends Transitio
 	public BuchiAutomatonManagementJPanel(Dimension d, ActionListener container) throws JAXBException{
 		
 		 super();
+		 this.container=container;
 		 this.setBackground(Color.getColor("myColor"));
 		 this.setSize(d);
 		 this.setMinimumSize(d);
@@ -57,7 +59,7 @@ public class BuchiAutomatonManagementJPanel<S extends State, T extends Transitio
 	}
 	
 	protected BuchiAutomatonJPanel<S,T, A> getAutomatonPanel(Dimension automatonJPanelDimension){
-		 return new  BuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension);
+		 return new  BuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension, container);
 	}
 	public String getAutomatonXML() {
 		return this.loadingPanel.getAutomatonXML();

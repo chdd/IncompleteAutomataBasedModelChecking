@@ -29,7 +29,7 @@ public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends
 	}	
 	
 	protected BuchiAutomatonJPanel<S,T, A> getAutomatonPanel(Dimension automatonJPanelDimension){
-		 return new  IncompleteBuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension);
+		 return new  IncompleteBuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension, container);
 	}
 	
 	public void updateAutomatonPanel(A a){

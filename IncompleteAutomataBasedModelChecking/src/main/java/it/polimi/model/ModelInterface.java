@@ -77,4 +77,25 @@ public interface ModelInterface {
 	 * @throws IOException
 	 */
 	public void saveSpecification(String filePath) throws BuilderException;
+	
+	/**
+	 * adds the regular state s into the model
+	 * @param s the state to be added
+	 */
+	public void addRegularStateToTheModel(State s, boolean regular, boolean initial, boolean accepting);
+	/**
+	 * adds the regular state s into the model
+	 * @param s the state to be added
+	 */
+	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
+	
+	public void addTransitionToTheModel(State source, State destination, String character);
+	
+	public void addTransitionToTheSpecification(State source, State destination, String character);
+	
+	public void addCharacterToTheModed(String character);
+	public void addCharacterToTheSpecification(String character);
+
+		
+	
 }
