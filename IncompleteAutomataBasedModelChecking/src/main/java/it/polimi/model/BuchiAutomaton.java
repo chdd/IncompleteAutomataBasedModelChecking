@@ -519,9 +519,11 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 			statesOfThePath.push(currState);
 			// if the state is accepting
 			if(this.isAccept(currState)){
-				// I start the second DFS if the answer of the second DFS is true I return true
-				if(this.secondDFS(new HashSet<S>(), currState, statesOfThePath)){
-					return true;
+				for(T t: this.getTransitionsWithSource(currState)){
+					// I start the second DFS if the answer of the second DFS is true I return true
+					if(this.secondDFS(new HashSet<S>(), t.getDestination(), statesOfThePath)){
+						return true;
+					}
 				}
 			}
 			// otherwise, I check each transition that leaves the state currState

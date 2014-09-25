@@ -102,7 +102,7 @@ public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends
 		// sets the number of mixed states in the intersection
 		this.parameters.setNumMixedStatesIntersection(this.ris.getMixedStates().size());
 		
-		// verifies if the intersection is empty
+		// verifies if the intersection (without mixed states) is empty
 		long startEmptyTime = System.nanoTime();   
 		boolean res=ris.isEmpty();
 		long stopEmptyTime = System.nanoTime();   
