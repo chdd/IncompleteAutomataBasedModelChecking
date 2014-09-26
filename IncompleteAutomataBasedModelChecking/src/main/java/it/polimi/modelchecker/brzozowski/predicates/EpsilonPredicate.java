@@ -149,7 +149,8 @@ public class EpsilonPredicate<S extends State> extends AbstractPredicate<S>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EpsilonPredicate other = (EpsilonPredicate) obj;
+		@SuppressWarnings("unchecked")
+		EpsilonPredicate<S> other = (EpsilonPredicate<S>) obj;
 		if (ret == null) {
 			if (other.ret != null)
 				return false;

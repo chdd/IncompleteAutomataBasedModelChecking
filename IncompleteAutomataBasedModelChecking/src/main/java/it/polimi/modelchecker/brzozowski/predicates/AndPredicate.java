@@ -227,7 +227,8 @@ public class AndPredicate<S extends State> extends LogicalPredicate<S>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AndPredicate other = (AndPredicate) obj;
+		@SuppressWarnings("unchecked")
+		AndPredicate<S> other = (AndPredicate<S>) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;

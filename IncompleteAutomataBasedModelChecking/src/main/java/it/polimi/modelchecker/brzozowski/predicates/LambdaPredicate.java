@@ -96,7 +96,8 @@ public class LambdaPredicate<S extends State> extends AbstractPredicate<S> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LambdaPredicate other = (LambdaPredicate) obj;
+		@SuppressWarnings("unchecked")
+		LambdaPredicate<S> other = (LambdaPredicate<S>) obj;
 		if (ret == null) {
 			if (other.ret != null)
 				return false;

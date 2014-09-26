@@ -84,6 +84,7 @@ public class EmptyPredicate<S extends State> extends AbstractPredicate<S> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("unchecked")
 		EmptyPredicate<S> other = (EmptyPredicate<S>) obj;
 		if (ret == null) {
 			if (other.ret != null)

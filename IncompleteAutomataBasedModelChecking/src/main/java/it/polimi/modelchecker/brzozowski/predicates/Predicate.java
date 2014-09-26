@@ -256,7 +256,8 @@ public class Predicate<S extends State> extends AbstractPredicate<S>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Predicate other = (Predicate) obj;
+		@SuppressWarnings("unchecked")
+		Predicate<S> other = (Predicate<S>) obj;
 		if (regularExpression == null) {
 			if (other.regularExpression != null)
 				return false;

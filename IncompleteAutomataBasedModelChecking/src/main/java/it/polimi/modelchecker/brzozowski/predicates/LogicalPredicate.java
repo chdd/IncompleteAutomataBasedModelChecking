@@ -102,7 +102,8 @@ public abstract class LogicalPredicate<S extends State> extends AbstractPredicat
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LogicalPredicate other = (LogicalPredicate) obj;
+		@SuppressWarnings("unchecked")
+		LogicalPredicate<S> other = (LogicalPredicate<S>) obj;
 		if (value == null) {
 			if (other.value != null)
 				return false;

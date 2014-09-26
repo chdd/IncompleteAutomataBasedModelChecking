@@ -30,6 +30,7 @@ public class Controller implements Observer{
 	 * is the (graphical) interface of the application
 	 */
 	private ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view;
+	
 	/**
 	 * is the interface to the model of the application
 	 */
@@ -39,8 +40,15 @@ public class Controller implements Observer{
 	 * creates a new controller with the specified model and view 
 	 * @param model is the model of the application
 	 * @param view is the view of the application
+	 * @throws IllegalArgumentException if the model or the specification is null
 	 */
 	public Controller(ModelInterface model, ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view) {
+		if(this.model==null){
+			throw new IllegalArgumentException("The model cannot be null");
+		}
+		if(this.view==null){
+			throw new IllegalArgumentException("The view cannot be null");
+		}
 		this.model=model;
 		this.view=view;
 		this.update();

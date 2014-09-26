@@ -156,7 +156,8 @@ public class OrPredicate<S extends State> extends LogicalPredicate<S> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OrPredicate other = (OrPredicate) obj;
+		@SuppressWarnings("unchecked")
+		OrPredicate<S> other = (OrPredicate<S>) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;
