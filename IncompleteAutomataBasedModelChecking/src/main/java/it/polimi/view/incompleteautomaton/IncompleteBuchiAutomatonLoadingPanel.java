@@ -3,7 +3,7 @@ package it.polimi.view.incompleteautomaton;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.view.automaton.BuchiAutomatonLoadingJPanel;
+import it.polimi.view.buchiautomaton.BuchiAutomatonLoadingJPanel;
 
 import java.awt.Dimension;
 import java.awt.event.ActionListener;

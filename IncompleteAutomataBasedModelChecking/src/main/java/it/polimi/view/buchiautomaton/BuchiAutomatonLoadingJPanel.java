@@ -1,39 +1,27 @@
-package it.polimi.view.automaton;
+package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.view.automaton.AutomatonLoadingPanel;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.xml.bind.JAXBException;
 
 @SuppressWarnings("serial")
-public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel {
+public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends AutomatonLoadingPanel {
 
-	private BuchiAutomatonXMLTextArea<S,T,A> xmlArea;
+	
 	public BuchiAutomatonLoadingJPanel(Dimension d, ActionListener container) throws JAXBException{
-		 super();
-		 this.setBackground(Color.getColor("myColor"));
-		 this.setSize(d);
-		 this.setMinimumSize(d);
-		 this.setMaximumSize(d);
-		 this.setPreferredSize(d);
-		 
-		 this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+		 super(d, container);
 		 Dimension buttonPanelDimension=new Dimension(d.width, d.height/4);
 		 JPanel buttonPanel=this.createButtonPanel(buttonPanelDimension, container);
 		 this.add(buttonPanel);
 		 
-		 Dimension xmlAreaDimension=new Dimension(d.width, d.height/4*3);
-		 xmlArea=new BuchiAutomatonXMLTextArea<S,T,A>(xmlAreaDimension);
-		 this.add(xmlArea);
 		 if(buttonPanel instanceof BuchiButtonJPanel){
 			 ((BuchiButtonJPanel) buttonPanel).setXMLarea(xmlArea);
 		 }
@@ -45,7 +33,7 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 	}
 	
 	public void update(A a){
-		this.xmlArea.update(a);
+		this.xmlArea.update(a.toXMLString());
 	}
 		
 	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){

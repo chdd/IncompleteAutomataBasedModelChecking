@@ -6,7 +6,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.view.automaton.BuchiButtonJPanel;
+import it.polimi.view.buchiautomaton.BuchiButtonJPanel;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJCharacterCreator;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJStateCreator;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJTransitionCreator;

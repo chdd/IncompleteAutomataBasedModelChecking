@@ -1,12 +1,11 @@
-package it.polimi.view.automaton;
+package it.polimi.view.buchiautomaton;
 
 import it.polimi.controller.actions.file.loading.LoadSpecification;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.view.ViewInterface;
+import it.polimi.view.automaton.AutomatonXMLTextArea;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJStateCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJTransitionCreator;
@@ -38,9 +37,9 @@ public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A exten
 	protected JButton btnLoad;
 	protected JButton btnSave;
 	protected ActionListener container;
-	protected BuchiAutomatonXMLTextArea<S,T,A> xmlarea;
+	protected AutomatonXMLTextArea xmlarea;
 	
-	public void setXMLarea(BuchiAutomatonXMLTextArea<S,T,A> xmlarea){
+	public void setXMLarea(AutomatonXMLTextArea xmlarea){
 		this.xmlarea=xmlarea;
 	}
 	

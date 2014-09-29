@@ -7,22 +7,19 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.view.automaton.BuchiAutomatonManagementJPanel;
+import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonManagementJPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FileDialog;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Observable;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
