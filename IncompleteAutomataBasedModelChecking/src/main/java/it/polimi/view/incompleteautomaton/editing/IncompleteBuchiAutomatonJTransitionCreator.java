@@ -1,6 +1,6 @@
 package it.polimi.view.incompleteautomaton.editing;
 
-import it.polimi.view.actions.IncompleteBuchiTransitionCreationAction;
+import it.polimi.controller.actions.IncompleteBuchiTransitionCreationAction;
 import it.polimi.view.automaton.editing.BuchiAutomatonJTransitionCreator;
 
 import java.awt.event.ActionEvent;

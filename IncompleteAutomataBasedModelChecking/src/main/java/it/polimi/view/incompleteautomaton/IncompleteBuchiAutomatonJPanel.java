@@ -8,7 +8,6 @@ import it.polimi.view.automaton.transformers.BuchiAutomatonPaintTransformer;
 import it.polimi.view.incompleteautomaton.transformers.IncompleteBuchiAutomatonPaintTransformer;
 
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 
 public class IncompleteBuchiAutomatonJPanel<S extends State, T extends Transition<S>, A extends IncompleteBuchiAutomaton<S,T>> extends BuchiAutomatonJPanel<S, T, A> {
 
@@ -18,8 +17,8 @@ public class IncompleteBuchiAutomatonJPanel<S extends State, T extends Transitio
 	private static final long serialVersionUID = 1L;
 	
 	
-	public IncompleteBuchiAutomatonJPanel(Dimension d, ActionListener container){
-		super(d, container);
+	public IncompleteBuchiAutomatonJPanel(Dimension d){
+		super(d);
 	}
 	
 	protected BuchiAutomatonPaintTransformer<S,T,A> getPaintTransformer(A a){

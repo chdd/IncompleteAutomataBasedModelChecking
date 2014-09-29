@@ -1,6 +1,6 @@
 package it.polimi.view.incompleteautomaton.editing;
 
-import it.polimi.view.actions.IncompleteBuchiAddCharacterAction;
+import it.polimi.controller.actions.IncompleteBuchiAddCharacterAction;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
 
 import java.awt.event.ActionEvent;

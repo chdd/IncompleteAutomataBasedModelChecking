@@ -1,4 +1,6 @@
-package it.polimi.view.actions;
+package it.polimi.controller.actions;
+
+import it.polimi.model.ModelInterface;
 
 public class IncompleteBuchiAddCharacterAction extends BuchiAddCharacterAction{
 
@@ -12,4 +14,8 @@ public class IncompleteBuchiAddCharacterAction extends BuchiAddCharacterAction{
 		super(source, id, command, character);
 	}
 
+	@Override
+	public void perform(ModelInterface model) {
+		model.addCharacterToTheModed(this.character);
+	}
 }

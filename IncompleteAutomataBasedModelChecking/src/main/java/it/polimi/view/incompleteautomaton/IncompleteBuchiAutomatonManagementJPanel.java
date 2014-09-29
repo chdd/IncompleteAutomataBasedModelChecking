@@ -21,7 +21,7 @@ import javax.xml.bind.JAXBException;
  * @param <A> is the type of the {@link IncompleteBuchiAutomaton}
  */
 @SuppressWarnings("serial")
-public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends Transition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiAutomatonManagementJPanel<S, T, A>  {
+public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends Transition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiAutomatonManagementJPanel<S,T,A>  {
 
 
 	public IncompleteBuchiAutomatonManagementJPanel(Dimension d, ActionListener container) throws JAXBException{
@@ -29,7 +29,7 @@ public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends
 	}	
 	
 	protected BuchiAutomatonJPanel<S,T, A> getAutomatonPanel(Dimension automatonJPanelDimension){
-		 return new  IncompleteBuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension, container);
+		 return new  IncompleteBuchiAutomatonJPanel<S,T, A>(automatonJPanelDimension);
 	}
 	
 	public void updateAutomatonPanel(A a){

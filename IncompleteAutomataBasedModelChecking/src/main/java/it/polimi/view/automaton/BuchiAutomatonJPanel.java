@@ -8,18 +8,9 @@ import it.polimi.view.automaton.transformers.BuchiAutomatonPaintTransformer;
 import it.polimi.view.automaton.transformers.BuchiAutomatonShapeTransformer;
 import it.polimi.view.automaton.transformers.BuchiAutomatonStrokeTransformer;
 import it.polimi.view.automaton.transformers.ShowEdgeArrowsPredicate;
-import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJStateCreator;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -39,7 +30,7 @@ import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 
-public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel{
+public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel  {
 
 	/**
 	 * contains the {@link Graph} to be inserted in the component
@@ -48,7 +39,7 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 	
 	private Layout<S,T> layout;
 	private VisualizationViewer<S, T> vv;
-
+	
 	/**
 	 * 
 	 */
@@ -60,7 +51,7 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 	 * @param a is the {@link BuchiAutomaton} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BuchiAutomaton} d is null
 	 */
-	public BuchiAutomatonJPanel(Dimension d, ActionListener container){
+	public BuchiAutomatonJPanel(Dimension d){
 		super();
 		if(d==null){
 			throw new IllegalArgumentException("The dimension cannot be null");
@@ -86,13 +77,9 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		vv.setBorder(new LineBorder(Color.getColor("myColor")));
 		vv.setAutoscrolls(true);
 		
-		
-		// add the key listener after this instruction if the user press p can moves the nodes in the graph
 		DefaultModalGraphMouse<S, T> gm=new DefaultModalGraphMouse<S,T>();
 		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
 		vv.setGraphMouse(gm);
-		vv.addKeyListener(gm.getModeKeyListener());
-		
 		this.add(vv);
 		
 	}
@@ -114,7 +101,6 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 		vv.getRenderContext().setVertexStrokeTransformer(this.getStrokeTransformer(a));
 		vv.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeTransformer(a));
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
-		
 		EdgeLabelRenderer edgeLabelRenderer=vv.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
 		vv.getRenderContext().setLabelOffset(20);
@@ -153,17 +139,6 @@ public class BuchiAutomatonJPanel<S extends State, T extends Transition<S>, A ex
 			}
 		}	
 	}
-
-	
-
-	
-
-	
-	
-
-	
-
-	
 
 	
 }

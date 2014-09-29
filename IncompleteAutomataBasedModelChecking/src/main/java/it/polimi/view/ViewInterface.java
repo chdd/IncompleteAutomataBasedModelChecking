@@ -16,11 +16,8 @@ public interface ViewInterface<S1 extends State, T1 extends Transition<S1>, S ex
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification);
 	public void updateIntersection(IntersectionAutomaton<S1,T1,S,T> intersection);
 	public void updateVerificationResults(ModelCheckerParameters<S1> verificationResults);
-	public String getFile();
 	public void addObserver(Observer o);
-	public String createFile();
-	public String getModelXML();
-	public String getSpecificationXML();
+
 	public void displayErrorMessage(String message);
 	
 }

@@ -92,12 +92,14 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model){
 		this.modelPanel.updateAutomatonPanel(model);
 		this.modelPanel.updateLoadingPanel(model);
+		
 		jframe.repaint();
 	}
 	@Override
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification){
 		this.specificationPanel.updateAutomatonPanel(specification);
 		this.specificationPanel.updateLoadingPanel(specification);
+		
 		jframe.repaint();
 		
 	}
@@ -123,38 +125,8 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 		this.notifyObservers(e);
 	}
 
-	@Override
-	public String getFile() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-		int result = fileChooser.showOpenDialog(null);
-		if (result == JFileChooser.APPROVE_OPTION) {
-		    File selectedFile = fileChooser.getSelectedFile();
-		    return selectedFile.getAbsolutePath();
-		}
-		return null;
-	}
-	@Override
-	public String createFile(){
-		 FileDialog fDialog = new FileDialog(this.jframe, "Save", FileDialog.SAVE);
-	     fDialog.setVisible(true);
-	     return fDialog.getDirectory() + fDialog.getFile();
-	}
-
-	@Override
-	public String getModelXML() {
-		return this.modelPanel.getAutomatonXML();
-	}
-
-	@Override
-	public String getSpecificationXML() {
-		return this.specificationPanel.getAutomatonXML();
-	}
-	
 	public void displayErrorMessage(String message){
 		JOptionPane.showMessageDialog(null, message);
 	}
-	
-	
 	
 }

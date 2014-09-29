@@ -21,7 +21,7 @@ IncompleteBuchiAutomatonManagementJPanel<S1, T1, A> {
 	}
 	@Override
 	protected IntersectionAutomatonJPanel<S,T, S1,T1, A> getAutomatonPanel(Dimension automatonJPanelDimension){
-		 return new  IntersectionAutomatonJPanel<S,T, S1,T1, A>(automatonJPanelDimension, container);
+		 return new  IntersectionAutomatonJPanel<S,T, S1,T1, A>(automatonJPanelDimension);
 	}
 	
 	public void updateAutomatonPanel(A a){

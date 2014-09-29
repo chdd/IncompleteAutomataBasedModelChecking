@@ -1,6 +1,6 @@
 package it.polimi.view.automaton.editing;
 
-import it.polimi.view.actions.BuchiActionStateCreation;
+import it.polimi.controller.actions.BuchiActionStateCreation;
 
 import java.awt.Color;
 import java.awt.Container;

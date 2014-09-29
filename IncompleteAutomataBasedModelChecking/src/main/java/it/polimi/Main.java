@@ -21,7 +21,7 @@ public class Main{
 		ModelInterface model=new Model();
 		
 		// contains the view of the application
-		ViewInterface<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>> view=new View<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>>();
+		ViewInterface<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>> view=new View();
 		
 		// creates a new controller with the specified model and view
 		Controller controller=new Controller(model, view);

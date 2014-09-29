@@ -39,6 +39,7 @@ public class IntersectionAutomatonLoadingPanel<S extends State, T extends Transi
 		label.setText("Verification results");
 		ret.add(label);
 		
+		
 		return ret;
 	}
 

@@ -1,6 +1,6 @@
 package it.polimi.view.incompleteautomaton.editing;
 
-import it.polimi.view.actions.IncompleteBuchiActionStateCreation;
+import it.polimi.controller.actions.IncompleteBuchiActionStateCreation;
 import it.polimi.view.automaton.editing.BuchiAutomatonJStateCreator;
 
 import java.awt.Container;

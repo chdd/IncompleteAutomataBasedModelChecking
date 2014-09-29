@@ -34,6 +34,10 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S
 		 Dimension xmlAreaDimension=new Dimension(d.width, d.height/4*3);
 		 xmlArea=new BuchiAutomatonXMLTextArea<S,T,A>(xmlAreaDimension);
 		 this.add(xmlArea);
+		 if(buttonPanel instanceof BuchiButtonJPanel){
+			 ((BuchiButtonJPanel) buttonPanel).setXMLarea(xmlArea);
+		 }
+		
 	}
 	
 	public JPanel createButtonPanel(Dimension buttonPanelDimension, ActionListener container){

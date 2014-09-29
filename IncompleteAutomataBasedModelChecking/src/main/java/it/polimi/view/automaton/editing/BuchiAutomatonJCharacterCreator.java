@@ -1,6 +1,6 @@
 package it.polimi.view.automaton.editing;
 
-import it.polimi.view.actions.BuchiAddCharacterAction;
+import it.polimi.controller.actions.BuchiAddCharacterAction;
 
 import java.awt.Color;
 import java.awt.Container;

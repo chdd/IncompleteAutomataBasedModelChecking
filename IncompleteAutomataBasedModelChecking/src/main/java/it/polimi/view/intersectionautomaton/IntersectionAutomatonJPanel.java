@@ -10,14 +10,13 @@ import it.polimi.view.intersectionautomaton.transformers.IntersectionAutomatonEd
 import it.polimi.view.intersectionautomaton.transformers.IntersectionAutomatonStrokeTransformer;
 
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 
 @SuppressWarnings("serial")
 public class IntersectionAutomatonJPanel<S extends State, T extends Transition<S>, S1 extends IntersectionState<S>, T1 extends Transition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
 		IncompleteBuchiAutomatonJPanel<S1, T1, A> {
 
-	public IntersectionAutomatonJPanel(Dimension d,ActionListener container) {
-		super(d, container);
+	public IntersectionAutomatonJPanel(Dimension d) {
+		super(d);
 	}
 	@Override
 	protected BuchiAutomatonStrokeTransformer<S1, T1, A> getStrokeTransformer(A a){

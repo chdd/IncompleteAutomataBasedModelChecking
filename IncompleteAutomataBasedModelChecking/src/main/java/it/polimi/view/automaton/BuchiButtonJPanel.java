@@ -1,6 +1,12 @@
 package it.polimi.view.automaton;
 
-import it.polimi.view.Actions;
+import it.polimi.controller.actions.file.loading.LoadSpecification;
+import it.polimi.controller.actions.file.saving.SaveSpecification;
+import it.polimi.model.BuchiAutomaton;
+import it.polimi.model.IntersectionState;
+import it.polimi.model.State;
+import it.polimi.model.Transition;
+import it.polimi.view.ViewInterface;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJStateCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJTransitionCreator;
@@ -8,15 +14,17 @@ import it.polimi.view.automaton.editing.BuchiAutomatonJTransitionCreator;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 
-public class BuchiButtonJPanel  extends JPanel implements ActionListener{
+public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>>  extends JPanel implements ActionListener{
 
 	/**
 	 * 
@@ -30,6 +38,11 @@ public class BuchiButtonJPanel  extends JPanel implements ActionListener{
 	protected JButton btnLoad;
 	protected JButton btnSave;
 	protected ActionListener container;
+	protected BuchiAutomatonXMLTextArea<S,T,A> xmlarea;
+	
+	public void setXMLarea(BuchiAutomatonXMLTextArea<S,T,A> xmlarea){
+		this.xmlarea=xmlarea;
+	}
 	
 	public BuchiButtonJPanel(Dimension d, ActionListener container){
 		 super();
@@ -84,7 +97,6 @@ public class BuchiButtonJPanel  extends JPanel implements ActionListener{
 		 btnLoad.setBackground(Color.getColor("myColor"));
 		 btnLoad.addActionListener(this);
 		 this.add(btnLoad);
-		 this.setLoadActionCommand();
 		 
 		 btnSave = new JButton("Save");
 		 btnSave.setSize(buttonDimension);
@@ -94,18 +106,11 @@ public class BuchiButtonJPanel  extends JPanel implements ActionListener{
 		 btnSave.setBackground(Color.getColor("myColor"));
 		 btnSave.addActionListener(this);
 		 this.add(btnSave);
-		 this.setSaveActionCommand();
 	}
 	protected void setLabelText(){
 		this.label.setText("Specification");
 	}
 	
-	protected void setLoadActionCommand(){
-		btnLoad.setActionCommand(Actions.LOADSPECIFICATION.name());
-	}
-	protected void setSaveActionCommand(){
-		btnSave.setActionCommand(Actions.SAVESPECIFICATION.name());
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -118,8 +123,15 @@ public class BuchiButtonJPanel  extends JPanel implements ActionListener{
 		if(e.getSource().equals(this.addCharacter)){
 			new BuchiAutomatonJCharacterCreator("Character creator", container);
 		}
-		else{
-			container.actionPerformed(e);
+		if(e.getSource().equals(this.btnSave)){
+			container.actionPerformed(
+					new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this), this.xmlarea.toString())
+			);
+		}
+		if(e.getSource().equals(this.btnLoad)){
+			container.actionPerformed(
+					new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand())
+					);
 		}
 		
 	}
