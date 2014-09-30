@@ -1,8 +1,8 @@
 package it.polimi.view.buchiautomaton.transformers;
 
 import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

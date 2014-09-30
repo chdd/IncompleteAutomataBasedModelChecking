@@ -5,8 +5,8 @@ import java.awt.Stroke;
 
 import it.polimi.model.ConstrainedTransition;
 import it.polimi.model.IntersectionState;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 
 public class IntersectionAutomatonEdgeStrokeTransformed<S1 extends State, T1 extends LabelledTransition<S1>, S extends IntersectionState<S1>, T extends LabelledTransition<S>> extends

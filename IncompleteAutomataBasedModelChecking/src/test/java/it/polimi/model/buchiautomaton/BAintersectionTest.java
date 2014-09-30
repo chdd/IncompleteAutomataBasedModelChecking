@@ -5,8 +5,8 @@ import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 
 import java.io.IOException;
 import java.util.HashSet;

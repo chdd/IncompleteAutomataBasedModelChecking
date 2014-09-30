@@ -1,4 +1,4 @@
-package it.polimi.model;
+package it.polimi.model.graph;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;

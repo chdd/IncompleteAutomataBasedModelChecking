@@ -1,5 +1,6 @@
 package it.polimi.model;
 
+import it.polimi.model.graph.State;
 import it.polimi.model.graph.Transition;
 
 import javax.xml.bind.annotation.XmlElement;

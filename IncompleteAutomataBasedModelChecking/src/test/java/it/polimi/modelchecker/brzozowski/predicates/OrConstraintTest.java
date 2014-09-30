@@ -1,7 +1,7 @@
 package it.polimi.modelchecker.brzozowski.predicates;
 
 import static org.junit.Assert.*;
-import it.polimi.model.State;
+import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.AndPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;

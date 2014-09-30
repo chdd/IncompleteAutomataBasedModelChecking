@@ -1,7 +1,7 @@
 package it.polimi.controller.actions;
 
 import it.polimi.model.ModelInterface;
-import it.polimi.model.State;
+import it.polimi.model.graph.State;
 
 public class IncompleteBuchiActionStateCreation extends BuchiActionStateCreation implements ActionInterface{
 

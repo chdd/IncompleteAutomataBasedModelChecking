@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 
 import java.util.HashSet;
 import java.util.Set;

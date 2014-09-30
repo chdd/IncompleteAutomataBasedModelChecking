@@ -1,8 +1,8 @@
 package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 import it.polimi.view.automaton.AutomatonJPanel;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonPaintTransformer;

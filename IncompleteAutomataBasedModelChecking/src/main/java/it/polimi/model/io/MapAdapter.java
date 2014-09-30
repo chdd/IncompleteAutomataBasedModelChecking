@@ -1,7 +1,7 @@
 package it.polimi.model.io;
 
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 
 import java.util.ArrayList;
 import java.util.HashMap;

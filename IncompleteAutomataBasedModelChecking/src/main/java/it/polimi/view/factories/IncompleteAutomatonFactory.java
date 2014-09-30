@@ -1,8 +1,8 @@
 package it.polimi.view.factories;
 
 import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonLoadingPanel;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;

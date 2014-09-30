@@ -3,8 +3,6 @@ package it.polimi.model.graph;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;
 
-import it.polimi.model.State;
-
 public class Transition<S extends State> {
 
 	/**

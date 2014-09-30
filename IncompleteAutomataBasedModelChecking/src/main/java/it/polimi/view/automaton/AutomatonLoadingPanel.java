@@ -1,8 +1,8 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -1,5 +1,7 @@
 package it.polimi.model;
 
+import it.polimi.model.graph.State;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;

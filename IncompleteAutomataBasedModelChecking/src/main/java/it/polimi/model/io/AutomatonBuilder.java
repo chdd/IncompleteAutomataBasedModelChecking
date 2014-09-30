@@ -1,8 +1,8 @@
 package it.polimi.model.io;
 
 import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.State;
 import it.polimi.model.LabelledTransition;
+import it.polimi.model.graph.State;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

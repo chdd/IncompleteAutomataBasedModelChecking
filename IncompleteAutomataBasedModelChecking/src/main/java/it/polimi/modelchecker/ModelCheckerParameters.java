@@ -1,6 +1,6 @@
 package it.polimi.modelchecker;
 
-import it.polimi.model.State;
+import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 
 /**

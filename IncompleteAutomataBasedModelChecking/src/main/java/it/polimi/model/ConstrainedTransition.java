@@ -1,5 +1,7 @@
 package it.polimi.model;
 
+import it.polimi.model.graph.State;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;
 

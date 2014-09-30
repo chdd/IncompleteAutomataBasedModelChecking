@@ -1,5 +1,7 @@
 package it.polimi.model;
 
+import it.polimi.model.graph.State;
+
 /**
  * @author claudiomenghi
  * contains an intersection state. The intersection state is a state that results from the intersection of two automata states.
