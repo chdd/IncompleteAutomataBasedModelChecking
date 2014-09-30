@@ -1,4 +1,4 @@
-package it.polimi.model;
+package it.polimi.model.intersection;
 
 import it.polimi.model.graph.State;
 

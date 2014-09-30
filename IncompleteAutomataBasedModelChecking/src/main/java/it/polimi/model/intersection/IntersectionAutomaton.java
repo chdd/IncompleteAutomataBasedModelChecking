@@ -1,6 +1,9 @@
-package it.polimi.model;
+package it.polimi.model.intersection;
 
+import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,7 +53,7 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	 */
 	private boolean completeEmptiness=true;
 	
-	protected IntersectionAutomaton(){
+	public IntersectionAutomaton(){
 		this.model=new IncompleteBuchiAutomaton<S1, T1>();
 		this.specification=new BuchiAutomaton<S1, T1>();
 		this.mixedStates=new HashSet<S>(); 

@@ -1,8 +1,8 @@
 package it.polimi.model.buchiautomaton;
 
 import static org.junit.Assert.*;
-import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 
 import java.util.HashSet;

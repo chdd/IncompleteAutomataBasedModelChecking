@@ -3,11 +3,11 @@ package it.polimi.modelchecker.brzozowski;
 import java.util.HashSet;
 import java.util.Set;
 
-import it.polimi.model.ConstrainedTransition;
-import it.polimi.model.IntersectionAutomaton;
-import it.polimi.model.IntersectionState;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.intersection.ConstrainedTransition;
+import it.polimi.model.intersection.IntersectionAutomaton;
+import it.polimi.model.intersection.IntersectionState;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;

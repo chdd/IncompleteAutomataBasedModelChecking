@@ -1,9 +1,9 @@
 package it.polimi.view.factories;
 
-import it.polimi.model.IntersectionAutomaton;
-import it.polimi.model.IntersectionState;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.intersection.IntersectionAutomaton;
+import it.polimi.model.intersection.IntersectionState;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonButtonJPanel;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonJPanel;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonLoadingPanel;

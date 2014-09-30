@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.iba.IncompleteBuchiAutomaton;
 
 import org.junit.Test;
 

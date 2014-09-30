@@ -1,11 +1,11 @@
 package it.polimi.view;
 
-import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.IntersectionAutomaton;
-import it.polimi.model.IntersectionState;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.intersection.IntersectionAutomaton;
+import it.polimi.model.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
 import it.polimi.view.factories.BuchiAutomatonFactory;

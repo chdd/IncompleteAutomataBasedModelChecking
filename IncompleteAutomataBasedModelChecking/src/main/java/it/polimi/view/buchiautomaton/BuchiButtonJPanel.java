@@ -2,8 +2,8 @@ package it.polimi.view.buchiautomaton;
 
 import it.polimi.controller.actions.file.loading.LoadSpecification;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
-import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 import it.polimi.view.automaton.AutomatonButtonJPanel;
 import it.polimi.view.automaton.AutomatonXMLTextArea;

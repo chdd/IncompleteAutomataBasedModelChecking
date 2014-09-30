@@ -1,6 +1,6 @@
 package it.polimi.model.io;
 
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 
 import java.util.ArrayList;

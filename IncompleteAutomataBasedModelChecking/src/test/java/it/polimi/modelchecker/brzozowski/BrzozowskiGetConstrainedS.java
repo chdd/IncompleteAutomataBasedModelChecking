@@ -1,12 +1,12 @@
 package it.polimi.modelchecker.brzozowski;
 
 import static org.junit.Assert.assertTrue;
-import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.IntersectionAutomaton;
-import it.polimi.model.IntersectionState;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.intersection.IntersectionAutomaton;
+import it.polimi.model.intersection.IntersectionState;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;

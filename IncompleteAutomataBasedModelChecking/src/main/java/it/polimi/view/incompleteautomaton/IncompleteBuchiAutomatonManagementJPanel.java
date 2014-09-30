@@ -1,8 +1,8 @@
 package it.polimi.view.incompleteautomaton;
 
-import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.automaton.AutomatonManagementJPanel;
 
 import java.awt.Dimension;

@@ -1,10 +1,10 @@
 package it.polimi.performance;
 
-import it.polimi.model.BuchiAutomaton;
-import it.polimi.model.IncompleteBuchiAutomaton;
-import it.polimi.model.IntersectionState;
-import it.polimi.model.LabelledTransition;
+import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.ba.LabelledTransition;
 import it.polimi.model.graph.State;
+import it.polimi.model.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.intersection.IntersectionState;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.ModelChecker;
