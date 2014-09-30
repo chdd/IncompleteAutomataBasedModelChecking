@@ -1,14 +1,15 @@
 package it.polimi.model;
 
+import it.polimi.model.graph.Transition;
+
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlIDREF;
 
 /**
  * @author Claudio Menghi
  * contains an automata transition. The transition contains the character that labels the transition and the destination state
  * 
  */
-public class LabelledTransition<S extends State>{
+public class LabelledTransition<S extends State> extends Transition<S>{
 	
 	/**
 	 * the character that labels the transition
@@ -17,19 +18,12 @@ public class LabelledTransition<S extends State>{
 	private final String character;
 	
 	/**
-	 * the destination state of the transition
-	 */
-	@XmlElement(name="destinationState", type=State.class)
-	@XmlIDREF
-	private final S state;
-	
-	/**
 	 * creates a new empty transition
 	 */
 	@SuppressWarnings("unused")
 	private LabelledTransition(){
+		super();
 		this.character=null;
-		this.state=null;
 	}
 	
 	/** 
@@ -39,14 +33,12 @@ public class LabelledTransition<S extends State>{
 	 * @throws IllegalArgumentException is generated is the character that labels the transition is null or if the destination state is null
 	 */
 	public LabelledTransition(String c, S to)	{
+		super(to);
 		if(c==null){
 			throw new IllegalArgumentException("The character that labels the transition cannot be null");
 		}
-		if(to==null){
-			throw new IllegalArgumentException("The destination state of the transition cannot be null");
-		}
+		
 		this.character=c;
-		this.state=to;
 	}
 
 	/**
@@ -54,13 +46,6 @@ public class LabelledTransition<S extends State>{
 	 */
 	public String getCharacter() {
 		return character;
-	}
-
-	/**
-	 * @return the destination of the transition
-	 */
-	public S getDestination() {
-		return state;
 	}
 
 	/**
