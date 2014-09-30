@@ -4,32 +4,17 @@ import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.view.automaton.AutomatonButtonJPanel;
 import it.polimi.view.automaton.AutomatonLoadingPanel;
+import it.polimi.view.automaton.AutomatonXMLTextArea;
 
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
-
-import javax.swing.JPanel;
-import javax.xml.bind.JAXBException;
 
 @SuppressWarnings("serial")
-public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends AutomatonLoadingPanel {
+public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends AutomatonLoadingPanel<S,T,A> {
 
-	
-	public BuchiAutomatonLoadingJPanel(Dimension d, ActionListener container) throws JAXBException{
-		 super(d, container);
-		 Dimension buttonPanelDimension=new Dimension(d.width, d.height/4);
-		 JPanel buttonPanel=this.createButtonPanel(buttonPanelDimension, container);
-		 this.add(buttonPanel);
-		 
-		 if(buttonPanel instanceof BuchiButtonJPanel){
-			 ((BuchiButtonJPanel) buttonPanel).setXMLarea(xmlArea);
-		 }
-		
-	}
-	
-	public JPanel createButtonPanel(Dimension buttonPanelDimension, ActionListener container){
-		return new BuchiButtonJPanel(buttonPanelDimension, container);
+	public BuchiAutomatonLoadingJPanel(Dimension d, AutomatonButtonJPanel jButtonPanel, AutomatonXMLTextArea jAutomatonTextArea){
+		 super(d, jButtonPanel, jAutomatonTextArea);
 	}
 	
 	public void update(A a){

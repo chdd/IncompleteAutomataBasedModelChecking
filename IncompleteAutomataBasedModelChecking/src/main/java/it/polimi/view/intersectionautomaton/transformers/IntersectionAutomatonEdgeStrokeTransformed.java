@@ -7,7 +7,7 @@ import it.polimi.model.ConstrainedTransition;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
-import it.polimi.view.automaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
+import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 
 public class IntersectionAutomatonEdgeStrokeTransformed<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> extends
 		BuchiAutomatonEdgeStrokeTransormer<S, T> {

@@ -30,6 +30,9 @@ public class BuchiAutomatonJStateCreator extends JDialog implements ActionListen
 	
 	public BuchiAutomatonJStateCreator(String title, ActionListener container){
 		super();
+		if(container==null){
+			throw new IllegalArgumentException("The container cannot be null");
+		}
 		this.setPreferredSize(new Dimension(300,150));
 		Container contentPane=this.getContentPane();
 		

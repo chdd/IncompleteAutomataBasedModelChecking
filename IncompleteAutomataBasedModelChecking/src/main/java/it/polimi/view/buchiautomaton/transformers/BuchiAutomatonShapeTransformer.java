@@ -1,4 +1,4 @@
-package it.polimi.view.automaton.transformers;
+package it.polimi.view.buchiautomaton.transformers;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;

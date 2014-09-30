@@ -8,6 +8,9 @@ import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
+import it.polimi.view.factories.BuchiAutomatonFactory;
+import it.polimi.view.factories.IncompleteAutomatonFactory;
+import it.polimi.view.factories.IntersectionAutomatonFactory;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonManagementJPanel;
 
@@ -52,30 +55,32 @@ public class View<S1 extends State, T1 extends Transition<S1>, S extends Interse
 		 
 		 container.setLayout(new BoxLayout(container,BoxLayout.Y_AXIS));
 		
-		 modelPanel=new  IncompleteBuchiAutomatonManagementJPanel<S1,T1, IncompleteBuchiAutomaton<S1, T1>> (automatonManagementPanelDimension, this);
-		 modelPanel.setSize(automatonManagementPanelDimension);
-		 modelPanel.setMinimumSize(automatonManagementPanelDimension);
-		 modelPanel.setMaximumSize(automatonManagementPanelDimension);
-		 modelPanel.setPreferredSize(automatonManagementPanelDimension);
+		 
+		 IncompleteAutomatonFactory<S1, T1, IncompleteBuchiAutomaton<S1,T1>> factoryIncompleteBa=
+				 new IncompleteAutomatonFactory<S1, T1, IncompleteBuchiAutomaton<S1,T1>>();
+		 
+		 this.modelPanel=
+				 factoryIncompleteBa.getPanel(automatonManagementPanelDimension);
 		 container.add(modelPanel);
+		 this.modelPanel.setActionListener(this);
 		 container.setVisible(true);
 		 
-		 specificationPanel= new  BuchiAutomatonManagementJPanel<S1,T1, BuchiAutomaton<S1, T1>> (automatonManagementPanelDimension, this);
-		 specificationPanel.setSize(automatonManagementPanelDimension);
-		 specificationPanel.setMinimumSize(automatonManagementPanelDimension);
-		 specificationPanel.setMaximumSize(automatonManagementPanelDimension);
-		 specificationPanel.setPreferredSize(automatonManagementPanelDimension);
+		 BuchiAutomatonFactory<S1,T1, BuchiAutomaton<S1, T1>> factoryBa=new BuchiAutomatonFactory<S1,T1, BuchiAutomaton<S1, T1>>();
+		 this.specificationPanel=
+				 factoryBa.getPanel(automatonManagementPanelDimension);
+		 this.specificationPanel.setActionListener(this);
 		 container.add(specificationPanel);
-		 container.setVisible(true);
+		 
 		 
 		
-		intersectionPanel=
-				new IntersectionAutomatonManagementJPanel<S1, T1,S, T, IntersectionAutomaton<S1, T1, S, T>>(automatonManagementPanelDimension, this);
-		 intersectionPanel.setSize(automatonManagementPanelDimension);
-		 intersectionPanel.setMinimumSize(automatonManagementPanelDimension);
-		 intersectionPanel.setMaximumSize(automatonManagementPanelDimension);
-		 intersectionPanel.setPreferredSize(automatonManagementPanelDimension);
+		 
+		 IntersectionAutomatonFactory<S1, T1, S, T, IntersectionAutomaton<S1, T1, S, T>> factoryIntersection=
+				 new  IntersectionAutomatonFactory<S1, T1, S, T, IntersectionAutomaton<S1, T1, S, T>>();
+		
+		 this.intersectionPanel=factoryIntersection.getPanel(automatonManagementPanelDimension);
+		
 		 container.add(intersectionPanel);
+		 container.setVisible(true);
 		 container.setVisible(true);
 		 jframe.add(container);
 		 jframe.setResizable(true);

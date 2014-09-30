@@ -5,6 +5,7 @@ import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
+import it.polimi.view.automaton.AutomatonButtonJPanel;
 import it.polimi.view.automaton.AutomatonXMLTextArea;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJStateCreator;
@@ -19,11 +20,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 
-public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>>  extends JPanel implements ActionListener{
+public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>>  extends AutomatonButtonJPanel implements ActionListener{
 
 	/**
 	 * 
@@ -36,16 +36,15 @@ public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A exten
 	protected JButton addCharacter;
 	protected JButton btnLoad;
 	protected JButton btnSave;
-	protected ActionListener container;
+	
 	protected AutomatonXMLTextArea xmlarea;
 	
 	public void setXMLarea(AutomatonXMLTextArea xmlarea){
 		this.xmlarea=xmlarea;
 	}
 	
-	public BuchiButtonJPanel(Dimension d, ActionListener container){
+	public BuchiButtonJPanel(Dimension d){
 		 super();
-		 this.container=container;
 		 this.setBackground(Color.getColor("myColor"));
 		 this.setSize(d);
 		 this.setMinimumSize(d);
@@ -114,21 +113,21 @@ public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A exten
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource().equals(addState)){
-			new BuchiAutomatonJStateCreator("Incomplete Buchi state creator", container);
+			new BuchiAutomatonJStateCreator("Incomplete Buchi state creator", l);
 		}
 		if(e.getSource().equals(addTransition)){
-			new BuchiAutomatonJTransitionCreator("Incomplete Buchi state creator", container);
+			new BuchiAutomatonJTransitionCreator("Incomplete Buchi state creator", l);
 		}
 		if(e.getSource().equals(this.addCharacter)){
-			new BuchiAutomatonJCharacterCreator("Character creator", container);
+			new BuchiAutomatonJCharacterCreator("Character creator", l);
 		}
 		if(e.getSource().equals(this.btnSave)){
-			container.actionPerformed(
+			l.actionPerformed(
 					new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this), this.xmlarea.toString())
 			);
 		}
 		if(e.getSource().equals(this.btnLoad)){
-			container.actionPerformed(
+			l.actionPerformed(
 					new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand())
 					);
 		}

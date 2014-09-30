@@ -5,34 +5,45 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
 import it.polimi.model.Transition;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
+import it.polimi.view.automaton.AutomatonManagementJPanel;
 
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
-
-import javax.xml.bind.JAXBException;
+import java.awt.FlowLayout;
 
 @SuppressWarnings("serial")
 public class IntersectionAutomatonManagementJPanel<S extends State, T extends Transition<S>, S1 extends IntersectionState<S>, T1 extends Transition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
-IncompleteBuchiAutomatonManagementJPanel<S1, T1, A> {
+AutomatonManagementJPanel<S1, T1, A> {
 
-	public IntersectionAutomatonManagementJPanel(Dimension d, ActionListener container) throws JAXBException {
-		super(d, container);
-	}
-	@Override
-	protected IntersectionAutomatonJPanel<S,T, S1,T1, A> getAutomatonPanel(Dimension automatonJPanelDimension){
-		 return new  IntersectionAutomatonJPanel<S,T, S1,T1, A>(automatonJPanelDimension);
+	public IntersectionAutomatonManagementJPanel(Dimension d,
+			IntersectionAutomatonJPanel<S,T, S1, T1, A> automatonPanel,
+			IntersectionAutomatonLoadingPanel<S, T, S1, T1, A> loadingPanel) 
+	{
+		super(new FlowLayout(), d, automatonPanel,loadingPanel);
 	}
 	
 	public void updateAutomatonPanel(A a){
-		super.updateAutomatonPanel(a);
+		this.automatonPanel.update(a);
 	}
-	public void updateVerificationResults(ModelCheckerParameters<S> verificationResults){
-		this.loadingPanel.updateResults(verificationResults);
+	
+	public void updateVerificationResults(ModelCheckerParameters<S> results){
+		if(results==null){
+			throw new IllegalArgumentException("The incomplete automaton a cannot be null");
+		}
+		String text="";
+		if(results.getResult()==1){
+			text="The property is satisfied";
+		}
+		if(results.getResult()==0){
+			text="The property is not satisfied";
+		}
+		if(results.getResult()==-1){
+			text="The property is possibly satisfied\n\n";
+			text=text+"Constraint:\n"+results.getConstraint();
+		}
+		((IntersectionAutomatonLoadingPanel<S, T, S1, T1, A>) this.loadingPanel).update(text);
 	}
-	protected void addLoadingPanel(Dimension d, ActionListener container) throws JAXBException{
-		 Dimension automatonLoadingPanelDimension=new Dimension(d.width, d.height);
-		 loadingPanel=new IntersectionAutomatonLoadingPanel<S,T,S1,T1,A>(automatonLoadingPanelDimension, container);
-		 this.add(loadingPanel);
-	}
+
+
+
+
 }
