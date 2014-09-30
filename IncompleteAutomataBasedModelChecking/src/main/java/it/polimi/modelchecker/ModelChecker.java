@@ -5,7 +5,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 
@@ -18,7 +18,7 @@ import it.polimi.modelchecker.brzozowski.predicates.Constraint;
  * @param <S>  is the type of the states of the {@link IntersectionAutomaton}
  * @param <T>  is the type of the states of the {@link IntersectionAutomaton}
  */
-public class ModelChecker<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> {
+public class ModelChecker<S1 extends State, T1 extends LabelledTransition<S1>, S extends IntersectionState<S1>, T extends LabelledTransition<S>> {
 	
 	/**
 	 * contains the specification to be checked

@@ -6,7 +6,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
@@ -19,8 +19,8 @@ import org.junit.Test;
 
 public class BrzozowskiGetConstrainedS {
 
-	private IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> intersectBA=null;
-	private Brzozowski<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> brzozowski=null;
+	private IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> intersectBA=null;
+	private Brzozowski<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> brzozowski=null;
 	
 	private State s1=new State("s1");
 	private State s2=new State("s2");
@@ -34,37 +34,37 @@ public class BrzozowskiGetConstrainedS {
 		Set<String> alphabet=new HashSet<String>();
 		alphabet.add("a");
 		
-		IncompleteBuchiAutomaton<State, Transition<State>> model=new IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		IncompleteBuchiAutomaton<State, LabelledTransition<State>> model=new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		// add the states to the BuchiAutomaton
 		model.addInitialState(s1);
 		model.addState(s2);
 		model.addState(s3);
 		model.addAcceptState(s4);
 		
-		model.addTransition(s1, new Transition<State>("a", s2));
-		model.addTransition(s2, new Transition<State>("a", s3));
-		model.addTransition(s3, new Transition<State>("a", s4));
-		model.addTransition(s4, new Transition<State>("a", s4));
+		model.addTransition(s1, new LabelledTransition<State>("a", s2));
+		model.addTransition(s2, new LabelledTransition<State>("a", s3));
+		model.addTransition(s3, new LabelledTransition<State>("a", s4));
+		model.addTransition(s4, new LabelledTransition<State>("a", s4));
 		
 		// creates the BuchiAutomaton
-		BuchiAutomaton<State, Transition<State>> specification=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> specification=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		// add the states to the BuchiAutomaton
 		specification.addInitialState(s1);
 		specification.addState(s2);
 		specification.addState(s3);
 		specification.addAcceptState(s4);
 		
-		specification.addTransition(s1, new Transition<State>("a", s2));
-		specification.addTransition(s2, new Transition<State>("a", s3));
-		specification.addTransition(s3, new Transition<State>("a", s4));
-		specification.addTransition(s4, new Transition<State>("a", s4));
+		specification.addTransition(s1, new LabelledTransition<State>("a", s2));
+		specification.addTransition(s2, new LabelledTransition<State>("a", s3));
+		specification.addTransition(s3, new LabelledTransition<State>("a", s4));
+		specification.addTransition(s4, new LabelledTransition<State>("a", s4));
 	
 		emptyPredicate=new EmptyPredicate<State>();
 		lambdaPredicate=new LambdaPredicate<State>();
 		
-		intersectBA=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+		intersectBA=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 		System.out.println(intersectBA);
-		brzozowski=new Brzozowski<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(intersectBA);
+		brzozowski=new Brzozowski<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(intersectBA);
 	}
 
 	/**

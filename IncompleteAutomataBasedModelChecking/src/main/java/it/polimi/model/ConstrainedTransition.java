@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlIDREF;
  * @param <S1> is the type of the state of the constrained state (the state of the original model or of the specification
  * @param <S> is the type of the state of the intersection automaton
  */
-public class ConstrainedTransition<S1 extends State,S extends IntersectionState<S1>> extends Transition<S> {
+public class ConstrainedTransition<S1 extends State,S extends IntersectionState<S1>> extends LabelledTransition<S> {
 
 	/**
 	 * contains the constrained state

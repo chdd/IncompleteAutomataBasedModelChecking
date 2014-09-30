@@ -3,7 +3,7 @@ package it.polimi.model.incompletebuchiautomaton;
 import static org.junit.Assert.*;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class IBAaddTransparentStateTest {
 	@Test
 	public void test1() {
 		Set<String> alphabet=new HashSet<String>();
-		IncompleteBuchiAutomaton<State, Transition<State>> iba=new IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		IncompleteBuchiAutomaton<State, LabelledTransition<State>> iba=new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		State s1=new State("a");
 		iba.addTransparentState(s1);
 	
@@ -42,7 +42,7 @@ public class IBAaddTransparentStateTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void test2() {
 		Set<String> alphabet=new HashSet<String>();
-		IncompleteBuchiAutomaton<State, Transition<State>> iba=new IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		IncompleteBuchiAutomaton<State, LabelledTransition<State>> iba=new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		iba.addTransparentState(null);	
 	}
 

@@ -4,7 +4,7 @@ import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.ModelChecker;
@@ -63,13 +63,13 @@ public class PerformanceEvaluator{
 					else{
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", true)));
 					}
-					IncompleteBuchiAutomaton<State, Transition<State>> a1 = IncompleteBuchiAutomaton.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
-					AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builder=
-							new AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>>();
+					IncompleteBuchiAutomaton<State, LabelledTransition<State>> a1 = IncompleteBuchiAutomaton.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
+					AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>> builder=
+							new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>();
 					
-					BuchiAutomaton<State, Transition<State>>  a2=builder.loadAutomaton(BuchiAutomaton.class, "src/main/resources/Automaton2.xml");
+					BuchiAutomaton<State, LabelledTransition<State>>  a2=builder.loadAutomaton(BuchiAutomaton.class, "src/main/resources/Automaton2.xml");
 					
-					ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2, mp);
+					ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> mc=new ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(a1, a2, mp);
 					mc.check();
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());

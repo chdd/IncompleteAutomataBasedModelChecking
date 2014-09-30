@@ -5,7 +5,7 @@ import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,29 +31,29 @@ public class ModelCheckerTest {
 		alphabet.add("b");
 		
 		// creates the model
-		IncompleteBuchiAutomaton<State, Transition<State>> model=new IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		IncompleteBuchiAutomaton<State, LabelledTransition<State>> model=new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		State s1=new State("s1");
 		State s2=new State("s2");
 		model.addInitialState(s1);
 		model.addAcceptState(s2);
-		model.addTransition(s1, new Transition<State>("a", s2));
-		model.addTransition(s2, new Transition<State>("b", s2));
+		model.addTransition(s1, new LabelledTransition<State>("a", s2));
+		model.addTransition(s2, new LabelledTransition<State>("b", s2));
 		
 		// creates the specification
-		BuchiAutomaton<State, Transition<State>> specification=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> specification=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		State s3=new State("s3");
 		State s4=new State("s4");
 		specification.addInitialState(s3);
 		specification.addAcceptState(s4);
-		specification.addTransition(s3, new Transition<State>("a", s4));
-		specification.addTransition(s4, new Transition<State>("b", s4));
+		specification.addTransition(s3, new LabelledTransition<State>("a", s4));
+		specification.addTransition(s4, new LabelledTransition<State>("b", s4));
 		
 		// creates the model checking parameters
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
 		// creates the model checker
-		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mck=
-				new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification, mp);
+		ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> mck=
+				new ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification, mp);
 		
 		// the property is not satisfied since the intersection between the model and the specification is not empty
 		assertTrue(mck.check()==0);
@@ -72,29 +72,29 @@ public class ModelCheckerTest {
 		alphabet.add("c");
 		
 		// creates the model
-		IncompleteBuchiAutomaton<State, Transition<State>> model=new IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		IncompleteBuchiAutomaton<State, LabelledTransition<State>> model=new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		State s1=new State("s1");
 		State s2=new State("s2");
 		model.addInitialState(s1);
 		model.addAcceptState(s2);
-		model.addTransition(s1, new Transition<State>("a", s2));
-		model.addTransition(s2, new Transition<State>("b", s2));
+		model.addTransition(s1, new LabelledTransition<State>("a", s2));
+		model.addTransition(s2, new LabelledTransition<State>("b", s2));
 		
 		// creates the specification
-		BuchiAutomaton<State, Transition<State>> specification=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> specification=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		State s3=new State("s3");
 		State s4=new State("s4");
 		specification.addInitialState(s3);
 		specification.addAcceptState(s4);
-		specification.addTransition(s3, new Transition<State>("a", s4));
-		specification.addTransition(s4, new Transition<State>("c", s4));
+		specification.addTransition(s3, new LabelledTransition<State>("a", s4));
+		specification.addTransition(s4, new LabelledTransition<State>("c", s4));
 		
 		// creates the model checking parameters
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
 		// creates the model checker
-		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mck=
-				new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification, mp);
+		ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> mck=
+				new ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification, mp);
 		
 		// the property the intersection between the model and the specification is empty the property is satisfied
 		assertTrue(mck.check()==1);

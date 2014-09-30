@@ -3,7 +3,7 @@ package it.polimi.view.intersectionautomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStrokeTransformer;
 import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.intersectionautomaton.transformers.IntersectionAutomatonEdgeStrokeTransformed;
@@ -12,7 +12,7 @@ import it.polimi.view.intersectionautomaton.transformers.IntersectionAutomatonSt
 import java.awt.Dimension;
 
 @SuppressWarnings("serial")
-public class IntersectionAutomatonJPanel<S extends State, T extends Transition<S>, S1 extends IntersectionState<S>, T1 extends Transition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
+public class IntersectionAutomatonJPanel<S extends State, T extends LabelledTransition<S>, S1 extends IntersectionState<S>, T1 extends LabelledTransition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
 		IncompleteBuchiAutomatonJPanel<S1, T1, A> {
 
 	public IntersectionAutomatonJPanel(Dimension d) {

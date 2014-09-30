@@ -3,7 +3,7 @@ package it.polimi.view.factories;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonButtonJPanel;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonJPanel;
 import it.polimi.view.intersectionautomaton.IntersectionAutomatonLoadingPanel;
@@ -11,7 +11,7 @@ import it.polimi.view.intersectionautomaton.IntersectionAutomatonManagementJPane
 
 import java.awt.Dimension;
 
-public class IntersectionAutomatonFactory <S extends State, T extends Transition<S>, S1 extends IntersectionState<S>, T1 extends Transition<S1>, A extends IntersectionAutomaton<S,T, S1,T1>> extends AbstractAutomatonFactory<S1,T1,A> {
+public class IntersectionAutomatonFactory <S extends State, T extends LabelledTransition<S>, S1 extends IntersectionState<S>, T1 extends LabelledTransition<S1>, A extends IntersectionAutomaton<S,T, S1,T1>> extends AbstractAutomatonFactory<S1,T1,A> {
 
 	@Override
 	public IntersectionAutomatonManagementJPanel<S, T, S1, T1, A> getPanel(Dimension d) {

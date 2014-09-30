@@ -20,8 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param <T> is the type of the transition in the intersection automaton
  */
 @XmlRootElement
-public class IntersectionAutomaton<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
-extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
+public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition<S1>,S extends IntersectionState<S1>, T 
+extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 
 	/**
 	 * contains the model of the system that generates the intersection automaton
@@ -261,7 +261,7 @@ extends Transition<S>> extends IncompleteBuchiAutomaton<S, T> {
 						S p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
 						@SuppressWarnings("unchecked")
-						T t=(T) new Transition<S>(t1.getCharacter(), p);
+						T t=(T) new LabelledTransition<S>(t1.getCharacter(), p);
 						this.addTransition(currentState, t);
 						
 						// re-executes the recursive procedure

@@ -3,7 +3,7 @@ package it.polimi.model.buchiautomaton;
 import static org.junit.Assert.*;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,10 +22,10 @@ public class BAtransitionTest {
 		alphabet.add("b");
 		State s1=new State("s1");
 		State s2=new State("s2");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addState(s1);
 		a.addState(s2);
-		Transition<State> t1=new Transition<State>("a",s2);
+		LabelledTransition<State> t1=new LabelledTransition<State>("a",s2);
 		a.addTransition(s1, t1);
 		
 		assertTrue(a.getTransitionsWithSource(s1).contains(t1));
@@ -43,10 +43,10 @@ public class BAtransitionTest {
 		alphabet.add("b");
 		State s1=new State("s1");
 		State s2=new State("s2");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addState(s1);
 		a.addState(s2);
-		Transition<State> t1=new Transition<State>("c",s2);
+		LabelledTransition<State> t1=new LabelledTransition<State>("c",s2);
 		a.addTransition(s1, t1);
 	}
 	/**
@@ -59,10 +59,10 @@ public class BAtransitionTest {
 		alphabet.add("b");
 		State s1=new State("s1");
 		State s2=new State("s2");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addState(s1);
 		a.addState(s2);
-		Transition<State> t1=new Transition<State>("a",s2);
+		LabelledTransition<State> t1=new LabelledTransition<State>("a",s2);
 		a.addTransition(null, t1);
 	}
 	/**
@@ -75,7 +75,7 @@ public class BAtransitionTest {
 		alphabet.add("b");
 		State s1=new State("s1");
 		State s2=new State("s2");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addState(s1);
 		a.addState(s2);
 		a.addTransition(s1, null);
@@ -91,10 +91,10 @@ public class BAtransitionTest {
 		State s1=new State("s1");
 		State s2=new State("s2");
 		State s3=new State("s3");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addState(s1);
 		a.addState(s2);
-		Transition<State> t1=new Transition<State>("a",s2);
+		LabelledTransition<State> t1=new LabelledTransition<State>("a",s2);
 		a.addTransition(s3, t1);
 	}
 	/**
@@ -108,10 +108,10 @@ public class BAtransitionTest {
 		State s1=new State("s1");
 		State s2=new State("s2");
 		State s3=new State("s3");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addState(s1);
 		a.addState(s2);
-		Transition<State> t1=new Transition<State>("a",s3);
+		LabelledTransition<State> t1=new LabelledTransition<State>("a",s3);
 		a.addTransition(s3, t1);
 		
 		

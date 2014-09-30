@@ -2,7 +2,7 @@ package it.polimi.view.incompleteautomaton;
 
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.automaton.AutomatonManagementJPanel;
 
 import java.awt.Dimension;
@@ -19,7 +19,7 @@ import javax.swing.JPanel;
  * @param <A> is the type of the {@link IncompleteBuchiAutomaton}
  */
 @SuppressWarnings("serial")
-public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends Transition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends AutomatonManagementJPanel<S,T,A>  {
+public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends LabelledTransition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends AutomatonManagementJPanel<S,T,A>  {
 
 
 	public IncompleteBuchiAutomatonManagementJPanel(Dimension d,

@@ -1,7 +1,7 @@
 package it.polimi.model.io;
 
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class MapAdapter<S extends State, T extends Transition<S>> extends XmlAdapter<MapAdapter.AdaptedMap<S,T>, Map<S, HashSet<T>>> {
+public class MapAdapter<S extends State, T extends LabelledTransition<S>> extends XmlAdapter<MapAdapter.AdaptedMap<S,T>, Map<S, HashSet<T>>> {
 	
 	@Override
 	public AdaptedMap<S,T> marshal(Map<S, HashSet<T>> map) throws Exception {
@@ -39,13 +39,13 @@ public class MapAdapter<S extends State, T extends Transition<S>> extends XmlAda
 		return map;
 	}
 
-	public static class AdaptedMap<S extends State, T extends Transition<S>> {
+	public static class AdaptedMap<S extends State, T extends LabelledTransition<S>> {
 		@XmlElement(name ="element")  
 		public List<Entry<S,T>> entry = new ArrayList<Entry<S,T>>();
 		
 		
 	}
-	public static class Entry<S extends State, T extends Transition<S>> {
+	public static class Entry<S extends State, T extends LabelledTransition<S>> {
 		@XmlIDREF 
 		public S sourceState;
 		@XmlElementWrapper(name = "transitions")

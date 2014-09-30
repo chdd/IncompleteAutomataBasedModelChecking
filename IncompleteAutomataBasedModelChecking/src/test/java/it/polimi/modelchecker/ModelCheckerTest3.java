@@ -5,7 +5,7 @@ import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
@@ -24,24 +24,24 @@ public class ModelCheckerTest3 {
 	private static final String arg0="src//test//resources//modelchecker//model3.xml";
 	private static final String arg1="src//test//resources//modelchecker//specification3.xml";
 	
-	private IncompleteBuchiAutomaton<State, Transition<State>> model =null;
-	private BuchiAutomaton<State, Transition<State>>  specification=null;
-	private ModelChecker<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>> mck;
+	private IncompleteBuchiAutomaton<State, LabelledTransition<State>> model =null;
+	private BuchiAutomaton<State, LabelledTransition<State>>  specification=null;
+	private ModelChecker<State,LabelledTransition<State>,IntersectionState<State>,LabelledTransition<IntersectionState<State>>> mck;
 	private ModelCheckerParameters<State> mp;
 	
 	@Before
 	public void setUp() throws BuilderException {
-		AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>> builderIBA=
-				new AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>>();
+		AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>> builderIBA=
+				new AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>>();
 		model = builderIBA.loadAutomaton(IncompleteBuchiAutomaton.class, arg0);
 		
-		AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builderBA=
-				new AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>>();
+		AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>> builderBA=
+				new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>();
 		
 		specification=builderBA.loadAutomaton(BuchiAutomaton.class, arg1);
 		
 		mp=new ModelCheckerParameters<State>();
-		mck=new ModelChecker<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>>(model,specification, mp);
+		mck=new ModelChecker<State,LabelledTransition<State>,IntersectionState<State>,LabelledTransition<IntersectionState<State>>>(model,specification, mp);
 	}
 	
 	/**

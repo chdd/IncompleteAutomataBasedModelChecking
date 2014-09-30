@@ -6,7 +6,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.io.BuilderException;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
@@ -25,21 +25,21 @@ public class BrzozowskiGetConstraintsTest {
 	private static final String arg0="src//main//resources//ExtendedAutomaton1.xml";
 	private static final String arg1="src//main//resources//Automaton2.xml";
 	
-	private IncompleteBuchiAutomaton<State, Transition<State>> a1 =null;
-	private BuchiAutomaton<State, Transition<State>>  a2=null;
-	private IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=null;
+	private IncompleteBuchiAutomaton<State, LabelledTransition<State>> a1 =null;
+	private BuchiAutomaton<State, LabelledTransition<State>>  a2=null;
+	private IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> ris=null;
 	
 	@Before
 	public void setUp() throws BuilderException {
-		AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>> builderIBA=
-				new AutomatonBuilder<State, Transition<State>, IncompleteBuchiAutomaton<State, Transition<State>>>();
+		AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>> builderIBA=
+				new AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>>();
 		a1 = builderIBA.loadAutomaton(IncompleteBuchiAutomaton.class, arg0);
 		
-		AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>> builderBA=
-				new AutomatonBuilder<State, Transition<State>, BuchiAutomaton<State, Transition<State>>>();
+		AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>> builderBA=
+				new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>();
 		
 		a2=builderBA.loadAutomaton(BuchiAutomaton.class, arg1);
-		ris=new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(a1, a2);
+		ris=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(a1, a2);
 	}
 	
 	/**
@@ -53,8 +53,8 @@ public class BrzozowskiGetConstraintsTest {
 	public void testBrozowskiGetConstrainedT() throws JAXBException, SAXException, IOException, ParserConfigurationException {
 		
 		
-		Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>> brzozowski=
-				new Brzozowski<State,Transition<State>,IntersectionState<State>,Transition<IntersectionState<State>>>(ris);
+		Brzozowski<State,LabelledTransition<State>,IntersectionState<State>,LabelledTransition<IntersectionState<State>>> brzozowski=
+				new Brzozowski<State,LabelledTransition<State>,IntersectionState<State>,LabelledTransition<IntersectionState<State>>>(ris);
 		Constraint<State> con=brzozowski.getConstraint();
 		assertTrue(
 				con.toString().equals("¬(<s2,(a)*b(b)*c(((((a)+(c)))+(b)))*λ>)")||

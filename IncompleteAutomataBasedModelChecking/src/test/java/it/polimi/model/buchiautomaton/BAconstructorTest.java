@@ -3,7 +3,7 @@ package it.polimi.model.buchiautomaton;
 import static org.junit.Assert.*;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +21,7 @@ public class BAconstructorTest {
 	 */
 	@Test
 	public void testConstructor1() {
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>();
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>();
 		assertTrue(a.getInitialStates()!=null);
 		assertTrue(a.getInitialStates().size()==0);
 		assertTrue(a.getStates()!=null);
@@ -36,7 +36,7 @@ public class BAconstructorTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructor2() {
-		new BuchiAutomaton<State, Transition<State>>(null);
+		new BuchiAutomaton<State, LabelledTransition<State>>(null);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class BAconstructorTest {
 		Set<String> alphabet=new HashSet<String>();
 		alphabet.add("a");
 		alphabet.add("b");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		assertTrue(a.getInitialStates()!=null);
 		assertTrue(a.getInitialStates().size()==0);
 		assertTrue(a.getStates()!=null);
@@ -65,7 +65,7 @@ public class BAconstructorTest {
 		Set<String> alphabet=new HashSet<String>();
 		alphabet.add("a");
 		alphabet.add("b");
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		assertTrue(a.getAlphabet().contains("a"));
 		assertTrue(a.getAlphabet().contains("b"));
 	}

@@ -4,7 +4,7 @@ import it.polimi.controller.actions.file.loading.LoadSpecification;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.automaton.AutomatonButtonJPanel;
 import it.polimi.view.automaton.AutomatonXMLTextArea;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 
-public class BuchiButtonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>>  extends AutomatonButtonJPanel implements ActionListener{
+public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>>  extends AutomatonButtonJPanel implements ActionListener{
 
 	/**
 	 * 

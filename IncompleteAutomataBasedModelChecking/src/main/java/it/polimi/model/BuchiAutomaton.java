@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @param <T> the type of the transitions
  */
 @XmlRootElement
-public class BuchiAutomaton<S extends State, T extends Transition<S>>{
+public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>>{
 	
 	/**
 	 * contains the initial states of the {@link BuchiAutomaton}
@@ -434,13 +434,13 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public static<S extends State, T extends Transition<S>> BuchiAutomaton<State,Transition<State>> getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<String> alphabet){
+	public static<S extends State, T extends LabelledTransition<S>> BuchiAutomaton<State,LabelledTransition<State>> getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<String> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
 
 		Random r=new Random();
-		BuchiAutomaton<State,Transition<State>> a=new IncompleteBuchiAutomaton<State,Transition<State>>(alphabet);
+		BuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
 		for(int i=0; i<n;i++){
 			State s=new State("s"+i);
 			a.addState(s);
@@ -469,7 +469,7 @@ public class BuchiAutomaton<S extends State, T extends Transition<S>>{
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					a.addTransition(s1, new Transition<State>(character, s2));
+					a.addTransition(s1, new LabelledTransition<State>(character, s2));
 				}
 			}
 		}

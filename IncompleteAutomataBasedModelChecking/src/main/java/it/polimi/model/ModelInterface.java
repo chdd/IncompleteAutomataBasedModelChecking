@@ -28,17 +28,17 @@ public interface ModelInterface {
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public IncompleteBuchiAutomaton<State, Transition<State>> getModel();
+	public IncompleteBuchiAutomaton<State, LabelledTransition<State>> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public BuchiAutomaton<State, Transition<State>> getSpecification();
+	public BuchiAutomaton<State, LabelledTransition<State>> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
-	public IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> getIntersection();
+	public IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> getIntersection();
 	/**
 	 * load the automaton from the specified string
 	 * @param automatonXML contains the model of the system

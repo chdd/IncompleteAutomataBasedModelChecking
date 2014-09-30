@@ -7,7 +7,7 @@ import it.polimi.model.ConstrainedTransition;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
 import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
@@ -21,12 +21,12 @@ import it.polimi.modelchecker.brzozowski.predicates.Predicate;
  * {@link Constraint}
  * 
  * @param <S1> the type of the {@link State}s of the original BA, (I)BA
- * @param <T1> the type of the {@link Transition}s of the original BA, (I)BA
+ * @param <T1> the type of the {@link LabelledTransition}s of the original BA, (I)BA
  * @param <S> the type of the {@link State}s  of the intersection automaton
- * @param <T> the type of the {@link Transition}s of the intersection automaton
+ * @param <T> the type of the {@link LabelledTransition}s of the intersection automaton
  */
-public class Brzozowski<S1 extends State, T1 extends Transition<S1>,S extends IntersectionState<S1>, T 
-extends Transition<S>> {
+public class Brzozowski<S1 extends State, T1 extends LabelledTransition<S1>,S extends IntersectionState<S1>, T 
+extends LabelledTransition<S>> {
 
 	/**
 	 * contains the {@link IntersectionAutomaton} to be analyzed

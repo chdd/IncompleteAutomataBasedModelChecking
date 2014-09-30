@@ -7,7 +7,7 @@ import it.polimi.model.IntersectionState;
 import it.polimi.model.Model;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.model.io.BuilderException;
 import it.polimi.view.View;
 import it.polimi.view.ViewInterface;
@@ -21,7 +21,7 @@ public class Main{
 		ModelInterface model=new Model();
 		
 		// contains the view of the application
-		ViewInterface<State, Transition<State>,IntersectionState<State>, Transition<IntersectionState<State>>> view=new View();
+		ViewInterface<State, LabelledTransition<State>,IntersectionState<State>, LabelledTransition<IntersectionState<State>>> view=new View();
 		
 		// creates a new controller with the specified model and view
 		Controller controller=new Controller(model, view);

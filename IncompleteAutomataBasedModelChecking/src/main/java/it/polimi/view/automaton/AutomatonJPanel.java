@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.buchiautomaton.transformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
@@ -33,7 +33,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  * @author claudiomenghi
  *
  */
-public abstract class AutomatonJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends JPanel {
+public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>> extends JPanel {
 
 	/**
 	 * contains the {@link Graph} to be inserted in the component

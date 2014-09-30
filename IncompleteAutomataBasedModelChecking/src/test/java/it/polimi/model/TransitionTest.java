@@ -16,7 +16,7 @@ public class TransitionTest {
 	@Test
 	public void testTransitionCreation() {
 		State s1=new State("s1");
-		Transition<State> t=new Transition<State>("a", s1);
+		LabelledTransition<State> t=new LabelledTransition<State>("a", s1);
 		assertTrue(t.getCharacter().equals("a"));
 		assertTrue(t.getDestination().equals(s1));
 	}
@@ -26,29 +26,29 @@ public class TransitionTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testTransitionCreation1() {
 		State s1=new State("s1");
-		new Transition<State>(null, s1);;
+		new LabelledTransition<State>(null, s1);;
 	}
 	/**
 	 * tests that it is not possible to create a transition with a null destination state
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testTransitionCreation2() {
-		new Transition<State>("a", null);;
+		new LabelledTransition<State>("a", null);;
 	}
 	/**
 	 * tests that it is not possible to create a transition with a null character and destination state
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testTransitionCreation3() {
-		new Transition<State>(null, null);;
+		new LabelledTransition<State>(null, null);;
 	}
 	/**
 	 * tests the equals method of the transition 
 	 */
 	public void testEquals() {
 		State s1=new State("s1");
-		Transition<State> t=new Transition<State>("a", s1);
-		Transition<State> t1=new Transition<State>("a", s1);
+		LabelledTransition<State> t=new LabelledTransition<State>("a", s1);
+		LabelledTransition<State> t1=new LabelledTransition<State>("a", s1);
 		assertEquals(t, t1);
 		assertTrue(t.equals(t1));
 	}
@@ -57,8 +57,8 @@ public class TransitionTest {
 	 */
 	public void testHashCode() {
 		State s1=new State("s1");
-		Transition<State> t=new Transition<State>("a", s1);
-		Transition<State> t1=new Transition<State>("a", s1);
+		LabelledTransition<State> t=new LabelledTransition<State>("a", s1);
+		LabelledTransition<State> t1=new LabelledTransition<State>("a", s1);
 		assertEquals(t.hashCode(), t1.hashCode());
 	}
 	/**
@@ -66,7 +66,7 @@ public class TransitionTest {
 	 */
 	public void testToString() {
 		State s1=new State("s1");
-		Transition<State> t=new Transition<State>("a", s1);
+		LabelledTransition<State> t=new LabelledTransition<State>("a", s1);
 		assertEquals("a->s1", t.toString());
 	}
 	

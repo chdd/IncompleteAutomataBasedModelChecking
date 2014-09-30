@@ -5,7 +5,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
 import it.polimi.view.factories.BuchiAutomatonFactory;
@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.xml.bind.JAXBException;
 
-public class View<S1 extends State, T1 extends Transition<S1>, S extends IntersectionState<S1>, T extends Transition<S>> extends Observable implements ViewInterface<S1,T1,S,T>, ActionListener{
+public class View<S1 extends State, T1 extends LabelledTransition<S1>, S extends IntersectionState<S1>, T extends LabelledTransition<S>> extends Observable implements ViewInterface<S1,T1,S,T>, ActionListener{
 
 	private IncompleteBuchiAutomatonManagementJPanel<S1,T1, IncompleteBuchiAutomaton<S1, T1>>  modelPanel;
 	private BuchiAutomatonManagementJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanel;

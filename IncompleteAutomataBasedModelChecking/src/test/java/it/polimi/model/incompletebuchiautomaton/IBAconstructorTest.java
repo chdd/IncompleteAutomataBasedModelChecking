@@ -7,7 +7,7 @@ import java.util.Set;
 
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class IBAconstructorTest {
 		alphabet.add("a");
 		alphabet.add("b");
 		alphabet.add("c");
-		IncompleteBuchiAutomaton<State, Transition<State>> iba=new IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		IncompleteBuchiAutomaton<State, LabelledTransition<State>> iba=new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		assertTrue(iba.getAcceptStates()!=null);
 		assertTrue(iba.getAcceptStates().isEmpty());
 		assertTrue(iba.getStates()!=null);
@@ -39,7 +39,7 @@ public class IBAconstructorTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void test2(){
-		new IncompleteBuchiAutomaton<State, Transition<State>>(null);
+		new IncompleteBuchiAutomaton<State, LabelledTransition<State>>(null);
 	}
 
 }

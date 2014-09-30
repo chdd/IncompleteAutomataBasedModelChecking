@@ -4,7 +4,7 @@ import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.saving.SaveModel;
 import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.buchiautomaton.BuchiButtonJPanel;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJCharacterCreator;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJStateCreator;
@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
-public class IncompleteBuchiButtonJPanel<S extends State, T extends Transition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiButtonJPanel<S,T, A> {
+public class IncompleteBuchiButtonJPanel<S extends State, T extends LabelledTransition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiButtonJPanel<S,T, A> {
 
 	public IncompleteBuchiButtonJPanel(Dimension d) {
 		super(d);

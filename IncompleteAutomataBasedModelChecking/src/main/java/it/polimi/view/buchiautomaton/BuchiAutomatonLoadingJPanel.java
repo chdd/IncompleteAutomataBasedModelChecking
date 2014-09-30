@@ -2,7 +2,7 @@ package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.automaton.AutomatonButtonJPanel;
 import it.polimi.view.automaton.AutomatonLoadingPanel;
@@ -11,7 +11,7 @@ import it.polimi.view.automaton.AutomatonXMLTextArea;
 import java.awt.Dimension;
 
 @SuppressWarnings("serial")
-public class BuchiAutomatonLoadingJPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S,T>> extends AutomatonLoadingPanel<S,T,A> {
+public class BuchiAutomatonLoadingJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>> extends AutomatonLoadingPanel<S,T,A> {
 
 	public BuchiAutomatonLoadingJPanel(Dimension d, AutomatonButtonJPanel jButtonPanel, AutomatonXMLTextArea jAutomatonTextArea){
 		 super(d, jButtonPanel, jAutomatonTextArea);

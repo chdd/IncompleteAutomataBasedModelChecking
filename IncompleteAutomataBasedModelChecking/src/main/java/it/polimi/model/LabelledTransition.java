@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlIDREF;
  * contains an automata transition. The transition contains the character that labels the transition and the destination state
  * 
  */
-public class Transition<S extends State>{
+public class LabelledTransition<S extends State>{
 	
 	/**
 	 * the character that labels the transition
@@ -27,7 +27,7 @@ public class Transition<S extends State>{
 	 * creates a new empty transition
 	 */
 	@SuppressWarnings("unused")
-	private Transition(){
+	private LabelledTransition(){
 		this.character=null;
 		this.state=null;
 	}
@@ -38,7 +38,7 @@ public class Transition<S extends State>{
 	 * @param to destination state: is the destination of the transition
 	 * @throws IllegalArgumentException is generated is the character that labels the transition is null or if the destination state is null
 	 */
-	public Transition(String c, S to)	{
+	public LabelledTransition(String c, S to)	{
 		if(c==null){
 			throw new IllegalArgumentException("The character that labels the transition cannot be null");
 		}

@@ -4,7 +4,7 @@ import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.ViewInterface;
@@ -22,7 +22,7 @@ public class Controller implements Observer{
 	/**
 	 * is the (graphical) interface of the application
 	 */
-	private ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view;
+	private ViewInterface<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> view;
 	
 	/**
 	 * is the interface to the model of the application
@@ -35,7 +35,7 @@ public class Controller implements Observer{
 	 * @param view is the view of the application
 	 * @throws IllegalArgumentException if the model or the specification is null
 	 */
-	public Controller(ModelInterface model, ViewInterface<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> view) {
+	public Controller(ModelInterface model, ViewInterface<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> view) {
 		if(model==null){
 			throw new IllegalArgumentException("The model cannot be null");
 		}
@@ -68,7 +68,7 @@ public class Controller implements Observer{
 		this.view.updateSpecification(model.getSpecification());
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
-		ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> mc=new ModelChecker<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model.getModel(), model.getSpecification(), mp);
+		ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> mc=new ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model.getModel(), model.getSpecification(), mp);
 		mc.check();
 		this.view.updateIntersection(model.getIntersection());
 		

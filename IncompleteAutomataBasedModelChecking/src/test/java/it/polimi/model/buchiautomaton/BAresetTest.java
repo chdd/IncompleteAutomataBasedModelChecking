@@ -7,7 +7,7 @@ import java.util.Set;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import org.junit.Test;
 
@@ -25,10 +25,10 @@ public class BAresetTest {
 		alphabet.add("a");
 		alphabet.add("b");
 		
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		a.addInitialState(s1);
 		a.addAcceptState(s2);
-		a.addTransition(s1, new Transition<State>("a", s2));
+		a.addTransition(s1, new LabelledTransition<State>("a", s2));
 		a.reset();
 		assertTrue(a.getAlphabet().isEmpty());
 		assertTrue(a.getStates().isEmpty());

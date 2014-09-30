@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-public class AutomatonLoadingPanel<S extends State, T extends Transition<S>, A extends BuchiAutomaton<S, T>> extends JPanel {
+public class AutomatonLoadingPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S, T>> extends JPanel {
 
 	/**
 	 * 

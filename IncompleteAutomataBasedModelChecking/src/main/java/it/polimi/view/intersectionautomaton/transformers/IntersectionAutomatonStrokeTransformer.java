@@ -3,13 +3,13 @@ package it.polimi.view.intersectionautomaton.transformers;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStrokeTransformer;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 
-public class IntersectionAutomatonStrokeTransformer<S extends State, T extends Transition<S>, S1 extends IntersectionState<S>, T1 extends Transition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
+public class IntersectionAutomatonStrokeTransformer<S extends State, T extends LabelledTransition<S>, S1 extends IntersectionState<S>, T1 extends LabelledTransition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
 		BuchiAutomatonStrokeTransformer<S1, T1, A> {
 
 	public IntersectionAutomatonStrokeTransformer(A a) {

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import it.polimi.model.BuchiAutomaton;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class BAisEmptyTest {
 		Set<String> alphabet=new HashSet<String>();
 		alphabet.add("a");
 		//creates the Buchi automaton
-		BuchiAutomaton<State, Transition<State>> a=new BuchiAutomaton<State, Transition<State>>(alphabet);
+		BuchiAutomaton<State, LabelledTransition<State>> a=new BuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		// add the states into the automaton
 		a.addState(s1);
 		a.addState(s2);
@@ -39,9 +39,9 @@ public class BAisEmptyTest {
 		// add the accepting state
 		a.addAcceptState(s3);
 		// add the transitions
-		a.addTransition(s1, new Transition<State>("a", s2));
-		a.addTransition(s2, new Transition<State>("a", s3));
-		a.addTransition(s3, new Transition<State>("a", s3));
+		a.addTransition(s1, new LabelledTransition<State>("a", s2));
+		a.addTransition(s2, new LabelledTransition<State>("a", s3));
+		a.addTransition(s3, new LabelledTransition<State>("a", s3));
 		// assert that the automaton is not empty
 		assertFalse(a.isEmpty());
 	}

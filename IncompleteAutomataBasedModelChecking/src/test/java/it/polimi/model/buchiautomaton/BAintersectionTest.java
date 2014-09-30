@@ -6,7 +6,7 @@ import it.polimi.model.IncompleteBuchiAutomaton;
 import it.polimi.model.IntersectionAutomaton;
 import it.polimi.model.IntersectionState;
 import it.polimi.model.State;
-import it.polimi.model.Transition;
+import it.polimi.model.LabelledTransition;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -27,11 +27,11 @@ public class BAintersectionTest {
 	public void testIntersection1() throws JAXBException, SAXException, IOException, ParserConfigurationException {
 		
 		 Set<String> alphabet=new HashSet<String>();
-		 IncompleteBuchiAutomaton<State, Transition<State>> model =new  IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		 IncompleteBuchiAutomaton<State, LabelledTransition<State>> model =new  IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		  
-		 BuchiAutomaton<State, Transition<State>>  specification =new  BuchiAutomaton<State, Transition<State>>();
-		 IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
-				 new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+		 BuchiAutomaton<State, LabelledTransition<State>>  specification =new  BuchiAutomaton<State, LabelledTransition<State>>();
+		 IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> ris=
+				 new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 		 
 		 assertTrue(ris.isEmpty());
 		 assertTrue(ris.getStates().isEmpty());
@@ -44,13 +44,13 @@ public class BAintersectionTest {
 		 // creates the alphabet
 		 Set<String> alphabet=new HashSet<String>();
 		 // creates the model of the system
-		 IncompleteBuchiAutomaton<State, Transition<State>> model =new  IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		 IncompleteBuchiAutomaton<State, LabelledTransition<State>> model =new  IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		 // add the state s1 to the model
 		 model.addState(new State("s1"));
 		 // creates the specification of the system
-		 BuchiAutomaton<State, Transition<State>>  specification =new  BuchiAutomaton<State, Transition<State>>();
-		 IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
-				 new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+		 BuchiAutomaton<State, LabelledTransition<State>>  specification =new  BuchiAutomaton<State, LabelledTransition<State>>();
+		 IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> ris=
+				 new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 		 	
 		 assertTrue(ris.isEmpty());
 		 assertTrue(ris.getStates().isEmpty());
@@ -63,17 +63,17 @@ public class BAintersectionTest {
 		
 		 Set<String> alphabet=new HashSet<String>();
 		 // creates the model
-		 IncompleteBuchiAutomaton<State, Transition<State>> model =new  IncompleteBuchiAutomaton<State, Transition<State>>(alphabet);
+		 IncompleteBuchiAutomaton<State, LabelledTransition<State>> model =new  IncompleteBuchiAutomaton<State, LabelledTransition<State>>(alphabet);
 		 model.addState(new State("s1"));
 		 model.addInitialState(new State("s1"));
 		 // creates the specification
-		 BuchiAutomaton<State, Transition<State>>  specification =new  BuchiAutomaton<State, Transition<State>>();
+		 BuchiAutomaton<State, LabelledTransition<State>>  specification =new  BuchiAutomaton<State, LabelledTransition<State>>();
 		 specification.addState(new State("s2"));
 		 specification.addInitialState(new State("s2"));
 		 
 		 // creates the intersection automaton
-		 IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>> ris=
-				 new IntersectionAutomaton<State, Transition<State>, IntersectionState<State>, Transition<IntersectionState<State>>>(model, specification);
+		 IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> ris=
+				 new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 		 
 		 // the automaton is empty since no accepting runs are presented
 		 assertTrue(ris.isEmpty());
