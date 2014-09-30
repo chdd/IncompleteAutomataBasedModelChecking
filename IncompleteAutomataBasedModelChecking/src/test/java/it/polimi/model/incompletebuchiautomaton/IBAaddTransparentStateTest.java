@@ -1,9 +1,9 @@
 package it.polimi.model.incompletebuchiautomaton;
 
 import static org.junit.Assert.*;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.graph.State;
-import it.polimi.model.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashSet;
 import java.util.Set;

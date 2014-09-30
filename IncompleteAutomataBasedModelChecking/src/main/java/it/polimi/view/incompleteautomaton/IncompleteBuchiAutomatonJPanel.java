@@ -1,8 +1,8 @@
 package it.polimi.view.incompleteautomaton;
 
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.graph.State;
-import it.polimi.model.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.buchiautomaton.BuchiAutomatonJPanel;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonPaintTransformer;
 import it.polimi.view.incompleteautomaton.transformers.IncompleteBuchiAutomatonPaintTransformer;

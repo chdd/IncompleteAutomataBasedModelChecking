@@ -1,4 +1,4 @@
-package it.polimi.model.intersection;
+package it.polimi.model.automata.intersection;
 
 import it.polimi.model.graph.State;
 

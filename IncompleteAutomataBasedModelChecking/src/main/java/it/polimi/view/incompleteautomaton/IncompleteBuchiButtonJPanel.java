@@ -2,9 +2,9 @@ package it.polimi.view.incompleteautomaton;
 
 import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.saving.SaveModel;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.graph.State;
-import it.polimi.model.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.buchiautomaton.BuchiButtonJPanel;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJCharacterCreator;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJStateCreator;

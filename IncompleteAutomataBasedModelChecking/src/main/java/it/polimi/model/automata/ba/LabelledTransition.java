@@ -1,4 +1,4 @@
-package it.polimi.model.ba;
+package it.polimi.model.automata.ba;
 
 import it.polimi.model.graph.State;
 import it.polimi.model.graph.Transition;

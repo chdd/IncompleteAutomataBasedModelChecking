@@ -1,7 +1,7 @@
-package it.polimi.model.iba;
+package it.polimi.model.automata.iba;
 
-import it.polimi.model.ba.BuchiAutomaton;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.BuchiAutomaton;
+import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 
 import java.io.IOException;
@@ -266,7 +266,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	}
 	/**
 	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.
-	 * @see it.polimi.model.ba.BuchiAutomaton#reset()
+	 * @see it.polimi.model.automata.ba.BuchiAutomaton#reset()
 	 */	
 	@Override
 	public void reset(){

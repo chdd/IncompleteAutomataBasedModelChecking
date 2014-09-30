@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import it.polimi.model.ba.BuchiAutomaton;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.BuchiAutomaton;
+import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 
 import org.junit.Test;

@@ -1,8 +1,8 @@
-package it.polimi.model.ba;
+package it.polimi.model.automata.ba;
 
+import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.graph.Graph;
 import it.polimi.model.graph.State;
-import it.polimi.model.iba.IncompleteBuchiAutomaton;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,6 +1,6 @@
 package it.polimi.model.graph;
 
-import it.polimi.model.ba.BuchiAutomaton;
+import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.io.MapAdapter;
 
 import java.util.HashMap;

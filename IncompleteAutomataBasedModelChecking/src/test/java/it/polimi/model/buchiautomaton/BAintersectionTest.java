@@ -1,12 +1,12 @@
 package it.polimi.model.buchiautomaton;
 
 import static org.junit.Assert.*;
-import it.polimi.model.ba.BuchiAutomaton;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.BuchiAutomaton;
+import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.intersection.IntersectionAutomaton;
+import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.model.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.intersection.IntersectionAutomaton;
-import it.polimi.model.intersection.IntersectionState;
 
 import java.io.IOException;
 import java.util.HashSet;

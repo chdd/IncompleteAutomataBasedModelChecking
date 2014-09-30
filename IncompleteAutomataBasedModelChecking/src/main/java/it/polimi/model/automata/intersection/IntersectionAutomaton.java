@@ -1,9 +1,9 @@
-package it.polimi.model.intersection;
+package it.polimi.model.automata.intersection;
 
-import it.polimi.model.ba.BuchiAutomaton;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.BuchiAutomaton;
+import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.graph.State;
-import it.polimi.model.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashSet;
 import java.util.Set;

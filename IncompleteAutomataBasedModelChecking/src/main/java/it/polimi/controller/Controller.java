@@ -2,9 +2,9 @@ package it.polimi.controller;
 
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.model.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.ViewInterface;

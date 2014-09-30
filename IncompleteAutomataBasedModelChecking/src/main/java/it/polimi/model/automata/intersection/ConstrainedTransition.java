@@ -1,6 +1,6 @@
-package it.polimi.model.intersection;
+package it.polimi.model.automata.intersection;
 
-import it.polimi.model.ba.LabelledTransition;
+import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 
 import javax.xml.bind.annotation.XmlElement;
