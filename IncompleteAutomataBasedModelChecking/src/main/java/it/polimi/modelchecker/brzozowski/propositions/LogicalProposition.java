@@ -1,29 +1,29 @@
-package it.polimi.modelchecker.brzozowski.predicates;
+package it.polimi.modelchecker.brzozowski.propositions;
 
 import it.polimi.model.graph.State;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LogicalPredicate<S extends State> extends AbstractPredicate<S>{
+public abstract class LogicalProposition<S extends State> extends AbstractProposition<S>{
 
 	/** The value is used for character storage. */
-    private List<AbstractPredicate<S>> value;
+    private List<AbstractProposition<S>> value;
     
     /**
-	 * returns the list of the {@link AbstractPredicate} associated with the {@link AndPredicate}
-	 * @return the list of the {@link AbstractPredicate} associated with the {@link AndPredicate}
+	 * returns the list of the {@link AbstractProposition} associated with the {@link AndProposition}
+	 * @return the list of the {@link AbstractProposition} associated with the {@link AndProposition}
 	 */
-	public List<AbstractPredicate<S>> getPredicates(){
+	public List<AbstractProposition<S>> getPredicates(){
 	   return this.value;
     }
 	
 	 /**
-     * Initializes a newly created {@link AndPredicate} starting from the list l of {@link AbstractPredicate} 
-     * @param l: is the list of {@link AbstractPredicate} to be added in the and predicate
-     * @throws IllegalArgumentException if the list of the {@link AbstractPredicate} contains less than 2 {@link AbstractPredicate}
+     * Initializes a newly created {@link AndProposition} starting from the list l of {@link AbstractProposition} 
+     * @param l: is the list of {@link AbstractProposition} to be added in the and predicate
+     * @throws IllegalArgumentException if the list of the {@link AbstractProposition} contains less than 2 {@link AbstractProposition}
      */
-	 public LogicalPredicate(List<AbstractPredicate<S>> l) {
+	 public LogicalProposition(List<AbstractProposition<S>> l) {
 		this.value=l;
         if(this.value.size()<=1){
         	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
@@ -31,19 +31,19 @@ public abstract class LogicalPredicate<S extends State> extends AbstractPredicat
 	 }
 	 
 	 /**
-	 * creates a new {@link AndPredicate} that contains the two {@link AbstractPredicate} firstPredicate, secondPredicate 
-	 * @param firstPredicate is the first {@link AbstractPredicate} to be included in the {@link AndPredicate}
-	 * @param secondPredicate is the second {@link AbstractPredicate} included in the {@link AndPredicate}
-	 * @throws IllegalArgumentException is the first or the second {@link AbstractPredicate} are null
+	 * creates a new {@link AndProposition} that contains the two {@link AbstractProposition} firstPredicate, secondPredicate 
+	 * @param firstPredicate is the first {@link AbstractProposition} to be included in the {@link AndProposition}
+	 * @param secondPredicate is the second {@link AbstractProposition} included in the {@link AndProposition}
+	 * @throws IllegalArgumentException is the first or the second {@link AbstractProposition} are null
 	 */
-	 public LogicalPredicate(AbstractPredicate<S> firstPredicate, AbstractPredicate<S> secondPredicate){
+	 public LogicalProposition(AbstractProposition<S> firstPredicate, AbstractProposition<S> secondPredicate){
 	 	if(firstPredicate==null){
     		throw new IllegalArgumentException("The first constraint cannot be null");
     	}
     	if(secondPredicate==null){
     		throw new IllegalArgumentException("The second constraint cannot be null");
     	}
-        this.value = new ArrayList<AbstractPredicate<S>>();
+        this.value = new ArrayList<AbstractProposition<S>>();
         this.value.add(firstPredicate);
         this.value.add(secondPredicate);
         if(this.value.size()<=1){
@@ -51,15 +51,15 @@ public abstract class LogicalPredicate<S extends State> extends AbstractPredicat
         }
 	 }
 	 /**
-	 * @see {@link AbstractPredicate}
+	 * @see {@link AbstractProposition}
 	 */
     @Override
 	public String toString() {
 		String ret="";
 		int inserted=0;
-		List<AbstractPredicate<S>> value=getPredicates();
+		List<AbstractProposition<S>> value=getPredicates();
 		for(int i=0; i<value.size();i++){
-			if(!(value.get(i) instanceof EpsilonPredicate)){
+			if(!(value.get(i) instanceof EpsilonProposition)){
 				if(inserted>0){
 					if(inserted==1){
 						inserted=2;
@@ -103,7 +103,7 @@ public abstract class LogicalPredicate<S extends State> extends AbstractPredicat
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		LogicalPredicate<S> other = (LogicalPredicate<S>) obj;
+		LogicalProposition<S> other = (LogicalProposition<S>) obj;
 		if (value == null) {
 			if (other.value != null)
 				return false;

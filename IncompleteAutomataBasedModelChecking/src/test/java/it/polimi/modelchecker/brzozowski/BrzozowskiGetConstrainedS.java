@@ -7,9 +7,9 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +27,8 @@ public class BrzozowskiGetConstrainedS {
 	private State s3=new State("s3");
 	private State s4=new State("s4");
 	
-	private AbstractPredicate<State> emptyPredicate=null;
-	private AbstractPredicate<State> lambdaPredicate=null;
+	private AbstractProposition<State> emptyPredicate=null;
+	private AbstractProposition<State> lambdaPredicate=null;
 	@Before
 	public void setUp(){
 		Set<String> alphabet=new HashSet<String>();
@@ -59,8 +59,8 @@ public class BrzozowskiGetConstrainedS {
 		specification.addTransition(s3, new LabelledTransition<State>("a", s4));
 		specification.addTransition(s4, new LabelledTransition<State>("a", s4));
 	
-		emptyPredicate=new EmptyPredicate<State>();
-		lambdaPredicate=new LambdaPredicate<State>();
+		emptyPredicate=new EmptyProposition<State>();
+		lambdaPredicate=new LambdaProposition<State>();
 		
 		intersectBA=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 		System.out.println(intersectBA);
@@ -81,7 +81,7 @@ public class BrzozowskiGetConstrainedS {
 	 */
 	@Test
 	public void testGetS2() {
-		AbstractPredicate<State>[] ret=brzozowski.getConstrainedS(new IntersectionState<State>(s4, s4, 2));
+		AbstractProposition<State>[] ret=brzozowski.getConstrainedS(new IntersectionState<State>(s4, s4, 2));
 		int i=0;
 		for(IntersectionState<State> s: this.intersectBA.getStates()){
 			if(s.equals(new IntersectionState<State>(s1, s1, 0)) ||

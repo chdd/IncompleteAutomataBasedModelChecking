@@ -9,7 +9,6 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.predicates.Constraint;
 
 import java.io.IOException;
 

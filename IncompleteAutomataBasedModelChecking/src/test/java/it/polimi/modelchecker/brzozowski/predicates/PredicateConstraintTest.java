@@ -2,6 +2,13 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.model.graph.State;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.AndProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
+import it.polimi.modelchecker.brzozowski.propositions.OrProposition;
+import it.polimi.modelchecker.brzozowski.propositions.AtomicProposition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,38 +19,38 @@ public class PredicateConstraintTest {
 
 	@Test
 	public void testConstructor1() {
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
 		assertTrue(p.getState().equals(new State("s1")));
 		assertTrue(p.getRegularExpression().equals("abb"));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructor2() {
-		new Predicate<State>(null, "abb");
+		new AtomicProposition<State>(null, "abb");
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructor3() {
-		new Predicate<State>(new State("s1"), null);
+		new AtomicProposition<State>(new State("s1"), null);
 	}
 	@Test
 	public void testGetterAndSetters1() {
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
 		p.setRegularExpression("cdd");
 		assertTrue(p.getState().equals(new State("s1")));
 		assertTrue(p.getRegularExpression().equals("cdd"));
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetterAndSetters2() {
-		new Predicate<State>(null, "abb");
+		new AtomicProposition<State>(null, "abb");
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetterAndSetters3() {
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
 		p.setRegularExpression(null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testConcat0() {
-		AbstractPredicate<State> a=new Predicate<State>(new State("s1"), "aab");
+		AbstractProposition<State> a=new AtomicProposition<State>(new State("s1"), "aab");
 		a.concatenate(null);
 	}
 	
@@ -52,27 +59,27 @@ public class PredicateConstraintTest {
 	 */
 	@Test
 	public void testConcat1() {
-		AbstractPredicate<State> a=new EmptyPredicate<State>();
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
+		AbstractProposition<State> a=new EmptyProposition<State>();
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
 		assertTrue(p.concatenate(a).equals(a));
 	}
 	/**
 	 * the concatenation of the predicate and lambda is equal to the predicate
 	 */
 	public void testConcat2() {
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		AbstractPredicate<State> a=new LambdaPredicate<State>();
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
+		AbstractProposition<State> a=new LambdaProposition<State>();
 		assertTrue(p.concatenate(a).equals(p));
 	}
 	/**
 	 * the concatenation of two predicate with the same state constrained is a new predicate where the regular expressions are concatenated
 	 */
 	public void testConcat3() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s1"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s1"), "cdd");
 		
-		assertTrue(p1.concatenate(p2) instanceof Predicate);
-		Predicate<State> a=(Predicate<State>) p1.concatenate(p2);
+		assertTrue(p1.concatenate(p2) instanceof AtomicProposition);
+		AtomicProposition<State> a=(AtomicProposition<State>) p1.concatenate(p2);
 		assertTrue(a.getState().equals(new State("s1")));
 		assertTrue(a.getRegularExpression().equals("abbcdd"));
 	}
@@ -80,11 +87,11 @@ public class PredicateConstraintTest {
 	 * the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
 	 */
 	public void testConcat4() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s1"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s1"), "cdd");
 		
-		assertTrue(p1.concatenate(p2) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(p2);
+		assertTrue(p1.concatenate(p2) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p1.concatenate(p2);
 		
 		assertTrue(a.getPredicates().contains(p1));
 		assertTrue(a.getPredicates().contains(p2));
@@ -95,39 +102,39 @@ public class PredicateConstraintTest {
 	 * the first predicate of the and constraint if they have the same state
 	 */
 	public void testConcat5() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 
-		List<AbstractPredicate<State>> l=new ArrayList<AbstractPredicate<State>>();
+		List<AbstractProposition<State>> l=new ArrayList<AbstractProposition<State>>();
 		l.add(p1);
 		l.add(p2);
-		AndPredicate<State> c1=new AndPredicate<State>(l);
-		Predicate<State> p3=new Predicate<State>(new State("s1"), "sss");
+		AndProposition<State> c1=new AndProposition<State>(l);
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s1"), "sss");
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getPredicates().contains(p3));
-		assertTrue(a.getFistPredicate().equals(new Predicate<State>(new State("s1"), "sssabb")));
+		assertTrue(a.getFistPredicate().equals(new AtomicProposition<State>(new State("s1"), "sssabb")));
 	}
 	/**
 	 * the concatenation of a predicate and an AndConstraint add the predicate to the and constraint if this predicate and
 	 * the first predicate of the and constraint have a different state
 	 */
 	public void testConcat6() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 
-		List<AbstractPredicate<State>> l=new ArrayList<AbstractPredicate<State>>();
+		List<AbstractProposition<State>> l=new ArrayList<AbstractProposition<State>>();
 		l.add(p1);
 		l.add(p2);
-		AndPredicate<State> c1=new AndPredicate<State>(l);
-		Predicate<State> p3=new Predicate<State>(new State("s3"), "sss");
+		AndProposition<State> c1=new AndProposition<State>(l);
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s3"), "sss");
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
@@ -139,17 +146,17 @@ public class PredicateConstraintTest {
 	 * is the orconstraint
 	 * */
 	public void testConcat7() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 		
 		
-		OrPredicate<State> c1=new OrPredicate<State>(p1,p2);
+		OrProposition<State> c1=new OrProposition<State>(p1,p2);
 		
-		Predicate<State> p3=new Predicate<State>(new State("s3"), "sss");
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s3"), "sss");
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
@@ -160,11 +167,11 @@ public class PredicateConstraintTest {
 	 * and the second one is the EpsilonConstraint
 	 * */
 	public void testConcat8() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		EpsilonPredicate<State> eps=new EpsilonPredicate<State>();
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		EpsilonProposition<State> eps=new EpsilonProposition<State>();
 		
-		assertTrue(p1.concatenate(eps) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(eps);
+		assertTrue(p1.concatenate(eps) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p1.concatenate(eps);
 		
 		assertTrue(a.getFistPredicate().equals(p1));
 		assertTrue(a.getLastPredicate().equals(eps));
@@ -175,9 +182,9 @@ public class PredicateConstraintTest {
 	@Test
 	public void testStar() {
 		
-		AbstractPredicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		assertTrue(p.star() instanceof Predicate);
-		Predicate<State> a=(Predicate<State>) p.star();
+		AbstractProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
+		assertTrue(p.star() instanceof AtomicProposition);
+		AtomicProposition<State> a=(AtomicProposition<State>) p.star();
 		
 		assertTrue(a.getState().equals(new State("s1")));
 		assertTrue(a.getRegularExpression().equals("(abb)*"));
@@ -187,7 +194,7 @@ public class PredicateConstraintTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testUnion0() {
-		AbstractPredicate<State> a=new Predicate<State>(new State("s1"), "aab");
+		AbstractProposition<State> a=new AtomicProposition<State>(new State("s1"), "aab");
 		a.union(null);
 	}
 	
@@ -196,19 +203,19 @@ public class PredicateConstraintTest {
 	 */
 	@Test
 	public void testUnion1() {
-		AbstractPredicate<State> a=new EmptyPredicate<State>();
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
+		AbstractProposition<State> a=new EmptyProposition<State>();
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
 		assertTrue(p.union(a).equals(p));
 	}
 	/**
 	 * the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
 	 */
 	public void testUnion2() {
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		AbstractPredicate<State> a=new LambdaPredicate<State>();
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
+		AbstractProposition<State> a=new LambdaProposition<State>();
 		
-		assertTrue(p.union(a) instanceof OrPredicate);
-		OrPredicate<State> o=(OrPredicate<State>) p.union(a);
+		assertTrue(p.union(a) instanceof OrProposition);
+		OrProposition<State> o=(OrProposition<State>) p.union(a);
 		assertTrue(o.getPredicates().contains(p));
 		assertTrue(o.getPredicates().contains(a));
 	}
@@ -217,11 +224,11 @@ public class PredicateConstraintTest {
 	 * of their regular expressions <s, (reg1)+(reg2)> 
 	 */
 	public void testUnion3() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s1"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s1"), "cdd");
 		
-		assertTrue(p1.union(p2) instanceof Predicate);
-		Predicate<State> a=(Predicate<State>) p1.union(p2);
+		assertTrue(p1.union(p2) instanceof AtomicProposition);
+		AtomicProposition<State> a=(AtomicProposition<State>) p1.union(p2);
 		assertTrue(a.getState().equals(new State("s1")));
 		assertTrue(a.getRegularExpression().equals("(abb)+(cdd)"));
 	}
@@ -230,11 +237,11 @@ public class PredicateConstraintTest {
 	 * contains the two predicates 
 	 */
 	public void testUnion4() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 		
-		assertTrue(p1.union(p2) instanceof OrPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p1.union(p2);
+		assertTrue(p1.union(p2) instanceof OrProposition);
+		AndProposition<State> a=(AndProposition<State>) p1.union(p2);
 		
 		assertTrue(a.getPredicates().contains(p1));
 		assertTrue(a.getPredicates().contains(p2));
@@ -244,13 +251,13 @@ public class PredicateConstraintTest {
 	 *	the union of the predicate and an or constraint is a new or constraint where the predicate is added
 	 */
 	public void testUnion5() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s3"), "cdd");
 		
-		OrPredicate<State> c1=new OrPredicate<State>(p2, p3);
-		assertTrue(p1.union(c1) instanceof OrPredicate);
-		OrPredicate<State> a=(OrPredicate<State>) p1.union(c1);
+		OrProposition<State> c1=new OrProposition<State>(p2, p3);
+		assertTrue(p1.union(c1) instanceof OrProposition);
+		OrProposition<State> a=(OrProposition<State>) p1.union(c1);
 		
 		assertTrue(a.getPredicates().contains(p1));
 		assertTrue(a.getPredicates().contains(c1));
@@ -259,13 +266,13 @@ public class PredicateConstraintTest {
 	 * the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
 	 */
 	public void testUnion6() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s3"), "cdd");
 		
-		AndPredicate<State> c1=new AndPredicate<State>(p2, p3);
-		assertTrue(p1.union(c1) instanceof OrPredicate);
-		OrPredicate<State> a=(OrPredicate<State>) p1.union(c1);
+		AndProposition<State> c1=new AndProposition<State>(p2, p3);
+		assertTrue(p1.union(c1) instanceof OrProposition);
+		OrProposition<State> a=(OrProposition<State>) p1.union(c1);
 		
 		assertTrue(a.getPredicates().contains(p1));
 		assertTrue(a.getPredicates().contains(c1));
@@ -274,17 +281,17 @@ public class PredicateConstraintTest {
 	 * the union of a predicate and epsilon is a new or constraint that contains the predicate
 	 * */
 	public void testUnion7() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		EpsilonPredicate<State> eps=new EpsilonPredicate<State>();
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		EpsilonProposition<State> eps=new EpsilonProposition<State>();
 		
-		assertTrue(p1.union(eps) instanceof Predicate);
+		assertTrue(p1.union(eps) instanceof AtomicProposition);
 		assertTrue(p1.union(eps).equals(p1));
 	}
 	
 	@Test
 	public void testToString() {
 		
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
 		assertTrue(p.toString().equals("<s1,abb>"));
 	}
 

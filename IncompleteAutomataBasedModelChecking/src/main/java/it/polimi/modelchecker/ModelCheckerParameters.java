@@ -1,7 +1,7 @@
 package it.polimi.modelchecker;
 
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.predicates.Constraint;
+import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
  * @author Claudio Menghi

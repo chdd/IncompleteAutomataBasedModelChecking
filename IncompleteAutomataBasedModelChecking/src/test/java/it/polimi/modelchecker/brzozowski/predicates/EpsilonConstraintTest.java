@@ -2,6 +2,13 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.model.graph.State;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.AndProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
+import it.polimi.modelchecker.brzozowski.propositions.OrProposition;
+import it.polimi.modelchecker.brzozowski.propositions.AtomicProposition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,36 +21,36 @@ public class EpsilonConstraintTest {
 	 */
 	@Test
 	public void testConcat1() {
-		AbstractPredicate<State> a=new EmptyPredicate<State>();
-		AbstractPredicate<State> p=new EpsilonPredicate<State>();
+		AbstractProposition<State> a=new EmptyProposition<State>();
+		AbstractProposition<State> p=new EpsilonProposition<State>();
 		assertTrue(p.concatenate(a).equals(a));
 	}
 	/**
 	 * the concatenation of an epsilon constraint and the lambda constraint is equal to the epsilon constraint
 	 */
 	public void testConcat2() {
-		AbstractPredicate<State> p=new EpsilonPredicate<State>();
-		AbstractPredicate<State> a=new LambdaPredicate<State>();
+		AbstractProposition<State> p=new EpsilonProposition<State>();
+		AbstractProposition<State> a=new LambdaProposition<State>();
 		assertTrue(p.concatenate(a).equals(p));
 	}
 	/**
 	 * the concatenation of an epsilon constraint and an epsilon constraint is equal to the epsilon constraint
 	 */
 	public void testConcat3() {
-		AbstractPredicate<State> p1=new EpsilonPredicate<State>();
-		AbstractPredicate<State> p2=new EpsilonPredicate<State>();
+		AbstractProposition<State> p1=new EpsilonProposition<State>();
+		AbstractProposition<State> p2=new EpsilonProposition<State>();
 		
-		assertTrue(p1.concatenate(p2) instanceof EpsilonPredicate);
+		assertTrue(p1.concatenate(p2) instanceof EpsilonProposition);
 	}
 	/**
 	 *	the concatenation of an epsilon constraint and a predicate is a new and constraint that contains the epsilon constraint and the predicate
 	 */
 	public void testConcat4() {
-		AbstractPredicate<State> p1=new EpsilonPredicate<State>();
-		Predicate<State> p2=new Predicate<State>(new State("s1"), "cdd");
+		AbstractProposition<State> p1=new EpsilonProposition<State>();
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s1"), "cdd");
 		
-		assertTrue(p1.concatenate(p2) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p1.concatenate(p2);
+		assertTrue(p1.concatenate(p2) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p1.concatenate(p2);
 		
 		assertTrue(a.getPredicates().contains(p1));
 		assertTrue(a.getPredicates().contains(p2));
@@ -56,18 +63,18 @@ public class EpsilonConstraintTest {
 	public void testConcat5() {
 		
 			
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 		
-		List<AbstractPredicate<State>> l=new ArrayList<AbstractPredicate<State>>();
+		List<AbstractProposition<State>> l=new ArrayList<AbstractProposition<State>>();
 		l.add(p1);
 		l.add(p2);
-		AndPredicate<State> c1=new AndPredicate<State>(l);
-		EpsilonPredicate<State> p3=new EpsilonPredicate<State>();
+		AndProposition<State> c1=new AndProposition<State>(l);
+		EpsilonProposition<State> p3=new EpsilonProposition<State>();
 		
 		
-		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
@@ -79,15 +86,15 @@ public class EpsilonConstraintTest {
 	 * and the original or constraint
 	 */
 	public void testConcat6() {
-		Predicate<State> p1=new Predicate<State>(new State("s1"), "abb");
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p1=new AtomicProposition<State>(new State("s1"), "abb");
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 
 
-		OrPredicate<State> c1=new OrPredicate<State>(p1,p2);
-		EpsilonPredicate<State> p3=new EpsilonPredicate<State>();
+		OrProposition<State> c1=new OrProposition<State>(p1,p2);
+		EpsilonProposition<State> p3=new EpsilonProposition<State>();
 		
-		assertTrue(p3.concatenate(c1) instanceof AndPredicate);
-		AndPredicate<State> a=(AndPredicate<State>) p3.concatenate(c1);
+		assertTrue(p3.concatenate(c1) instanceof AndProposition);
+		AndProposition<State> a=(AndProposition<State>) p3.concatenate(c1);
 		
 		assertTrue(a.getPredicates().contains(p3));
 		assertTrue(a.getFistPredicate().equals(p3));
@@ -101,13 +108,13 @@ public class EpsilonConstraintTest {
 	@Test
 	public void testStar() {
 		
-		AbstractPredicate<State> a=new EpsilonPredicate<State>();
-		assertTrue(a.star() instanceof EpsilonPredicate);
+		AbstractProposition<State> a=new EpsilonProposition<State>();
+		assertTrue(a.star() instanceof EpsilonProposition);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testUnion0() {
-		AbstractPredicate<State> a=new EpsilonPredicate<State>();
+		AbstractProposition<State> a=new EpsilonProposition<State>();
 		a.union(null);
 	}
 	
@@ -116,38 +123,38 @@ public class EpsilonConstraintTest {
 	 */
 	@Test
 	public void testUnion1() {
-		AbstractPredicate<State> a=new EpsilonPredicate<State>();
-		Predicate<State> p=new Predicate<State>(new State("s1"), "abb");
-		assertTrue(p.union(a).equals(new OrPredicate<State>(p, a)));
+		AbstractProposition<State> a=new EpsilonProposition<State>();
+		AtomicProposition<State> p=new AtomicProposition<State>(new State("s1"), "abb");
+		assertTrue(p.union(a).equals(new OrProposition<State>(p, a)));
 	}
 	/**
 	 * the union of an epsilon constraint and an EmptyConstraint is the epsilon constraint
 	 */
 	public void testUnion2() {
-		AbstractPredicate<State> a1=new EpsilonPredicate<State>();
-		AbstractPredicate<State> a2=new EmptyPredicate<State>();
+		AbstractProposition<State> a1=new EpsilonProposition<State>();
+		AbstractProposition<State> a2=new EmptyProposition<State>();
 		
-		assertTrue(a1.union(a2) instanceof EpsilonPredicate);
+		assertTrue(a1.union(a2) instanceof EpsilonProposition);
 	}
 	/**
 	 *	the union of an epsilon constraint and an epsilon constraint is the epsilon constraint
 	 */
 	public void testUnion3() {
-		AbstractPredicate<State> a1=new EpsilonPredicate<State>();
-		AbstractPredicate<State> a2=new EpsilonPredicate<State>();
+		AbstractProposition<State> a1=new EpsilonProposition<State>();
+		AbstractProposition<State> a2=new EpsilonProposition<State>();
 		
-		assertTrue(a1.union(a2) instanceof EpsilonPredicate);
+		assertTrue(a1.union(a2) instanceof EpsilonProposition);
 	}
 	/**
 	 *   the union of an epsilon constraint and an epsilon constraint is an or constraint that contains the epsilon constraint
 	 *    and the predicate 
 	 */
 	public void testUnion4() {
-		AbstractPredicate<State> a1=new EpsilonPredicate<State>();
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
+		AbstractProposition<State> a1=new EpsilonProposition<State>();
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
 		
-		assertTrue(a1.union(p2) instanceof OrPredicate);
-		OrPredicate<State> a=(OrPredicate<State>) a1.union(p2);
+		assertTrue(a1.union(p2) instanceof OrProposition);
+		OrProposition<State> a=(OrProposition<State>) a1.union(p2);
 		
 		assertTrue(a.getPredicates().contains(a1));
 		assertTrue(a.getPredicates().contains(p2));
@@ -157,13 +164,13 @@ public class EpsilonConstraintTest {
 	 *	the union of an epsilon constraint and an epsilon constraint is an or constraint that contains the epsilon constraint and the predicate
 	 */
 	public void testUnion5() {
-		AbstractPredicate<State> a1=new EpsilonPredicate<State>();
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
+		AbstractProposition<State> a1=new EpsilonProposition<State>();
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s3"), "cdd");
 		
-		OrPredicate<State> c1=new OrPredicate<State>(p2, p3);
-		assertTrue(a1.union(c1) instanceof OrPredicate);
-		OrPredicate<State> a=(OrPredicate<State>) a1.union(c1);
+		OrProposition<State> c1=new OrProposition<State>(p2, p3);
+		assertTrue(a1.union(c1) instanceof OrProposition);
+		OrProposition<State> a=(OrProposition<State>) a1.union(c1);
 		
 		assertTrue(a.getPredicates().contains(a1));
 		assertTrue(a.getPredicates().contains(c1));
@@ -172,13 +179,13 @@ public class EpsilonConstraintTest {
 	 *	the union of an epsilon constraint and an and constraint is an or constraint that contains the epsilon constraint and the and constraint 
 	 */
 	public void testUnion6() {
-		AbstractPredicate<State> a1=new EpsilonPredicate<State>();
-		Predicate<State> p2=new Predicate<State>(new State("s2"), "cdd");
-		Predicate<State> p3=new Predicate<State>(new State("s3"), "cdd");
+		AbstractProposition<State> a1=new EpsilonProposition<State>();
+		AtomicProposition<State> p2=new AtomicProposition<State>(new State("s2"), "cdd");
+		AtomicProposition<State> p3=new AtomicProposition<State>(new State("s3"), "cdd");
 		
-		AndPredicate<State> c1=new AndPredicate<State>(p2, p3);
-		assertTrue(a1.union(c1) instanceof OrPredicate);
-		OrPredicate<State> a=(OrPredicate<State>) a1.union(c1);
+		AndProposition<State> c1=new AndProposition<State>(p2, p3);
+		assertTrue(a1.union(c1) instanceof OrProposition);
+		OrProposition<State> a=(OrProposition<State>) a1.union(c1);
 		
 		assertTrue(a.getPredicates().contains(a1));
 		assertTrue(a.getPredicates().contains(c1));
@@ -187,7 +194,7 @@ public class EpsilonConstraintTest {
 	@Test
 	public void testToString() {
 		
-		AbstractPredicate<State> a=new EpsilonPredicate<State>();
+		AbstractProposition<State> a=new EpsilonProposition<State>();
 		assertTrue(a.toString().equals("ε"));
 	}
 

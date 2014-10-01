@@ -9,10 +9,10 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
 
 import java.io.IOException;
 
@@ -48,8 +48,8 @@ public class BrzozowskiGetConstrainedT {
 	private State s5=null;
 	private State s6=null;
 	
-	private AbstractPredicate<State> lambdaPredicate=null;
-	private AbstractPredicate<State> epsilonPredicate=null;
+	private AbstractProposition<State> lambdaPredicate=null;
+	private AbstractProposition<State> epsilonPredicate=null;
 	
 	@Before
 	public void setUp() throws BuilderException {
@@ -79,8 +79,8 @@ public class BrzozowskiGetConstrainedT {
 		s3s61=new IntersectionState<State>(s3, s6, 1);
 		s3s62=new IntersectionState<State>(s3, s6, 2);
 		
-		lambdaPredicate=new LambdaPredicate<State>();
-		epsilonPredicate=new EpsilonPredicate<State>();
+		lambdaPredicate=new LambdaProposition<State>();
+		epsilonPredicate=new EpsilonProposition<State>();
 
 	}
 	
@@ -97,7 +97,7 @@ public class BrzozowskiGetConstrainedT {
 		
 		Brzozowski<State,LabelledTransition<State>,IntersectionState<State>,LabelledTransition<IntersectionState<State>>> brzozowski=
 				new Brzozowski<State,LabelledTransition<State>,IntersectionState<State>,LabelledTransition<IntersectionState<State>>>(ris);
-		AbstractPredicate<State>[][] constraintT=brzozowski.getConstraintT();
+		AbstractProposition<State>[][] constraintT=brzozowski.getConstraintT();
 		
 		
 		assertTrue(constraintT[ris.statePosition(s1s40)]!=null);
@@ -106,7 +106,7 @@ public class BrzozowskiGetConstrainedT {
 		for(int i=0; i<ris.getStates().size();i++){
 			
 			if((i!=ris.statePosition(s4s40)) && (i!=ris.statePosition(s2s40))){
-				assertTrue(constraintT[ris.statePosition(s1s40)][i].equals(new EmptyPredicate<>()));
+				assertTrue(constraintT[ris.statePosition(s1s40)][i].equals(new EmptyProposition<>()));
 			}
 		}
 		

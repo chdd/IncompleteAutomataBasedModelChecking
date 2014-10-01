@@ -8,12 +8,11 @@ import it.polimi.model.automata.intersection.ConstrainedTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.predicates.AbstractPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.Constraint;
-import it.polimi.modelchecker.brzozowski.predicates.EmptyPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.EpsilonPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.LambdaPredicate;
-import it.polimi.modelchecker.brzozowski.predicates.Predicate;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
+import it.polimi.modelchecker.brzozowski.propositions.AtomicProposition;
 
 /**
  * @author claudiomenghi
@@ -51,9 +50,9 @@ extends LabelledTransition<S>> {
 	public Constraint<S1> getConstraint(){
 		
 		// contains the predicates that will be inserted in the final constraint
-		AbstractPredicate<S1> ret=new EmptyPredicate<S1>();
+		AbstractProposition<S1> ret=new EmptyProposition<S1>();
 		
-		Set<AbstractPredicate<S1>> predicates=new HashSet<AbstractPredicate<S1>>();
+		Set<AbstractProposition<S1>> predicates=new HashSet<AbstractProposition<S1>>();
 		
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
@@ -61,8 +60,8 @@ extends LabelledTransition<S>> {
 			//System.out.println("computing the matrixes");
 			
 			// the matrixes t and s are computed
-			AbstractPredicate<S1>[][] t=this.getConstraintT();
-			AbstractPredicate<S1>[] s=this.getConstrainedS(accept);
+			AbstractProposition<S1>[][] t=this.getConstraintT();
+			AbstractProposition<S1>[] s=this.getConstrainedS(accept);
 			
 			// the system of equations described by the matrixes t and s is solved
 			//System.out.println("solving the system");
@@ -75,7 +74,7 @@ extends LabelledTransition<S>> {
 				//System.out.println("analyzing the initial state: computing the constraint");
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
-				AbstractPredicate<S1> newconstraint=s[a.statePosition(init)].omega();
+				AbstractProposition<S1> newconstraint=s[a.statePosition(init)].omega();
 				
 				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
@@ -97,7 +96,7 @@ extends LabelledTransition<S>> {
 	 * @return the constraint associated with the {@link IntersectionAutomaton}
 	 * @throws IllegalArgumentException if the matrix t or s is null
 	 */
-	protected  void solveSystem(AbstractPredicate<S1>[][] t, AbstractPredicate<S1>[] s) {
+	protected  void solveSystem(AbstractProposition<S1>[][] t, AbstractProposition<S1>[] s) {
 		if(t==null){
 			throw new IllegalArgumentException("The matrix t cannot be null");
 		}
@@ -126,9 +125,9 @@ extends LabelledTransition<S>> {
 	 * @return the matrix that represents the {@link IntersectionAutomaton} a
 	 * @throws IllegalArgumentException when the array of the states ordered is null
 	 */
-	protected AbstractPredicate<S1>[][]  getConstraintT(){
+	protected AbstractProposition<S1>[][]  getConstraintT(){
 		
-		AbstractPredicate<S1>[][]  ret=new AbstractPredicate[a.getStates().size()][a.getStates().size()];
+		AbstractProposition<S1>[][]  ret=new AbstractProposition[a.getStates().size()][a.getStates().size()];
 		int i=0;
 		for(S s1: a.getStates()){
 			int j=0;
@@ -139,27 +138,27 @@ extends LabelledTransition<S>> {
 						// if the first state of s1 does not change and the state is transparent
 						if(t instanceof ConstrainedTransition){
 							if(!setted){
-								ret[i][j]=new Predicate<S1>(s1.getS1(),t.getCharacter()+"");
+								ret[i][j]=new AtomicProposition<S1>(s1.getS1(),t.getCharacter()+"");
 							}
 							else{
-								ret[i][j]=ret[i][j].union(new Predicate<S1>(s1.getS1(),t.getCharacter()+""));
+								ret[i][j]=ret[i][j].union(new AtomicProposition<S1>(s1.getS1(),t.getCharacter()+""));
 							}
 						}
 						else{
 							if(a.isMixed(s1)){
 								if(!setted){
-									ret[i][j]=new Predicate<S1>(s1.getS1(), "λ");
+									ret[i][j]=new AtomicProposition<S1>(s1.getS1(), "λ");
 								}
 								else{
-									ret[i][j]=ret[i][j].union(new Predicate<S1>(s1.getS1(), "λ"));
+									ret[i][j]=ret[i][j].union(new AtomicProposition<S1>(s1.getS1(), "λ"));
 								}
 							}
 							else{
 								if(!setted){
-									ret[i][j]=new EpsilonPredicate<S1>();
+									ret[i][j]=new EpsilonProposition<S1>();
 								}
 								else{
-									ret[i][j]=ret[i][j].union(new EpsilonPredicate<S1>());
+									ret[i][j]=ret[i][j].union(new EpsilonProposition<S1>());
 								}
 							}
 						}
@@ -167,7 +166,7 @@ extends LabelledTransition<S>> {
 					}	
 				}
 				if(!setted){
-					ret[i][j]=new EmptyPredicate<S1>();
+					ret[i][j]=new EmptyProposition<S1>();
 				}
 				j++;
 			}
@@ -184,14 +183,14 @@ extends LabelledTransition<S>> {
 	 * if the array of the ordered states does not contains all the states of the automaton and vice-versa
 	 * if the state accept is not in the set of accepting states of the {@link IntersectionAutomaton}
 	 */
-	protected AbstractPredicate<S1>[] getConstrainedS(S accept){
+	protected AbstractProposition<S1>[] getConstrainedS(S accept){
 		if(accept==null){
 			throw new IllegalArgumentException("The accepting state cannot be null");
 		}
 		if(!a.isAccept(accept)){
 			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
 		}
-		AbstractPredicate<S1>[] ret=new AbstractPredicate[a.getStates().size()];
+		AbstractProposition<S1>[] ret=new AbstractProposition[a.getStates().size()];
 		
 		int i=0;
 		// for each state in the stateOrdered vector
@@ -200,11 +199,11 @@ extends LabelledTransition<S>> {
 			// if the state is equal to the state accept
 			if(accept.equals(s)){
 				// I add the lambda predicate in the s[i] cell of the vector
-				ret[i]=new LambdaPredicate<S1>();
+				ret[i]=new LambdaProposition<S1>();
 			}
 			else{
 				// I add the empty predicate in the s[i] cell of the vector
-				ret[i]=new EmptyPredicate<S1>();
+				ret[i]=new EmptyProposition<S1>();
 			}
 			i++;
 		}

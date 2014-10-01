@@ -7,7 +7,7 @@ import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
-import it.polimi.modelchecker.brzozowski.predicates.Constraint;
+import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
  * contains the model checking algorithm

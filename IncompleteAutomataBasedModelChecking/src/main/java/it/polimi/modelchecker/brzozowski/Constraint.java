@@ -1,11 +1,12 @@
-package it.polimi.modelchecker.brzozowski.predicates;
+package it.polimi.modelchecker.brzozowski;
 
 import it.polimi.model.graph.State;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
 
 public class Constraint<S extends State> {
 
-	private final AbstractPredicate<S> p;
-	public Constraint(AbstractPredicate<S> p){
+	private final AbstractProposition<S> p;
+	public Constraint(AbstractProposition<S> p){
 		this.p=p;
 	}
 	/* (non-Javadoc)
