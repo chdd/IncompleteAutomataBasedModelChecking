@@ -13,7 +13,8 @@ import javax.xml.bind.Unmarshaller;
 
 /**
  * @author claudiomenghi
- * This class implements the Builder pattern which allows to separate the construction of the automata from their representations. 
+ * This class implements the singleton pattern to ensure that the class only has one instance, 
+ * and provide a global point of access to it.
  * The same construction process can be used to create different implementations.
  */
 @SuppressWarnings({ "unchecked", "rawtypes"})
