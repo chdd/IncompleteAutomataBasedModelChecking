@@ -1,11 +1,6 @@
-package it.polimi.modelchecker.brzozowski.propositions.state;
+package it.polimi.modelchecker.brzozowski.propositions;
 
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
-import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
-import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
-import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
-import it.polimi.modelchecker.brzozowski.propositions.LogicalProposition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +23,6 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 	 public AndProposition(AbstractProposition<S> firstPredicate, AbstractProposition<S> secondPredicate){
 	 	super(firstPredicate, secondPredicate);
 	 }
-	 
 	 /**
      * Initializes a newly created {@link AndProposition} starting from the list l of {@link AbstractProposition} 
      * @param l: is the list of {@link AbstractProposition} to be added in the and predicate

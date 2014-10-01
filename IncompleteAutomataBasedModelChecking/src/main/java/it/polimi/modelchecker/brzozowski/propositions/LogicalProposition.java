@@ -1,7 +1,6 @@
 package it.polimi.modelchecker.brzozowski.propositions;
 
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.propositions.state.AndProposition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +22,8 @@ public abstract class LogicalProposition<S extends State> extends AbstractPropos
      * Initializes a newly created {@link AndProposition} starting from the list l of {@link AbstractProposition} 
      * @param l: is the list of {@link AbstractProposition} to be added in the and predicate
      * @throws IllegalArgumentException if the list of the {@link AbstractProposition} contains less than 2 {@link AbstractProposition}
-     * @throws NullPointerException when the {@link List} l is null
      */
 	 public LogicalProposition(List<AbstractProposition<S>> l) {
-		if(l==null){
-			throw new NullPointerException("The list l cannot be null");
-		}
 		this.value=l;
         if(this.value.size()<=1){
         	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
