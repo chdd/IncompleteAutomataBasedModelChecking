@@ -3,12 +3,12 @@ package it.polimi.modelchecker.brzozowski.predicates;
 import static org.junit.Assert.assertTrue;
 import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
-import it.polimi.modelchecker.brzozowski.propositions.AndProposition;
 import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
 import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
-import it.polimi.modelchecker.brzozowski.propositions.OrProposition;
-import it.polimi.modelchecker.brzozowski.propositions.AtomicProposition;
+import it.polimi.modelchecker.brzozowski.propositions.state.AndProposition;
+import it.polimi.modelchecker.brzozowski.propositions.state.AtomicProposition;
+import it.polimi.modelchecker.brzozowski.propositions.state.OrProposition;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,11 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.state;
 
 import it.polimi.model.graph.State;
+import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
+import it.polimi.modelchecker.brzozowski.propositions.LogicalProposition;
 
 /**
  * @author claudiomenghi

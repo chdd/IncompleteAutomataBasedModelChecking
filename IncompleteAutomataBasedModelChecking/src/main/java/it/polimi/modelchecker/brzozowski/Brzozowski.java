@@ -12,7 +12,7 @@ import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.EpsilonProposition;
 import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
-import it.polimi.modelchecker.brzozowski.propositions.AtomicProposition;
+import it.polimi.modelchecker.brzozowski.propositions.state.AtomicProposition;
 
 /**
  * @author claudiomenghi
