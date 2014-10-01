@@ -1,4 +1,4 @@
-package it.polimi.model.io;
+package it.polimi.model.automata;
 
 public class BuilderException extends Exception {
 

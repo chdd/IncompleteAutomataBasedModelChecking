@@ -5,10 +5,10 @@ import javax.xml.bind.JAXBException;
 import it.polimi.controller.Controller;
 import it.polimi.model.Model;
 import it.polimi.model.ModelInterface;
+import it.polimi.model.automata.BuilderException;
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.model.io.BuilderException;
 import it.polimi.view.View;
 import it.polimi.view.ViewInterface;
 
