@@ -1,4 +1,4 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.graph.State;
 
@@ -7,7 +7,7 @@ import it.polimi.model.graph.State;
  * Is the abstract class which specifies the abstract behavior (methods) of the predicates
  * @param <S> is the type of the states that are involved in the constraints
  */
-public abstract class  AbstractProposition<S extends State>{
+public interface AbstractProposition<S extends State>{
 	
 	/**
 	 * the concatenate method generates the concatenation of the this {@link AbstractProposition}  with the 

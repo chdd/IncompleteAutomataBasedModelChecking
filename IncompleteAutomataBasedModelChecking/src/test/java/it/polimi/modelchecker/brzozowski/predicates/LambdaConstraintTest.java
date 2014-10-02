@@ -2,11 +2,11 @@ package it.polimi.modelchecker.brzozowski.predicates;
 
 import static org.junit.Assert.*;
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
-import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
-import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
-import it.polimi.modelchecker.brzozowski.propositions.OrProposition;
-import it.polimi.modelchecker.brzozowski.propositions.AtomicProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.OrProposition;
 
 import org.junit.Test;
 

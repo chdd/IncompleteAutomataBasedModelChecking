@@ -1,4 +1,4 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.graph.State;
 
@@ -6,7 +6,7 @@ import it.polimi.model.graph.State;
  * @author claudiomenghi
  * contains a {@link LambdaProposition}. The {@link LambdaProposition} is used to identify states that are accepting in the BA (final in the FSA)
  */
-public class LambdaProposition<S extends State> extends AbstractProposition<S> {
+public class LambdaProposition<S extends State> implements AbstractProposition<S> {
 
 	private final String ret="λ";
 	

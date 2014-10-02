@@ -7,9 +7,9 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
-import it.polimi.modelchecker.brzozowski.propositions.AbstractProposition;
-import it.polimi.modelchecker.brzozowski.propositions.EmptyProposition;
-import it.polimi.modelchecker.brzozowski.propositions.LambdaProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 
 import java.util.HashSet;
 import java.util.Set;

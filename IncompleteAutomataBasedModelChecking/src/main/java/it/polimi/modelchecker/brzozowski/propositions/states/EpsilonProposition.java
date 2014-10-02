@@ -1,4 +1,4 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.Constraint;
@@ -8,7 +8,7 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * contains an {@link EpsilonProposition} Predicate. This predicate is associated with regular transitions of the (I)BA since these transitions
  * are not relevant in the {@link Constraint} computation
  */
-public class EpsilonProposition<S extends State> extends AbstractProposition<S>{
+public class EpsilonProposition<S extends State> implements AbstractProposition<S>{
 
 	private final String ret="ε";
 	/**
@@ -55,7 +55,7 @@ public class EpsilonProposition<S extends State> extends AbstractProposition<S>{
 		// the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
 		// and the original or predicate
 		if(a instanceof OrProposition){
-			return new AndProposition<S>(this, a);
+			return new OrProposition<S>(this, a);
 		}
 		// is generated if the type of the predicate is not supported by the predicate computation
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");

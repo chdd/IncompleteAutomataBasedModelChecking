@@ -1,4 +1,4 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.graph.State;
 
@@ -6,7 +6,7 @@ import it.polimi.model.graph.State;
  * @author claudiomenghi
  * contains an {@link EmptyProposition}.  This predicate is used when no transitions of the (I)BA are present to connect two states
  */
-public class EmptyProposition<S extends State> extends AbstractProposition<S> {
+public class EmptyProposition<S extends State> implements AbstractProposition<S> {
 
 	private final String ret="∅";
 	/**

@@ -1,11 +1,11 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.graph.State;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LogicalProposition<S extends State> extends AbstractProposition<S>{
+public abstract class LogicalProposition<S extends State> implements AbstractProposition<S>{
 
 	/** The value is used for character storage. */
     private List<AbstractProposition<S>> value;

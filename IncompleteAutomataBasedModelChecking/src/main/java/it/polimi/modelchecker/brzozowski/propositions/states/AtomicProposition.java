@@ -1,4 +1,4 @@
-package it.polimi.modelchecker.brzozowski.propositions;
+package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.graph.State;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @author claudiomenghi
  * contains a {@link AtomicProposition} which constraints a state to be able to recognize a particular regular expression
  */
-public class AtomicProposition<S extends State> extends AbstractProposition<S>{
+public class AtomicProposition<S extends State> implements AbstractProposition<S>{
 
 	/**
 	 * contains the state of the predicate

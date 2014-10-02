@@ -10,15 +10,15 @@ import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
- * contains the model checking algorithm
  * @author claudiomenghi
- *
+ * 
  * @param <S1> is the type of the states of the specification ({@link BuchiAutomaton}) and of the  model ({@link IncompleteBuchiAutomaton})
  * @param <T1> is the type of the transition of the specification ({@link BuchiAutomaton}) and of the  model ({@link IncompleteBuchiAutomaton})
  * @param <S>  is the type of the states of the {@link IntersectionAutomaton}
  * @param <T>  is the type of the states of the {@link IntersectionAutomaton}
  */
 public class ModelChecker<S1 extends State, T1 extends LabelledTransition<S1>, S extends IntersectionState<S1>, T extends LabelledTransition<S>> {
+	
 	
 	/**
 	 * contains the specification to be checked
