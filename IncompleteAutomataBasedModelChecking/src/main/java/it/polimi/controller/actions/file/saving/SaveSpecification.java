@@ -10,14 +10,13 @@ public class SaveSpecification extends SaveAction {
 	
 
 	public SaveSpecification(Object source, int id, String command,
-			Frame frameParent, String modelXML) {
-		super(source, id, command, frameParent, modelXML);
+			Frame frameParent) {
+		super(source, id, command, frameParent);
 	}
 
 	@Override
 	public void perform(ModelInterface model) throws Exception {
 		String filePath=this.getFile();
-		model.loadSpecificationFromXML(this.automatonXML);
 		model.saveSpecification(filePath);
 	}
 

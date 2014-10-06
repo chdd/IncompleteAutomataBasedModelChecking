@@ -1,11 +1,13 @@
 package it.polimi.model.automata.ba;
 
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.io.ba.StateAcceptingToMetadataTransformer;
+import it.polimi.model.io.ba.StateInitialToMetadataTransformer;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.Pair;
+import edu.uci.ics.jung.io.GraphMLWriter;
 
 /**
  * @author claudiomenghi
@@ -156,19 +159,18 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
 	 * @throws IOException - if an I/O error occurs.
 	 */
-	public void toFile(String filePath) throws JAXBException, IOException{
-		JAXBContext context = JAXBContext.newInstance(this.getClass());
-		 
-        Marshaller m = context.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-           
-        File baFile = new File(filePath);
-        if(!baFile.exists()) {
-            baFile.createNewFile();
-        } 
-    	OutputStream os = new FileOutputStream(baFile, false);
-        m.marshal( this, os ); 
-		os.close();
+	public void toFile(String filePath) throws IOException{
+		
+		GraphMLWriter<S, T> graphWriter =new GraphMLWriter<S, T>();
+		
+		graphWriter.addVertexData("initial", "initial", "false", new StateInitialToMetadataTransformer<S,T, BuchiAutomaton<S, T>>(this));
+		graphWriter.addVertexData("accepting", "accepting", "false", new StateAcceptingToMetadataTransformer<S,T, BuchiAutomaton<S, T>>(this));
+		
+		
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath)));
+		
+		graphWriter.save(this, out);
+		
 	}
 	
 	/**

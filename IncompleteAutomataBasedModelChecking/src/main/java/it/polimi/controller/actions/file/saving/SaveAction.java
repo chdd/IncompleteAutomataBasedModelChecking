@@ -9,11 +9,9 @@ import java.awt.Frame;
 public abstract class SaveAction extends FileAction {
 
 	private Frame frameParent;
-	protected String automatonXML;
-	public SaveAction(Object source, int id, String command, Frame frameParent, String automatonXML) {
+	public SaveAction(Object source, int id, String command, Frame frameParent) {
 		super(source, id, command);
 		this.frameParent=frameParent;
-		this.automatonXML=automatonXML;
 	}
 
 	protected String getFile(){

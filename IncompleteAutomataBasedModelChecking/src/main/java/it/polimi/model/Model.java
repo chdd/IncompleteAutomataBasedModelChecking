@@ -1,13 +1,12 @@
 package it.polimi.model;
 
-import it.polimi.model.automata.AutomatonBuilder;
-import it.polimi.model.automata.BuilderException;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.io.AutomatonBuilder;
 
 import java.io.IOException;
 import java.util.Set;
@@ -16,6 +15,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
+
+import edu.uci.ics.jung.io.GraphIOException;
 
 /**
  * contains the model of the application: the model of the system, its specification and the intersection between the model and the specification
@@ -47,16 +48,17 @@ public class Model implements ModelInterface{
 	 * file with path specificationFilePath 
 	 * @param modelFilePath is the path of the file which contains the model of the system
 	 * @param specificationFilePath is the path of the file which contains the specification of the system 
+	 * @throws GraphIOException 
 	 * @throws JAXBException
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public Model(String modelFilePath, String specificationFilePath) throws BuilderException{
-		this.model=new AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>>()
-				.loadAutomaton(IncompleteBuchiAutomaton.class, modelFilePath);
-		this.specification=new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>()
-				.loadAutomaton(BuchiAutomaton.class, specificationFilePath);
+	public Model(String modelFilePath, String specificationFilePath) throws IOException, GraphIOException{
+		this.model=new AutomatonBuilder()
+				.loadIBAAutomaton(modelFilePath);
+		this.specification=new AutomatonBuilder()
+				.loadBAAutomaton(specificationFilePath);
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	
@@ -64,18 +66,18 @@ public class Model implements ModelInterface{
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public void changeModel(String modelFilePath) throws BuilderException{
-		this.model=new AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>>()
-				.loadAutomaton(IncompleteBuchiAutomaton.class, modelFilePath);
+	public void changeModel(String modelFilePath) throws IOException, GraphIOException{
+		this.model=new AutomatonBuilder()
+				.loadIBAAutomaton(modelFilePath);
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public void changeSpecification(String specificationFilePath) throws BuilderException{
-		this.specification=new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>()
-				.loadAutomaton(BuchiAutomaton.class, specificationFilePath);
+	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException{
+		this.specification=new AutomatonBuilder()
+				.loadBAAutomaton(specificationFilePath);
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	/**
@@ -99,43 +101,20 @@ public class Model implements ModelInterface{
 	public IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> getIntersection(){
 		return this.intersection;
 	}
+	
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public void loadModelFromXML(String automatonXML) throws BuilderException{
-		this.model=new AutomatonBuilder<State, LabelledTransition<State>, IncompleteBuchiAutomaton<State, LabelledTransition<State>>>()
-				.loadAutomatonFromText(IncompleteBuchiAutomaton.class, automatonXML);
-	}
-	/**
-	 * @see {@link ModelInterface}
-	 */
-	@Override
-	public void loadSpecificationFromXML(String automatonXML) throws BuilderException{
-		this.specification=new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>()
-				.loadAutomatonFromText(BuchiAutomaton.class, automatonXML);
-	}
-	/**
-	 * @see {@link ModelInterface}
-	 */
-	@Override
-	public void saveModel(String filePath) throws BuilderException{
-		try {
+	public void saveModel(String filePath) throws IOException, GraphIOException{
 			this.model.toFile(filePath);
-		} catch (JAXBException | IOException e) {
-			new BuilderException(e.toString());
-		}
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public void saveSpecification(String filePath) throws BuilderException{
-		try{
+	public void saveSpecification(String filePath) throws IOException, GraphIOException{
 			this.specification.toFile(filePath);
-		} catch (JAXBException | IOException e) {
-			new BuilderException(e.toString());
-		}
 	}
 	@Override
 	public void addRegularStateToTheModel(State s, boolean regular, boolean initial, boolean accepting) {

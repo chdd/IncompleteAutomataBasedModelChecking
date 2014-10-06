@@ -39,7 +39,7 @@ public class IncompleteBuchiButtonJPanel<S extends State, T extends LabelledTran
 		}
 		if(e.getSource().equals(this.btnSave)){
 			l.actionPerformed(
-					new SaveModel(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this), this.xmlarea.toString())
+					new SaveModel(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this))
 					);
 		}
 		if(e.getSource().equals(this.btnLoad)){

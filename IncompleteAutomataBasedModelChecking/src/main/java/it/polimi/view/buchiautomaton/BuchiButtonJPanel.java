@@ -123,7 +123,7 @@ public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>,
 		}
 		if(e.getSource().equals(this.btnSave)){
 			l.actionPerformed(
-					new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this), this.xmlarea.toString())
+					new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this))
 			);
 		}
 		if(e.getSource().equals(this.btnLoad)){

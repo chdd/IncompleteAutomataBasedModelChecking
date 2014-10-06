@@ -1,6 +1,5 @@
 package it.polimi.model;
 
-import it.polimi.model.automata.BuilderException;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.State;
@@ -16,6 +15,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import edu.uci.ics.jung.io.GraphIOException;
+
 /**
  * contains the interface that the model of the application must implement
  * @author claudiomenghi
@@ -25,12 +26,13 @@ public interface ModelInterface {
 	/**
 	 * loads the model of the system from the file whose path is specified in the string modelFilePath
 	 * @param modelFilePath is the path of the file from which the model must be loaded
+	 * @throws GraphIOException 
 	 * @throws JAXBException
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public void changeModel(String modelFilePath) throws BuilderException;
+	public void changeModel(String modelFilePath) throws IOException, GraphIOException;
 	/**
 	 * returns the model of the system
 	 * @return the model of the system
@@ -46,44 +48,33 @@ public interface ModelInterface {
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
 	public IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> getIntersection();
-	/**
-	 * load the automaton from the specified string
-	 * @param automatonXML contains the model of the system
-	 * @throws JAXBException
-	 */
-	public void loadModelFromXML(String automatonXML) throws BuilderException;
-	/**
-	 * contains the specification of the system
-	 * @param automatonXML contains the specification of the system
-	 * @throws JAXBException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 */
-	public void loadSpecificationFromXML(String automatonXML) throws BuilderException;
+	
 	/**
 	 * save the model in the file with path filePath
 	 * @param filePath
+	 * @throws GraphIOException 
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	public void saveModel(String filePath) throws BuilderException;
+	public void saveModel(String filePath) throws IOException, GraphIOException;
 	/**
 	 * load the model from the specified filePath
 	 * @param specificationFilePath is the path of the file that contains the specification to be loaded
+	 * @throws GraphIOException 
 	 * @throws JAXBException
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public void changeSpecification(String specificationFilePath) throws BuilderException;
+	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException;
 	/**
 	 * save the specification in the file with path filePath
 	 * @param filePath is the path of the file where the specification must be saved
+	 * @throws GraphIOException 
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	public void saveSpecification(String filePath) throws BuilderException;
+	public void saveSpecification(String filePath) throws IOException, GraphIOException;
 	
 	/**
 	 * adds the regular state s into the model

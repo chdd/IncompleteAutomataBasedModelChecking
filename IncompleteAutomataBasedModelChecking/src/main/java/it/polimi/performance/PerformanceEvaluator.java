@@ -1,12 +1,11 @@
 package it.polimi.performance;
 
-import it.polimi.model.automata.AutomatonBuilder;
-import it.polimi.model.automata.BuilderException;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
@@ -42,7 +41,7 @@ public class PerformanceEvaluator{
 	
 	private static final String resultsPath="/Users/Claudio1/Desktop/LTLLover/Performance/";
 
-	public static void main(String args[]) throws BuilderException, IOException, JAXBException {
+	public static void main(String args[]) throws  IOException, JAXBException {
 		
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
