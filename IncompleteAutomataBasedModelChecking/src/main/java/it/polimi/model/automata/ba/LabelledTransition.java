@@ -1,5 +1,8 @@
 package it.polimi.model.automata.ba;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import it.polimi.model.graph.State;
 import it.polimi.model.graph.Transition;
 
@@ -16,7 +19,7 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 	 * the character that labels the transition
 	 */
 	@XmlElement(name="character")
-	private final String character;
+	private final Set<String> character;
 	
 	/**
 	 * creates a new empty transition
@@ -33,7 +36,7 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 	 * @param to destination state: is the destination of the transition
 	 * @throws IllegalArgumentException is generated is the character that labels the transition is null or if the destination state is null
 	 */
-	public LabelledTransition(String c, S to)	{
+	public LabelledTransition(Set<String> c, S to)	{
 		super(to);
 		if(c==null){
 			throw new IllegalArgumentException("The character that labels the transition cannot be null");
@@ -45,7 +48,7 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 	/**
 	 * @return the character that labels the transition
 	 */
-	public String getCharacter() {
+	public Set<String> getCharacter() {
 		return character;
 	}
 
@@ -54,7 +57,17 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 	 */
 	@Override
 	public String toString() {
-		return character;
+		if(this.character.size()==1){
+			return this.character.iterator().next();
+		}
+		else{
+			Iterator<String> it=this.character.iterator();
+			String ret=it.next();
+			while(it.hasNext()){
+				String retadd=it.next();
+				ret+="^"+retadd;
+			}
+			return ret;
+		}
 	}
-	
 }

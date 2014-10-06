@@ -185,7 +185,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 			// the union of two predicates <s, reg1>, <s, reg2> with the same state s is a new predicate that contains the or combination 
 			// of their regular expressions <s, (reg1)+(reg2)>
 			if(a1.getState().equals(this.getState())){
-				return new AtomicProposition<S>(this.getState(), "(("+this.regularExpression+")+("+a1.regularExpression+"))");
+				return new AtomicProposition<S>(this.getState(), "(("+this.regularExpression+")|("+a1.regularExpression+"))");
 			}
 			// the union of two predicates <s1, reg1>, <s2, reg2> with a different state is a new or constraint that contains the two predicates 
 			else{

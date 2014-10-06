@@ -10,6 +10,7 @@ import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -151,7 +152,7 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override
-	public void addTransitionToTheModel(State source, State destination, String character){
+	public void addTransitionToTheModel(State source, State destination, Set<String> character){
 		this.model.addTransition(source, new LabelledTransition<State>(character, destination));
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
@@ -167,7 +168,7 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override
-	public void addTransitionToTheSpecification(State source, State destination, String character) {
+	public void addTransitionToTheSpecification(State source, State destination, Set<String> character) {
 		this.specification.addTransition(source, new LabelledTransition<State>(character, destination));
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}

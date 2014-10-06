@@ -161,7 +161,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 */
 	public void addTransition(S source, T t){
 		
-		if(!this.alphabet.contains(t.getCharacter())){
+		if(!this.alphabet.containsAll(t.getCharacter())){
 			throw new IllegalArgumentException("The character: "+t.getCharacter()+" is not contained in the set of the characters of the automaton.");
 		}
 		super.addTransition(source, t);
@@ -231,8 +231,10 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 			for(State s2: a.getStates()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
+					Set<String> characters=new HashSet<String>();
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					a.addTransition(s1, new LabelledTransition<State>(character, s2));
+					characters.add(character);
+					a.addTransition(s1, new LabelledTransition<State>(characters, s2));
 				}
 			}
 		}

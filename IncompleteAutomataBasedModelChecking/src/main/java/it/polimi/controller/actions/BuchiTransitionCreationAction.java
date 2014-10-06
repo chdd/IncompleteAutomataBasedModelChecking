@@ -4,13 +4,16 @@ import it.polimi.model.ModelInterface;
 import it.polimi.model.graph.State;
 
 import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class BuchiTransitionCreationAction extends ActionEvent implements ActionInterface{
 	
 	
 	protected final String sourceState;
 	protected final String destinationState;
-	protected final String character;
+	protected final Set<String> character;
 	/**
 	 * 
 	 */
@@ -20,7 +23,7 @@ public class BuchiTransitionCreationAction extends ActionEvent implements Action
 		super(source, id, command);
 		this.sourceState=sourceState;
 		this.destinationState=destinationState;
-		this.character=character;
+		this.character=new HashSet<String>(java.util.Arrays.asList(character.split(",")));
 	}
 
 	@Override

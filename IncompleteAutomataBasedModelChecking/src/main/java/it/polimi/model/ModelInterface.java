@@ -9,6 +9,7 @@ import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.graph.State;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -95,9 +96,9 @@ public interface ModelInterface {
 	 */
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
 	
-	public void addTransitionToTheModel(State source, State destination, String character);
+	public void addTransitionToTheModel(State source, State destination, Set<String> character);
 	
-	public void addTransitionToTheSpecification(State source, State destination, String character);
+	public void addTransitionToTheSpecification(State source, State destination, Set<String> character);
 	
 	public void addCharacterToTheModed(String character);
 	public void addCharacterToTheSpecification(String character);

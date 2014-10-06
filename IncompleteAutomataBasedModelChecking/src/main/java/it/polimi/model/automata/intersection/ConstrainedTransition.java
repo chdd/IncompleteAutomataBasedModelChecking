@@ -1,5 +1,7 @@
 package it.polimi.model.automata.intersection;
 
+import java.util.Set;
+
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.graph.State;
 
@@ -30,7 +32,7 @@ public class ConstrainedTransition<S1 extends State,S extends IntersectionState<
 	 * @param constrainedState is the state in the original model which is constrained
 	 * @throws IllegalArgumentException if the character, the destination or the constrained state is null
 	 */
-	public ConstrainedTransition(String c, S to, S1 constrainedState) {
+	public ConstrainedTransition(Set<String> c, S to, S1 constrainedState) {
 		super(c, to);
 		if(constrainedState==null){
 			throw new IllegalArgumentException("The constrained state cannot be null");

@@ -49,12 +49,14 @@ public class Controller implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		try {
+		 try{
 			
 			ActionInterface a=(ActionInterface) arg;
 			a.perform(model);
 			this.update();
-		} catch (Exception e) {
+		 } 
+		 catch(Exception e) {
+			 e.printStackTrace();
 			this.view.displayErrorMessage(e.getMessage());
 		}
 	}

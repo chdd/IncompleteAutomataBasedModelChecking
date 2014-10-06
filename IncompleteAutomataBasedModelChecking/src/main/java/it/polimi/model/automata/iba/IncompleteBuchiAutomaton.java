@@ -164,8 +164,10 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			for(State s2: a.getStates()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
+					Set<String> characters=new HashSet<String>();
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					a.addTransition(s1, new LabelledTransition<State>(character, s2));
+					characters.add(character);
+					a.addTransition(s1, new LabelledTransition<State>(characters, s2));
 				}
 			}
 		}
@@ -214,8 +216,11 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			for(State s2: a.getStates()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
+					Set<String> characters=new HashSet<String>();
+					
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					a.addTransition(s1, new LabelledTransition<State>(character, s2));
+					characters.add(character);
+					a.addTransition(s1, new LabelledTransition<State>(characters, s2));
 				}
 			}
 		}

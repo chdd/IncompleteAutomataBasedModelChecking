@@ -24,29 +24,4 @@ public class BuchiActionStateCreation extends ActionEvent implements ActionInter
 		State s=new State(this.name);
 		model.addRegularStateToTheSpecification(s, this.initial, this.accepting);
 	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-
-		/**
-	 * @return the initial
-	 */
-	public boolean isInitial() {
-		return initial;
-	}
-
-	
-	/**
-	 * @return the accepting
-	 */
-	public boolean isAccepting() {
-		return accepting;
-	}
-
-	
 }
