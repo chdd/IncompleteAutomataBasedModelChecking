@@ -7,8 +7,8 @@ import it.polimi.model.Model;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.automata.BuilderException;
 import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.model.graph.State;
 import it.polimi.view.View;
 import it.polimi.view.ViewInterface;
 

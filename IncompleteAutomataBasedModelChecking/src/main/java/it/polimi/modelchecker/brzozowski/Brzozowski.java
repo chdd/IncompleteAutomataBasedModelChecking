@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.intersection.ConstrainedTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
@@ -54,6 +54,8 @@ extends LabelledTransition<S>> {
 		
 		Set<AbstractProposition<S1>> predicates=new HashSet<AbstractProposition<S1>>();
 		
+		S[] states=(S[]) a.getVertices().toArray();
+		
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
 			
@@ -74,7 +76,7 @@ extends LabelledTransition<S>> {
 				//System.out.println("analyzing the initial state: computing the constraint");
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
-				AbstractProposition<S1> newconstraint=s[a.statePosition(init)].omega();
+				AbstractProposition<S1> newconstraint=s[this.statePosition(init, states)].omega();
 				
 				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
@@ -104,7 +106,7 @@ extends LabelledTransition<S>> {
 			throw new IllegalArgumentException("The vector s cannot be null");
 		}
 		
-		int m=a.getStates().size();
+		int m=a.getVertexCount();
 		for(int n=m-1; n>=0; n--){
 			s[n]=t[n][n].star().concatenate(s[n]);
 			for(int j=0; j<n;j++){
@@ -127,13 +129,13 @@ extends LabelledTransition<S>> {
 	 */
 	protected AbstractProposition<S1>[][]  getConstraintT(){
 		
-		AbstractProposition<S1>[][]  ret=new AbstractProposition[a.getStates().size()][a.getStates().size()];
+		AbstractProposition<S1>[][]  ret=new AbstractProposition[a.getVertexCount()][a.getVertexCount()];
 		int i=0;
-		for(S s1: a.getStates()){
+		for(S s1: a.getVertices()){
 			int j=0;
-			for(S s2: a.getStates()){
+			for(S s2: a.getVertices()){
 				boolean setted=false;
-				for(T t: a.getTransitionsWithSource(s1)){
+				for(T t: a.getOutEdges(s1)){
 					if(t.getDestination().equals(s2)){
 						// if the first state of s1 does not change and the state is transparent
 						if(t instanceof ConstrainedTransition){
@@ -174,6 +176,20 @@ extends LabelledTransition<S>> {
 		}
 		return ret;
 	}
+	
+	public int statePosition(State s, State[] states){
+		
+		int i=0;
+		for(State tmp: states){
+			if(tmp.equals(s)){
+				return i;
+			}
+			i++;
+		}
+		return -1;
+		
+	}
+	
 	/**
 	 * returns the matrix S associated with the {@link IntersectionAutomaton} a
 	 * @param accept is the accepting states of the {@link IntersectionAutomaton} considered
@@ -190,11 +206,11 @@ extends LabelledTransition<S>> {
 		if(!a.isAccept(accept)){
 			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
 		}
-		AbstractProposition<S1>[] ret=new AbstractProposition[a.getStates().size()];
+		AbstractProposition<S1>[] ret=new AbstractProposition[a.getVertexCount()];
 		
 		int i=0;
 		// for each state in the stateOrdered vector
-		for(S s: a.getStates()){
+		for(S s: a.getVertices()){
 			
 			// if the state is equal to the state accept
 			if(accept.equals(s)){

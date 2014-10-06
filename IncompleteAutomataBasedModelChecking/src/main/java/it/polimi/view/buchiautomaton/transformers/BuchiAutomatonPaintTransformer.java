@@ -2,7 +2,7 @@ package it.polimi.view.buchiautomaton.transformers;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 
 import java.awt.Color;
 import java.awt.Paint;

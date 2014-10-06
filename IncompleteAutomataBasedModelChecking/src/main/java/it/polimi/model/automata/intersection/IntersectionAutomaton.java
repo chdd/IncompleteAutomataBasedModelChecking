@@ -2,8 +2,8 @@ package it.polimi.model.automata.intersection;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.graph.State;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param <S> is the type of the state in the intersection automaton
  * @param <T> is the type of the transition in the intersection automaton
  */
+@SuppressWarnings("serial")
 @XmlRootElement
 public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition<S1>,S extends IntersectionState<S1>, T 
 extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
@@ -88,7 +89,7 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 			throw new IllegalArgumentException("The state to be added cannot be null");
 		}
 		this.mixedStates.add(s);
-		super.addState(s);
+		this.addVertex(s);
 	}
 	/**
 	 * returns true if the state s is mixed, false otherwise
@@ -254,9 +255,9 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 			visitedStates.add(currentState);
 			
 			// for each transition in the extended automaton whit source s1
-			for(T1 t1: model.getTransitionsWithSource(s1)){
+			for(T1 t1: model.getOutEdges(s1)){
 				// for each transition in the extended automaton whit source s2
-				for(T1 t2: specification.getTransitionsWithSource(s2)){
+				for(T1 t2: specification.getOutEdges(s2)){
 					// if the characters of the two transitions are equal
 					if(t1.getCharacter().equals(t2.getCharacter())){
 						
@@ -278,7 +279,7 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 			// if the current state of the extended automaton is transparent
 			if(model.isTransparent(s1)){
 				// for each transition in the automaton a2
-				for(T1 t2: specification.getTransitionsWithSource(s2)){
+				for(T1 t2: specification.getOutEdges(s2)){
 					// a new state is created made by the transparent state and the state s2next
 					S1 s2next=t2.getDestination();
 					S p=this.addIntersectionState(s1, t2.getDestination(), currentState);
@@ -311,12 +312,12 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 			this.addAcceptState(p);
 		}
 		else{
-			this.addState(p);
+			this.addVertex(p);
 		}
 		if(this.model.isTransparent(s1)){
 			this.addMixedState(p);
 		}
-		this.addState(p);
+		this.addVertex(p);
 		if(currentState==null){
 			this.addInitialState(p);
 		}

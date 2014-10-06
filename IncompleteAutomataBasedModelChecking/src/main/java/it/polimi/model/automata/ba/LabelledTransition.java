@@ -3,9 +3,6 @@ package it.polimi.model.automata.ba;
 import java.util.Iterator;
 import java.util.Set;
 
-import it.polimi.model.graph.State;
-import it.polimi.model.graph.Transition;
-
 import javax.xml.bind.annotation.XmlElement;
 
 /**

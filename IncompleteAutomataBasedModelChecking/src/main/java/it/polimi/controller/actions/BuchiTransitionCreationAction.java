@@ -1,7 +1,7 @@
 package it.polimi.controller.actions;
 
 import it.polimi.model.ModelInterface;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 
 import java.awt.event.ActionEvent;
 import java.util.HashSet;

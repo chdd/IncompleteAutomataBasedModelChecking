@@ -1,4 +1,4 @@
-package it.polimi.model.graph;
+package it.polimi.model.automata.ba;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;

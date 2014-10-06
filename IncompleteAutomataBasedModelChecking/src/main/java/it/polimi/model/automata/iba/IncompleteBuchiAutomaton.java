@@ -2,7 +2,7 @@ package it.polimi.model.automata.iba;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -29,6 +29,7 @@ import org.xml.sax.SAXParseException;
  * @param <S> contains the type of the states of the automaton
  * @param <T> contains the type of the transitions of the automaton
  */
+@SuppressWarnings("serial")
 @XmlRootElement
 public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends BuchiAutomaton<S,T>{
 
@@ -70,7 +71,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			throw new IllegalArgumentException("The state to be added cannot be null");
 		}
 		this.transparentStates.add(s);
-		this.addState(s);
+		this.addVertex(s);
 	}
 	
 	/**
@@ -153,15 +154,15 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 					a.addAcceptState(s);
 				}
 				else{
-					a.addState(s);
+					a.addVertex(s);
 				}
 			}
 			if(r.nextInt(10)<transparentStateProbability*10){
 				a.addTransparentState(s);
 			}
 		}
-		for(State s1: a.getStates()){
-			for(State s2: a.getStates()){
+		for(State s1: a.getVertices()){
+			for(State s2: a.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					Set<String> characters=new HashSet<String>();
@@ -188,15 +189,15 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 		IncompleteBuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
 		for(int i=0; i<n;i++){
 			State s=new State("s"+i);
-			a.addState(s);
+			a.addVertex(s);
 		}
-		Iterator<State> it1=a.getStates().iterator();
+		Iterator<State> it1=a.getVertices().iterator();
 		for(int i=0; i<numTransparentStates; i++){
 			a.addTransparentState(it1.next());
 		}
 		for(int i=0; i<numInitial; i++){
-			int transp=r.nextInt(a.getStates().size());
-			Iterator<State> it=a.getStates().iterator();
+			int transp=r.nextInt(a.getVertices().size());
+			Iterator<State> it=a.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
@@ -204,16 +205,16 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			a.addInitialState(it.next());
 		}
 		for(int i=0; i<numAccepting; i++){
-			int transp=r.nextInt(a.getStates().size());
-			Iterator<State> it=a.getStates().iterator();
+			int transp=r.nextInt(a.getVertices().size());
+			Iterator<State> it=a.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
 			a.addAcceptState(it.next());
 		}
-		for(State s1: a.getStates()){
-			for(State s2: a.getStates()){
+		for(State s1: a.getVertices()){
+			for(State s2: a.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					Set<String> characters=new HashSet<String>();

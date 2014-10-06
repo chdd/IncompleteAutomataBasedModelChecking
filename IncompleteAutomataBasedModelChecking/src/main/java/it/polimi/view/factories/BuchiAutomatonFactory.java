@@ -2,7 +2,7 @@ package it.polimi.view.factories;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 import it.polimi.view.buchiautomaton.BuchiAutomatonJPanel;
 import it.polimi.view.buchiautomaton.BuchiAutomatonLoadingJPanel;
 import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;

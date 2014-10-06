@@ -1,8 +1,8 @@
 package it.polimi.model;
 
 import static org.junit.Assert.*;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.model.graph.State;
 
 import org.junit.Test;
 

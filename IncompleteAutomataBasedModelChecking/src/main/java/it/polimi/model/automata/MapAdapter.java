@@ -1,7 +1,7 @@
 package it.polimi.model.automata;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 
 import java.util.ArrayList;
 import java.util.HashMap;

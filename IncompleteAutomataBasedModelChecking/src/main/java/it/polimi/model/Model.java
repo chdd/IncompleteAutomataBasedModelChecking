@@ -4,10 +4,10 @@ import it.polimi.model.automata.AutomatonBuilder;
 import it.polimi.model.automata.BuilderException;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.model.graph.State;
 
 import java.io.IOException;
 import java.util.Set;
@@ -148,7 +148,7 @@ public class Model implements ModelInterface{
 		if(accepting){
 			this.model.addAcceptState(s);
 		}
-		this.model.addState(s);
+		this.model.addVertex(s);
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override
@@ -164,7 +164,7 @@ public class Model implements ModelInterface{
 		if(accepting){
 			this.specification.addAcceptState(s);
 		}
-		this.specification.addState(s);
+		this.specification.addVertex(s);
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override

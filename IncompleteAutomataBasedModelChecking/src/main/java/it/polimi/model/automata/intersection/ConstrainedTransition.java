@@ -3,7 +3,7 @@ package it.polimi.model.automata.intersection;
 import java.util.Set;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlIDREF;

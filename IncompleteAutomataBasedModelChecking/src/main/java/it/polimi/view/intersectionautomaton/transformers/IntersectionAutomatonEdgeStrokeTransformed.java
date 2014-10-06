@@ -4,9 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Stroke;
 
 import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.intersection.ConstrainedTransition;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.model.graph.State;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 
 public class IntersectionAutomatonEdgeStrokeTransformed<S1 extends State, T1 extends LabelledTransition<S1>, S extends IntersectionState<S1>, T extends LabelledTransition<S>> extends

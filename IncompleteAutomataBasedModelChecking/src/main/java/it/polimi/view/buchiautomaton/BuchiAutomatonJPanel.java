@@ -2,7 +2,7 @@ package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 import it.polimi.view.automaton.AutomatonJPanel;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonPaintTransformer;
@@ -50,17 +50,5 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition<
 		return new BuchiAutomatonEdgeStrokeTransormer<S, T>();
 	}
 	
-	protected void loadAutomata(A a){
-		this.graph = new SparseMultigraph<S,T>();
-		for(S s: a.getStates()){
-			this.graph.addVertex(s);
-		}
-		for(S s: a.getStates()){
-			if(a.getTransitionsWithSource(s)!=null){
-				for(T t: a.getTransitionsWithSource(s)){
-					this.graph.addEdge(t, s, t.getDestination(), EdgeType.DIRECTED);
-				}  
-			}
-		}	
-	}
+	
 }

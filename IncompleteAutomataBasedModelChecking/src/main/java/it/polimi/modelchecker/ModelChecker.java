@@ -2,10 +2,10 @@ package it.polimi.modelchecker;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.model.graph.State;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
@@ -71,13 +71,13 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition<S1>, S
 		
 		// SPECIFICATION
 		// updates the set of the number of the states in the specification
-		this.parameters.setNumStatesSpecification(this.specification.getStates().size());
+		this.parameters.setNumStatesSpecification(this.specification.getVertexCount());
 		// updates the number of accepting states of the specification
 		this.parameters.setNumAcceptStatesSpecification(this.specification.getAcceptStates().size());
 		
 		// MODEL
 		// updates the number of the states of the model
-		this.parameters.setNumStatesModel(this.model.getStates().size());
+		this.parameters.setNumStatesModel(this.model.getVertexCount());
 		// updates the number of accepting states of the model
 		this.parameters.setNumAcceptStatesModel(this.model.getAcceptStates().size());
 		// updates the number of transparent states in the model
@@ -93,7 +93,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition<S1>, S
 		
 		// INTERSECTION
 		// sets the number of the states in the intersection
-		this.parameters.setNumStatesIntersection(this.ris.getStates().size());
+		this.parameters.setNumStatesIntersection(this.ris.getVertexCount());
 		
 		// sets the number of accepting states of the intersection
 		this.parameters.setNumAcceptingStatesIntersection(this.ris.getAcceptStates().size());

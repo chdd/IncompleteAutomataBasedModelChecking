@@ -1,8 +1,6 @@
 package it.polimi.model.automata.ba;
 
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.graph.Graph;
-import it.polimi.model.graph.State;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,7 +10,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -22,7 +19,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.Pair;
 
 /**
  * @author claudiomenghi
@@ -30,10 +32,19 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param <S> the type of the states
  * @param <T> the type of the transitions
  */
+@SuppressWarnings("serial")
 @XmlRootElement
-public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends Graph<S,T>{
+public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends SparseMultigraph<S,T>{
 	
-	
+	/**
+	 * contains the initial states of the {@link BuchiAutomaton}
+	 */
+	@XmlElementWrapper(name="initialStates")
+	@XmlElements({
+	    @XmlElement(name="initialState", type=State.class)
+	  })
+	@XmlIDREF
+	protected Set<S> initialStates;
 	
 	/**
 	 * contains the set of the character of the {@link BuchiAutomaton}
@@ -42,12 +53,25 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	@XmlElement(name="character")
 	protected Set<String> alphabet;
 	
+
+	/**
+	 * contains the accepting states of the {@link BuchiAutomaton}
+	 */
+	@XmlElementWrapper(name="acceptingStates")
+	@XmlElements({
+	    @XmlElement(name="acceptingState", type=State.class)
+	  })
+	@XmlIDREF
+	protected Set<S> acceptStates;
+	
 	/**
 	 * creates a new empty {@link BuchiAutomaton}
 	 */
 	public BuchiAutomaton() {
 		
 		this.alphabet=new HashSet<String>(0);
+		this.acceptStates=new HashSet<S>();
+		this.initialStates=new HashSet<S>();
 	}
 	
 	
@@ -58,14 +82,13 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 * @throws NullPointerException is generated if the alphabet of the {@link BuchiAutomaton} is null
 	 */
 	public BuchiAutomaton(Set<String> alphabet) {
+		super();
 		if(alphabet==null){
 			throw new IllegalArgumentException();
 		}
-		this.states=new LinkedHashSet<S>();
-		this.initialStates=new HashSet<S>();
-		this.acceptStates=new HashSet<S>();
-		this.transitionRelation=new HashMap<S, HashSet<T>>();
 		this.alphabet=alphabet;
+		this.acceptStates=new HashSet<S>();
+		this.initialStates=new HashSet<S>();
 	}
 	
 	/**
@@ -164,7 +187,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		if(!this.alphabet.containsAll(t.getCharacter())){
 			throw new IllegalArgumentException("The character: "+t.getCharacter()+" is not contained in the set of the characters of the automaton.");
 		}
-		super.addTransition(source, t);
+		super.addEdge(t, source, t.getDestination());
 	}
 	
 	
@@ -176,9 +199,9 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	public String toString() {
 		return "Automaton \n"
 				+ "initialStates: " + initialStates + "\n"
-				+ "states: "+ states + "\n"
+				+ "states: "+ this.getVertices() + "\n"
 				+ "acceptStates: " + acceptStates + "\n"
-				+ "transitionRelation: " + transitionRelation+ "\n"
+				+ "transitionRelation: " + this.edges+ "\n"
 				+ "alphabet: "+ alphabet + "\n";
 	}
 	
@@ -187,9 +210,15 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 * resets the automaton, removes its states, its initial states, the accepting states, the transitions and the alphabet
 	 */
 	public void reset(){
-		super.reset();
+		this.initialStates=new HashSet<S>();
+		this.alphabet=new HashSet<String>();
+		this.acceptStates=new HashSet<S>();
+		this.directedEdges=new HashSet<T>();
+		this.edges=new HashMap<T,Pair<S>>();
+		this.vertices=new HashMap<S,Pair<Set<T>>>();
 		this.alphabet.clear();
 	}
+	
 	
 	/**
 	 * generates a new random graph (note that almost every graph is connected with the parameters n, 2ln(n)/n
@@ -206,12 +235,12 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		BuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
 		for(int i=0; i<n;i++){
 			State s=new State("s"+i);
-			a.addState(s);
+			a.addVertex(s);
 		}
 		
 		for(int i=0; i<numInitial; i++){
-			int transp=r.nextInt(a.getStates().size());
-			Iterator<State> it=a.getStates().iterator();
+			int transp=r.nextInt(a.getVertices().size());
+			Iterator<State> it=a.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
@@ -219,16 +248,16 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 			a.addInitialState(it.next());
 		}
 		for(int i=0; i<numAccepting; i++){
-			int transp=r.nextInt(a.getStates().size());
-			Iterator<State> it=a.getStates().iterator();
+			int transp=r.nextInt(a.getVertices().size());
+			Iterator<State> it=a.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
 			a.addAcceptState(it.next());
 		}
-		for(State s1: a.getStates()){
-			for(State s2: a.getStates()){
+		for(State s1: a.getVertices()){
+			for(State s2: a.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					Set<String> characters=new HashSet<String>();
@@ -284,7 +313,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 			statesOfThePath.push(currState);
 			// if the state is accepting
 			if(this.isAccept(currState)){
-				for(T t: this.getTransitionsWithSource(currState)){
+				for(T t: this.getOutEdges(currState)){
 					// I start the second DFS if the answer of the second DFS is true I return true
 					if(this.secondDFS(new HashSet<S>(), t.getDestination(), statesOfThePath)){
 						return true;
@@ -292,7 +321,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 				}
 			}
 			// otherwise, I check each transition that leaves the state currState
-			for(T t: this.getTransitionsWithSource(currState)){
+			for(T t: this.getOutEdges(currState)){
 				// I call the first DFS method, If the answer is true I return true
 				if(firstDFS(visitedStates, t.getDestination(), statesOfThePath)){
 					return true;
@@ -325,7 +354,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 				// add the state into the set of the visited states
 				visitedStates.add(currState);
 				// for each transition that leaves the current state
-				for(T t: this.getTransitionsWithSource(currState)){
+				for(T t: this.getOutEdges(currState)){
 					// if the second DFS returns a true answer than the accepting path has been found
 					if(secondDFS(visitedStates, t.getDestination(), statesOfThePath)){
 						return true;
@@ -335,6 +364,74 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 				return false;
 			}
 		}
+	}
+	
+	/** 
+	 * Returns the set (possibly empty) of the initial states of the graph. 
+	 * @return the set of the initial states of the graph
+	 */
+	public Set<S> getInitialStates() {
+		return this.initialStates;
+	}
+	
+	/** 
+	 * Add a new initial state in the set of the states of the graph. 
+	 * The state is also added in the set of the states of the graph through the method {@link addState}
+	 * @param s state is the initial state to be added in the set of the states of the graph
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
+	 */
+	public void addInitialState(S s) {
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
+		this.initialStates.add(s);
+		this.addVertex(s);
+	}
+	/**
+	 * check is the state s is contained into the set of the initial states of the automaton
+	 * @param s the state to be checked if present
+	 * @return true if the state s is contained into the set of the initial states of the automaton, false otherwise
+	 * @throws IllegalArgumentException if the state s is null
+	 */
+	public boolean isInitial(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s cannot be null");
+		}
+		return this.initialStates.contains(s);
+	}
+	
+	/** 
+	 * Add a new accept state in the set of the states of the graph. 
+	 * The state is also added in the set of the states of the graph through the method {@link addState}
+	 * @param s state is the accept state to be added in the set of the states of the graph
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
+	 */
+	public void addAcceptState(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
+		this.acceptStates.add(s);
+		this.addVertex(s);
+	}
+	/**
+	 * check is the state s is contained into the set of the accept states of the automaton
+	 * @param s the state to be checked if present
+	 * @return true if the state s is contained into the set of the accept states of the automaton, false otherwise
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
+	 */
+	public boolean isAccept(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
+		return this.acceptStates.contains(s);
+	}
+	
+	/** 
+	 * Returns the set of accepting states of the automaton. 
+	 * @return set of the accepting states of the automaton (see {@link State})
+	 */
+	public Set<S> getAcceptStates() {
+		return this.acceptStates;
 	}
 	
 	

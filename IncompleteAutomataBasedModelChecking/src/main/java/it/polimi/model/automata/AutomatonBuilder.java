@@ -2,7 +2,7 @@ package it.polimi.model.automata;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

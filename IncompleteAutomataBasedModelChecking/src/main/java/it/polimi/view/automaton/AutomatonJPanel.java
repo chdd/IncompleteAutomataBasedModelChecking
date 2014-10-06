@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.graph.State;
+import it.polimi.model.automata.ba.State;
 import it.polimi.view.buchiautomaton.transformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
@@ -101,7 +101,9 @@ public abstract class AutomatonJPanel<S extends State, T extends LabelledTransit
 		this.repaint();
 	}
 	
-	protected abstract void loadAutomata(A a);
+	protected void loadAutomata(A a){
+		this.graph=a;
+	}
 	
 	protected abstract Transformer<S, Shape> getShapeTransformer(A a);
 	
