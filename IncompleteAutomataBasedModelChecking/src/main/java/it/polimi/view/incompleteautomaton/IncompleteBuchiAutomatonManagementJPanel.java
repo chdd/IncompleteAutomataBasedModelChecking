@@ -40,7 +40,7 @@ public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends
 		if(a==null){
 			throw new IllegalArgumentException("The incomplete automaton a cannot be null");
 		}
-		((IncompleteBuchiAutomatonLoadingPanel<S, T, A>) this.loadingPanel).update(a.toXMLString());
+	//	((IncompleteBuchiAutomatonLoadingPanel<S, T, A>) this.loadingPanel).update(a.toXMLString());
 	}
 	
 	

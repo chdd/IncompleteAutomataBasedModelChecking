@@ -53,8 +53,7 @@ extends LabelledTransition<S>> {
 		AbstractProposition<S1> ret=new EmptyProposition<S1>();
 		
 		Set<AbstractProposition<S1>> predicates=new HashSet<AbstractProposition<S1>>();
-		
-		S[] states=(S[]) a.getVertices().toArray();
+		S[] states=(S[]) a.getVertices().toArray(new IntersectionState[a.getVertexCount()]);
 		
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
@@ -189,6 +188,7 @@ extends LabelledTransition<S>> {
 		return -1;
 		
 	}
+	
 	
 	/**
 	 * returns the matrix S associated with the {@link IntersectionAutomaton} a

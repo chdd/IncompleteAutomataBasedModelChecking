@@ -3,34 +3,13 @@ package it.polimi.model.automata.iba;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.State;
-import it.polimi.model.io.ba.StateAcceptingToMetadataTransformer;
-import it.polimi.model.io.ba.StateInitialToMetadataTransformer;
-import it.polimi.model.io.iba.StateTransparentToMetadataTransformer;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import edu.uci.ics.jung.io.GraphMLWriter;
 
 /**
  * @author claudiomenghi
@@ -45,11 +24,6 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	/**
 	 * contains the set of the transparent states of the automaton
 	 */
-	@XmlElementWrapper(name="transparentStates")
-	@XmlElements({
-	    @XmlElement(name="transparentState", type=State.class)
-	  })
-	@XmlIDREF
 	private Set<S> transparentStates;
 	
 	/**
@@ -103,65 +77,12 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 		return this.transparentStates;
 	}
 	
-	/**
-	 * Returns the string representation of the automaton
-	 * @see BuchiAutomaton
-	 */
-	@Override
-	public String toString() {
-		return super.toString()
-				+ "transparentStates: "+this.transparentStates+ "\n";
-	}
-	
-	/**
-	 * writes the BuchiAutomaton to the file with path filePath
-	 * @param filePath is the path of the file where the BuchiAutomaton must be written
-	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
-	 * @throws IOException - if an I/O error occurs.
-	 */
-	public void toFile(String filePath) throws IOException{
-		
-		GraphMLWriter<S, T> graphWriter =new GraphMLWriter<S, T>();
-		
-		graphWriter.addVertexData("initial", "initial", "false", new StateInitialToMetadataTransformer<S,T, BuchiAutomaton<S, T>>(this));
-		graphWriter.addVertexData("accepting", "accepting", "false", new StateAcceptingToMetadataTransformer<S,T, BuchiAutomaton<S, T>>(this));
-		graphWriter.addVertexData("transparent", "transparent", "false", new StateTransparentToMetadataTransformer<S,T, IncompleteBuchiAutomaton<S, T>>(this));
-		
-		
-		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath)));
-		
-		graphWriter.save(this, out);
-		
-	}
 	
 	
 	
-
 	
-	public static void validate(String filePath) throws SAXException, IOException, ParserConfigurationException{
-		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-		domFactory.setValidating(true);
-		DocumentBuilder builder = domFactory.newDocumentBuilder();
-		builder.setErrorHandler(new ErrorHandler() {
-		    @Override
-		    public void error(SAXParseException exception) throws SAXException {
-		        // do something more useful in each of these handlers
-		        exception.printStackTrace();
-		    }
-		    @Override
-		    public void fatalError(SAXParseException exception) throws SAXException {
-		        exception.printStackTrace();
-		    }
-
-		    @Override
-		    public void warning(SAXParseException exception) throws SAXException {
-		        exception.printStackTrace();
-		    }
-		});
-		builder.parse(filePath);
-	}
 	
-	/**
+/**
 	 * generates a new random graph (note that almost every graph is connected with the parameters n, 2ln(n)/n
 	 * @param n: number of nodes
 	 * @param p: probability through which each transition is included in the graph

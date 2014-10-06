@@ -18,7 +18,6 @@ public class BuchiAutomatonLoadingJPanel<S extends State, T extends LabelledTran
 	}
 	
 	public void update(A a){
-		this.xmlArea.update(a.toXMLString());
 	}
 		
 	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){

@@ -1,14 +1,7 @@
 package it.polimi.model.automata.ba;
 
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.io.ba.StateAcceptingToMetadataTransformer;
-import it.polimi.model.io.ba.StateInitialToMetadataTransformer;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,18 +9,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
-import edu.uci.ics.jung.io.GraphMLWriter;
 
 /**
  * @author claudiomenghi
@@ -36,35 +20,21 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @param <T> the type of the transitions
  */
 @SuppressWarnings("serial")
-@XmlRootElement
 public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends SparseMultigraph<S,T>{
 	
 	/**
 	 * contains the initial states of the {@link BuchiAutomaton}
 	 */
-	@XmlElementWrapper(name="initialStates")
-	@XmlElements({
-	    @XmlElement(name="initialState", type=State.class)
-	  })
-	@XmlIDREF
 	protected Set<S> initialStates;
 	
 	/**
 	 * contains the set of the character of the {@link BuchiAutomaton}
 	 */
-	@XmlElementWrapper(name="alphabet")
-	@XmlElement(name="character")
 	protected Set<String> alphabet;
 	
-
 	/**
 	 * contains the accepting states of the {@link BuchiAutomaton}
 	 */
-	@XmlElementWrapper(name="acceptingStates")
-	@XmlElements({
-	    @XmlElement(name="acceptingState", type=State.class)
-	  })
-	@XmlIDREF
 	protected Set<S> acceptStates;
 	
 	/**
@@ -111,67 +81,86 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		if(character==null){
 			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
 		}
-		if(this.alphabet.contains(character)){
-			throw new IllegalArgumentException("The character "+character+"is already contained in the alphabet of the automaton");
-		}
 		this.alphabet.add(character);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * returns a String which contains the XML description of the BuchiAutomaton
-	 * @return a String which contains the XML description of the BuchiAutomaton
-	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
-	 */
-	public String toXMLString() {
-	
-		StringWriter sw = new StringWriter();
-		// create JAXB context and initializing Marshaller
-		JAXBContext jaxbContext;
-		try {
-			jaxbContext = JAXBContext.newInstance(this.getClass());
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			
-			// for getting nice formatted output
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			
-			// Writing to console
-			jaxbMarshaller.marshal(this, sw);
-			return sw.toString();
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+	public void addCharacters(Set<String> characters){
+		if(characters==null){
+			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
 		}
-		
+		for(String character: characters){
+			this.addCharacter(character);
+		}
+	}
+	
+	/** 
+	 * Returns the set (possibly empty) of the initial states of the graph. 
+	 * @return the set of the initial states of the graph
+	 */
+	public Set<S> getInitialStates() {
+		return this.initialStates;
+	}
+	
+	/** 
+	 * Add a new initial state in the set of the states of the graph. 
+	 * The state is also added in the set of the states of the graph through the method {@link addState}
+	 * @param s state is the initial state to be added in the set of the states of the graph
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
+	 */
+	public void addInitialState(S s) {
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
+		this.initialStates.add(s);
+		this.addVertex(s);
 	}
 	/**
-	 * writes the BuchiAutomaton to the file with path filePath
-	 * @param filePath is the path of the file where the BuchiAutomaton must be written
-	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
-	 * @throws IOException - if an I/O error occurs.
+	 * check is the state s is contained into the set of the initial states of the automaton
+	 * @param s the state to be checked if present
+	 * @return true if the state s is contained into the set of the initial states of the automaton, false otherwise
+	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public void toFile(String filePath) throws IOException{
-		
-		GraphMLWriter<S, T> graphWriter =new GraphMLWriter<S, T>();
-		
-		graphWriter.addVertexData("initial", "initial", "false", new StateInitialToMetadataTransformer<S,T, BuchiAutomaton<S, T>>(this));
-		graphWriter.addVertexData("accepting", "accepting", "false", new StateAcceptingToMetadataTransformer<S,T, BuchiAutomaton<S, T>>(this));
-		
-		
-		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath)));
-		
-		graphWriter.save(this, out);
-		
+	public boolean isInitial(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s cannot be null");
+		}
+		return this.initialStates.contains(s);
 	}
+	
+	/** 
+	 * Add a new accept state in the set of the states of the graph. 
+	 * The state is also added in the set of the states of the graph through the method {@link addState}
+	 * @param s state is the accept state to be added in the set of the states of the graph
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
+	 */
+	public void addAcceptState(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
+		this.acceptStates.add(s);
+		this.addVertex(s);
+	}
+	/**
+	 * check is the state s is contained into the set of the accept states of the automaton
+	 * @param s the state to be checked if present
+	 * @return true if the state s is contained into the set of the accept states of the automaton, false otherwise
+	 * @throws IllegalArgumentException is generate if the state s to be added is null
+	 */
+	public boolean isAccept(S s){
+		if(s==null){
+			throw new IllegalArgumentException("The state s to be added cannot be null");
+		}
+		return this.acceptStates.contains(s);
+	}
+	
+	/** 
+	 * Returns the set of accepting states of the automaton. 
+	 * @return set of the accepting states of the automaton (see {@link State})
+	 */
+	public Set<S> getAcceptStates() {
+		return this.acceptStates;
+	}
+	
 	
 	/**
 	 * add the transition t, with source source to the set of the transitions of the automaton
@@ -189,22 +178,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		if(!this.alphabet.containsAll(t.getCharacter())){
 			throw new IllegalArgumentException("The character: "+t.getCharacter()+" is not contained in the set of the characters of the automaton.");
 		}
-		super.addEdge(t, source, t.getDestination());
-	}
-	
-	
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Automaton \n"
-				+ "initialStates: " + initialStates + "\n"
-				+ "states: "+ this.getVertices() + "\n"
-				+ "acceptStates: " + acceptStates + "\n"
-				+ "transitionRelation: " + this.edges+ "\n"
-				+ "alphabet: "+ alphabet + "\n";
+		super.addEdge(t, source, t.getDestination(), EdgeType.DIRECTED);
 	}
 	
 	
@@ -367,74 +341,4 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 			}
 		}
 	}
-	
-	/** 
-	 * Returns the set (possibly empty) of the initial states of the graph. 
-	 * @return the set of the initial states of the graph
-	 */
-	public Set<S> getInitialStates() {
-		return this.initialStates;
-	}
-	
-	/** 
-	 * Add a new initial state in the set of the states of the graph. 
-	 * The state is also added in the set of the states of the graph through the method {@link addState}
-	 * @param s state is the initial state to be added in the set of the states of the graph
-	 * @throws IllegalArgumentException is generate if the state s to be added is null
-	 */
-	public void addInitialState(S s) {
-		if(s==null){
-			throw new IllegalArgumentException("The state s to be added cannot be null");
-		}
-		this.initialStates.add(s);
-		this.addVertex(s);
-	}
-	/**
-	 * check is the state s is contained into the set of the initial states of the automaton
-	 * @param s the state to be checked if present
-	 * @return true if the state s is contained into the set of the initial states of the automaton, false otherwise
-	 * @throws IllegalArgumentException if the state s is null
-	 */
-	public boolean isInitial(S s){
-		if(s==null){
-			throw new IllegalArgumentException("The state s cannot be null");
-		}
-		return this.initialStates.contains(s);
-	}
-	
-	/** 
-	 * Add a new accept state in the set of the states of the graph. 
-	 * The state is also added in the set of the states of the graph through the method {@link addState}
-	 * @param s state is the accept state to be added in the set of the states of the graph
-	 * @throws IllegalArgumentException is generate if the state s to be added is null
-	 */
-	public void addAcceptState(S s){
-		if(s==null){
-			throw new IllegalArgumentException("The state s to be added cannot be null");
-		}
-		this.acceptStates.add(s);
-		this.addVertex(s);
-	}
-	/**
-	 * check is the state s is contained into the set of the accept states of the automaton
-	 * @param s the state to be checked if present
-	 * @return true if the state s is contained into the set of the accept states of the automaton, false otherwise
-	 * @throws IllegalArgumentException is generate if the state s to be added is null
-	 */
-	public boolean isAccept(S s){
-		if(s==null){
-			throw new IllegalArgumentException("The state s to be added cannot be null");
-		}
-		return this.acceptStates.contains(s);
-	}
-	
-	/** 
-	 * Returns the set of accepting states of the automaton. 
-	 * @return set of the accepting states of the automaton (see {@link State})
-	 */
-	public Set<S> getAcceptStates() {
-		return this.acceptStates;
-	}
-	
-	
 }

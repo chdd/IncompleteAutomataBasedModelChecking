@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
+import edu.uci.ics.jung.io.GraphIOException;
 
 /**
  * evaluates the performances of the model checking tool, it generates a set of random models (BA) with an increasing number of states and transparent states
@@ -41,7 +41,7 @@ public class PerformanceEvaluator{
 	
 	private static final String resultsPath="/Users/Claudio1/Desktop/LTLLover/Performance/";
 
-	public static void main(String args[]) throws  IOException, JAXBException {
+	public static void main(String args[]) throws  IOException, GraphIOException {
 		
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
@@ -63,10 +63,9 @@ public class PerformanceEvaluator{
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", true)));
 					}
 					IncompleteBuchiAutomaton<State, LabelledTransition<State>> a1 = IncompleteBuchiAutomaton.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
-					AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>> builder=
-							new AutomatonBuilder<State, LabelledTransition<State>, BuchiAutomaton<State, LabelledTransition<State>>>();
+					AutomatonBuilder builder=new AutomatonBuilder();
 					
-					BuchiAutomaton<State, LabelledTransition<State>>  a2=builder.loadAutomaton(BuchiAutomaton.class, "src/main/resources/Automaton2.xml");
+					BuchiAutomaton<State, LabelledTransition<State>>  a2=builder.loadBAAutomaton("src/main/resources/Automaton2.xml");
 					
 					ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> mc=new ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(a1, a2, mp);
 					mc.check();
@@ -74,8 +73,8 @@ public class PerformanceEvaluator{
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
 					
 					
-					a1.toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"a1-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
-					mc.getIntersection().toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"ris-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
+					//a1.toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"a1-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
+					//mc.getIntersection().toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"ris-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
 					writer.close();
 					a1.reset();
 					a2.reset();

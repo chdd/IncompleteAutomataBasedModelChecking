@@ -1,68 +1,52 @@
-<?xml version="1.0"?>
-<!DOCTYPE buchiAutomaton SYSTEM "automaton.dtd">
-<buchiAutomaton>
-    <initialStates>
-        <initialState>s4</initialState>
-    </initialStates>
-    <states>
-        <state id="s4"/>
-        <state id="s5"/>
-        <state id="s6"/>
-    </states>
-    <acceptingStates>
-    	<acceptingState>s6</acceptingState>
-    </acceptingStates>
-   
-    <transitionRelation>
-        <element>
-            <sourceState>s4</sourceState>
-            <transitions>
-            	 <transition>
-                	<character>a</character>
-                	<destinationState>s4</destinationState>
-                </transition> 
-                 <transition>
-                	<character>b</character>
-                	<destinationState>s5</destinationState>
-                </transition> 
-            </transitions>
-        </element>
-        <element>
-            <sourceState>s5</sourceState>
-            <transitions>
-            	 <transition>
-                	<character>b</character>
-                	<destinationState>s5</destinationState>
-                </transition> 
-                <transition>
-                	<character>c</character>
-                	<destinationState>s6</destinationState>
-                </transition> 
-            </transitions>
-        </element>
-         <element>
-            <sourceState>s6</sourceState>
-            <transitions>
-            	 <transition>
-                	<character>a</character>
-                	<destinationState>s6</destinationState>
-                </transition>
-            	 <transition>
-                	<character>b</character>
-                	<destinationState>s6</destinationState>
-                </transition> 
-                <transition>
-                	<character>c</character>
-                	<destinationState>s6</destinationState>
-                </transition> 
-            </transitions>
-        </element>
-    </transitionRelation>
-    <alphabet>
-        <character>a</character>
-        <character>b</character>
-        <character>c</character>
-    </alphabet>
-      <transparentStates>
-    </transparentStates>
-</buchiAutomaton>
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+<key id="initial" for="node">
+<desc>initial</desc>
+<default>false</default>
+</key>
+<key id="accepting" for="node">
+<desc>accepting</desc>
+<default>false</default>
+</key>
+<key id="labels" for="edge">
+<desc>labels</desc>
+<default></default>
+</key>
+<graph edgedefault="directed">
+<node id="s4">
+<data key="initial">true</data>
+<data key="accepting">false</data>
+</node>
+<node id="s5">
+<data key="initial">false</data>
+<data key="accepting">false</data>
+</node>
+<node id="s6">
+<data key="initial">false</data>
+<data key="accepting">true</data>
+</node>
+<edge source="s5" target="s5">
+<data key="labels">b</data>
+</edge>
+<edge source="s4" target="s4">
+<data key="labels">a</data>
+</edge>
+<edge source="s6" target="s6">
+<data key="labels">b</data>
+</edge>
+<edge source="s4" target="s5">
+<data key="labels">b</data>
+</edge>
+<edge source="s5" target="s6">
+<data key="labels">c</data>
+</edge>
+<edge source="s6" target="s6">
+<data key="labels">a</data>
+</edge>
+<edge source="s6" target="s6">
+<data key="labels">c</data>
+</edge>
+</graph>
+</graphml>

@@ -7,6 +7,8 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.io.AutomatonBuilder;
+import it.polimi.model.io.BAtoFile;
+import it.polimi.model.io.IBAtoFile;
 
 import java.io.IOException;
 import java.util.Set;
@@ -107,14 +109,16 @@ public class Model implements ModelInterface{
 	 */
 	@Override
 	public void saveModel(String filePath) throws IOException, GraphIOException{
-			this.model.toFile(filePath);
+			IBAtoFile ibaToFile=new IBAtoFile();
+			ibaToFile.toFile(filePath, this.model);
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
 	public void saveSpecification(String filePath) throws IOException, GraphIOException{
-			this.specification.toFile(filePath);
+			BAtoFile baToFile=new BAtoFile();
+			baToFile.toFile(filePath, this.specification);
 	}
 	@Override
 	public void addRegularStateToTheModel(State s, boolean regular, boolean initial, boolean accepting) {

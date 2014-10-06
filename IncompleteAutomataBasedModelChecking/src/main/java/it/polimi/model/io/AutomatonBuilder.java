@@ -5,6 +5,7 @@ import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.io.ba.BAMetadataToStateTransformer;
+import it.polimi.model.io.ba.BAMetadataToTransitionTransformer;
 import it.polimi.model.io.ba.BATransformer;
 import it.polimi.model.io.iba.IBAMetadataToStateTransformer;
 
@@ -53,13 +54,7 @@ public class AutomatonBuilder{
 				new BAMetadataToStateTransformer<BuchiAutomaton<State, LabelledTransition<State>>>(ba);
 
 		/* Create the Edge Transformer */
-		 Transformer<EdgeMetadata, LabelledTransition<State>> edgeTransformer =
-		 new Transformer<EdgeMetadata, LabelledTransition<State>>() {
-		     public LabelledTransition<State> transform(EdgeMetadata metadata) {
-		    	 LabelledTransition<State> e = new LabelledTransition<State>(null, new State(metadata.getTarget()));
-		         return e;
-		     }
-		 };
+		 Transformer<EdgeMetadata, LabelledTransition<State>> edgeTransformer =new BAMetadataToTransitionTransformer<BuchiAutomaton<State, LabelledTransition<State>>>(ba);
 		
 		
 		 /* Create the Hyperedge Transformer */
@@ -107,13 +102,8 @@ public class AutomatonBuilder{
 				new IBAMetadataToStateTransformer<IncompleteBuchiAutomaton<State, LabelledTransition<State>>>(ba);
 
 		/* Create the Edge Transformer */
-		 Transformer<EdgeMetadata, LabelledTransition<State>> edgeTransformer =
-		 new Transformer<EdgeMetadata, LabelledTransition<State>>() {
-		     public LabelledTransition<State> transform(EdgeMetadata metadata) {
-		    	 LabelledTransition<State> e = new LabelledTransition<State>(null, new State(metadata.getTarget()));
-		         return e;
-		     }
-		 };
+		 Transformer<EdgeMetadata, LabelledTransition<State>> edgeTransformer =new BAMetadataToTransitionTransformer<IncompleteBuchiAutomaton<State, LabelledTransition<State>>>(ba);
+			
 		
 		
 		 /* Create the Hyperedge Transformer */

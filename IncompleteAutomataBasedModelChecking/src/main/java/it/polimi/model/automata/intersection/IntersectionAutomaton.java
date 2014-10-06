@@ -9,12 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlIDREF;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * contains an intersection automaton
  * @author claudiomenghi
@@ -25,7 +19,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param <T> is the type of the transition in the intersection automaton
  */
 @SuppressWarnings("serial")
-@XmlRootElement
 public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition<S1>,S extends IntersectionState<S1>, T 
 extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 
@@ -42,11 +35,6 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 	/**
 	 * contains the set of the mixed states
 	 */
-	@XmlElementWrapper(name="mixedStates")
-	@XmlElements({
-	    @XmlElement(name="mixedState", type=State.class)
-	  })
-	@XmlIDREF
 	private Set<S> mixedStates;
 	
 	/**
