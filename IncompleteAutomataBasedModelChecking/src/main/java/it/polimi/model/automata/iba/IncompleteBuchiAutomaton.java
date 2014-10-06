@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * @author claudiomenghi
  * contains a possibly incomplete Buchi automaton which extends classical automaton with transparent states
@@ -18,7 +16,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param <T> contains the type of the transitions of the automaton
  */
 @SuppressWarnings("serial")
-@XmlRootElement
 public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends BuchiAutomaton<S,T>{
 
 	/**

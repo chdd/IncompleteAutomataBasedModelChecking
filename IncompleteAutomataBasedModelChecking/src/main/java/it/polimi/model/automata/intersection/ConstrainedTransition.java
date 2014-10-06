@@ -1,12 +1,9 @@
 package it.polimi.model.automata.intersection;
 
-import java.util.Set;
-
 import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.State;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlIDREF;
+import java.util.Set;
 
 /**
  * contains a constrainedTransition which is a transition that can be performed only if the constrainedState recognizes 
@@ -21,8 +18,6 @@ public class ConstrainedTransition<S1 extends State,S extends IntersectionState<
 	/**
 	 * contains the constrained state
 	 */
-	@XmlElement(name="constrainedState", type=State.class)
-	@XmlIDREF
 	private final S1 constrainedState;
 	
 	/**
