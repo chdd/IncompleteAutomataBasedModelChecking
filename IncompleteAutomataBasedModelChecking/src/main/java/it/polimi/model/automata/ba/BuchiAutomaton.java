@@ -1,10 +1,13 @@
 package it.polimi.model.automata.ba;
 
+import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -37,6 +40,8 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 */
 	protected Set<S> acceptStates;
 	
+	protected Map<Integer, S> mapNameState;
+	
 	/**
 	 * creates a new empty {@link BuchiAutomaton}
 	 */
@@ -45,6 +50,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		this.alphabet=new HashSet<String>(0);
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
+		this.mapNameState=new HashMap<Integer,S>();
 	}
 	
 	
@@ -62,6 +68,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		this.alphabet=alphabet;
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
+		this.mapNameState=new HashMap<Integer,S>();
 	}
 	
 	/**
@@ -175,9 +182,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 */
 	public void addTransition(S source, T t){
 		
-		if(!this.alphabet.containsAll(t.getCharacter())){
-			throw new IllegalArgumentException("The character: "+t.getCharacter()+" is not contained in the set of the characters of the automaton.");
-		}
+		this.alphabet.addAll(t.getCharacter());
 		super.addEdge(t, source, t.getDestination(), EdgeType.DIRECTED);
 	}
 	
@@ -209,8 +214,10 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 
 		Random r=new Random();
 		BuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
+		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
-			State s=new State("s"+i);
+			
+			State s=stateFactory.create("s"+i);
 			a.addVertex(s);
 		}
 		
@@ -340,5 +347,20 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 				return false;
 			}
 		}
+	}
+	
+	public boolean addVertex(S vertex) {
+		boolean ret=super.addVertex(vertex);
+		this.mapNameState.put(vertex.getId(), vertex);
+		return ret;
+	}
+	
+	public S getVertex(int id){
+		
+		if(!this.mapNameState.containsKey(id)){
+			throw new IllegalArgumentException("The state with the id "+id+" is not contained in the set of the states of the automaton");
+		}
+		
+		return this.mapNameState.get(id);
 	}
 }

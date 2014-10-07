@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import org.junit.Test;

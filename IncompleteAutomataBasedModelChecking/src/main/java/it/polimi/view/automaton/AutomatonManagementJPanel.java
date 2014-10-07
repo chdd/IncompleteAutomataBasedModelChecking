@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,7 +25,8 @@ public class AutomatonManagementJPanel<S extends State, T extends LabelledTransi
 		 this.setMinimumSize(d);
 		 this.setMaximumSize(d);
 		 this.setPreferredSize(d);
-		 this.setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+		 this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		
 		 this.automatonPanel=automatonPanel;
 		 this.loadingPanel=loadingPanel;
 		 this.add(automatonPanel);

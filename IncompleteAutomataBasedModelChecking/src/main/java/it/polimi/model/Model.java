@@ -2,13 +2,13 @@ package it.polimi.model;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.io.AutomatonBuilder;
-import it.polimi.model.io.BAtoFile;
 import it.polimi.model.io.IBAtoFile;
+import it.polimi.model.io.ba.tofile.BAtoFile;
 
 import java.io.IOException;
 import java.util.Set;
@@ -135,8 +135,10 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override
-	public void addTransitionToTheModel(State source, State destination, Set<String> character){
-		this.model.addTransition(source, new LabelledTransition<State>(character, destination));
+	public void addTransitionToTheModel(String source, String destination, Set<String> character){
+		
+		
+		this.model.addTransition(this.model.getVertex(Integer.parseInt(source)), new LabelledTransition<State>(character, this.model.getVertex(Integer.parseInt(destination))));
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override
@@ -151,8 +153,8 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override
-	public void addTransitionToTheSpecification(State source, State destination, Set<String> character) {
-		this.specification.addTransition(source, new LabelledTransition<State>(character, destination));
+	public void addTransitionToTheSpecification(String source, String destination, Set<String> character) {
+		this.specification.addTransition(this.specification.getVertex(Integer.parseInt(source)), new LabelledTransition<State>(character, this.specification.getVertex(Integer.parseInt(destination))));
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(model, specification);
 	}
 	@Override

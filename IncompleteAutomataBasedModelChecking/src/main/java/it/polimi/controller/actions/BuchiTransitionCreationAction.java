@@ -1,7 +1,6 @@
 package it.polimi.controller.actions;
 
 import it.polimi.model.ModelInterface;
-import it.polimi.model.automata.ba.State;
 
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
@@ -28,7 +27,7 @@ public class BuchiTransitionCreationAction extends ActionEvent implements Action
 
 	@Override
 	public void perform(ModelInterface model) {
-		model.addTransitionToTheSpecification(new State(this.sourceState), new State(this.destinationState), this.character);
+		model.addTransitionToTheSpecification(this.sourceState, this.destinationState, this.character);
 	}
 
 	

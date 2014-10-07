@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.intersection.ConstrainedTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;

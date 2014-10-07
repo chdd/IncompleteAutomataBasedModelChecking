@@ -2,7 +2,7 @@ package it.polimi.model.automata.intersection;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashSet;
@@ -337,7 +337,8 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				}
 			}
 		}
-		IntersectionState<S1> p = new IntersectionState<S1>(s1, s2, num);
+		IntersectionStateFactory<S1, S> factory=new IntersectionStateFactory<S1, S>();
+		IntersectionState<S1> p = factory.create(s1, s2, num);
 		return p;
 	}
 }

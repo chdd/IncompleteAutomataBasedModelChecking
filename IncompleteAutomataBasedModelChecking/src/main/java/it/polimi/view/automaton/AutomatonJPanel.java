@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.view.buchiautomaton.transformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
@@ -11,8 +11,8 @@ import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -23,6 +23,7 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
@@ -55,18 +56,22 @@ public abstract class AutomatonJPanel<S extends State, T extends LabelledTransit
 		
 		this.graph = new SparseMultigraph<S,T>();
 		this.layout=new CircleLayout<S,T>(this.graph);
-		Dimension size=new Dimension(this.getSize().width-50, this.getSize().height-50);
-		layout.setSize(size);
+		//Dimension size=new Dimension(this.getSize().width, this.getSize().height);
+		//layout.setSize(size);
 		this.vv=new VisualizationViewer<S,T>(layout);
 		vv.setSize(d);
 		vv.setMinimumSize(d);
 		vv.setMaximumSize(d);
+		vv.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createRaisedBevelBorder(), 
+				BorderFactory.createLoweredBevelBorder()));
 		vv.setPreferredSize(d);
 		vv.setVisible(true);
 		vv.setFocusable(true);
 		vv.setBackground(Color.WHITE);
-		vv.setBorder(new LineBorder(Color.getColor("myColor")));
 		vv.setAutoscrolls(true);
+		
+		
 		
 		DefaultModalGraphMouse<S, T> gm=new DefaultModalGraphMouse<S,T>();
 		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
@@ -79,9 +84,7 @@ public abstract class AutomatonJPanel<S extends State, T extends LabelledTransit
 		
 		this.loadAutomata(a);
 		this.layout.reset();
-		//this.layout=new CircleLayout<S,T>(this.graph);
 		this.layout=new FRLayout<S,T>(this.graph);
-		//this.layout=new KKLayout<S,T>(this.graph);
 		this.vv.setGraphLayout(layout);
 		
 		vv.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));

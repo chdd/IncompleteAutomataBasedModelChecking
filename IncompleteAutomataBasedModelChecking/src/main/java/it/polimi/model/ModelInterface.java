@@ -2,7 +2,7 @@ package it.polimi.model;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
@@ -87,9 +87,9 @@ public interface ModelInterface {
 	 */
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
 	
-	public void addTransitionToTheModel(State source, State destination, Set<String> character);
+	public void addTransitionToTheModel(String source, String destination, Set<String> character);
 	
-	public void addTransitionToTheSpecification(State source, State destination, Set<String> character);
+	public void addTransitionToTheSpecification(String source, String destination, Set<String> character);
 	
 	public void addCharacterToTheModed(String character);
 	public void addCharacterToTheSpecification(String character);

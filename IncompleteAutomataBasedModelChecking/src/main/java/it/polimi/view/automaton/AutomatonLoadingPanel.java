@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,10 +18,9 @@ public class AutomatonLoadingPanel<S extends State, T extends LabelledTransition
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected AutomatonXMLTextArea xmlArea;
 	protected AutomatonButtonJPanel jButtonPanel;
 	
-	public AutomatonLoadingPanel(Dimension d, AutomatonButtonJPanel jButtonPanel, AutomatonXMLTextArea jAutomatonTextArea){
+	public AutomatonLoadingPanel(Dimension d, AutomatonButtonJPanel jButtonPanel){
 		
 		 this.setBackground(Color.getColor("myColor"));
 		 this.setSize(d);
@@ -31,11 +30,9 @@ public class AutomatonLoadingPanel<S extends State, T extends LabelledTransition
 		 
 		 this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		 this.add(jButtonPanel);
-		 this.add(jAutomatonTextArea);
 		 this.jButtonPanel=jButtonPanel;
 		 
 		 this.repaint();
-		 this.xmlArea=jAutomatonTextArea;
 	}
 	protected void setActionListener(ActionListener l){
 		this.jButtonPanel.setActionListener(l);

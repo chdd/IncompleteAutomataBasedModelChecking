@@ -1,7 +1,7 @@
 package it.polimi.model.automata.intersection;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 
 import java.util.Set;
 

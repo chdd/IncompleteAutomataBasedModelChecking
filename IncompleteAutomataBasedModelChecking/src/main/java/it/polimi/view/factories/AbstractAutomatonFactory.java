@@ -2,10 +2,9 @@ package it.polimi.view.factories;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.view.automaton.AutomatonJPanel;
 import it.polimi.view.automaton.AutomatonLoadingPanel;
-import it.polimi.view.automaton.AutomatonXMLTextArea;
 
 import java.awt.Dimension;
 
@@ -22,7 +21,5 @@ public abstract class AbstractAutomatonFactory<S extends State, T extends Labell
 	
 	protected abstract JPanel getJButtonPanel(Dimension d);
 	
-	protected AutomatonXMLTextArea getXmlAreaDimension(Dimension d){
-		return new AutomatonXMLTextArea(d);
-	}
+	
 }

@@ -2,7 +2,8 @@ package it.polimi.model.automata.iba;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.state.StateFactory;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -92,8 +93,9 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 
 		Random r=new Random();
 		IncompleteBuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
+		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
-			State s=new State("s"+i);
+			State s=stateFactory.create();
 			if(r.nextInt(10)<=initialStateProbability*10){
 				a.addInitialState(s);
 			}
@@ -135,9 +137,10 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 
 		Random r=new Random();
 		IncompleteBuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
+		
+		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
-			State s=new State("s"+i);
-			a.addVertex(s);
+			stateFactory.create();
 		}
 		Iterator<State> it1=a.getVertices().iterator();
 		for(int i=0; i<numTransparentStates; i++){

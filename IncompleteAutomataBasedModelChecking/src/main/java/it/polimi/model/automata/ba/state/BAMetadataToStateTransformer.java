@@ -1,8 +1,7 @@
-package it.polimi.model.io.ba;
+package it.polimi.model.automata.ba.state;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -16,9 +15,11 @@ public class BAMetadataToStateTransformer<BA extends BuchiAutomaton<State, Label
 	}
 
 	@Override
-	public State transform(NodeMetadata input) { 
-		State s=new State(input.getId());
+	public State transform(NodeMetadata input) {
 		
+		State s=new State(input.getProperty("name"), Integer.parseInt(input.getId()));
+		ba.addVertex(s);
+			
 		if(Boolean.parseBoolean(input.getProperty("initial"))==true){
 			ba.addInitialState(s);
 		}

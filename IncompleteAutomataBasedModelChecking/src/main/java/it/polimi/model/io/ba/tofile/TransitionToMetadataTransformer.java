@@ -1,8 +1,8 @@
-package it.polimi.model.io.ba;
+package it.polimi.model.io.ba.tofile;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 
 import org.apache.commons.collections15.Transformer;
 

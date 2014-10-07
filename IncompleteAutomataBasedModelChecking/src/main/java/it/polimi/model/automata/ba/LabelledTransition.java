@@ -1,5 +1,7 @@
 package it.polimi.model.automata.ba;
 
+import it.polimi.model.automata.ba.state.State;
+
 import java.util.Iterator;
 import java.util.Set;
 

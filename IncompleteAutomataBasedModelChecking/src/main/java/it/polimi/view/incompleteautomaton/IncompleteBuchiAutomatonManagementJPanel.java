@@ -1,7 +1,7 @@
 package it.polimi.view.incompleteautomaton;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.automaton.AutomatonManagementJPanel;
 
@@ -42,11 +42,6 @@ public class IncompleteBuchiAutomatonManagementJPanel<S extends State, T extends
 		}
 	//	((IncompleteBuchiAutomatonLoadingPanel<S, T, A>) this.loadingPanel).update(a.toXMLString());
 	}
-	
-	
-	public String getAutomatonXML() {
-		return ((IncompleteBuchiAutomatonLoadingPanel<S, T, A>) this.loadingPanel).getAutomatonXML();
-	}
-	
+		
 	
 }

@@ -2,7 +2,7 @@ package it.polimi.view.factories;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.view.buchiautomaton.BuchiAutomatonJPanel;
 import it.polimi.view.buchiautomaton.BuchiAutomatonLoadingJPanel;
 import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
@@ -20,8 +20,8 @@ public class BuchiAutomatonFactory<S extends State, T extends LabelledTransition
 	@Override
 	public BuchiAutomatonManagementJPanel<S,T,A> getPanel(Dimension d) {
 		return new BuchiAutomatonManagementJPanel<S,T,A>(d, 
-				this.getAutomatonPanel(new Dimension(d.width/2, d.height)), 
-				this.getLoadingPanel(new Dimension(d.width/2, d.height)));
+				this.getAutomatonPanel(new Dimension(d.width, d.height/8*7)), 
+				this.getLoadingPanel(new Dimension(d.width, d.height/8*1)));
 	}
 
 	@Override
@@ -35,8 +35,7 @@ public class BuchiAutomatonFactory<S extends State, T extends LabelledTransition
 	protected BuchiAutomatonLoadingJPanel<S,T,A> getLoadingPanel(Dimension d) {
 		
 		return new BuchiAutomatonLoadingJPanel<S,T,A>(d,
-				this.getJButtonPanel(new Dimension(d.width, d.height/4)),
-				this.getXmlAreaDimension(new Dimension(d.width, d.height/4*3)));
+				this.getJButtonPanel(new Dimension(d.width, d.height)));
 	}
 
 	@Override

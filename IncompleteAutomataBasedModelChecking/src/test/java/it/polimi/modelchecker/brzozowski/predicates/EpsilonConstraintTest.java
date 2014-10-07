@@ -1,7 +1,7 @@
 package it.polimi.modelchecker.brzozowski.predicates;
 
 import static org.junit.Assert.assertTrue;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AndProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;

@@ -1,6 +1,6 @@
 package it.polimi.model.automata.intersection;
 
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 
 /**
  * @author claudiomenghi
@@ -30,12 +30,25 @@ public class IntersectionState<S extends State> extends State{
 	 * @param number is the number of the state
 	 * @throws IllegalArgumentException is generated if the state s1 or the state s2 is null or if the number is different from 0,1,2
 	 */
-	public IntersectionState(S s1, S s2, int number) {
-		super(s1, s2, number);
+	protected IntersectionState(S s1, S s2, int number, int id) {
+		super(id);
+		if(s1==null){
+				throw new IllegalArgumentException("The state s1 cannot be null");
+		}
+		if(s2==null){
+			throw new IllegalArgumentException("The state s2 cannot be null");
+		}
+		if(!(number>=0 && number<=2)){
+			throw new IllegalArgumentException("the number of the state must be equal to 0,1 or 2");
+		}
+		this.name=s1.getName()+"-"+s2.getName()+"-"+number;
+		
+
 	
 		this.s1=s1;
 		this.s2=s2;
 		this.number=number;
+		
 	}
 
 	/**

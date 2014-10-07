@@ -2,7 +2,7 @@ package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.view.automaton.AutomatonManagementJPanel;
 
 import java.awt.Dimension;
@@ -25,12 +25,8 @@ public class BuchiAutomatonManagementJPanel<S extends State, T extends LabelledT
 		this.automatonPanel.update(a);
 		
 	}
-	public void updateLoadingPanel(A a){
-		((BuchiAutomatonLoadingJPanel<S,T,A>) this.loadingPanel).update(a);
-	}
 	
 	
-	public String getAutomatonXML() {
-		return ((BuchiAutomatonLoadingJPanel<S,T,A>)this.loadingPanel).getAutomatonXML();
-	}
+	
+	
 }

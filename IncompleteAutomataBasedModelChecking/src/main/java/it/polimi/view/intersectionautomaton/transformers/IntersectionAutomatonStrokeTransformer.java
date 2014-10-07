@@ -1,7 +1,7 @@
 package it.polimi.view.intersectionautomaton.transformers;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStrokeTransformer;

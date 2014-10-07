@@ -1,7 +1,8 @@
 package it.polimi.controller.actions;
 
 import it.polimi.model.ModelInterface;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.state.StateFactory;
 
 public class IncompleteBuchiActionStateCreation extends BuchiActionStateCreation implements ActionInterface{
 
@@ -21,7 +22,7 @@ public class IncompleteBuchiActionStateCreation extends BuchiActionStateCreation
 
 	
 	public void perform(ModelInterface model){
-		State s=new State(this.name);
+		State s=new StateFactory<State>().create(this.name);
 		model.addRegularStateToTheModel(s, this.regular, this.initial, this.accepting);
 	}
 }

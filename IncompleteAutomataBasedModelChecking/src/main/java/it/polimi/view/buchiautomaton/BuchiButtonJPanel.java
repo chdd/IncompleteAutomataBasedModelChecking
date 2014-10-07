@@ -1,12 +1,9 @@
 package it.polimi.view.buchiautomaton;
 
-import it.polimi.controller.actions.file.loading.LoadSpecification;
-import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.view.automaton.AutomatonButtonJPanel;
-import it.polimi.view.automaton.AutomatonXMLTextArea;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJStateCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJTransitionCreator;
@@ -14,13 +11,11 @@ import it.polimi.view.automaton.editing.BuchiAutomatonJTransitionCreator;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 
 public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>>  extends AutomatonButtonJPanel implements ActionListener{
@@ -34,14 +29,7 @@ public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>,
 	protected JButton addState;
 	protected JButton addTransition;
 	protected JButton addCharacter;
-	protected JButton btnLoad;
-	protected JButton btnSave;
 	
-	protected AutomatonXMLTextArea xmlarea;
-	
-	public void setXMLarea(AutomatonXMLTextArea xmlarea){
-		this.xmlarea=xmlarea;
-	}
 	
 	public BuchiButtonJPanel(Dimension d){
 		 super();
@@ -87,23 +75,7 @@ public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>,
 		 addCharacter.addActionListener(this);
 		 this.add(addCharacter);
 		 
-		 btnLoad = new JButton("Open");
-		 btnLoad.setSize(buttonDimension);
-		 btnLoad.setOpaque(true);
-		 btnLoad.setLocation(d.width/2+buttonDimension.width, d.height/2/5/20);
-		 btnLoad.setVisible(true);
-		 btnLoad.setBackground(Color.getColor("myColor"));
-		 btnLoad.addActionListener(this);
-		 this.add(btnLoad);
 		 
-		 btnSave = new JButton("Save");
-		 btnSave.setSize(buttonDimension);
-		 btnSave.setOpaque(true);
-		 btnSave.setLocation(d.width/2+(buttonDimension.width*2), d.height/2/5/20);
-		 btnSave.setVisible(true);
-		 btnSave.setBackground(Color.getColor("myColor"));
-		 btnSave.addActionListener(this);
-		 this.add(btnSave);
 	}
 	protected void setLabelText(){
 		this.label.setText("Specification");
@@ -121,16 +93,5 @@ public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>,
 		if(e.getSource().equals(this.addCharacter)){
 			new BuchiAutomatonJCharacterCreator("Character creator", l);
 		}
-		if(e.getSource().equals(this.btnSave)){
-			l.actionPerformed(
-					new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand(), (Frame)SwingUtilities.getRoot(this))
-			);
-		}
-		if(e.getSource().equals(this.btnLoad)){
-			l.actionPerformed(
-					new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand())
-					);
-		}
-		
 	}
 }

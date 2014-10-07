@@ -1,49 +1,30 @@
-package it.polimi.model.automata.ba;
+package it.polimi.model.automata.ba.state;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlType;
+
+import org.apache.commons.collections15.Transformer;
+
+import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 /**
  * @author claudiomenghi
  * contains an automata state. The state is identified by its name
  */
-@XmlType
 public class State implements Comparable<State>{
 	
 	/**
+	 * contains the id of the state
+	 */
+	protected final int id;
+	/**
 	 * contains the name of the state
 	 */
-	@XmlAttribute(name="id")
-	@XmlID
-	protected final String name;
+	protected String name;
 	
-	/**
-	 * creates a new empty state 
-	 */
-	@SuppressWarnings("unused")
-	private State(){
+	
+	protected State(int id){
+		this.id=id;
 		this.name="";
-	}
-	
-	/**
-	 * creates a new intersection state
-	 * @param s1 is the state of the first automaton
-	 * @param s2 is the state of the second automaton
-	 * @param number is the number of the state
-	 * @throws IllegalArgumentException is generated if the state s1 or the state s2 is null or if the number is different from 0,1,2
-	 */
-	protected State(State s1, State s2, int number) {
-		if(s1==null){
-			throw new IllegalArgumentException("The state s1 cannot be null");
-		}
-		if(s2==null){
-			throw new IllegalArgumentException("The state s2 cannot be null");
-		}
-		if(!(number>=0 && number<=2)){
-			throw new IllegalArgumentException("the number of the state must be equal to 0,1 or 2");
-		}
-		this.name=s1.getName()+"-"+s2.getName()+"-"+number;
 	}
 	
 	/**
@@ -51,11 +32,15 @@ public class State implements Comparable<State>{
 	 * @param name: contains the name of the state the name of the state
 	 * @throws IllegalArgumentException is raised when the name of the state is null
 	 */
-	public State(String name){
+	protected State(String name, int id){
 		super();
+		if(id<0){
+			throw new IllegalArgumentException("The id cannot be <0");
+		}
 		if(name==null){
 			throw new IllegalArgumentException("The name of the state cannot be null");
 		}
+		this.id=id;
 		this.name=name;
 	}
 	
@@ -73,8 +58,13 @@ public class State implements Comparable<State>{
 	 * @return the String representation of the AutomatonState
 	 */
 	public String toString(){
-		return this.getName();
+		return "Id: {"+this.id+"} "+"\n Name:"+this.getName();
 	}
+
+	public int getId(){
+		return this.id;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -83,6 +73,7 @@ public class State implements Comparable<State>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -99,6 +90,8 @@ public class State implements Comparable<State>{
 		if (getClass() != obj.getClass())
 			return false;
 		State other = (State) obj;
+		if (id != other.id)
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -110,7 +103,9 @@ public class State implements Comparable<State>{
 	@Override
 	public int compareTo(State o) {
 
-		return this.name.compareTo(o.name);
+		return Integer.compare(this.id, o.id);
 	}
 	
+
+
 }

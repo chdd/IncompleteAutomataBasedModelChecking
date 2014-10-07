@@ -1,7 +1,7 @@
 package it.polimi.view.incompleteautomaton;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.buchiautomaton.BuchiAutomatonJPanel;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonPaintTransformer;

@@ -1,7 +1,7 @@
 package it.polimi.view.intersectionautomaton;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelCheckerParameters;
@@ -40,7 +40,6 @@ AutomatonManagementJPanel<S1, T1, A> {
 			text="The property is possibly satisfied\n\n";
 			text=text+"Constraint:\n"+results.getConstraint();
 		}
-		((IntersectionAutomatonLoadingPanel<S, T, S1, T1, A>) this.loadingPanel).update(text);
 	}
 
 

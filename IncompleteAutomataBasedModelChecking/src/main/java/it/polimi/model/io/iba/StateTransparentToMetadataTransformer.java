@@ -1,7 +1,7 @@
 package it.polimi.model.io.iba;
 
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import org.apache.commons.collections15.Transformer;

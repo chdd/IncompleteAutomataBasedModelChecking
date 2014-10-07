@@ -1,8 +1,8 @@
-package it.polimi.model.io.ba;
+package it.polimi.model.automata.ba.io.fromfile;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.state.State;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public class BAMetadataToTransitionTransformer<BA extends BuchiAutomaton<State, 
 	public LabelledTransition<State> transform(EdgeMetadata input) {
 		
 		 ba.addCharacters(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))));
-		 LabelledTransition<State> e = new LabelledTransition<State>(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))), new State(input.getTarget()));
+		 LabelledTransition<State> e = new LabelledTransition<State>(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))), ba.getVertex(Integer.parseInt(input.getTarget())));
          return e;
 	}
 

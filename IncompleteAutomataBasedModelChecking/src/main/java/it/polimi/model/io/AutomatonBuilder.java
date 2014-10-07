@@ -2,11 +2,11 @@ package it.polimi.model.io;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.LabelledTransition;
-import it.polimi.model.automata.ba.State;
+import it.polimi.model.automata.ba.io.fromfile.BAMetadataToTransitionTransformer;
+import it.polimi.model.automata.ba.io.fromfile.BATransformer;
+import it.polimi.model.automata.ba.state.BAMetadataToStateTransformer;
+import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.io.ba.BAMetadataToStateTransformer;
-import it.polimi.model.io.ba.BAMetadataToTransitionTransformer;
-import it.polimi.model.io.ba.BATransformer;
 import it.polimi.model.io.iba.IBAMetadataToStateTransformer;
 
 import java.io.BufferedReader;
@@ -50,8 +50,7 @@ public class AutomatonBuilder{
 		graphTransformer = new BATransformer<GraphMetadata, BuchiAutomaton<State, LabelledTransition<State>>>(ba);
 		
 		/* Create the Vertex Transformer */
-		BAMetadataToStateTransformer<BuchiAutomaton<State, LabelledTransition<State>>> vertexTransformer=
-				new BAMetadataToStateTransformer<BuchiAutomaton<State, LabelledTransition<State>>>(ba);
+		BAMetadataToStateTransformer<BuchiAutomaton<State, LabelledTransition<State>>> vertexTransformer=new BAMetadataToStateTransformer<BuchiAutomaton<State,LabelledTransition<State>>>(ba);
 
 		/* Create the Edge Transformer */
 		 Transformer<EdgeMetadata, LabelledTransition<State>> edgeTransformer =new BAMetadataToTransitionTransformer<BuchiAutomaton<State, LabelledTransition<State>>>(ba);
@@ -61,7 +60,7 @@ public class AutomatonBuilder{
 		 Transformer<HyperEdgeMetadata, LabelledTransition<State>> hyperEdgeTransformer
 		 = new Transformer<HyperEdgeMetadata, LabelledTransition<State>>() {
 		      public LabelledTransition<State> transform(HyperEdgeMetadata metadata) {
-		    	  LabelledTransition<State> e = new LabelledTransition<State>(null, new State(metadata.getId()));
+		    	  LabelledTransition<State> e = new LabelledTransition<State>(null, null);
 			        
 		          return e;
 		      }
@@ -72,8 +71,6 @@ public class AutomatonBuilder{
 				new GraphMLReader2<BuchiAutomaton<State, LabelledTransition<State>>, State, LabelledTransition<State>>
 		(fileReader, graphTransformer, vertexTransformer,
 			       edgeTransformer, hyperEdgeTransformer);
-				
-				
 		BuchiAutomaton<State, LabelledTransition<State>> g = graphReader.readGraph();
 		return g;
 	}
@@ -110,7 +107,7 @@ public class AutomatonBuilder{
 		 Transformer<HyperEdgeMetadata, LabelledTransition<State>> hyperEdgeTransformer
 		 = new Transformer<HyperEdgeMetadata, LabelledTransition<State>>() {
 		      public LabelledTransition<State> transform(HyperEdgeMetadata metadata) {
-		    	  LabelledTransition<State> e = new LabelledTransition<State>(null, new State(metadata.getId()));
+		    	  LabelledTransition<State> e = new LabelledTransition<State>(null, null);
 			        
 		          return e;
 		      }
