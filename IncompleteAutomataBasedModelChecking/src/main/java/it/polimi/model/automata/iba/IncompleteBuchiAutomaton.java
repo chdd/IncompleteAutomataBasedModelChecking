@@ -86,7 +86,6 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	@SuppressWarnings("unchecked")
 	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<String> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");

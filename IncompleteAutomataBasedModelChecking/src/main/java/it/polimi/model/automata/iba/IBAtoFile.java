@@ -5,8 +5,6 @@ import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
 import it.polimi.model.io.ba.tofile.StateAcceptingToMetadataTransformer;
 import it.polimi.model.io.ba.tofile.StateInitialToMetadataTransformer;
-import it.polimi.model.io.ba.tofile.StateNameToMetadataTransformer;
-import it.polimi.model.io.ba.tofile.StateToIdTransformer;
 import it.polimi.model.io.iba.StateTransparentToMetadataTransformer;
 
 import java.io.BufferedWriter;
@@ -31,8 +29,20 @@ public class IBAtoFile {
 	public void toFile(String filePath, IncompleteBuchiAutomaton<State, LabelledTransition> iba) throws IOException{
 		
 		GraphMLWriter<State, LabelledTransition> graphWriter =new GraphMLWriter<State, LabelledTransition>();
-		graphWriter.setVertexIDs(new StateToIdTransformer<State>());
-		graphWriter.addVertexData("name", "name", "", new StateNameToMetadataTransformer<State>());
+		graphWriter.setVertexIDs(new Transformer<State, String>() {
+
+			@Override
+			public String transform(State input) {
+				return Integer.toString(input.getId());
+			}
+			
+		});
+		graphWriter.addVertexData("name", "name", "", new Transformer<State, String>() {
+			@Override
+			public String transform(State input) {
+				return input.getName();
+			}
+		});
 		
 		graphWriter.addVertexData("initial", "initial", "false", new StateInitialToMetadataTransformer<State,LabelledTransition, IncompleteBuchiAutomaton<State, LabelledTransition>>(iba));
 		graphWriter.addVertexData("accepting", "accepting", "false", new StateAcceptingToMetadataTransformer<State,LabelledTransition, IncompleteBuchiAutomaton<State, LabelledTransition>>(iba));

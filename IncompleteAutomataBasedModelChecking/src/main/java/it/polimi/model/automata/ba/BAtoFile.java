@@ -5,8 +5,6 @@ import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
 import it.polimi.model.io.ba.tofile.StateAcceptingToMetadataTransformer;
 import it.polimi.model.io.ba.tofile.StateInitialToMetadataTransformer;
-import it.polimi.model.io.ba.tofile.StateNameToMetadataTransformer;
-import it.polimi.model.io.ba.tofile.StateToIdTransformer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -31,8 +29,19 @@ public class BAtoFile {
 		
 		GraphMLWriter<State, LabelledTransition> graphWriter =new GraphMLWriter<State, LabelledTransition>();
 		
-		graphWriter.setVertexIDs(new StateToIdTransformer<State>());
-		graphWriter.addVertexData("name", "name", "", new StateNameToMetadataTransformer<State>());
+		graphWriter.setVertexIDs(new Transformer<State, String>() {
+
+			@Override
+			public String transform(State input) {
+				return Integer.toString(input.getId());
+			}
+		});
+		graphWriter.addVertexData("name", "name", "", new Transformer<State, String>() {
+			@Override
+			public String transform(State input) {
+				return input.getName();
+			}
+		});
 		
 		graphWriter.addVertexData("initial", "initial", "false", new StateInitialToMetadataTransformer<State,LabelledTransition, BuchiAutomaton<State, LabelledTransition>>(ba));
 		graphWriter.addVertexData("accepting", "accepting", "false", new StateAcceptingToMetadataTransformer<State,LabelledTransition, BuchiAutomaton<State, LabelledTransition>>(ba));
