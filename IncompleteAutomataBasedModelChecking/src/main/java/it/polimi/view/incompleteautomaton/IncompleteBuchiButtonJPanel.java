@@ -1,7 +1,7 @@
 package it.polimi.view.incompleteautomaton;
 
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.buchiautomaton.BuchiButtonJPanel;
 import it.polimi.view.incompleteautomaton.editing.IncompleteBuchiAutomatonJCharacterCreator;
@@ -12,7 +12,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class IncompleteBuchiButtonJPanel<S extends State, T extends LabelledTransition<S>, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiButtonJPanel<S,T, A> {
+public class IncompleteBuchiButtonJPanel<S extends State, T extends LabelledTransition, A extends IncompleteBuchiAutomaton<S, T>> extends BuchiButtonJPanel<S,T, A> {
 
 	public IncompleteBuchiButtonJPanel(Dimension d) {
 		super(d);

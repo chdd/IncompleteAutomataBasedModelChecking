@@ -2,6 +2,8 @@ package it.polimi.model.automata.ba;
 
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.state.StateFactory;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashMap;
@@ -23,7 +25,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @param <T> the type of the transitions
  */
 @SuppressWarnings("serial")
-public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends SparseMultigraph<S,T>{
+public class BuchiAutomaton<S extends State, T extends LabelledTransition> extends SparseMultigraph<S,T>{
 	
 	/**
 	 * contains the initial states of the {@link BuchiAutomaton}
@@ -42,6 +44,8 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	
 	protected Map<Integer, S> mapNameState;
 	
+	protected TransitionFactory<T> transitionFactory;
+	
 	/**
 	 * creates a new empty {@link BuchiAutomaton}
 	 */
@@ -51,6 +55,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.mapNameState=new HashMap<Integer,S>();
+		this.transitionFactory=new TransitionFactory<T>();
 	}
 	
 	
@@ -69,6 +74,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.mapNameState=new HashMap<Integer,S>();
+		this.transitionFactory=new TransitionFactory<T>();
 	}
 	
 	/**
@@ -180,10 +186,10 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 * 					the source is not contained into the set of the states of the automaton <br/>
 	 *					the destination of the transition is not contained into the set of the states of the automaton <br/>
 	 */
-	public void addTransition(S source, T t){
+	public void addTransition(S source, S destination, T labels){
 		
-		this.alphabet.addAll(t.getCharacter());
-		super.addEdge(t, source, t.getDestination(), EdgeType.DIRECTED);
+		this.alphabet.addAll(labels.getCharacter());
+		super.addEdge(labels, source, destination, EdgeType.DIRECTED);
 	}
 	
 	
@@ -207,50 +213,51 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public static<S extends State, T extends LabelledTransition<S>> BuchiAutomaton<State,LabelledTransition<State>> getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<String> alphabet){
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<String> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
 
+		this.reset();
+		this.addCharacters(alphabet);
 		Random r=new Random();
-		BuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
+		
 		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
 			
-			State s=stateFactory.create("s"+i);
-			a.addVertex(s);
+			S s=stateFactory.create("s"+i);
+			this.addVertex(s);
 		}
 		
 		for(int i=0; i<numInitial; i++){
-			int transp=r.nextInt(a.getVertices().size());
-			Iterator<State> it=a.getVertices().iterator();
+			int transp=r.nextInt(this.getVertices().size());
+			Iterator<S> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
-			a.addInitialState(it.next());
+			this.addInitialState(it.next());
 		}
 		for(int i=0; i<numAccepting; i++){
-			int transp=r.nextInt(a.getVertices().size());
-			Iterator<State> it=a.getVertices().iterator();
+			int transp=r.nextInt(this.getVertices().size());
+			Iterator<S> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
-			a.addAcceptState(it.next());
+			this.addAcceptState(it.next());
 		}
-		for(State s1: a.getVertices()){
-			for(State s2: a.getVertices()){
+		for(S s1: this.getVertices()){
+			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					Set<String> characters=new HashSet<String>();
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					characters.add(character);
-					a.addTransition(s1, new LabelledTransition<State>(characters, s2));
+					this.addTransition(s1, s2,  this.transitionFactory.create(characters));
 				}
 			}
 		}
-		return a;
 	}
 	public static String getRandomString(Set<String> alphabet, int position){
 
@@ -298,7 +305,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 			if(this.isAccept(currState)){
 				for(T t: this.getOutEdges(currState)){
 					// I start the second DFS if the answer of the second DFS is true I return true
-					if(this.secondDFS(new HashSet<S>(), t.getDestination(), statesOfThePath)){
+					if(this.secondDFS(new HashSet<S>(), this.getDest(t), statesOfThePath)){
 						return true;
 					}
 				}
@@ -306,7 +313,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 			// otherwise, I check each transition that leaves the state currState
 			for(T t: this.getOutEdges(currState)){
 				// I call the first DFS method, If the answer is true I return true
-				if(firstDFS(visitedStates, t.getDestination(), statesOfThePath)){
+				if(firstDFS(visitedStates, this.getDest(t), statesOfThePath)){
 					return true;
 				}
 			}
@@ -339,7 +346,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition<S>> ex
 				// for each transition that leaves the current state
 				for(T t: this.getOutEdges(currState)){
 					// if the second DFS returns a true answer than the accepting path has been found
-					if(secondDFS(visitedStates, t.getDestination(), statesOfThePath)){
+					if(secondDFS(visitedStates, this.getDest(t), statesOfThePath)){
 						return true;
 					}
 				}

@@ -1,8 +1,10 @@
 package it.polimi.model.automata.intersection;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.ConstrainedTransition;
+import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import java.util.HashSet;
@@ -19,8 +21,8 @@ import java.util.Stack;
  * @param <T> is the type of the transition in the intersection automaton
  */
 @SuppressWarnings("serial")
-public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition<S1>,S extends IntersectionState<S1>, T 
-extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
+public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
+extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 
 	/**
 	 * contains the model of the system that generates the intersection automaton
@@ -243,20 +245,21 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 			visitedStates.add(currentState);
 			
 			// for each transition in the extended automaton whit source s1
-			for(T1 t1: model.getOutEdges(s1)){
+			for(T1 t1: this.model.getOutEdges(s1)){
 				// for each transition in the extended automaton whit source s2
-				for(T1 t2: specification.getOutEdges(s2)){
+				for(T1 t2: this.specification.getOutEdges(s2)){
 					// if the characters of the two transitions are equal
 					if(t1.getCharacter().equals(t2.getCharacter())){
 						
+						
 						// creates a new state made by the states s1next and s2 next
-						S1 s1next=t1.getDestination();
-						S1 s2next=t2.getDestination();
+						S1 s1next=this.model.getDest(t1);
+						S1 s2next=this.specification.getDest(t2);
 						S p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
-						@SuppressWarnings("unchecked")
-						T t=(T) new LabelledTransition<S>(t1.getCharacter(), p);
-						this.addTransition(currentState, t);
+						ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
+						T t=ctfactory.create(t1.getCharacter());
+						this.addTransition(currentState, p, t);
 						
 						// re-executes the recursive procedure
 						this.computeIntersection(s1next, s2next, visitedStates, p);
@@ -269,12 +272,12 @@ extends LabelledTransition<S>> extends IncompleteBuchiAutomaton<S, T> {
 				// for each transition in the automaton a2
 				for(T1 t2: specification.getOutEdges(s2)){
 					// a new state is created made by the transparent state and the state s2next
-					S1 s2next=t2.getDestination();
-					S p=this.addIntersectionState(s1, t2.getDestination(), currentState);
+					S1 s2next=this.specification.getDest(t2);
+					S p=this.addIntersectionState(s1, this.specification.getDest(t2), currentState);
 					// the new state is connected by the previous one through a constrained transition
-					@SuppressWarnings("unchecked")
-					T t=(T) new ConstrainedTransition<S1,S>(t2.getCharacter(), p, s1);
-					this.addTransition(currentState, t);
+					ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
+					T t=ctfactory.create(t2.getCharacter(), s1);
+					this.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(s1, s2next, visitedStates, p);
 				}

@@ -1,8 +1,8 @@
 package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.view.automaton.AutomatonJPanel;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonPaintTransformer;
@@ -13,10 +13,8 @@ import java.awt.Dimension;
 
 import javax.swing.JComponent;
 
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 
-
-public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>> extends AutomatonJPanel<S,T,A>  {
+public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends AutomatonJPanel<S,T,A>  {
 
 	/**
 	 * 
@@ -31,8 +29,9 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition<
 	 */
 	public BuchiAutomatonJPanel(Dimension d){
 		super(d);
-		/*EditingModalGraphMouse<S, T> gm=new EditingModalGraphMouse<S, T>(vv.getRenderContext()
-				);*/
+		/* EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(vv.getRenderContext(), 
+                 new StateFactory<S>(), sgv.edgeFactory); 
+        vv.setGraphMouse(gm);*/
 	}
 	
 	protected BuchiAutomatonShapeTransformer<S,T,A> getShapeTransformer(A a){

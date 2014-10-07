@@ -3,9 +3,9 @@ package it.polimi.modelchecker.brzozowski;
 import java.util.HashSet;
 import java.util.Set;
 
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
-import it.polimi.model.automata.intersection.ConstrainedTransition;
+import it.polimi.model.automata.ba.transition.ConstrainedTransition;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
@@ -24,8 +24,8 @@ import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
  * @param <S> the type of the {@link State}s  of the intersection automaton
  * @param <T> the type of the {@link LabelledTransition}s of the intersection automaton
  */
-public class Brzozowski<S1 extends State, T1 extends LabelledTransition<S1>,S extends IntersectionState<S1>, T 
-extends LabelledTransition<S>> {
+public class Brzozowski<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
+extends ConstrainedTransition<S1>> {
 
 	/**
 	 * contains the {@link IntersectionAutomaton} to be analyzed
@@ -135,7 +135,7 @@ extends LabelledTransition<S>> {
 			for(S s2: a.getVertices()){
 				boolean setted=false;
 				for(T t: a.getOutEdges(s1)){
-					if(t.getDestination().equals(s2)){
+					if(a.getDest(t).equals(s2)){
 						// if the first state of s1 does not change and the state is transparent
 						if(t instanceof ConstrainedTransition){
 							if(!setted){

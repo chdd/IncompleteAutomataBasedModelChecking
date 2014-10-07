@@ -1,7 +1,7 @@
 package it.polimi.view.incompleteautomaton;
 
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.view.buchiautomaton.BuchiAutomatonJPanel;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonPaintTransformer;
@@ -9,7 +9,7 @@ import it.polimi.view.incompleteautomaton.transformers.IncompleteBuchiAutomatonP
 
 import java.awt.Dimension;
 
-public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition<S>, A extends IncompleteBuchiAutomaton<S,T>> extends BuchiAutomatonJPanel<S, T, A> {
+public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends IncompleteBuchiAutomaton<S,T>> extends BuchiAutomatonJPanel<S, T, A> {
 
 	/**
 	 * 

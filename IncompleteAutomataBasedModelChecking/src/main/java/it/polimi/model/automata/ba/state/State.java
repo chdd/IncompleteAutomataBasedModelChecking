@@ -1,10 +1,5 @@
 package it.polimi.model.automata.ba.state;
 
-import javax.xml.bind.annotation.XmlType;
-
-import org.apache.commons.collections15.Transformer;
-
-import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 /**
  * @author claudiomenghi

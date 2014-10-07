@@ -1,8 +1,8 @@
 package it.polimi.view.buchiautomaton.transformers;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import java.awt.Polygon;
 import java.awt.Shape;
@@ -11,7 +11,7 @@ import java.awt.geom.Ellipse2D;
 
 import org.apache.commons.collections15.Transformer;
 
-public class BuchiAutomatonShapeTransformer<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S, T>> implements Transformer<S, Shape>{
+public class BuchiAutomatonShapeTransformer<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S, T>> implements Transformer<S, Shape>{
 
 	private final int stateRadius=10;
 	

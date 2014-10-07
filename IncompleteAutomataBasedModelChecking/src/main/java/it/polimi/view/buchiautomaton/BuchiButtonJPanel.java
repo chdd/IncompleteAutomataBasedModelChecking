@@ -1,8 +1,8 @@
 package it.polimi.view.buchiautomaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.view.automaton.AutomatonButtonJPanel;
 import it.polimi.view.automaton.editing.BuchiAutomatonJCharacterCreator;
 import it.polimi.view.automaton.editing.BuchiAutomatonJStateCreator;
@@ -18,7 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 
-public class BuchiButtonJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>>  extends AutomatonButtonJPanel implements ActionListener{
+public class BuchiButtonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>>  extends AutomatonButtonJPanel implements ActionListener{
 
 	/**
 	 * 

@@ -2,8 +2,8 @@ package it.polimi.model.buchiautomaton;
 
 import static org.junit.Assert.*;
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,15 +1,15 @@
 package it.polimi.model.io.ba.tofile;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.io.graphml.DataMetadata;
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
-public class StateInitialToMetadataTransformer<S extends State, T extends LabelledTransition<S>,BA extends BuchiAutomaton<S, T>> implements Transformer<S, String>  {
+public class StateInitialToMetadataTransformer<S extends State, T extends LabelledTransition,BA extends BuchiAutomaton<S, T>> implements Transformer<S, String>  {
 
 	private BA ba;
 	public StateInitialToMetadataTransformer(BA ba){

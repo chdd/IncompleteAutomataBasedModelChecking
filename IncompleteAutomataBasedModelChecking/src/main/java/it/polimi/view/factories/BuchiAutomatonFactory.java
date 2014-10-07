@@ -1,8 +1,8 @@
 package it.polimi.view.factories;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.view.buchiautomaton.BuchiAutomatonJPanel;
 import it.polimi.view.buchiautomaton.BuchiAutomatonLoadingJPanel;
 import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
@@ -10,7 +10,7 @@ import it.polimi.view.buchiautomaton.BuchiButtonJPanel;
 
 import java.awt.Dimension;
 
-public class BuchiAutomatonFactory<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>> extends AbstractAutomatonFactory<S,T,A>{
+public class BuchiAutomatonFactory<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends AbstractAutomatonFactory<S,T,A>{
 
 	
 	public BuchiAutomatonFactory() {

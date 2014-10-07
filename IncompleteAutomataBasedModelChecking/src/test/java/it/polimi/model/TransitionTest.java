@@ -1,8 +1,8 @@
 package it.polimi.model;
 
 import static org.junit.Assert.*;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import org.junit.Test;
 

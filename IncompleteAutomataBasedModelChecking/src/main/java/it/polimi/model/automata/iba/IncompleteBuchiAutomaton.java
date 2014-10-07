@@ -1,9 +1,9 @@
 package it.polimi.model.automata.iba;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.state.StateFactory;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import java.util.Set;
  * @param <T> contains the type of the transitions of the automaton
  */
 @SuppressWarnings("serial")
-public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransition<S>> extends BuchiAutomaton<S,T>{
+public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransition> extends BuchiAutomaton<S, T>{
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -86,43 +86,43 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public static<S extends State, T extends LabelledTransition<S>> IncompleteBuchiAutomaton<State,LabelledTransition<State>> getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<String> alphabet){
+	@SuppressWarnings("unchecked")
+	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<String> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
 
+		this.reset();
 		Random r=new Random();
-		IncompleteBuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
 		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
-			State s=stateFactory.create();
+			S s=stateFactory.create();
 			if(r.nextInt(10)<=initialStateProbability*10){
-				a.addInitialState(s);
+				this.addInitialState(s);
 			}
 			else{
 				if(r.nextInt(10)<acceptingStateProbability*10){
-					a.addAcceptState(s);
+					this.addAcceptState(s);
 				}
 				else{
-					a.addVertex(s);
+					this.addVertex(s);
 				}
 			}
 			if(r.nextInt(10)<transparentStateProbability*10){
-				a.addTransparentState(s);
+				this.addTransparentState(s);
 			}
 		}
-		for(State s1: a.getVertices()){
-			for(State s2: a.getVertices()){
+		for(S s1: this.getVertices()){
+			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					Set<String> characters=new HashSet<String>();
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					characters.add(character);
-					a.addTransition(s1, new LabelledTransition<State>(characters, s2));
+					this.addTransition(s1, s2, this.transitionFactory.create(characters));
 				}
 			}
 		}
-		return a;
 	}
 	/**
 	 * generates a new random graph (note that almost every graph is connected with the parameters n, 2ln(n)/n
@@ -130,53 +130,54 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public static<S extends State, T extends LabelledTransition<S>> IncompleteBuchiAutomaton<State,LabelledTransition<State>> getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<String> alphabet){
+
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<String> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
 
+		this.reset();
+		this.addCharacters(alphabet);
 		Random r=new Random();
-		IncompleteBuchiAutomaton<State,LabelledTransition<State>> a=new IncompleteBuchiAutomaton<State,LabelledTransition<State>>(alphabet);
 		
 		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
 			stateFactory.create();
 		}
-		Iterator<State> it1=a.getVertices().iterator();
+		Iterator<S> it1=this.getVertices().iterator();
 		for(int i=0; i<numTransparentStates; i++){
-			a.addTransparentState(it1.next());
+			this.addTransparentState(it1.next());
 		}
 		for(int i=0; i<numInitial; i++){
-			int transp=r.nextInt(a.getVertices().size());
-			Iterator<State> it=a.getVertices().iterator();
+			int transp=r.nextInt(this.getVertices().size());
+			Iterator<S> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
-			a.addInitialState(it.next());
+			this.addInitialState(it.next());
 		}
 		for(int i=0; i<numAccepting; i++){
-			int transp=r.nextInt(a.getVertices().size());
-			Iterator<State> it=a.getVertices().iterator();
+			int transp=r.nextInt(this.getVertices().size());
+			Iterator<S> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
-			a.addAcceptState(it.next());
+			this.addAcceptState(it.next());
 		}
-		for(State s1: a.getVertices()){
-			for(State s2: a.getVertices()){
+		for(S s1: this.getVertices()){
+			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					Set<String> characters=new HashSet<String>();
 					
 					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					characters.add(character);
-					a.addTransition(s1, new LabelledTransition<State>(characters, s2));
+					this.addTransition(s1, s2, this.transitionFactory.create(characters));
 				}
 			}
 		}
-		return a;
 	}
 	public static String getRandomString(Set<String> alphabet, int position){
 

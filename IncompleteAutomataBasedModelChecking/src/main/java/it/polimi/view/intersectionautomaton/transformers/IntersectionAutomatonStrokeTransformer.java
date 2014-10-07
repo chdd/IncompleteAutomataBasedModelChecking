@@ -1,7 +1,8 @@
 package it.polimi.view.intersectionautomaton.transformers;
 
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.ConstrainedTransition;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStrokeTransformer;
@@ -9,7 +10,7 @@ import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStrokeTransforme
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 
-public class IntersectionAutomatonStrokeTransformer<S extends State, T extends LabelledTransition<S>, S1 extends IntersectionState<S>, T1 extends LabelledTransition<S1>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
+public class IntersectionAutomatonStrokeTransformer<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
 		BuchiAutomatonStrokeTransformer<S1, T1, A> {
 
 	public IntersectionAutomatonStrokeTransformer(A a) {

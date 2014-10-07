@@ -1,33 +1,20 @@
-package it.polimi.model.automata.ba;
-
-import it.polimi.model.automata.ba.state.State;
+package it.polimi.model.automata.ba.transition;
 
 import java.util.Iterator;
 import java.util.Set;
-
-import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author Claudio Menghi
  * contains an automata transition. The transition contains the character that labels the transition and the destination state
  * 
  */
-public class LabelledTransition<S extends State> extends Transition<S>{
+public class LabelledTransition{
 	
+	private final int id;
 	/**
 	 * the character that labels the transition
 	 */
-	@XmlElement(name="character")
-	private final Set<String> character;
-	
-	/**
-	 * creates a new empty transition
-	 */
-	@SuppressWarnings("unused")
-	private LabelledTransition(){
-		super();
-		this.character=null;
-	}
+	private Set<String> character;
 	
 	/** 
 	 * Constructs a new singleton interval transition. 
@@ -35,12 +22,11 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 	 * @param to destination state: is the destination of the transition
 	 * @throws IllegalArgumentException is generated is the character that labels the transition is null or if the destination state is null
 	 */
-	public LabelledTransition(Set<String> c, S to)	{
-		super(to);
+	protected LabelledTransition(Set<String> c, int id)	{
+		this.id=id;
 		if(c==null){
 			throw new IllegalArgumentException("The character that labels the transition cannot be null");
 		}
-		
 		this.character=c;
 	}
 
@@ -57,7 +43,7 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 	@Override
 	public String toString() {
 		if(this.character.size()==1){
-			return this.character.iterator().next();
+			return "Id: {"+Integer.toString(this.id)+"}\t"+this.character.iterator().next();
 		}
 		else{
 			Iterator<String> it=this.character.iterator();
@@ -66,7 +52,14 @@ public class LabelledTransition<S extends State> extends Transition<S>{
 				String retadd=it.next();
 				ret+="^"+retadd;
 			}
-			return ret;
+			return "Id: {"+Integer.toString(this.id)+"}\t"+ret;
 		}
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
 	}
 }

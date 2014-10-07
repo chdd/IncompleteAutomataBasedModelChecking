@@ -1,8 +1,8 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,7 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class AutomatonManagementJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S, T>> extends JPanel {
+public class AutomatonManagementJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S, T>> extends JPanel {
 
 	protected AutomatonLoadingPanel<S, T, A> loadingPanel;
 	protected AutomatonJPanel<S,T, A> automatonPanel;

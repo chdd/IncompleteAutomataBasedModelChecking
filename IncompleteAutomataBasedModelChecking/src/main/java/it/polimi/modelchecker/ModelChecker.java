@@ -1,8 +1,9 @@
 package it.polimi.modelchecker;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.ConstrainedTransition;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
@@ -17,7 +18,7 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * @param <S>  is the type of the states of the {@link IntersectionAutomaton}
  * @param <T>  is the type of the states of the {@link IntersectionAutomaton}
  */
-public class ModelChecker<S1 extends State, T1 extends LabelledTransition<S1>, S extends IntersectionState<S1>, T extends LabelledTransition<S>> {
+public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>> {
 	
 	
 	/**

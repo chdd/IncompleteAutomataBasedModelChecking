@@ -1,8 +1,8 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.view.buchiautomaton.transformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
@@ -23,7 +23,6 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
@@ -34,7 +33,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  * @author claudiomenghi
  *
  */
-public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition<S>, A extends BuchiAutomaton<S,T>> extends JPanel {
+public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends JPanel {
 
 	/**
 	 * contains the {@link Graph} to be inserted in the component

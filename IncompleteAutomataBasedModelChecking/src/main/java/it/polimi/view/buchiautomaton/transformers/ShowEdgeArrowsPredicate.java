@@ -1,14 +1,14 @@
 package it.polimi.view.buchiautomaton.transformers;
 
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import org.apache.commons.collections15.Predicate;
 
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.Context;
 
-public class ShowEdgeArrowsPredicate<S extends State, T extends LabelledTransition<S>> implements Predicate<Context<Graph<S, T>, T>> {
+public class ShowEdgeArrowsPredicate<S extends State, T extends LabelledTransition> implements Predicate<Context<Graph<S, T>, T>> {
 
 	protected boolean show_d;
 	protected boolean show_u;

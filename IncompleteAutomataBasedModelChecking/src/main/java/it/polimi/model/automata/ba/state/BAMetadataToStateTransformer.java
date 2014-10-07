@@ -1,13 +1,13 @@
 package it.polimi.model.automata.ba.state;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
-public class BAMetadataToStateTransformer<BA extends BuchiAutomaton<State, LabelledTransition<State>>> implements Transformer<NodeMetadata, State> {
+public class BAMetadataToStateTransformer<BA extends BuchiAutomaton<State, LabelledTransition>> implements Transformer<NodeMetadata, State> {
 	
 	protected BA ba;
 	public BAMetadataToStateTransformer(BA ba){

@@ -1,8 +1,9 @@
 package it.polimi.performance;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.ba.transition.ConstrainedTransition;
+import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.io.AutomatonBuilder;
@@ -62,12 +63,13 @@ public class PerformanceEvaluator{
 					else{
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", true)));
 					}
-					IncompleteBuchiAutomaton<State, LabelledTransition<State>> a1 = IncompleteBuchiAutomaton.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
+					IncompleteBuchiAutomaton<State, LabelledTransition> a1 =new IncompleteBuchiAutomaton<State, LabelledTransition>();
+					a1.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
 					AutomatonBuilder builder=new AutomatonBuilder();
 					
-					BuchiAutomaton<State, LabelledTransition<State>>  a2=builder.loadBAAutomaton("src/main/resources/Automaton2.xml");
+					BuchiAutomaton<State, LabelledTransition>  a2=builder.loadBAAutomaton("src/main/resources/Automaton2.xml");
 					
-					ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>> mc=new ModelChecker<State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<IntersectionState<State>>>(a1, a2, mp);
+					ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> mc=new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(a1, a2, mp);
 					mc.check();
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());

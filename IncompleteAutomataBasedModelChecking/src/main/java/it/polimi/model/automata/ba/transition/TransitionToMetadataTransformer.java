@@ -1,12 +1,11 @@
-package it.polimi.model.io.ba.tofile;
+package it.polimi.model.automata.ba.transition;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.LabelledTransition;
 import it.polimi.model.automata.ba.state.State;
 
 import org.apache.commons.collections15.Transformer;
 
-public class TransitionToMetadataTransformer<S extends State, T extends LabelledTransition<S>,BA extends BuchiAutomaton<S, T>> implements Transformer<T, String>  {
+public class TransitionToMetadataTransformer<S extends State, T extends LabelledTransition,BA extends BuchiAutomaton<S, T>> implements Transformer<T, String>  {
 
 
 	public TransitionToMetadataTransformer(){
