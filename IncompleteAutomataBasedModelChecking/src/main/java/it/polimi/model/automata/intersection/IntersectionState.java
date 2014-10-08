@@ -78,7 +78,7 @@ public class IntersectionState<S extends State> extends State{
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		int result = 1;
 		result = prime * result + number;
 		result = prime * result + ((s1 == null) ? 0 : s1.hashCode());
 		result = prime * result + ((s2 == null) ? 0 : s2.hashCode());
@@ -92,12 +92,9 @@ public class IntersectionState<S extends State> extends State{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		IntersectionState<S> other = (IntersectionState<S>) obj;
+		IntersectionState other = (IntersectionState) obj;
 		if (number != other.number)
 			return false;
 		if (s1 == null) {
@@ -111,5 +108,7 @@ public class IntersectionState<S extends State> extends State{
 		} else if (!s2.equals(other.s2))
 			return false;
 		return true;
-	}	
+	}
+
+	
 }

@@ -20,9 +20,15 @@ public class BAMetadataToTransitionTransformer<BA extends BuchiAutomaton<State, 
 	
 	@Override
 	public LabelledTransition transform(EdgeMetadata input) {
-		
-		 ba.addCharacters(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))));
-		 LabelledTransition e = new LabelledTransition(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))), Integer.parseInt(input.getId()));
+		LabelledTransition e;
+		if(input.getProperty("labels")!=null){
+			ba.addCharacters(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))));
+			e = new LabelledTransition(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))), Integer.parseInt(input.getId()));
+		}
+		else{
+			e = new LabelledTransition(new HashSet<String>(), Integer.parseInt(input.getId()));
+			
+		}
          return e;
 	}
 

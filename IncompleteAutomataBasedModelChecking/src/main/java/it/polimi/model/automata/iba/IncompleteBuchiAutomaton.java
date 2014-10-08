@@ -141,13 +141,13 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 		
 		StateFactory<S> stateFactory=new StateFactory<S>();
 		for(int i=0; i<n;i++){
-			stateFactory.create();
+			this.addVertex(stateFactory.create());
 		}
 		Iterator<S> it1=this.getVertices().iterator();
-		for(int i=0; i<numTransparentStates; i++){
+		for(int i=0; i< Math.min(numTransparentStates, this.getVertexCount()); i++){
 			this.addTransparentState(it1.next());
 		}
-		for(int i=0; i<numInitial; i++){
+		for(int i=0; i<Math.min(numInitial, this.getVertexCount()); i++){
 			int transp=r.nextInt(this.getVertices().size());
 			Iterator<S> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)

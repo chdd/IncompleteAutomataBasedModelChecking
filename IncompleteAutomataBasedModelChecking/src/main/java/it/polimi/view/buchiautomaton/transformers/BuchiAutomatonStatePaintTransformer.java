@@ -9,11 +9,11 @@ import java.awt.Paint;
 
 import org.apache.commons.collections15.Transformer;
 
-public class BuchiAutomatonPaintTransformer<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S, T>> implements Transformer<S, Paint> {
+public class BuchiAutomatonStatePaintTransformer<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S, T>> implements Transformer<S, Paint> {
 
 	protected A a;
 	
-	public BuchiAutomatonPaintTransformer(A a){
+	public BuchiAutomatonStatePaintTransformer(A a){
 		this.a=a;
 	}
 	@Override

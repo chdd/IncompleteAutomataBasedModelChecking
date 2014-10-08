@@ -10,17 +10,14 @@ import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
@@ -33,92 +30,96 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  * @author claudiomenghi
  *
  */
-public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends JPanel {
+@SuppressWarnings("serial")
+public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends VisualizationViewer<S,T> {
 
+	private final Dimension minSize=new Dimension(50,50);
+	private final int marginSize=0;
 	/**
 	 * contains the {@link Graph} to be inserted in the component
 	 */
-	protected Graph<S, T> graph;
 	
-	protected Layout<S,T> layout;
-	protected VisualizationViewer<S, T> vv;
+	protected ActionListener view;
 	
-	public AutomatonJPanel(Dimension d){
+	public AutomatonJPanel(Dimension d, A  a, ActionListener view){
+		super(new FRLayout<S,T>(a));
+		
 		if(d==null){
 			throw new IllegalArgumentException("The dimension cannot be null");
 		}
-		this.setSize(d);
-		this.setMinimumSize(d);
-		this.setMaximumSize(d);
-		this.setPreferredSize(d);
-		this.setBackground(Color.WHITE);
+		this.view=view;
 		
-		this.graph = new SparseMultigraph<S,T>();
-		this.layout=new CircleLayout<S,T>(this.graph);
-		//Dimension size=new Dimension(this.getSize().width, this.getSize().height);
-		//layout.setSize(size);
-		this.vv=new VisualizationViewer<S,T>(layout);
-		vv.setSize(d);
-		vv.setMinimumSize(d);
-		vv.setMaximumSize(d);
-		vv.setBorder(BorderFactory.createCompoundBorder(
+		this.setBackground(Color.WHITE);
+		this.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createRaisedBevelBorder(), 
 				BorderFactory.createLoweredBevelBorder()));
-		vv.setPreferredSize(d);
-		vv.setVisible(true);
-		vv.setFocusable(true);
-		vv.setBackground(Color.WHITE);
-		vv.setAutoscrolls(true);
 		
 		
+			
+		this.setSize(new Dimension(d.width-marginSize, d.height-marginSize));
+		this.setMinimumSize(minSize);
+		this.setMaximumSize(new Dimension(d.width-marginSize, d.height-marginSize));
+	
+		this.setPreferredSize(new Dimension(d.width-marginSize, d.height-marginSize));
+		this.setVisible(true);
+		this.setFocusable(true);
+		this.setBackground(Color.WHITE);
+		this.setAutoscrolls(true);
+	
+		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
+	
+		this.update(a);
 		
-		DefaultModalGraphMouse<S, T> gm=new DefaultModalGraphMouse<S,T>();
-		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
-		vv.setGraphMouse(gm);
-		vv.addKeyListener(gm.getModeKeyListener());
-		this.add(vv);
 	}
 	
 	public void update(A  a){
 		
-		this.loadAutomata(a);
-		this.layout.reset();
-		this.layout=new FRLayout<S,T>(this.graph);
-		this.vv.setGraphLayout(layout);
+		this.getGraphLayout().setGraph(a);
 		
-		vv.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
-		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
-		vv.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
-		vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<T>());
-		vv.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
-		vv.getRenderContext().setVertexStrokeTransformer(this.getStrokeTransformer(a));
-		vv.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeTransformer(a));
-		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
-		EdgeLabelRenderer edgeLabelRenderer=vv.getRenderContext().getEdgeLabelRenderer();
+		
+		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
+		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
+		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
+		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<T>());
+		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
+		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
+		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
+				
+		this.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
+		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
-		vv.getRenderContext().setLabelOffset(20);
+		this.getRenderContext().setLabelOffset(20);
 		
-		vv.repaint();
+		this.repaint();
 		
 		this.repaint();
 	}
-	
-	protected void loadAutomata(A a){
-		this.graph=a;
+	public void update(){
+		this.repaint();
 	}
+	
+	
+	
+	public void setTranformingMode(){
+		DefaultModalGraphMouse<S, T> gm=new DefaultModalGraphMouse<S,T>();
+		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
+		this.setGraphMouse(gm);
+		this.addKeyListener(gm.getModeKeyListener());
+		
+	}
+	
+	public abstract void setEditingMode();
+	
 	
 	protected abstract Transformer<S, Shape> getShapeTransformer(A a);
 	
-	protected abstract Transformer<S, Stroke> getStrokeTransformer(A a);
+	protected abstract Transformer<T, Stroke> getStrokeEdgeStrokeTransformer();
+	protected abstract Transformer<S, Stroke> getStateStrokeTransformer(A a);
 	
-	protected abstract Transformer<T, Stroke> getStrokeEdgeTransformer(A a);
 	
 	protected abstract Transformer<S,Paint> getPaintTransformer(A a);
 		
 	
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	
 }

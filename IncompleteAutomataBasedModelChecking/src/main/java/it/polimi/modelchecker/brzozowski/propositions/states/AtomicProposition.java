@@ -229,7 +229,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 * @see {@link AbstractProposition}
 	 */
 	public String toString(){
-		return "<"+state+","+this.regularExpression+">";
+		return "<"+state.getId()+","+this.regularExpression+">";
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

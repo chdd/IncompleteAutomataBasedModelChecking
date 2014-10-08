@@ -12,12 +12,9 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.view.buchiautomaton.BuchiAutomatonManagementJPanel;
-import it.polimi.view.factories.BuchiAutomatonFactory;
-import it.polimi.view.factories.IncompleteAutomatonFactory;
-import it.polimi.view.factories.IntersectionAutomatonFactory;
-import it.polimi.view.incompleteautomaton.IncompleteBuchiAutomatonManagementJPanel;
-import it.polimi.view.intersectionautomaton.IntersectionAutomatonManagementJPanel;
+import it.polimi.view.automaton.BuchiAutomatonJPanel;
+import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
+import it.polimi.view.intersectionautomaton.IntersectionAutomatonJPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -30,6 +27,7 @@ import java.util.Observable;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -40,12 +38,18 @@ import javax.xml.bind.JAXBException;
 
 public class View<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>> extends Observable implements ViewInterface<S1,T1,S,T>, ActionListener{
 
-	private IncompleteBuchiAutomatonManagementJPanel<S1,T1, IncompleteBuchiAutomaton<S1, T1>>  modelPanel;
-	private BuchiAutomatonManagementJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanel;
-	private IntersectionAutomatonManagementJPanel<S1, T1, S, T, IntersectionAutomaton<S1, T1, S, T>> intersectionPanel;
+	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>  modelPanel;
+	private BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanel;
+	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> intersectionPanel;
 	private Dimension panelDimensions;
 	private JFrame jframe;
-	public View() throws JAXBException {
+	private ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> resultsJPanel;
+	
+	private static int margin=10;
+	
+	public View(IncompleteBuchiAutomaton<S1, T1> model,
+			BuchiAutomaton<S1, T1> specification,
+			IntersectionAutomaton<S1, T1,S,T> intersection) throws JAXBException {
 		
 		
 		 jframe=new JFrame();
@@ -61,7 +65,6 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		
 		 Dimension contentPanelSize=new Dimension(screenSize.width - scnMax.left -scnMax.right , screenSize.height - scnMax.bottom -scnMax.top - this.modelMenu.getHeight());	
 			
-		 System.out.println(this.modelMenu.getHeight());
 		 panelDimensions=new Dimension(contentPanelSize.width/2, contentPanelSize.height/2);
 		 
 		 
@@ -75,34 +78,43 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 container.setLayout(new BoxLayout(container,BoxLayout.X_AXIS));
 		
 		 
-		 JPanel c = new JPanel();
-		 c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
-		 IncompleteAutomatonFactory<S1, T1, IncompleteBuchiAutomaton<S1,T1>> factoryIncompleteBa=
-				 new IncompleteAutomatonFactory<S1, T1, IncompleteBuchiAutomaton<S1,T1>>();
-		 
-		 this.modelPanel=
-				 factoryIncompleteBa.getPanel(panelDimensions);
-		 c.add(modelPanel);
-		 this.modelPanel.setActionListener(this);
-		 c.setVisible(true);
-		 
-		 BuchiAutomatonFactory<S1,T1, BuchiAutomaton<S1, T1>> factoryBa=new BuchiAutomatonFactory<S1,T1, BuchiAutomaton<S1, T1>>();
-		 this.specificationPanel=
-				 factoryBa.getPanel(panelDimensions);
-		 this.specificationPanel.setActionListener(this);
-		 c.add(specificationPanel);
-		 
-		 container.add(c);
-		 
-		 
+		 JPanel container1=new JPanel();
+		 container1.setLayout(new BoxLayout(container1,BoxLayout.Y_AXIS));
 		
+		 JLabel modelLabel=new JLabel("Model");
+		 container1.add(modelLabel);
+		 this.modelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(panelDimensions, model, this);
+		 container1.add(modelPanel);
 		 
-		 IntersectionAutomatonFactory<S1, T1, S, T, IntersectionAutomaton<S1, T1, S, T>> factoryIntersection=
-				 new  IntersectionAutomatonFactory<S1, T1, S, T, IntersectionAutomaton<S1, T1, S, T>>();
-		
-		 this.intersectionPanel=factoryIntersection.getPanel(automatonManagementPanelDimension);
-		
-		 container.add(intersectionPanel);
+		 JLabel specificationLabel=new JLabel("Specification");
+		 container1.add(specificationLabel);
+		 	
+		 this.specificationPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(panelDimensions, specification, this);
+		 container1.add(specificationPanel);
+		 
+		 container.add(container1);
+		 
+		 JPanel container2=new JPanel();
+		 container2.setLayout(new BoxLayout(container2,BoxLayout.Y_AXIS));
+		 
+		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
+		 container2.add(intersectionLabel);
+		 this.intersectionPanel=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(
+				 new Dimension(automatonManagementPanelDimension.width,
+						 automatonManagementPanelDimension.height/4*3 -margin)
+				 , intersection, this);
+		 container2.add(intersectionPanel);
+			
+		 JLabel resultsLabel=new JLabel("Model Checking results");
+		 container2.add(resultsLabel);
+		 
+		 this.resultsJPanel=new ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(
+				 new Dimension(automatonManagementPanelDimension.width,
+						 automatonManagementPanelDimension.height/4*1 -margin)
+				 );
+		 container2.add(resultsJPanel);
+			
+		 container.add(container2);
 		 container.setVisible(true);
 		 container.setVisible(true);
 		 jframe.add(container);
@@ -115,32 +127,21 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	
 	@Override
 	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model){
-		this.modelPanel.updateAutomatonPanel(model);
-		this.modelPanel.updateLoadingPanel(model);
-		
-		jframe.repaint();
+		this.modelPanel.update(model);
 	}
 	@Override
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification){
-		this.specificationPanel.updateAutomatonPanel(specification);
-		
-		jframe.repaint();
-		
+		this.specificationPanel.update(specification);
 	}
 
 	@Override
 	public void updateIntersection(IntersectionAutomaton<S1, T1,S,T> intersection){
-		this.intersectionPanel.updateAutomatonPanel(intersection);
-		jframe.repaint();
-		
+		this.intersectionPanel.update(intersection);
 	}
 
 	@Override
 	public void updateVerificationResults(ModelCheckerParameters<S1> verificationResults) {
-		this.intersectionPanel.updateVerificationResults(verificationResults);
-		jframe.repaint();
-		
-		
+		this.resultsJPanel.updateResults(verificationResults);
 	}
 
 	@Override
@@ -160,10 +161,24 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 				}
 				else{
 					if(e.getSource().equals(this.modelOpenItem)){
+						System.out.println("notify open model");
 						this.notifyObservers(new LoadModel(e.getSource(), e.getID(), e.getActionCommand()));
 					}
 					else{
-						this.notifyObservers(e);
+						if(e.getSource().equals(this.editItem)){
+							this.modelPanel.setEditingMode();
+							this.specificationPanel.setEditingMode();
+						}
+						else{
+							if(e.getSource().equals(this.trasformItem)){
+								this.modelPanel.setTranformingMode();
+								this.specificationPanel.setTranformingMode();
+							}
+							else{
+								
+								this.notifyObservers(e);
+							}
+						}
 					}
 				}
 			}
@@ -176,7 +191,13 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	
 	private JMenuBar menuBar;
 	private JMenu modelMenu;
+	private JMenu editMenu;
+	
 	private JMenuItem modelOpenItem;
+	private JMenuItem editItem;
+	
+	private JMenuItem trasformItem;
+	
 	private JMenuItem modelSaveItem;
 	private JMenuItem specificationOpenItem;
 	private JMenuItem specificationSaveItem;
@@ -208,9 +229,26 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		specificationSaveItem.setMnemonic(KeyEvent.VK_O);
 		specificationSaveItem.addActionListener(this);
 		
-		
-		
 		menuBar.add(modelMenu);
+		
+		editMenu=new JMenu("Project");
+		editMenu.addActionListener(this);
+		
+		editItem = new JMenuItem("Edit", KeyEvent.VK_T);
+		editMenu.add(editItem);
+		editItem.setMnemonic(KeyEvent.VK_O);
+		editItem.addActionListener(this);
+		
+		trasformItem = new JMenuItem("Trasform", KeyEvent.VK_T);
+		editMenu.add(trasformItem);
+		trasformItem.setMnemonic(KeyEvent.VK_O);
+		trasformItem.addActionListener(this);
+		
+		menuBar.add(editMenu);
+
+
+		
+		
 		jframe.setJMenuBar(menuBar);
 		menuBar.setVisible(true);
 		

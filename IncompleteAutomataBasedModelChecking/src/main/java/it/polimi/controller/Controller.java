@@ -50,16 +50,30 @@ public class Controller implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		 try{
-			
-			ActionInterface a=(ActionInterface) arg;
-			a.perform(model);
-			this.update();
-		 } 
-		 catch(Exception e) {
-			 e.printStackTrace();
-			this.view.displayErrorMessage(e.getMessage());
+		
+		if(arg instanceof ActionInterface)
+		{	ActionInterface a=(ActionInterface) arg;
+			try {
+				a.perform(model);
+			} catch (Exception e) {
+				e.printStackTrace();
+				this.view.displayErrorMessage(e.toString());
+			}
+			this.updateInputs();
 		}
+		else{
+			 this.update();
+		}
+		
+	}
+	
+	private void updateInputs(){
+		
+		System.out.println(this.model.getModel());
+		System.out.println(this.model.getSpecification());
+		this.view.updateModel(this.model.getModel());
+		this.view.updateSpecification(this.model.getSpecification());
+		this.update();
 	}
 	
 	/**
@@ -67,15 +81,15 @@ public class Controller implements Observer{
 	 */
 	private void update(){
 		
-		this.view.updateModel(model.getModel());
-		this.view.updateSpecification(model.getSpecification());
 		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
 		
 		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> mc=new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model.getModel(), model.getSpecification(), mp);
 		mc.check();
+		this.model.changeIntersection(mc.getIntersection());
 		this.view.updateIntersection(model.getIntersection());
 		
 		this.view.updateVerificationResults(mp);
+		
 	}
 	
 

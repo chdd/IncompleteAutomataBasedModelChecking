@@ -30,6 +30,9 @@ public class LabelledTransition{
 		this.character=c;
 	}
 
+	public void addCharacter(String character){
+		this.character.add(character);
+	}
 	/**
 	 * @return the character that labels the transition
 	 */
@@ -42,8 +45,11 @@ public class LabelledTransition{
 	 */
 	@Override
 	public String toString() {
+		if(this.character.size()==0){
+			return "Id: {"+Integer.toString(this.id)+"} Labels:{}";
+		}
 		if(this.character.size()==1){
-			return "Id: {"+Integer.toString(this.id)+"}\t"+this.character.iterator().next();
+			return "Id: {"+Integer.toString(this.id)+"}\t Labels:{"+this.character.iterator().next()+"}";
 		}
 		else{
 			Iterator<String> it=this.character.iterator();
@@ -52,7 +58,7 @@ public class LabelledTransition{
 				String retadd=it.next();
 				ret+="^"+retadd;
 			}
-			return "Id: {"+Integer.toString(this.id)+"}\t"+ret;
+			return "Id: {"+Integer.toString(this.id)+"}\t Labels:{"+ret+"}";
 		}
 	}
 

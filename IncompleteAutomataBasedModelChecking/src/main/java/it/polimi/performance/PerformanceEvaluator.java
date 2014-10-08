@@ -33,7 +33,7 @@ public class PerformanceEvaluator{
 	
 	private static final int initialNumberOfTransparentStates=1;
 	private static final int incrementNumberOfTransparentStates=1;
-	private static final int maxNumberTransparentStates=10;
+	private static final int maxNumberTransparentStates=20;
 	
 	private static final int numInitialStates=2;
 	private static final int numAcceptingStates=2;

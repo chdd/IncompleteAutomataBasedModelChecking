@@ -94,6 +94,9 @@ public interface ModelInterface {
 	
 	public void addCharacterToTheModed(String character);
 	public void addCharacterToTheSpecification(String character);
+	
+	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection);
+		
 
 		
 	

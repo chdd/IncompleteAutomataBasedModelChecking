@@ -9,13 +9,14 @@ import java.awt.Stroke;
 
 import org.apache.commons.collections15.Transformer;
 
-public class BuchiAutomatonStrokeTransformer<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S, T>> implements Transformer<S, Stroke>{
+public class BuchiAutomatonStateStrokeTransofmer<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S, T>> implements Transformer<S, Stroke> {
+
 	protected A a;
 	
-	public BuchiAutomatonStrokeTransformer(A a){
+	public BuchiAutomatonStateStrokeTransofmer(A a){
 		this.a=a;
 	}
-
+	
 	@Override
 	public Stroke transform(S input) {
 		return new BasicStroke();

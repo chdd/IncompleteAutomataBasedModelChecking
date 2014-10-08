@@ -47,13 +47,17 @@ public class State implements Comparable<State>{
 		return name;
 	}
 	
+	public void setName(String name){
+		this.name=name;
+	}
+	
 	@Override
 	/**
 	 * returns a String representation of the AutomatonState
 	 * @return the String representation of the AutomatonState
 	 */
 	public String toString(){
-		return "Id: {"+this.id+"} "+"\n Name:"+this.getName();
+		return "Id: {"+this.id+"} "+"\n Name: {"+this.getName()+"}";
 	}
 
 	public int getId(){
@@ -61,6 +65,7 @@ public class State implements Comparable<State>{
 	}
 	
 
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -69,7 +74,6 @@ public class State implements Comparable<State>{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -86,11 +90,6 @@ public class State implements Comparable<State>{
 			return false;
 		State other = (State) obj;
 		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}

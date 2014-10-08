@@ -165,6 +165,10 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 		
 	}
+	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection){
+		this.intersection=intersection;
+	}
+	
 	@Override
 	public void addCharacterToTheSpecification(String character) {
 		this.specification.addCharacter(character);

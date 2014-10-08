@@ -1,4 +1,4 @@
-package it.polimi.view.intersectionautomaton;
+package it.polimi.view;
 
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
@@ -6,20 +6,23 @@ import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.view.automaton.AutomatonButtonJPanel;
-import it.polimi.view.automaton.AutomatonLoadingPanel;
 
 import java.awt.Dimension;
 import java.awt.TextArea;
 
+import javax.swing.JPanel;
+
 @SuppressWarnings("serial")
-public class IntersectionAutomatonLoadingPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends AutomatonLoadingPanel<S1,T1,A> {
+public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends JPanel {
 
 	private TextArea xmlArea;
 	
-	public IntersectionAutomatonLoadingPanel(Dimension d, AutomatonButtonJPanel jButtonPanel, TextArea jAutomatonTextArea) {
-		super(d, jButtonPanel);
-		 this.xmlArea=jAutomatonTextArea;
+	public ResultsJPanel(Dimension d) {
+		 this.xmlArea=new TextArea();
+		 this.xmlArea.setSize(d);
+		 this.xmlArea.setPreferredSize(d);
+		 this.setPreferredSize(d);
+		 this.setMaximumSize(d);
 		 this.add(this.xmlArea);
 	}
 	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){

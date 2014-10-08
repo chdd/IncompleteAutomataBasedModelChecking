@@ -62,11 +62,11 @@ extends ConstrainedTransition<S1>> {
 			
 			// the matrixes t and s are computed
 			AbstractProposition<S1>[][] t=this.getConstraintT();
-			AbstractProposition<S1>[] s=this.getConstrainedS(accept);
+			AbstractProposition<S1>[] constr=this.getConstrainedS(accept);
 			
 			// the system of equations described by the matrixes t and s is solved
 			//System.out.println("solving the system");
-			this.solveSystem(t, s);
+			this.solveSystem(t, constr);
 			//System.out.println("system solved");
 			
 			// each initial state is analyzed
@@ -75,7 +75,7 @@ extends ConstrainedTransition<S1>> {
 				//System.out.println("analyzing the initial state: computing the constraint");
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
-				AbstractProposition<S1> newconstraint=s[this.statePosition(init, states)].omega();
+				AbstractProposition<S1> newconstraint=constr[this.statePosition(init, states)].concatenate(constr[this.statePosition(accept, states)].omega());
 				
 				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
@@ -137,7 +137,7 @@ extends ConstrainedTransition<S1>> {
 				for(T t: a.getOutEdges(s1)){
 					if(a.getDest(t).equals(s2)){
 						// if the first state of s1 does not change and the state is transparent
-						if(t instanceof ConstrainedTransition){
+						if(t.getConstrainedState()!=null){
 							if(!setted){
 								ret[i][j]=new AtomicProposition<S1>(s1.getS1(),t.getCharacter()+"");
 							}

@@ -6,6 +6,10 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
 <desc>initial</desc>
 <default>false</default>
 </key>
+<key id="name" for="node">
+<desc>name</desc>
+<default></default>
+</key>
 <key id="accepting" for="node">
 <desc>accepting</desc>
 <default>false</default>
@@ -15,37 +19,40 @@ xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
 <default></default>
 </key>
 <graph edgedefault="directed">
-<node id="s4">
-<data key="initial">true</data>
+<node id="1">
+<data key="initial">false</data>
+<data key="name">s5</data>
 <data key="accepting">false</data>
 </node>
-<node id="s5">
+<node id="2">
 <data key="initial">false</data>
-<data key="accepting">false</data>
-</node>
-<node id="s6">
-<data key="initial">false</data>
+<data key="name">s6</data>
 <data key="accepting">true</data>
 </node>
-<edge source="s5" target="s5">
-<data key="labels">b</data>
-</edge>
-<edge source="s4" target="s4">
+<node id="0">
+<data key="initial">true</data>
+<data key="name">s4</data>
+<data key="accepting">false</data>
+</node>
+<edge id="0" source="0" target="0">
 <data key="labels">a</data>
 </edge>
-<edge source="s6" target="s6">
+<edge id="1" source="0" target="1">
 <data key="labels">b</data>
 </edge>
-<edge source="s4" target="s5">
+<edge id="2" source="1" target="1">
 <data key="labels">b</data>
 </edge>
-<edge source="s5" target="s6">
+<edge id="3" source="1" target="2">
 <data key="labels">c</data>
 </edge>
-<edge source="s6" target="s6">
+<edge id="4" source="2" target="2">
 <data key="labels">a</data>
 </edge>
-<edge source="s6" target="s6">
+<edge id="5" source="2" target="2">
+<data key="labels">b</data>
+</edge>
+<edge id="6" source="2" target="2">
 <data key="labels">c</data>
 </edge>
 </graph>

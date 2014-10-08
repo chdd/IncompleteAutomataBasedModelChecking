@@ -28,9 +28,7 @@ public class ConstrainedTransition<S1 extends State> extends LabelledTransition 
 	 */
 	protected ConstrainedTransition(Set<String> c,S1 constrainedState, int id) {
 		super(c, id);
-		if(constrainedState==null){
-			throw new IllegalArgumentException("The constrained state cannot be null");
-		}
+		
 		this.constrainedState=constrainedState;
 	}
 
@@ -43,6 +41,11 @@ public class ConstrainedTransition<S1 extends State> extends LabelledTransition 
 	
 	@Override
 	public String toString() {
-		return "<"+constrainedState.getName()+","+super.getCharacter()+">";
+		if(constrainedState!=null){
+			return "<"+constrainedState.getName()+","+super.getCharacter()+">";
+		}
+		else{
+			return super.toString();
+		}
 	}
 }

@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
 
@@ -25,7 +25,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @param <T> the type of the transitions
  */
 @SuppressWarnings("serial")
-public class BuchiAutomaton<S extends State, T extends LabelledTransition> extends SparseMultigraph<S,T>{
+public class BuchiAutomaton<S extends State, T extends LabelledTransition> extends DirectedSparseGraph<S,T>{
 	
 	/**
 	 * contains the initial states of the {@link BuchiAutomaton}
@@ -50,6 +50,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 * creates a new empty {@link BuchiAutomaton}
 	 */
 	public BuchiAutomaton() {
+		super();
 		
 		this.alphabet=new HashSet<String>(0);
 		this.acceptStates=new HashSet<S>();
@@ -200,9 +201,8 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		this.initialStates=new HashSet<S>();
 		this.alphabet=new HashSet<String>();
 		this.acceptStates=new HashSet<S>();
-		this.directedEdges=new HashSet<T>();
 		this.edges=new HashMap<T,Pair<S>>();
-		this.vertices=new HashMap<S,Pair<Set<T>>>();
+		this.vertices=new HashMap<S,Pair<Map<S,T>>>();
 		this.alphabet.clear();
 	}
 	
@@ -355,6 +355,11 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 			}
 		}
 	}
+	@Override
+	public EdgeType getDefaultEdgeType() 
+	{
+		return EdgeType.DIRECTED;
+	}
 	
 	public boolean addVertex(S vertex) {
 		boolean ret=super.addVertex(vertex);
@@ -370,4 +375,30 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		
 		return this.mapNameState.get(id);
 	}
+	
+	@Override
+    public boolean addEdge(T edge, Pair<? extends S> endpoints, EdgeType edgeType)
+    {
+    	this.validateEdgeType(edgeType);
+        Pair<S> new_endpoints = getValidatedEndpoints(edge, endpoints);
+        if (new_endpoints == null)
+            return false;
+        
+        S source = new_endpoints.getFirst();
+        S dest = new_endpoints.getSecond();
+        
+        edges.put(edge, new_endpoints);
+
+        if (!vertices.containsKey(source))
+            this.addVertex(source);
+        
+        if (!vertices.containsKey(dest))
+            this.addVertex(dest);
+        
+        // map source of this edge to <dest, edge> and vice versa
+        vertices.get(source).getSecond().put(dest, edge);
+        vertices.get(dest).getFirst().put(source, edge);
+
+        return true;
+    }
 }
