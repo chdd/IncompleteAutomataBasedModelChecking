@@ -12,6 +12,10 @@ import it.polimi.view.ViewInterface;
 
 import javax.xml.bind.JAXBException;
 
+import rwth.i2.ltl2ba4j.formula.IFormula;
+import rwth.i2.ltl2ba4j.formula.IFormulaFactory;
+import rwth.i2.ltl2ba4j.formula.impl.FormulaFactory;
+
 
 public class Main{
 
@@ -28,5 +32,19 @@ public class Main{
 		
 		// add  the controller as observer of the view
 		view.addObserver(controller);
+		
+		/*IFormulaFactory factory = new FormulaFactory();
+		
+		IFormula formula=factory.G(
+                     factory.And(
+                        factory.Proposition("prop1"),
+                        factory.Not(
+                                factory.Proposition("prop2")
+                        )
+                     )
+                   );
+		formula.*/
+		
+		
 	}
 }

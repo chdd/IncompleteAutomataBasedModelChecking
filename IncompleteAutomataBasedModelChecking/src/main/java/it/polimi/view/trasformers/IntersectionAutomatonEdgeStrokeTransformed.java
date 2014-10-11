@@ -1,8 +1,7 @@
-package it.polimi.view.intersectionautomaton.transformers;
+package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

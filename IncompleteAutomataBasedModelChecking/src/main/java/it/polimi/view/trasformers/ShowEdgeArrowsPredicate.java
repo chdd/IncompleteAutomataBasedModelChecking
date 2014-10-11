@@ -1,4 +1,4 @@
-package it.polimi.view.buchiautomaton.transformers;
+package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;

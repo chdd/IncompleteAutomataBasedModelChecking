@@ -1,11 +1,10 @@
-package it.polimi.view.intersectionautomaton.transformers;
+package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStateStrokeTransofmer;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

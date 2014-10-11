@@ -1,9 +1,9 @@
-package it.polimi.view.incompleteautomaton.editing;
+package it.polimi.view.menu;
 
-import it.polimi.view.incompleteautomaton.editing.Actions.Accepting;
-import it.polimi.view.incompleteautomaton.editing.Actions.DeleteVertexMenuItem;
-import it.polimi.view.incompleteautomaton.editing.Actions.Initial;
-import it.polimi.view.incompleteautomaton.editing.Actions.Rename;
+import it.polimi.view.menu.Actions.Accepting;
+import it.polimi.view.menu.Actions.DeleteVertexMenuItem;
+import it.polimi.view.menu.Actions.Initial;
+import it.polimi.view.menu.Actions.Rename;
 
 import java.awt.event.ActionListener;
 

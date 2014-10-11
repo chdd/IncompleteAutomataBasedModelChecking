@@ -5,13 +5,13 @@ import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonEdgeStrokeTransormer;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonShapeTransformer;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStatePaintTransformer;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStateStrokeTransofmer;
-import it.polimi.view.incompleteautomaton.editing.Actions;
-import it.polimi.view.incompleteautomaton.editing.BAStateMenu;
-import it.polimi.view.incompleteautomaton.editing.Plugin;
+import it.polimi.view.menu.Actions;
+import it.polimi.view.menu.BAStateMenu;
+import it.polimi.view.menu.Plugin;
+import it.polimi.view.trasformers.BuchiAutomatonEdgeStrokeTransormer;
+import it.polimi.view.trasformers.BuchiAutomatonShapeTransformer;
+import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
+import it.polimi.view.trasformers.BuchiAutomatonStateStrokeTransofmer;
 
 import java.awt.Dimension;
 import java.awt.Stroke;
@@ -39,8 +39,8 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 	 * @param a is the {@link BuchiAutomaton} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BuchiAutomaton} d is null
 	 */
-	public BuchiAutomatonJPanel(Dimension d, A a, ActionListener l){
-		super(d, a, l); 
+	public BuchiAutomatonJPanel(A a, ActionListener l){
+		super(a, l); 
 		this.setEditingMode();
 	}
 	
@@ -71,14 +71,11 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 
 	@Override
 	public void setEditingMode() {
-		
-		
-		 EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
+		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
                  new StateFactory<S>(), new TransitionFactory<T>()); 
-		 this.setGraphMouse(gm);
+		this.setGraphMouse(gm);
         gm.setMode(ModalGraphMouse.Mode.EDITING);
 		
-        
         Plugin myPlugin = new Plugin(view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
         JPopupMenu edgeMenu = new Actions.EdgeMenu();
@@ -89,12 +86,5 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
         gm.remove(gm.getPopupEditingPlugin());
         gm.add(myPlugin);   // Add our new plugin to the mouse
         this.setGraphMouse(gm);
-        
-        
-		
-	}
-	
-	
-	
-	
+    }
 }

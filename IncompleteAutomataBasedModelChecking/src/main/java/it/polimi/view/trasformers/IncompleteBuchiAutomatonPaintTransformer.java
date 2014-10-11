@@ -1,9 +1,8 @@
-package it.polimi.view.incompleteautomaton.transformers;
+package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.view.buchiautomaton.transformers.BuchiAutomatonStatePaintTransformer;
 
 import java.awt.Color;
 import java.awt.Paint;

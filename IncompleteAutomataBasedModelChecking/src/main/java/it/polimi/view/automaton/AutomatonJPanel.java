@@ -3,10 +3,9 @@ package it.polimi.view.automaton;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.view.buchiautomaton.transformers.ShowEdgeArrowsPredicate;
+import it.polimi.view.trasformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -33,50 +32,27 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 @SuppressWarnings("serial")
 public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends VisualizationViewer<S,T> {
 
-	private final Dimension minSize=new Dimension(50,50);
-	private final int marginSize=0;
 	/**
 	 * contains the {@link Graph} to be inserted in the component
 	 */
 	
 	protected ActionListener view;
 	
-	public AutomatonJPanel(Dimension d, A  a, ActionListener view){
+	public AutomatonJPanel(A  a, ActionListener view){
 		super(new FRLayout<S,T>(a));
 		
-		if(d==null){
-			throw new IllegalArgumentException("The dimension cannot be null");
-		}
 		this.view=view;
 		
 		this.setBackground(Color.WHITE);
 		this.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createRaisedBevelBorder(), 
 				BorderFactory.createLoweredBevelBorder()));
-		
-		
-			
-		this.setSize(new Dimension(d.width-marginSize, d.height-marginSize));
-		this.setMinimumSize(minSize);
-		this.setMaximumSize(new Dimension(d.width-marginSize, d.height-marginSize));
-	
-		this.setPreferredSize(new Dimension(d.width-marginSize, d.height-marginSize));
-		this.setVisible(true);
-		this.setFocusable(true);
-		this.setBackground(Color.WHITE);
-		this.setAutoscrolls(true);
-	
-		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
 	
 		this.update(a);
-		
 	}
 	
 	public void update(A  a){
-		
-		this.getGraphLayout().setGraph(a);
-		
-		
+		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
 		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
 		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
 		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
@@ -84,19 +60,15 @@ public abstract class AutomatonJPanel<S extends State, T extends LabelledTransit
 		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
 		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
 		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
-				
 		this.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
 		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
 		this.getRenderContext().setLabelOffset(20);
 		
-		this.repaint();
-		
-		this.repaint();
-	}
-	public void update(){
+		this.getGraphLayout().setGraph(a);
 		this.repaint();
 	}
+	
 	
 	
 	
@@ -118,8 +90,4 @@ public abstract class AutomatonJPanel<S extends State, T extends LabelledTransit
 	
 	
 	protected abstract Transformer<S,Paint> getPaintTransformer(A a);
-		
-	
-	
-	
 }

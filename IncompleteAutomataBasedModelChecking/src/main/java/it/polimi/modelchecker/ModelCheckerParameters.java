@@ -1,5 +1,7 @@
 package it.polimi.modelchecker;
 
+import java.util.Stack;
+
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
@@ -46,6 +48,8 @@ public class ModelCheckerParameters<S extends State> {
 	 * contains the constraint computed by the model checking procedure
 	 */
 	private Constraint<S> constraint;
+	
+	private Stack<S> violatingPath;
 	
 	private double totalTime;
 	
@@ -381,6 +385,20 @@ public class ModelCheckerParameters<S extends State> {
 	 */
 	public void setConstraint(Constraint<S> constraint) {
 		this.constraint = constraint;
+	}
+
+	/**
+	 * @return the violatingPath
+	 */
+	public Stack<S> getViolatingPath() {
+		return violatingPath;
+	}
+
+	/**
+	 * @param violatingPath the violatingPath to set
+	 */
+	public void setViolatingPath(Stack<S> violatingPath) {
+		this.violatingPath = violatingPath;
 	}
 
 	

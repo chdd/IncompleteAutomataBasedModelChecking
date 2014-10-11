@@ -14,11 +14,11 @@ import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
-import it.polimi.view.intersectionautomaton.IntersectionAutomatonJPanel;
+import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.util.Observable;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -34,17 +35,24 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.xml.bind.JAXBException;
 
 public class View<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>> extends Observable implements ViewInterface<S1,T1,S,T>, ActionListener{
 
-	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>  modelPanel;
 	private BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanel;
-	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> intersectionPanel;
-	private Dimension panelDimensions;
+	
+	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationPanelIntersection;
+	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> intersectionPanelIntersection;
+	
+	
 	private JFrame jframe;
 	private ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> resultsJPanel;
 	
+	
+	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>> modelTabmodel;
+	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>> verificationPanelmodel;
+		
 	private static int margin=10;
 	
 	public View(IncompleteBuchiAutomaton<S1, T1> model,
@@ -52,58 +60,86 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 			IntersectionAutomaton<S1, T1,S,T> intersection) throws JAXBException {
 		
 		
-		 jframe=new JFrame();
-		 
-		 
-		 this.createMenuBar(jframe);
-		 System.setProperty("myColor", "0XAABBCC");
+		 this.jframe=new JFrame();
+		 // setting the size of the jframe
+		 this.jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		 this.jframe.getContentPane().setBackground(Color.getColor("myColor"));
 		 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		 jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 jframe.getContentPane().setBackground(Color.getColor("myColor"));
-		 jframe.setSize(screenSize);
-		 Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(jframe.getGraphicsConfiguration());
+		 this.jframe.setSize(screenSize);
+		 this.jframe.getContentPane();
 		
-		 Dimension contentPanelSize=new Dimension(screenSize.width - scnMax.left -scnMax.right , screenSize.height - scnMax.bottom -scnMax.top - this.modelMenu.getHeight());	
-			
-		 panelDimensions=new Dimension(contentPanelSize.width/2, contentPanelSize.height/2);
+		 
+		 // creating the menu bar
+		 this.createMenuBar(jframe);
+		 
+		 JTabbedPane tabbedPane = new JTabbedPane();
+		 tabbedPane.setSize(this.jframe.getContentPane().getSize());
+		 tabbedPane.setPreferredSize(this.jframe.getContentPane().getSize());
+		 
+		 JComponent modelTab = makeTextPanel("Model");
+		 tabbedPane.addTab("Model",modelTab);
+		 tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
+		
+		 JComponent specificationTab = makeTextPanel("Claim");
+		 tabbedPane.addTab("Claim", specificationTab);
+		 tabbedPane.setMnemonicAt(1, KeyEvent.VK_3);
 		 
 		 
+		 JComponent verificationResults = makeTextPanel("Verification Results");
+		 tabbedPane.addTab("Verification Results", verificationResults);
+		 tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 
+		 JComponent verificationSnapshot = makeTextPanel("Verification Snapshot");
+		 tabbedPane.addTab("Verification Snapshot", verificationSnapshot);
+		 tabbedPane.setMnemonicAt(3, KeyEvent.VK_1);
+		 verificationSnapshot.setLayout(new BoxLayout(verificationSnapshot,BoxLayout.X_AXIS));
+		 
+		this.jframe.add(tabbedPane);
+		 
+		 Dimension contentPanelSize=tabbedPane.getSize();
+				
 		 JPanel container = new JPanel();
+		 container.setAutoscrolls(false);
+		 
 		 JScrollPane scrPane = new JScrollPane(container);
 		 jframe.add(scrPane);
 		 
 		 Dimension automatonManagementPanelDimension=new Dimension(contentPanelSize.width/2, contentPanelSize.height);
 		 
 		 container.setLayout(new BoxLayout(container,BoxLayout.X_AXIS));
-		
+		 container.add(tabbedPane);
 		 
 		 JPanel container1=new JPanel();
 		 container1.setLayout(new BoxLayout(container1,BoxLayout.Y_AXIS));
 		
 		 JLabel modelLabel=new JLabel("Model");
 		 container1.add(modelLabel);
-		 this.modelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(panelDimensions, model, this);
-		 container1.add(modelPanel);
+		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(model, this);
+		 this.verificationPanelmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(model, this);
+		 modelTab.add(modelTabmodel);
+		 
+		 container1.add(verificationPanelmodel);
 		 
 		 JLabel specificationLabel=new JLabel("Specification");
 		 container1.add(specificationLabel);
 		 	
-		 this.specificationPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(panelDimensions, specification, this);
+		 this.specificationPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(specification, this);
 		 container1.add(specificationPanel);
 		 
-		 container.add(container1);
+		 verificationSnapshot.add(container1);
 		 
 		 JPanel container2=new JPanel();
 		 container2.setLayout(new BoxLayout(container2,BoxLayout.Y_AXIS));
 		 
 		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
 		 container2.add(intersectionLabel);
-		 this.intersectionPanel=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(
-				 new Dimension(automatonManagementPanelDimension.width,
-						 automatonManagementPanelDimension.height/4*3 -margin)
-				 , intersection, this);
-		 container2.add(intersectionPanel);
+		 this.verificationPanelIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(intersection, this);
+		 container2.add(verificationPanelIntersection);
+		 
+		 this.intersectionPanelIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(intersection, this);
+		 
+		 verificationResults.add(intersectionPanelIntersection);
+		 
 			
 		 JLabel resultsLabel=new JLabel("Model Checking results");
 		 container2.add(resultsLabel);
@@ -114,20 +150,16 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 				 );
 		 container2.add(resultsJPanel);
 			
-		 container.add(container2);
-		 container.setVisible(true);
-		 container.setVisible(true);
-		 jframe.add(container);
+		 verificationSnapshot.add(container2);
 		 jframe.setResizable(true);
 		 jframe.setVisible(true);
 		 
-
-	
 	}
 	
 	@Override
 	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model){
-		this.modelPanel.update(model);
+		this.modelTabmodel.update(model);
+		this.verificationPanelmodel.update(model);
 	}
 	@Override
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification){
@@ -136,12 +168,19 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 
 	@Override
 	public void updateIntersection(IntersectionAutomaton<S1, T1,S,T> intersection){
-		this.intersectionPanel.update(intersection);
+		this.verificationPanelIntersection.update(intersection);
+		this.intersectionPanelIntersection.update(intersection);
 	}
 
 	@Override
 	public void updateVerificationResults(ModelCheckerParameters<S1> verificationResults) {
+		
 		this.resultsJPanel.updateResults(verificationResults);
+		if(verificationResults.getResult()==0){
+			for(S1 s: verificationResults.getViolatingPath()){
+				
+			}
+		}
 	}
 
 	@Override
@@ -166,12 +205,15 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 					}
 					else{
 						if(e.getSource().equals(this.editItem)){
-							this.modelPanel.setEditingMode();
+							this.modelTabmodel.setEditingMode();
+							this.verificationPanelmodel.setEditingMode();
 							this.specificationPanel.setEditingMode();
 						}
 						else{
 							if(e.getSource().equals(this.trasformItem)){
-								this.modelPanel.setTranformingMode();
+								this.modelTabmodel.setEditingMode();
+								this.verificationPanelmodel.setEditingMode();
+
 								this.specificationPanel.setTranformingMode();
 							}
 							else{
@@ -253,4 +295,10 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		menuBar.setVisible(true);
 		
 	}
+	
+	protected JComponent makeTextPanel(String text) {
+        JPanel panel = new JPanel(false);
+        panel.setLayout(new GridLayout(1, 1));
+        return panel;
+    }
 }

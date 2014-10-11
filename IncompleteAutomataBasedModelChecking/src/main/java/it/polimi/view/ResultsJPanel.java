@@ -19,10 +19,13 @@ public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 ext
 	
 	public ResultsJPanel(Dimension d) {
 		 this.xmlArea=new TextArea();
-		 this.xmlArea.setSize(d);
-		 this.xmlArea.setPreferredSize(d);
-		 this.setPreferredSize(d);
-		 this.setMaximumSize(d);
+		 	
+		 //this.xmlArea.setPreferredSize(d);
+		 //this.xmlArea.setMinimumSize(d);
+		 //this.setPreferredSize(d);
+		 //this.setMaximumSize(d);
+		 //this.setMinimumSize(d);
+		 //this.setSize(d);
 		 this.add(this.xmlArea);
 	}
 	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){

@@ -1,4 +1,4 @@
-package it.polimi.view.incompleteautomaton.editing;
+package it.polimi.view.menu;
 
 /*
  * PopupVertexEdgeMenuMousePlugin.java
