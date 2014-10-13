@@ -32,7 +32,8 @@ public class LTLtoBATransformer implements Transformer<String, BuchiAutomaton<St
 		
 		Map<IState, State> map=new HashMap<IState, State>();
 		
-		Collection<ITransition> transitions=LTL2BA4J.formulaToBA(input);
+		LTL2BA4J.formulaToBA(input);
+		/*Collection<ITransition> transitions=LTL2BA4J.formulaToBA(input);
 		for(ITransition t: transitions){
 			 if(!map.containsKey(t.getSourceState())){
 				State s=factory.create(t.getSourceState().getLabel());
@@ -63,7 +64,7 @@ public class LTLtoBATransformer implements Transformer<String, BuchiAutomaton<St
 					map.get(t.getTargetState()),
 					transitionFactory.create(propositions));
 		}
-		
+		*/
 		return ba;
 	}
 }
