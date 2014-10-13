@@ -3,13 +3,14 @@ package it.polimi.modelchecker;
 import java.util.Stack;
 
 import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
  * @author Claudio Menghi
  * contains the report of the model checking parameters
  */
-public class ModelCheckerParameters<S extends State> {
+public class ModelCheckerParameters<S extends State, S1 extends IntersectionState<S>> {
 	
 
 	/**
@@ -49,7 +50,7 @@ public class ModelCheckerParameters<S extends State> {
 	 */
 	private Constraint<S> constraint;
 	
-	private Stack<S> violatingPath;
+	private Stack<S1> violatingPath;
 	
 	private double totalTime;
 	
@@ -390,14 +391,14 @@ public class ModelCheckerParameters<S extends State> {
 	/**
 	 * @return the violatingPath
 	 */
-	public Stack<S> getViolatingPath() {
+	public Stack<S1> getViolatingPath() {
 		return violatingPath;
 	}
 
 	/**
 	 * @param violatingPath the violatingPath to set
 	 */
-	public void setViolatingPath(Stack<S> violatingPath) {
+	public void setViolatingPath(Stack<S1> violatingPath) {
 		this.violatingPath = violatingPath;
 	}
 

@@ -6,6 +6,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -112,8 +113,16 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
 	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isEmpty(){
-		return super.isEmpty();
+	public boolean isEmpty(ModelCheckerParameters<S1, S> mp){
+		
+		if(super.isEmpty()){
+			return true;
+		}
+		if(this.completeEmptiness){
+			mp.setViolatingPath(this.stack);
+		}
+		
+		return false;
 	}
 	public boolean isCompleteEmpty(){
 		this.completeEmptiness=false;
@@ -146,12 +155,12 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 	 * @return true if an accepting path is found during the second DFS, false otherwise
 	 */
 	@Override
-	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath, Stack<S> stackSecondDFS){
 		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
 		else{
-			return super.secondDFS(visitedStates, currState, statesOfThePath);
+			return super.secondDFS(visitedStates, currState, statesOfThePath, stackSecondDFS);
 		}
 	}
 

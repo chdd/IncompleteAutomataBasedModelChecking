@@ -16,9 +16,11 @@ public interface ViewInterface<S1 extends State, T1 extends LabelledTransition, 
 	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model);
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification);
 	public void updateIntersection(IntersectionAutomaton<S1,T1,S,T> intersection);
-	public void updateVerificationResults(ModelCheckerParameters<S1> verificationResults);
+	public void updateVerificationResults(ModelCheckerParameters<S1, S> verificationResults,
+			IntersectionAutomaton<S1, T1,S,T> intersection);
 	public void addObserver(Observer o);
 
 	public void displayErrorMessage(String message);
 	
+	public void setBrzozoski(String system);
 }

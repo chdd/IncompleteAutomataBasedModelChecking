@@ -10,16 +10,10 @@ import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.view.View;
 import it.polimi.view.ViewInterface;
 
-import javax.xml.bind.JAXBException;
-
-import rwth.i2.ltl2ba4j.formula.IFormula;
-import rwth.i2.ltl2ba4j.formula.IFormulaFactory;
-import rwth.i2.ltl2ba4j.formula.impl.FormulaFactory;
-
 
 public class Main{
 
-	public static void main(String args[]) throws JAXBException {
+	public static void main(String args[]) {
 		
 		// creates the model of the application starting from the model of the system contained in modelPath and the specification contained in the specificationPath
 		ModelInterface model=new Model();
@@ -33,17 +27,7 @@ public class Main{
 		// add  the controller as observer of the view
 		view.addObserver(controller);
 		
-		/*IFormulaFactory factory = new FormulaFactory();
 		
-		IFormula formula=factory.G(
-                     factory.And(
-                        factory.Proposition("prop1"),
-                        factory.Not(
-                                factory.Proposition("prop2")
-                        )
-                     )
-                   );
-		formula.*/
 		
 		
 	}

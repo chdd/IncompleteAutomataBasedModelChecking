@@ -32,6 +32,11 @@ extends ConstrainedTransition<S1>> {
 	 */
 	private final IntersectionAutomaton<S1, T1, S, T> a;
 	
+	private final S[] orderedStates;
+	
+	private final AbstractProposition<S1>[][] constraintmatrix;
+	
+	
 	/**
 	 * creates a new modified Brzozowski solved which is responsible for finding the {@link Constraint} associated with a particular {@link IntersectionAutomaton}
 	 * @param a is the {@link IntersectionAutomaton} to be analyzed
@@ -42,6 +47,8 @@ extends ConstrainedTransition<S1>> {
 			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
 		}
 		this.a=a;
+		this.orderedStates=(S[]) a.getVertices().toArray(new IntersectionState[a.getVertexCount()]);
+		this.constraintmatrix=this.getConstraintT();
 	}
 	/**
 	 * returns the {@link Constraint} associated with the {@link IntersectionAutomaton} a
@@ -53,7 +60,6 @@ extends ConstrainedTransition<S1>> {
 		AbstractProposition<S1> ret=new EmptyProposition<S1>();
 		
 		Set<AbstractProposition<S1>> predicates=new HashSet<AbstractProposition<S1>>();
-		S[] states=(S[]) a.getVertices().toArray(new IntersectionState[a.getVertexCount()]);
 		
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
@@ -75,7 +81,10 @@ extends ConstrainedTransition<S1>> {
 				//System.out.println("analyzing the initial state: computing the constraint");
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
-				AbstractProposition<S1> newconstraint=constr[this.statePosition(init, states)].concatenate(constr[this.statePosition(accept, states)].omega());
+				
+				System.out.println(constr[this.statePosition(init, orderedStates)]);
+				System.out.println(constr[this.statePosition(accept, orderedStates)].omega());
+				AbstractProposition<S1> newconstraint=constr[this.statePosition(init, orderedStates)].concatenate(constr[this.statePosition(accept, orderedStates)].omega());
 				
 				//System.out.println("updating ret");
 				// the language (is added to the set of predicates that will generate the final constraint)
@@ -224,6 +233,32 @@ extends ConstrainedTransition<S1>> {
 			i++;
 		}
 		// returns the vector s
+		return ret;
+	}
+	/**
+	 * @return the constraintmatrix
+	 */
+	public String getConstraintmatrix() {
+		String ret="";
+		for(int i=0; i< this.orderedStates.length; i++){
+			ret+=this.orderedStates[i].getId()+"=";
+			boolean first=true;
+			for(int j=0; j< this.orderedStates.length; j++){
+				if(!this.constraintmatrix[i][j].equals(new EmptyProposition<S>())){
+					if(first){
+						ret+=this.constraintmatrix[i][j].toString()+""+this.orderedStates[j].getId();
+						first=false;
+					}
+					else{
+						ret+=" + "+this.constraintmatrix[i][j].toString()+""+this.orderedStates[j].getId();
+					}
+				}
+			}
+			if(a.isAccept(this.orderedStates[i])){
+				ret+="+"+new LambdaProposition<S>().toString();
+			}
+			ret+="\n";
+		}
 		return ret;
 	}
 }

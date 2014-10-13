@@ -7,6 +7,8 @@ import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.ltltoba.LTLtoBATransformer;
+import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
 import java.util.Set;
@@ -96,8 +98,10 @@ public interface ModelInterface {
 	public void addCharacterToTheSpecification(String character);
 	
 	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection);
-		
 
-		
+	public void check();
 	
+	public ModelCheckerParameters<State, IntersectionState<State>> getVerificationResults();
+	
+	public void loadClaim(String claim);
 }

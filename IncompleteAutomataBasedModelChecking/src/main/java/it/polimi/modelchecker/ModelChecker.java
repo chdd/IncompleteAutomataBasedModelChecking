@@ -25,6 +25,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * contains the specification to be checked
 	 */
 	private BuchiAutomaton<S1,T1> specification;
+	
 	/**
 	 * contains the model to be checked
 	 */
@@ -38,7 +39,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
 	 */
-	private ModelCheckerParameters<S1> parameters;
+	private ModelCheckerParameters<S1, S> parameters;
 	
 	/**
 	 * creates a new {@link ModelChecker}
@@ -47,7 +48,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters<S1> mp){
+	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters<S1, S> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}
@@ -105,7 +106,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 		
 		// verifies if the intersection (without mixed states) is empty
 		long startEmptyTime = System.nanoTime();   
-		boolean res=ris.isEmpty();
+		boolean res=ris.isEmpty(this.parameters);
 		long stopEmptyTime = System.nanoTime();   
 		// sets the time required to verify if the intersection is empty (without mixed states)
 		this.parameters.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
@@ -163,7 +164,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * @return the resulting parameters of the verification, the number of the states of the intersection automaton the time required 
 	 * from the verification procedure etc
 	 */
-	public ModelCheckerParameters<S1> getParameters() {
+	public ModelCheckerParameters<S1, S> getParameters() {
 		return parameters;
 	}
 	

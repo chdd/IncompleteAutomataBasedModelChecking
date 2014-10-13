@@ -7,7 +7,6 @@ import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
-import java.awt.Dimension;
 import java.awt.TextArea;
 
 import javax.swing.JPanel;
@@ -17,15 +16,9 @@ public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 ext
 
 	private TextArea xmlArea;
 	
-	public ResultsJPanel(Dimension d) {
+	public ResultsJPanel() {
 		 this.xmlArea=new TextArea();
 		 	
-		 //this.xmlArea.setPreferredSize(d);
-		 //this.xmlArea.setMinimumSize(d);
-		 //this.setPreferredSize(d);
-		 //this.setMaximumSize(d);
-		 //this.setMinimumSize(d);
-		 //this.setSize(d);
 		 this.add(this.xmlArea);
 	}
 	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){

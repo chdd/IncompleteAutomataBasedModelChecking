@@ -51,19 +51,26 @@ public abstract class AutomatonJPanel<S extends State, T extends LabelledTransit
 		this.update(a);
 	}
 	
-	public void update(A  a){
+	public void setTransformers(A  a){
 		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
 		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
 		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
 		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
+		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
+		
 		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<T>());
 		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
-		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
 		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
+		
 		this.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
 		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
 		this.getRenderContext().setLabelOffset(20);
+		
+	}
+	
+	public void update(A  a){
+		this.setTransformers(a);
 		
 		this.getGraphLayout().setGraph(a);
 		this.repaint();

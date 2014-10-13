@@ -44,7 +44,7 @@ public class PerformanceEvaluator{
 
 	public static void main(String args[]) throws  IOException, GraphIOException {
 		
-		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
+		ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
 		
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
 			

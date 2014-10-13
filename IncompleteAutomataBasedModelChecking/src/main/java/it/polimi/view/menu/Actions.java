@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -148,7 +147,7 @@ public class Actions {
     }
     
     @SuppressWarnings("serial")
-	public static class Initial extends JCheckBoxMenuItem implements StateMenuListener<State,LabelledTransition> {
+	public static class Initial extends JMenuItem implements StateMenuListener<State,LabelledTransition> {
         State v;
         VisualizationViewer<State,LabelledTransition> visComp;
         private ActionListener listener;
@@ -170,14 +169,14 @@ public class Actions {
             });
         }
         public void setVertexAndView(State v, VisualizationViewer<State,LabelledTransition> visComp) {
-            this.v = v;
+        	this.v = v;
             this.visComp=visComp;
         }
         
     }
     
     @SuppressWarnings("serial")
-	public static class Transparent extends JCheckBoxMenuItem implements StateMenuListener<State,LabelledTransition> {
+	public static class Transparent extends JMenuItem implements StateMenuListener<State,LabelledTransition> {
         State v;
         VisualizationViewer<State,LabelledTransition> visComp;
         public Transparent() {
@@ -200,7 +199,7 @@ public class Actions {
     }
     
         @SuppressWarnings("serial")
-		public static class Accepting extends JCheckBoxMenuItem implements StateMenuListener<State,LabelledTransition> {
+		public static class Accepting extends JMenuItem implements StateMenuListener<State,LabelledTransition> {
         State v;
         VisualizationViewer<State,LabelledTransition> visComp;
         private ActionListener listener;

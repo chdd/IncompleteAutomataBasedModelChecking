@@ -1,5 +1,7 @@
 package it.polimi.view;
 
+import it.polimi.controller.actions.CheckAction;
+import it.polimi.controller.actions.LoadClaimAction;
 import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.loading.LoadSpecification;
 import it.polimi.controller.actions.file.saving.SaveModel;
@@ -18,7 +20,9 @@ import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +30,7 @@ import java.awt.event.KeyEvent;
 import java.util.Observable;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,15 +41,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.xml.bind.JAXBException;
+import javax.swing.JTextArea;
 
 public class View<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>> extends Observable implements ViewInterface<S1,T1,S,T>, ActionListener{
 
+	private BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanelResults;
 	private BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>  specificationPanel;
+	
+	private JTextArea claimArea;
+	private JButton loadClaim;
 	
 	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationPanelIntersection;
 	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> intersectionPanelIntersection;
 	
+	private TextArea brzozowskiSystem;
 	
 	private JFrame jframe;
 	private ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> resultsJPanel;
@@ -53,11 +63,10 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>> modelTabmodel;
 	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>> verificationPanelmodel;
 		
-	private static int margin=10;
 	
 	public View(IncompleteBuchiAutomaton<S1, T1> model,
 			BuchiAutomaton<S1, T1> specification,
-			IntersectionAutomaton<S1, T1,S,T> intersection) throws JAXBException {
+			IntersectionAutomaton<S1, T1,S,T> intersection) {
 		
 		
 		 this.jframe=new JFrame();
@@ -94,17 +103,15 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 tabbedPane.setMnemonicAt(3, KeyEvent.VK_1);
 		 verificationSnapshot.setLayout(new BoxLayout(verificationSnapshot,BoxLayout.X_AXIS));
 		 
-		this.jframe.add(tabbedPane);
+		 this.jframe.add(tabbedPane);
 		 
-		 Dimension contentPanelSize=tabbedPane.getSize();
-				
+		 		
 		 JPanel container = new JPanel();
 		 container.setAutoscrolls(false);
 		 
 		 JScrollPane scrPane = new JScrollPane(container);
 		 jframe.add(scrPane);
 		 
-		 Dimension automatonManagementPanelDimension=new Dimension(contentPanelSize.width/2, contentPanelSize.height);
 		 
 		 container.setLayout(new BoxLayout(container,BoxLayout.X_AXIS));
 		 container.add(tabbedPane);
@@ -112,6 +119,36 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 JPanel container1=new JPanel();
 		 container1.setLayout(new BoxLayout(container1,BoxLayout.Y_AXIS));
 		
+		 
+		 
+		 // claim tab
+		 specificationTab.setLayout(new BoxLayout(specificationTab,BoxLayout.Y_AXIS));
+		 specificationTab.add(new JLabel("Claim"));
+		 JPanel containerClaim=new JPanel();
+		 containerClaim.setLayout(new FlowLayout(FlowLayout.CENTER));
+		 claimArea=new JTextArea();
+		 claimArea.setLineWrap(true);
+	       
+	        //
+	        // Filter a new line, pressing enter key will be replaced
+	        // with a space instead.
+	        //
+		 claimArea.getDocument().putProperty("filterNewlines",
+	                Boolean.TRUE);
+		 claimArea.setRows(1);
+		 containerClaim.add(claimArea);
+			
+		 loadClaim=new JButton("Convert LTL BA");
+		 containerClaim.add(loadClaim);
+		 loadClaim.addActionListener(this);
+		 specificationTab.add(containerClaim);
+		 
+		 specificationPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(specification, this);
+		 specificationTab.add(specificationPanel);
+		 
+		 
+		 
+		 // model tab
 		 JLabel modelLabel=new JLabel("Model");
 		 container1.add(modelLabel);
 		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(model, this);
@@ -119,12 +156,15 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 modelTab.add(modelTabmodel);
 		 
 		 container1.add(verificationPanelmodel);
+		
+		 
 		 
 		 JLabel specificationLabel=new JLabel("Specification");
 		 container1.add(specificationLabel);
 		 	
-		 this.specificationPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(specification, this);
-		 container1.add(specificationPanel);
+		 
+		 this.specificationPanelResults=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(specification, this);
+		 container1.add(specificationPanelResults);
 		 
 		 verificationSnapshot.add(container1);
 		 
@@ -136,18 +176,32 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 this.verificationPanelIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(intersection, this);
 		 container2.add(verificationPanelIntersection);
 		 
+		 
+		 
+		 
+		 // Verification Results Tab
+		 
 		 this.intersectionPanelIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(intersection, this);
-		 
-		 verificationResults.add(intersectionPanelIntersection);
-		 
+		 JPanel containerInt1=new JPanel();
+		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
+		 containerInt1.add(new JLabel("Intersection automaton"));
+		 containerInt1.add(this.intersectionPanelIntersection);
 			
+		 JPanel containerInt2=new JPanel();
+		 containerInt2.setLayout(new BoxLayout(containerInt2,BoxLayout.Y_AXIS));
+		 containerInt2.add(new JLabel("Brzozowski representation"));
+		 this.brzozowskiSystem=new TextArea();
+		 containerInt2.add(this.brzozowskiSystem);
+		
+		 verificationResults.add(containerInt1);
+		 verificationResults.add(containerInt2);
+		 
+		
+		 // Model checking results Tab	
 		 JLabel resultsLabel=new JLabel("Model Checking results");
 		 container2.add(resultsLabel);
 		 
-		 this.resultsJPanel=new ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(
-				 new Dimension(automatonManagementPanelDimension.width,
-						 automatonManagementPanelDimension.height/4*1 -margin)
-				 );
+		 this.resultsJPanel=new ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>();
 		 container2.add(resultsJPanel);
 			
 		 verificationSnapshot.add(container2);
@@ -164,6 +218,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	@Override
 	public void updateSpecification(BuchiAutomaton<S1, T1> specification){
 		this.specificationPanel.update(specification);
+		this.specificationPanelResults.update(specification);
 	}
 
 	@Override
@@ -173,16 +228,19 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	}
 
 	@Override
-	public void updateVerificationResults(ModelCheckerParameters<S1> verificationResults) {
+	public void updateVerificationResults(ModelCheckerParameters<S1, S> verificationResults,
+			IntersectionAutomaton<S1, T1,S,T> intersection) {
 		
 		this.resultsJPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
-			for(S1 s: verificationResults.getViolatingPath()){
-				
-			}
+			this.intersectionPanelIntersection.highlightPath(verificationResults.getViolatingPath(), intersection);
 		}
 	}
 
+	public void setBrzozoski(String system){
+		this.brzozowskiSystem.setText(system);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.setChanged();
@@ -200,25 +258,30 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 				}
 				else{
 					if(e.getSource().equals(this.modelOpenItem)){
-						System.out.println("notify open model");
 						this.notifyObservers(new LoadModel(e.getSource(), e.getID(), e.getActionCommand()));
 					}
 					else{
 						if(e.getSource().equals(this.editItem)){
 							this.modelTabmodel.setEditingMode();
 							this.verificationPanelmodel.setEditingMode();
-							this.specificationPanel.setEditingMode();
+							this.specificationPanelResults.setEditingMode();
 						}
 						else{
 							if(e.getSource().equals(this.trasformItem)){
 								this.modelTabmodel.setEditingMode();
 								this.verificationPanelmodel.setEditingMode();
 
-								this.specificationPanel.setTranformingMode();
+								this.specificationPanelResults.setTranformingMode();
 							}
 							else{
-								
-								this.notifyObservers(e);
+								if(e.getSource().equals(this.checkItem)){
+									this.notifyObservers(new CheckAction());
+								}
+								else{
+									if(e.getSource().equals(this.loadClaim)){
+										this.notifyObservers(new LoadClaimAction(this.claimArea.getText()));
+									}
+								}
 							}
 						}
 					}
@@ -235,10 +298,12 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private JMenu modelMenu;
 	private JMenu editMenu;
 	
+	
 	private JMenuItem modelOpenItem;
 	private JMenuItem editItem;
 	
 	private JMenuItem trasformItem;
+	private JMenuItem checkItem;
 	
 	private JMenuItem modelSaveItem;
 	private JMenuItem specificationOpenItem;
@@ -286,8 +351,18 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		trasformItem.setMnemonic(KeyEvent.VK_O);
 		trasformItem.addActionListener(this);
 		
-		menuBar.add(editMenu);
+		checkItem=new JMenuItem("Check", KeyEvent.VK_T);
+		editMenu.add(checkItem);
+		checkItem.setMnemonic(KeyEvent.VK_O);
+		checkItem.addActionListener(this);
 
+		trasformItem.setMnemonic(KeyEvent.VK_O);
+		trasformItem.addActionListener(this);
+		
+		
+		menuBar.add(editMenu);
+		
+		
 
 		
 		

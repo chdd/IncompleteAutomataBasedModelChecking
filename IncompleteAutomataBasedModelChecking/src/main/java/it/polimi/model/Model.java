@@ -11,6 +11,9 @@ import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.io.AutomatonBuilder;
+import it.polimi.model.ltltoba.LTLtoBATransformer;
+import it.polimi.modelchecker.ModelChecker;
+import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
 import java.util.Set;
@@ -41,6 +44,9 @@ public class Model implements ModelInterface{
 	 * contains the intersection between the model and the specification
 	 */
 	private IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection;
+	
+	private ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
+	
 	
 	public Model(){
 		this.model=new IncompleteBuchiAutomaton<State, LabelledTransition>();
@@ -175,4 +181,21 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	
+	@Override
+	public void loadClaim(String claim){
+		LTLtoBATransformer ltltoBa=new LTLtoBATransformer();
+		this.specification=ltltoBa.transform(claim);
+	}
+	
+	@Override
+	public void check(){
+		mp=new ModelCheckerParameters<State, IntersectionState<State>>();
+		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> mc=new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(this.getModel(), this.getSpecification(), mp);
+		mc.check();
+		this.changeIntersection(mc.getIntersection());
+	}
+	
+	public ModelCheckerParameters<State, IntersectionState<State>> getVerificationResults(){
+		return this.mp;
+	}
 }

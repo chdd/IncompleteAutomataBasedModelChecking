@@ -268,6 +268,8 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		}
 		return it.next();
 	}
+	
+	protected Stack<S> stack;
 	/**
 	 * returns true if the automaton is empty
 	 * @return true if the automaton is empty
@@ -275,8 +277,11 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	public boolean isEmpty(){
 		boolean res=true;
 		Set<S> visitedStates=new HashSet<S>();
+		
 		for(S init: this.getInitialStates()){
-			if(firstDFS(visitedStates, init, new Stack<S>())){
+			stack=new Stack<S>();
+			if(firstDFS(visitedStates, init, stack)){
+				
 				return false;
 			}
 		}
@@ -304,8 +309,11 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 			// if the state is accepting
 			if(this.isAccept(currState)){
 				for(T t: this.getOutEdges(currState)){
+					
+					Stack<S> stackSecondDFS=new Stack<S>();
 					// I start the second DFS if the answer of the second DFS is true I return true
-					if(this.secondDFS(new HashSet<S>(), this.getDest(t), statesOfThePath)){
+					if(this.secondDFS(new HashSet<S>(), this.getDest(t), statesOfThePath, stackSecondDFS)){
+						statesOfThePath.addAll(stackSecondDFS);
 						return true;
 					}
 				}
@@ -330,7 +338,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 * @return true if an accepting path is found (a path that contains a state in the set of the states statesOfThePath), false otherwise
 	 */
 	// note that at the beginning the visited states do not contain the current state
-	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath, Stack<S> stackSecondDFS){
 		// if the state is in the set of the states on the path the an accepting path is found
 		if(statesOfThePath.contains(currState)){
 			return true;
@@ -341,15 +349,18 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 				return false;
 			}
 			else{
+				stackSecondDFS.push(currState);
 				// add the state into the set of the visited states
 				visitedStates.add(currState);
 				// for each transition that leaves the current state
 				for(T t: this.getOutEdges(currState)){
+					
 					// if the second DFS returns a true answer than the accepting path has been found
-					if(secondDFS(visitedStates, this.getDest(t), statesOfThePath)){
+					if(secondDFS(visitedStates, this.getDest(t), statesOfThePath, stackSecondDFS)){
 						return true;
 					}
 				}
+				stackSecondDFS.pop();
 				// otherwise the path is not accepting
 				return false;
 			}

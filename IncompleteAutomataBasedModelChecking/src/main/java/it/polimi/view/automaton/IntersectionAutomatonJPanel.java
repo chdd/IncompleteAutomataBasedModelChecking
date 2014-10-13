@@ -5,6 +5,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.view.trasformers.HighlighPathPaintTransformer;
 import it.polimi.view.trasformers.IntersectionAutomatonEdgeStrokeTransformed;
 import it.polimi.view.trasformers.IntersectionAutomatonStrokeTransformer;
 
@@ -22,7 +23,13 @@ public class IntersectionAutomatonJPanel<S extends State, T extends LabelledTran
 		super(a, l);
 	}
 	
-	public void highlightPath(Stack<S1> states){
+	public void highlightPath(Stack<S1> states, A a){
+		this.setTransformers(a);
+		this.getRenderContext().setVertexFillPaintTransformer(
+				new HighlighPathPaintTransformer<S, T, S1, T1, A>(a, states));
+		
+		this.getGraphLayout().setGraph(a);
+		this.repaint();
 	}
 	
 	@Override

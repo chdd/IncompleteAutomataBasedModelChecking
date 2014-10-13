@@ -6,8 +6,7 @@ import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionState;
-import it.polimi.modelchecker.ModelChecker;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.view.ViewInterface;
 
 import java.util.Observable;
@@ -59,38 +58,21 @@ public class Controller implements Observer{
 				e.printStackTrace();
 				this.view.displayErrorMessage(e.toString());
 			}
-			this.updateInputs();
 		}
-		else{
-			 this.update();
-		}
-		
+		this.update();	
 	}
 	
-	private void updateInputs(){
-		
-		System.out.println(this.model.getModel());
-		System.out.println(this.model.getSpecification());
-		this.view.updateModel(this.model.getModel());
-		this.view.updateSpecification(this.model.getSpecification());
-		this.update();
-	}
-	
-	/**
-	 * run the model checker and updates the view with the current model of the system 
-	 */
 	private void update(){
 		
-		ModelCheckerParameters<State> mp=new ModelCheckerParameters<State>();
-		
-		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> mc=new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model.getModel(), model.getSpecification(), mp);
-		mc.check();
-		this.model.changeIntersection(mc.getIntersection());
+		this.view.updateModel(this.model.getModel());
+		this.view.updateSpecification(this.model.getSpecification());
 		this.view.updateIntersection(model.getIntersection());
 		
-		this.view.updateVerificationResults(mp);
-		
+		this.view.setBrzozoski(new Brzozowski<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(this.model.getIntersection()).getConstraintmatrix());
+		this.view.updateVerificationResults(this.model.getVerificationResults(), this.model.getIntersection());
 	}
+	
+	
 	
 
 }
