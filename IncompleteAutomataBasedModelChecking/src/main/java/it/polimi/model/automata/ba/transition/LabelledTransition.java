@@ -14,7 +14,7 @@ public class LabelledTransition{
 	/**
 	 * the character that labels the transition
 	 */
-	private Set<String> character;
+	private Set<String> characters;
 	
 	/** 
 	 * Constructs a new singleton interval transition. 
@@ -27,17 +27,23 @@ public class LabelledTransition{
 		if(c==null){
 			throw new IllegalArgumentException("The character that labels the transition cannot be null");
 		}
-		this.character=c;
+		this.characters=c;
 	}
 
 	public void addCharacter(String character){
-		this.character.add(character);
+		this.characters.add(character);
 	}
 	/**
 	 * @return the character that labels the transition
 	 */
 	public Set<String> getCharacter() {
-		return character;
+		return characters;
+	}
+	
+	public void removeCharacter(String character){
+		if(this.characters.contains(character)){
+			this.characters.remove(character);
+		}
 	}
 
 	/**
@@ -45,14 +51,14 @@ public class LabelledTransition{
 	 */
 	@Override
 	public String toString() {
-		if(this.character.size()==0){
+		if(this.characters.size()==0){
 			return "Id: {"+Integer.toString(this.id)+"} Labels:{}";
 		}
-		if(this.character.size()==1){
-			return "Id: {"+Integer.toString(this.id)+"}\t Labels:{"+this.character.iterator().next()+"}";
+		if(this.characters.size()==1){
+			return "Id: {"+Integer.toString(this.id)+"}\t Labels:{"+this.characters.iterator().next()+"}";
 		}
 		else{
-			Iterator<String> it=this.character.iterator();
+			Iterator<String> it=this.characters.iterator();
 			String ret=it.next();
 			while(it.hasNext()){
 				String retadd=it.next();
