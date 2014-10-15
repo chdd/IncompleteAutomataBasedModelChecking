@@ -12,7 +12,7 @@ public class TransitionFactory<T extends LabelledTransition> implements Factory<
 	@Override
 	public T create() {
 		Set<String> labeling=new HashSet<String>();
-		labeling.add("<SIGMA>");
+		labeling.add("SIGMA");
 		T t=(T) new LabelledTransition(labeling, TransitionFactory.transitionCount);
 		TransitionFactory.transitionCount++;
 		return t;

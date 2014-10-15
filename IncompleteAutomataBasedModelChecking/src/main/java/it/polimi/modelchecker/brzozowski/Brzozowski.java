@@ -50,6 +50,16 @@ extends ConstrainedTransition<S1>> {
 		this.orderedStates=(S[]) a.getVertices().toArray(new IntersectionState[a.getVertexCount()]);
 		this.constraintmatrix=this.getConstraintT();
 	}
+	
+	private void setInit(S init){
+		for(int i=0; i< orderedStates.length; i++){
+			if(orderedStates[i].equals(init)){
+				orderedStates[i]=orderedStates[0];
+				orderedStates[0]=init;
+			}
+		}
+	}
+	
 	/**
 	 * returns the {@link Constraint} associated with the {@link IntersectionAutomaton} a
 	 * @return the {@link Constraint} associated with the {@link IntersectionAutomaton} a
@@ -64,23 +74,29 @@ extends ConstrainedTransition<S1>> {
 		// for each accepting states
 		for(S accept: a.getAcceptStates()){
 			
-			
-			// the matrixes t and s are computed
-			AbstractProposition<S1>[][] t=this.getConstraintT();
-			AbstractProposition<S1>[] constr=this.getConstrainedS(accept);
-			
-			// the system of equations described by the matrixes t and s is solved
-			this.solveSystem(t, constr);
-			
 			// each initial state is analyzed
 			for(S init: a.getInitialStates()){
 				
+				System.out.println(init);
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
-				System.out.println("prefix: "+constr[this.statePosition(init, orderedStates)]);
-				System.out.println("suffix: "+constr[this.statePosition(accept, orderedStates)]);
+				// the matrixes t and s are computed
+				this.setInit(init);
+				AbstractProposition<S1>[][] t=this.getConstraintT();
+				AbstractProposition<S1>[] constr1=this.getConstrainedS(accept);
 				
-				AbstractProposition<S1> newconstraint=constr[this.statePosition(init, orderedStates)].concatenate(constr[this.statePosition(accept, orderedStates)].omega());
+				// the system of equations described by the matrixes t and s is solved
+				this.solveSystem(t, constr1);
+				
+				this.setInit(accept);
+				AbstractProposition<S1>[][] t2=this.getConstraintT();
+				AbstractProposition<S1>[] constr2=this.getConstrainedS(accept);
+				
+				// the system of equations described by the matrixes t and s is solved
+				this.solveSystem(t2, constr2);
+				
+				AbstractProposition<S1> newconstraint=constr1[0]
+						.concatenate(constr2[0].omega());
 				
 				// the language (is added to the set of predicates that will generate the final constraint)
 				//if(!predicates.contains(newconstraint)){
@@ -133,9 +149,9 @@ extends ConstrainedTransition<S1>> {
 		
 		AbstractProposition<S1>[][]  ret=new AbstractProposition[a.getVertexCount()][a.getVertexCount()];
 		int i=0;
-		for(S s1: a.getVertices()){
+		for(S s1: this.orderedStates){
 			int j=0;
-			for(S s2: a.getVertices()){
+			for(S s2: this.orderedStates){
 				boolean setted=false;
 				for(T t: a.getOutEdges(s1)){
 					if(a.getDest(t).equals(s2)){
@@ -179,20 +195,6 @@ extends ConstrainedTransition<S1>> {
 		return ret;
 	}
 	
-	public int statePosition(State s, State[] states){
-		
-		int i=0;
-		for(State tmp: states){
-			if(tmp.equals(s)){
-				return i;
-			}
-			i++;
-		}
-		return -1;
-		
-	}
-	
-	
 	/**
 	 * returns the matrix S associated with the {@link IntersectionAutomaton} a
 	 * @param accept is the accepting states of the {@link IntersectionAutomaton} considered
@@ -213,7 +215,7 @@ extends ConstrainedTransition<S1>> {
 		
 		int i=0;
 		// for each state in the stateOrdered vector
-		for(S s: a.getVertices()){
+		for(S s: this.orderedStates){
 			
 			// if the state is equal to the state accept
 			if(accept.equals(s)){
