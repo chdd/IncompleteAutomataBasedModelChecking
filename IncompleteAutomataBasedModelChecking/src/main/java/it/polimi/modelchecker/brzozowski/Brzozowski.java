@@ -77,7 +77,6 @@ extends ConstrainedTransition<S1>> {
 			// each initial state is analyzed
 			for(S init: a.getInitialStates()){
 				
-				System.out.println(init);
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
 				// the matrixes t and s are computed
