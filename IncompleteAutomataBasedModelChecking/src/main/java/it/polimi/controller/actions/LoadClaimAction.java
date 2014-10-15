@@ -12,6 +12,13 @@ public class LoadClaimAction implements ActionInterface {
 	
 	@Override
 	public void perform(ModelInterface model) throws Exception {
-		model.loadClaim(this.claim);
+		throw new Exception("Still to be implemented");
+		/*
+		if(this.claim==null){
+			throw new NullPointerException("The LTL formula be converted cannot be empty");
+		}
+		model.loadClaim(this.claim);	
+		*/
+		
 	}
 }

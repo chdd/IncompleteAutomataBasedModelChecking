@@ -53,7 +53,6 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
    	 */
 	@Override
 	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
-		//System.out.println("and concatenate");
 		
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");

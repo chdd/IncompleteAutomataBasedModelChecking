@@ -22,11 +22,15 @@ extends ConstrainedTransition<S1>, A  extends IntersectionAutomaton<S1, T1, S, T
 	
 	@Override
 	public Paint transform(S input) {
-		if(states.contains(input)){
-			return Color.RED;
-		}
-		if(a.isTransparent(input)){
-			return Color.GRAY;
+		
+		if(this.states!=null){
+			if(this.states.contains(input)){
+				return Color.RED;
+			}
+			if(a.isTransparent(input)){
+				return Color.GRAY;
+			}
+		
 		}
 		return Color.WHITE;
 	}

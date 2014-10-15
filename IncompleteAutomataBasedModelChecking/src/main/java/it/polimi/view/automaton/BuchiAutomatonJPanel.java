@@ -72,9 +72,10 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 	@Override
 	public void setEditingMode() {
 		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
-                 new StateFactory<S>(), new TransitionFactory<T>()); 
+                new StateFactory<S>(), new TransitionFactory<T>()); 
 		this.setGraphMouse(gm);
-        gm.setMode(ModalGraphMouse.Mode.EDITING);
+		
+		gm.setMode(ModalGraphMouse.Mode.EDITING);
 		
         Plugin myPlugin = new Plugin(view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
@@ -85,6 +86,8 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
         
         gm.remove(gm.getPopupEditingPlugin());
         gm.add(myPlugin);   // Add our new plugin to the mouse
-        this.setGraphMouse(gm);
-    }
+        this.setGraphMouse(gm);	
+     }
+	
+	
 }

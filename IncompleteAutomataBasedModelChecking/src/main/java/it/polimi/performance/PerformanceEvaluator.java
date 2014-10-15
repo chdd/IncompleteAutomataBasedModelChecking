@@ -29,7 +29,7 @@ public class PerformanceEvaluator{
 
 	private static final int initialNumberOfStates=10;
 	private static final int maxNumberOfStates=100;
-	private static final int numberOfStatesIncrement=2;
+	private static final int numberOfStatesIncrement=1;
 	
 	private static final int initialNumberOfTransparentStates=1;
 	private static final int incrementNumberOfTransparentStates=1;
@@ -74,9 +74,6 @@ public class PerformanceEvaluator{
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
 					
-					
-					//a1.toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"a1-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
-					//mc.getIntersection().toFile("/Users/Claudio1/Desktop/LTLLover/Automata/"+"ris-provaNumero"+j+"-stati"+n+"-tr"+i+".xml");
 					writer.close();
 					a1.reset();
 					a2.reset();

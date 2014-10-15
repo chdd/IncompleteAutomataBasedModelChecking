@@ -14,7 +14,9 @@ public class SaveSpecification extends SaveAction {
 	@Override
 	public void perform(ModelInterface model) throws Exception {
 		String filePath=this.getFile();
-		model.saveSpecification(filePath);
+		if(filePath!=null){
+			model.saveSpecification(filePath);
+		}
 	}
 
 

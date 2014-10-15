@@ -12,7 +12,9 @@ public class SaveModel extends SaveAction {
 	@Override
 	public void perform(ModelInterface model) throws Exception {
 		String filePath=this.getFile();
-		model.saveModel(filePath);
+		if(filePath!=null){
+			model.saveModel(filePath);
+		}
 	}
 
 }

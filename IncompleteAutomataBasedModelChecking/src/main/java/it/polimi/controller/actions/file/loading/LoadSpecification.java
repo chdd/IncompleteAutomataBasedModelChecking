@@ -12,6 +12,8 @@ public class LoadSpecification extends LoadingAction{
 	@Override
 	public void perform(ModelInterface model) throws Exception {
 		String file=this.getFile();
-		model.changeSpecification(file);
+		if(file!=null){
+			model.changeSpecification(file);
+		}
 	}
 }

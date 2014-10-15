@@ -13,6 +13,8 @@ public class LoadModel extends LoadingAction{
 	@Override
 	public void perform(ModelInterface model) throws Exception {
 		String file=this.getFile();
-		model.changeModel(file);
+		if(file!=null){
+			model.changeModel(file);
+		}
 	}
 }

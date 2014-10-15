@@ -55,8 +55,7 @@ public class Controller implements Observer{
 			try {
 				a.perform(model);
 			} catch (Exception e) {
-				e.printStackTrace();
-				this.view.displayErrorMessage(e.toString());
+				this.view.displayErrorMessage(e.getMessage().toString());
 			}
 		}
 		this.update();	

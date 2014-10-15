@@ -15,6 +15,9 @@ public abstract class SaveAction extends FileAction {
 		JFileChooser saveFile = new JFileChooser();
 		saveFile.setDialogTitle("Specify a file to save");
 		saveFile.showSaveDialog(null);
-		return saveFile.getSelectedFile().getAbsolutePath();
+		if(saveFile.getSelectedFile()!=null){
+			return saveFile.getSelectedFile().getAbsolutePath();
+		}
+		return null;
 	}
 }
