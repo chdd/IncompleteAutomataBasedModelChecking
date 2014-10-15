@@ -222,6 +222,9 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 */
 	@Override
 	public AbstractProposition<S> omega() {
+		if(this.getRegularExpression().endsWith("*")){
+			return new AtomicProposition<S>(this.getState(), "("+this.getRegularExpression().substring(1,this.getRegularExpression().lastIndexOf(")*"))+")ω");
+		}
 		return new AtomicProposition<S>(this.getState(), "("+this.getRegularExpression()+")ω");
 	}
 	
