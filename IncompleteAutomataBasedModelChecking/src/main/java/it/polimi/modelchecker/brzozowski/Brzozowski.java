@@ -77,6 +77,8 @@ extends ConstrainedTransition<S1>> {
 				
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
+				System.out.println("prefix: "+constr[this.statePosition(init, orderedStates)]);
+				System.out.println("suffix: "+constr[this.statePosition(accept, orderedStates)]);
 				
 				AbstractProposition<S1> newconstraint=constr[this.statePosition(init, orderedStates)].concatenate(constr[this.statePosition(accept, orderedStates)].omega());
 				

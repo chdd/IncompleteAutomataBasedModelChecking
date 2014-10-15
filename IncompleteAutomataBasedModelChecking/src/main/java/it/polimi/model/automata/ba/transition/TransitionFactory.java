@@ -11,8 +11,9 @@ public class TransitionFactory<T extends LabelledTransition> implements Factory<
 	
 	@Override
 	public T create() {
-		
-		T t=(T) new LabelledTransition(new HashSet<String>(), TransitionFactory.transitionCount);
+		Set<String> labeling=new HashSet<String>();
+		labeling.add("<SIGMA>");
+		T t=(T) new LabelledTransition(labeling, TransitionFactory.transitionCount);
 		TransitionFactory.transitionCount++;
 		return t;
 	}
