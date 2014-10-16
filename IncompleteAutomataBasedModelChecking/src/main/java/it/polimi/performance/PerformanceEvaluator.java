@@ -1,12 +1,12 @@
 package it.polimi.performance;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.labeling.Proposition;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
@@ -65,11 +65,11 @@ public class PerformanceEvaluator{
 					else{
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", true)));
 					}
-					IncompleteBuchiAutomaton<State, LabelledTransition> a1 =new IncompleteBuchiAutomaton<State, LabelledTransition>();
+					IBAImpl<State, LabelledTransition> a1 =new IBAImpl<State, LabelledTransition>();
 					a1.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
 					AutomatonBuilder builder=new AutomatonBuilder();
 					
-					BuchiAutomaton<State, LabelledTransition>  a2=builder.loadBAAutomaton("src/main/resources/Automaton2.xml");
+					BAImpl<State, LabelledTransition>  a2=builder.loadBAAutomaton("src/main/resources/Automaton2.xml");
 					
 					ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> mc=new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(a1, a2, mp);
 					mc.check();

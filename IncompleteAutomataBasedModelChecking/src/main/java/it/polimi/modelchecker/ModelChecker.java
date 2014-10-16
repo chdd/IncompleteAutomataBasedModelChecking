@@ -1,20 +1,20 @@
 package it.polimi.modelchecker;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
  * @author claudiomenghi
  * 
- * @param <S1> is the type of the states of the specification ({@link BuchiAutomaton}) and of the  model ({@link IncompleteBuchiAutomaton})
- * @param <T1> is the type of the transition of the specification ({@link BuchiAutomaton}) and of the  model ({@link IncompleteBuchiAutomaton})
+ * @param <S1> is the type of the states of the specification ({@link BAImpl}) and of the  model ({@link IBAImpl})
+ * @param <T1> is the type of the transition of the specification ({@link BAImpl}) and of the  model ({@link IBAImpl})
  * @param <S>  is the type of the states of the {@link IntersectionAutomaton}
  * @param <T>  is the type of the states of the {@link IntersectionAutomaton}
  */
@@ -24,12 +24,12 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	/**
 	 * contains the specification to be checked
 	 */
-	private BuchiAutomaton<S1,T1> specification;
+	private BAImpl<S1,T1> specification;
 	
 	/**
 	 * contains the model to be checked
 	 */
-	private  IncompleteBuchiAutomaton<S1, T1> model;
+	private  IBAImpl<S1, T1> model;
 	
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
@@ -48,7 +48,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1,T1> specification, ModelCheckerParameters<S1, S> mp){
+	public ModelChecker(IBAImpl<S1, T1> model, BAImpl<S1,T1> specification, ModelCheckerParameters<S1, S> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}

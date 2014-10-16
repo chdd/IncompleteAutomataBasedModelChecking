@@ -1,10 +1,11 @@
 package it.polimi.model.automata.ba;
 
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
-import it.polimi.model.io.ba.tofile.StateAcceptingToMetadataTransformer;
-import it.polimi.model.io.ba.tofile.StateInitialToMetadataTransformer;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.elements.states.BAStateAcceptingToMetadataTransformer;
+import it.polimi.model.elements.states.BAStateInitialToMetadataTransformer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -25,9 +26,10 @@ public class BAtoFile {
 	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
 	 * @throws IOException - if an I/O error occurs.
 	 */
-	public void toFile(String filePath, BuchiAutomaton<State, LabelledTransition> ba) throws IOException {
+	public void toFile(String filePath, BAImpl<State, LabelledTransition> ba) throws IOException {
 		
 		GraphMLWriter<State, LabelledTransition> graphWriter =new GraphMLWriter<State, LabelledTransition>();
+		
 		
 		graphWriter.setVertexIDs(new Transformer<State, String>() {
 
@@ -43,8 +45,8 @@ public class BAtoFile {
 			}
 		});
 		
-		graphWriter.addVertexData("initial", "initial", "false", new StateInitialToMetadataTransformer<State,LabelledTransition, BuchiAutomaton<State, LabelledTransition>>(ba));
-		graphWriter.addVertexData("accepting", "accepting", "false", new StateAcceptingToMetadataTransformer<State,LabelledTransition, BuchiAutomaton<State, LabelledTransition>>(ba));
+		graphWriter.addVertexData("initial", "initial", "false", new BAStateInitialToMetadataTransformer<State,LabelledTransition, BAImpl<State, LabelledTransition>>(ba));
+		graphWriter.addVertexData("accepting", "accepting", "false", new BAStateAcceptingToMetadataTransformer<State,LabelledTransition, BAImpl<State, LabelledTransition>>(ba));
 		
 		graphWriter.setEdgeIDs(new Transformer<LabelledTransition, String>() {
 				@Override

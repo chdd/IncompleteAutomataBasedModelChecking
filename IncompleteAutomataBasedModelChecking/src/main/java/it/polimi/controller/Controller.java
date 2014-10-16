@@ -2,10 +2,10 @@ package it.polimi.controller;
 
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.view.ViewInterface;
 

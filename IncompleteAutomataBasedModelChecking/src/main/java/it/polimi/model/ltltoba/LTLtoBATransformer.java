@@ -1,18 +1,16 @@
 package it.polimi.model.ltltoba;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
-import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
 import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.elements.states.FactoryState;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections15.Transformer;
@@ -22,15 +20,15 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
-public class LTLtoBATransformer implements Transformer<String, BuchiAutomaton<State, LabelledTransition>> {
+public class LTLtoBATransformer implements Transformer<String, BAImpl<State, LabelledTransition>> {
 
-	private StateFactory<State> factory=new StateFactory<State>();
+	private FactoryState<State> factory=new FactoryState<State>();
 	private TransitionFactory<LabelledTransition> transitionFactory=new TransitionFactory<LabelledTransition>();
 	
 	@Override
-	public BuchiAutomaton<State, LabelledTransition> transform(String input) {
+	public BAImpl<State, LabelledTransition> transform(String input) {
 		
-		BuchiAutomaton<State, LabelledTransition> ba=new BuchiAutomaton<State, LabelledTransition>();
+		BAImpl<State, LabelledTransition> ba=new BAImpl<State, LabelledTransition>();
 		
 		Map<IState, State> map=new HashMap<IState, State>();
 		

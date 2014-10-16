@@ -1,7 +1,7 @@
 package it.polimi.model.automata.ba.transition;
 
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
+import it.polimi.model.elements.states.State;
 
 /**
  * contains a constrainedTransition which is a transition that can be performed only if the constrainedState recognizes 

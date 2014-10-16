@@ -1,12 +1,16 @@
 package it.polimi.model.automata.intersection;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.FactoryIntersectionState;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.BA;
+import it.polimi.model.interfaces.IBA;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.HashSet;
@@ -24,17 +28,17 @@ import java.util.Stack;
  */
 @SuppressWarnings("serial")
 public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
+extends ConstrainedTransition<S1>> extends IBAImpl<S, T> {
 
 	/**
 	 * contains the model of the system that generates the intersection automaton
 	 */
-	private IncompleteBuchiAutomaton<S1, T1> model;
+	private IBA<S1, T1> model;
 	
 	/**
 	 * contains the specification that generates the intersection automaton
 	 */
-	private BuchiAutomaton<S1, T1> specification;
+	private BA<S1, T1> specification;
 	
 	/**
 	 * contains the set of the mixed states
@@ -47,8 +51,8 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 	private boolean completeEmptiness=true;
 	
 	public IntersectionAutomaton(){
-		this.model=new IncompleteBuchiAutomaton<S1, T1>();
-		this.specification=new BuchiAutomaton<S1, T1>();
+		this.model=new IBAImpl<S1, T1>();
+		this.specification=new BAImpl<S1, T1>();
 		this.mixedStates=new HashSet<S>(); 
 	}
 	/**
@@ -56,7 +60,7 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 	 * @param model: is the model to be considered
 	 * @param specification: is the specification to be considered
 	 */
-	public IntersectionAutomaton(IncompleteBuchiAutomaton<S1, T1> model, BuchiAutomaton<S1, T1> specification){
+	public IntersectionAutomaton(IBAImpl<S1, T1> model, BAImpl<S1, T1> specification){
 		super();
 		if(model==null){
 			throw new IllegalArgumentException("The model to be considered cannot be null");
@@ -106,7 +110,7 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 	/**
 	 * @return the model that generates the intersection automaton
 	 */
-	public IncompleteBuchiAutomaton<S1, T1> getModel() {
+	public IBA<S1, T1> getModel() {
 		return model;
 	}
 	
@@ -255,9 +259,9 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 			visitedStates.add(currentState);
 			
 			// for each transition in the extended automaton whit source s1
-			for(T1 t1: this.model.getOutEdges(s1)){
+			for(T1 t1: this.model.getOutTransition(s1)){
 				// for each transition in the extended automaton whit source s2
-				for(T1 t2: this.specification.getOutEdges(s2)){
+				for(T1 t2: this.specification.getOutTransition(s2)){
 					// if the characters of the two transitions are equal
 					
 					Set<ConjunctiveClause> commonClauses=t1.getDnfFormula().getCommonClauses(t2.getDnfFormula());
@@ -265,8 +269,8 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 						
 						
 						// creates a new state made by the states s1next and s2 next
-						S1 s1next=this.model.getDest(t1);
-						S1 s2next=this.specification.getDest(t2);
+						S1 s1next=this.model.getTransitionDestination(t1);
+						S1 s2next=this.specification.getTransitionDestination(t2);
 						S p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
 						ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
@@ -282,10 +286,10 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 			// if the current state of the extended automaton is transparent
 			if(model.isTransparent(s1)){
 				// for each transition in the automaton a2
-				for(T1 t2: specification.getOutEdges(s2)){
+				for(T1 t2: specification.getOutTransition(s2)){
 					// a new state is created made by the transparent state and the state s2next
-					S1 s2next=this.specification.getDest(t2);
-					S p=this.addIntersectionState(s1, this.specification.getDest(t2), currentState);
+					S1 s2next=this.specification.getTransitionDestination(t2);
+					S p=this.addIntersectionState(s1, s2next, currentState);
 					// the new state is connected by the previous one through a constrained transition
 					ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
 					T t=ctfactory.create(t2.getDnfFormula(), s1);
@@ -352,7 +356,7 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 				}
 			}
 		}
-		IntersectionStateFactory<S1, S> factory=new IntersectionStateFactory<S1, S>();
+		FactoryIntersectionState<S1, S> factory=new FactoryIntersectionState<S1, S>();
 		IntersectionState<S1> p = factory.create(s1, s2, num);
 		return p;
 	}

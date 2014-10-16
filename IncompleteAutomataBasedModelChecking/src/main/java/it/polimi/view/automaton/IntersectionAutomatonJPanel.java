@@ -1,10 +1,10 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
 import it.polimi.view.trasformers.HighlighPathPaintTransformer;
 import it.polimi.view.trasformers.IntersectionAutomatonEdgeStrokeTransformed;
 import it.polimi.view.trasformers.IntersectionAutomatonStrokeTransformer;

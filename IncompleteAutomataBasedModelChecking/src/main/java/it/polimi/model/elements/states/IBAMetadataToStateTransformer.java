@@ -1,14 +1,12 @@
-package it.polimi.model.io.iba;
+package it.polimi.model.elements.states;
 
-import it.polimi.model.automata.ba.state.BAMetadataToStateTransformer;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.impl.IBAImpl;
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
-public class IBAMetadataToStateTransformer<BA extends IncompleteBuchiAutomaton<State, LabelledTransition>> extends
-		BAMetadataToStateTransformer<BA> {
+public class IBAMetadataToStateTransformer<BA extends IBAImpl<State, LabelledTransition>> extends BAMetadataToStateTransformer<BA>{
 
+	
 	public IBAMetadataToStateTransformer(BA ba) {
 		super(ba);
 	}

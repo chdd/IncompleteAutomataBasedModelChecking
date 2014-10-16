@@ -10,8 +10,8 @@ package it.polimi.view.menu;
  */
 
 
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.elements.states.State;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

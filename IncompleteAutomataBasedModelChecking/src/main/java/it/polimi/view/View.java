@@ -6,13 +6,13 @@ import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.loading.LoadSpecification;
 import it.polimi.controller.actions.file.saving.SaveModel;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
@@ -57,7 +57,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private JButton saveModel;
 	private JButton modelDevelopment;
 	private JButton modelEditing;
-	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>> modelTabmodel;
+	private IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>> modelTabmodel;
 	
 	// claim
 	private JButton openClaim;
@@ -65,7 +65,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private JButton ltlLoadClaim;
 	private JButton claimDevelopment;
 	private JButton claimEditing;
-	private BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>  claimTabClaimPanel;
+	private BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>  claimTabClaimPanel;
 
 	
 	
@@ -77,8 +77,8 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private TextArea brzozowskiSystem;
 
 	// verification snapshot
-	private IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>> verificationSnapshotModelPanel;
-	private BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>  verificationSnapshotClaimPanel;
+	private IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>> verificationSnapshotModelPanel;
+	private BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>  verificationSnapshotClaimPanel;
 	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationSnapshotIntersectionPanel;
 	private ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationSnapshotResultsPanel;
 	
@@ -91,8 +91,8 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	
 		
 	
-	public View(IncompleteBuchiAutomaton<S1, T1> model,
-			BuchiAutomaton<S1, T1> claim,
+	public View(IBAImpl<S1, T1> model,
+			BAImpl<S1, T1> claim,
 			IntersectionAutomaton<S1, T1,S,T> intersection) {
 		
 		
@@ -175,7 +175,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 containerModelMenu.add(this.modelEditing);
 		 modelTab.add(containerModelMenu);
 		 
-		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(model, this);
+		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>>(model, this);
 		 modelTab.add(modelTabmodel);
 		 
 		 //******************************************************************************************************************************
@@ -211,7 +211,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 this.claimEditing.setFocusPainted(false);
 		 containerClaimMenu.add(this.claimEditing);
 		 
-		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(claim, this);
+		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>(claim, this);
 		 
 		 claimTab.add(containerClaimMenu);
 		 claimTab.add(this.claimTabClaimPanel);
@@ -269,11 +269,11 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		
 		 
 		 container1.add(new JLabel("Model"));
-		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,IncompleteBuchiAutomaton<S1,T1>>(model, this);
+		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>>(model, this);
 		 container1.add(verificationSnapshotModelPanel);
 		
 		 container1.add(new JLabel("Claim"));
-		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<S1,T1, BuchiAutomaton<S1, T1>>(claim, this);
+		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>(claim, this);
 		 container1.add(verificationSnapshotClaimPanel);
 		 verificationSnapshotTab.add(container1);
 		 
@@ -299,12 +299,12 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	}
 	
 	@Override
-	public void updateModel(IncompleteBuchiAutomaton<S1, T1> model){
+	public void updateModel(IBAImpl<S1, T1> model){
 		this.modelTabmodel.update(model);
 		this.verificationSnapshotModelPanel.update(model);
 	}
 	@Override
-	public void updateSpecification(BuchiAutomaton<S1, T1> specification){
+	public void updateSpecification(BAImpl<S1, T1> specification){
 		this.claimTabClaimPanel.update(specification);
 		this.verificationSnapshotClaimPanel.update(specification);
 		

@@ -1,9 +1,9 @@
-package it.polimi.model.automata.iba;
+package it.polimi.model.automata.impl;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
-import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.elements.states.FactoryState;
+import it.polimi.model.interfaces.IBA;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @param <T> contains the type of the transitions of the automaton
  */
 @SuppressWarnings("serial")
-public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransition> extends BuchiAutomaton<S, T>{
+public class IBAImpl<S extends State, T extends LabelledTransition> extends BAImpl<S, T> implements IBA<S,T>{
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -29,17 +29,17 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	/**
 	 * creates a new extended automaton
 	 */
-	public IncompleteBuchiAutomaton(){
+	public IBAImpl(){
 		super();
 		this.transparentStates=new HashSet<S>();
 	}
 	
 	/**
-	 * creates a new extended automaton with the specified alphabet (see {@link BuchiAutomaton})
+	 * creates a new extended automaton with the specified alphabet (see {@link BAImpl})
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
-	public IncompleteBuchiAutomaton(Set<IGraphProposition> alphabet) {
+	public IBAImpl(Set<IGraphProposition> alphabet) {
 		super(alphabet);
 		transparentStates=new HashSet<S>();
 	}
@@ -69,6 +69,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 		}
 		return this.transparentStates.contains(s);
 	}
+	
 	/**
 	 * returns the set of the transparent states of the automaton
 	 * @return the set of the transparent states of the automaton (if no transparent states are present an empty set is returned)
@@ -77,12 +78,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 		return this.transparentStates;
 	}
 	
-	
-	
-	
-	
-	
-/**
+	/**
 	 * generates a new random graph (note that almost every graph is connected with the parameters n, 2ln(n)/n
 	 * @param n: number of nodes
 	 * @param p: probability through which each transition is included in the graph
@@ -95,7 +91,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 
 		this.reset();
 		Random r=new Random();
-		StateFactory<S> stateFactory=new StateFactory<S>();
+		FactoryState<S> stateFactory=new FactoryState<S>();
 		for(int i=0; i<n;i++){
 			S s=stateFactory.create();
 			if(r.nextInt(10)<=initialStateProbability*10){
@@ -117,7 +113,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
-					IGraphProposition character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					this.addTransition(s1, s2, this.transitionFactory.create(character));
 				}
 			}
@@ -139,7 +135,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 		this.addCharacters(alphabet);
 		Random r=new Random();
 		
-		StateFactory<S> stateFactory=new StateFactory<S>();
+		FactoryState<S> stateFactory=new FactoryState<S>();
 		for(int i=0; i<n;i++){
 			this.addVertex(stateFactory.create());
 		}
@@ -170,7 +166,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					
-					IGraphProposition character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					this.addTransition(s1, s2, this.transitionFactory.create(character));
 				}
 			}
@@ -211,7 +207,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IncompleteBuchiAutomaton<S,T> other = (IncompleteBuchiAutomaton<S,T>) obj;
+		IBAImpl<S,T> other = (IBAImpl<S,T>) obj;
 		if (transparentStates == null) {
 			if (other.transparentStates != null)
 				return false;
@@ -221,7 +217,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	}
 	/**
 	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.
-	 * @see it.polimi.model.automata.ba.BuchiAutomaton#reset()
+	 * @see it.polimi.model.automata.impl.BAImpl#reset()
 	 */	
 	@Override
 	public void reset(){

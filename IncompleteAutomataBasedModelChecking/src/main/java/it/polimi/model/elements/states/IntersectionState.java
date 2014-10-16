@@ -1,6 +1,5 @@
-package it.polimi.model.automata.intersection;
+package it.polimi.model.elements.states;
 
-import it.polimi.model.automata.ba.state.State;
 
 /**
  * @author claudiomenghi
@@ -42,13 +41,10 @@ public class IntersectionState<S extends State> extends State{
 			throw new IllegalArgumentException("the number of the state must be equal to 0,1 or 2");
 		}
 		this.name=s1.getName()+"-"+s2.getName()+"-"+number;
-		
-
-	
+			
 		this.s1=s1;
 		this.s2=s2;
 		this.number=number;
-		
 	}
 
 	/**
@@ -88,13 +84,14 @@ public class IntersectionState<S extends State> extends State{
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		IntersectionState other = (IntersectionState) obj;
+		IntersectionState<S> other = (IntersectionState<S>) obj;
 		if (number != other.number)
 			return false;
 		if (s1 == null) {
@@ -109,6 +106,4 @@ public class IntersectionState<S extends State> extends State{
 			return false;
 		return true;
 	}
-
-	
 }

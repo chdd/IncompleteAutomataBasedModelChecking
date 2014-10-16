@@ -1,16 +1,16 @@
 package it.polimi.model;
 
 import it.polimi.model.automata.ba.BAtoFile;
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 import it.polimi.model.automata.iba.IBAtoFile;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
@@ -34,12 +34,12 @@ public class Model implements ModelInterface{
 	/**
 	 * contains the model of the system
 	 */
-	private IncompleteBuchiAutomaton<State, LabelledTransition> model;
+	private IBAImpl<State, LabelledTransition> model;
 	
 	/**
 	 * contains the specification of the system
 	 */
-	private BuchiAutomaton<State, LabelledTransition>  specification;
+	private BAImpl<State, LabelledTransition>  specification;
 	/**
 	 * contains the intersection between the model and the specification
 	 */
@@ -49,8 +49,8 @@ public class Model implements ModelInterface{
 	
 	
 	public Model(){
-		this.model=new IncompleteBuchiAutomaton<State, LabelledTransition>();
-		this.specification=new BuchiAutomaton<State, LabelledTransition>();
+		this.model=new IBAImpl<State, LabelledTransition>();
+		this.specification=new BAImpl<State, LabelledTransition>();
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>();
 	}
 	/**
@@ -94,14 +94,14 @@ public class Model implements ModelInterface{
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public IncompleteBuchiAutomaton<State, LabelledTransition> getModel(){
+	public IBAImpl<State, LabelledTransition> getModel(){
 		return this.model;
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public BuchiAutomaton<State, LabelledTransition> getSpecification(){
+	public BAImpl<State, LabelledTransition> getSpecification(){
 		return this.specification;
 	}
 	/**

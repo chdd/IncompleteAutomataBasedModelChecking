@@ -1,10 +1,11 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
-import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.elements.states.FactoryState;
+import it.polimi.model.interfaces.BA;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
@@ -26,7 +27,7 @@ import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
 
-public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends BuchiAutomaton<S,T>> extends AutomatonJPanel<S,T,A>  {
+public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends BAImpl<S,T>> extends AutomatonJPanel<S,T,A>  {
 
 	/**
 	 * 
@@ -36,8 +37,8 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 	/**
 	 * creates a new {@link JComponent} which prints the automaton a
 	 * @param d is the {@link Dimension} of the component
-	 * @param a is the {@link BuchiAutomaton} to be printed
-	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BuchiAutomaton} d is null
+	 * @param a is the {@link BAImpl} to be printed
+	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
 	public BuchiAutomatonJPanel(A a, ActionListener l){
 		super(a, l); 
@@ -72,7 +73,7 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 	@Override
 	public void setEditingMode() {
 		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
-                new StateFactory<S>(), new TransitionFactory<T>()); 
+                new FactoryState<S>(), new TransitionFactory<T>()); 
 		this.setGraphMouse(gm);
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);

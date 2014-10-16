@@ -1,10 +1,10 @@
-package it.polimi.model.automata.ba;
+package it.polimi.model.automata.impl;
 
-import it.polimi.model.automata.ba.state.State;
-import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.elements.states.FactoryState;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.BA;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,25 +21,25 @@ import edu.uci.ics.jung.graph.util.Pair;
 
 /**
  * @author claudiomenghi
- * contains a complete {@link BuchiAutomaton}
+ * contains a complete {@link BAImpl}
  * @param <S> the type of the states
  * @param <T> the type of the transitions
  */
 @SuppressWarnings("serial")
-public class BuchiAutomaton<S extends State, T extends LabelledTransition> extends DirectedSparseGraph<S,T>{
+public class BAImpl<S extends State, T extends LabelledTransition> extends DirectedSparseGraph<S,T> implements BA<S,T>{
 	
 	/**
-	 * contains the initial states of the {@link BuchiAutomaton}
+	 * contains the initial states of the {@link BAImpl}
 	 */
 	protected Set<S> initialStates;
 	
 	/**
-	 * contains the set of the character of the {@link BuchiAutomaton}
+	 * contains the set of the character of the {@link BAImpl}
 	 */
 	protected Set<IGraphProposition> alphabet;
 	
 	/**
-	 * contains the accepting states of the {@link BuchiAutomaton}
+	 * contains the accepting states of the {@link BAImpl}
 	 */
 	protected Set<S> acceptStates;
 	
@@ -48,9 +48,9 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	protected TransitionFactory<T> transitionFactory;
 	
 	/**
-	 * creates a new empty {@link BuchiAutomaton}
+	 * creates a new empty {@link BAImpl}
 	 */
-	public BuchiAutomaton() {
+	public BAImpl() {
 		super();
 		
 		this.alphabet=new HashSet<IGraphProposition>(0);
@@ -65,11 +65,11 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	
 	
 	/** 
-	 * Constructs a new {@link BuchiAutomaton} with the specified alphabet
-	 * @param alphabet: is the alphabet of the {@link BuchiAutomaton}
-	 * @throws NullPointerException is generated if the alphabet of the {@link BuchiAutomaton} is null
+	 * Constructs a new {@link BAImpl} with the specified alphabet
+	 * @param alphabet: is the alphabet of the {@link BAImpl}
+	 * @throws NullPointerException is generated if the alphabet of the {@link BAImpl} is null
 	 */
-	public BuchiAutomaton(Set<IGraphProposition> alphabet) {
+	public BAImpl(Set<IGraphProposition> alphabet) {
 		super();
 		if(alphabet==null){
 			throw new IllegalArgumentException();
@@ -82,8 +82,8 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	}
 	
 	/**
-	 * Returns the alphabet of the {@link BuchiAutomaton}
-	 * @return the alphabet of the {@link BuchiAutomaton}
+	 * Returns the alphabet of the {@link BAImpl}
+	 * @return the alphabet of the {@link BAImpl}
 	 */
 	public Set<IGraphProposition> getAlphabet() {
 		return alphabet;
@@ -225,7 +225,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		this.addCharacters(alphabet);
 		Random r=new Random();
 		
-		StateFactory<S> stateFactory=new StateFactory<S>();
+		FactoryState<S> stateFactory=new FactoryState<S>();
 		for(int i=0; i<n;i++){
 			
 			S s=stateFactory.create("s"+i);
@@ -256,7 +256,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 				if(randInt<=transitionProbability){
 					
 					
-					IGraphProposition character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					this.addTransition(s1, s2,  this.transitionFactory.create(character));
 				}
 			}
@@ -381,6 +381,16 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		return ret;
 	}
 	
+	public boolean removeVertex(S vertex) {
+		if(this.initialStates.contains(vertex)){
+			this.initialStates.remove(vertex);
+		}
+		if(this.acceptStates.contains(vertex)){
+			this.acceptStates.remove(vertex);
+		}
+        return super.removeVertex(vertex);
+    }
+	
 	public S getVertex(int id){
 		
 		if(!this.mapNameState.containsKey(id)){
@@ -388,5 +398,23 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		}
 		
 		return this.mapNameState.get(id);
+	}
+
+	/**
+	 * returns the transitions that exits the {@link State} state
+	 * @return the transitions that exits the {@link State} state
+	 */
+	@Override
+	public Set<T> getOutTransition(S state) {
+		return new HashSet<T>(super.getOutEdges(state));
+	}
+
+	/**
+	 * returns the destination of the {@link LabelledTransition} transition
+	 * @return the {@link State} which is the destination of the {@link LabelledTransition} transition
+	 */
+	@Override
+	public S getTransitionDestination(T transition) {
+		return this.getDest(transition);
 	}
 }

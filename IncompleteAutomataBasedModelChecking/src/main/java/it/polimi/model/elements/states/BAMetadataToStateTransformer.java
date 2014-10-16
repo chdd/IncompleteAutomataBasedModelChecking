@@ -1,19 +1,25 @@
-package it.polimi.model.automata.ba.state;
+package it.polimi.model.elements.states;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.automata.impl.BAImpl;
 
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
-public class BAMetadataToStateTransformer<BA extends BuchiAutomaton<State, LabelledTransition>> implements Transformer<NodeMetadata, State> {
+
+/**
+ * @author claudiomenghi
+ * contains the transformer that given the metadata of a State returns the state
+ * @param <BA> is the BuchiAutomaton of the state
+ */
+public class BAMetadataToStateTransformer<BA extends BAImpl<State, LabelledTransition>> implements Transformer<NodeMetadata, State> {
 	
 	protected BA ba;
 	public BAMetadataToStateTransformer(BA ba){
 		this.ba=ba;
 	}
-
+	
 	@Override
 	public State transform(NodeMetadata input) {
 		

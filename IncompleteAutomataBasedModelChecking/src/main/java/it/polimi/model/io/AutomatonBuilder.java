@@ -1,14 +1,14 @@
 package it.polimi.model.io;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.io.fromfile.BATransformer;
-import it.polimi.model.automata.ba.state.BAMetadataToStateTransformer;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.BAMetadataToTransitionTransformer;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
-import it.polimi.model.io.iba.IBAMetadataToStateTransformer;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
+import it.polimi.model.elements.states.BAMetadataToStateTransformer;
+import it.polimi.model.elements.states.IBAMetadataToStateTransformer;
+import it.polimi.model.elements.states.State;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,21 +40,19 @@ public class AutomatonBuilder{
 	 * @throws IOException 
 	 * @throws GraphIOException 
 	 */
-	public static BuchiAutomaton<State, LabelledTransition> loadBAAutomaton(String filePath) throws IOException, GraphIOException  {
+	public static BAImpl<State, LabelledTransition> loadBAAutomaton(String filePath) throws IOException, GraphIOException  {
 		
 		BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
 		
-		BuchiAutomaton<State, LabelledTransition> ba=new BuchiAutomaton<State, LabelledTransition>();
+		BAImpl<State, LabelledTransition> ba=new BAImpl<State, LabelledTransition>();
 		
 		/* Create the Graph Transformer */
-		Transformer<GraphMetadata, BuchiAutomaton<State, LabelledTransition>>
-		graphTransformer = new BATransformer<GraphMetadata, BuchiAutomaton<State, LabelledTransition>>(ba);
+		Transformer<GraphMetadata, BAImpl<State, LabelledTransition>>
+		graphTransformer = new BATransformer<GraphMetadata, BAImpl<State, LabelledTransition>>(ba);
 		
-		/* Create the Vertex Transformer */
-		BAMetadataToStateTransformer<BuchiAutomaton<State, LabelledTransition>> vertexTransformer=new BAMetadataToStateTransformer<BuchiAutomaton<State,LabelledTransition>>(ba);
-
+		
 		/* Create the Edge Transformer */
-		 Transformer<EdgeMetadata, LabelledTransition> edgeTransformer =new BAMetadataToTransitionTransformer<BuchiAutomaton<State, LabelledTransition>>(ba);
+		 Transformer<EdgeMetadata, LabelledTransition> edgeTransformer =new BAMetadataToTransitionTransformer<BAImpl<State, LabelledTransition>>(ba);
 		
 		
 		 /* Create the Hyperedge Transformer */
@@ -68,11 +66,13 @@ public class AutomatonBuilder{
 		 };
 		 
 		
-		GraphMLReader2<BuchiAutomaton<State, LabelledTransition>, State, LabelledTransition> graphReader = 
-				new GraphMLReader2<BuchiAutomaton<State, LabelledTransition>, State, LabelledTransition>
-		(fileReader, graphTransformer, vertexTransformer,
+		GraphMLReader2<BAImpl<State, LabelledTransition>, State, LabelledTransition> graphReader = 
+				new GraphMLReader2<BAImpl<State, LabelledTransition>, State, LabelledTransition>
+		(fileReader, graphTransformer, 
+				new BAMetadataToStateTransformer<BAImpl<State,LabelledTransition>>(ba)
+				,
 			       edgeTransformer, hyperEdgeTransformer);
-		BuchiAutomaton<State, LabelledTransition> g = graphReader.readGraph();
+		BAImpl<State, LabelledTransition> g = graphReader.readGraph();
 		return g;
 	}
 	
@@ -85,22 +85,22 @@ public class AutomatonBuilder{
 	 * @throws IOException 
 	 * @throws GraphIOException 
 	 */
-	public static IncompleteBuchiAutomaton<State, LabelledTransition> loadIBAAutomaton(String filePath) throws IOException, GraphIOException  {
+	public static IBAImpl<State, LabelledTransition> loadIBAAutomaton(String filePath) throws IOException, GraphIOException  {
 			
 		BufferedReader fileReader = new BufferedReader(new FileReader(filePath));
 		
-		IncompleteBuchiAutomaton<State, LabelledTransition> ba=new IncompleteBuchiAutomaton<State, LabelledTransition>();
+		IBAImpl<State, LabelledTransition> ba=new IBAImpl<State, LabelledTransition>();
 		
 		/* Create the Graph Transformer */
-		Transformer<GraphMetadata, IncompleteBuchiAutomaton<State, LabelledTransition>>
-		graphTransformer = new BATransformer<GraphMetadata, IncompleteBuchiAutomaton<State, LabelledTransition>>(ba);
+		Transformer<GraphMetadata, IBAImpl<State, LabelledTransition>>
+		graphTransformer = new BATransformer<GraphMetadata, IBAImpl<State, LabelledTransition>>(ba);
 		
 		/* Create the Vertex Transformer */
-		IBAMetadataToStateTransformer<IncompleteBuchiAutomaton<State, LabelledTransition>> vertexTransformer=
-				new IBAMetadataToStateTransformer<IncompleteBuchiAutomaton<State, LabelledTransition>>(ba);
+		IBAMetadataToStateTransformer<IBAImpl<State, LabelledTransition>> vertexTransformer=
+				new IBAMetadataToStateTransformer<IBAImpl<State, LabelledTransition>>(ba);
 
 		/* Create the Edge Transformer */
-		 Transformer<EdgeMetadata, LabelledTransition> edgeTransformer =new BAMetadataToTransitionTransformer<IncompleteBuchiAutomaton<State, LabelledTransition>>(ba);
+		 Transformer<EdgeMetadata, LabelledTransition> edgeTransformer =new BAMetadataToTransitionTransformer<IBAImpl<State, LabelledTransition>>(ba);
 			
 		
 		
@@ -115,13 +115,14 @@ public class AutomatonBuilder{
 		 };
 		 
 		
-		GraphMLReader2<IncompleteBuchiAutomaton<State, LabelledTransition>, State, LabelledTransition> graphReader = 
-				new GraphMLReader2<IncompleteBuchiAutomaton<State, LabelledTransition>, State, LabelledTransition>
-		(fileReader, graphTransformer, vertexTransformer,
+		GraphMLReader2<IBAImpl<State, LabelledTransition>, State, LabelledTransition> graphReader = 
+				new GraphMLReader2<IBAImpl<State, LabelledTransition>, State, LabelledTransition>
+		(fileReader, graphTransformer, 
+				vertexTransformer,
 			       edgeTransformer, hyperEdgeTransformer);
 				
 				
-		IncompleteBuchiAutomaton<State, LabelledTransition> g = graphReader.readGraph();
+		IBAImpl<State, LabelledTransition> g = graphReader.readGraph();
 		return g;
 	}
 }

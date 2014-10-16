@@ -1,6 +1,6 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
-import it.polimi.model.automata.ba.state.State;
+import it.polimi.model.elements.states.State;
 
 import java.util.ArrayList;
 import java.util.List;

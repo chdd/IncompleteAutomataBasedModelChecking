@@ -1,12 +1,13 @@
 package it.polimi.model;
 
-import it.polimi.model.automata.ba.BuchiAutomaton;
-import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
+import it.polimi.model.automata.impl.BAImpl;
+import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
-import it.polimi.model.automata.intersection.IntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.BA;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
@@ -40,12 +41,12 @@ public interface ModelInterface {
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public IncompleteBuchiAutomaton<State, LabelledTransition> getModel();
+	public IBAImpl<State, LabelledTransition> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public BuchiAutomaton<State, LabelledTransition> getSpecification();
+	public BAImpl<State, LabelledTransition> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
