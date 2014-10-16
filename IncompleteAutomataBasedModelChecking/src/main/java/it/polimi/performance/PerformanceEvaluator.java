@@ -4,6 +4,7 @@ import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.automata.ba.transition.labeling.Proposition;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionState;
 import it.polimi.model.io.AutomatonBuilder;
@@ -17,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import edu.uci.ics.jung.io.GraphIOException;
 
 /**
@@ -51,9 +53,9 @@ public class PerformanceEvaluator{
 			for(int i=initialNumberOfTransparentStates; i<=maxNumberTransparentStates;i=i+incrementNumberOfTransparentStates){
 				
 				for(int j=0;j<numeroProve;j++){
-					Set<String> alphabetModel=new HashSet<String>();
-					alphabetModel.add("a");
-					alphabetModel.add("b");
+					Set<IGraphProposition> alphabetModel=new HashSet<IGraphProposition>();
+					alphabetModel.add(new Proposition("a", false));
+					alphabetModel.add(new Proposition("b", false));
 					
 					PrintWriter writer=null;
 					if(j==0){

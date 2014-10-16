@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
@@ -35,7 +36,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	/**
 	 * contains the set of the character of the {@link BuchiAutomaton}
 	 */
-	protected Set<String> alphabet;
+	protected Set<IGraphProposition> alphabet;
 	
 	/**
 	 * contains the accepting states of the {@link BuchiAutomaton}
@@ -52,7 +53,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	public BuchiAutomaton() {
 		super();
 		
-		this.alphabet=new HashSet<String>(0);
+		this.alphabet=new HashSet<IGraphProposition>(0);
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.mapNameState=new HashMap<Integer,S>();
@@ -61,12 +62,14 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	
 	
 	
+	
+	
 	/** 
 	 * Constructs a new {@link BuchiAutomaton} with the specified alphabet
 	 * @param alphabet: is the alphabet of the {@link BuchiAutomaton}
 	 * @throws NullPointerException is generated if the alphabet of the {@link BuchiAutomaton} is null
 	 */
-	public BuchiAutomaton(Set<String> alphabet) {
+	public BuchiAutomaton(Set<IGraphProposition> alphabet) {
 		super();
 		if(alphabet==null){
 			throw new IllegalArgumentException();
@@ -82,7 +85,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 * Returns the alphabet of the {@link BuchiAutomaton}
 	 * @return the alphabet of the {@link BuchiAutomaton}
 	 */
-	public Set<String> getAlphabet() {
+	public Set<IGraphProposition> getAlphabet() {
 		return alphabet;
 	}
 	
@@ -91,18 +94,18 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 * @param character is the character to be added in the alphabet of the automaton
 	 * @throws IllegalArgumentException if the character is null or if the character is already contained into the alphabet of the automaton
 	 */
-	public void addCharacter(String character){
+	public void addCharacter(IGraphProposition character){
 		if(character==null){
 			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
 		}
 		this.alphabet.add(character);
 	}
 	
-	public void addCharacters(Set<String> characters){
+	public void addCharacters(Set<IGraphProposition> characters){
 		if(characters==null){
 			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
 		}
-		for(String character: characters){
+		for(IGraphProposition character: characters){
 			this.addCharacter(character);
 		}
 	}
@@ -187,10 +190,10 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 * 					the source is not contained into the set of the states of the automaton <br/>
 	 *					the destination of the transition is not contained into the set of the states of the automaton <br/>
 	 */
-	public void addTransition(S source, S destination, T labels){
+	public void addTransition(S source, S destination, T transition){
 		
-		this.alphabet.addAll(labels.getCharacter());
-		super.addEdge(labels, source, destination, EdgeType.DIRECTED);
+		this.alphabet.addAll(transition.getDnfFormula().getPropositions());
+		super.addEdge(transition, source, destination, EdgeType.DIRECTED);
 	}
 	
 	
@@ -199,7 +202,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 */
 	public void reset(){
 		this.initialStates=new HashSet<S>();
-		this.alphabet=new HashSet<String>();
+		this.alphabet=new HashSet<IGraphProposition>();
 		this.acceptStates=new HashSet<S>();
 		this.edges=new HashMap<T,Pair<S>>();
 		this.vertices=new HashMap<S,Pair<Map<S,T>>>();
@@ -213,7 +216,7 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<String> alphabet){
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<IGraphProposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -251,17 +254,17 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
-					Set<String> characters=new HashSet<String>();
-					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					characters.add(character);
-					this.addTransition(s1, s2,  this.transitionFactory.create(characters));
+					
+					
+					IGraphProposition character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					this.addTransition(s1, s2,  this.transitionFactory.create(character));
 				}
 			}
 		}
 	}
-	public static String getRandomString(Set<String> alphabet, int position){
+	public static IGraphProposition getRandomString(Set<IGraphProposition> alphabet, int position){
 
-		Iterator<String> it=alphabet.iterator();
+		Iterator<IGraphProposition> it=alphabet.iterator();
 		for(int i=0; i<position; i++){
 		
 			it.next();
@@ -386,30 +389,4 @@ public class BuchiAutomaton<S extends State, T extends LabelledTransition> exten
 		
 		return this.mapNameState.get(id);
 	}
-	
-	@Override
-    public boolean addEdge(T edge, Pair<? extends S> endpoints, EdgeType edgeType)
-    {
-    	this.validateEdgeType(edgeType);
-        Pair<S> new_endpoints = getValidatedEndpoints(edge, endpoints);
-        if (new_endpoints == null)
-            return false;
-        
-        S source = new_endpoints.getFirst();
-        S dest = new_endpoints.getSecond();
-        
-        edges.put(edge, new_endpoints);
-
-        if (!vertices.containsKey(source))
-            this.addVertex(source);
-        
-        if (!vertices.containsKey(dest))
-            this.addVertex(dest);
-        
-        // map source of this edge to <dest, edge> and vice versa
-        vertices.get(source).getSecond().put(dest, edge);
-        vertices.get(dest).getFirst().put(source, edge);
-
-        return true;
-    }
 }

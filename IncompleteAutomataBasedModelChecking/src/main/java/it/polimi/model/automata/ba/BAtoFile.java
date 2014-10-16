@@ -52,7 +52,9 @@ public class BAtoFile {
 					return Integer.toString(input.getId());
 				}
 			});
-		graphWriter.addEdgeData("labels", "labels", "", new TransitionToMetadataTransformer<State,LabelledTransition, BuchiAutomaton<State, LabelledTransition>>());
+		graphWriter.addEdgeData("id", "id", "", new TransitionToMetadataTransformer.TransitionIdToMetadataTransformer<LabelledTransition>());
+		graphWriter.addEdgeData("DNFFormula", "DNFFormula", "", new TransitionToMetadataTransformer.TransitionDNFFormulaToMetadataTransformer<LabelledTransition>());
+		
 		
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filePath)));
 		

@@ -57,7 +57,7 @@ public class State implements Comparable<State>{
 	 * @return the String representation of the AutomatonState
 	 */
 	public String toString(){
-		return "Id: {"+this.id+"} "+"\n Name: {"+this.getName()+"}";
+		return "Id: {"+this.id+"} "+" Name: {"+this.getName()+"}";
 	}
 
 	public int getId(){

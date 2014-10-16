@@ -12,6 +12,7 @@ package it.polimi.view.menu;
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 
 import java.awt.event.ActionEvent;
@@ -37,9 +38,6 @@ public class Actions {
 			this.add(new AddCharacter());
 			this.addSeparator();
 			
-			this.add(new RemoveCharacter());
-			this.addSeparator();
-
 			this.add(new DeleteEdgeMenuItem());
 		}
 	}
@@ -60,7 +58,7 @@ public class Actions {
 
 			this.character.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					edge.addCharacter(character.getText());
+					edge.setDNFFormula(DNFFormula.loadFromString(character.getText()));
 					visComp.repaint();
 				}
 			});
@@ -79,43 +77,7 @@ public class Actions {
 		}
 	}
 
-	@SuppressWarnings("serial")
-	public static class RemoveCharacter extends Box implements
-			EdgeMenuListener<State, LabelledTransition> {
-		private LabelledTransition edge;
-		private VisualizationViewer<State, LabelledTransition> visComp;
-		private JTextField character;
-
-		/** Creates a new instance of DeleteEdgeMenuItem */
-		public RemoveCharacter() {
-			super(BoxLayout.X_AXIS);
-
-			this.add(new JLabel("Character to remove: "));
-			this.character = new JTextField("character");
-			this.add(character);
-
-			this.character.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					edge.removeCharacter(character.getText());
-					visComp.repaint();
-				}
-			});
-		}
-
-		/**
-		 * Implements the EdgeMenuListener interface to update the menu item
-		 * with info on the currently chosen edge.
-		 * 
-		 * @param edge
-		 * @param visComp
-		 */
-		public void setEdgeAndView(LabelledTransition edge,
-				VisualizationViewer<State, LabelledTransition> visComp) {
-			this.edge = edge;
-			this.visComp = visComp;
-		}
-
-	}
+	
 
 	@SuppressWarnings("serial")
 	public static class DeleteEdgeMenuItem extends JMenuItem implements

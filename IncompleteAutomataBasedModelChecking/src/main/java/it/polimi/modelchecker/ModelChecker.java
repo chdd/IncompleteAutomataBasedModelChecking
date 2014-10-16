@@ -86,6 +86,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 		this.parameters.setNumTransparentStatesModel(this.model.getTransparentStates().size());
 		
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
+		System.out.println(this.specification.toString());
 		long startIntersectionTime = System.nanoTime();   
 		this.ris=new IntersectionAutomaton<S1,T1, S, T>(this.model, this.specification);
 		long stopTime = System.nanoTime(); 

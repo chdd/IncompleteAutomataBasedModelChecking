@@ -6,6 +6,7 @@ import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
+import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 import it.polimi.model.automata.iba.IBAtoFile;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.model.automata.intersection.IntersectionAutomaton;
@@ -16,7 +17,6 @@ import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
-import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -143,11 +143,8 @@ public class Model implements ModelInterface{
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	@Override
-	public void addTransitionToTheModel(String source, String destination, Set<String> character){
-		
-		
-		this.model.addTransition(this.model.getVertex(Integer.parseInt(source)), this.model.getVertex(Integer.parseInt(destination)), new TransitionFactory<LabelledTransition>().create(character));
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+	public void addTransitionToTheModel(String source, String destination, String dnfFormula){
+		this.model.addTransition(this.model.getVertex(Integer.parseInt(source)), this.model.getVertex(Integer.parseInt(destination)), new TransitionFactory<LabelledTransition>().create(DNFFormula.loadFromString(dnfFormula)));
 	}
 	@Override
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting) {
@@ -160,26 +157,11 @@ public class Model implements ModelInterface{
 		this.specification.addVertex(s);
 		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
-	@Override
-	public void addTransitionToTheSpecification(String source, String destination, Set<String> character) {
-		this.specification.addTransition(this.specification.getVertex(Integer.parseInt(source)), this.specification.getVertex(Integer.parseInt(destination)),new TransitionFactory<LabelledTransition>().create(character));
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
-	}
-	@Override
-	public void addCharacterToTheModed(String character) {
-		this.model.addCharacter(character);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
-		
-	}
+	
 	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection){
 		this.intersection=intersection;
 	}
 	
-	@Override
-	public void addCharacterToTheSpecification(String character) {
-		this.specification.addCharacter(character);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
-	}
 	
 	@Override
 	public void loadClaim(String claim){
@@ -198,4 +180,10 @@ public class Model implements ModelInterface{
 	public ModelCheckerParameters<State, IntersectionState<State>> getVerificationResults(){
 		return this.mp;
 	}
+	@Override
+	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula) {
+		this.specification.addTransition(this.specification.getVertex(Integer.parseInt(source)), this.specification.getVertex(Integer.parseInt(destination)), new TransitionFactory<LabelledTransition>().create(DNFFormula.loadFromString(dnfFormula)));
+	
+	}
+	
 }

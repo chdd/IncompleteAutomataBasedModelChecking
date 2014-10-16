@@ -1,8 +1,7 @@
 package it.polimi.model.automata.ba.transition;
 
 import it.polimi.model.automata.ba.state.State;
-
-import java.util.Set;
+import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 
 /**
  * contains a constrainedTransition which is a transition that can be performed only if the constrainedState recognizes 
@@ -26,8 +25,8 @@ public class ConstrainedTransition<S1 extends State> extends LabelledTransition 
 	 * @param constrainedState is the state in the original model which is constrained
 	 * @throws IllegalArgumentException if the character, the destination or the constrained state is null
 	 */
-	protected ConstrainedTransition(Set<String> c,S1 constrainedState, int id) {
-		super(c, id);
+	protected ConstrainedTransition(DNFFormula dnfFormula,S1 constrainedState, int id) {
+		super(dnfFormula, id);
 		
 		this.constrainedState=constrainedState;
 	}
@@ -42,7 +41,7 @@ public class ConstrainedTransition<S1 extends State> extends LabelledTransition 
 	@Override
 	public String toString() {
 		if(constrainedState!=null){
-			return "<"+constrainedState.getName()+","+super.getCharacter()+">";
+			return "<"+constrainedState.getName()+","+super.getDnfFormula().toString()+">";
 		}
 		else{
 			return super.toString();

@@ -157,10 +157,10 @@ extends ConstrainedTransition<S1>> {
 						// if the first state of s1 does not change and the state is transparent
 						if(t.getConstrainedState()!=null){
 							if(!setted){
-								ret[i][j]=new AtomicProposition<S1>(s1.getS1(),t.getCharacter()+"");
+								ret[i][j]=new AtomicProposition<S1>(s1.getS1(),t.getDnfFormula().toString()+"");
 							}
 							else{
-								ret[i][j]=ret[i][j].union(new AtomicProposition<S1>(s1.getS1(),t.getCharacter()+""));
+								ret[i][j]=ret[i][j].union(new AtomicProposition<S1>(s1.getS1(),"("+t.getDnfFormula().toString()+")"));
 							}
 						}
 						else{

@@ -5,6 +5,7 @@ import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
 import it.polimi.model.automata.iba.IncompleteBuchiAutomaton;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
@@ -258,7 +259,9 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 				// for each transition in the extended automaton whit source s2
 				for(T1 t2: this.specification.getOutEdges(s2)){
 					// if the characters of the two transitions are equal
-					if(t1.getCharacter().equals(t2.getCharacter())){
+					
+					Set<ConjunctiveClause> commonClauses=t1.getDnfFormula().getCommonClauses(t2.getDnfFormula());
+					if(!commonClauses.isEmpty()){
 						
 						
 						// creates a new state made by the states s1next and s2 next
@@ -267,7 +270,7 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 						S p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
 						ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
-						T t=ctfactory.create(t1.getCharacter());
+						T t=ctfactory.create(commonClauses);
 						this.addTransition(currentState, p, t);
 						
 						// re-executes the recursive procedure
@@ -285,7 +288,7 @@ extends ConstrainedTransition<S1>> extends IncompleteBuchiAutomaton<S, T> {
 					S p=this.addIntersectionState(s1, this.specification.getDest(t2), currentState);
 					// the new state is connected by the previous one through a constrained transition
 					ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
-					T t=ctfactory.create(t2.getCharacter(), s1);
+					T t=ctfactory.create(t2.getDnfFormula(), s1);
 					this.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(s1, s2next, visitedStates, p);

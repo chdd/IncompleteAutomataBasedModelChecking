@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
+
 /**
  * @author claudiomenghi
  * contains a possibly incomplete Buchi automaton which extends classical automaton with transparent states
@@ -37,7 +39,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
-	public IncompleteBuchiAutomaton(Set<String> alphabet) {
+	public IncompleteBuchiAutomaton(Set<IGraphProposition> alphabet) {
 		super(alphabet);
 		transparentStates=new HashSet<S>();
 	}
@@ -86,7 +88,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<String> alphabet){
+	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<IGraphProposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -115,10 +117,8 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
-					Set<String> characters=new HashSet<String>();
-					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					characters.add(character);
-					this.addTransition(s1, s2, this.transitionFactory.create(characters));
+					IGraphProposition character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					this.addTransition(s1, s2, this.transitionFactory.create(character));
 				}
 			}
 		}
@@ -130,7 +130,7 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 	 * @return a new random graph
 	 */
 
-	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<String> alphabet){
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<IGraphProposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -169,18 +169,16 @@ public class IncompleteBuchiAutomaton<S extends State, T extends LabelledTransit
 			for(S s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
-					Set<String> characters=new HashSet<String>();
 					
-					String character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					characters.add(character);
-					this.addTransition(s1, s2, this.transitionFactory.create(characters));
+					IGraphProposition character=IncompleteBuchiAutomaton.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					this.addTransition(s1, s2, this.transitionFactory.create(character));
 				}
 			}
 		}
 	}
-	public static String getRandomString(Set<String> alphabet, int position){
+	public static IGraphProposition getRandomString(Set<IGraphProposition> alphabet, int position){
 
-		Iterator<String> it=alphabet.iterator();
+		Iterator<IGraphProposition> it=alphabet.iterator();
 		if(position==0)
 		for(int i=0; i<position; i++){
 		

@@ -5,6 +5,8 @@ import it.polimi.model.automata.ba.state.State;
 import it.polimi.model.automata.ba.state.StateFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
+import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
+import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,14 +58,21 @@ public class LTLtoBATransformer implements Transformer<String, BuchiAutomaton<St
 			}
 		}
 		for(ITransition t: transitions){
-			Set<String> propositions=new HashSet<String>();
+			ConjunctiveClause conjunctionClause=new ConjunctiveClause();
 			for(IGraphProposition p: t.getLabels()){
-				propositions.add(p.getFullLabel());
+				conjunctionClause.addProposition(p);
 			}
-			ba.addTransition(
-					map.get(t.getSourceState()),
-					map.get(t.getTargetState()),
-					transitionFactory.create(propositions));
+			if(ba.isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
+				ba.findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getDnfFormula().addDisjunctionClause(conjunctionClause);
+			}
+			else{
+				DNFFormula dnfFormula=new DNFFormula();
+				dnfFormula.addDisjunctionClause(conjunctionClause);
+				ba.addTransition(
+						map.get(t.getSourceState()),
+						map.get(t.getTargetState()),
+						transitionFactory.create(dnfFormula));
+			}
 		}
 		
 		return ba;

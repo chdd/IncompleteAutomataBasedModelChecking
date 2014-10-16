@@ -14,18 +14,21 @@ public class TransitionToMetadataTransformer<S extends State, T extends Labelled
 	@Override
 	public String transform(T input) {
 		
+		return input.toString();
+	}
+	
+	public static class TransitionIdToMetadataTransformer<T extends LabelledTransition> implements Transformer<T, String> {
 		
-		String labels="";
-		boolean first=true;
-		for(String character: input.getCharacter()){
-			if(first){
-				labels=character;
-				first=false;
-			}
-			else{
-				labels+=","+character;
-			}
+		@Override
+		public String transform(T input) {
+			return Integer.toString(input.getId());
 		}
-		return labels;
+	}
+	public static class TransitionDNFFormulaToMetadataTransformer<T extends LabelledTransition> implements Transformer<T, String> {
+		
+		@Override
+		public String transform(T input) {
+			return input.getDnfFormula().toString();
+		}
 	}
 }

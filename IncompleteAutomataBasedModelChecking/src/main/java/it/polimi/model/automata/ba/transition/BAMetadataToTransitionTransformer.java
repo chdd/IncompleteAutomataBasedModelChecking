@@ -2,9 +2,7 @@ package it.polimi.model.automata.ba.transition;
 
 import it.polimi.model.automata.ba.BuchiAutomaton;
 import it.polimi.model.automata.ba.state.State;
-
-import java.util.Arrays;
-import java.util.HashSet;
+import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -20,16 +18,8 @@ public class BAMetadataToTransitionTransformer<BA extends BuchiAutomaton<State, 
 	
 	@Override
 	public LabelledTransition transform(EdgeMetadata input) {
-		LabelledTransition e;
-		if(input.getProperty("labels")!=null){
-			ba.addCharacters(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))));
-			e = new LabelledTransition(new HashSet<String>(Arrays.asList(input.getProperty("labels").split(","))), Integer.parseInt(input.getId()));
-		}
-		else{
-			e = new LabelledTransition(new HashSet<String>(), Integer.parseInt(input.getId()));
-			
-		}
-         return e;
+		
+		return new LabelledTransition(DNFFormula.loadFromString(input.getProperty("DNFFormula")), Integer.parseInt(input.getProperty("id")));
 	}
 
 }

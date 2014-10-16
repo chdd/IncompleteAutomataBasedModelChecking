@@ -90,12 +90,10 @@ public interface ModelInterface {
 	 */
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
 	
-	public void addTransitionToTheModel(String source, String destination, Set<String> character);
+	public void addTransitionToTheModel(String source, String destination, String dnfFormula);
 	
-	public void addTransitionToTheSpecification(String source, String destination, Set<String> character);
+	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula);
 	
-	public void addCharacterToTheModed(String character);
-	public void addCharacterToTheSpecification(String character);
 	
 	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection);
 
