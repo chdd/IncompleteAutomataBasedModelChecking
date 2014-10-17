@@ -10,7 +10,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 import it.polimi.model.interfaces.drawable.DrawableBA;
 import it.polimi.model.interfaces.drawable.DrawableIBA;
 import it.polimi.model.interfaces.drawable.DrawableIntBA;
@@ -94,7 +94,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private IncompleteBuchiAutomatonJPanel<S1,T1,DrawableIBA<S1,T1>> verificationSnapshotModelPanel;
 	private BuchiAutomatonJPanel<S1,T1, DrawableBA<S1, T1>>  verificationSnapshotClaimPanel;
 	private IntersectionAutomatonJPanel<S1, T1, S, T,DrawableIntBA<S1, T1, S, T>> verificationSnapshotIntersectionPanel;
-	private ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationSnapshotResultsPanel;
+	private ResultsJPanel<S1, T1, S, T,IntBAImpl<S1, T1, S, T>> verificationSnapshotResultsPanel;
 	
 	
 	
@@ -310,7 +310,7 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 
 		 container2.add(new JLabel("Model Checking results"));
 		 
-		 this.verificationSnapshotResultsPanel=new ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>();
+		 this.verificationSnapshotResultsPanel=new ResultsJPanel<S1, T1, S, T,IntBAImpl<S1, T1, S, T>>();
 		 container2.add(verificationSnapshotResultsPanel);
 			
 		 verificationSnapshotTab.add(container2);

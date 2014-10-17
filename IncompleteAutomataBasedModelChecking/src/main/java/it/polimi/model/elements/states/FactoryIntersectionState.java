@@ -1,12 +1,12 @@
 package it.polimi.model.elements.states;
 
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 
 import org.apache.commons.collections15.Factory;
 
 /**
  * @author claudiomenghi
- * contains the factory method (see Factory method pattern) which is in charge of instantiating the {@link IntersectionState} of the {@link IntersectionAutomaton}
+ * contains the factory method (see Factory method pattern) which is in charge of instantiating the {@link IntersectionState} of the {@link IntBAImpl}
  * @param <S> is the type of the {@link State} of the original automata
  * @param <IntS> is the type of the {@link IntersectionState} of the intersection automaton
  */
@@ -35,7 +35,7 @@ public class FactoryIntersectionState<S extends State, IntS extends Intersection
 	 * @param s1 is the first {@link State} of the automaton
 	 * @param s2 is the second {@link State} of the automaton
 	 * @param num is the number which is associated to the state
-	 * @return a new {@link IntersectionAutomaton} for the {@link IntersectionAutomaton}
+	 * @return a new {@link IntBAImpl} for the {@link IntBAImpl}
 	 */
 	@SuppressWarnings("unchecked")
 	public IntS create(S s1, S s2, int num) {

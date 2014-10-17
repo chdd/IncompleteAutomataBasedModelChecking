@@ -6,7 +6,7 @@ import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.BAImpl;
 import it.polimi.model.impl.IBAImpl;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 import it.polimi.model.interfaces.BA;
 import it.polimi.model.interfaces.IBA;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
@@ -17,8 +17,8 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * 
  * @param <S1> is the type of the states of the specification ({@link BAImpl}) and of the  model ({@link IBAImpl})
  * @param <T1> is the type of the transition of the specification ({@link BAImpl}) and of the  model ({@link IBAImpl})
- * @param <S>  is the type of the states of the {@link IntersectionAutomaton}
- * @param <T>  is the type of the states of the {@link IntersectionAutomaton}
+ * @param <S>  is the type of the states of the {@link IntBAImpl}
+ * @param <T>  is the type of the states of the {@link IntBAImpl}
  */
 public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>> {
 	
@@ -36,7 +36,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
 	 */
-	private IntersectionAutomaton<S1,T1, S, T> ris;
+	private IntBAImpl<S1,T1, S, T> ris;
 	
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
@@ -90,7 +90,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		System.out.println(this.specification.toString());
 		long startIntersectionTime = System.nanoTime();   
-		this.ris=new IntersectionAutomaton<S1,T1, S, T>(this.model, this.specification);
+		this.ris=new IntBAImpl<S1,T1, S, T>(this.model, this.specification);
 		long stopTime = System.nanoTime(); 
 		
 		// updates the time required to compute the intersection between the model and the specification
@@ -159,7 +159,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * returns the intersection between the model and the specification
 	 * @return the intersection automaton that contains the intersection of the model and the specification
 	 */
-	public IntersectionAutomaton<S1,T1, S, T> getIntersection(){
+	public IntBAImpl<S1,T1, S, T> getIntersection(){
 		return this.ris;
 	}
 	/**

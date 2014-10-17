@@ -26,7 +26,7 @@ import java.util.Stack;
  * @param <T> is the type of the transition in the intersection automaton
  */
 @SuppressWarnings("serial")
-public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
+public class IntBAImpl<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
 extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntBA<S1,T1,S,T>{
 
 	/**
@@ -49,7 +49,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 	 */
 	private boolean completeEmptiness=true;
 	
-	public IntersectionAutomaton(){
+	public IntBAImpl(){
 		this.model=new IBAImpl<S1, T1>();
 		this.specification=new BAImpl<S1, T1>();
 		this.mixedStates=new HashSet<S>(); 
@@ -59,7 +59,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 	 * @param model: is the model to be considered
 	 * @param specification: is the specification to be considered
 	 */
-	public IntersectionAutomaton(IBA<S1, T1> model, BA<S1, T1> specification){
+	public IntBAImpl(IBA<S1, T1> model, BA<S1, T1> specification){
 		super();
 		if(model==null){
 			throw new IllegalArgumentException("The model to be considered cannot be null");
@@ -199,7 +199,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IntersectionAutomaton<S1, T1, S, T> other = (IntersectionAutomaton<S1, T1, S, T>) obj;
+		IntBAImpl<S1, T1, S, T> other = (IntBAImpl<S1, T1, S, T>) obj;
 		if (mixedStates == null) {
 			if (other.mixedStates != null)
 				return false;

@@ -6,7 +6,7 @@ import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.BAImpl;
 import it.polimi.model.impl.IBAImpl;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public interface ModelInterface {
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
-	public IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> getIntersection();
+	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> getIntersection();
 	
 	/**
 	 * save the model in the file with path filePath
@@ -93,7 +93,7 @@ public interface ModelInterface {
 	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula);
 	
 	
-	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection);
+	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection);
 
 	public void check();
 	

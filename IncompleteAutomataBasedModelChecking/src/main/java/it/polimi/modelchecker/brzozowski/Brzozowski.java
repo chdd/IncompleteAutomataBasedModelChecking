@@ -7,7 +7,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
@@ -16,7 +16,7 @@ import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 
 /**
  * @author claudiomenghi
- * implements the modified Brzozowski algorithm, given a possibly empty {@link IntersectionAutomaton} computes the corresponding
+ * implements the modified Brzozowski algorithm, given a possibly empty {@link IntBAImpl} computes the corresponding
  * {@link Constraint}
  * 
  * @param <S1> the type of the {@link State}s of the original BA, (I)BA
@@ -28,9 +28,9 @@ public class Brzozowski<S1 extends State, T1 extends LabelledTransition,S extend
 extends ConstrainedTransition<S1>> {
 
 	/**
-	 * contains the {@link IntersectionAutomaton} to be analyzed
+	 * contains the {@link IntBAImpl} to be analyzed
 	 */
-	private final IntersectionAutomaton<S1, T1, S, T> a;
+	private final IntBAImpl<S1, T1, S, T> a;
 	
 	private final S[] orderedStates;
 	
@@ -38,11 +38,11 @@ extends ConstrainedTransition<S1>> {
 	
 	
 	/**
-	 * creates a new modified Brzozowski solved which is responsible for finding the {@link Constraint} associated with a particular {@link IntersectionAutomaton}
-	 * @param a is the {@link IntersectionAutomaton} to be analyzed
-	 * @throws IllegalArgumentException is generated if the {@link IntersectionAutomaton} a is null
+	 * creates a new modified Brzozowski solved which is responsible for finding the {@link Constraint} associated with a particular {@link IntBAImpl}
+	 * @param a is the {@link IntBAImpl} to be analyzed
+	 * @throws IllegalArgumentException is generated if the {@link IntBAImpl} a is null
 	 */
-	public Brzozowski(IntersectionAutomaton<S1, T1, S, T> a){
+	public Brzozowski(IntBAImpl<S1, T1, S, T> a){
 		if(a==null){
 			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
 		}
@@ -61,8 +61,8 @@ extends ConstrainedTransition<S1>> {
 	}
 	
 	/**
-	 * returns the {@link Constraint} associated with the {@link IntersectionAutomaton} a
-	 * @return the {@link Constraint} associated with the {@link IntersectionAutomaton} a
+	 * returns the {@link Constraint} associated with the {@link IntBAImpl} a
+	 * @return the {@link Constraint} associated with the {@link IntBAImpl} a
 	 */
 	public Constraint<S1> getConstraint(){
 		
@@ -109,10 +109,10 @@ extends ConstrainedTransition<S1>> {
 	}
 	
 	/**
-	 * returns the {@link Constraint} associated with the {@link IntersectionAutomaton}
-	 * @param t: is the matrix t which describes the transition relation of the {@link IntersectionAutomaton}
-	 * @param s: is the matrix s which describes the accepting states of the {@link IntersectionAutomaton}
-	 * @return the constraint associated with the {@link IntersectionAutomaton}
+	 * returns the {@link Constraint} associated with the {@link IntBAImpl}
+	 * @param t: is the matrix t which describes the transition relation of the {@link IntBAImpl}
+	 * @param s: is the matrix s which describes the accepting states of the {@link IntBAImpl}
+	 * @return the constraint associated with the {@link IntBAImpl}
 	 * @throws IllegalArgumentException if the matrix t or s is null
 	 */
 	protected  void solveSystem(AbstractProposition<S1>[][] t, AbstractProposition<S1>[] s) {
@@ -138,10 +138,10 @@ extends ConstrainedTransition<S1>> {
 		}
 }
 	/**
-	 * returns the matrix associated with the {@link IntersectionAutomaton} a
-	 * @param a is the {@link IntersectionAutomaton} to be converted into a matrix t
+	 * returns the matrix associated with the {@link IntBAImpl} a
+	 * @param a is the {@link IntBAImpl} to be converted into a matrix t
 	 * @param statesOrdered is an ordered version of the {@link State}s in a
-	 * @return the matrix that represents the {@link IntersectionAutomaton} a
+	 * @return the matrix that represents the {@link IntBAImpl} a
 	 * @throws IllegalArgumentException when the array of the states ordered is null
 	 */
 	protected AbstractProposition<S1>[][]  getConstraintT(){
@@ -195,13 +195,13 @@ extends ConstrainedTransition<S1>> {
 	}
 	
 	/**
-	 * returns the matrix S associated with the {@link IntersectionAutomaton} a
-	 * @param accept is the accepting states of the {@link IntersectionAutomaton} considered
-	 * @param statesOrdered contains the states of the {@link IntersectionAutomaton} a ordered
-	 * @return the matrix S associated with the {@link IntersectionAutomaton} a
+	 * returns the matrix S associated with the {@link IntBAImpl} a
+	 * @param accept is the accepting states of the {@link IntBAImpl} considered
+	 * @param statesOrdered contains the states of the {@link IntBAImpl} a ordered
+	 * @return the matrix S associated with the {@link IntBAImpl} a
 	 * @throws IllegalArgumentException when the accepting state or the ordered set of states is null
 	 * if the array of the ordered states does not contains all the states of the automaton and vice-versa
-	 * if the state accept is not in the set of accepting states of the {@link IntersectionAutomaton}
+	 * if the state accept is not in the set of accepting states of the {@link IntBAImpl}
 	 */
 	protected AbstractProposition<S1>[] getConstrainedS(S accept){
 		if(accept==null){

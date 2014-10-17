@@ -4,10 +4,10 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 
 /**
- * is the interface the {@link IntersectionAutomaton} must implement
+ * is the interface the {@link IntBAImpl} must implement
  * @author claudiomenghi
  *
  * @param <S1> is the type of the states of the two original automata

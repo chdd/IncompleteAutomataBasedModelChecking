@@ -10,7 +10,7 @@ import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.BAImpl;
 import it.polimi.model.impl.IBAImpl;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
@@ -43,7 +43,7 @@ public class Model implements ModelInterface{
 	/**
 	 * contains the intersection between the model and the specification
 	 */
-	private IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection;
+	private IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection;
 	
 	private ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
 	
@@ -51,7 +51,7 @@ public class Model implements ModelInterface{
 	public Model(){
 		this.model=new IBAImpl<State, LabelledTransition>();
 		this.specification=new BAImpl<State, LabelledTransition>();
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>();
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>();
 	}
 	/**
 	 * creates a new model of the application: the model of the system is loaded from the file with path modelFilePath, its specification is loaded from the 
@@ -69,7 +69,7 @@ public class Model implements ModelInterface{
 				.loadIBAAutomaton(modelFilePath);
 		this.specification=new AutomatonBuilder()
 				.loadBAAutomaton(specificationFilePath);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class Model implements ModelInterface{
 	public void changeModel(String modelFilePath) throws IOException, GraphIOException{
 		this.model=new AutomatonBuilder()
 				.loadIBAAutomaton(modelFilePath);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	/**
 	 * @see {@link ModelInterface}
@@ -88,7 +88,7 @@ public class Model implements ModelInterface{
 	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException{
 		this.specification=new AutomatonBuilder()
 				.loadBAAutomaton(specificationFilePath);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	/**
 	 * @see {@link ModelInterface}
@@ -108,7 +108,7 @@ public class Model implements ModelInterface{
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> getIntersection(){
+	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> getIntersection(){
 		return this.intersection;
 	}
 	
@@ -140,7 +140,7 @@ public class Model implements ModelInterface{
 			this.model.addAcceptState(s);
 		}
 		this.model.addVertex(s);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	@Override
 	public void addTransitionToTheModel(String source, String destination, String dnfFormula){
@@ -155,10 +155,10 @@ public class Model implements ModelInterface{
 			this.specification.addAcceptState(s);
 		}
 		this.specification.addVertex(s);
-		this.intersection=new IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
 	}
 	
-	public void changeIntersection(IntersectionAutomaton<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection){
+	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection){
 		this.intersection=intersection;
 	}
 	

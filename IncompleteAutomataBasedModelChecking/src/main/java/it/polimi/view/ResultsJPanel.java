@@ -4,7 +4,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.impl.IntBAImpl;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.awt.TextArea;
@@ -12,7 +12,7 @@ import java.awt.TextArea;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends JPanel {
+public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntBAImpl<S, T, S1, T1>> extends JPanel {
 
 	private TextArea xmlArea;
 	
