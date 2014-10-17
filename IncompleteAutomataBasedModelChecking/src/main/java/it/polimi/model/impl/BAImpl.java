@@ -5,7 +5,7 @@ import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.interfaces.BA;
-import it.polimi.model.interfaces.DrawableBA;
+import it.polimi.model.interfaces.drawable.DrawableBA;
 
 import java.util.HashMap;
 import java.util.HashSet;

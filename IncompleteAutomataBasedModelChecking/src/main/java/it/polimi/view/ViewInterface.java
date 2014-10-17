@@ -4,9 +4,9 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.DrawableBA;
-import it.polimi.model.interfaces.DrawableIBA;
-import it.polimi.model.interfaces.DrawableIntBA;
+import it.polimi.model.interfaces.drawable.DrawableBA;
+import it.polimi.model.interfaces.drawable.DrawableIBA;
+import it.polimi.model.interfaces.drawable.DrawableIntBA;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.Observer;

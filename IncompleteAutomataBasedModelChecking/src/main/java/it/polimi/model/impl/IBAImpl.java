@@ -3,7 +3,7 @@ package it.polimi.model.impl;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.DrawableIBA;
+import it.polimi.model.interfaces.drawable.DrawableIBA;
 
 import java.util.HashSet;
 import java.util.Iterator;

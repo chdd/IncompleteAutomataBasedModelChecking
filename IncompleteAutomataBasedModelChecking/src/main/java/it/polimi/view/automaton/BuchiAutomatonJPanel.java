@@ -6,7 +6,7 @@ import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.impl.BAImpl;
 import it.polimi.model.interfaces.BA;
-import it.polimi.model.interfaces.DrawableBA;
+import it.polimi.model.interfaces.drawable.DrawableBA;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;

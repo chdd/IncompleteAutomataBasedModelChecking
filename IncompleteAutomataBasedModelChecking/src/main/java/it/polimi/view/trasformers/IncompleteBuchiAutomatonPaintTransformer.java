@@ -2,7 +2,7 @@ package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.DrawableIBA;
+import it.polimi.model.interfaces.drawable.DrawableIBA;
 
 import java.awt.Color;
 import java.awt.Paint;

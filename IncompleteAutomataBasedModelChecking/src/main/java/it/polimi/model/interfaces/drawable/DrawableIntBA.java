@@ -1,9 +1,10 @@
-package it.polimi.model.interfaces;
+package it.polimi.model.interfaces.drawable;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.IIntBA;
 
 /**
  * is the interface the {@link DrawableIntBA} the drawable intersection automaton must implement

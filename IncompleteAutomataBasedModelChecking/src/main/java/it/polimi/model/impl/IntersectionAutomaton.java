@@ -8,8 +8,8 @@ import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.FactoryIntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.interfaces.BA;
-import it.polimi.model.interfaces.DrawableIntBA;
 import it.polimi.model.interfaces.IBA;
+import it.polimi.model.interfaces.drawable.DrawableIntBA;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.HashSet;

@@ -5,7 +5,7 @@ import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.IntersectionAutomaton;
-import it.polimi.model.interfaces.DrawableIntBA;
+import it.polimi.model.interfaces.drawable.DrawableIntBA;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

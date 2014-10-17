@@ -2,7 +2,7 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.DrawableIBA;
+import it.polimi.model.interfaces.drawable.DrawableIBA;
 import it.polimi.view.menu.IBAStateMenu;
 import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
 import it.polimi.view.trasformers.IncompleteBuchiAutomatonPaintTransformer;
