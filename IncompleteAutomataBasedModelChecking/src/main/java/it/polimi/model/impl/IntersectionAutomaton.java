@@ -1,15 +1,14 @@
-package it.polimi.model.automata.intersection;
+package it.polimi.model.impl;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
-import it.polimi.model.automata.impl.BAImpl;
-import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.FactoryIntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.interfaces.BA;
+import it.polimi.model.interfaces.DrawableIntBA;
 import it.polimi.model.interfaces.IBA;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
@@ -28,7 +27,7 @@ import java.util.Stack;
  */
 @SuppressWarnings("serial")
 public class IntersectionAutomaton<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>> extends IBAImpl<S, T> {
+extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntBA<S1,T1,S,T>{
 
 	/**
 	 * contains the model of the system that generates the intersection automaton
@@ -60,7 +59,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> {
 	 * @param model: is the model to be considered
 	 * @param specification: is the specification to be considered
 	 */
-	public IntersectionAutomaton(IBAImpl<S1, T1> model, BAImpl<S1, T1> specification){
+	public IntersectionAutomaton(IBA<S1, T1> model, BA<S1, T1> specification){
 		super();
 		if(model==null){
 			throw new IllegalArgumentException("The model to be considered cannot be null");

@@ -1,8 +1,8 @@
 package it.polimi.model.io.iba;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.IBAImpl;
 
 import org.apache.commons.collections15.Transformer;
 

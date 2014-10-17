@@ -8,11 +8,12 @@ import it.polimi.controller.actions.file.saving.SaveModel;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.BAImpl;
-import it.polimi.model.automata.impl.IBAImpl;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.interfaces.DrawableBA;
+import it.polimi.model.interfaces.DrawableIBA;
+import it.polimi.model.interfaces.DrawableIntBA;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
@@ -52,20 +53,33 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private final ImageIcon editIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/view-fullscreen.png"));
 	private final ImageIcon checkIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/categories/applications-system.png"));
 	
+	// Messages
+	private final String editingMessage="<html>Editing Mode:<br>"
+			+ "MouseButtonOne press on empty space creates a new State<br>"
+			+ "MouseButtonOne press on a State, followed by a drag to another State creates an directed transition between them<br>"
+			+ "Right click on the state or on the transition to modify its properties<br></html>";
+	private final String transorfmingMessage="<html>Transorming Mode:<br>"
+			+ "MouseButtonOne+drag to translate the display<br>"
+			+ "MouseButtonOne+Shift+drag to rotate the display<br>"
+			+ "MouseButtonOne+ctrl(or Command)+drag to shear the display<br>"
+			+ "Position the mouse on a state and press p to enter the state selection mode that allows to move the states<br>"
+			+ "Press t to exit the state selection mode<br></html>";
+	
+	
 	// model
 	private JButton openModel;
 	private JButton saveModel;
-	private JButton modelDevelopment;
 	private JButton modelEditing;
-	private IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>> modelTabmodel;
+	private JButton modelTrasforming;
+	private IncompleteBuchiAutomatonJPanel<S1,T1,DrawableIBA<S1,T1>> modelTabmodel;
 	
 	// claim
 	private JButton openClaim;
 	private JButton saveClaim;
 	private JButton ltlLoadClaim;
-	private JButton claimDevelopment;
 	private JButton claimEditing;
-	private BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>  claimTabClaimPanel;
+	private JButton claimTransforming;
+	private BuchiAutomatonJPanel<S1,T1, DrawableBA<S1, T1>>  claimTabClaimPanel;
 
 	
 	
@@ -73,13 +87,13 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	private JButton openResults;
 	private JButton saveResults;
 	private JButton check;
-	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationResultsIntersection;
+	private IntersectionAutomatonJPanel<S1, T1, S, T,DrawableIntBA<S1, T1, S, T>> verificationResultsIntersection;
 	private TextArea brzozowskiSystem;
 
 	// verification snapshot
-	private IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>> verificationSnapshotModelPanel;
-	private BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>  verificationSnapshotClaimPanel;
-	private IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationSnapshotIntersectionPanel;
+	private IncompleteBuchiAutomatonJPanel<S1,T1,DrawableIBA<S1,T1>> verificationSnapshotModelPanel;
+	private BuchiAutomatonJPanel<S1,T1, DrawableBA<S1, T1>>  verificationSnapshotClaimPanel;
+	private IntersectionAutomatonJPanel<S1, T1, S, T,DrawableIntBA<S1, T1, S, T>> verificationSnapshotIntersectionPanel;
 	private ResultsJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>> verificationSnapshotResultsPanel;
 	
 	
@@ -91,9 +105,9 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	
 		
 	
-	public View(IBAImpl<S1, T1> model,
-			BAImpl<S1, T1> claim,
-			IntersectionAutomaton<S1, T1,S,T> intersection) {
+	public View(DrawableIBA<S1, T1> model,
+			DrawableBA<S1, T1> claim,
+			DrawableIntBA<S1, T1,S,T> intersection) {
 		
 		
 		 this.jframe=new JFrame();
@@ -163,19 +177,21 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 this.saveModel.setFocusPainted(false);
 		 containerModelMenu.add(saveModel);
 		 
-		 this.modelDevelopment=new JButton(this.developmentIcon);
-		 this.modelDevelopment.addActionListener(this);
-		 this.modelDevelopment.setFocusPainted(true);
-		 containerModelMenu.add(this.modelDevelopment);
-		 
-		 this.modelEditing=new JButton(this.editIcon);
+		 this.modelEditing=new JButton(this.developmentIcon);
 		 this.modelEditing.addActionListener(this);
-		 this.modelEditing.setFocusPainted(false);
-		 
+		 this.modelEditing.setFocusPainted(true);
+		 this.modelEditing.setToolTipText(this.editingMessage);
 		 containerModelMenu.add(this.modelEditing);
+		 
+		 this.modelTrasforming=new JButton(this.editIcon);
+		 this.modelTrasforming.addActionListener(this);
+		 this.modelTrasforming.setFocusPainted(false);
+		 this.modelTrasforming.setToolTipText(this.transorfmingMessage);
+		 
+		 containerModelMenu.add(this.modelTrasforming);
 		 modelTab.add(containerModelMenu);
 		 
-		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>>(model, this);
+		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1,DrawableIBA<S1,T1>>(model, this);
 		 modelTab.add(modelTabmodel);
 		 
 		 //******************************************************************************************************************************
@@ -201,17 +217,19 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 this.ltlLoadClaim.setFocusPainted(false);
 		 containerClaimMenu.add(this.ltlLoadClaim);
 		 
-		 this.claimDevelopment=new JButton(this.developmentIcon);
-		 this.claimDevelopment.addActionListener(this);
-		 this.claimDevelopment.setFocusPainted(true);
-		 containerClaimMenu.add(this.claimDevelopment);
-		 
-		 this.claimEditing=new JButton(this.editIcon);
+		 this.claimEditing=new JButton(this.developmentIcon);
 		 this.claimEditing.addActionListener(this);
-		 this.claimEditing.setFocusPainted(false);
+		 this.claimEditing.setFocusPainted(true);
+		 this.claimEditing.setToolTipText(this.editingMessage);
 		 containerClaimMenu.add(this.claimEditing);
 		 
-		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>(claim, this);
+		 this.claimTransforming=new JButton(this.editIcon);
+		 this.claimTransforming.addActionListener(this);
+		 this.claimTransforming.setFocusPainted(false);
+		 this.claimTransforming.setToolTipText(this.transorfmingMessage);
+		 containerClaimMenu.add(this.claimTransforming);
+		 
+		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<S1,T1, DrawableBA<S1, T1>>(claim, this);
 		 
 		 claimTab.add(containerClaimMenu);
 		 claimTab.add(this.claimTabClaimPanel);
@@ -244,12 +262,13 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 
 		 verificationResultsTab.add(verificationMenu);
 		
-		 this.verificationResultsIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(intersection, this);
+		 this.verificationResultsIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T,DrawableIntBA<S1, T1, S, T>>(intersection, this);
 		 JPanel containerInt1=new JPanel();
 		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
 		 containerInt1.add(new JLabel("Intersection automaton"));
 		 containerInt1.add(this.verificationResultsIntersection);
 			
+		 verificationResultsIntersection.setTranformingMode();
 		 JPanel containerInt2=new JPanel();
 		 containerInt2.setLayout(new BoxLayout(containerInt2,BoxLayout.Y_AXIS));
 		 containerInt2.add(new JLabel("Brzozowski representation"));
@@ -269,11 +288,13 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		
 		 
 		 container1.add(new JLabel("Model"));
-		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,IBAImpl<S1,T1>>(model, this);
+		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,DrawableIBA<S1,T1>>(model, this);
+		 this.verificationSnapshotModelPanel.setTranformingMode();
 		 container1.add(verificationSnapshotModelPanel);
 		
 		 container1.add(new JLabel("Claim"));
-		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<S1,T1, BAImpl<S1, T1>>(claim, this);
+		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<S1,T1, DrawableBA<S1, T1>>(claim, this);
+		 this.verificationSnapshotClaimPanel.setTranformingMode();
 		 container1.add(verificationSnapshotClaimPanel);
 		 verificationSnapshotTab.add(container1);
 		 
@@ -283,8 +304,8 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
 		 container2.add(intersectionLabel);
 		 
-		 this.verificationSnapshotIntersectionPanel=new IntersectionAutomatonJPanel<S1, T1, S, T,IntersectionAutomaton<S1, T1, S, T>>(intersection, this);
-		 
+		 this.verificationSnapshotIntersectionPanel=new IntersectionAutomatonJPanel<S1, T1, S, T,DrawableIntBA<S1, T1, S, T>>(intersection, this);
+		 this.verificationSnapshotIntersectionPanel.setTranformingMode();
 		 container2.add(verificationSnapshotIntersectionPanel);
 		 
 		 container2.add(new JLabel("Model Checking results"));
@@ -299,26 +320,26 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 	}
 	
 	@Override
-	public void updateModel(IBAImpl<S1, T1> model){
+	public void updateModel(DrawableIBA<S1, T1> model){
 		this.modelTabmodel.update(model);
 		this.verificationSnapshotModelPanel.update(model);
 	}
 	@Override
-	public void updateSpecification(BAImpl<S1, T1> specification){
+	public void updateSpecification(DrawableBA<S1, T1> specification){
 		this.claimTabClaimPanel.update(specification);
 		this.verificationSnapshotClaimPanel.update(specification);
 		
 	}
 
 	@Override
-	public void updateIntersection(IntersectionAutomaton<S1, T1,S,T> intersection){
+	public void updateIntersection(DrawableIntBA<S1, T1,S,T> intersection){
 		this.verificationSnapshotIntersectionPanel.update(intersection);
 		this.verificationResultsIntersection.update(intersection);
 	}
 
 	@Override
 	public void updateVerificationResults(ModelCheckerParameters<S1, S> verificationResults,
-			IntersectionAutomaton<S1, T1,S,T> intersection) {
+			DrawableIntBA<S1, T1,S,T> intersection) {
 		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
@@ -354,28 +375,28 @@ public class View<S1 extends State, T1 extends LabelledTransition, S extends Int
 						this.openModel.setFocusPainted(false);
 					}
 					else{
-						if(e.getSource().equals(this.editItem) || e.getSource().equals(this.modelDevelopment)){
+						if(e.getSource().equals(this.editItem) || e.getSource().equals(this.modelEditing)){
 							this.modelTabmodel.setEditingMode();
-							this.modelDevelopment.setFocusPainted(true);
-							this.modelEditing.setFocusable(false);
+							this.modelEditing.setFocusPainted(true);
+							this.modelTrasforming.setFocusable(false);
 						}
 						else{
-							if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.modelEditing)){
+							if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.modelTrasforming)){
 								this.modelTabmodel.setTranformingMode();
-								this.modelDevelopment.setFocusPainted(false);
-								this.modelEditing.setFocusable(true);
+								this.modelEditing.setFocusPainted(false);
+								this.modelTrasforming.setFocusable(true);
 							}
 							else{
-								if(e.getSource().equals(this.editItem) || e.getSource().equals(this.claimDevelopment)){
-									this.verificationSnapshotClaimPanel.setEditingMode();
-									this.claimDevelopment.setFocusPainted(true);
-									this.claimEditing.setFocusable(false);
+								if(e.getSource().equals(this.editItem) || e.getSource().equals(this.claimEditing)){
+									this.claimTabClaimPanel.setEditingMode();
+									this.claimEditing.setFocusPainted(true);
+									this.claimTransforming.setFocusable(false);
 								}
 								else{
-									if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.claimEditing)){
-										this.verificationSnapshotClaimPanel.setTranformingMode();
-										this.claimDevelopment.setFocusPainted(false);
-										this.claimEditing.setFocusable(true);
+									if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.claimTransforming)){
+										this.claimTabClaimPanel.setTranformingMode();
+										this.claimEditing.setFocusPainted(false);
+										this.claimTransforming.setFocusable(true);
 									}
 									else{
 										if(e.getSource().equals(this.checkItem) || e.getSource().equals(this.check)){

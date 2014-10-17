@@ -2,14 +2,15 @@ package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.interfaces.DrawableIntBA;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 
-public class IntersectionAutomatonStrokeTransformer<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
+public class IntersectionAutomatonStrokeTransformer<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends DrawableIntBA<S, T, S1, T1>> extends
 BuchiAutomatonStateStrokeTransofmer<S1, T1, A> {
 
 	public IntersectionAutomatonStrokeTransformer(A a) {

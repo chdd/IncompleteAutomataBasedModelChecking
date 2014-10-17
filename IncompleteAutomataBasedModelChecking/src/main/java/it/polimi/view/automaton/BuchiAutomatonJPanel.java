@@ -2,10 +2,11 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.model.automata.impl.BAImpl;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.FactoryState;
+import it.polimi.model.impl.BAImpl;
 import it.polimi.model.interfaces.BA;
+import it.polimi.model.interfaces.DrawableBA;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
@@ -27,7 +28,7 @@ import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
 
-public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends BAImpl<S,T>> extends AutomatonJPanel<S,T,A>  {
+public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends DrawableBA<S,T>> extends AutomatonJPanel<S,T,A>  {
 
 	/**
 	 * 

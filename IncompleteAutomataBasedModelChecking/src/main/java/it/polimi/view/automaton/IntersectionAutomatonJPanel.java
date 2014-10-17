@@ -2,9 +2,9 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.DrawableIntBA;
 import it.polimi.view.trasformers.HighlighPathPaintTransformer;
 import it.polimi.view.trasformers.IntersectionAutomatonEdgeStrokeTransformed;
 import it.polimi.view.trasformers.IntersectionAutomatonStrokeTransformer;
@@ -16,7 +16,7 @@ import java.util.Stack;
 import org.apache.commons.collections15.Transformer;
 
 @SuppressWarnings("serial")
-public class IntersectionAutomatonJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntersectionAutomaton<S, T, S1, T1>> extends
+public class IntersectionAutomatonJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends DrawableIntBA<S, T, S1, T1>> extends
 		IncompleteBuchiAutomatonJPanel<S1, T1, A> {
 
 	public IntersectionAutomatonJPanel(A a, ActionListener l) {

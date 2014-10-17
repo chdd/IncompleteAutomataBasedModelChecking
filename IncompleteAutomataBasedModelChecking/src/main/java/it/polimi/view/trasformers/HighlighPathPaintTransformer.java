@@ -2,16 +2,16 @@ package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.DrawableIntBA;
 
 import java.awt.Color;
 import java.awt.Paint;
 import java.util.Stack;
 
 public class HighlighPathPaintTransformer<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>, A  extends IntersectionAutomaton<S1, T1, S, T>> extends BuchiAutomatonStatePaintTransformer<S,T, A> {
+extends ConstrainedTransition<S1>, A  extends DrawableIntBA<S1, T1, S, T>> extends BuchiAutomatonStatePaintTransformer<S,T, A> {
 
 	private Stack<S> states;
 	

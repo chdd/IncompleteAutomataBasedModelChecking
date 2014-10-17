@@ -2,10 +2,10 @@ package it.polimi.model.automata.iba;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
-import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.BAStateAcceptingToMetadataTransformer;
 import it.polimi.model.elements.states.BAStateInitialToMetadataTransformer;
+import it.polimi.model.impl.IBAImpl;
 import it.polimi.model.io.iba.StateTransparentToMetadataTransformer;
 
 import java.io.BufferedWriter;

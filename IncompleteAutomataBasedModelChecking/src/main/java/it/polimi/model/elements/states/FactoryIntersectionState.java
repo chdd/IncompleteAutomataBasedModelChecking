@@ -1,6 +1,6 @@
 package it.polimi.model.elements.states;
 
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
+import it.polimi.model.impl.IntersectionAutomaton;
 
 import org.apache.commons.collections15.Factory;
 

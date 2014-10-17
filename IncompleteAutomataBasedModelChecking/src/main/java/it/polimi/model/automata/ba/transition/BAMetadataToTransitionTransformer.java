@@ -1,8 +1,8 @@
 package it.polimi.model.automata.ba.transition;
 
 import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
-import it.polimi.model.automata.impl.BAImpl;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.BAImpl;
 
 import org.apache.commons.collections15.Transformer;
 

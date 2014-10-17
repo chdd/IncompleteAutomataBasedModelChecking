@@ -2,11 +2,13 @@ package it.polimi.modelchecker;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.BAImpl;
-import it.polimi.model.automata.impl.IBAImpl;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.BAImpl;
+import it.polimi.model.impl.IBAImpl;
+import it.polimi.model.impl.IntersectionAutomaton;
+import it.polimi.model.interfaces.BA;
+import it.polimi.model.interfaces.IBA;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
@@ -24,12 +26,12 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	/**
 	 * contains the specification to be checked
 	 */
-	private BAImpl<S1,T1> specification;
+	private BA<S1,T1> specification;
 	
 	/**
 	 * contains the model to be checked
 	 */
-	private  IBAImpl<S1, T1> model;
+	private  IBA<S1, T1> model;
 	
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
@@ -48,7 +50,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IBAImpl<S1, T1> model, BAImpl<S1,T1> specification, ModelCheckerParameters<S1, S> mp){
+	public ModelChecker(IBA<S1, T1> model, BA<S1,T1> specification, ModelCheckerParameters<S1, S> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}
@@ -73,13 +75,13 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 		
 		// SPECIFICATION
 		// updates the set of the number of the states in the specification
-		this.parameters.setNumStatesSpecification(this.specification.getVertexCount());
+		this.parameters.setNumStatesSpecification(this.specification.getStateNumber());
 		// updates the number of accepting states of the specification
 		this.parameters.setNumAcceptStatesSpecification(this.specification.getAcceptStates().size());
 		
 		// MODEL
 		// updates the number of the states of the model
-		this.parameters.setNumStatesModel(this.model.getVertexCount());
+		this.parameters.setNumStatesModel(this.model.getStateNumber());
 		// updates the number of accepting states of the model
 		this.parameters.setNumAcceptStatesModel(this.model.getAcceptStates().size());
 		// updates the number of transparent states in the model

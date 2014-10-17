@@ -1,10 +1,11 @@
-package it.polimi.model.automata.impl;
+package it.polimi.model.impl;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.interfaces.BA;
+import it.polimi.model.interfaces.DrawableBA;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,7 +27,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @param <T> the type of the transitions
  */
 @SuppressWarnings("serial")
-public class BAImpl<S extends State, T extends LabelledTransition> extends DirectedSparseGraph<S,T> implements BA<S,T>{
+public class BAImpl<S extends State, T extends LabelledTransition> extends DirectedSparseGraph<S,T> implements DrawableBA<S,T>{
 	
 	/**
 	 * contains the initial states of the {@link BAImpl}
@@ -416,5 +417,13 @@ public class BAImpl<S extends State, T extends LabelledTransition> extends Direc
 	@Override
 	public S getTransitionDestination(T transition) {
 		return this.getDest(transition);
+	}
+
+	/**
+	 * returns the number of the states of the {@link BAImpl}
+	 */
+	@Override
+	public int getStateNumber() {
+		return this.getVertexCount();
 	}
 }

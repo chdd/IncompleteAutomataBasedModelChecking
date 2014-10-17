@@ -1,9 +1,9 @@
-package it.polimi.model.automata.impl;
+package it.polimi.model.impl;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.FactoryState;
-import it.polimi.model.interfaces.IBA;
+import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.DrawableIBA;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @param <T> contains the type of the transitions of the automaton
  */
 @SuppressWarnings("serial")
-public class IBAImpl<S extends State, T extends LabelledTransition> extends BAImpl<S, T> implements IBA<S,T>{
+public class IBAImpl<S extends State, T extends LabelledTransition> extends BAImpl<S, T> implements DrawableIBA<S,T>{
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -217,7 +217,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition> extends BAIm
 	}
 	/**
 	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.
-	 * @see it.polimi.model.automata.impl.BAImpl#reset()
+	 * @see it.polimi.model.impl.BAImpl#reset()
 	 */	
 	@Override
 	public void reset(){

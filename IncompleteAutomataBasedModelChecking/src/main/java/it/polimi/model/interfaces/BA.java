@@ -41,6 +41,12 @@ public interface BA<S extends State, T extends LabelledTransition> {
 	 */
 	public S getTransitionDestination(T transition);
 	
+	/** 
+	 * Returns the set of accepting states of the {@link BA}. 
+	 * @return set of the accepting states of the {@link BA} (see {@link State})
+	 */
+	public Set<S> getAcceptStates();
+	
 	/**
 	 * returns true if the {@link State} state is accepting false otherwise
 	 * @param state is the {@link State} to be checked if accepting
@@ -48,4 +54,17 @@ public interface BA<S extends State, T extends LabelledTransition> {
 	 */
 	public boolean isAccept(S state);
 	
+	/**
+	 * check is the state s is contained into the set of the initial states of the automaton
+	 * @param s the state to be checked if present
+	 * @return true if the state s is contained into the set of the initial states of the automaton, false otherwise
+	 * @throws IllegalArgumentException if the state s is null
+	 */
+	public boolean isInitial(S s);
+	
+	/**
+	 * returns the number of the states of the {@link BA}
+	 * @return the number of the states of the {@link BA}
+	 */
+	public int getStateNumber();
 }

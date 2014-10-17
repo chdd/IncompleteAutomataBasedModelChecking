@@ -11,9 +11,9 @@ package it.polimi.view.menu;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
-import it.polimi.model.automata.impl.BAImpl;
-import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.BAImpl;
+import it.polimi.model.impl.IBAImpl;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

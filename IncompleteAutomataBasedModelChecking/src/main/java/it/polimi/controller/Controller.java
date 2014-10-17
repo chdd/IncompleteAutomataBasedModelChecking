@@ -6,6 +6,9 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.DrawableBA;
+import it.polimi.model.interfaces.DrawableIBA;
+import it.polimi.model.interfaces.DrawableIntBA;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.view.ViewInterface;
 
@@ -64,12 +67,12 @@ public class Controller implements Observer{
 	
 	private void update(){
 		
-		this.view.updateModel(this.model.getModel());
-		this.view.updateSpecification(this.model.getSpecification());
-		this.view.updateIntersection(model.getIntersection());
+		this.view.updateModel((DrawableIBA<State, LabelledTransition>) this.model.getModel());
+		this.view.updateSpecification((DrawableBA<State, LabelledTransition>) this.model.getSpecification());
+		this.view.updateIntersection((DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>>)(model.getIntersection()));
 		
 		this.view.setBrzozoski(new Brzozowski<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(this.model.getIntersection()).getConstraintmatrix());
-		this.view.updateVerificationResults(this.model.getVerificationResults(), this.model.getIntersection());
+		this.view.updateVerificationResults(this.model.getVerificationResults(), (DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>>)this.model.getIntersection());
 	}
 	
 	

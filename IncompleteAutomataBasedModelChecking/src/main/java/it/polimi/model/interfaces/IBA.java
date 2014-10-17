@@ -1,5 +1,7 @@
 package it.polimi.model.interfaces;
 
+import java.util.Set;
+
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
 
@@ -19,4 +21,10 @@ public interface IBA<S extends State, T extends LabelledTransition> extends BA<S
 	 * @throws IllegalArgumentException if the state s is null
 	 */
 	public boolean isTransparent(S s);
+	
+	/**
+	 * returns the set of the transparent states of the {@link IBA}
+	 * @return the set of the transparent states of the {@link IBA} (if no transparent states are present an empty set is returned)
+	 */
+	public Set<S>  getTransparentStates();
 }

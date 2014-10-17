@@ -1,7 +1,7 @@
 package it.polimi.model.elements.states;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.IBAImpl;
+import it.polimi.model.impl.IBAImpl;
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 public class IBAMetadataToStateTransformer<BA extends IBAImpl<State, LabelledTransition>> extends BAMetadataToStateTransformer<BA>{

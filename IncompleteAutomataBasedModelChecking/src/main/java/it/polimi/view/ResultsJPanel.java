@@ -2,9 +2,9 @@ package it.polimi.view;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.IntersectionAutomaton;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.awt.TextArea;

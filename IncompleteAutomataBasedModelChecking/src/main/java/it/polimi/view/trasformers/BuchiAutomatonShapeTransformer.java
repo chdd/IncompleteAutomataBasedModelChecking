@@ -1,8 +1,9 @@
 package it.polimi.view.trasformers;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.BAImpl;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.BAImpl;
+import it.polimi.model.interfaces.DrawableBA;
 
 import java.awt.Polygon;
 import java.awt.Shape;
@@ -11,7 +12,7 @@ import java.awt.geom.Ellipse2D;
 
 import org.apache.commons.collections15.Transformer;
 
-public class BuchiAutomatonShapeTransformer<S extends State, T extends LabelledTransition, A extends BAImpl<S, T>> implements Transformer<S, Shape>{
+public class BuchiAutomatonShapeTransformer<S extends State, T extends LabelledTransition, A extends DrawableBA<S, T>> implements Transformer<S, Shape>{
 
 	private final int stateRadius=10;
 	

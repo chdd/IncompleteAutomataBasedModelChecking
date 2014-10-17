@@ -1,8 +1,8 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.interfaces.DrawableIBA;
 import it.polimi.view.menu.IBAStateMenu;
 import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
 import it.polimi.view.trasformers.IncompleteBuchiAutomatonPaintTransformer;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPopupMenu;
 
-public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends IBAImpl<S,T>> extends BuchiAutomatonJPanel<S, T, A> {
+public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends DrawableIBA<S,T>> extends BuchiAutomatonJPanel<S, T, A> {
 
 	/**
 	 * 

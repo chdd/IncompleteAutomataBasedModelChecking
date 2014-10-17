@@ -4,11 +4,11 @@ import it.polimi.model.automata.ba.io.fromfile.BATransformer;
 import it.polimi.model.automata.ba.transition.BAMetadataToTransitionTransformer;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.model.automata.impl.BAImpl;
-import it.polimi.model.automata.impl.IBAImpl;
 import it.polimi.model.elements.states.BAMetadataToStateTransformer;
 import it.polimi.model.elements.states.IBAMetadataToStateTransformer;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.BAImpl;
+import it.polimi.model.impl.IBAImpl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

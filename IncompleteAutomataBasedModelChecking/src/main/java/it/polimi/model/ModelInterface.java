@@ -2,17 +2,14 @@ package it.polimi.model;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.impl.BAImpl;
-import it.polimi.model.automata.impl.IBAImpl;
-import it.polimi.model.automata.intersection.IntersectionAutomaton;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.BA;
-import it.polimi.model.ltltoba.LTLtoBATransformer;
+import it.polimi.model.impl.BAImpl;
+import it.polimi.model.impl.IBAImpl;
+import it.polimi.model.impl.IntersectionAutomaton;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
-import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
