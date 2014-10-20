@@ -2,8 +2,8 @@ package it.polimi.modelchecker;
 
 import java.util.Stack;
 
-import it.polimi.model.elements.states.IntersectionState;
-import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.State;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**

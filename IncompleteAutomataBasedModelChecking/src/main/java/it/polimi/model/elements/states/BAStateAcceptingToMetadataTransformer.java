@@ -1,6 +1,7 @@
 package it.polimi.model.elements.states;
 
 import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 

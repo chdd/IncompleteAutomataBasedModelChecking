@@ -1,10 +1,10 @@
 package it.polimi.model.ltltoba;
 
-import it.polimi.model.elements.states.State;
-import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
@@ -23,7 +23,7 @@ import rwth.i2.ltl2ba4j.model.ITransition;
 
 public class LTLtoBATransformer implements Transformer<String, BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>> {
 
-	private FactoryState<State> factory=new FactoryState<State>();
+	private StateFactory<State> factory=new StateFactory<State>();
 	private LabelledTransitionFactory transitionFactory=new LabelledTransitionFactory();
 	
 	@Override

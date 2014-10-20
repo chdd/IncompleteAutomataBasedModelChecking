@@ -1,10 +1,10 @@
 package it.polimi.model.impl.automata;
 
 
-import it.polimi.model.elements.states.FactoryState;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
@@ -99,7 +99,7 @@ public class IBAImpl<
 
 		this.reset();
 		Random r=new Random();
-		FactoryState<STATE> stateFactory=new FactoryState<STATE>();
+		StateFactory<STATE> stateFactory=new StateFactory<STATE>();
 		for(int i=0; i<n;i++){
 			STATE s=stateFactory.create();
 			if(r.nextInt(10)<=initialStateProbability*10){
@@ -143,7 +143,7 @@ public class IBAImpl<
 		this.addCharacters(alphabet);
 		Random r=new Random();
 		
-		FactoryState<STATE> stateFactory=new FactoryState<STATE>();
+		StateFactory<STATE> stateFactory=new StateFactory<STATE>();
 		for(int i=0; i<n;i++){
 			this.addVertex(stateFactory.create());
 		}

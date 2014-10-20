@@ -2,11 +2,9 @@ package it.polimi.model.io;
 
 import it.polimi.model.automata.ba.io.fromfile.BATransformer;
 import it.polimi.model.automata.ba.transition.BAMetadataToTransitionTransformer;
-import it.polimi.model.elements.states.BAMetadataToStateTransformer;
-import it.polimi.model.elements.states.IBAMetadataToStateTransformer;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
@@ -69,10 +67,7 @@ public class AutomatonBuilder{
 		
 		GraphMLReader2<BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>, State, LabelledTransition> graphReader = 
 				new GraphMLReader2<BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>, State, LabelledTransition>
-		(fileReader, graphTransformer, 
-				new BAMetadataToStateTransformer<BAImpl<State,LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(ba)
-				,
-			       edgeTransformer, hyperEdgeTransformer);
+		(fileReader, graphTransformer, State.getTranformer(), edgeTransformer, hyperEdgeTransformer);
 		BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> g = graphReader.readGraph();
 		return g;
 	}
@@ -96,10 +91,7 @@ public class AutomatonBuilder{
 		Transformer<GraphMetadata, IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>
 		graphTransformer = new BATransformer<GraphMetadata, IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(ba);
 		
-		/* Create the Vertex Transformer */
-		IBAMetadataToStateTransformer<IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>> vertexTransformer=
-				new IBAMetadataToStateTransformer<IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(ba);
-
+		
 		/* Create the Edge Transformer */
 		 Transformer<EdgeMetadata, LabelledTransition> edgeTransformer =new BAMetadataToTransitionTransformer<IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(ba);
 			
@@ -119,8 +111,8 @@ public class AutomatonBuilder{
 		GraphMLReader2<IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>, State, LabelledTransition> graphReader = 
 				new GraphMLReader2<IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>, State, LabelledTransition>
 		(fileReader, graphTransformer, 
-				vertexTransformer,
-			       edgeTransformer, hyperEdgeTransformer);
+					State.getTranformer(),
+					edgeTransformer, hyperEdgeTransformer);
 				
 				
 		IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> g = graphReader.readGraph();

@@ -2,12 +2,12 @@ package it.polimi.model;
 
 import it.polimi.model.automata.ba.BAtoFile;
 import it.polimi.model.automata.iba.IBAtoFile;
-import it.polimi.model.elements.states.IntersectionState;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;

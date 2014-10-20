@@ -1,4 +1,4 @@
-package it.polimi.model.elements.states;
+package it.polimi.model.impl.states;
 
 import it.polimi.model.impl.automata.IntBAImpl;
 
@@ -25,7 +25,7 @@ public class FactoryIntersectionState<S extends State, IntS extends Intersection
 	@Override
 	public IntS create() {
 		
-		IntersectionState<S> s=new IntersectionState<S>(new FactoryState<S>().create(), new FactoryState<S>().create(), 0, FactoryIntersectionState.nodeCount);
+		IntersectionState<S> s=new IntersectionState<S>(new StateFactory<S>().create(), new StateFactory<S>().create(), 0, FactoryIntersectionState.nodeCount);
 		FactoryIntersectionState.nodeCount++;
 		return (IntS) s;
 	}

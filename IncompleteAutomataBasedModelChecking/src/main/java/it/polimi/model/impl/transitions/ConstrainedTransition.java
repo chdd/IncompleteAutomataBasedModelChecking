@@ -1,7 +1,7 @@
 package it.polimi.model.impl.transitions;
 
-import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.states.State;
 
 /**
  * contains a constrainedTransition which is a transition that can be performed only if the constrainedState recognizes 

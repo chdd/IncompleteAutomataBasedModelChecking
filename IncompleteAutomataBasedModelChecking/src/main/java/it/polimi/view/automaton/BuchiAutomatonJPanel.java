@@ -1,8 +1,8 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.elements.states.FactoryState;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
@@ -80,7 +80,7 @@ public class BuchiAutomatonJPanel<
 		
 		LabelledTransitionFactoryInterface<T> tf=(LabelledTransitionFactoryInterface<T>) new LabelledTransitionFactory();
 		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
-                new FactoryState<S>(), tf); 
+                new StateFactory<S>(), tf); 
 		this.setGraphMouse(gm);
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);

@@ -1,10 +1,10 @@
 package it.polimi.model.impl.automata;
 
-import it.polimi.model.elements.states.FactoryIntersectionState;
-import it.polimi.model.elements.states.IntersectionState;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.states.FactoryIntersectionState;
+import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;

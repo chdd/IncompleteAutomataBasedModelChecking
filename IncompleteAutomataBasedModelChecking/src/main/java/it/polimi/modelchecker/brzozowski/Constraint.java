@@ -1,6 +1,6 @@
 package it.polimi.modelchecker.brzozowski;
 
-import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.states.State;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 
 public class Constraint<S extends State> {

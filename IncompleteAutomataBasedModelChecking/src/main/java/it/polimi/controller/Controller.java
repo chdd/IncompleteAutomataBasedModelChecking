@@ -2,8 +2,8 @@ package it.polimi.controller;
 
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
-import it.polimi.model.elements.states.IntersectionState;
-import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;

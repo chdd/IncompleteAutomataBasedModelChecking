@@ -1,10 +1,10 @@
 package it.polimi.model.automata.iba;
 
 import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.BAStateAcceptingToMetadataTransformer;
 import it.polimi.model.elements.states.BAStateInitialToMetadataTransformer;
 import it.polimi.model.impl.automata.IBAImpl;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.model.io.iba.StateTransparentToMetadataTransformer;
