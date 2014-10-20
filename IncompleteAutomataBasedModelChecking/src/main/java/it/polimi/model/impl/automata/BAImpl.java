@@ -2,6 +2,8 @@ package it.polimi.model.impl.automata;
 
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
@@ -253,8 +255,11 @@ public class BAImpl<S extends State, T extends LabelledTransition, TFactory exte
 					
 					
 					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					this.addTransition(s1, s2,  this.transitionFactory.create(character));
+					this.addTransition(s1, s2,  this.transitionFactory.create(
+							new DNFFormula(new ConjunctiveClause(character))));
+					
 				}
+				
 			}
 		}
 	}

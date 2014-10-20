@@ -31,6 +31,19 @@ public class ConjunctiveClause {
 	}
 	
 	/**
+	 * creates a new {@link ConjunctiveClause} with the single {@link IGraphProposition} p
+	 * @param p the only proposition of the {@link ConjunctiveClause}
+	 * @throws NullPointerException if the {@link IGraphProposition} p is null
+	 */
+	public ConjunctiveClause(IGraphProposition p){
+		if(p==null){
+			throw new NullPointerException("The proposition p cannot be null");
+		}
+		propositions=new HashSet<IGraphProposition>();
+		this.propositions.add(p);
+	}
+	
+	/**
 	 * @return the {@link Set} of the propositions ( {@link IGraphProposition}) of the conjunctive clause
 	 */
 	public Set<IGraphProposition> getPropositions() {

@@ -34,14 +34,26 @@ public class DNFFormula {
 	
 	/**
 	 * creates a new {@link DNFFormula} with the clauses specified as parameter
-	 * @param disjunctionClause contains the set of {@link ConjunctiveClause} of the {@link DNFFormula}
+	 * @param conjunctiveClauses contains the set of {@link ConjunctiveClause} of the {@link DNFFormula}
 	 * @throws NullPointerException if the set of {@link ConjunctiveClause} is null
 	 */
-	public DNFFormula(Set<ConjunctiveClause> disjunctionClause){
-		if(disjunctionClause==null){
+	public DNFFormula(Set<ConjunctiveClause> conjunctiveClauses){
+		if(conjunctiveClauses==null){
 			throw new NullPointerException("The set of disjunctionClause cannot be null");
 		}
-		this.disjunctionClause=disjunctionClause;
+		this.disjunctionClause=conjunctiveClauses;
+	}
+	
+	/**
+	 * creates a new {@link DNFFormula} with a single {@link ConjunctiveClause} conjunctiveClause
+	 * @param conjunctiveClause is the only {@link ConjunctiveClause} of the {@link DNFFormula}
+	 */
+	public DNFFormula(ConjunctiveClause conjunctiveClause){
+		if(conjunctiveClause==null){
+			throw new NullPointerException("The set of disjunctionClause cannot be null");
+		}
+		this.disjunctionClause=new HashSet<ConjunctiveClause>();
+		this.disjunctionClause.add(conjunctiveClause);
 	}
 
 	/**

@@ -38,6 +38,10 @@ public class ConstrainedTransition<S1 extends State> extends LabelledTransition 
 		return constrainedState;
 	}
 	
+	/**
+	 * returns the {@link String} representation of the {@link ConstrainedTransition}
+	 * @return the {@link String} representation of the {@link ConstrainedTransition}
+	 */
 	@Override
 	public String toString() {
 		if(constrainedState!=null){

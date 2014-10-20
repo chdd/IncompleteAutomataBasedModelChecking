@@ -4,6 +4,7 @@ import it.polimi.model.elements.states.FactoryIntersectionState;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
@@ -269,7 +270,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 						S1 s2next=this.specification.getTransitionDestination(t2);
 						S p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
-						T t=this.transitionFactory.create(commonClauses);
+						T t=this.transitionFactory.create(new DNFFormula(commonClauses));
 						this.addTransition(currentState, p, t);
 						
 						// re-executes the recursive procedure
