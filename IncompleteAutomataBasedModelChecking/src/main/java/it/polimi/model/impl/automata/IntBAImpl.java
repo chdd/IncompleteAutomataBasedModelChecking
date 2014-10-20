@@ -22,29 +22,37 @@ import java.util.Stack;
  * contains an intersection automaton
  * @author claudiomenghi
  *
- * @param <S1> is the type of the states of the original Buchi automata
- * @param <T1> is the type of the transitions of the original Buchi automata
- * @param <S> is the type of the state in the intersection automaton
- * @param <T> is the type of the transition in the intersection automaton
+ * @param <STATE> is the type of the states of the original Buchi automata
+ * @param <TRANSITION> is the type of the transitions of the original Buchi automata
+ * @param <INTERSECTIONSTATE> is the type of the state in the intersection automaton
+ * @param <INTERSECTIONTRANSITION> is the type of the transition in the intersection automaton
  */
 @SuppressWarnings("serial")
-public class IntBAImpl<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFactoryInterface<T1>, TFactory extends ConstrainedTransitionFactoryInterface<S1, T>> extends IBAImpl<S, T, TFactory> implements DrawableIntBA<S1,T1,S,T, TFactory>{
+public class IntBAImpl<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	INTERSECTIONSTATE extends IntersectionState<STATE>, 
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE, INTERSECTIONTRANSITION>> 
+	extends IBAImpl<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> 
+	implements DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>{
 
+	
 	/**
 	 * contains the model of the system that generates the intersection automaton
 	 */
-	private IBA<S1, T1, TLabelingFactory> model;
+	private IBA<STATE, TRANSITION, TRANSITIONFACTORY> model;
 	
 	/**
 	 * contains the specification that generates the intersection automaton
 	 */
-	private BA<S1, T1, TLabelingFactory> specification;
+	private BA<STATE, TRANSITION, TRANSITIONFACTORY> specification;
 	
 	/**
 	 * contains the set of the mixed states
 	 */
-	private Set<S> mixedStates;
+	private Set<INTERSECTIONSTATE> mixedStates;
 	
 	/**
 	 * is used in the emptiness checking to store if the complete emptiness checking procedure or the "normal" emptiness checking must be performed
@@ -57,7 +65,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @param model: is the model to be considered
 	 * @param specification: is the specification to be considered
 	 */
-	public IntBAImpl(IBA<S1, T1, TLabelingFactory> model, BA<S1, T1, TLabelingFactory> specification, TFactory transitionFactory){
+	public IntBAImpl(IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, BA<STATE, TRANSITION, TRANSITIONFACTORY> specification, INTERSECTIONTRANSITIONFACTORY transitionFactory){
 		super(transitionFactory);
 		if(model==null){
 			throw new IllegalArgumentException("The model to be considered cannot be null");
@@ -67,7 +75,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 		}
 		this.model=model;
 		this.specification=specification;
-		this.mixedStates=new HashSet<S>();
+		this.mixedStates=new HashSet<INTERSECTIONSTATE>();
 		this.computeIntersection();
 	}
 	
@@ -77,7 +85,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @param s the state to be added in the set of the mixed states
 	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public void addMixedState(S s){
+	public void addMixedState(INTERSECTIONSTATE s){
 		if(s==null){
 			throw new IllegalArgumentException("The state to be added cannot be null");
 		}
@@ -90,7 +98,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @return true if the state s is mixed, false otherwise
 	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public boolean isMixed(S s){
+	public boolean isMixed(INTERSECTIONSTATE s){
 		if(s==null){
 			throw new IllegalArgumentException("The state s cannot be null");
 		}
@@ -100,14 +108,14 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * returns the set of the mixed states
 	 * @return the set of the mixed states
 	 */
-	public Set<S> getMixedStates(){
+	public Set<INTERSECTIONSTATE> getMixedStates(){
 		return this.mixedStates;
 	}
 	
 	/**
 	 * @return the model that generates the intersection automaton
 	 */
-	public IBA<S1, T1, TLabelingFactory> getModel() {
+	public IBA<STATE, TRANSITION, TRANSITIONFACTORY> getModel() {
 		return model;
 	}
 	
@@ -115,7 +123,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
 	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isEmpty(ModelCheckerParameters<S1, S> mp){
+	public boolean isEmpty(ModelCheckerParameters<STATE, INTERSECTIONSTATE> mp){
 		
 		if(super.isEmpty()){
 			return true;
@@ -141,7 +149,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @return true if an accepting path is found, false otherwise
 	 */
 	@Override
-	protected boolean firstDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath){
+	protected boolean firstDFS(Set<INTERSECTIONSTATE> visitedStates, INTERSECTIONSTATE currState, Stack<INTERSECTIONSTATE> statesOfThePath){
 		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
@@ -157,7 +165,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @return true if an accepting path is found during the second DFS, false otherwise
 	 */
 	@Override
-	protected boolean secondDFS(Set<S> visitedStates, S currState, Stack<S> statesOfThePath, Stack<S> stackSecondDFS){
+	protected boolean secondDFS(Set<INTERSECTIONSTATE> visitedStates, INTERSECTIONSTATE currState, Stack<INTERSECTIONSTATE> statesOfThePath, Stack<INTERSECTIONSTATE> stackSecondDFS){
 		if(this.isMixed(currState) && completeEmptiness){
 			return false;
 		}
@@ -197,7 +205,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IntBAImpl<S1, T1, S, T, TLabelingFactory, TFactory> other = (IntBAImpl<S1, T1, S, T, TLabelingFactory, TFactory>) obj;
+		IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> other = (IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>) obj;
 		if (mixedStates == null) {
 			if (other.mixedStates != null)
 				return false;
@@ -224,11 +232,11 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 		this.alphabet.addAll(model.getAlphabet());
 		this.alphabet.addAll(specification.getAlphabet());
 		
-		for(S1 s1: model.getInitialStates()){
-			for(S1 s2: specification.getInitialStates()){
-				S p=this.addIntersectionState(s1, s2, null);
+		for(STATE s1: model.getInitialStates()){
+			for(STATE s2: specification.getInitialStates()){
+				INTERSECTIONSTATE p=this.addIntersectionState(s1, s2, null);
 				
-				Set<S> visitedStates=new HashSet<S>();
+				Set<INTERSECTIONSTATE> visitedStates=new HashSet<INTERSECTIONSTATE>();
 				this.computeIntersection(s1, s2, visitedStates, p);
 			}
 		}
@@ -242,10 +250,10 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @param currentState contains the current state of the intersection automaton under analysis
 	 */
 	private void computeIntersection(
-									S1 s1, 
-									S1 s2, 
-									Set<S> visitedStates, 
-									S currentState
+									STATE s1, 
+									STATE s2, 
+									Set<INTERSECTIONSTATE> visitedStates, 
+									INTERSECTIONSTATE currentState
 									){
 		// if the state currentState has been already been visited it returns
 		if(visitedStates.contains(currentState)){
@@ -256,9 +264,9 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 			visitedStates.add(currentState);
 			
 			// for each transition in the extended automaton whit source s1
-			for(T1 t1: this.model.getOutTransition(s1)){
+			for(TRANSITION t1: this.model.getOutTransition(s1)){
 				// for each transition in the extended automaton whit source s2
-				for(T1 t2: this.specification.getOutTransition(s2)){
+				for(TRANSITION t2: this.specification.getOutTransition(s2)){
 					// if the characters of the two transitions are equal
 					
 					Set<ConjunctiveClause> commonClauses=t1.getDnfFormula().getCommonClauses(t2.getDnfFormula());
@@ -266,11 +274,11 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 						
 						
 						// creates a new state made by the states s1next and s2 next
-						S1 s1next=this.model.getTransitionDestination(t1);
-						S1 s2next=this.specification.getTransitionDestination(t2);
-						S p=this.addIntersectionState(s1next, s2next, currentState);
+						STATE s1next=this.model.getTransitionDestination(t1);
+						STATE s2next=this.specification.getTransitionDestination(t2);
+						INTERSECTIONSTATE p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
-						T t=this.transitionFactory.create(new DNFFormula(commonClauses));
+						INTERSECTIONTRANSITION t=this.transitionFactory.create(new DNFFormula(commonClauses));
 						this.addTransition(currentState, p, t);
 						
 						// re-executes the recursive procedure
@@ -282,12 +290,12 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 			// if the current state of the extended automaton is transparent
 			if(model.isTransparent(s1)){
 				// for each transition in the automaton a2
-				for(T1 t2: specification.getOutTransition(s2)){
+				for(TRANSITION t2: specification.getOutTransition(s2)){
 					// a new state is created made by the transparent state and the state s2next
-					S1 s2next=this.specification.getTransitionDestination(t2);
-					S p=this.addIntersectionState(s1, s2next, currentState);
+					STATE s2next=this.specification.getTransitionDestination(t2);
+					INTERSECTIONSTATE p=this.addIntersectionState(s1, s2next, currentState);
 					// the new state is connected by the previous one through a constrained transition
-					T t=this.transitionFactory.create(t2.getDnfFormula(), s1);
+					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), s1);
 					this.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(s1, s2next, visitedStates, p);
@@ -306,10 +314,10 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @param currentState is the current state of the intersection (the one that precedes the state that is generated in this method)
 	 * @return the new intersection state
 	 */
-	private S addIntersectionState(S1 s1, S1 s2, S currentState){
+	private INTERSECTIONSTATE addIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState){
 
 		@SuppressWarnings("unchecked")
-		S p = (S) this.generateIntersectionState(s1, s2, currentState);
+		INTERSECTIONSTATE p = (INTERSECTIONSTATE) this.generateIntersectionState(s1, s2, currentState);
 		if(p.getNumber()==2){
 			this.addAcceptState(p);
 		}
@@ -333,7 +341,7 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 	 * @param currentState: is the current state to be considered in the generation of the automaton state
 	 * @return a new intersection state
 	 */
-	protected IntersectionState<S1> generateIntersectionState(S1 s1, S1 s2, S currentState){
+	protected IntersectionState<STATE> generateIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState){
 		int num=0;
 		if(currentState!=null){
 			num=currentState.getNumber();
@@ -351,8 +359,8 @@ extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFa
 				}
 			}
 		}
-		FactoryIntersectionState<S1, S> factory=new FactoryIntersectionState<S1, S>();
-		IntersectionState<S1> p = factory.create(s1, s2, num);
+		FactoryIntersectionState<STATE, INTERSECTIONSTATE> factory=new FactoryIntersectionState<STATE, INTERSECTIONSTATE>();
+		IntersectionState<STATE> p = factory.create(s1, s2, num);
 		return p;
 	}
 }

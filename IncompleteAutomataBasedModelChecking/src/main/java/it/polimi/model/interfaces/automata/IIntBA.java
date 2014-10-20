@@ -11,13 +11,18 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterf
  * is the interface the {@link IntBAImpl} must implement
  * @author claudiomenghi
  *
- * @param <S1> is the type of the states of the two original automata
- * @param <T1> is the type of the transitions of the two original automata
- * @param <S> is the type of the states of the intersection automata
- * @param <T> is the type of the transitions of the intersection automata
+ * @param <STATE> is the type of the states of the two original automata
+ * @param <TRANSITION> is the type of the transitions of the two original automata
+ * @param <INTERSECTIONSTATE> is the type of the states of the intersection automata
+ * @param <INTERSECTIONTRANSITION> is the type of the transitions of the intersection automata
  */
-public interface IIntBA<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>, TFactory extends ConstrainedTransitionFactoryInterface<S1,T> > extends IBA<S,T, TFactory> {
+public interface IIntBA<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	INTERSECTIONSTATE extends IntersectionState<STATE>, 
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	TRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE,INTERSECTIONTRANSITION>>
+	extends IBA<INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
 
 	/**
 	 * returns true if the state s is mixed, false otherwise
@@ -25,6 +30,6 @@ extends ConstrainedTransition<S1>, TFactory extends ConstrainedTransitionFactory
 	 * @return true if the state s is mixed, false otherwise
 	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public boolean isMixed(S s);
+	public boolean isMixed(INTERSECTIONSTATE s);
 	
 }

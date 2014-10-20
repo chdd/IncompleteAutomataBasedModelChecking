@@ -19,23 +19,27 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 /**
  * @author claudiomenghi
  * contains a possibly incomplete Buchi automaton which extends classical automaton with transparent states
- * @param <S> contains the type of the states of the automaton
- * @param <T> contains the type of the transitions of the automaton
+ * @param <STATE> contains the type of the states of the automaton
+ * @param <TRANSITION> contains the type of the transitions of the automaton
  */
 @SuppressWarnings("serial")
-public class IBAImpl<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends BAImpl<S, T, TFactory> implements DrawableIBA<S,T, TFactory>{
+public class IBAImpl<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	extends BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> implements DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>{
 
 	/**
 	 * contains the set of the transparent states of the automaton
 	 */
-	private Set<S> transparentStates;
+	private Set<STATE> transparentStates;
 	
 	/**
 	 * creates a new extended automaton
 	 */
-	public IBAImpl(TFactory transitionFactory){
+	public IBAImpl(TRANSITIONFACTORY transitionFactory){
 		super(transitionFactory);
-		this.transparentStates=new HashSet<S>();
+		this.transparentStates=new HashSet<STATE>();
 	}
 	
 	/**
@@ -43,9 +47,9 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
-	public IBAImpl(Set<IGraphProposition> alphabet, TFactory transitionFactory) {
+	public IBAImpl(Set<IGraphProposition> alphabet, TRANSITIONFACTORY transitionFactory) {
 		super(alphabet, transitionFactory);
-		transparentStates=new HashSet<S>();
+		transparentStates=new HashSet<STATE>();
 	}
 	
 	/**
@@ -53,7 +57,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 	 * @param s is the state to be added and is also added to the set of the states of the automaton
 	 * @throws IllegalArgumentException if the state to be added is null
 	 */
-	public void addTransparentState(S s){
+	public void addTransparentState(STATE s){
 		if(s==null){
 			throw new IllegalArgumentException("The state to be added cannot be null");
 		}
@@ -67,7 +71,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 	 * @return true if the state s is transparent, false otherwise
 	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public boolean isTransparent(S s){
+	public boolean isTransparent(STATE s){
 		if(s==null){
 			throw new IllegalArgumentException("The state to be added cannot be null");
 		}
@@ -78,7 +82,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 	 * returns the set of the transparent states of the automaton
 	 * @return the set of the transparent states of the automaton (if no transparent states are present an empty set is returned)
 	 */
-	public Set<S>  getTransparentStates(){
+	public Set<STATE>  getTransparentStates(){
 		return this.transparentStates;
 	}
 	
@@ -95,9 +99,9 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 
 		this.reset();
 		Random r=new Random();
-		FactoryState<S> stateFactory=new FactoryState<S>();
+		FactoryState<STATE> stateFactory=new FactoryState<STATE>();
 		for(int i=0; i<n;i++){
-			S s=stateFactory.create();
+			STATE s=stateFactory.create();
 			if(r.nextInt(10)<=initialStateProbability*10){
 				this.addInitialState(s);
 			}
@@ -113,8 +117,8 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 				this.addTransparentState(s);
 			}
 		}
-		for(S s1: this.getVertices()){
-			for(S s2: this.getVertices()){
+		for(STATE s1: this.getVertices()){
+			for(STATE s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
@@ -139,17 +143,17 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 		this.addCharacters(alphabet);
 		Random r=new Random();
 		
-		FactoryState<S> stateFactory=new FactoryState<S>();
+		FactoryState<STATE> stateFactory=new FactoryState<STATE>();
 		for(int i=0; i<n;i++){
 			this.addVertex(stateFactory.create());
 		}
-		Iterator<S> it1=this.getVertices().iterator();
+		Iterator<STATE> it1=this.getVertices().iterator();
 		for(int i=0; i< Math.min(numTransparentStates, this.getVertexCount()); i++){
 			this.addTransparentState(it1.next());
 		}
 		for(int i=0; i<Math.min(numInitial, this.getVertexCount()); i++){
 			int transp=r.nextInt(this.getVertices().size());
-			Iterator<S> it=this.getVertices().iterator();
+			Iterator<STATE> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
@@ -158,15 +162,15 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 		}
 		for(int i=0; i<numAccepting; i++){
 			int transp=r.nextInt(this.getVertices().size());
-			Iterator<S> it=this.getVertices().iterator();
+			Iterator<STATE> it=this.getVertices().iterator();
 			for(int j=0;j<transp;j++)
 			{
 				it.next();
 			}
 			this.addAcceptState(it.next());
 		}
-		for(S s1: this.getVertices()){
-			for(S s2: this.getVertices()){
+		for(STATE s1: this.getVertices()){
+			for(STATE s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					
@@ -211,7 +215,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition, TFactory ext
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IBAImpl<S,T, TFactory> other = (IBAImpl<S,T, TFactory>) obj;
+		IBAImpl<STATE,TRANSITION, TRANSITIONFACTORY> other = (IBAImpl<STATE,TRANSITION, TRANSITIONFACTORY>) obj;
 		if (transparentStates == null) {
 			if (other.transparentStates != null)
 				return false;

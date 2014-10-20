@@ -11,13 +11,17 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterf
  * is the interface the {@link DrawableIntBA} the drawable intersection automaton must implement
  * @author claudiomenghi
  *
- * @param <S1> is the type of the {@link State} of the two original automata
- * @param <T1> is the type of the {@link LabelledTransition} of the two original automata
- * @param <S> is the type of the states of the {@link IntersectionState} that is the state that i generated from the two original automata
- * @param <T> is the type of the {@link ConstrainedTransition} which is generate is the intersection of a Buchi and an Incomplete Buchi automata
+ * @param <STATE> is the type of the {@link State} of the two original automata
+ * @param <TRANSITION> is the type of the {@link LabelledTransition} of the two original automata
+ * @param <INTERSECTIONSTATE> is the type of the states of the {@link IntersectionState} that is the state that i generated from the two original automata
+ * @param <INTERSECTIONTRANSITION> is the type of the {@link ConstrainedTransition} which is generate is the intersection of a Buchi and an Incomplete Buchi automata
  */
-public interface DrawableIntBA <S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, 
-T  extends ConstrainedTransition<S1>, 
-TFactory extends ConstrainedTransitionFactoryInterface<S1,T>> extends IIntBA<S1,T1,S,T, TFactory>, DrawableIBA<S, T, TFactory> {
+public interface DrawableIntBA<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	INTERSECTIONSTATE extends IntersectionState<STATE>, 
+	INTERSECTIONTRANSITION  extends ConstrainedTransition<STATE>, 
+	TRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE,INTERSECTIONTRANSITION>> 
+	extends IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY>, DrawableIBA<INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
 
 }

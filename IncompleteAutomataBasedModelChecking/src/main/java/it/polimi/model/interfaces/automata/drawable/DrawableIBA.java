@@ -9,9 +9,13 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface
  * is the interface a {@link DrawableIBA} (drawable Incomplete Buchi automaton) must implement
  * @author claudiomenghi
  *
- * @param <S> is the type of the {@link State} the drawable Incomplete Buchi automaton must implement
- * @param <T> is the type of the {@link LabelledTransition} the drawable Incomplete Buchi Automaton must implement
+ * @param <STATE> is the type of the {@link State} the drawable Incomplete Buchi automaton must implement
+ * @param <TRANSITION> is the type of the {@link LabelledTransition} the drawable Incomplete Buchi Automaton must implement
  */
-public interface DrawableIBA<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends DrawableBA<S, T, TFactory>, IBA<S, T, TFactory> {
+public interface DrawableIBA<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>, IBA<STATE, TRANSITION, TRANSITIONFACTORY> {
 
 }

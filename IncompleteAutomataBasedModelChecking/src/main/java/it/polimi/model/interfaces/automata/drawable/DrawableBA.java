@@ -10,9 +10,13 @@ import edu.uci.ics.jung.graph.DirectedGraph;
  * is the interface a {@link DrawableBA} must implement
  * @author claudiomenghi
  *
- * @param <S> is the type of the {@link State} of the {@link DrawableBA}
- * @param <T> is the type of the {@link LabelledTransition} of the {@link DrawableBA}
+ * @param <STATE> is the type of the {@link State} of the {@link DrawableBA}
+ * @param <TRANSITION> is the type of the {@link LabelledTransition} of the {@link DrawableBA}
  */
-public interface DrawableBA<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends BA<S, T, TFactory>, DirectedGraph<S, T> {
+public interface DrawableBA<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	extends BA<STATE, TRANSITION, TRANSITIONFACTORY>, DirectedGraph<STATE, TRANSITION> {
 
 }

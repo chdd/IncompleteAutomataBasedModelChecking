@@ -10,10 +10,14 @@ import java.util.Set;
  * is the interface of an incomplete Buchi automaton {@link IBA}
  * @author claudiomenghi
  *
- * @param <S> is the type of the states of the {@link IBA}
- * @param <T> is the type of the transitions of the {@link IBA}
+ * @param <STATE> is the type of the states of the {@link IBA}
+ * @param <TRANSITION> is the type of the transitions of the {@link IBA}
  */
-public interface IBA<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends BA<S, T, TFactory> {
+public interface IBA<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	extends BA<STATE, TRANSITION, TRANSITIONFACTORY> {
 
 	/**
 	 * check if the state is transparent
@@ -21,11 +25,11 @@ public interface IBA<S extends State, T extends LabelledTransition, TFactory ext
 	 * @return true if the state s is transparent, false otherwise
 	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public boolean isTransparent(S s);
+	public boolean isTransparent(STATE s);
 	
 	/**
 	 * returns the set of the transparent states of the {@link IBA}
 	 * @return the set of the transparent states of the {@link IBA} (if no transparent states are present an empty set is returned)
 	 */
-	public Set<S>  getTransparentStates();
+	public Set<STATE>  getTransparentStates();
 }

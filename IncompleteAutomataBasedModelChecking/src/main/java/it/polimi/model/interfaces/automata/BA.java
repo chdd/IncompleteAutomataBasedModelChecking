@@ -12,16 +12,19 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * is the interface of the {@link BA}
  * @author claudiomenghi
  *
- * @param <S> is the type of the states of the {@link BA}
- * @param <T> is the type of the transitions of the {@link BA}
+ * @param <STATE> is the type of the states of the {@link BA}
+ * @param <TRANSITION> is the type of the transitions of the {@link BA}
  */
-public interface BA<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> {
+public interface BA<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> {
 
 	/**
 	 * returns the initial states of the {@link BA}
 	 * @return the initial states of the {@link BA}
 	 */
-	public Set<S> getInitialStates();
+	public Set<STATE> getInitialStates();
 	
 	/**
 	 * returns the alphabet of the {@link BA}
@@ -33,27 +36,27 @@ public interface BA<S extends State, T extends LabelledTransition, TFactory exte
 	 * return the transitions that exits the {@link State} state
 	 * @return the transitions that exits the {@link State} state
 	 */
-	public Set<T> getOutTransition(S state);
+	public Set<TRANSITION> getOutTransition(STATE state);
 	
 	/**
 	 * returns the destination of the {@link LabelledTransition} transition
 	 * @param transition is the transition to be analyzed
 	 * @return the {@link State} which is destination of the {@link LabelledTransition} transition
 	 */
-	public S getTransitionDestination(T transition);
+	public STATE getTransitionDestination(TRANSITION transition);
 	
 	/** 
 	 * Returns the set of accepting states of the {@link BA}. 
 	 * @return set of the accepting states of the {@link BA} (see {@link State})
 	 */
-	public Set<S> getAcceptStates();
+	public Set<STATE> getAcceptStates();
 	
 	/**
 	 * returns true if the {@link State} state is accepting false otherwise
 	 * @param state is the {@link State} to be checked if accepting
 	 * @return true if the {@link State} state is accepting, false otherwise
 	 */
-	public boolean isAccept(S state);
+	public boolean isAccept(STATE state);
 	
 	/**
 	 * check is the state s is contained into the set of the initial states of the automaton
@@ -61,7 +64,7 @@ public interface BA<S extends State, T extends LabelledTransition, TFactory exte
 	 * @return true if the state s is contained into the set of the initial states of the automaton, false otherwise
 	 * @throws IllegalArgumentException if the state s is null
 	 */
-	public boolean isInitial(S s);
+	public boolean isInitial(STATE s);
 	
 	/**
 	 * returns the number of the states of the {@link BA}
