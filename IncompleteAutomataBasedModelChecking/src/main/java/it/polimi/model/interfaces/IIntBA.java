@@ -4,7 +4,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.IntBAImpl;
+import it.polimi.model.impl.automata.IntBAImpl;
 
 /**
  * is the interface the {@link IntBAImpl} must implement

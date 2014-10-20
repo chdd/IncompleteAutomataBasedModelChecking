@@ -7,8 +7,8 @@ import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.elements.states.BAMetadataToStateTransformer;
 import it.polimi.model.elements.states.IBAMetadataToStateTransformer;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.BAImpl;
-import it.polimi.model.impl.IBAImpl;
+import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.automata.IBAImpl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

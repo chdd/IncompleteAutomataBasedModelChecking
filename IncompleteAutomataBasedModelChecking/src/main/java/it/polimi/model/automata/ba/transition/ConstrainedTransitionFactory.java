@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
-import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.DNFFormula;
 
 public class ConstrainedTransitionFactory<S extends State, T extends ConstrainedTransition<S>> extends TransitionFactory<T> {
 

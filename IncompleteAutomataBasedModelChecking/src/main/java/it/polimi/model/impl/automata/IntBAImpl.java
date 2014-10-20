@@ -1,12 +1,12 @@
-package it.polimi.model.impl;
+package it.polimi.model.impl.automata;
 
 import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.FactoryIntersectionState;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.interfaces.BA;
 import it.polimi.model.interfaces.IBA;
 import it.polimi.model.interfaces.drawable.DrawableIntBA;

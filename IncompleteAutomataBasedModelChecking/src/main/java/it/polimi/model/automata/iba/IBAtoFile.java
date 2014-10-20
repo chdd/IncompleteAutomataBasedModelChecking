@@ -5,7 +5,7 @@ import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.BAStateAcceptingToMetadataTransformer;
 import it.polimi.model.elements.states.BAStateInitialToMetadataTransformer;
-import it.polimi.model.impl.IBAImpl;
+import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.io.iba.StateTransparentToMetadataTransformer;
 
 import java.io.BufferedWriter;

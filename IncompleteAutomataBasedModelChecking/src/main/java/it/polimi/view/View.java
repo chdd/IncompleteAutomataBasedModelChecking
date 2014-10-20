@@ -10,7 +10,7 @@ import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.IntBAImpl;
+import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.interfaces.drawable.DrawableBA;
 import it.polimi.model.interfaces.drawable.DrawableIBA;
 import it.polimi.model.interfaces.drawable.DrawableIntBA;

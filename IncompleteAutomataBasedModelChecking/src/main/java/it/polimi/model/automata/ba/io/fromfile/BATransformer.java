@@ -2,7 +2,7 @@ package it.polimi.model.automata.ba.io.fromfile;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.impl.BAImpl;
+import it.polimi.model.impl.automata.BAImpl;
 
 import org.apache.commons.collections15.Transformer;
 

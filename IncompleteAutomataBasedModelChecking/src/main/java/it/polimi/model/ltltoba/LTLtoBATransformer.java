@@ -2,11 +2,11 @@ package it.polimi.model.ltltoba;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
-import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.FactoryState;
-import it.polimi.model.impl.BAImpl;
+import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.DNFFormula;
 
 import java.util.Collection;
 import java.util.HashMap;

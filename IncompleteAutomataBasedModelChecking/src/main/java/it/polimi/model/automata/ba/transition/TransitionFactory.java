@@ -1,7 +1,7 @@
 package it.polimi.model.automata.ba.transition;
 
-import it.polimi.model.automata.ba.transition.labeling.ConjunctiveClause;
-import it.polimi.model.automata.ba.transition.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.DNFFormula;
 
 import org.apache.commons.collections15.Factory;
 

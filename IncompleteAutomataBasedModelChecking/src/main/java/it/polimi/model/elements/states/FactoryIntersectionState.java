@@ -1,6 +1,6 @@
 package it.polimi.model.elements.states;
 
-import it.polimi.model.impl.IntBAImpl;
+import it.polimi.model.impl.automata.IntBAImpl;
 
 import org.apache.commons.collections15.Factory;
 

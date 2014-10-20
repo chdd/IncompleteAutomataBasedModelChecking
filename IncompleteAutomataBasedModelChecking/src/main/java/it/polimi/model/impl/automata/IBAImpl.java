@@ -1,4 +1,4 @@
-package it.polimi.model.impl;
+package it.polimi.model.impl.automata;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.FactoryState;
@@ -217,7 +217,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition> extends BAIm
 	}
 	/**
 	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.
-	 * @see it.polimi.model.impl.BAImpl#reset()
+	 * @see it.polimi.model.impl.automata.BAImpl#reset()
 	 */	
 	@Override
 	public void reset(){

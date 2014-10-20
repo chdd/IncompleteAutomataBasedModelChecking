@@ -1,10 +1,9 @@
-package it.polimi.model.impl;
+package it.polimi.model.impl.automata;
 
 import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.BA;
 import it.polimi.model.interfaces.drawable.DrawableBA;
 
 import java.util.HashMap;
@@ -60,10 +59,6 @@ public class BAImpl<S extends State, T extends LabelledTransition> extends Direc
 		this.mapNameState=new HashMap<Integer,S>();
 		this.transitionFactory=new TransitionFactory<T>();
 	}
-	
-	
-	
-	
 	
 	/** 
 	 * Constructs a new {@link BAImpl} with the specified alphabet
