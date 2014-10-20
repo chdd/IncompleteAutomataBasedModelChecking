@@ -1,4 +1,4 @@
-package it.polimi.model.automata.ba.transition;
+package it.polimi.model.impl.transitions;
 
 import it.polimi.model.impl.labeling.DNFFormula;
 

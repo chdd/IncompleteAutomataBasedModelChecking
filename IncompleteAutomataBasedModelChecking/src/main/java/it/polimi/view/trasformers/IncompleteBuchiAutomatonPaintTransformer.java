@@ -1,13 +1,19 @@
 package it.polimi.view.trasformers;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableIBA;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import java.awt.Color;
 import java.awt.Paint;
 
-public class IncompleteBuchiAutomatonPaintTransformer<S extends State, T extends LabelledTransition, A extends DrawableIBA<S, T>> extends BuchiAutomatonStatePaintTransformer<S,T, A> {
+public class IncompleteBuchiAutomatonPaintTransformer<
+	S extends State, 
+	T extends LabelledTransition, 
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>,
+	A extends DrawableIBA<S, T, LABELLEDTRANSITIONFACTORY>> 
+	extends BuchiAutomatonStatePaintTransformer<S,T, LABELLEDTRANSITIONFACTORY, A> {
 
 	public IncompleteBuchiAutomatonPaintTransformer(A a) {
 		super(a);

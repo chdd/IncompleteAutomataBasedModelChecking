@@ -1,8 +1,9 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableIBA;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.view.menu.IBAStateMenu;
 import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
 import it.polimi.view.trasformers.IncompleteBuchiAutomatonPaintTransformer;
@@ -11,7 +12,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPopupMenu;
 
-public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends DrawableIBA<S,T>> extends BuchiAutomatonJPanel<S, T, A> {
+public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
+TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>, A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T, TRANSITIONFACTORY, A> {
 
 	/**
 	 * 
@@ -22,8 +24,8 @@ public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledT
 		 super(a, l);
 	}
 	
-	protected BuchiAutomatonStatePaintTransformer<S,T,A> getPaintTransformer(A a){
-		return new IncompleteBuchiAutomatonPaintTransformer<S,T,A>(a);
+	protected BuchiAutomatonStatePaintTransformer<S,T, TRANSITIONFACTORY, A> getPaintTransformer(A a){
+		return new IncompleteBuchiAutomatonPaintTransformer<S,T, TRANSITIONFACTORY, A>(a);
 	}
 	protected JPopupMenu getStateMenu(){
 		 return new IBAStateMenu(view);

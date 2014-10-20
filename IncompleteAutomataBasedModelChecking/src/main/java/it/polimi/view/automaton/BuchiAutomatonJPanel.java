@@ -1,12 +1,12 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.ba.transition.TransitionFactory;
-import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.FactoryState;
+import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
-import it.polimi.model.interfaces.BA;
-import it.polimi.model.interfaces.drawable.DrawableBA;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
@@ -28,7 +28,11 @@ import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
 
-public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition, A extends DrawableBA<S,T>> extends AutomatonJPanel<S,T,A>  {
+public class BuchiAutomatonJPanel<
+	S extends State, 
+	T extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>, 
+	A extends DrawableBA<S,T, TRANSITIONFACTORY>> extends AutomatonJPanel<S,T, TRANSITIONFACTORY,A>  {
 
 	/**
 	 * 
@@ -51,12 +55,12 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 	}
 	
 	
-	protected BuchiAutomatonShapeTransformer<S,T,A> getShapeTransformer(A a){
-		return new BuchiAutomatonShapeTransformer<S, T, A>(a);
+	protected BuchiAutomatonShapeTransformer<S,T, TRANSITIONFACTORY, A> getShapeTransformer(A a){
+		return new BuchiAutomatonShapeTransformer<S, T, TRANSITIONFACTORY, A>(a);
 	}
 	
-	protected BuchiAutomatonStatePaintTransformer<S,T,A> getPaintTransformer(A a){
-		return new BuchiAutomatonStatePaintTransformer<S,T,A>(a);
+	protected BuchiAutomatonStatePaintTransformer<S,T, TRANSITIONFACTORY, A> getPaintTransformer(A a){
+		return new BuchiAutomatonStatePaintTransformer<S,T, TRANSITIONFACTORY, A>(a);
 	}
 	
 	
@@ -68,13 +72,15 @@ public class BuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 
 	@Override
 	protected Transformer<S, Stroke> getStateStrokeTransformer(A a) {
-		return new BuchiAutomatonStateStrokeTransofmer<S, T, A>(a);
+		return new BuchiAutomatonStateStrokeTransofmer<S, T, TRANSITIONFACTORY, A>(a);
 	}
 
 	@Override
 	public void setEditingMode() {
+		
+		LabelledTransitionFactoryInterface<T> tf=(LabelledTransitionFactoryInterface<T>) new LabelledTransitionFactory();
 		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
-                new FactoryState<S>(), new TransitionFactory<T>()); 
+                new FactoryState<S>(), tf); 
 		this.setGraphMouse(gm);
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);

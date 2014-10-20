@@ -1,10 +1,12 @@
 package it.polimi.view;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.IntBAImpl;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.awt.TextArea;
@@ -12,7 +14,9 @@ import java.awt.TextArea;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends IntBAImpl<S, T, S1, T1>> extends JPanel {
+public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, 
+LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>,
+CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<S, T1>, A  extends IntBAImpl<S, T, S1, T1, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>> extends JPanel {
 
 	private TextArea xmlArea;
 	

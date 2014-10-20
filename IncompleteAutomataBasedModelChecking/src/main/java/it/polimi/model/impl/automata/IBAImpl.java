@@ -1,9 +1,11 @@
 package it.polimi.model.impl.automata;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
+
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableIBA;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,7 +21,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @param <T> contains the type of the transitions of the automaton
  */
 @SuppressWarnings("serial")
-public class IBAImpl<S extends State, T extends LabelledTransition> extends BAImpl<S, T> implements DrawableIBA<S,T>{
+public class IBAImpl<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends BAImpl<S, T, TFactory> implements DrawableIBA<S,T, TFactory>{
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -29,8 +31,8 @@ public class IBAImpl<S extends State, T extends LabelledTransition> extends BAIm
 	/**
 	 * creates a new extended automaton
 	 */
-	public IBAImpl(){
-		super();
+	public IBAImpl(TFactory transitionFactory){
+		super(transitionFactory);
 		this.transparentStates=new HashSet<S>();
 	}
 	
@@ -39,8 +41,8 @@ public class IBAImpl<S extends State, T extends LabelledTransition> extends BAIm
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
-	public IBAImpl(Set<IGraphProposition> alphabet) {
-		super(alphabet);
+	public IBAImpl(Set<IGraphProposition> alphabet, TFactory transitionFactory) {
+		super(alphabet, transitionFactory);
 		transparentStates=new HashSet<S>();
 	}
 	
@@ -207,7 +209,7 @@ public class IBAImpl<S extends State, T extends LabelledTransition> extends BAIm
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IBAImpl<S,T> other = (IBAImpl<S,T>) obj;
+		IBAImpl<S,T, TFactory> other = (IBAImpl<S,T, TFactory>) obj;
 		if (transparentStates == null) {
 			if (other.transparentStates != null)
 				return false;

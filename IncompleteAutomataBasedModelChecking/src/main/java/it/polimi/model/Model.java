@@ -1,9 +1,6 @@
 package it.polimi.model;
 
 import it.polimi.model.automata.ba.BAtoFile;
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.automata.iba.IBAtoFile;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
@@ -11,6 +8,12 @@ import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
@@ -34,24 +37,28 @@ public class Model implements ModelInterface{
 	/**
 	 * contains the model of the system
 	 */
-	private IBAImpl<State, LabelledTransition> model;
+	private IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> model;
 	
 	/**
 	 * contains the specification of the system
 	 */
-	private BAImpl<State, LabelledTransition>  specification;
+	private BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>  specification;
 	/**
 	 * contains the intersection between the model and the specification
 	 */
-	private IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection;
+	private IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
+	, LabelledTransitionFactoryInterface<LabelledTransition>,
+	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> intersection;
 	
 	private ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
 	
 	
 	public Model(){
-		this.model=new IBAImpl<State, LabelledTransition>();
-		this.specification=new BAImpl<State, LabelledTransition>();
-		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>();
+		this.model=new IBAImpl<State, LabelledTransition,  LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory());
+		this.specification=new BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory());
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
+		, LabelledTransitionFactoryInterface<LabelledTransition>,
+		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(this.model, this.specification, new ConstrainedTransitionFactory());
 	}
 	/**
 	 * creates a new model of the application: the model of the system is loaded from the file with path modelFilePath, its specification is loaded from the 
@@ -69,7 +76,9 @@ public class Model implements ModelInterface{
 				.loadIBAAutomaton(modelFilePath);
 		this.specification=new AutomatonBuilder()
 				.loadBAAutomaton(specificationFilePath);
-		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
+		, LabelledTransitionFactoryInterface<LabelledTransition>,
+		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
 	}
 	
 	/**
@@ -79,7 +88,9 @@ public class Model implements ModelInterface{
 	public void changeModel(String modelFilePath) throws IOException, GraphIOException{
 		this.model=new AutomatonBuilder()
 				.loadIBAAutomaton(modelFilePath);
-		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
+		, LabelledTransitionFactoryInterface<LabelledTransition>,
+		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
 	}
 	/**
 	 * @see {@link ModelInterface}
@@ -88,27 +99,31 @@ public class Model implements ModelInterface{
 	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException{
 		this.specification=new AutomatonBuilder()
 				.loadBAAutomaton(specificationFilePath);
-		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
+		, LabelledTransitionFactoryInterface<LabelledTransition>,
+		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public IBAImpl<State, LabelledTransition> getModel(){
+	public IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel(){
 		return this.model;
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public BAImpl<State, LabelledTransition> getSpecification(){
+	public BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification(){
 		return this.specification;
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> getIntersection(){
+	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+	LabelledTransitionFactoryInterface<LabelledTransition>,
+	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> getIntersection(){
 		return this.intersection;
 	}
 	
@@ -140,11 +155,13 @@ public class Model implements ModelInterface{
 			this.model.addAcceptState(s);
 		}
 		this.model.addVertex(s);
-		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+				LabelledTransitionFactoryInterface<LabelledTransition>,
+				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
 	}
 	@Override
 	public void addTransitionToTheModel(String source, String destination, String dnfFormula){
-		this.model.addTransition(this.model.getVertex(Integer.parseInt(source)), this.model.getVertex(Integer.parseInt(destination)), new TransitionFactory<LabelledTransition>().create(DNFFormula.loadFromString(dnfFormula)));
+		this.model.addTransition(this.model.getVertex(Integer.parseInt(source)), this.model.getVertex(Integer.parseInt(destination)), new LabelledTransitionFactory().create(DNFFormula.loadFromString(dnfFormula)));
 	}
 	@Override
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting) {
@@ -155,10 +172,14 @@ public class Model implements ModelInterface{
 			this.specification.addAcceptState(s);
 		}
 		this.specification.addVertex(s);
-		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(model, specification);
+		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+				LabelledTransitionFactoryInterface<LabelledTransition>,
+				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
 	}
 	
-	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection){
+	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+			LabelledTransitionFactoryInterface<LabelledTransition>,
+			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> intersection){
 		this.intersection=intersection;
 	}
 	
@@ -172,7 +193,12 @@ public class Model implements ModelInterface{
 	@Override
 	public void check(){
 		mp=new ModelCheckerParameters<State, IntersectionState<State>>();
-		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> mc=new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(this.getModel(), this.getSpecification(), mp);
+		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+		LabelledTransitionFactoryInterface<LabelledTransition>,
+		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> mc=new 
+		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+		LabelledTransitionFactoryInterface<LabelledTransition>,
+		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(this.getModel(), this.getSpecification(), mp);
 		mc.check();
 		this.changeIntersection(mc.getIntersection());
 	}
@@ -182,7 +208,7 @@ public class Model implements ModelInterface{
 	}
 	@Override
 	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula) {
-		this.specification.addTransition(this.specification.getVertex(Integer.parseInt(source)), this.specification.getVertex(Integer.parseInt(destination)), new TransitionFactory<LabelledTransition>().create(DNFFormula.loadFromString(dnfFormula)));
+		this.specification.addTransition(this.specification.getVertex(Integer.parseInt(source)), this.specification.getVertex(Integer.parseInt(destination)), new LabelledTransitionFactory().create(DNFFormula.loadFromString(dnfFormula)));
 	
 	}
 	

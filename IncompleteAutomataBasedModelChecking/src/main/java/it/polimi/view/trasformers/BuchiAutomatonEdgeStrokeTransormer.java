@@ -1,6 +1,6 @@
 package it.polimi.view.trasformers;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

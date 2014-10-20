@@ -1,14 +1,15 @@
 package it.polimi.model.elements.states;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.io.graphml.DataMetadata;
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
-public class BAStateInitialToMetadataTransformer<S extends State, T extends LabelledTransition,BA extends BAImpl<S, T>> implements Transformer<S, String>  {
+public class BAStateInitialToMetadataTransformer<S extends State, T extends LabelledTransition,  TFactory extends LabelledTransitionFactoryInterface<T>, BA extends BAImpl<S, T, TFactory>> implements Transformer<S, String>  {
 
 	private BA ba;
 	public BAStateInitialToMetadataTransformer(BA ba){

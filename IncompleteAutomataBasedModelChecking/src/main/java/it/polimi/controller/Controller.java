@@ -2,13 +2,15 @@ package it.polimi.controller;
 
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableBA;
-import it.polimi.model.interfaces.drawable.DrawableIBA;
-import it.polimi.model.interfaces.drawable.DrawableIntBA;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.view.ViewInterface;
 
@@ -25,7 +27,9 @@ public class Controller implements Observer{
 	/**
 	 * is the (graphical) interface of the application
 	 */
-	private ViewInterface<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> view;
+	private ViewInterface<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>, 
+	LabelledTransitionFactoryInterface<LabelledTransition>,
+	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> view;
 	
 	/**
 	 * is the interface to the model of the application
@@ -38,7 +42,9 @@ public class Controller implements Observer{
 	 * @param view is the view of the application
 	 * @throws IllegalArgumentException if the model or the specification is null
 	 */
-	public Controller(ModelInterface model, ViewInterface<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> view) {
+	public Controller(ModelInterface model, ViewInterface<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>, 
+			LabelledTransitionFactoryInterface<LabelledTransition>,
+			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> view) {
 		if(model==null){
 			throw new IllegalArgumentException("The model cannot be null");
 		}
@@ -67,12 +73,17 @@ public class Controller implements Observer{
 	
 	private void update(){
 		
-		this.view.updateModel((DrawableIBA<State, LabelledTransition>) this.model.getModel());
-		this.view.updateSpecification((DrawableBA<State, LabelledTransition>) this.model.getSpecification());
-		this.view.updateIntersection((DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>>)(model.getIntersection()));
+		this.view.updateModel((DrawableIBA<State, LabelledTransition,  LabelledTransitionFactoryInterface<LabelledTransition>>) this.model.getModel());
+		this.view.updateSpecification((DrawableBA<State, LabelledTransition,  LabelledTransitionFactoryInterface<LabelledTransition>>) this.model.getSpecification());
+		this.view.updateIntersection((DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>, 
+				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>)(model.getIntersection()));
 		
-		this.view.setBrzozoski(new Brzozowski<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>>(this.model.getIntersection()).getConstraintmatrix());
-		this.view.updateVerificationResults(this.model.getVerificationResults(), (DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>>)this.model.getIntersection());
+		this.view.setBrzozoski(new Brzozowski<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+				LabelledTransitionFactoryInterface<LabelledTransition>,
+				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(this.model.getIntersection()).getConstraintmatrix());
+		this.view.updateVerificationResults(this.model.getVerificationResults(), 
+				(DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>,
+						ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>)this.model.getIntersection());
 	}
 	
 	

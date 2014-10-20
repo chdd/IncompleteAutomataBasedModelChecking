@@ -1,14 +1,17 @@
 package it.polimi.modelchecker;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
-import it.polimi.model.interfaces.BA;
-import it.polimi.model.interfaces.IBA;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
@@ -20,23 +23,26 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * @param <S>  is the type of the states of the {@link IntBAImpl}
  * @param <T>  is the type of the states of the {@link IntBAImpl}
  */
-public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>> {
+public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>,
+TFactory extends LabelledTransitionFactoryInterface<T1>,
+IntTFactory  extends ConstrainedTransitionFactoryInterface<S1,T>> 
+{
 	
 	
 	/**
 	 * contains the specification to be checked
 	 */
-	private BA<S1,T1> specification;
+	private BA<S1,T1, TFactory> specification;
 	
 	/**
 	 * contains the model to be checked
 	 */
-	private  IBA<S1, T1> model;
+	private  IBA<S1, T1, TFactory> model;
 	
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
 	 */
-	private IntBAImpl<S1,T1, S, T> ris;
+	private IntBAImpl<S1,T1, S, T, TFactory, IntTFactory> ris;
 	
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
@@ -50,7 +56,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IBA<S1, T1> model, BA<S1,T1> specification, ModelCheckerParameters<S1, S> mp){
+	public ModelChecker(IBA<S1, T1, TFactory> model, BA<S1,T1, TFactory> specification, ModelCheckerParameters<S1, S> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}
@@ -90,7 +96,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		System.out.println(this.specification.toString());
 		long startIntersectionTime = System.nanoTime();   
-		this.ris=new IntBAImpl<S1,T1, S, T>(this.model, this.specification);
+		this.ris=new IntBAImpl<S1,T1, S, T, TFactory, IntTFactory>(this.model, this.specification, (IntTFactory) new ConstrainedTransitionFactory());
 		long stopTime = System.nanoTime(); 
 		
 		// updates the time required to compute the intersection between the model and the specification
@@ -140,7 +146,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 				// sets the result of the verification
 				this.parameters.setResult(-1);
 				// compute the constraints
-				Brzozowski<S1,T1,S,T> brzozowski=new Brzozowski<S1,T1,S,T>(ris);
+				Brzozowski<S1,T1,S,T,TFactory, IntTFactory> brzozowski=new Brzozowski<S1,T1,S,T,TFactory, IntTFactory>(ris);
 				Constraint<S1> returnConstraint;
 				long startConstraintTime = System.nanoTime();   
 				returnConstraint=brzozowski.getConstraint();
@@ -159,7 +165,7 @@ public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S ext
 	 * returns the intersection between the model and the specification
 	 * @return the intersection automaton that contains the intersection of the model and the specification
 	 */
-	public IntBAImpl<S1,T1, S, T> getIntersection(){
+	public IntBAImpl<S1,T1, S, T, TFactory, IntTFactory> getIntersection(){
 		return this.ris;
 	}
 	/**

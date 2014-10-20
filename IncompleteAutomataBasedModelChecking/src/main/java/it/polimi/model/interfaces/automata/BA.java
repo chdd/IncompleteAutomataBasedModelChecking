@@ -1,7 +1,8 @@
-package it.polimi.model.interfaces;
+package it.polimi.model.interfaces.automata;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @param <S> is the type of the states of the {@link BA}
  * @param <T> is the type of the transitions of the {@link BA}
  */
-public interface BA<S extends State, T extends LabelledTransition> {
+public interface BA<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> {
 
 	/**
 	 * returns the initial states of the {@link BA}

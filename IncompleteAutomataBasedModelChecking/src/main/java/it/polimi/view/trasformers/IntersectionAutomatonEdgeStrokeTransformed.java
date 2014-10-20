@@ -1,7 +1,7 @@
 package it.polimi.view.trasformers;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
 import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

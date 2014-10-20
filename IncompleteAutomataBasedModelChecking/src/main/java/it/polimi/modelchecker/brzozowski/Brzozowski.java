@@ -1,18 +1,20 @@
 package it.polimi.modelchecker.brzozowski;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.IntBAImpl;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EpsilonProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author claudiomenghi
@@ -25,12 +27,14 @@ import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
  * @param <T> the type of the {@link LabelledTransition}s of the intersection automaton
  */
 public class Brzozowski<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>> {
+extends ConstrainedTransition<S1>,
+TFactory extends LabelledTransitionFactoryInterface<T1>,
+IntTFactory  extends ConstrainedTransitionFactoryInterface<S1,T>> {
 
 	/**
 	 * contains the {@link IntBAImpl} to be analyzed
 	 */
-	private final IntBAImpl<S1, T1, S, T> a;
+	private final IntBAImpl<S1, T1, S, T, TFactory, IntTFactory> a;
 	
 	private final S[] orderedStates;
 	
@@ -42,7 +46,7 @@ extends ConstrainedTransition<S1>> {
 	 * @param a is the {@link IntBAImpl} to be analyzed
 	 * @throws IllegalArgumentException is generated if the {@link IntBAImpl} a is null
 	 */
-	public Brzozowski(IntBAImpl<S1, T1, S, T> a){
+	public Brzozowski(IntBAImpl<S1, T1, S, T, TFactory, IntTFactory> a){
 		if(a==null){
 			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
 		}

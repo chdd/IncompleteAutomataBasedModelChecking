@@ -9,11 +9,12 @@ package it.polimi.view.menu;
  *
  */
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -160,7 +161,7 @@ public class Actions {
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					visComp.getPickedVertexState().pick(v, false);
-					((BAImpl<State, LabelledTransition>) visComp
+					((BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>) visComp
 							.getGraphLayout().getGraph()).addInitialState(v);
 					;
 					visComp.repaint();
@@ -191,7 +192,7 @@ public class Actions {
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					visComp.getPickedVertexState().pick(v, false);
-					((IBAImpl<State, LabelledTransition>) visComp
+					((IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>) visComp
 							.getGraphLayout().getGraph())
 							.addTransparentState(v);
 					;
@@ -224,7 +225,7 @@ public class Actions {
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					visComp.getPickedVertexState().pick(v, false);
-					((BAImpl<State, LabelledTransition>) visComp
+					((BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>) visComp
 							.getGraphLayout().getGraph()).addAcceptState(v);
 					;
 					visComp.repaint();

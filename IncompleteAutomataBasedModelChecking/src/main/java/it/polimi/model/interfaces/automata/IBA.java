@@ -1,9 +1,10 @@
-package it.polimi.model.interfaces;
+package it.polimi.model.interfaces.automata;
+
+import it.polimi.model.elements.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import java.util.Set;
-
-import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.elements.states.State;
 
 /**
  * is the interface of an incomplete Buchi automaton {@link IBA}
@@ -12,7 +13,7 @@ import it.polimi.model.elements.states.State;
  * @param <S> is the type of the states of the {@link IBA}
  * @param <T> is the type of the transitions of the {@link IBA}
  */
-public interface IBA<S extends State, T extends LabelledTransition> extends BA<S, T> {
+public interface IBA<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends BA<S, T, TFactory> {
 
 	/**
 	 * check if the state is transparent

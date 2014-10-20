@@ -1,15 +1,16 @@
 package it.polimi.model.impl.automata;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.ConstrainedTransitionFactory;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.FactoryIntersectionState;
+import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
-import it.polimi.model.interfaces.BA;
-import it.polimi.model.interfaces.IBA;
-import it.polimi.model.interfaces.drawable.DrawableIntBA;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.HashSet;
@@ -27,17 +28,17 @@ import java.util.Stack;
  */
 @SuppressWarnings("serial")
 public class IntBAImpl<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
-extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntBA<S1,T1,S,T>{
+extends ConstrainedTransition<S1>, TLabelingFactory extends LabelledTransitionFactoryInterface<T1>, TFactory extends ConstrainedTransitionFactoryInterface<S1, T>> extends IBAImpl<S, T, TFactory> implements DrawableIntBA<S1,T1,S,T, TFactory>{
 
 	/**
 	 * contains the model of the system that generates the intersection automaton
 	 */
-	private IBA<S1, T1> model;
+	private IBA<S1, T1, TLabelingFactory> model;
 	
 	/**
 	 * contains the specification that generates the intersection automaton
 	 */
-	private BA<S1, T1> specification;
+	private BA<S1, T1, TLabelingFactory> specification;
 	
 	/**
 	 * contains the set of the mixed states
@@ -49,18 +50,14 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 	 */
 	private boolean completeEmptiness=true;
 	
-	public IntBAImpl(){
-		this.model=new IBAImpl<S1, T1>();
-		this.specification=new BAImpl<S1, T1>();
-		this.mixedStates=new HashSet<S>(); 
-	}
+	
 	/**
 	 * creates a new Intersection automaton starting from the model and its specification
 	 * @param model: is the model to be considered
 	 * @param specification: is the specification to be considered
 	 */
-	public IntBAImpl(IBA<S1, T1> model, BA<S1, T1> specification){
-		super();
+	public IntBAImpl(IBA<S1, T1, TLabelingFactory> model, BA<S1, T1, TLabelingFactory> specification, TFactory transitionFactory){
+		super(transitionFactory);
 		if(model==null){
 			throw new IllegalArgumentException("The model to be considered cannot be null");
 		}
@@ -109,7 +106,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 	/**
 	 * @return the model that generates the intersection automaton
 	 */
-	public IBA<S1, T1> getModel() {
+	public IBA<S1, T1, TLabelingFactory> getModel() {
 		return model;
 	}
 	
@@ -199,7 +196,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IntBAImpl<S1, T1, S, T> other = (IntBAImpl<S1, T1, S, T>) obj;
+		IntBAImpl<S1, T1, S, T, TLabelingFactory, TFactory> other = (IntBAImpl<S1, T1, S, T, TLabelingFactory, TFactory>) obj;
 		if (mixedStates == null) {
 			if (other.mixedStates != null)
 				return false;
@@ -272,8 +269,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 						S1 s2next=this.specification.getTransitionDestination(t2);
 						S p=this.addIntersectionState(s1next, s2next, currentState);
 						// add the transition from the current state to the new created state
-						ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
-						T t=ctfactory.create(commonClauses);
+						T t=this.transitionFactory.create(commonClauses);
 						this.addTransition(currentState, p, t);
 						
 						// re-executes the recursive procedure
@@ -290,8 +286,7 @@ extends ConstrainedTransition<S1>> extends IBAImpl<S, T> implements DrawableIntB
 					S1 s2next=this.specification.getTransitionDestination(t2);
 					S p=this.addIntersectionState(s1, s2next, currentState);
 					// the new state is connected by the previous one through a constrained transition
-					ConstrainedTransitionFactory<S1, T> ctfactory=new ConstrainedTransitionFactory<S1, T>();
-					T t=ctfactory.create(t2.getDnfFormula(), s1);
+					T t=this.transitionFactory.create(t2.getDnfFormula(), s1);
 					this.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(s1, s2next, visitedStates, p);

@@ -1,12 +1,14 @@
 package it.polimi.model;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
@@ -38,17 +40,19 @@ public interface ModelInterface {
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public IBAImpl<State, LabelledTransition> getModel();
+	public IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public BAImpl<State, LabelledTransition> getSpecification();
+	public BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
-	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> getIntersection();
+	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+	LabelledTransitionFactoryInterface<LabelledTransition>,
+	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> getIntersection();
 	
 	/**
 	 * save the model in the file with path filePath
@@ -93,7 +97,9 @@ public interface ModelInterface {
 	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula);
 	
 	
-	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>> intersection);
+	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
+			LabelledTransitionFactoryInterface<LabelledTransition>,
+			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> intersection);
 
 	public void check();
 	

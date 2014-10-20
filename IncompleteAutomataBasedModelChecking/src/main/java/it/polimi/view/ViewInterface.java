@@ -1,23 +1,31 @@
 package it.polimi.view;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableBA;
-import it.polimi.model.interfaces.drawable.DrawableIBA;
-import it.polimi.model.interfaces.drawable.DrawableIntBA;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.Observer;
 
-public interface ViewInterface<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>>{
+public interface ViewInterface<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition, 
+	INTERSECTIONSTATE extends IntersectionState<STATE>, 
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	LabelTransitionFactory extends LabelledTransitionFactoryInterface<TRANSITION>,
+ConstrainedTransitionFactory extends ConstrainedTransitionFactoryInterface<STATE,INTERSECTIONTRANSITION>>{
 
-	public void updateModel(DrawableIBA<S1, T1> model);
-	public void updateSpecification(DrawableBA<S1, T1> specification);
-	public void updateIntersection(DrawableIntBA<S1,T1,S,T> intersection);
-	public void updateVerificationResults(ModelCheckerParameters<S1, S> verificationResults,
-			DrawableIntBA<S1, T1,S,T> intersection);
+	public void updateModel(DrawableIBA<STATE, TRANSITION, LabelTransitionFactory> model);
+	public void updateSpecification(DrawableBA<STATE, TRANSITION, LabelTransitionFactory> specification);
+	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, ConstrainedTransitionFactory> intersection);
+	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE> verificationResults,
+			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, ConstrainedTransitionFactory> intersection);
 	public void addObserver(Observer o);
 
 	public void displayErrorMessage(String message);

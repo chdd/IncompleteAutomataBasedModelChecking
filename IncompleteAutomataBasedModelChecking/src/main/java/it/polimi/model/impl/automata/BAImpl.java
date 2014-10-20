@@ -1,10 +1,10 @@
 package it.polimi.model.impl.automata;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
-import it.polimi.model.automata.ba.transition.TransitionFactory;
 import it.polimi.model.elements.states.FactoryState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableBA;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ import edu.uci.ics.jung.graph.util.Pair;
  * @param <T> the type of the transitions
  */
 @SuppressWarnings("serial")
-public class BAImpl<S extends State, T extends LabelledTransition> extends DirectedSparseGraph<S,T> implements DrawableBA<S,T>{
+public class BAImpl<S extends State, T extends LabelledTransition, TFactory extends LabelledTransitionFactoryInterface<T>> extends DirectedSparseGraph<S,T> implements DrawableBA<S,T, TFactory>{
 	
 	/**
 	 * contains the initial states of the {@link BAImpl}
@@ -45,19 +45,19 @@ public class BAImpl<S extends State, T extends LabelledTransition> extends Direc
 	
 	protected Map<Integer, S> mapNameState;
 	
-	protected TransitionFactory<T> transitionFactory;
+	protected TFactory transitionFactory;
 	
 	/**
 	 * creates a new empty {@link BAImpl}
 	 */
-	public BAImpl() {
+	public BAImpl(TFactory transitionFactory) {
 		super();
 		
 		this.alphabet=new HashSet<IGraphProposition>(0);
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.mapNameState=new HashMap<Integer,S>();
-		this.transitionFactory=new TransitionFactory<T>();
+		this.transitionFactory=transitionFactory;
 	}
 	
 	/** 
@@ -65,7 +65,7 @@ public class BAImpl<S extends State, T extends LabelledTransition> extends Direc
 	 * @param alphabet: is the alphabet of the {@link BAImpl}
 	 * @throws NullPointerException is generated if the alphabet of the {@link BAImpl} is null
 	 */
-	public BAImpl(Set<IGraphProposition> alphabet) {
+	public BAImpl(Set<IGraphProposition> alphabet, TFactory transitionFactory) {
 		super();
 		if(alphabet==null){
 			throw new IllegalArgumentException();
@@ -74,7 +74,7 @@ public class BAImpl<S extends State, T extends LabelledTransition> extends Direc
 		this.acceptStates=new HashSet<S>();
 		this.initialStates=new HashSet<S>();
 		this.mapNameState=new HashMap<Integer,S>();
-		this.transitionFactory=new TransitionFactory<T>();
+		this.transitionFactory=transitionFactory;
 	}
 	
 	/**

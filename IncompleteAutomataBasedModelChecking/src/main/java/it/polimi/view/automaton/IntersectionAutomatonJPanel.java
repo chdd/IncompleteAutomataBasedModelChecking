@@ -1,10 +1,12 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.automata.ba.transition.ConstrainedTransition;
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.IntersectionState;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableIntBA;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.view.trasformers.HighlighPathPaintTransformer;
 import it.polimi.view.trasformers.IntersectionAutomatonEdgeStrokeTransformed;
 import it.polimi.view.trasformers.IntersectionAutomatonStrokeTransformer;
@@ -16,29 +18,38 @@ import java.util.Stack;
 import org.apache.commons.collections15.Transformer;
 
 @SuppressWarnings("serial")
-public class IntersectionAutomatonJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends ConstrainedTransition<S>, A  extends DrawableIntBA<S, T, S1, T1>> extends
-		IncompleteBuchiAutomatonJPanel<S1, T1, A> {
+public class IntersectionAutomatonJPanel<
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	INTERSECTIONSTATE extends IntersectionState<STATE>, 
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>,
+	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE, INTERSECTIONTRANSITION>,
+	INTERSECTIONAUTOMATON  extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY>> extends
+		IncompleteBuchiAutomatonJPanel<INTERSECTIONSTATE, INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON> 
 
-	public IntersectionAutomatonJPanel(A a, ActionListener l) {
+{
+
+	public IntersectionAutomatonJPanel(INTERSECTIONAUTOMATON a, ActionListener l) {
 		super(a, l);
 	}
 	
-	public void highlightPath(Stack<S1> states, A a){
+	public void highlightPath(Stack<INTERSECTIONSTATE> states, INTERSECTIONAUTOMATON a){
 		this.setTransformers(a);
 		this.getRenderContext().setVertexFillPaintTransformer(
-				new HighlighPathPaintTransformer<S, T, S1, T1, A>(a, states));
+				new HighlighPathPaintTransformer<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, LABELLEDTRANSITIONFACTORY, CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON>(a, states));
 		
 		this.getGraphLayout().setGraph(a);
 		this.repaint();
 	}
 	
 	@Override
-	protected Transformer<S1, Stroke> getStateStrokeTransformer(A a){
-		return new IntersectionAutomatonStrokeTransformer<S,T, S1, T1, A>(a);
+	protected Transformer<INTERSECTIONSTATE, Stroke> getStateStrokeTransformer(INTERSECTIONAUTOMATON a){
+		return new IntersectionAutomatonStrokeTransformer<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, LABELLEDTRANSITIONFACTORY ,CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON>(a);
 	}
 	@Override
-	protected Transformer<T1, Stroke> getStrokeEdgeStrokeTransformer(){
-		return new IntersectionAutomatonEdgeStrokeTransformed<S,T1>();
+	protected Transformer<INTERSECTIONTRANSITION, Stroke> getStrokeEdgeStrokeTransformer(){
+		return new IntersectionAutomatonEdgeStrokeTransformed<STATE,INTERSECTIONTRANSITION>();
 	}
 	
 	@Override

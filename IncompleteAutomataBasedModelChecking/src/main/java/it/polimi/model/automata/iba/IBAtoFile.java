@@ -1,11 +1,12 @@
 package it.polimi.model.automata.iba;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.automata.ba.transition.TransitionToMetadataTransformer;
 import it.polimi.model.elements.states.State;
 import it.polimi.model.elements.states.BAStateAcceptingToMetadataTransformer;
 import it.polimi.model.elements.states.BAStateInitialToMetadataTransformer;
 import it.polimi.model.impl.automata.IBAImpl;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.model.io.iba.StateTransparentToMetadataTransformer;
 
 import java.io.BufferedWriter;
@@ -27,7 +28,7 @@ public class IBAtoFile {
 	 * @throws JAXBException if an error was encountered while creating the XML description of the BuchiAutomaton
 	 * @throws IOException - if an I/O error occurs.
 	 */
-	public void toFile(String filePath, IBAImpl<State, LabelledTransition> iba) throws IOException{
+	public void toFile(String filePath, IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> iba) throws IOException{
 		
 		GraphMLWriter<State, LabelledTransition> graphWriter =new GraphMLWriter<State, LabelledTransition>();
 		
@@ -47,9 +48,9 @@ public class IBAtoFile {
 			}
 		});
 		
-		graphWriter.addVertexData("initial", "initial", "false", new BAStateInitialToMetadataTransformer<State,LabelledTransition, IBAImpl<State, LabelledTransition>>(iba));
-		graphWriter.addVertexData("accepting", "accepting", "false", new BAStateAcceptingToMetadataTransformer<State,LabelledTransition, IBAImpl<State, LabelledTransition>>(iba));
-		graphWriter.addVertexData("transparent", "transparent", "false", new StateTransparentToMetadataTransformer<State,LabelledTransition, IBAImpl<State, LabelledTransition>>(iba));
+		graphWriter.addVertexData("initial", "initial", "false", new BAStateInitialToMetadataTransformer<State,LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(iba));
+		graphWriter.addVertexData("accepting", "accepting", "false", new BAStateAcceptingToMetadataTransformer<State,LabelledTransition,LabelledTransitionFactoryInterface<LabelledTransition>, IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(iba));
+		graphWriter.addVertexData("transparent", "transparent", "false", new StateTransparentToMetadataTransformer<State,LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>(iba));
 		
 		graphWriter.setEdgeIDs(new Transformer<LabelledTransition, String>() {
 			@Override

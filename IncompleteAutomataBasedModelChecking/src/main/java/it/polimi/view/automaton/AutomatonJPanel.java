@@ -1,8 +1,9 @@
 package it.polimi.view.automaton;
 
-import it.polimi.model.automata.ba.transition.LabelledTransition;
 import it.polimi.model.elements.states.State;
-import it.polimi.model.interfaces.drawable.DrawableBA;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.view.trasformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
@@ -30,7 +31,8 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  *
  */
 @SuppressWarnings("serial")
-public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition, A extends DrawableBA<S,T>> extends VisualizationViewer<S,T> {
+public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition,
+TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>, A extends DrawableBA<S,T, TRANSITIONFACTORY>> extends VisualizationViewer<S,T> {
 
 	/**
 	 * contains the {@link Graph} to be inserted in the component
