@@ -32,4 +32,10 @@ public interface IBA<
 	 * @return the set of the transparent states of the {@link IBA} (if no transparent states are present an empty set is returned)
 	 */
 	public Set<STATE>  getTransparentStates();
+	
+	/**
+	 * adds the transparent state s to the states of the {@link IBA}
+	 * @param s the state to be added in the {@link IBA}
+	 */
+	public void addTransparentState(STATE s);
 }

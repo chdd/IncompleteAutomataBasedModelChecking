@@ -1,12 +1,12 @@
 package it.polimi.model;
 
-import it.polimi.model.impl.automata.BAImpl;
-import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.modelchecker.ModelCheckerParameters;
@@ -40,12 +40,12 @@ public interface ModelInterface {
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel();
+	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification();
+	public DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
@@ -92,7 +92,6 @@ public interface ModelInterface {
 	 */
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
 	
-	public void addTransitionToTheModel(String source, String destination, String dnfFormula);
 	
 	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula);
 	

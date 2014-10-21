@@ -1,10 +1,10 @@
 package it.polimi.model;
 
-import it.polimi.model.automata.ba.BAtoFile;
-import it.polimi.model.automata.iba.IBAtoFile;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
+import it.polimi.model.impl.automata.io.BAWriter;
+import it.polimi.model.impl.automata.io.IBAWriter;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
@@ -12,6 +12,9 @@ import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
 import it.polimi.model.io.AutomatonBuilder;
@@ -19,7 +22,10 @@ import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,7 +43,7 @@ public class Model implements ModelInterface{
 	/**
 	 * contains the model of the system
 	 */
-	private IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> model;
+	private DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> model;
 	
 	/**
 	 * contains the specification of the system
@@ -107,14 +113,14 @@ public class Model implements ModelInterface{
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel(){
+	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel(){
 		return this.model;
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification(){
+	public DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification(){
 		return this.specification;
 	}
 	/**
@@ -132,17 +138,33 @@ public class Model implements ModelInterface{
 	 */
 	@Override
 	public void saveModel(String filePath) throws IOException, GraphIOException{
-			IBAtoFile ibaToFile=new IBAtoFile();
-			ibaToFile.toFile(filePath, this.model);
+			IBAWriter<State, 
+				LabelledTransition,
+				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				DrawableIBA<State,LabelledTransition,LabelledTransitionFactoryInterface<LabelledTransition>>> ibaToFile
+				=new IBAWriter<State, 
+						LabelledTransition,
+						LabelledTransitionFactoryInterface<LabelledTransition>, 
+						DrawableIBA<State,LabelledTransition,LabelledTransitionFactoryInterface<LabelledTransition>>>();
+			ibaToFile.save(this.model, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
 	public void saveSpecification(String filePath) throws IOException, GraphIOException{
-			BAtoFile baToFile=new BAtoFile();
-			baToFile.toFile(filePath, this.specification);
+		
+		BAWriter<State, 
+				LabelledTransition,
+				LabelledTransitionFactoryInterface<LabelledTransition>,
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>> baToFile=
+					new BAWriter<State, 
+					LabelledTransition,
+					LabelledTransitionFactoryInterface<LabelledTransition>,
+					DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>();
+		baToFile.save(this.specification, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
 	}
+	
 	@Override
 	public void addRegularStateToTheModel(State s, boolean regular, boolean initial, boolean accepting) {
 		if(!regular){
@@ -159,10 +181,7 @@ public class Model implements ModelInterface{
 				LabelledTransitionFactoryInterface<LabelledTransition>,
 				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
 	}
-	@Override
-	public void addTransitionToTheModel(String source, String destination, String dnfFormula){
-		this.model.addTransition(this.model.getVertex(Integer.parseInt(source)), this.model.getVertex(Integer.parseInt(destination)), new LabelledTransitionFactory().create(DNFFormula.loadFromString(dnfFormula)));
-	}
+	
 	@Override
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting) {
 		if(initial){

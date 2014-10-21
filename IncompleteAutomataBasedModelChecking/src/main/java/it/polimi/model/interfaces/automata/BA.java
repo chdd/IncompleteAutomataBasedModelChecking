@@ -71,4 +71,16 @@ public interface BA<
 	 * @return the number of the states of the {@link BA}
 	 */
 	public int getStateNumber();
+	
+	/**
+	 * adds the initial state S to the {@link BA}
+	 * @param S the state to be added as initial state
+	 */
+	public void addInitialState(STATE S);
+	
+	/**
+	 * adds the accepting state S to the {@link BA}
+	 * @param S the state to be added as accepting state
+	 */
+	public void addAcceptState(STATE s);
 }
