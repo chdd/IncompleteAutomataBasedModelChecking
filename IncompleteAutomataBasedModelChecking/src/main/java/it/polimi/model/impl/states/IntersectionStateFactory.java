@@ -10,7 +10,7 @@ import org.apache.commons.collections15.Factory;
  * @param <S> is the type of the {@link State} of the original automata
  * @param <IntS> is the type of the {@link IntersectionState} of the intersection automaton
  */
-public class FactoryIntersectionState<S extends State, IntS extends IntersectionState<S>> implements Factory<IntS> {
+public class IntersectionStateFactory<S extends State, IntS extends IntersectionState<S>> implements Factory<IntS> {
 	
 	/**
 	 * contains the counter which whose value will be associated to the next state of the automaton
@@ -25,8 +25,8 @@ public class FactoryIntersectionState<S extends State, IntS extends Intersection
 	@Override
 	public IntS create() {
 		
-		IntersectionState<S> s=new IntersectionState<S>(new StateFactory<S>().create(), new StateFactory<S>().create(), 0, FactoryIntersectionState.nodeCount);
-		FactoryIntersectionState.nodeCount++;
+		IntersectionState<S> s=new IntersectionState<S>(new StateFactory<S>().create(), new StateFactory<S>().create(), 0, IntersectionStateFactory.nodeCount);
+		IntersectionStateFactory.nodeCount++;
 		return (IntS) s;
 	}
 	
@@ -40,8 +40,8 @@ public class FactoryIntersectionState<S extends State, IntS extends Intersection
 	@SuppressWarnings("unchecked")
 	public IntS create(S s1, S s2, int num) {
 		
-		IntersectionState<S> s=new IntersectionState<S>(s1, s2, num, FactoryIntersectionState.nodeCount);
-		FactoryIntersectionState.nodeCount++;
+		IntersectionState<S> s=new IntersectionState<S>(s1, s2, num, IntersectionStateFactory.nodeCount);
+		IntersectionStateFactory.nodeCount++;
 		return (IntS) s;
 	}
 

@@ -2,7 +2,7 @@ package it.polimi.model.impl.automata;
 
 import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.impl.labeling.DNFFormula;
-import it.polimi.model.impl.states.FactoryIntersectionState;
+import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
@@ -359,7 +359,7 @@ public class IntBAImpl<
 				}
 			}
 		}
-		FactoryIntersectionState<STATE, INTERSECTIONSTATE> factory=new FactoryIntersectionState<STATE, INTERSECTIONSTATE>();
+		IntersectionStateFactory<STATE, INTERSECTIONSTATE> factory=new IntersectionStateFactory<STATE, INTERSECTIONSTATE>();
 		IntersectionState<STATE> p = factory.create(s1, s2, num);
 		return p;
 	}
