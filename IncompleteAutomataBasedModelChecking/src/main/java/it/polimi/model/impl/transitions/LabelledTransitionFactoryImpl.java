@@ -48,7 +48,19 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
+	
+	/**
+	 * creates a new {@link LabelledTransition} with the specified {@link DNFFormula}, and the specified id 
+	 * @param dnfFormula is the {@link DNFFormula} to be added as a label of the {@link LabelledTransition}
+	 * @param id is the if of the {@link LabelledTransition}
+	 * @return a new {@link LabelledTransition} with the {@link DNFFormula} as label, and the specified id
+	 * @throws NullPointerException if the {@link DNFFormula} is null
+	 * @throws IllegalArgumentException if the id is not grater than or equal to zero
+	 */
 	public LabelledTransition create(int id, DNFFormula dnfFormula) {
+		if(id<0){
+			throw new IllegalArgumentException("The id must be grater than or equal to zero");
+		}
 		if(dnfFormula==null){
 			throw new NullPointerException("The dnfFormula to be added at the LabelledTransition cannot be null");
 		}
@@ -57,6 +69,4 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
-
-	
 }

@@ -109,6 +109,9 @@ public class State implements Comparable<State>{
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
 	@Override
 	public int compareTo(State o) {
 

@@ -68,8 +68,19 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		return t;
 	}
 
+	/**
+	 * creates a new {@link ConstrainedTransition} with the specified {@link DNFFormula}, a null {@link State} and the specified id 
+	 * @param dnfFormula is the {@link DNFFormula} to be added as a label of the {@link ConstrainedTransition}
+	 * @param id is the if of the {@link ConstrainedTransition}
+	 * @return a new {@link ConstrainedTransition} with the {@link DNFFormula} as label, a null {@link State} and the specified id
+	 * @throws NullPointerException if the {@link DNFFormula} is null
+	 * @throws IllegalArgumentException if the id is not grater than or equal to zero
+	 */
 	@Override
 	public ConstrainedTransition<State> create(int id, DNFFormula dnfFormula) {
+		if(id<0){
+			throw new IllegalArgumentException("The id must be grater than or equal to zero");
+		}
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
@@ -80,5 +91,3 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		return t;
 	}
 }
-
-

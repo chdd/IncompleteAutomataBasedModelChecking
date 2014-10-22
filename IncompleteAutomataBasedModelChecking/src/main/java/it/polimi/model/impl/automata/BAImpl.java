@@ -374,12 +374,18 @@ public class BAImpl<
 			}
 		}
 	}
+	/* (non-Javadoc)
+	 * @see edu.uci.ics.jung.graph.AbstractTypedGraph#getDefaultEdgeType()
+	 */
 	@Override
 	public EdgeType getDefaultEdgeType() 
 	{
 		return EdgeType.DIRECTED;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.uci.ics.jung.graph.DirectedSparseGraph#addVertex(java.lang.Object)
+	 */
 	@Override
 	public boolean addVertex(STATE vertex) {
 		boolean ret=super.addVertex(vertex);
@@ -387,6 +393,9 @@ public class BAImpl<
 		return ret;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.uci.ics.jung.graph.DirectedSparseGraph#removeVertex(java.lang.Object)
+	 */
 	@Override
 	public boolean removeVertex(STATE vertex) {
 		if(this.initialStates.contains(vertex)){
@@ -397,9 +406,17 @@ public class BAImpl<
 		}
         return super.removeVertex(vertex);
     }
-	
+	/**
+	 * returns the {@link State} with the specified id
+	 * @param id is the id of the {@link State} to be searched
+	 * @return the {@link State} with the specified id
+	 * @throws IllegalArgumentException if the id is not an id of the states of the automaton or if the id is not grater than or equal to zero
+	 * 
+	 */
 	public STATE getVertex(int id){
-		
+		if(id<0){
+			throw new IllegalArgumentException("the id must be grater than or equal to zero");
+		}
 		if(!this.mapNameState.containsKey(id)){
 			throw new IllegalArgumentException("The state with the id "+id+" is not contained in the set of the states of the automaton");
 		}

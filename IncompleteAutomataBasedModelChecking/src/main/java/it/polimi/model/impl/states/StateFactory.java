@@ -39,8 +39,17 @@ public class StateFactory<STATE extends State> implements Factory<STATE> {
 		return (STATE) s;
 	}
 	
+	/**
+	 * creates a new {@link State} with the specified name and id
+	 * @param name is the name of the {@link State} to be created
+	 * @param id is the id of the state to be created
+	 * @return a new {@link State} with the specified name and id
+	 * @throws IllegalArgumentException if the id is less than 0
+	 */
 	public STATE create(String name, int id) {
-		
+		if(id<0){
+			throw new IllegalArgumentException("The id must be grater than or equal to 0");
+		}
 		State s=new State(name, id);
 		StateFactory.nodeCount=Math.max(StateFactory.nodeCount++, id+1);
 		return (STATE) s;
