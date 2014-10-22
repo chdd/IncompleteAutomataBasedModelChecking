@@ -49,7 +49,7 @@ public class IBAReader<
 		@Override
 		public STATE transform(NodeMetadata input) {
 			
-			STATE s=this.StateFactory.create(input.getProperty("name"), Integer.parseInt(input.getId()));
+			STATE s=this.stateFactory.create(input.getProperty("name"), Integer.parseInt(input.getId()));
 			if(Boolean.parseBoolean(input.getProperty("initial"))){
 				this.a.addInitialState(s);
 			}
