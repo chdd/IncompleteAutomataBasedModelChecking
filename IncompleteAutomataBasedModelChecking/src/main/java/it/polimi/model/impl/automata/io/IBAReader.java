@@ -3,17 +3,29 @@ package it.polimi.model.impl.automata.io;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.IBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.io.BufferedReader;
 
+import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
 
-import edu.uci.ics.jung.io.GraphIOException;
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
+/**
+ * contains an {@link DrawableIBA} reader which loads the {@link DrawableIBA} from a {@link BufferedReader}
+ * @author claudiomenghi
+ *
+ * @param <STATE> is the type of the {@link State} of the {@link IBA}
+ * @param <TRANSITION> is the type of the {@link LabelledTransition} of the {@link IBA}
+ * @param <TRANSITIONFACTORY> is the {@link Factory} which creates the {@link LabelledTransition}
+ * @param <STATEFACTORY> is the {@link Factory} which creates the {@link State} of the {@link IBA}
+ * @param <AUTOMATON> is the type of the {@link DrawableIBA} to be generated
+ * @param <AUTOMATONFACTORY> is the {@link Factory} which creates an empty {@link DrawableIBA}
+ */
 public class IBAReader<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition, 
@@ -23,6 +35,14 @@ public class IBAReader<
 	AUTOMATONFACTORY extends IBAFactory<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON>>
 	extends BAReader<STATE, TRANSITION, TRANSITIONFACTORY, STATEFACTORY, AUTOMATON, AUTOMATONFACTORY>{
 
+	/**
+	 * creates a new {@link IBAReader}
+	 * @param transitionFactory is the {@link Factory} which creates the {@link LabelledTransition}
+	 * @param stateFactory is the {@link Factory} which creates the {@link State} of the {@link IBA}
+	 * @param automatonFactory is the {@link Factory} which creates a new empty {@link DrawableIBA}
+	 * @param fileReader is the {@link BufferedReader} which is able to create an empty {@link DrawableIBA}
+	 * @throws NullPointerException if the transitionFactory or the stateFactory or the automatonFactory or the fileReader is null
+	 */
 	public IBAReader( 
 			TRANSITIONFACTORY transitionFactory,
 			STATEFACTORY stateFactory, 
@@ -30,24 +50,48 @@ public class IBAReader<
 			BufferedReader fileReader) {
 		super(transitionFactory, stateFactory, automatonFactory, fileReader);
 	}
-
-	public DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> readGraph() throws GraphIOException {
-		
-		return this.graphReader.readGraph();
-	}
 	
+	/**
+	 * returns the {@link Transformer} that given a {@link State} returns its {@link NodeMetadata}
+	 * @param stateFactory is the {@link StateFactory}
+	 * @return the {@link Transformer} that given a {@link State} returns its {@link NodeMetadata}
+	 * @throws NullPointerException if the {@link StateFactory} is null
+	 */
 	protected Transformer<NodeMetadata, STATE> getStateTransformer(STATEFACTORY stateFactory){
-		return new BAMetadataStateTransformer(this.ba, stateFactory); 
+		if(stateFactory==null){
+			throw new NullPointerException("The stateFactory cannot be null");
+		}
+		return new IBAMetadataStateTransformer(this.ba, stateFactory); 
 	}
 	
+	/**
+	 * creates a new IBAMetadataStateTransformer
+	 * @param a is the {@link DrawableIBA} that must be updated by the {@link Transformer}
+	 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableIBA}
+	 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactory} is null
+	 */
 	protected class IBAMetadataStateTransformer extends BAMetadataStateTransformer{
 
+		/**
+		 * creates a new IBAMetadataStateTransformer
+		 * @param a is the {@link DrawableIBA} that must be updated by the {@link Transformer}
+		 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableIBA}
+		 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactory} is null
+		 */
 		public IBAMetadataStateTransformer(AUTOMATON a, STATEFACTORY transitionFactory) {
 			super(a, transitionFactory);
 		}
 
+		/**
+		 * transforms the {@link NodeMetadata} into the corresponding {@link State}
+		 * @param input contains the {@link NodeMetadata} to be converted into the corresponding {@link State}
+		 * @throws NullPointerException if the input is null
+		 */
 		@Override
 		public STATE transform(NodeMetadata input) {
+			if(input==null){
+				throw new NullPointerException("The NodeMetadata to be converted into a State cannot be null");
+			}
 			
 			STATE s=this.stateFactory.create(input.getProperty("name"), Integer.parseInt(input.getId()));
 			if(Boolean.parseBoolean(input.getProperty("initial"))){
@@ -57,7 +101,7 @@ public class IBAReader<
 				this.a.addAcceptState(s);
 			}
 			if(Boolean.parseBoolean(input.getProperty("transparent"))){
-				this.a.addAcceptState(s);
+				this.a.addTransparentState(s);
 			}
 			return s;
 		}

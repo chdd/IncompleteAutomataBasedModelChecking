@@ -380,12 +380,14 @@ public class BAImpl<
 		return EdgeType.DIRECTED;
 	}
 	
+	@Override
 	public boolean addVertex(STATE vertex) {
 		boolean ret=super.addVertex(vertex);
 		this.mapNameState.put(vertex.getId(), vertex);
 		return ret;
 	}
 	
+	@Override
 	public boolean removeVertex(STATE vertex) {
 		if(this.initialStates.contains(vertex)){
 			this.initialStates.remove(vertex);

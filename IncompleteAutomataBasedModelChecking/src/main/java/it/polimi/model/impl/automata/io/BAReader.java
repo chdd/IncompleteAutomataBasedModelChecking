@@ -104,7 +104,7 @@ public class BAReader<
 	 * @return a new {@link DrawableBA} which is read from the {@link BufferedReader}
 	 * @throws GraphIOException is generated if a problem occurs in the loading of the {@link DrawableBA}
 	 */
-	public DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> readGraph() throws GraphIOException {
+	public AUTOMATON readGraph() throws GraphIOException {
 		return this.graphReader.readGraph();
 	}
 		
@@ -158,7 +158,7 @@ public class BAReader<
 		/**
 		 * contains the {@link DrawableBA} which must be updated by the {@link Transformer}
 		 */
-		protected DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> a;
+		protected AUTOMATON a;
 
 		/**
 		 * creates a new BAMetadataStateTransformer
@@ -166,7 +166,7 @@ public class BAReader<
 		 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableBA}
 		 * @throws NullPointerException if the {@link DrawableBA} or the {@link StateFactory} is null
 		 */
-		public BAMetadataStateTransformer(DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> a, STATEFACTORY stateFactory) {
+		public BAMetadataStateTransformer(AUTOMATON a, STATEFACTORY stateFactory) {
 			if(a==null){
 				throw new NullPointerException("The AUTOMATON cannot be null");
 			}
