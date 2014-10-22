@@ -5,7 +5,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -26,7 +26,7 @@ import edu.uci.ics.jung.io.GraphMLWriter;
 public class BAWriter<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	AUTOMATA extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>
 	extends GraphMLWriter<STATE, TRANSITION> {
 

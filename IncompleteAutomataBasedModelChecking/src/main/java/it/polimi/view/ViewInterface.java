@@ -7,8 +7,8 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.Observer;
@@ -18,14 +18,14 @@ public interface ViewInterface<
 	TRANSITION extends LabelledTransition, 
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
-	LabelTransitionFactory extends LabelledTransitionFactoryInterface<TRANSITION>,
-ConstrainedTransitionFactory extends ConstrainedTransitionFactoryInterface<STATE,INTERSECTIONTRANSITION>>{
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>{
 
-	public void updateModel(DrawableIBA<STATE, TRANSITION, LabelTransitionFactory> model);
-	public void updateSpecification(DrawableBA<STATE, TRANSITION, LabelTransitionFactory> specification);
-	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, ConstrainedTransitionFactory> intersection);
+	public void updateModel(DrawableIBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model);
+	public void updateSpecification(DrawableBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification);
+	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
 	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE> verificationResults,
-			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, ConstrainedTransitionFactory> intersection);
+			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
 	public void addObserver(Observer o);
 
 	public void displayErrorMessage(String message);

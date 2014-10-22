@@ -7,8 +7,8 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.View;
 import it.polimi.view.ViewInterface;
 
@@ -22,11 +22,11 @@ public class Main{
 		
 		// contains the view of the application
 		ViewInterface<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>,
-			LabelledTransitionFactoryInterface<LabelledTransition>,
-			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> view=
+			LabelledTransitionFactory<LabelledTransition>,
+			ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> view=
 			new View<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>,
-			LabelledTransitionFactoryInterface<LabelledTransition>,
-			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(
+			LabelledTransitionFactory<LabelledTransition>,
+			ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(
 				 model.getModel(), 
 				 model.getSpecification(), 
 				 model.getIntersection());

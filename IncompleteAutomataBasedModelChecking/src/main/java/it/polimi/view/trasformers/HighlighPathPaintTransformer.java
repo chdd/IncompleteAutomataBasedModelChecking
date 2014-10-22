@@ -5,8 +5,8 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.Color;
 import java.awt.Paint;
@@ -17,8 +17,8 @@ public class HighlighPathPaintTransformer<
 	T1 extends LabelledTransition,
 	S extends IntersectionState<S1>, 
 	T extends ConstrainedTransition<S1>, 
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T1>,
-	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<S1, T>,
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T1>,
+	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<S1, T>,
 	A  extends DrawableIntBA<S1, T1, S, T, CONSTRAINEDTRANSITIONFACTORY>> extends BuchiAutomatonStatePaintTransformer<S,T, CONSTRAINEDTRANSITIONFACTORY, A> {
 
 	private Stack<S> states;

@@ -4,9 +4,9 @@ import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.impl.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
@@ -31,7 +31,7 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 public class BuchiAutomatonJPanel<
 	S extends State, 
 	T extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<T>, 
 	A extends DrawableBA<S,T, TRANSITIONFACTORY>> extends AutomatonJPanel<S,T, TRANSITIONFACTORY,A>  {
 
 	/**
@@ -78,7 +78,7 @@ public class BuchiAutomatonJPanel<
 	@Override
 	public void setEditingMode() {
 		
-		LabelledTransitionFactoryInterface<T> tf=(LabelledTransitionFactoryInterface<T>) new LabelledTransitionFactory();
+		LabelledTransitionFactory<T> tf=(LabelledTransitionFactory<T>) new LabelledTransitionFactoryImpl();
 		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
                 new StateFactory<S>(), tf); 
 		this.setGraphMouse(gm);

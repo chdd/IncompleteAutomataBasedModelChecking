@@ -3,7 +3,7 @@ package it.polimi.view.automaton;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.IBAStateMenu;
 import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
 import it.polimi.view.trasformers.IncompleteBuchiAutomatonPaintTransformer;
@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JPopupMenu;
 
 public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
-TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>, A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T, TRANSITIONFACTORY, A> {
+TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T, TRANSITIONFACTORY, A> {
 
 	/**
 	 * 

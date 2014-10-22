@@ -7,8 +7,8 @@ import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.io.IOException;
@@ -40,19 +40,19 @@ public interface ModelInterface {
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel();
+	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification();
+	public DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
 	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-	LabelledTransitionFactoryInterface<LabelledTransition>,
-	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> getIntersection();
+	LabelledTransitionFactory<LabelledTransition>,
+	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> getIntersection();
 	
 	/**
 	 * save the model in the file with path filePath
@@ -96,8 +96,8 @@ public interface ModelInterface {
 	
 	
 	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-			LabelledTransitionFactoryInterface<LabelledTransition>,
-			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> intersection);
+			LabelledTransitionFactory<LabelledTransition>,
+			ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intersection);
 
 	public void check();
 	

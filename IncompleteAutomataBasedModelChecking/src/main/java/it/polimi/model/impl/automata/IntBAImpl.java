@@ -10,8 +10,8 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
 import java.util.HashSet;
@@ -33,8 +33,8 @@ public class IntBAImpl<
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE, INTERSECTIONTRANSITION>> 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
 	extends IBAImpl<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> 
 	implements DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>{
 

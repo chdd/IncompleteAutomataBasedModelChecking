@@ -2,7 +2,7 @@ package it.polimi.model.interfaces.automata;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.Set;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 public interface IBA<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
 	extends BA<STATE, TRANSITION, TRANSITIONFACTORY> {
 
 	/**

@@ -14,8 +14,8 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
@@ -49,8 +49,8 @@ public class View<S1 extends State,
 			T1 extends LabelledTransition, 
 			S extends IntersectionState<S1>, 
 			T extends ConstrainedTransition<S1>,
-			LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T1>,
-			CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<S1, T>> extends Observable implements ViewInterface<S1,T1,S,T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>, ActionListener{
+			LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T1>,
+			CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactory<S1, T>> extends Observable implements ViewInterface<S1,T1,S,T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>, ActionListener{
 
 	// Icons
 	private final ImageIcon openIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-open.png"));

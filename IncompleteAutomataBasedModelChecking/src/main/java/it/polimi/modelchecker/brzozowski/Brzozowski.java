@@ -5,8 +5,8 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
@@ -28,8 +28,8 @@ import java.util.Set;
  */
 public class Brzozowski<S1 extends State, T1 extends LabelledTransition,S extends IntersectionState<S1>, T 
 extends ConstrainedTransition<S1>,
-TFactory extends LabelledTransitionFactoryInterface<T1>,
-IntTFactory  extends ConstrainedTransitionFactoryInterface<S1,T>> {
+TFactory extends LabelledTransitionFactory<T1>,
+IntTFactory  extends ConstrainedTransitionFactory<S1,T>> {
 
 	/**
 	 * contains the {@link IntBAImpl} to be analyzed

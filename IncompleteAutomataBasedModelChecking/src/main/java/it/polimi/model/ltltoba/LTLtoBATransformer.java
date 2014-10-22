@@ -6,8 +6,8 @@ import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.impl.transitions.LabelledTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,15 +21,15 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
-public class LTLtoBATransformer implements Transformer<String, BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>> {
+public class LTLtoBATransformer implements Transformer<String, BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>> {
 
 	private StateFactory<State> factory=new StateFactory<State>();
-	private LabelledTransitionFactory transitionFactory=new LabelledTransitionFactory();
+	private LabelledTransitionFactoryImpl transitionFactory=new LabelledTransitionFactoryImpl();
 	
 	@Override
-	public BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> transform(String input) {
+	public BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> transform(String input) {
 		
-		BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> ba=new BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory());
+		BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> ba=new BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl());
 		
 		Map<IState, State> map=new HashMap<IState, State>();
 		

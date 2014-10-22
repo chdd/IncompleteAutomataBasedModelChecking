@@ -5,8 +5,8 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;
@@ -16,8 +16,8 @@ public class IntersectionAutomatonStrokeTransformer<
 	T extends LabelledTransition, 
 	S1 extends IntersectionState<S>, 
 	T1 extends ConstrainedTransition<S>, 
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>,
-	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<S, T1>,
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T>,
+	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<S, T1>,
 	A  extends DrawableIntBA<S, T, S1, T1, CONSTRAINEDTRANSITIONFACTORY>> extends
 	BuchiAutomatonStateStrokeTransofmer<S1, T1, CONSTRAINEDTRANSITIONFACTORY, A> {
 

@@ -2,19 +2,19 @@ package it.polimi.model.impl.automata;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.IBAFactoryInterface;
+import it.polimi.model.interfaces.automata.IBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
-public class IBAFactory<
+public class IBAFactoryImpl<
 	STATE extends State,
 	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>>
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
 	implements
-		IBAFactoryInterface<STATE, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION,TRANSITIONFACTORY>> {
+		IBAFactory<STATE, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION,TRANSITIONFACTORY>> {
 
 	protected TRANSITIONFACTORY transitionFactory;
-	public IBAFactory(TRANSITIONFACTORY transitionFactory){
+	public IBAFactoryImpl(TRANSITIONFACTORY transitionFactory){
 		this.transitionFactory=transitionFactory;
 	}
 

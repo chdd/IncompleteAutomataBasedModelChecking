@@ -3,16 +3,16 @@ package it.polimi.model.interfaces.transitions;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
-import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.impl.transitions.ConstrainedTransitionFactoryImpl;
 
 /**
- * contains the {@link ConstrainedTransitionFactoryInterface} that a {@link ConstrainedTransitionFactory} must implement to generate {@link ConstrainedTransition}s
+ * contains the {@link ConstrainedTransitionFactory} that a {@link ConstrainedTransitionFactoryImpl} must implement to generate {@link ConstrainedTransition}s
  * @author claudiomenghi
  */
-public interface ConstrainedTransitionFactoryInterface<
+public interface ConstrainedTransitionFactory<
 		STATE extends State, 
 		TRANSITION extends ConstrainedTransition<STATE>> 
-		extends LabelledTransitionFactoryInterface<TRANSITION> {
+		extends LabelledTransitionFactory<TRANSITION> {
 
 	/**
 	 * creates a new transition TRANSITION 

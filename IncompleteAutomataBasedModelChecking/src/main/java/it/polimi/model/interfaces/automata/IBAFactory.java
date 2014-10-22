@@ -3,13 +3,13 @@ package it.polimi.model.interfaces.automata;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
-public interface IBAFactoryInterface<
+public interface IBAFactory<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
 	AUTOMATON extends DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY>>
-	extends BAFactoryInterface<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON> {
+	extends BAFactory<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON> {
 
 }

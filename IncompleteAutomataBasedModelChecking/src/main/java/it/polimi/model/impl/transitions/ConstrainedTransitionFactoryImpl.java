@@ -3,7 +3,7 @@ package it.polimi.model.impl.transitions;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,11 +11,11 @@ import java.util.Set;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 /**
- * contains the {@link ConstrainedTransitionFactory} which generates {@link ConstrainedTransition}s
+ * contains the {@link ConstrainedTransitionFactoryImpl} which generates {@link ConstrainedTransition}s
  * @author claudiomenghi
  *
  */
-public class ConstrainedTransitionFactory implements ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>{
+public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFactory<State, ConstrainedTransition<State>>{
 
 	/**
 	 * creates a new {@link ConstrainedTransition} with the specified {@link State} and {@link DNFFormula}
@@ -28,8 +28,8 @@ public class ConstrainedTransitionFactory implements ConstrainedTransitionFactor
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, s,  LabelledTransitionFactory.transitionCount);
-		LabelledTransitionFactory.transitionCount++;
+		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, s,  LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
 	
@@ -47,8 +47,8 @@ public class ConstrainedTransitionFactory implements ConstrainedTransitionFactor
 		clause.addProposition(new GraphProposition("SIGMA", false));
 		dnfFormula.addDisjunctionClause(clause);
 		
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactory.transitionCount);
-		LabelledTransitionFactory.transitionCount++;
+		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
 	
@@ -63,8 +63,8 @@ public class ConstrainedTransitionFactory implements ConstrainedTransitionFactor
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
 		
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactory.transitionCount);
-		LabelledTransitionFactory.transitionCount++;
+		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
 
@@ -73,10 +73,10 @@ public class ConstrainedTransitionFactory implements ConstrainedTransitionFactor
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactory.transitionCount);
+		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
 		
-		LabelledTransitionFactory.transitionCount=Math.max(id++, LabelledTransitionFactory.transitionCount++);
-		LabelledTransitionFactory.transitionCount++;
+		LabelledTransitionFactoryImpl.transitionCount=Math.max(id++, LabelledTransitionFactoryImpl.transitionCount++);
+		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
 }

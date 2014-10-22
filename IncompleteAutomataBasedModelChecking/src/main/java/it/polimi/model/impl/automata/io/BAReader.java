@@ -4,9 +4,9 @@ import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.BAFactoryInterface;
+import it.polimi.model.interfaces.automata.BAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.io.BufferedReader;
 
@@ -22,10 +22,10 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
 public class BAReader<
 		STATE extends State, 
 		TRANSITION extends LabelledTransition, 
-		TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>, 
+		TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
 		STATEFACTORY extends StateFactory<STATE>,
 		AUTOMATON extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>,
-		AUTOMATONFACTORY extends BAFactoryInterface<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON>>{
+		AUTOMATONFACTORY extends BAFactory<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON>>{
 
 	protected GraphMLReader2<AUTOMATON, STATE, TRANSITION> graphReader=null;
 	protected AUTOMATON ba;

@@ -3,7 +3,7 @@ package it.polimi.model.interfaces.automata.drawable;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import edu.uci.ics.jung.graph.DirectedGraph;
 
 /**
@@ -16,7 +16,7 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 public interface DrawableBA<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
 	extends BA<STATE, TRANSITION, TRANSITIONFACTORY>, DirectedGraph<STATE, TRANSITION> {
 
 }

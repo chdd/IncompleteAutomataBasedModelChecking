@@ -3,7 +3,7 @@ package it.polimi.view.trasformers;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.Polygon;
 import java.awt.Shape;
@@ -15,7 +15,7 @@ import org.apache.commons.collections15.Transformer;
 public class BuchiAutomatonShapeTransformer<
 	S extends State, 
 	T extends LabelledTransition,
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<T>,
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T>,
 	A extends DrawableBA<S, T, LABELLEDTRANSITIONFACTORY>> implements Transformer<S, Shape>{
 
 	private final int stateRadius=10;

@@ -5,7 +5,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.IIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
 /**
  * is the interface the {@link DrawableIntBA} the drawable intersection automaton must implement
@@ -21,7 +21,7 @@ public interface DrawableIntBA<
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION  extends ConstrainedTransition<STATE>, 
-	TRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE,INTERSECTIONTRANSITION>> 
+	TRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>> 
 	extends IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY>, DrawableIBA<INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
 
 }

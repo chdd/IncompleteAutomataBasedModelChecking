@@ -1,8 +1,8 @@
 package it.polimi.model;
 
-import it.polimi.model.impl.automata.BAFactory;
+import it.polimi.model.impl.automata.BAFactoryImpl;
 import it.polimi.model.impl.automata.BAImpl;
-import it.polimi.model.impl.automata.IBAFactory;
+import it.polimi.model.impl.automata.IBAFactoryImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.automata.io.BAReader;
@@ -13,15 +13,15 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
-import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.impl.transitions.ConstrainedTransitionFactoryImpl;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.impl.transitions.LabelledTransitionFactory;
-import it.polimi.model.interfaces.automata.BAFactoryInterface;
-import it.polimi.model.interfaces.automata.IBAFactoryInterface;
+import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
+import it.polimi.model.interfaces.automata.BAFactory;
+import it.polimi.model.interfaces.automata.IBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
@@ -49,50 +49,50 @@ public class Model implements ModelInterface{
 	/**
 	 * contains the model of the system
 	 */
-	private DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> model;
+	private DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> model;
 	
 	/**
 	 * contains the specification of the system
 	 */
-	private DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>  specification;
+	private DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>  specification;
 	
 	/**
 	 * 
 	 */
 	private BAReader<State, 
 		LabelledTransition,
-		LabelledTransitionFactoryInterface<LabelledTransition>, 
+		LabelledTransitionFactory<LabelledTransition>, 
 		StateFactory<State>,
-		DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
-		BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>> baReader;
+		DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
+		BAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>> baReader;
 	
 	/**
 	 * 
 	 */
 	private IBAReader<State, 
 		LabelledTransition,
-		LabelledTransitionFactoryInterface<LabelledTransition>, 
+		LabelledTransitionFactory<LabelledTransition>, 
 		StateFactory<State>,
-		DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
-		IBAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>> ibaReader;
+		DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
+		IBAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>> ibaReader;
 	
 	
 	/**
 	 * contains the intersection between the model and the specification
 	 */
 	private IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
-	, LabelledTransitionFactoryInterface<LabelledTransition>,
-	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> intersection;
+	, LabelledTransitionFactory<LabelledTransition>,
+	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intersection;
 	
 	private ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
 	
 	
 	public Model(){
-		this.model=new IBAImpl<State, LabelledTransition,  LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory());
-		this.specification=new BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory());
+		this.model=new IBAImpl<State, LabelledTransition,  LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl());
+		this.specification=new BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl());
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
-		, LabelledTransitionFactoryInterface<LabelledTransition>,
-		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(this.model, this.specification, new ConstrainedTransitionFactory());
+		, LabelledTransitionFactory<LabelledTransition>,
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(this.model, this.specification, new ConstrainedTransitionFactoryImpl());
 	}
 	/**
 	 * creates a new model of the application: the model of the system is loaded from the file with path modelFilePath, its specification is loaded from the 
@@ -109,32 +109,32 @@ public class Model implements ModelInterface{
 		
 		ibaReader=new IBAReader<State, 
 				LabelledTransition,
-				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				LabelledTransitionFactory<LabelledTransition>, 
 				StateFactory<State>,
-				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
-				IBAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
-				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
-						new LabelledTransitionFactory(), 
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
+				IBAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>>(
+						new LabelledTransitionFactoryImpl(), 
 						new StateFactory<State>(), 
-						new IBAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new IBAFactoryImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl()),
 						new BufferedReader(new FileReader(modelFilePath)));
 		this.model=this.ibaReader.readGraph();
 		this.baReader=new BAReader<State, 
 				LabelledTransition,
-				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				LabelledTransitionFactory<LabelledTransition>, 
 				StateFactory<State>,
-				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
-				BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
-				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
-						new LabelledTransitionFactory(), 
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
+				BAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>>(
+						new LabelledTransitionFactoryImpl(), 
 						new StateFactory<State>(), 
-						new BAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new BAFactoryImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl()),
 						new BufferedReader(new FileReader(specificationFilePath)));
 		
 		this.specification=this.baReader.readGraph();
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
-		, LabelledTransitionFactoryInterface<LabelledTransition>,
-		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
+		, LabelledTransitionFactory<LabelledTransition>,
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactoryImpl());
 	}
 	
 	/**
@@ -144,19 +144,19 @@ public class Model implements ModelInterface{
 	public void changeModel(String modelFilePath) throws IOException, GraphIOException{
 		this.ibaReader=new IBAReader<State, 
 				LabelledTransition,
-				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				LabelledTransitionFactory<LabelledTransition>, 
 				StateFactory<State>,
-				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
-				IBAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
-				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
-						new LabelledTransitionFactory(), 
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
+				IBAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>>(
+						new LabelledTransitionFactoryImpl(), 
 						new StateFactory<State>(), 
-						new IBAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new IBAFactoryImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl()),
 						new BufferedReader(new FileReader(modelFilePath)));
 		this.model=ibaReader.readGraph();
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
-		, LabelledTransitionFactoryInterface<LabelledTransition>,
-		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
+		, LabelledTransitionFactory<LabelledTransition>,
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactoryImpl());
 	}
 	/**
 	 * @see {@link ModelInterface}
@@ -165,32 +165,32 @@ public class Model implements ModelInterface{
 	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException{
 		this.baReader=new BAReader<State, 
 				LabelledTransition,
-				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				LabelledTransitionFactory<LabelledTransition>, 
 				StateFactory<State>,
-				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
-				BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
-				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
-						new LabelledTransitionFactory(), 
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
+				BAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>>(
+						new LabelledTransitionFactoryImpl(), 
 						new StateFactory<State>(), 
-						new BAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new BAFactoryImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl()),
 						new BufferedReader(new FileReader(specificationFilePath)));
 		this.specification=this.baReader.readGraph();
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
-		, LabelledTransitionFactoryInterface<LabelledTransition>,
-		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
+		, LabelledTransitionFactory<LabelledTransition>,
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactoryImpl());
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getModel(){
+	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> getModel(){
 		return this.model;
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> getSpecification(){
+	public DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> getSpecification(){
 		return this.specification;
 	}
 	/**
@@ -198,8 +198,8 @@ public class Model implements ModelInterface{
 	 */
 	@Override
 	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-	LabelledTransitionFactoryInterface<LabelledTransition>,
-	ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> getIntersection(){
+	LabelledTransitionFactory<LabelledTransition>,
+	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> getIntersection(){
 		return this.intersection;
 	}
 	
@@ -210,12 +210,12 @@ public class Model implements ModelInterface{
 	public void saveModel(String filePath) throws IOException, GraphIOException{
 			IBAWriter<State, 
 				LabelledTransition,
-				LabelledTransitionFactoryInterface<LabelledTransition>, 
-				DrawableIBA<State,LabelledTransition,LabelledTransitionFactoryInterface<LabelledTransition>>> ibaToFile
+				LabelledTransitionFactory<LabelledTransition>, 
+				DrawableIBA<State,LabelledTransition,LabelledTransitionFactory<LabelledTransition>>> ibaToFile
 				=new IBAWriter<State, 
 						LabelledTransition,
-						LabelledTransitionFactoryInterface<LabelledTransition>, 
-						DrawableIBA<State,LabelledTransition,LabelledTransitionFactoryInterface<LabelledTransition>>>();
+						LabelledTransitionFactory<LabelledTransition>, 
+						DrawableIBA<State,LabelledTransition,LabelledTransitionFactory<LabelledTransition>>>();
 			ibaToFile.save(this.model, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
 	}
 	/**
@@ -226,12 +226,12 @@ public class Model implements ModelInterface{
 		
 		BAWriter<State, 
 				LabelledTransition,
-				LabelledTransitionFactoryInterface<LabelledTransition>,
-				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>> baToFile=
+				LabelledTransitionFactory<LabelledTransition>,
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>> baToFile=
 					new BAWriter<State, 
 					LabelledTransition,
-					LabelledTransitionFactoryInterface<LabelledTransition>,
-					DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>();
+					LabelledTransitionFactory<LabelledTransition>,
+					DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>();
 		baToFile.save(this.specification, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
 	}
 	
@@ -248,8 +248,8 @@ public class Model implements ModelInterface{
 		}
 		this.model.addVertex(s);
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-				LabelledTransitionFactoryInterface<LabelledTransition>,
-				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
+				LabelledTransitionFactory<LabelledTransition>,
+				ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactoryImpl());
 	}
 	
 	@Override
@@ -262,13 +262,13 @@ public class Model implements ModelInterface{
 		}
 		this.specification.addVertex(s);
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-				LabelledTransitionFactoryInterface<LabelledTransition>,
-				ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
+				LabelledTransitionFactory<LabelledTransition>,
+				ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactoryImpl());
 	}
 	
 	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-			LabelledTransitionFactoryInterface<LabelledTransition>,
-			ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> intersection){
+			LabelledTransitionFactory<LabelledTransition>,
+			ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intersection){
 		this.intersection=intersection;
 	}
 	
@@ -283,11 +283,11 @@ public class Model implements ModelInterface{
 	public void check(){
 		mp=new ModelCheckerParameters<State, IntersectionState<State>>();
 		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-		LabelledTransitionFactoryInterface<LabelledTransition>,
-		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>> mc=new 
+		LabelledTransitionFactory<LabelledTransition>,
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> mc=new 
 		ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-		LabelledTransitionFactoryInterface<LabelledTransition>,
-		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(this.getModel(), this.getSpecification(), mp);
+		LabelledTransitionFactory<LabelledTransition>,
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(this.getModel(), this.getSpecification(), mp);
 		mc.check();
 		this.changeIntersection(mc.getIntersection());
 	}

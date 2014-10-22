@@ -5,7 +5,7 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
 /**
  * is the interface the {@link IntBAImpl} must implement
@@ -21,7 +21,7 @@ public interface IIntBA<
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
-	TRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE,INTERSECTIONTRANSITION>>
+	TRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>
 	extends IBA<INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
 
 	/**

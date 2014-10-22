@@ -6,12 +6,12 @@ import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
-import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.impl.transitions.ConstrainedTransitionFactoryImpl;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
@@ -24,8 +24,8 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * @param <T>  is the type of the states of the {@link IntBAImpl}
  */
 public class ModelChecker<S1 extends State, T1 extends LabelledTransition, S extends IntersectionState<S1>, T extends ConstrainedTransition<S1>,
-TFactory extends LabelledTransitionFactoryInterface<T1>,
-IntTFactory  extends ConstrainedTransitionFactoryInterface<S1,T>> 
+TFactory extends LabelledTransitionFactory<T1>,
+IntTFactory  extends ConstrainedTransitionFactory<S1,T>> 
 {
 	
 	
@@ -96,7 +96,7 @@ IntTFactory  extends ConstrainedTransitionFactoryInterface<S1,T>>
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		System.out.println(this.specification.toString());
 		long startIntersectionTime = System.nanoTime();   
-		this.ris=new IntBAImpl<S1,T1, S, T, TFactory, IntTFactory>(this.model, this.specification, (IntTFactory) new ConstrainedTransitionFactory());
+		this.ris=new IntBAImpl<S1,T1, S, T, TFactory, IntTFactory>(this.model, this.specification, (IntTFactory) new ConstrainedTransitionFactoryImpl());
 		long stopTime = System.nanoTime(); 
 		
 		// updates the time required to compute the intersection between the model and the specification

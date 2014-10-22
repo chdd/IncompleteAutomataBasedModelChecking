@@ -5,8 +5,8 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.trasformers.HighlighPathPaintTransformer;
 import it.polimi.view.trasformers.IntersectionAutomatonEdgeStrokeTransformed;
 import it.polimi.view.trasformers.IntersectionAutomatonStrokeTransformer;
@@ -23,8 +23,8 @@ public class IntersectionAutomatonJPanel<
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>,
-	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactoryInterface<STATE, INTERSECTIONTRANSITION>,
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
 	INTERSECTIONAUTOMATON  extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY>> extends
 		IncompleteBuchiAutomatonJPanel<INTERSECTIONSTATE, INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON> 
 

@@ -6,7 +6,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ import edu.uci.ics.jung.graph.util.Pair;
 public class BAImpl<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactoryInterface<TRANSITION>> 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
 	extends DirectedSparseGraph<STATE,TRANSITION> implements DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>{
 	
 	/**

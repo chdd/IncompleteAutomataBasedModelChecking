@@ -3,7 +3,7 @@ package it.polimi.model.interfaces.transitions;
 import it.polimi.model.impl.labeling.ConjunctiveClause;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.impl.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
 
 import org.apache.commons.collections15.Factory;
 
@@ -11,10 +11,10 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 
 /**
- * contains the {@link LabelledTransitionFactoryInterface} that a {@link LabelledTransitionFactory} must implement to generate {@link LabelledTransition}s
+ * contains the {@link LabelledTransitionFactory} that a {@link LabelledTransitionFactoryImpl} must implement to generate {@link LabelledTransition}s
  * @author claudiomenghi
  */
-public interface LabelledTransitionFactoryInterface<
+public interface LabelledTransitionFactory<
 	TRANSITION extends LabelledTransition> 
 	extends Factory<TRANSITION> {
 
