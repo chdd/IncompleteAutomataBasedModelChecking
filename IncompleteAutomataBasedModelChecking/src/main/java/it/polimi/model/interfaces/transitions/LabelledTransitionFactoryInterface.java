@@ -25,4 +25,6 @@ public interface LabelledTransitionFactoryInterface<
 	 */
 	public TRANSITION create();
 	public TRANSITION create(DNFFormula dnfFormula);
+	
+	public TRANSITION create(int id, DNFFormula dnfFormula);
 }

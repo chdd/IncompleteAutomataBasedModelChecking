@@ -1,21 +1,25 @@
 package it.polimi.performance;
 
-import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.automata.BAFactory;
 import it.polimi.model.impl.automata.IBAImpl;
+import it.polimi.model.impl.automata.io.BAReader;
 import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
-import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.automata.BAFactoryInterface;
+import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
-import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -72,9 +76,27 @@ public class PerformanceEvaluator{
 					
 					IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> a1 =new IBAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory());
 					a1.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
-					AutomatonBuilder builder=new AutomatonBuilder();
 					
-					BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>  a2=builder.loadBAAutomaton("src/main/resources/Automaton2.xml");
+					BAReader<State, 
+					LabelledTransition,
+					LabelledTransitionFactoryInterface<LabelledTransition>, 
+					StateFactory<State>,
+					DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+					BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>> baReader=new BAReader<State, 
+							LabelledTransition,
+							LabelledTransitionFactoryInterface<LabelledTransition>, 
+							StateFactory<State>,
+							DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+							BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
+							DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
+									new LabelledTransitionFactory(), 
+									new StateFactory<State>(), 
+									new BAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+									new BufferedReader(new FileReader("src/main/resources/Automaton2.xml")));
+				
+					
+					
+					DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>> a2=baReader.readGraph();
 					
 					ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
 					LabelledTransitionFactoryInterface<LabelledTransition>,
@@ -87,8 +109,6 @@ public class PerformanceEvaluator{
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
 					
 					writer.close();
-					a1.reset();
-					a2.reset();
 					mc.getIntersection().reset();
 				}
 			}

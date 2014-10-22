@@ -38,4 +38,11 @@ public class StateFactory<STATE extends State> implements Factory<STATE> {
 		StateFactory.nodeCount++;
 		return (STATE) s;
 	}
+	
+	public STATE create(String name, int id) {
+		
+		State s=new State(name, id);
+		StateFactory.nodeCount=Math.max(StateFactory.nodeCount++, id+1);
+		return (STATE) s;
+	}
 }

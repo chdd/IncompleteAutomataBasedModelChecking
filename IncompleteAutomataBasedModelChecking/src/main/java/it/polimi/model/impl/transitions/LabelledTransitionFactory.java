@@ -48,6 +48,15 @@ public class LabelledTransitionFactory implements LabelledTransitionFactoryInter
 		LabelledTransitionFactory.transitionCount++;
 		return t;
 	}
+	public LabelledTransition create(int id, DNFFormula dnfFormula) {
+		if(dnfFormula==null){
+			throw new NullPointerException("The dnfFormula to be added at the LabelledTransition cannot be null");
+		}
+		LabelledTransition t=new LabelledTransition(dnfFormula, id);
+		LabelledTransitionFactory.transitionCount=Math.max(id++, LabelledTransitionFactory.transitionCount++);
+		LabelledTransitionFactory.transitionCount++;
+		return t;
+	}
 
 	
 }

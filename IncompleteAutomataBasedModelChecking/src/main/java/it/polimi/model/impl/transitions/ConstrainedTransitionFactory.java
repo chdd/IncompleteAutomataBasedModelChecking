@@ -67,6 +67,18 @@ public class ConstrainedTransitionFactory implements ConstrainedTransitionFactor
 		LabelledTransitionFactory.transitionCount++;
 		return t;
 	}
+
+	@Override
+	public ConstrainedTransition<State> create(int id, DNFFormula dnfFormula) {
+		if(dnfFormula==null){
+			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
+		}
+		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactory.transitionCount);
+		
+		LabelledTransitionFactory.transitionCount=Math.max(id++, LabelledTransitionFactory.transitionCount++);
+		LabelledTransitionFactory.transitionCount++;
+		return t;
+	}
 }
 
 

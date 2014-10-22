@@ -13,8 +13,6 @@ import java.io.Writer;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.io.GraphMLWriter;
-import edu.uci.ics.jung.io.graphml.DataMetadata;
-import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 /**
  * @author claudiomenghi
@@ -51,7 +49,7 @@ public class BAWriter<
 		this.setVertexIDs(this.getStateIdTransformer());
 		this.addVertexData("name", "name", "", this.getStateNameTransformer());
 		this.addVertexData("initial", "initial", "false", this.getStateInitialTransformer());
-		this.addVertexData("initial", "initial", "false", this.getStateAcceptingTransformer());
+		this.addVertexData("accepting", "accepting", "false", this.getStateAcceptingTransformer());
 				
 		this.setEdgeIDs(this.getTransitionIdTransformer());
 		this.addEdgeData("DNFFormula", "DNFFormula", "", this.getTransitionDNFFormulaTransformer());
@@ -200,12 +198,6 @@ public class BAWriter<
 		 */
 		@Override
 		public String transform(STATE input) {
-			
-			NodeMetadata m=new NodeMetadata();
-			m.setId(input.getName());
-			
-			DataMetadata initial=new DataMetadata();
-			initial.setKey("accepting");
 			return Boolean.toString(ba.isAccept(input));
 		}
 	}

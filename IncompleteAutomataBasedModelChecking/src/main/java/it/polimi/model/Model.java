@@ -1,28 +1,34 @@
 package it.polimi.model;
 
+import it.polimi.model.impl.automata.BAFactory;
 import it.polimi.model.impl.automata.BAImpl;
+import it.polimi.model.impl.automata.IBAFactory;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
+import it.polimi.model.impl.automata.io.BAReader;
 import it.polimi.model.impl.automata.io.BAWriter;
+import it.polimi.model.impl.automata.io.IBAReader;
 import it.polimi.model.impl.automata.io.IBAWriter;
-import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactory;
-import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.BAFactoryInterface;
+import it.polimi.model.interfaces.automata.IBAFactoryInterface;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactoryInterface;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactoryInterface;
-import it.polimi.model.io.AutomatonBuilder;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,7 +54,29 @@ public class Model implements ModelInterface{
 	/**
 	 * contains the specification of the system
 	 */
-	private BAImpl<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>  specification;
+	private DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>  specification;
+	
+	/**
+	 * 
+	 */
+	private BAReader<State, 
+		LabelledTransition,
+		LabelledTransitionFactoryInterface<LabelledTransition>, 
+		StateFactory<State>,
+		DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+		BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>> baReader;
+	
+	/**
+	 * 
+	 */
+	private IBAReader<State, 
+		LabelledTransition,
+		LabelledTransitionFactoryInterface<LabelledTransition>, 
+		StateFactory<State>,
+		DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+		IBAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>> ibaReader;
+	
+	
 	/**
 	 * contains the intersection between the model and the specification
 	 */
@@ -78,10 +106,32 @@ public class Model implements ModelInterface{
 	 * @throws ParserConfigurationException
 	 */
 	public Model(String modelFilePath, String specificationFilePath) throws IOException, GraphIOException{
-		this.model=new AutomatonBuilder()
-				.loadIBAAutomaton(modelFilePath);
-		this.specification=new AutomatonBuilder()
-				.loadBAAutomaton(specificationFilePath);
+		
+		ibaReader=new IBAReader<State, 
+				LabelledTransition,
+				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				StateFactory<State>,
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+				IBAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
+						new LabelledTransitionFactory(), 
+						new StateFactory<State>(), 
+						new IBAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new BufferedReader(new FileReader(modelFilePath)));
+		this.model=this.ibaReader.readGraph();
+		this.baReader=new BAReader<State, 
+				LabelledTransition,
+				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				StateFactory<State>,
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+				BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
+						new LabelledTransitionFactory(), 
+						new StateFactory<State>(), 
+						new BAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new BufferedReader(new FileReader(specificationFilePath)));
+		
+		this.specification=this.baReader.readGraph();
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
 		, LabelledTransitionFactoryInterface<LabelledTransition>,
 		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
@@ -92,8 +142,18 @@ public class Model implements ModelInterface{
 	 */
 	@Override
 	public void changeModel(String modelFilePath) throws IOException, GraphIOException{
-		this.model=new AutomatonBuilder()
-				.loadIBAAutomaton(modelFilePath);
+		this.ibaReader=new IBAReader<State, 
+				LabelledTransition,
+				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				StateFactory<State>,
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+				IBAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
+				DrawableIBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
+						new LabelledTransitionFactory(), 
+						new StateFactory<State>(), 
+						new IBAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new BufferedReader(new FileReader(modelFilePath)));
+		this.model=ibaReader.readGraph();
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
 		, LabelledTransitionFactoryInterface<LabelledTransition>,
 		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
@@ -103,8 +163,18 @@ public class Model implements ModelInterface{
 	 */
 	@Override
 	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException{
-		this.specification=new AutomatonBuilder()
-				.loadBAAutomaton(specificationFilePath);
+		this.baReader=new BAReader<State, 
+				LabelledTransition,
+				LabelledTransitionFactoryInterface<LabelledTransition>, 
+				StateFactory<State>,
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>,
+				BAFactoryInterface<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>, 
+				DrawableBA<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>>>(
+						new LabelledTransitionFactory(), 
+						new StateFactory<State>(), 
+						new BAFactory<State, LabelledTransition, LabelledTransitionFactoryInterface<LabelledTransition>>(new LabelledTransitionFactory()),
+						new BufferedReader(new FileReader(specificationFilePath)));
+		this.specification=this.baReader.readGraph();
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
 		, LabelledTransitionFactoryInterface<LabelledTransition>,
 		ConstrainedTransitionFactoryInterface<State, ConstrainedTransition<State>>>(model, specification, new ConstrainedTransitionFactory());
@@ -225,10 +295,6 @@ public class Model implements ModelInterface{
 	public ModelCheckerParameters<State, IntersectionState<State>> getVerificationResults(){
 		return this.mp;
 	}
-	@Override
-	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula) {
-		this.specification.addTransition(this.specification.getVertex(Integer.parseInt(source)), this.specification.getVertex(Integer.parseInt(destination)), new LabelledTransitionFactory().create(DNFFormula.loadFromString(dnfFormula)));
 	
-	}
 	
 }

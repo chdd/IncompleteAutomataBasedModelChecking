@@ -1,8 +1,5 @@
 package it.polimi.model.impl.states;
 
-import org.apache.commons.collections15.Transformer;
-
-import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 /**
  * @author claudiomenghi
@@ -82,19 +79,7 @@ public class State implements Comparable<State>{
 		return "Id: {"+this.id+"} "+" Name: {"+this.getName()+"}";
 	}
 	
-	/**
-	 * returns the {@link Transformer} that given the {@link NodeMetadata} return a {@link State}
-	 * @return the {@link Transformer} that given the {@link NodeMetadata} return a {@link State} object
-	 */
-	public static Transformer<NodeMetadata, State> getTranformer(){
-		return new Transformer<NodeMetadata, State>(){
-
-			@Override
-			public State transform(NodeMetadata input) {
-				return new State(input.getProperty("name"), Integer.parseInt(input.getId()));
-			}
-		};
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

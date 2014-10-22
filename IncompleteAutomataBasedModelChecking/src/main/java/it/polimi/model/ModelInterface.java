@@ -93,7 +93,6 @@ public interface ModelInterface {
 	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
 	
 	
-	public void addTransitionToTheSpecification(String source, String destination, String dnfFormula);
 	
 	
 	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
