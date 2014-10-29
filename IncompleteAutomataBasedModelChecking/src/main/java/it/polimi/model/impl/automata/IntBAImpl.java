@@ -40,16 +40,6 @@ public class IntBAImpl<
 
 	
 	/**
-	 * contains the model of the system that generates the intersection automaton
-	 */
-	private IBA<STATE, TRANSITION, TRANSITIONFACTORY> model;
-	
-	/**
-	 * contains the specification that generates the intersection automaton
-	 */
-	private BA<STATE, TRANSITION, TRANSITIONFACTORY> specification;
-	
-	/**
 	 * contains the set of the mixed states
 	 */
 	private Set<INTERSECTIONSTATE> mixedStates;
@@ -73,10 +63,8 @@ public class IntBAImpl<
 		if(specification==null){
 			throw new IllegalArgumentException("The specification to e considered cannot be null");
 		}
-		this.model=model;
-		this.specification=specification;
 		this.mixedStates=new HashSet<INTERSECTIONSTATE>();
-		this.computeIntersection();
+		this.computeIntersection(model, specification);
 	}
 	
 	
@@ -112,12 +100,7 @@ public class IntBAImpl<
 		return this.mixedStates;
 	}
 	
-	/**
-	 * @return the model that generates the intersection automaton
-	 */
-	public IBA<STATE, TRANSITION, TRANSITIONFACTORY> getModel() {
-		return model;
-	}
+	
 	
 	/** 
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
@@ -220,7 +203,7 @@ public class IntBAImpl<
 	 * @return the intersection of this automaton and the automaton a2
 	 * @throws IllegalArgumentException if the automaton a2 is null
 	 */
-	protected void computeIntersection() {
+	protected void computeIntersection(IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
 		
 		if(model==null){
 			throw new IllegalArgumentException("The model cannot be null");
@@ -234,10 +217,10 @@ public class IntBAImpl<
 		
 		for(STATE s1: model.getInitialStates()){
 			for(STATE s2: specification.getInitialStates()){
-				INTERSECTIONSTATE p=this.addIntersectionState(s1, s2, null);
+				INTERSECTIONSTATE p=this.addIntersectionState(s1, s2, null, model, specification);
 				
 				Set<INTERSECTIONSTATE> visitedStates=new HashSet<INTERSECTIONSTATE>();
-				this.computeIntersection(s1, s2, visitedStates, p);
+				this.computeIntersection(s1, s2, visitedStates, p, model, specification);
 			}
 		}
 	}
@@ -253,7 +236,9 @@ public class IntBAImpl<
 									STATE s1, 
 									STATE s2, 
 									Set<INTERSECTIONSTATE> visitedStates, 
-									INTERSECTIONSTATE currentState
+									INTERSECTIONSTATE currentState,
+									IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
+									BA<STATE, TRANSITION, TRANSITIONFACTORY> specification
 									){
 		// if the state currentState has been already been visited it returns
 		if(visitedStates.contains(currentState)){
@@ -264,9 +249,9 @@ public class IntBAImpl<
 			visitedStates.add(currentState);
 			
 			// for each transition in the extended automaton whit source s1
-			for(TRANSITION t1: this.model.getOutTransition(s1)){
+			for(TRANSITION t1: model.getOutTransition(s1)){
 				// for each transition in the extended automaton whit source s2
-				for(TRANSITION t2: this.specification.getOutTransition(s2)){
+				for(TRANSITION t2: specification.getOutTransition(s2)){
 					// if the characters of the two transitions are equal
 					
 					Set<ConjunctiveClause> commonClauses=t1.getDnfFormula().getCommonClauses(t2.getDnfFormula());
@@ -274,15 +259,15 @@ public class IntBAImpl<
 						
 						
 						// creates a new state made by the states s1next and s2 next
-						STATE s1next=this.model.getTransitionDestination(t1);
-						STATE s2next=this.specification.getTransitionDestination(t2);
-						INTERSECTIONSTATE p=this.addIntersectionState(s1next, s2next, currentState);
+						STATE s1next=model.getTransitionDestination(t1);
+						STATE s2next=specification.getTransitionDestination(t2);
+						INTERSECTIONSTATE p=this.addIntersectionState(s1next, s2next, currentState, model, specification);
 						// add the transition from the current state to the new created state
 						INTERSECTIONTRANSITION t=this.transitionFactory.create(new DNFFormula(commonClauses));
 						this.addTransition(currentState, p, t);
 						
 						// re-executes the recursive procedure
-						this.computeIntersection(s1next, s2next, visitedStates, p);
+						this.computeIntersection(s1next, s2next, visitedStates, p, model , specification);
 						
 					}
 				}
@@ -292,13 +277,13 @@ public class IntBAImpl<
 				// for each transition in the automaton a2
 				for(TRANSITION t2: specification.getOutTransition(s2)){
 					// a new state is created made by the transparent state and the state s2next
-					STATE s2next=this.specification.getTransitionDestination(t2);
-					INTERSECTIONSTATE p=this.addIntersectionState(s1, s2next, currentState);
+					STATE s2next=specification.getTransitionDestination(t2);
+					INTERSECTIONSTATE p=this.addIntersectionState(s1, s2next, currentState, model, specification);
 					// the new state is connected by the previous one through a constrained transition
 					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), s1);
 					this.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
-					this.computeIntersection(s1, s2next, visitedStates, p);
+					this.computeIntersection(s1, s2next, visitedStates, p, model, specification);
 				}
 			}
 		}
@@ -314,17 +299,18 @@ public class IntBAImpl<
 	 * @param currentState is the current state of the intersection (the one that precedes the state that is generated in this method)
 	 * @return the new intersection state
 	 */
-	private INTERSECTIONSTATE addIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState){
+	private INTERSECTIONSTATE addIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState,
+			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
 
-		@SuppressWarnings("unchecked")
-		INTERSECTIONSTATE p = (INTERSECTIONSTATE) this.generateIntersectionState(s1, s2, currentState);
+		INTERSECTIONSTATE p = generateIntersectionState(s1, s2, currentState, model, specification);
 		if(p.getNumber()==2){
 			this.addAcceptState(p);
 		}
 		else{
 			this.addVertex(p);
 		}
-		if(this.model.isTransparent(s1)){
+		if(model.isTransparent(s1)){
 			this.addMixedState(p);
 		}
 		this.addVertex(p);
@@ -341,16 +327,18 @@ public class IntBAImpl<
 	 * @param currentState: is the current state to be considered in the generation of the automaton state
 	 * @return a new intersection state
 	 */
-	protected IntersectionState<STATE> generateIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState){
+	protected INTERSECTIONSTATE generateIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState,
+			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
 		int num=0;
 		if(currentState!=null){
 			num=currentState.getNumber();
 		}
-		if(num==0 && this.model.isAccept(s1)){
+		if(num==0 && model.isAccept(s1)){
 			num=1;
 		}
 		else{
-			if(num==1 && this.specification.isAccept(s2)){
+			if(num==1 && specification.isAccept(s2)){
 				num=2;
 			}
 			else{
@@ -360,7 +348,6 @@ public class IntBAImpl<
 			}
 		}
 		IntersectionStateFactory<STATE, INTERSECTIONSTATE> factory=new IntersectionStateFactory<STATE, INTERSECTIONSTATE>();
-		IntersectionState<STATE> p = factory.create(s1, s2, num);
-		return p;
+		return factory.create(s1, s2, num);
 	}
 }
