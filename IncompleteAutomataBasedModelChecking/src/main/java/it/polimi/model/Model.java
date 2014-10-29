@@ -9,6 +9,7 @@ import it.polimi.model.impl.automata.io.BAReader;
 import it.polimi.model.impl.automata.io.BAWriter;
 import it.polimi.model.impl.automata.io.IBAReader;
 import it.polimi.model.impl.automata.io.IBAWriter;
+import it.polimi.model.impl.automata.io.IntBAWriter;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
@@ -20,6 +21,7 @@ import it.polimi.model.interfaces.automata.BAFactory;
 import it.polimi.model.interfaces.automata.IBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
@@ -57,6 +59,13 @@ public class Model implements ModelInterface{
 	private DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>  specification;
 	
 	/**
+	 * contains the intersection between the model and the specification
+	 */
+	private IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
+	, LabelledTransitionFactory<LabelledTransition>,
+	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intersection;
+	
+	/**
 	 * 
 	 */
 	private BAReader<State, 
@@ -76,13 +85,14 @@ public class Model implements ModelInterface{
 		DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>,
 		IBAFactory<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>>> ibaReader;
 	
+	private IntBAWriter<
+		State, 
+		LabelledTransition, 
+		IntersectionState<State>, 
+		ConstrainedTransition<State>, 
+		LabelledTransitionFactory<LabelledTransition>, 
+		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intBaWriter;
 	
-	/**
-	 * contains the intersection between the model and the specification
-	 */
-	private IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
-	, LabelledTransitionFactory<LabelledTransition>,
-	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intersection;
 	
 	private ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
 	
@@ -93,6 +103,14 @@ public class Model implements ModelInterface{
 		this.intersection=new IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>
 		, LabelledTransitionFactory<LabelledTransition>,
 		ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(this.model, this.specification, new ConstrainedTransitionFactoryImpl());
+	
+		this.intBaWriter=new IntBAWriter<
+				State, 
+				LabelledTransition, 
+				IntersectionState<State>, 
+				ConstrainedTransition<State>, 
+				LabelledTransitionFactory<LabelledTransition>, 
+				ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>();
 	}
 	/**
 	 * creates a new model of the application: the model of the system is loaded from the file with path modelFilePath, its specification is loaded from the 
@@ -294,6 +312,13 @@ public class Model implements ModelInterface{
 	
 	public ModelCheckerParameters<State, IntersectionState<State>> getVerificationResults(){
 		return this.mp;
+	}
+	@Override
+	public void saveIntersection(String filePath) throws IOException,
+			GraphIOException {
+		
+		intBaWriter.save(this.intersection, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
+		
 	}
 	
 	

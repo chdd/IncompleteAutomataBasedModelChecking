@@ -4,6 +4,7 @@ import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
 import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.loading.LoadSpecification;
+import it.polimi.controller.actions.file.saving.SaveIntersection;
 import it.polimi.controller.actions.file.saving.SaveModel;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.impl.automata.IntBAImpl;
@@ -72,28 +73,26 @@ public class View<S1 extends State,
 			+ "Position the mouse on a state and press p to enter the state selection mode that allows to move the states<br>"
 			+ "Press t to exit the state selection mode<br></html>";
 	
-	
 	// model
-	private JButton openModel;
-	private JButton saveModel;
-	private JButton modelEditing;
-	private JButton modelTrasforming;
+	private JButton openModelButton;
+	private JButton saveModelButton;
+	private JButton modelEditingButton;
+	private JButton modelTrasformingButton;
 	private IncompleteBuchiAutomatonJPanel<S1,T1,LABELLEDTRANSITIONFACTORY,DrawableIBA<S1,T1, LABELLEDTRANSITIONFACTORY>> modelTabmodel;
 	
 	// claim
-	private JButton openClaim;
-	private JButton saveClaim;
-	private JButton ltlLoadClaim;
-	private JButton claimEditing;
-	private JButton claimTransforming;
+	private JButton openClaimButton;
+	private JButton saveClaimButton;
+	private JButton ltlLoadClaimButton;
+	
+	private JButton claimEditingButton;
+	private JButton claimTransformingButton;
 	private BuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY>>  claimTabClaimPanel;
 
-	
-	
 	// verification results
-	private JButton openResults;
-	private JButton saveResults;
-	private JButton check;
+	private JButton openIntersectionButton;
+	private JButton saveIntersectionButton;
+	private JButton checkButton;
 	private IntersectionAutomatonJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, DrawableIntBA<S1, T1, S, T, CONSTRAINTTRANSITIONFACTORY>> verificationResultsIntersection;
 	private TextArea brzozowskiSystem;
 
@@ -103,19 +102,12 @@ public class View<S1 extends State,
 	private IntersectionAutomatonJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, DrawableIntBA<S1, T1, S, T, CONSTRAINTTRANSITIONFACTORY>> verificationSnapshotIntersectionPanel;
 	private ResultsJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY,IntBAImpl<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY >> verificationSnapshotResultsPanel;
 	
-	
-	
-	
 	// main frame
 	private JFrame jframe;
-	
-	
-		
 	
 	public View(DrawableIBA<S1, T1, LABELLEDTRANSITIONFACTORY> model,
 			DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY> claim,
 			DrawableIntBA<S1, T1,S,T, CONSTRAINTTRANSITIONFACTORY> intersection) {
-		
 		
 		 this.jframe=new JFrame();
 		 // setting the size of the jframe
@@ -143,12 +135,12 @@ public class View<S1 extends State,
 		 tabbedPane.setMnemonicAt(1, KeyEvent.VK_3);
 		 
 		 
-		 JComponent verificationResultsTab= makeTextPanel("Verification Results");
-		 tabbedPane.addTab("Verification Results", verificationResultsTab);
+		 JComponent verificationResultsTab= makeTextPanel("Intersection");
+		 tabbedPane.addTab("Intersection", verificationResultsTab);
 		 tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 
-		 JComponent verificationSnapshotTab = makeTextPanel("Verification Snapshot");
-		 tabbedPane.addTab("Verification Snapshot", verificationSnapshotTab);
+		 JComponent verificationSnapshotTab = makeTextPanel("Verification");
+		 tabbedPane.addTab("Verification", verificationSnapshotTab);
 		 tabbedPane.setMnemonicAt(3, KeyEvent.VK_1);
 		 verificationSnapshotTab.setLayout(new BoxLayout(verificationSnapshotTab,BoxLayout.X_AXIS));
 		 
@@ -174,28 +166,28 @@ public class View<S1 extends State,
 		 JPanel containerModelMenu=new JPanel();
 		 containerModelMenu.setLayout(new BoxLayout(containerModelMenu, BoxLayout.X_AXIS));
 		 
-		 this.openModel=new JButton(openIcon);
-		 this.openModel.addActionListener(this);
-		 this.openModel.setFocusPainted(false);
-		 containerModelMenu.add(this.openModel);
+		 this.openModelButton=new JButton(openIcon);
+		 this.openModelButton.addActionListener(this);
+		 this.openModelButton.setFocusPainted(false);
+		 containerModelMenu.add(this.openModelButton);
 		 
-		 this.saveModel=new JButton(saveIcon);
-		 this.saveModel.addActionListener(this);
-		 this.saveModel.setFocusPainted(false);
-		 containerModelMenu.add(saveModel);
+		 this.saveModelButton=new JButton(saveIcon);
+		 this.saveModelButton.addActionListener(this);
+		 this.saveModelButton.setFocusPainted(false);
+		 containerModelMenu.add(saveModelButton);
 		 
-		 this.modelEditing=new JButton(this.developmentIcon);
-		 this.modelEditing.addActionListener(this);
-		 this.modelEditing.setFocusPainted(true);
-		 this.modelEditing.setToolTipText(this.editingMessage);
-		 containerModelMenu.add(this.modelEditing);
+		 this.modelEditingButton=new JButton(this.developmentIcon);
+		 this.modelEditingButton.addActionListener(this);
+		 this.modelEditingButton.setFocusPainted(true);
+		 this.modelEditingButton.setToolTipText(this.editingMessage);
+		 containerModelMenu.add(this.modelEditingButton);
 		 
-		 this.modelTrasforming=new JButton(this.editIcon);
-		 this.modelTrasforming.addActionListener(this);
-		 this.modelTrasforming.setFocusPainted(false);
-		 this.modelTrasforming.setToolTipText(this.transorfmingMessage);
+		 this.modelTrasformingButton=new JButton(this.editIcon);
+		 this.modelTrasformingButton.addActionListener(this);
+		 this.modelTrasformingButton.setFocusPainted(false);
+		 this.modelTrasformingButton.setToolTipText(this.transorfmingMessage);
 		 
-		 containerModelMenu.add(this.modelTrasforming);
+		 containerModelMenu.add(this.modelTrasformingButton);
 		 modelTab.add(containerModelMenu);
 		 
 		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableIBA<S1,T1, LABELLEDTRANSITIONFACTORY>>(model, this);
@@ -209,32 +201,32 @@ public class View<S1 extends State,
 		 JPanel containerClaimMenu=new JPanel();
 		 containerClaimMenu.setLayout(new BoxLayout(containerClaimMenu, BoxLayout.X_AXIS));
 		 
-		 this.openClaim=new JButton(openIcon);
-		 this.openClaim.addActionListener(this);
-		 this.openClaim.setFocusPainted(false);
-		 containerClaimMenu.add(this.openClaim);
+		 this.openClaimButton=new JButton(openIcon);
+		 this.openClaimButton.addActionListener(this);
+		 this.openClaimButton.setFocusPainted(false);
+		 containerClaimMenu.add(this.openClaimButton);
 		 
-		 this.saveClaim=new JButton(saveIcon);
-		 this.saveClaim.addActionListener(this);
-		 this.saveClaim.setFocusPainted(false);
-		 containerClaimMenu.add(this.saveClaim);
+		 this.saveClaimButton=new JButton(saveIcon);
+		 this.saveClaimButton.addActionListener(this);
+		 this.saveClaimButton.setFocusPainted(false);
+		 containerClaimMenu.add(this.saveClaimButton);
 		
-		 this.ltlLoadClaim=new JButton(this.ltlIcon);
-		 this.ltlLoadClaim.addActionListener(this);
-		 this.ltlLoadClaim.setFocusPainted(false);
-		 containerClaimMenu.add(this.ltlLoadClaim);
+		 this.ltlLoadClaimButton=new JButton(this.ltlIcon);
+		 this.ltlLoadClaimButton.addActionListener(this);
+		 this.ltlLoadClaimButton.setFocusPainted(false);
+		 containerClaimMenu.add(this.ltlLoadClaimButton);
 		 
-		 this.claimEditing=new JButton(this.developmentIcon);
-		 this.claimEditing.addActionListener(this);
-		 this.claimEditing.setFocusPainted(true);
-		 this.claimEditing.setToolTipText(this.editingMessage);
-		 containerClaimMenu.add(this.claimEditing);
+		 this.claimEditingButton=new JButton(this.developmentIcon);
+		 this.claimEditingButton.addActionListener(this);
+		 this.claimEditingButton.setFocusPainted(true);
+		 this.claimEditingButton.setToolTipText(this.editingMessage);
+		 containerClaimMenu.add(this.claimEditingButton);
 		 
-		 this.claimTransforming=new JButton(this.editIcon);
-		 this.claimTransforming.addActionListener(this);
-		 this.claimTransforming.setFocusPainted(false);
-		 this.claimTransforming.setToolTipText(this.transorfmingMessage);
-		 containerClaimMenu.add(this.claimTransforming);
+		 this.claimTransformingButton=new JButton(this.editIcon);
+		 this.claimTransformingButton.addActionListener(this);
+		 this.claimTransformingButton.setFocusPainted(false);
+		 this.claimTransformingButton.setToolTipText(this.transorfmingMessage);
+		 containerClaimMenu.add(this.claimTransformingButton);
 		 
 		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY>>(claim, this);
 		 
@@ -252,20 +244,20 @@ public class View<S1 extends State,
 		 JPanel verificationMenu=new JPanel();
 		 verificationMenu.setLayout(new BoxLayout(verificationMenu, BoxLayout.X_AXIS));
 		 
-		 this.openResults=new JButton(openIcon);
-		 this.openResults.addActionListener(this);
-		 this.openResults.setFocusPainted(false);
-		 verificationMenu.add(this.openResults);
+		 this.openIntersectionButton=new JButton(openIcon);
+		 this.openIntersectionButton.addActionListener(this);
+		 this.openIntersectionButton.setFocusPainted(false);
+		 verificationMenu.add(this.openIntersectionButton);
 		 
-		 this.saveResults=new JButton(this.saveIcon);
-		 this.saveResults.addActionListener(this);
-		 this.saveResults.setFocusPainted(false);
-		 verificationMenu.add(this.saveResults);
+		 this.saveIntersectionButton=new JButton(this.saveIcon);
+		 this.saveIntersectionButton.addActionListener(this);
+		 this.saveIntersectionButton.setFocusPainted(false);
+		 verificationMenu.add(this.saveIntersectionButton);
 		
-		 this.check=new JButton(this.checkIcon);
-		 this.check.addActionListener(this);
-		 this.check.setFocusPainted(false);
-		 verificationMenu.add(this.check);
+		 this.checkButton=new JButton(this.checkIcon);
+		 this.checkButton.addActionListener(this);
+		 this.checkButton.setFocusPainted(false);
+		 verificationMenu.add(this.checkButton);
 		 
 		 verificationResultsTab.add(verificationMenu);
 		
@@ -362,73 +354,60 @@ public class View<S1 extends State,
 	public void actionPerformed(ActionEvent e) {
 		this.setChanged();
 		
-		if(e.getSource().equals(this.specificationSaveItem) || e.getSource().equals(this.saveClaim)){
+		if(e.getSource().equals(this.specificationSaveItem) || e.getSource().equals(this.saveClaimButton)){
 			this.notifyObservers(new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand()));
-			this.saveClaim.setFocusPainted(false);
+			this.saveClaimButton.setFocusPainted(false);
 		}
-		else{
-			if(e.getSource().equals(this.specificationOpenItem) || e.getSource().equals(this.openClaim)){
-				this.notifyObservers(new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand()));
-				this.openClaim.setFocusPainted(false);
-			}
-			else{
-				if(e.getSource().equals(this.modelSaveItem) || e.getSource().equals(this.saveModel)){
-					this.notifyObservers(new SaveModel(e.getSource(), e.getID(), e.getActionCommand()));
-					this.saveModel.setFocusPainted(false);
-				}
-				else{
-					if(e.getSource().equals(this.modelOpenItem) || e.getSource().equals(this.openModel)){
-						this.notifyObservers(new LoadModel(e.getSource(), e.getID(), e.getActionCommand()));
-						this.openModel.setFocusPainted(false);
-					}
-					else{
-						if(e.getSource().equals(this.editItem) || e.getSource().equals(this.modelEditing)){
-							this.modelTabmodel.setEditingMode();
-							this.modelEditing.setFocusPainted(true);
-							this.modelTrasforming.setFocusable(false);
-						}
-						else{
-							if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.modelTrasforming)){
-								this.modelTabmodel.setTranformingMode();
-								this.modelEditing.setFocusPainted(false);
-								this.modelTrasforming.setFocusable(true);
-							}
-							else{
-								if(e.getSource().equals(this.editItem) || e.getSource().equals(this.claimEditing)){
-									this.claimTabClaimPanel.setEditingMode();
-									this.claimEditing.setFocusPainted(true);
-									this.claimTransforming.setFocusable(false);
-								}
-								else{
-									if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.claimTransforming)){
-										this.claimTabClaimPanel.setTranformingMode();
-										this.claimEditing.setFocusPainted(false);
-										this.claimTransforming.setFocusable(true);
-									}
-									else{
-										if(e.getSource().equals(this.checkItem) || e.getSource().equals(this.check)){
-											this.notifyObservers(new CheckAction());
-										}
-										else{
-											if(e.getSource().equals(this.ltlLoadClaim)){
-												String ltlFormula=JOptionPane.showInputDialog("Type the LTL formula\n "
-																								+ "Syntax:\n"
-																								+ "Propositions: true, false, any lowercase string \n"
-																								+ "Boolean operators:  ! (negation) ->(implication) <-> (equivalence) &&  (and) ||  (or)\n"
-																								+ "Temporal operators: []  (always) <>   (eventually) U   (until) V (realease) X   (next)");
-												
-												this.notifyObservers(new LoadClaimAction(ltlFormula));
-												this.ltlLoadClaim.setFocusPainted(false);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+		if(e.getSource().equals(this.specificationOpenItem) || e.getSource().equals(this.openClaimButton)){
+			this.notifyObservers(new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand()));
+			this.openClaimButton.setFocusPainted(false);
 		}
+		if(e.getSource().equals(this.modelSaveItem) || e.getSource().equals(this.saveModelButton)){
+			this.notifyObservers(new SaveModel(e.getSource(), e.getID(), e.getActionCommand()));
+			this.saveModelButton.setFocusPainted(false);
+		}
+		if(e.getSource().equals(this.saveIntersectionButton)){
+			this.notifyObservers(new SaveIntersection(e.getSource(), e.getID(), e.getActionCommand()));
+			this.saveModelButton.setFocusPainted(false);
+		}
+		if(e.getSource().equals(this.modelOpenItem) || e.getSource().equals(this.openModelButton)){
+			this.notifyObservers(new LoadModel(e.getSource(), e.getID(), e.getActionCommand()));
+			this.openModelButton.setFocusPainted(false);
+		}
+		if(e.getSource().equals(this.editItem) || e.getSource().equals(this.modelEditingButton)){
+			this.modelTabmodel.setEditingMode();
+			this.modelEditingButton.setFocusPainted(true);
+			this.modelTrasformingButton.setFocusable(false);
+		}
+		if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.modelTrasformingButton)){
+			this.modelTabmodel.setTranformingMode();
+			this.modelEditingButton.setFocusPainted(false);
+			this.modelTrasformingButton.setFocusable(true);
+		}
+		if(e.getSource().equals(this.editItem) || e.getSource().equals(this.claimEditingButton)){
+			this.claimTabClaimPanel.setEditingMode();
+			this.claimEditingButton.setFocusPainted(true);
+			this.claimTransformingButton.setFocusable(false);
+		}
+		if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.claimTransformingButton)){
+			this.claimTabClaimPanel.setTranformingMode();
+			this.claimEditingButton.setFocusPainted(false);
+			this.claimTransformingButton.setFocusable(true);
+		}
+		if(e.getSource().equals(this.checkItem) || e.getSource().equals(this.checkButton)){
+			this.notifyObservers(new CheckAction());
+		}
+		if(e.getSource().equals(this.ltlLoadClaimButton)){
+			String ltlFormula=JOptionPane.showInputDialog("Type the LTL formula\n "
+															+ "Syntax:\n"
+															+ "Propositions: true, false, any lowercase string \n"
+															+ "Boolean operators:  ! (negation) ->(implication) <-> (equivalence) &&  (and) ||  (or)\n"
+															+ "Temporal operators: []  (always) <>   (eventually) U   (until) V (realease) X   (next)");
+			
+			this.notifyObservers(new LoadClaimAction(ltlFormula));
+			this.ltlLoadClaimButton.setFocusPainted(false);
+		}
+		
 	}
 
 	public void displayErrorMessage(String message){

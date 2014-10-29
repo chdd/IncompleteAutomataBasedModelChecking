@@ -82,6 +82,16 @@ public interface ModelInterface {
 	public void saveSpecification(String filePath) throws IOException, GraphIOException;
 	
 	/**
+	 * save the intersection in the file with path filePath
+	 * @param filePath is the path of the file where the specification must be saved
+	 * @throws GraphIOException 
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
+	public void saveIntersection(String filePath) throws IOException, GraphIOException;
+	
+	
+	/**
 	 * adds the regular state s into the model
 	 * @param s the state to be added
 	 */
