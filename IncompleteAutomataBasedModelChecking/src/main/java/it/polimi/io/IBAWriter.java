@@ -1,4 +1,4 @@
-package it.polimi.model.impl.automata.io;
+package it.polimi.io;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;

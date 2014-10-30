@@ -13,7 +13,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JPopupMenu;
 
 public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
-TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T, TRANSITIONFACTORY, A> {
+TRANSITIONFACTORY extends LabelledTransitionFactory<T>, 
+A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T, TRANSITIONFACTORY, A> {
 
 	/**
 	 * 

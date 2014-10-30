@@ -1,8 +1,8 @@
 package it.polimi.performance;
 
+import it.polimi.io.BAReader;
 import it.polimi.model.impl.automata.BAFactoryImpl;
 import it.polimi.model.impl.automata.IBAImpl;
-import it.polimi.model.impl.automata.io.BAReader;
 import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;

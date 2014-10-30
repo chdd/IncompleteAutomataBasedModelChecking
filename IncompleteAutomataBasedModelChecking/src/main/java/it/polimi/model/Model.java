@@ -1,17 +1,17 @@
 package it.polimi.model;
 
+import it.polimi.io.BAReader;
+import it.polimi.io.BAWriter;
+import it.polimi.io.IBAReader;
+import it.polimi.io.IBAWriter;
+import it.polimi.io.IntBAReader;
+import it.polimi.io.IntBAWriter;
 import it.polimi.model.impl.automata.BAFactoryImpl;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAFactoryImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAFactoryImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
-import it.polimi.model.impl.automata.io.BAReader;
-import it.polimi.model.impl.automata.io.BAWriter;
-import it.polimi.model.impl.automata.io.IBAReader;
-import it.polimi.model.impl.automata.io.IBAWriter;
-import it.polimi.model.impl.automata.io.IntBAReader;
-import it.polimi.model.impl.automata.io.IntBAWriter;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;

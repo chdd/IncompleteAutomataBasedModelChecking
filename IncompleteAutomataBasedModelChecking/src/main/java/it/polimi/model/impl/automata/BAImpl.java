@@ -64,6 +64,7 @@ public class BAImpl<
 		this.initialStates=new HashSet<STATE>();
 		this.mapNameState=new HashMap<Integer,STATE>();
 		this.transitionFactory=transitionFactory;
+		
 	}
 	
 	/** 
