@@ -32,4 +32,10 @@ public interface IIntBA<
 	 */
 	public boolean isMixed(INTERSECTIONSTATE s);
 	
+	/**
+	 * adds the mixed state s to the set of the mixed states of the {@link IIntBA}
+	 * @param s the mixed state to be added in the {@link IIntBA}
+	 */
+	public void addMixedState(INTERSECTIONSTATE s);
+	
 }

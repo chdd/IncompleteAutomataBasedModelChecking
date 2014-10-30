@@ -82,8 +82,16 @@ public class BAReader<
 				fileReader,
 				new BATransformer(ba), 
 				this.getStateTransformer(stateFactory),
-				new BAMetadataToTransitionTransformer(transitionFactory), 
+				this.getTransitionTransformer(transitionFactory), 
 				new HyperEdgeMetadataToTransitionTransformer(transitionFactory));
+	}
+	
+	
+	protected Transformer<EdgeMetadata, TRANSITION> getTransitionTransformer(TRANSITIONFACTORY transitionFactory){
+		if(transitionFactory==null){
+			throw new NullPointerException("The stateFactory cannot be null");
+		}
+		return  new BAMetadataToTransitionTransformer(transitionFactory); 
 	}
 	
 	/**
@@ -234,7 +242,7 @@ public class BAReader<
 				throw new NullPointerException("The EdgeMetadata to be converted cannot be null");
 			}
 			return this.transitionFactory.create(
-					Integer.parseInt(input.getProperty("id")),
+					Integer.parseInt(input.getId()),
 					DNFFormula.loadFromString(input.getProperty("DNFFormula")));
 		}
 	}

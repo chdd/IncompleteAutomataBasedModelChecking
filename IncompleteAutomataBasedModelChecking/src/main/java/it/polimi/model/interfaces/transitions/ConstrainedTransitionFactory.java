@@ -20,5 +20,7 @@ public interface ConstrainedTransitionFactory<
 	 * @param state the {@link State} that constraints the transition, null if no states are constrained
 	 * @return a new {@link ConstrainedTransition}
 	 */
+	public TRANSITION create(int id, DNFFormula dnfFormula, STATE state);
+	
 	public TRANSITION create(DNFFormula dnfFormula, STATE state);
 }

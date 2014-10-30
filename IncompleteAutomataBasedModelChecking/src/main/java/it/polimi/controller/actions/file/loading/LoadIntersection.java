@@ -3,10 +3,9 @@ package it.polimi.controller.actions.file.loading;
 import it.polimi.model.ModelInterface;
 
 @SuppressWarnings("serial")
-public class LoadModel extends LoadingAction{
+public class LoadIntersection extends LoadingAction {
 
-	
-	public LoadModel(Object source, int id, String command) {
+	public LoadIntersection(Object source, int id, String command) {
 		super(source, id, command);
 	}
 
@@ -14,7 +13,8 @@ public class LoadModel extends LoadingAction{
 	public void perform(ModelInterface model) throws Exception {
 		String file=this.getFile();
 		if(file!=null){
-			model.loadModel(file);
+			model.loadIntersection(file);
 		}
 	}
 }
+

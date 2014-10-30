@@ -2,6 +2,7 @@ package it.polimi.view;
 
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
+import it.polimi.controller.actions.file.loading.LoadIntersection;
 import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.loading.LoadSpecification;
 import it.polimi.controller.actions.file.saving.SaveIntersection;
@@ -115,8 +116,6 @@ public class View<S1 extends State,
 		 this.jframe.getContentPane().setBackground(Color.getColor("myColor"));
 		 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		 this.jframe.setSize(screenSize);
-		 
-		
 		 
 		 // creating the menu bar
 		 this.createMenuBar(jframe);
@@ -354,15 +353,15 @@ public class View<S1 extends State,
 	public void actionPerformed(ActionEvent e) {
 		this.setChanged();
 		
-		if(e.getSource().equals(this.specificationSaveItem) || e.getSource().equals(this.saveClaimButton)){
+		if(e.getSource().equals(this.saveSpecificationMenuItem) || e.getSource().equals(this.saveClaimButton)){
 			this.notifyObservers(new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand()));
 			this.saveClaimButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.specificationOpenItem) || e.getSource().equals(this.openClaimButton)){
+		if(e.getSource().equals(this.openSpecificationMenuItem) || e.getSource().equals(this.openClaimButton)){
 			this.notifyObservers(new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand()));
 			this.openClaimButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.modelSaveItem) || e.getSource().equals(this.saveModelButton)){
+		if(e.getSource().equals(this.saveModelMenuItem) || e.getSource().equals(this.saveModelButton)){
 			this.notifyObservers(new SaveModel(e.getSource(), e.getID(), e.getActionCommand()));
 			this.saveModelButton.setFocusPainted(false);
 		}
@@ -370,7 +369,11 @@ public class View<S1 extends State,
 			this.notifyObservers(new SaveIntersection(e.getSource(), e.getID(), e.getActionCommand()));
 			this.saveModelButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.modelOpenItem) || e.getSource().equals(this.openModelButton)){
+		if(e.getSource().equals(this.openIntersectionButton)){
+			this.notifyObservers(new LoadIntersection(e.getSource(), e.getID(), e.getActionCommand()));
+			this.saveModelButton.setFocusPainted(false);
+		}
+		if(e.getSource().equals(this.openModelMenuItem) || e.getSource().equals(this.openModelButton)){
 			this.notifyObservers(new LoadModel(e.getSource(), e.getID(), e.getActionCommand()));
 			this.openModelButton.setFocusPainted(false);
 		}
@@ -419,42 +422,43 @@ public class View<S1 extends State,
 	private JMenu editMenu;
 	
 	
-	private JMenuItem modelOpenItem;
+	
 	private JMenuItem editItem;
 	
 	private JMenuItem trasformItem;
 	private JMenuItem checkItem;
 	
-	private JMenuItem modelSaveItem;
-	private JMenuItem specificationOpenItem;
-	private JMenuItem specificationSaveItem;
+	private JMenuItem openModelMenuItem;
+	private JMenuItem saveModelMenuItem;
+	private JMenuItem openSpecificationMenuItem;
+	private JMenuItem saveSpecificationMenuItem;
 	
 	private void createMenuBar(JFrame jframe){
 		menuBar=new JMenuBar();
 		modelMenu=new JMenu("File");
 		modelMenu.addActionListener(this);
 		
-		modelOpenItem = new JMenuItem("Open Model", KeyEvent.VK_T);
-		modelMenu.add(modelOpenItem);
-		modelOpenItem.setMnemonic(KeyEvent.VK_O);
-		modelOpenItem.addActionListener(this);
+		openModelMenuItem = new JMenuItem("Open Model", KeyEvent.VK_T);
+		modelMenu.add(openModelMenuItem);
+		openModelMenuItem.setMnemonic(KeyEvent.VK_O);
+		openModelMenuItem.addActionListener(this);
 		
-		modelSaveItem = new JMenuItem("Save Model", KeyEvent.VK_T);
-		modelMenu.add(modelSaveItem);
-		modelSaveItem.setMnemonic(KeyEvent.VK_O);
-		modelSaveItem.addActionListener(this);
-		
-		
-		specificationOpenItem = new JMenuItem("Open Specification", KeyEvent.VK_T);
-		modelMenu.add(specificationOpenItem);
-		specificationOpenItem.setMnemonic(KeyEvent.VK_O);
-		specificationOpenItem.addActionListener(this);
+		saveModelMenuItem = new JMenuItem("Save Model", KeyEvent.VK_T);
+		modelMenu.add(saveModelMenuItem);
+		saveModelMenuItem.setMnemonic(KeyEvent.VK_O);
+		saveModelMenuItem.addActionListener(this);
 		
 		
-		specificationSaveItem = new JMenuItem("Save Specification", KeyEvent.VK_T);
-		modelMenu.add(specificationSaveItem);
-		specificationSaveItem.setMnemonic(KeyEvent.VK_O);
-		specificationSaveItem.addActionListener(this);
+		openSpecificationMenuItem = new JMenuItem("Open Specification", KeyEvent.VK_T);
+		modelMenu.add(openSpecificationMenuItem);
+		openSpecificationMenuItem.setMnemonic(KeyEvent.VK_O);
+		openSpecificationMenuItem.addActionListener(this);
+		
+		
+		saveSpecificationMenuItem = new JMenuItem("Save Specification", KeyEvent.VK_T);
+		modelMenu.add(saveSpecificationMenuItem);
+		saveSpecificationMenuItem.setMnemonic(KeyEvent.VK_O);
+		saveSpecificationMenuItem.addActionListener(this);
 		
 		menuBar.add(modelMenu);
 		
@@ -481,10 +485,6 @@ public class View<S1 extends State,
 		
 		
 		menuBar.add(editMenu);
-		
-		
-
-		
 		
 		jframe.setJMenuBar(menuBar);
 		menuBar.setVisible(true);

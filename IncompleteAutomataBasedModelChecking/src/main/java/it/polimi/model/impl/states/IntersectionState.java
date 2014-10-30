@@ -7,16 +7,16 @@ package it.polimi.model.impl.states;
  * The state is identified by the states of the two original automata and a number (0,1,2) that specifies if the state is accepting (2),
  * or not accepting (0 ,1)
  */
-public class IntersectionState<S extends State> extends State{
+public class IntersectionState<STATE extends State> extends State{
 
 	/**
 	 * is the state of the fist automaton
 	 */
-	private final S s1;
+	private final STATE s1;
 	/**
 	 * is the state of the second automaton
 	 */
-	private final S s2;
+	private final STATE s2;
 	/**
 	 * is the number (0,1,2) that identifies if the state is accepting (2) or not accepting (0,1)
 	 */
@@ -29,7 +29,7 @@ public class IntersectionState<S extends State> extends State{
 	 * @param number is the number of the state
 	 * @throws IllegalArgumentException is generated if the state s1 or the state s2 is null or if the number is different from 0,1,2
 	 */
-	protected IntersectionState(S s1, S s2, int number, int id) {
+	protected IntersectionState(STATE s1, STATE s2, String name, int number, int id) {
 		super(id);
 		if(s1==null){
 				throw new IllegalArgumentException("The state s1 cannot be null");
@@ -40,7 +40,7 @@ public class IntersectionState<S extends State> extends State{
 		if(!(number>=0 && number<=2)){
 			throw new IllegalArgumentException("the number of the state must be equal to 0,1 or 2");
 		}
-		this.name=s1.getName()+"-"+s2.getName()+"-"+number;
+		this.name=name;
 			
 		this.s1=s1;
 		this.s2=s2;
@@ -50,14 +50,14 @@ public class IntersectionState<S extends State> extends State{
 	/**
 	 * @return the state s1 of the first automaton
 	 */
-	public S getS1() {
+	public STATE getS1() {
 		return s1;
 	}
 
 	/**
 	 * @return the state s2 of the second automaton
 	 */
-	public S getS2() {
+	public STATE getS2() {
 		return s2;
 	}
 
@@ -74,7 +74,7 @@ public class IntersectionState<S extends State> extends State{
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + number;
 		result = prime * result + ((s1 == null) ? 0 : s1.hashCode());
 		result = prime * result + ((s2 == null) ? 0 : s2.hashCode());
@@ -84,14 +84,16 @@ public class IntersectionState<S extends State> extends State{
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
+		if (!super.equals(obj))
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IntersectionState<S> other = (IntersectionState<S>) obj;
+		@SuppressWarnings("unchecked")
+		IntersectionState<STATE> other = (IntersectionState<STATE>) obj;
 		if (number != other.number)
 			return false;
 		if (s1 == null) {
@@ -106,4 +108,6 @@ public class IntersectionState<S extends State> extends State{
 			return false;
 		return true;
 	}
+
+	
 }

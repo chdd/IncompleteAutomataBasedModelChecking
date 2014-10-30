@@ -5,6 +5,7 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
@@ -34,7 +35,7 @@ IntTFactory  extends ConstrainedTransitionFactory<S1,T>> {
 	/**
 	 * contains the {@link IntBAImpl} to be analyzed
 	 */
-	private final IntBAImpl<S1, T1, S, T, TFactory, IntTFactory> a;
+	private final DrawableIntBA<S1, T1, S, T,  IntTFactory> a;
 	
 	private final S[] orderedStates;
 	
@@ -46,7 +47,7 @@ IntTFactory  extends ConstrainedTransitionFactory<S1,T>> {
 	 * @param a is the {@link IntBAImpl} to be analyzed
 	 * @throws IllegalArgumentException is generated if the {@link IntBAImpl} a is null
 	 */
-	public Brzozowski(IntBAImpl<S1, T1, S, T, TFactory, IntTFactory> a){
+	public Brzozowski(DrawableIntBA<S1, T1, S, T, IntTFactory> a){
 		if(a==null){
 			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
 		}

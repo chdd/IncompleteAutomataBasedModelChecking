@@ -7,6 +7,7 @@ import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
+import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
@@ -35,7 +36,19 @@ public interface ModelInterface {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public void changeModel(String modelFilePath) throws IOException, GraphIOException;
+	public void loadModel(String modelFilePath) throws IOException, GraphIOException;
+	
+	/**
+	 * loads the model of the system from the file whose path is specified in the string modelFilePath
+	 * @param modelFilePath is the path of the file from which the model must be loaded
+	 * @throws GraphIOException 
+	 * @throws JAXBException
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	public void loadIntersection(String modelFilePath) throws IOException, GraphIOException;
+	
 	/**
 	 * returns the model of the system
 	 * @return the model of the system
@@ -50,9 +63,7 @@ public interface ModelInterface {
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
-	public IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-	LabelledTransitionFactory<LabelledTransition>,
-	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> getIntersection();
+	public DrawableIntBA<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>, ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> getIntersection();
 	
 	/**
 	 * save the model in the file with path filePath

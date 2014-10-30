@@ -14,7 +14,11 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
@@ -217,10 +221,10 @@ public class IntBAImpl<
 		
 		for(STATE s1: model.getInitialStates()){
 			for(STATE s2: specification.getInitialStates()){
-				INTERSECTIONSTATE p=this.addIntersectionState(s1, s2, null, model, specification);
+				INTERSECTIONSTATE p=this.addIntersectionState(s1, s2, 0, true, model, specification);
 				
-				Set<INTERSECTIONSTATE> visitedStates=new HashSet<INTERSECTIONSTATE>();
-				this.computeIntersection(s1, s2, visitedStates, p, model, specification);
+				Map<Entry<Entry<STATE, STATE>,Integer>, INTERSECTIONSTATE> map=new HashMap<Entry<Entry<STATE, STATE>,Integer>, INTERSECTIONSTATE>();
+				this.computeIntersection(map, p, model, specification);
 			}
 		}
 	}
@@ -233,25 +237,26 @@ public class IntBAImpl<
 	 * @param currentState contains the current state of the intersection automaton under analysis
 	 */
 	private void computeIntersection(
-									STATE s1, 
-									STATE s2, 
-									Set<INTERSECTIONSTATE> visitedStates, 
+									Map<Entry<Entry<STATE, STATE>,Integer>, INTERSECTIONSTATE> visitedStatesMap, 
 									INTERSECTIONSTATE currentState,
 									IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
 									BA<STATE, TRANSITION, TRANSITIONFACTORY> specification
 									){
 		// if the state currentState has been already been visited it returns
-		if(visitedStates.contains(currentState)){
+		if(visitedStatesMap.containsKey(
+				new AbstractMap.SimpleEntry<Entry<STATE, STATE>,Integer>
+							(new AbstractMap.SimpleEntry<STATE, STATE>(currentState.getS1(), currentState.getS2()), currentState.getNumber()))){
 			return;
 		}
 		else{
 			// add the current state to the set of the visited states
-			visitedStates.add(currentState);
+			visitedStatesMap.put(new AbstractMap.SimpleEntry<Entry<STATE, STATE>,Integer>
+					(new AbstractMap.SimpleEntry<STATE, STATE>(currentState.getS1(), currentState.getS2()), currentState.getNumber()), currentState);
 			
 			// for each transition in the extended automaton whit source s1
-			for(TRANSITION t1: model.getOutTransition(s1)){
+			for(TRANSITION t1: model.getOutTransition(currentState.getS1())){
 				// for each transition in the extended automaton whit source s2
-				for(TRANSITION t2: specification.getOutTransition(s2)){
+				for(TRANSITION t2: specification.getOutTransition(currentState.getS2())){
 					// if the characters of the two transitions are equal
 					
 					Set<ConjunctiveClause> commonClauses=t1.getDnfFormula().getCommonClauses(t2.getDnfFormula());
@@ -261,29 +266,53 @@ public class IntBAImpl<
 						// creates a new state made by the states s1next and s2 next
 						STATE s1next=model.getTransitionDestination(t1);
 						STATE s2next=specification.getTransitionDestination(t2);
-						INTERSECTIONSTATE p=this.addIntersectionState(s1next, s2next, currentState, model, specification);
-						// add the transition from the current state to the new created state
 						INTERSECTIONTRANSITION t=this.transitionFactory.create(new DNFFormula(commonClauses));
+						
+						int num=this.comuteNumber(s1next, s2next, currentState.getNumber(), model, specification);
+						
+						INTERSECTIONSTATE p;
+						if(visitedStatesMap.containsKey(
+								new AbstractMap.SimpleEntry<Entry<STATE, STATE>,Integer>
+								(new AbstractMap.SimpleEntry<STATE, STATE>(s1next, s2next), num))){
+							p=visitedStatesMap.get(new AbstractMap.SimpleEntry<Entry<STATE, STATE>,Integer>
+							(new AbstractMap.SimpleEntry<STATE, STATE>(s1next, s2next), num));
+						}
+						else{
+							p=this.addIntersectionState(s1next, s2next, num, false, model, specification);
+						}
 						this.addTransition(currentState, p, t);
 						
+						
 						// re-executes the recursive procedure
-						this.computeIntersection(s1next, s2next, visitedStates, p, model , specification);
+						this.computeIntersection(visitedStatesMap, p, model , specification);
 						
 					}
 				}
 			}
 			// if the current state of the extended automaton is transparent
-			if(model.isTransparent(s1)){
+			if(model.isTransparent(currentState.getS1())){
 				// for each transition in the automaton a2
-				for(TRANSITION t2: specification.getOutTransition(s2)){
+				for(TRANSITION t2: specification.getOutTransition(currentState.getS2())){
 					// a new state is created made by the transparent state and the state s2next
 					STATE s2next=specification.getTransitionDestination(t2);
-					INTERSECTIONSTATE p=this.addIntersectionState(s1, s2next, currentState, model, specification);
+					INTERSECTIONSTATE p;
+					int num=this.comuteNumber(currentState.getS1(), s2next, currentState.getNumber(), model, specification);
+					
+					if(visitedStatesMap.containsKey(
+							new AbstractMap.SimpleEntry<Entry<STATE, STATE>,Integer>
+							(new AbstractMap.SimpleEntry<STATE, STATE>(currentState.getS1(), s2next), num))){
+						p=visitedStatesMap.get(new AbstractMap.SimpleEntry<Entry<STATE, STATE>,Integer>
+						(new AbstractMap.SimpleEntry<STATE, STATE>(currentState.getS1(), s2next), num));
+					}
+					else{
+						p=this.addIntersectionState(currentState.getS1(), s2next, num, false, model, specification);
+					}
+					
 					// the new state is connected by the previous one through a constrained transition
-					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), s1);
+					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), currentState.getS1());
 					this.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
-					this.computeIntersection(s1, s2next, visitedStates, p, model, specification);
+					this.computeIntersection(visitedStatesMap, p, model, specification);
 				}
 			}
 		}
@@ -299,24 +328,21 @@ public class IntBAImpl<
 	 * @param currentState is the current state of the intersection (the one that precedes the state that is generated in this method)
 	 * @return the new intersection state
 	 */
-	private INTERSECTIONSTATE addIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState,
+	private INTERSECTIONSTATE addIntersectionState(STATE s1, STATE s2, int number, boolean initial,
 			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
 			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
 
-		INTERSECTIONSTATE p = generateIntersectionState(s1, s2, currentState, model, specification);
+		INTERSECTIONSTATE p = generateIntersectionState(s1, s2, number, model, specification);
+		if(initial){
+			this.addInitialState(p);
+		}
 		if(p.getNumber()==2){
 			this.addAcceptState(p);
-		}
-		else{
-			this.addVertex(p);
 		}
 		if(model.isTransparent(s1)){
 			this.addMixedState(p);
 		}
 		this.addVertex(p);
-		if(currentState==null){
-			this.addInitialState(p);
-		}
 		return p;
 	}
 	
@@ -327,27 +353,29 @@ public class IntBAImpl<
 	 * @param currentState: is the current state to be considered in the generation of the automaton state
 	 * @return a new intersection state
 	 */
-	protected INTERSECTIONSTATE generateIntersectionState(STATE s1, STATE s2, INTERSECTIONSTATE currentState,
+	protected INTERSECTIONSTATE generateIntersectionState(STATE s1, STATE s2, int number,
+			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
+		
+		IntersectionStateFactory<STATE, INTERSECTIONSTATE> factory=new IntersectionStateFactory<STATE, INTERSECTIONSTATE>();
+		return factory.create(s1, s2, number);
+	}
+	
+	protected int comuteNumber(STATE s1, STATE s2, int prevNumber,
 			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
 			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
 		int num=0;
-		if(currentState!=null){
-			num=currentState.getNumber();
-		}
-		if(num==0 && model.isAccept(s1)){
+		
+		if(prevNumber==0 && model.isAccept(s1)){
 			num=1;
 		}
-		else{
-			if(num==1 && specification.isAccept(s2)){
-				num=2;
-			}
-			else{
-				if(num==2){
-					num=0;
-				}
-			}
+		if(prevNumber==1 && specification.isAccept(s2)){
+			num=2;
 		}
-		IntersectionStateFactory<STATE, INTERSECTIONSTATE> factory=new IntersectionStateFactory<STATE, INTERSECTIONSTATE>();
-		return factory.create(s1, s2, num);
+		if(prevNumber==2){
+			num=0;
+		}
+		return num;
 	}
+
 }

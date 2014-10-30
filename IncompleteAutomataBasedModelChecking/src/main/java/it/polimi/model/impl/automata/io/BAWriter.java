@@ -21,19 +21,19 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @param <STATE> is the type of the states of the {@link DrawableBA}
  * @param <TRANSITION> is the type of the transitions of the {@link DrawableBA}
  * @param <TRANSITIONFACTORY> is the factory which creates the transitions of the {@link DrawableBA}
- * @param <AUTOMATA> is the automata to be written by the {@link GraphMLWriter}
+ * @param <AUTOMATON> is the automata to be written by the {@link GraphMLWriter}
  */
 public class BAWriter<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition,
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-	AUTOMATA extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>
+	AUTOMATON extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>
 	extends GraphMLWriter<STATE, TRANSITION> {
 
 	/**
 	 * stores the AUTOMATA to be written on by the {@link GraphMLWriter}
 	 */
-	protected AUTOMATA ba;
+	protected AUTOMATON ba;
 	
 	/**
 	 * creates a new {@link BAWriter}
@@ -62,7 +62,7 @@ public class BAWriter<
 	 * @throws NullPointerException if the {@link DrawableBA} or the {@link Writer} are null
 	 * @throws IOException if there are problem in the IO process
 	 */
-	public void save(AUTOMATA ba, Writer w) throws IOException{
+	public void save(AUTOMATON ba, Writer w) throws IOException{
 		if(ba==null){
 			throw new NullPointerException("The ba cannot be null");
 		}

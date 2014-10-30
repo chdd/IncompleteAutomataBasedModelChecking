@@ -413,7 +413,7 @@ public class BAImpl<
 	 * @throws IllegalArgumentException if the id is not an id of the states of the automaton or if the id is not grater than or equal to zero
 	 * 
 	 */
-	public STATE getVertex(int id){
+	public STATE getState(int id){
 		if(id<0){
 			throw new IllegalArgumentException("the id must be grater than or equal to zero");
 		}

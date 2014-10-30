@@ -8,8 +8,6 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.io.GraphMLWriter;
-import edu.uci.ics.jung.io.graphml.DataMetadata;
-import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 /**
  * @author claudiomenghi
@@ -63,12 +61,6 @@ public class IBAWriter<
 		 */
 		@Override
 		public String transform(STATE input) {
-			
-			NodeMetadata m=new NodeMetadata();
-			m.setId(input.getName());
-			
-			DataMetadata initial=new DataMetadata();
-			initial.setKey("transparent");
 			return Boolean.toString(ba.isTransparent(input));
 		}
 	}

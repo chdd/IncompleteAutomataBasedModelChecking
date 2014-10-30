@@ -83,4 +83,6 @@ public interface BA<
 	 * @param S the state to be added as accepting state
 	 */
 	public void addAcceptState(STATE s);
+	
+	public STATE getState(int id);
 }
