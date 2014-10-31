@@ -69,22 +69,7 @@ public class LabelledTransition{
 	 */
 	@Override
 	public String toString() {
-		return "Id: {"+Integer.toString(this.id)+"} DNFFormula:{"+this.dnfFormula.toString()+"}";
+		return "{"+Integer.toString(this.id)+"} "+this.dnfFormula.toString()+"";
 	}
 
-	/**
-	 * parses the {@link LabelledTransition} starting from its {@link String} representation
-	 * @param transition is the {@link String} representation of the {@link LabelledTransition}
-	 * @return the {@link LabelledTransition} parsed from the {@link String}
-	 * @throws NullPointerException if the {@link String} is null
-	 */
-	public static LabelledTransition parseString(String transition){
-		if(transition==null){
-			throw new NullPointerException("The string which represents the transition cannot be null");
-		}
-		String idString=transition.substring(transition.indexOf("{"), transition.lastIndexOf("} DNFFormula:{"));
-		String dnfFormulaString=transition.substring(transition.lastIndexOf("} DNFFormula:{")+14, transition.lastIndexOf("}"));
-		
-		return new LabelledTransition(DNFFormula.loadFromString(dnfFormulaString), Integer.parseInt(idString));
-	}
 }

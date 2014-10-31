@@ -55,7 +55,12 @@ public class Main{
 				 model.getIntersection());
 		
 		// creates a new controller with the specified model and view
-		Controller controller=new Controller(model, view);
+		Controller<State, StateFactory<State>, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+					IntersectionState<State>, IntersectionStateFactory<State,IntersectionState<State>>,
+					ConstrainedTransition<State>, ConstrainedTransitionFactory<State,ConstrainedTransition<State>>> controller=
+					new Controller<State, StateFactory<State>, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+							IntersectionState<State>, IntersectionStateFactory<State,IntersectionState<State>>,
+							ConstrainedTransition<State>, ConstrainedTransitionFactory<State,ConstrainedTransition<State>>>(model, view);
 		
 		// add  the controller as observer of the view
 		view.addObserver(controller);

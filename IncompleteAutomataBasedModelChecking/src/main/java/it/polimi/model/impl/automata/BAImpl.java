@@ -450,4 +450,9 @@ public class BAImpl<
 	public int getStateNumber() {
 		return this.getVertexCount();
 	}
+
+	@Override
+	public TRANSITIONFACTORY getTransitionFactory() {
+		return this.transitionFactory;
+	}
 }

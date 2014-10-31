@@ -44,6 +44,7 @@ public class BAWriter<
 	public BAWriter(AbstractLayout<STATE, TRANSITION> layout){
 		super();
 		this.layout=layout;
+	
 	}
 	
 	/**

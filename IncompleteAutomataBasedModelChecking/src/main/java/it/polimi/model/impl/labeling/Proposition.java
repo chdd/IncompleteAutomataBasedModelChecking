@@ -16,8 +16,8 @@ public class Proposition extends GraphProposition {
 	 */
 	public Proposition(String label, boolean isNegated){
 		super(label, isNegated);
-		if(!label.matches("[a-z][a-z0-9]++")) {
-	       throw new IllegalArgumentException("proposition must be of form [a-z][a-z0-9]++ (got "+label+")");
+		if(!label.matches("[a-zA-Z][a-zA-Z0-9]*")) {
+	       throw new IllegalArgumentException("proposition must be of form [a-zA-Z_0-9] (got "+label+")");
 	   }
 	}
 	
@@ -44,10 +44,8 @@ public class Proposition extends GraphProposition {
 		if(proposition==null){
 			throw new NullPointerException("The String representation of the proposition cannot be null");
 		}
-		if(!proposition.matches("[a-z][a-z0-9]++")) {
-		       throw new IllegalArgumentException("proposition must be of form [a-z][a-z0-9]++ (got "+proposition+")");
-		}
-		if(proposition.contains("!")){
+		
+		if(proposition.startsWith("!")){
 			return new Proposition(proposition.substring(1), true);
 		}
 		else{

@@ -1,7 +1,9 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
@@ -20,15 +22,18 @@ import org.apache.commons.collections15.Transformer;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 
 @SuppressWarnings("serial")
-public class IntersectionAutomatonJPanel<
-	STATE extends State, 
-	TRANSITION extends LabelledTransition,
+public class IntersectionAutomatonJPanel
+	<STATE extends State, 
+	STATEFACTORY extends StateFactory<STATE>,
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
-	INTERSECTIONAUTOMATON  extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY>> extends
-		IncompleteBuchiAutomatonJPanel<INTERSECTIONSTATE, INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON> 
+	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
+	INTERSECTIONAUTOMATON  extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
+	extends
+		IncompleteBuchiAutomatonJPanel<INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,  INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, INTERSECTIONAUTOMATON> 
 
 {
 
@@ -39,7 +44,7 @@ public class IntersectionAutomatonJPanel<
 	public void highlightPath(Stack<INTERSECTIONSTATE> states, INTERSECTIONAUTOMATON a){
 		this.setTransformers(a);
 		this.getRenderContext().setVertexFillPaintTransformer(
-				new HighlighPathPaintTransformer<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, LABELLEDTRANSITIONFACTORY, CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON>(a, states));
+				new HighlighPathPaintTransformer<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, INTERSECTIONAUTOMATON>(a, states));
 		
 		this.getGraphLayout().setGraph(a);
 		this.repaint();
@@ -47,7 +52,7 @@ public class IntersectionAutomatonJPanel<
 	
 	@Override
 	protected Transformer<INTERSECTIONSTATE, Stroke> getStateStrokeTransformer(INTERSECTIONAUTOMATON a){
-		return new IntersectionAutomatonStrokeTransformer<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, LABELLEDTRANSITIONFACTORY ,CONSTRAINEDTRANSITIONFACTORY, INTERSECTIONAUTOMATON>(a);
+		return new IntersectionAutomatonStrokeTransformer<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY ,INTERSECTIONTRANSITIONFACTORY, INTERSECTIONAUTOMATON>(a);
 	}
 	@Override
 	protected Transformer<INTERSECTIONTRANSITION, Stroke> getStrokeEdgeStrokeTransformer(){

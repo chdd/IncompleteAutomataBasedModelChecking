@@ -1,6 +1,7 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
@@ -31,8 +32,13 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
  *
  */
 @SuppressWarnings("serial")
-public abstract class AutomatonJPanel<S extends State, T extends LabelledTransition,
-TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableBA<S,T, TRANSITIONFACTORY>> extends VisualizationViewer<S,T> {
+public abstract class AutomatonJPanel
+	<STATE extends State, 
+	STATEFACTORY extends StateFactory<STATE>,
+	TRANSITION extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	BA extends DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>> 
+	extends VisualizationViewer<STATE,TRANSITION> {
 
 	/**
 	 * contains the {@link Graph} to be inserted in the component
@@ -40,9 +46,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableBA<S,T
 	
 	protected ActionListener view;
 	
-
-	
-	public AutomatonJPanel(A  a, ActionListener view, AbstractLayout<S, T> layout){
+	public AutomatonJPanel(BA  a, ActionListener view, AbstractLayout<STATE, TRANSITION> layout){
 		super(layout);
 		
 		this.view=view;
@@ -55,15 +59,15 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableBA<S,T
 		this.update(a);
 	}
 	
-	public void setTransformers(A  a){
-		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
+	public void setTransformers(BA  a){
+		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
 		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
-		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<S>());
+		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
 		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
 		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
 		
-		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<T>());
-		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<S, T>(true, false));
+		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<TRANSITION>());
+		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<STATE, TRANSITION>(true, false));
 		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
 		
 		this.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
@@ -73,18 +77,15 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableBA<S,T
 		
 	}
 	
-	public void update(A  a){
+	public void update(BA  a){
 		this.setTransformers(a);
 		
 		this.getGraphLayout().setGraph(a);
 		this.repaint();
 	}
 	
-	
-	
-	
 	public void setTranformingMode(){
-		DefaultModalGraphMouse<S, T> gm=new DefaultModalGraphMouse<S,T>();
+		DefaultModalGraphMouse<STATE, TRANSITION> gm=new DefaultModalGraphMouse<STATE,TRANSITION>();
 		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
 		this.setGraphMouse(gm);
 		this.addKeyListener(gm.getModeKeyListener());
@@ -94,11 +95,11 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableBA<S,T
 	public abstract void setEditingMode();
 	
 	
-	protected abstract Transformer<S, Shape> getShapeTransformer(A a);
+	protected abstract Transformer<STATE, Shape> getShapeTransformer(BA a);
 	
-	protected abstract Transformer<T, Stroke> getStrokeEdgeStrokeTransformer();
-	protected abstract Transformer<S, Stroke> getStateStrokeTransformer(A a);
+	protected abstract Transformer<TRANSITION, Stroke> getStrokeEdgeStrokeTransformer();
+	protected abstract Transformer<STATE, Stroke> getStateStrokeTransformer(BA a);
 	
 	
-	protected abstract Transformer<S,Paint> getPaintTransformer(A a);
+	protected abstract Transformer<STATE,Paint> getPaintTransformer(BA a);
 }

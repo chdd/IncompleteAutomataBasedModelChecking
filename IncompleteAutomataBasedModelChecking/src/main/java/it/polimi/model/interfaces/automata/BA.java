@@ -31,6 +31,8 @@ public interface BA<
 	 * @return the alphabet of the {@link BA}
 	 */
 	public Set<IGraphProposition> getAlphabet();
+	
+	public TRANSITIONFACTORY getTransitionFactory();
 		
 	/**
 	 * return the transitions that exits the {@link State} state

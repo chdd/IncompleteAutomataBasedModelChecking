@@ -84,13 +84,29 @@ public class View<STATE extends State,
 			+ "MouseButtonOne+ctrl(or Command)+drag to shear the display<br>"
 			+ "Position the mouse on a state and press p to enter the state selection mode that allows to move the states<br>"
 			+ "Press t to exit the state selection mode<br></html>";
+	// menuBar
+	private JMenuBar menuBar;
+	private JMenu modelMenu;
+	private JMenu editMenu;
+	private JMenuItem editItem;
+	
+	private JMenuItem trasformItem;
+	private JMenuItem checkItem;
+	
+	private JMenuItem openModelMenu;
+	private JMenuItem saveModelMenu;
+	private JMenuItem openClaimMenu;
+	private JMenuItem saveClaimMenu;
+	private JMenuItem openIntersectionMenu;
+	private JMenuItem saveIntersectionMenu;
+	
 	
 	// model
 	private JButton openModelButton;
 	private JButton saveModelButton;
 	private JButton modelEditingButton;
 	private JButton modelTrasformingButton;
-	private IncompleteBuchiAutomatonJPanel<STATE,TRANSITION,TRANSITIONFACTORY,DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> modelTabmodel;
+	private IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> modelTabmodel;
 	private AbstractLayout<STATE, TRANSITION> modelLayout;
 	
 	
@@ -101,23 +117,45 @@ public class View<STATE extends State,
 	
 	private JButton claimEditingButton;
 	private JButton claimTransformingButton;
-	private BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>  claimTabClaimPanel;
+	private BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>>  claimTabClaimPanel;
 	private AbstractLayout<STATE, TRANSITION> claimLayout;
 	
 	
-	// verification results
+	// Intersection
 	private JButton openIntersectionButton;
 	private JButton saveIntersectionButton;
 	private JButton checkButton;
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionLayout;
 	
-	private IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> verificationResultsIntersection;
-	private TextArea brzozowskiSystem;
+	private IntersectionAutomatonJPanel
+		<STATE, 
+		STATEFACTORY,
+		TRANSITION, 
+		TRANSITIONFACTORY,
+		INTERSECTIONSTATE, 
+		INTERSECTIONSTATEFACTORY,
+		INTERSECTIONTRANSITION,
+		INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> intersectionPanel;
+	
+	private TextArea brzozowskiSystemArea;
 
 	// verification snapshot
-	private IncompleteBuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> verificationSnapshotModelPanel;
-	private BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>  verificationSnapshotClaimPanel;
-	private IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> verificationSnapshotIntersectionPanel;
+	private AbstractLayout<STATE, TRANSITION> verificationModelLayout;
+	private AbstractLayout<STATE, TRANSITION> verificationClaimLayout;
+	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationIntersectionLayout;
+	
+	
+	private IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>  verificationModelPanel;
+	private BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>>   verificationClaimPanel;
+	private IntersectionAutomatonJPanel<STATE, 
+	STATEFACTORY,
+	TRANSITION, 
+	TRANSITIONFACTORY,
+	INTERSECTIONSTATE, 
+	INTERSECTIONSTATEFACTORY,
+	INTERSECTIONTRANSITION,
+	INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> verificationIntersectionPanel;
+	
 	private ResultsJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY,IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY >> verificationSnapshotResultsPanel;
 	
 	// main frame
@@ -151,8 +189,8 @@ public class View<STATE extends State,
 		 tabbedPane.setMnemonicAt(1, KeyEvent.VK_3);
 		 
 		 
-		 JComponent verificationResultsTab= makeTextPanel("Intersection");
-		 tabbedPane.addTab("Intersection", verificationResultsTab);
+		 JComponent intersectionTab= makeTextPanel("Intersection");
+		 tabbedPane.addTab("Intersection", intersectionTab);
 		 tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 
 		 JComponent verificationSnapshotTab = makeTextPanel("Verification");
@@ -206,7 +244,7 @@ public class View<STATE extends State,
 		 containerModelMenu.add(this.modelTrasformingButton);
 		 modelTab.add(containerModelMenu);
 		 this.modelLayout=new FRLayout<STATE,TRANSITION>(model);
-		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
+		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
 		 modelTab.add(modelTabmodel);
 		 
 		 //******************************************************************************************************************************
@@ -244,7 +282,7 @@ public class View<STATE extends State,
 		 this.claimTransformingButton.setToolTipText(this.transorfmingMessage);
 		 containerClaimMenu.add(this.claimTransformingButton);
 		 this.claimLayout=new FRLayout<STATE,TRANSITION>(claim);
-		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>(claim, this,  this.claimLayout);
+		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>>(claim, this,  this.claimLayout);
 		 
 		 claimTab.add(containerClaimMenu);
 		 claimTab.add(this.claimTabClaimPanel);
@@ -252,10 +290,10 @@ public class View<STATE extends State,
 		 
 		 
 		 //******************************************************************************************************************************
-		 // Verification tab
+		 // intersection tab
 		 //******************************************************************************************************************************
 		 
-		 verificationResultsTab.setLayout(new BoxLayout(verificationResultsTab, BoxLayout.Y_AXIS));
+		 intersectionTab.setLayout(new BoxLayout(intersectionTab, BoxLayout.Y_AXIS));
 		 
 		 JPanel verificationMenu=new JPanel();
 		 verificationMenu.setLayout(new BoxLayout(verificationMenu, BoxLayout.X_AXIS));
@@ -275,24 +313,32 @@ public class View<STATE extends State,
 		 this.checkButton.setFocusPainted(false);
 		 verificationMenu.add(this.checkButton);
 		 
-		 verificationResultsTab.add(verificationMenu);
+		 intersectionTab.add(verificationMenu);
 		
 		 this.intersectionLayout=new FRLayout<INTERSECTIONSTATE,INTERSECTIONTRANSITION>(intersection);
-		 this.verificationResultsIntersection=new IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(intersection, this, this.intersectionLayout);
+		 this.intersectionPanel=new IntersectionAutomatonJPanel
+				 <STATE, 
+					STATEFACTORY,
+					TRANSITION, 
+					TRANSITIONFACTORY,
+					INTERSECTIONSTATE, 
+					INTERSECTIONSTATEFACTORY,
+					INTERSECTIONTRANSITION,
+					INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(intersection, this, this.intersectionLayout);
 		 JPanel containerInt1=new JPanel();
 		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
 		 containerInt1.add(new JLabel("Intersection automaton"));
-		 containerInt1.add(this.verificationResultsIntersection);
+		 containerInt1.add(this.intersectionPanel);
 			
-		 verificationResultsIntersection.setTranformingMode();
+		 intersectionPanel.setTranformingMode();
 		 JPanel containerInt2=new JPanel();
 		 containerInt2.setLayout(new BoxLayout(containerInt2,BoxLayout.Y_AXIS));
 		 containerInt2.add(new JLabel("Brzozowski representation"));
-		 this.brzozowskiSystem=new TextArea();
-		 containerInt2.add(this.brzozowskiSystem);
+		 this.brzozowskiSystemArea=new TextArea();
+		 containerInt2.add(this.brzozowskiSystemArea);
 		
-		 verificationResultsTab.add(containerInt1);
-		 verificationResultsTab.add(containerInt2);
+		 intersectionTab.add(containerInt1);
+		 intersectionTab.add(containerInt2);
 		 
 		 
 		 //******************************************************************************************************************************
@@ -303,15 +349,19 @@ public class View<STATE extends State,
 		 container1.setLayout(new BoxLayout(container1,BoxLayout.Y_AXIS));
 		
 		 
+		 this.verificationModelLayout=new FRLayout<STATE,TRANSITION>(model);
 		 container1.add(new JLabel("Model"));
-		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<STATE,TRANSITION,TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
-		 this.verificationSnapshotModelPanel.setTranformingMode();
-		 container1.add(verificationSnapshotModelPanel);
+		 this.verificationModelPanel=new IncompleteBuchiAutomatonJPanel
+				 <STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> (model, this, this.verificationModelLayout);
+		 this.verificationModelPanel.setTranformingMode();
+		 container1.add(verificationModelPanel);
 		
+
+		 this.verificationClaimLayout=new FRLayout<STATE,TRANSITION>(claim);
 		 container1.add(new JLabel("Claim"));
-		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>(claim, this, this.claimLayout);
-		 this.verificationSnapshotClaimPanel.setTranformingMode();
-		 container1.add(verificationSnapshotClaimPanel);
+		 this.verificationClaimPanel=new BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>> (claim, this, this.verificationClaimLayout);
+		 this.verificationClaimPanel.setTranformingMode();
+		 container1.add(verificationClaimPanel);
 		 verificationSnapshotTab.add(container1);
 		 
 		 JPanel container2=new JPanel();
@@ -320,9 +370,21 @@ public class View<STATE extends State,
 		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
 		 container2.add(intersectionLabel);
 		 
-		 this.verificationSnapshotIntersectionPanel=new IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(intersection, this, this.intersectionLayout);
-		 this.verificationSnapshotIntersectionPanel.setTranformingMode();
-		 container2.add(verificationSnapshotIntersectionPanel);
+		 this.verificationIntersectionLayout=new FRLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>(intersection);
+		 
+		 this.verificationIntersectionPanel=new IntersectionAutomatonJPanel
+				 <STATE, 
+					STATEFACTORY,
+					TRANSITION, 
+					TRANSITIONFACTORY,
+					INTERSECTIONSTATE, 
+					INTERSECTIONSTATEFACTORY,
+					INTERSECTIONTRANSITION,
+					INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
+		 	(intersection, this, this.verificationIntersectionLayout);
+		 
+		 this.verificationIntersectionPanel.setTranformingMode();
+		 container2.add(verificationIntersectionPanel);
 		 
 		 container2.add(new JLabel("Model Checking results"));
 		 
@@ -339,17 +401,21 @@ public class View<STATE extends State,
 	public void updateModel(DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions){
 		if(positions!=null){
 			this.modelLayout.setInitializer(positions);
+			this.verificationModelLayout.setInitializer(positions);
 		}
 		this.modelTabmodel.update(model);
-		this.verificationSnapshotModelPanel.update(model);
+		this.verificationModelPanel.update(model);
+		this.jframe.repaint();
 	}
 	@Override
 	public void updateSpecification(DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions){
 		if(positions!=null){
 			this.claimLayout.setInitializer(positions);
+			this.verificationClaimLayout.setInitializer(positions);
 		}
 		this.claimTabClaimPanel.update(specification);
-		this.verificationSnapshotClaimPanel.update(specification);
+		this.verificationClaimPanel.update(specification);
+		this.jframe.repaint();
 		
 	}
 
@@ -357,9 +423,12 @@ public class View<STATE extends State,
 	public void updateIntersection(DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
 		if(positions!=null){
 			this.intersectionLayout.setInitializer(positions);
+			this.verificationIntersectionLayout.setInitializer(positions);
 		}
-		this.verificationSnapshotIntersectionPanel.update(intersection);
-		this.verificationResultsIntersection.update(intersection);
+		this.verificationIntersectionPanel.update(intersection);
+		this.intersectionPanel.update(intersection);
+		this.jframe.repaint();
+		
 	}
 
 	@Override
@@ -368,44 +437,45 @@ public class View<STATE extends State,
 		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
-			this.verificationResultsIntersection.highlightPath(verificationResults.getViolatingPath(), intersection);
+			this.intersectionPanel.highlightPath(verificationResults.getViolatingPath(), intersection);
 		}
+		this.jframe.repaint();
 	}
 
 	public void setBrzozoski(String system){
-		this.brzozowskiSystem.setText(system);
+		this.brzozowskiSystemArea.setText(system);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.setChanged();
 		
-		if(e.getSource().equals(this.saveSpecificationMenuItem) || e.getSource().equals(this.saveClaimButton)){
+		if(e.getSource().equals(this.saveClaimMenu) || e.getSource().equals(this.saveClaimButton)){
 			this.notifyObservers(new SaveSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
 			this.saveClaimButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.openSpecificationMenuItem) || e.getSource().equals(this.openClaimButton)){
+		if(e.getSource().equals(this.openClaimMenu) || e.getSource().equals(this.openClaimButton)){
 			this.notifyObservers(new LoadSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 			this.openClaimButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.saveModelMenuItem) || e.getSource().equals(this.saveModelButton)){
+		if(e.getSource().equals(this.saveModelMenu) || e.getSource().equals(this.saveModelButton)){
 			this.notifyObservers(new SaveModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
 			this.saveModelButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.saveIntersectionButton)){
+		if(e.getSource().equals(this.saveIntersectionButton) || e.getSource().equals(this.saveIntersectionMenu)){
 			this.notifyObservers(new SaveIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
 			this.saveModelButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.openIntersectionButton)){
+		if(e.getSource().equals(this.openIntersectionButton) || e.getSource().equals(this.openIntersectionMenu)){
 			this.notifyObservers(new LoadIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 			this.saveModelButton.setFocusPainted(false);
 		}
-		if(e.getSource().equals(this.openModelMenuItem) || e.getSource().equals(this.openModelButton)){
+		if(e.getSource().equals(this.openModelMenu) || e.getSource().equals(this.openModelButton)){
 			this.notifyObservers(new LoadModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 			this.openModelButton.setFocusPainted(false);
@@ -452,48 +522,39 @@ public class View<STATE extends State,
 		JOptionPane.showMessageDialog(null, message);
 	}
 	
-	private JMenuBar menuBar;
-	private JMenu modelMenu;
-	private JMenu editMenu;
-	
-	
-	
-	private JMenuItem editItem;
-	
-	private JMenuItem trasformItem;
-	private JMenuItem checkItem;
-	
-	private JMenuItem openModelMenuItem;
-	private JMenuItem saveModelMenuItem;
-	private JMenuItem openSpecificationMenuItem;
-	private JMenuItem saveSpecificationMenuItem;
 	
 	private void createMenuBar(JFrame jframe){
-		menuBar=new JMenuBar();
-		modelMenu=new JMenu("File");
-		modelMenu.addActionListener(this);
+		this.menuBar=new JMenuBar();
+		this.modelMenu=new JMenu("File");
 		
-		openModelMenuItem = new JMenuItem("Open Model", KeyEvent.VK_T);
-		modelMenu.add(openModelMenuItem);
-		openModelMenuItem.setMnemonic(KeyEvent.VK_O);
-		openModelMenuItem.addActionListener(this);
+		// model
+		this.openModelMenu = new JMenuItem("Open Model");
+		this.modelMenu.add(this.openModelMenu);
+		this.openModelMenu.addActionListener(this);
 		
-		saveModelMenuItem = new JMenuItem("Save Model", KeyEvent.VK_T);
-		modelMenu.add(saveModelMenuItem);
-		saveModelMenuItem.setMnemonic(KeyEvent.VK_O);
-		saveModelMenuItem.addActionListener(this);
+		this.saveModelMenu = new JMenuItem("Save Model");
+		this.modelMenu.add(this.saveModelMenu);
+		this.saveModelMenu.addActionListener(this);
+		
+		// claim
+		this.openClaimMenu = new JMenuItem("Open Claim");
+		this.modelMenu.add(this.openClaimMenu);
+		this.openClaimMenu.addActionListener(this);
+		
+		this.saveClaimMenu = new JMenuItem("Save Claim");
+		this.modelMenu.add(this.saveClaimMenu);
+		this.saveClaimMenu.addActionListener(this);
+		
+		// intersection
+		this.saveIntersectionMenu=new JMenuItem("Save Intersection");
+		this.modelMenu.add(this.saveIntersectionMenu);
+		this.saveIntersectionMenu.addActionListener(this);
+		
+		this.openIntersectionMenu=new JMenuItem("Save Intersection");
+		this.modelMenu.add(this.openIntersectionMenu);
+		this.openIntersectionMenu.addActionListener(this);
 		
 		
-		openSpecificationMenuItem = new JMenuItem("Open Specification", KeyEvent.VK_T);
-		modelMenu.add(openSpecificationMenuItem);
-		openSpecificationMenuItem.setMnemonic(KeyEvent.VK_O);
-		openSpecificationMenuItem.addActionListener(this);
-		
-		
-		saveSpecificationMenuItem = new JMenuItem("Save Specification", KeyEvent.VK_T);
-		modelMenu.add(saveSpecificationMenuItem);
-		saveSpecificationMenuItem.setMnemonic(KeyEvent.VK_O);
-		saveSpecificationMenuItem.addActionListener(this);
 		
 		menuBar.add(modelMenu);
 		

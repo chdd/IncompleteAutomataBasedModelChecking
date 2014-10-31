@@ -331,7 +331,12 @@ public class BAReader<
 			if(input==null){
 				throw new NullPointerException("The input data cannot be null");
 			}
-			return this.statesandlocations.get(input);
+			if(this.statesandlocations.containsKey(input))
+				return this.statesandlocations.get(input);
+			else{
+				return new Point2D.Double();
+			}
+			
 		}
 	}
 }
