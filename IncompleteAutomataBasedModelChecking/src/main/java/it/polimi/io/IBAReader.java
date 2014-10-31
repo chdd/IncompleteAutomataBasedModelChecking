@@ -8,7 +8,9 @@ import it.polimi.model.interfaces.automata.IBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
+import java.util.Map;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
@@ -61,7 +63,7 @@ public class IBAReader<
 		if(stateFactory==null){
 			throw new NullPointerException("The stateFactory cannot be null");
 		}
-		return new IBAMetadataStateTransformer(this.ba, stateFactory); 
+		return new IBAMetadataStateTransformer(this.ba, this.statesandlocations, stateFactory); 
 	}
 	
 	/**
@@ -78,8 +80,8 @@ public class IBAReader<
 		 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableIBA}
 		 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactory} is null
 		 */
-		public IBAMetadataStateTransformer(AUTOMATON a, STATEFACTORY transitionFactory) {
-			super(a, transitionFactory);
+		public IBAMetadataStateTransformer(AUTOMATON a, Map<STATE, Point2D> statesandlocations, STATEFACTORY transitionFactory) {
+			super(a, statesandlocations, transitionFactory);
 		}
 
 		/**
@@ -89,17 +91,7 @@ public class IBAReader<
 		 */
 		@Override
 		public STATE transform(NodeMetadata input) {
-			if(input==null){
-				throw new NullPointerException("The NodeMetadata to be converted into a State cannot be null");
-			}
-			
-			STATE s=this.stateFactory.create(input.getProperty("name"), Integer.parseInt(input.getId()));
-			if(Boolean.parseBoolean(input.getProperty("initial"))){
-				this.a.addInitialState(s);
-			}
-			if(Boolean.parseBoolean(input.getProperty("accepting"))){
-				this.a.addAcceptState(s);
-			}
+			STATE s=super.transform(input);
 			if(Boolean.parseBoolean(input.getProperty("transparent"))){
 				this.a.addTransparentState(s);
 			}

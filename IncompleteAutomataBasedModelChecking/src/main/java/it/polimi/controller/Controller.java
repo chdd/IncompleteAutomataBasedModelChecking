@@ -3,15 +3,13 @@ package it.polimi.controller;
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.view.ViewInterface;
 
 import java.util.Observable;
@@ -22,19 +20,27 @@ import java.util.Observer;
  * 
  * @author claudiomenghi
  */
-public class Controller implements Observer{
+public class Controller<STATE extends State, 
+STATEFACTORY extends StateFactory<STATE>,
+TRANSITION extends LabelledTransition, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+INTERSECTIONSTATE extends IntersectionState<STATE>, 
+INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
+INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>  implements Observer{
 
 	/**
 	 * is the (graphical) interface of the application
 	 */
-	private ViewInterface<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>, 
-	LabelledTransitionFactory<LabelledTransition>,
-	ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> view;
+	private ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+	TRANSITIONFACTORY,
+	INTERSECTIONTRANSITIONFACTORY> view;
 	
 	/**
 	 * is the interface to the model of the application
 	 */
-	private ModelInterface model;
+	private ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,
+	INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model;
 	
 	/**
 	 * creates a new controller with the specified model and view 
@@ -42,9 +48,9 @@ public class Controller implements Observer{
 	 * @param view is the view of the application
 	 * @throws IllegalArgumentException if the model or the specification is null
 	 */
-	public Controller(ModelInterface model, ViewInterface<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>, 
-			LabelledTransitionFactory<LabelledTransition>,
-			ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> view) {
+	public Controller(ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,
+			INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model, 
+			ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view) {
 		if(model==null){
 			throw new IllegalArgumentException("The model cannot be null");
 		}
@@ -53,40 +59,39 @@ public class Controller implements Observer{
 		}
 		this.model=model;
 		this.view=view;
-		this.update();
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		
 		if(arg instanceof ActionInterface)
-		{	ActionInterface a=(ActionInterface) arg;
+		{	@SuppressWarnings("unchecked")
+			ActionInterface<
+				STATE, 
+				STATEFACTORY, 
+				TRANSITION , 
+				TRANSITIONFACTORY, 
+				INTERSECTIONSTATE, 
+				INTERSECTIONSTATEFACTORY, 
+				INTERSECTIONTRANSITION, 
+				INTERSECTIONTRANSITIONFACTORY> a=(ActionInterface<
+							STATE, 
+							STATEFACTORY, 
+							TRANSITION , 
+							TRANSITIONFACTORY, 
+							INTERSECTIONSTATE, 
+							INTERSECTIONSTATEFACTORY, 
+							INTERSECTIONTRANSITION, 
+							INTERSECTIONTRANSITIONFACTORY>) arg;
 			try {
-				a.perform(model);
+				a.perform(model, this.view);
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.view.displayErrorMessage(e.getMessage().toString());
 			}
 		}
-		this.update();	
-	}
 	
-	private void update(){
-		
-		this.view.updateModel((DrawableIBA<State, LabelledTransition,  LabelledTransitionFactory<LabelledTransition>>) this.model.getModel());
-		this.view.updateSpecification((DrawableBA<State, LabelledTransition,  LabelledTransitionFactory<LabelledTransition>>) this.model.getSpecification());
-		this.view.updateIntersection((DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>, 
-				ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>)(model.getIntersection()));
-		
-		this.view.setBrzozoski(new Brzozowski<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-				LabelledTransitionFactory<LabelledTransition>,
-				ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(this.model.getIntersection()).getConstraintmatrix());
-		this.view.updateVerificationResults(this.model.getVerificationResults(), 
-				(DrawableIntBA<State, LabelledTransition,IntersectionState<State>, ConstrainedTransition<State>,
-						ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>)this.model.getIntersection());
 	}
 	
 	
-	
-
 }

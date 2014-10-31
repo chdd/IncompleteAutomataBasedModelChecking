@@ -17,6 +17,8 @@ import java.util.Stack;
 
 import org.apache.commons.collections15.Transformer;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+
 @SuppressWarnings("serial")
 public class IntersectionAutomatonJPanel<
 	STATE extends State, 
@@ -30,8 +32,8 @@ public class IntersectionAutomatonJPanel<
 
 {
 
-	public IntersectionAutomatonJPanel(INTERSECTIONAUTOMATON a, ActionListener l) {
-		super(a, l);
+	public IntersectionAutomatonJPanel(INTERSECTIONAUTOMATON a, ActionListener l, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> layout) {
+		super(a, l, layout);
 	}
 	
 	public void highlightPath(Stack<INTERSECTIONSTATE> states, INTERSECTIONAUTOMATON a){

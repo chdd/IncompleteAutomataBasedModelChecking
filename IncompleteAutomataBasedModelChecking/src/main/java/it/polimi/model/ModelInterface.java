@@ -1,8 +1,9 @@
 package it.polimi.model;
 
-import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
@@ -12,13 +13,16 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
+import java.awt.geom.Point2D;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.collections15.Transformer;
 import org.xml.sax.SAXException;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.io.GraphIOException;
 
 /**
@@ -26,7 +30,16 @@ import edu.uci.ics.jung.io.GraphIOException;
  * @author claudiomenghi
  *
  */
-public interface ModelInterface {
+public interface ModelInterface<
+	STATE extends State,
+	STATEFACTORY extends StateFactory<STATE>,
+	TRANSITION extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	INTERSECTIONSTATE extends IntersectionState<STATE>,
+	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>
+	{
 	/**
 	 * loads the model of the system from the file whose path is specified in the string modelFilePath
 	 * @param modelFilePath is the path of the file from which the model must be loaded
@@ -36,7 +49,7 @@ public interface ModelInterface {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public void loadModel(String modelFilePath) throws IOException, GraphIOException;
+	public Transformer<STATE, Point2D> loadModel(String modelFilePath) throws IOException, GraphIOException;
 	
 	/**
 	 * loads the model of the system from the file whose path is specified in the string modelFilePath
@@ -47,23 +60,23 @@ public interface ModelInterface {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public void loadIntersection(String modelFilePath) throws IOException, GraphIOException;
+	public Transformer<INTERSECTIONSTATE, Point2D> loadIntersection(String modelFilePath) throws IOException, GraphIOException;
 	
 	/**
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public DrawableIBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> getModel();
+	public DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> getSpecification();
+	public DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
-	public DrawableIntBA<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>, ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> getIntersection();
+	public DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> getIntersection();
 	
 	/**
 	 * save the model in the file with path filePath
@@ -72,7 +85,7 @@ public interface ModelInterface {
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	public void saveModel(String filePath) throws IOException, GraphIOException;
+	public void saveModel(String filePath, AbstractLayout<STATE, TRANSITION> layout) throws IOException, GraphIOException;
 	/**
 	 * load the model from the specified filePath
 	 * @param specificationFilePath is the path of the file that contains the specification to be loaded
@@ -82,7 +95,7 @@ public interface ModelInterface {
 	 * @throws IOException
 	 * @throws ParserConfigurationException
 	 */
-	public void changeSpecification(String specificationFilePath) throws IOException, GraphIOException;
+	public Transformer<STATE, Point2D> changeSpecification(String specificationFilePath) throws IOException, GraphIOException;
 	/**
 	 * save the specification in the file with path filePath
 	 * @param filePath is the path of the file where the specification must be saved
@@ -90,7 +103,7 @@ public interface ModelInterface {
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	public void saveSpecification(String filePath) throws IOException, GraphIOException;
+	public void saveSpecification(String filePath, AbstractLayout<STATE, TRANSITION> layout) throws IOException, GraphIOException;
 	
 	/**
 	 * save the intersection in the file with path filePath
@@ -99,30 +112,28 @@ public interface ModelInterface {
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	public void saveIntersection(String filePath) throws IOException, GraphIOException;
+	public void saveIntersection(String filePath, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>  layout) throws IOException, GraphIOException;
 	
 	
 	/**
 	 * adds the regular state s into the model
 	 * @param s the state to be added
 	 */
-	public void addRegularStateToTheModel(State s, boolean regular, boolean initial, boolean accepting);
+	public void addRegularStateToTheModel(STATE s, boolean regular, boolean initial, boolean accepting);
 	/**
 	 * adds the regular state s into the model
 	 * @param s the state to be added
 	 */
-	public void addRegularStateToTheSpecification(State s, boolean initial, boolean accepting);
+	public void addRegularStateToTheSpecification(STATE s, boolean initial, boolean accepting);
 	
 	
 	
 	
-	public void changeIntersection(IntBAImpl<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-			LabelledTransitionFactory<LabelledTransition>,
-			ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> intersection);
+	public void changeIntersection(DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersection);
 
 	public void check();
 	
-	public ModelCheckerParameters<State, IntersectionState<State>> getVerificationResults();
+	public ModelCheckerParameters<STATE, INTERSECTIONSTATE> getVerificationResults();
 	
-	public void loadClaim(String claim);
+	public void loadClaimFromLTL(String ltlFormula);
 }

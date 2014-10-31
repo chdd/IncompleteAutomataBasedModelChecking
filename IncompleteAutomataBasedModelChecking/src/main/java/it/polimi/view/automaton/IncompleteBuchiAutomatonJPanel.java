@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPopupMenu;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+
 public class IncompleteBuchiAutomatonJPanel<S extends State, T extends LabelledTransition,
 TRANSITIONFACTORY extends LabelledTransitionFactory<T>, 
 A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T, TRANSITIONFACTORY, A> {
@@ -21,8 +23,8 @@ A extends DrawableIBA<S,T, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<S, T
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public IncompleteBuchiAutomatonJPanel(A a, ActionListener l){
-		 super(a, l);
+	public IncompleteBuchiAutomatonJPanel(A a, ActionListener l, AbstractLayout<S, T> layout){
+		 super(a, l, layout);
 	}
 	
 	protected BuchiAutomatonStatePaintTransformer<S,T, TRANSITIONFACTORY, A> getPaintTransformer(A a){

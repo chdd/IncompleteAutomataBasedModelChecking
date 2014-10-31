@@ -10,7 +10,9 @@ import it.polimi.controller.actions.file.saving.SaveModel;
 import it.polimi.controller.actions.file.saving.SaveSpecification;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
@@ -31,6 +33,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.Observable;
 
 import javax.swing.BoxLayout;
@@ -47,12 +50,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-public class View<S1 extends State, 
-			T1 extends LabelledTransition, 
-			S extends IntersectionState<S1>, 
-			T extends ConstrainedTransition<S1>,
-			LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T1>,
-			CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactory<S1, T>> extends Observable implements ViewInterface<S1,T1,S,T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>, ActionListener{
+import org.apache.commons.collections15.Transformer;
+
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+
+public class View<STATE extends State, 
+			STATEFACTORY extends StateFactory<STATE>,
+			TRANSITION extends LabelledTransition, 
+			TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+			INTERSECTIONSTATE extends IntersectionState<STATE>, 
+			INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
+			INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+			INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
+			extends Observable implements ViewInterface<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
 
 	// Icons
 	private final ImageIcon openIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-open.png"));
@@ -79,7 +90,9 @@ public class View<S1 extends State,
 	private JButton saveModelButton;
 	private JButton modelEditingButton;
 	private JButton modelTrasformingButton;
-	private IncompleteBuchiAutomatonJPanel<S1,T1,LABELLEDTRANSITIONFACTORY,DrawableIBA<S1,T1, LABELLEDTRANSITIONFACTORY>> modelTabmodel;
+	private IncompleteBuchiAutomatonJPanel<STATE,TRANSITION,TRANSITIONFACTORY,DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> modelTabmodel;
+	private AbstractLayout<STATE, TRANSITION> modelLayout;
+	
 	
 	// claim
 	private JButton openClaimButton;
@@ -88,27 +101,31 @@ public class View<S1 extends State,
 	
 	private JButton claimEditingButton;
 	private JButton claimTransformingButton;
-	private BuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY>>  claimTabClaimPanel;
-
+	private BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>  claimTabClaimPanel;
+	private AbstractLayout<STATE, TRANSITION> claimLayout;
+	
+	
 	// verification results
 	private JButton openIntersectionButton;
 	private JButton saveIntersectionButton;
 	private JButton checkButton;
-	private IntersectionAutomatonJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, DrawableIntBA<S1, T1, S, T, CONSTRAINTTRANSITIONFACTORY>> verificationResultsIntersection;
+	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionLayout;
+	
+	private IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> verificationResultsIntersection;
 	private TextArea brzozowskiSystem;
 
 	// verification snapshot
-	private IncompleteBuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableIBA<S1,T1, LABELLEDTRANSITIONFACTORY>> verificationSnapshotModelPanel;
-	private BuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY>>  verificationSnapshotClaimPanel;
-	private IntersectionAutomatonJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, DrawableIntBA<S1, T1, S, T, CONSTRAINTTRANSITIONFACTORY>> verificationSnapshotIntersectionPanel;
-	private ResultsJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY,IntBAImpl<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY >> verificationSnapshotResultsPanel;
+	private IncompleteBuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> verificationSnapshotModelPanel;
+	private BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>  verificationSnapshotClaimPanel;
+	private IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> verificationSnapshotIntersectionPanel;
+	private ResultsJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY,IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY >> verificationSnapshotResultsPanel;
 	
 	// main frame
 	private JFrame jframe;
 	
-	public View(DrawableIBA<S1, T1, LABELLEDTRANSITIONFACTORY> model,
-			DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY> claim,
-			DrawableIntBA<S1, T1,S,T, CONSTRAINTTRANSITIONFACTORY> intersection) {
+	public View(DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> model,
+			DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> claim,
+			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
 		
 		 this.jframe=new JFrame();
 		 // setting the size of the jframe
@@ -188,8 +205,8 @@ public class View<S1 extends State,
 		 
 		 containerModelMenu.add(this.modelTrasformingButton);
 		 modelTab.add(containerModelMenu);
-		 
-		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableIBA<S1,T1, LABELLEDTRANSITIONFACTORY>>(model, this);
+		 this.modelLayout=new FRLayout<STATE,TRANSITION>(model);
+		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
 		 modelTab.add(modelTabmodel);
 		 
 		 //******************************************************************************************************************************
@@ -226,8 +243,8 @@ public class View<S1 extends State,
 		 this.claimTransformingButton.setFocusPainted(false);
 		 this.claimTransformingButton.setToolTipText(this.transorfmingMessage);
 		 containerClaimMenu.add(this.claimTransformingButton);
-		 
-		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY>>(claim, this);
+		 this.claimLayout=new FRLayout<STATE,TRANSITION>(claim);
+		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>(claim, this,  this.claimLayout);
 		 
 		 claimTab.add(containerClaimMenu);
 		 claimTab.add(this.claimTabClaimPanel);
@@ -260,7 +277,8 @@ public class View<S1 extends State,
 		 
 		 verificationResultsTab.add(verificationMenu);
 		
-		 this.verificationResultsIntersection=new IntersectionAutomatonJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, DrawableIntBA<S1, T1, S, T, CONSTRAINTTRANSITIONFACTORY>>(intersection, this);
+		 this.intersectionLayout=new FRLayout<INTERSECTIONSTATE,INTERSECTIONTRANSITION>(intersection);
+		 this.verificationResultsIntersection=new IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(intersection, this, this.intersectionLayout);
 		 JPanel containerInt1=new JPanel();
 		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
 		 containerInt1.add(new JLabel("Intersection automaton"));
@@ -286,12 +304,12 @@ public class View<S1 extends State,
 		
 		 
 		 container1.add(new JLabel("Model"));
-		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<S1,T1,LABELLEDTRANSITIONFACTORY, DrawableIBA<S1,T1, LABELLEDTRANSITIONFACTORY>>(model, this);
+		 this.verificationSnapshotModelPanel=new IncompleteBuchiAutomatonJPanel<STATE,TRANSITION,TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
 		 this.verificationSnapshotModelPanel.setTranformingMode();
 		 container1.add(verificationSnapshotModelPanel);
 		
 		 container1.add(new JLabel("Claim"));
-		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<S1,T1, LABELLEDTRANSITIONFACTORY, DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY>>(claim, this);
+		 this.verificationSnapshotClaimPanel=new BuchiAutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>(claim, this, this.claimLayout);
 		 this.verificationSnapshotClaimPanel.setTranformingMode();
 		 container1.add(verificationSnapshotClaimPanel);
 		 verificationSnapshotTab.add(container1);
@@ -302,13 +320,13 @@ public class View<S1 extends State,
 		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
 		 container2.add(intersectionLabel);
 		 
-		 this.verificationSnapshotIntersectionPanel=new IntersectionAutomatonJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, DrawableIntBA<S1, T1, S, T, CONSTRAINTTRANSITIONFACTORY>>(intersection, this);
+		 this.verificationSnapshotIntersectionPanel=new IntersectionAutomatonJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(intersection, this, this.intersectionLayout);
 		 this.verificationSnapshotIntersectionPanel.setTranformingMode();
 		 container2.add(verificationSnapshotIntersectionPanel);
 		 
 		 container2.add(new JLabel("Model Checking results"));
 		 
-		 this.verificationSnapshotResultsPanel=new ResultsJPanel<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY, IntBAImpl<S1, T1, S, T, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>>();
+		 this.verificationSnapshotResultsPanel=new ResultsJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>>();
 		 container2.add(verificationSnapshotResultsPanel);
 			
 		 verificationSnapshotTab.add(container2);
@@ -318,26 +336,35 @@ public class View<S1 extends State,
 	}
 	
 	@Override
-	public void updateModel(DrawableIBA<S1, T1, LABELLEDTRANSITIONFACTORY> model){
+	public void updateModel(DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions){
+		if(positions!=null){
+			this.modelLayout.setInitializer(positions);
+		}
 		this.modelTabmodel.update(model);
 		this.verificationSnapshotModelPanel.update(model);
 	}
 	@Override
-	public void updateSpecification(DrawableBA<S1, T1, LABELLEDTRANSITIONFACTORY> specification){
+	public void updateSpecification(DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions){
+		if(positions!=null){
+			this.claimLayout.setInitializer(positions);
+		}
 		this.claimTabClaimPanel.update(specification);
 		this.verificationSnapshotClaimPanel.update(specification);
 		
 	}
 
 	@Override
-	public void updateIntersection(DrawableIntBA<S1, T1,S,T, CONSTRAINTTRANSITIONFACTORY> intersection){
+	public void updateIntersection(DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
+		if(positions!=null){
+			this.intersectionLayout.setInitializer(positions);
+		}
 		this.verificationSnapshotIntersectionPanel.update(intersection);
 		this.verificationResultsIntersection.update(intersection);
 	}
 
 	@Override
-	public void updateVerificationResults(ModelCheckerParameters<S1, S> verificationResults,
-			DrawableIntBA<S1, T1,S,T, CONSTRAINTTRANSITIONFACTORY> intersection) {
+	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE> verificationResults,
+			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
 		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
@@ -354,27 +381,33 @@ public class View<S1 extends State,
 		this.setChanged();
 		
 		if(e.getSource().equals(this.saveSpecificationMenuItem) || e.getSource().equals(this.saveClaimButton)){
-			this.notifyObservers(new SaveSpecification(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new SaveSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
 			this.saveClaimButton.setFocusPainted(false);
 		}
 		if(e.getSource().equals(this.openSpecificationMenuItem) || e.getSource().equals(this.openClaimButton)){
-			this.notifyObservers(new LoadSpecification(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 			this.openClaimButton.setFocusPainted(false);
 		}
 		if(e.getSource().equals(this.saveModelMenuItem) || e.getSource().equals(this.saveModelButton)){
-			this.notifyObservers(new SaveModel(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new SaveModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
 			this.saveModelButton.setFocusPainted(false);
 		}
 		if(e.getSource().equals(this.saveIntersectionButton)){
-			this.notifyObservers(new SaveIntersection(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new SaveIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
 			this.saveModelButton.setFocusPainted(false);
 		}
 		if(e.getSource().equals(this.openIntersectionButton)){
-			this.notifyObservers(new LoadIntersection(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 			this.saveModelButton.setFocusPainted(false);
 		}
 		if(e.getSource().equals(this.openModelMenuItem) || e.getSource().equals(this.openModelButton)){
-			this.notifyObservers(new LoadModel(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 			this.openModelButton.setFocusPainted(false);
 		}
 		if(e.getSource().equals(this.editItem) || e.getSource().equals(this.modelEditingButton)){
@@ -398,7 +431,8 @@ public class View<S1 extends State,
 			this.claimTransformingButton.setFocusable(true);
 		}
 		if(e.getSource().equals(this.checkItem) || e.getSource().equals(this.checkButton)){
-			this.notifyObservers(new CheckAction());
+			this.notifyObservers(new CheckAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
 		}
 		if(e.getSource().equals(this.ltlLoadClaimButton)){
 			String ltlFormula=JOptionPane.showInputDialog("Type the LTL formula\n "
@@ -407,7 +441,8 @@ public class View<S1 extends State,
 															+ "Boolean operators:  ! (negation) ->(implication) <-> (equivalence) &&  (and) ||  (or)\n"
 															+ "Temporal operators: []  (always) <>   (eventually) U   (until) V (realease) X   (next)");
 			
-			this.notifyObservers(new LoadClaimAction(ltlFormula));
+			this.notifyObservers(new LoadClaimAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(ltlFormula));
 			this.ltlLoadClaimButton.setFocusPainted(false);
 		}
 		

@@ -11,7 +11,10 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
 
+import java.awt.geom.Point2D;
 import java.util.Observer;
+
+import org.apache.commons.collections15.Transformer;
 
 public interface ViewInterface<
 	STATE extends State, 
@@ -21,9 +24,14 @@ public interface ViewInterface<
 	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>{
 
-	public void updateModel(DrawableIBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model);
-	public void updateSpecification(DrawableBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification);
-	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
+	/**
+	 * 
+	 * @param model
+	 */
+	public void updateModel(DrawableIBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions);
+	public void updateSpecification(DrawableBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
+	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions);
+	
 	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE> verificationResults,
 			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
 	public void addObserver(Observer o);

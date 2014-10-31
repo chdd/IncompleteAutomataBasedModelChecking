@@ -12,6 +12,7 @@ import java.io.Writer;
 
 import org.apache.commons.collections15.Transformer;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.io.GraphMLWriter;
 
 /**
@@ -35,11 +36,14 @@ public class BAWriter<
 	 */
 	protected AUTOMATON ba;
 	
+	protected AbstractLayout<STATE, TRANSITION> layout;
+	
 	/**
 	 * creates a new {@link BAWriter}
 	 */
-	public BAWriter(){
+	public BAWriter(AbstractLayout<STATE, TRANSITION> layout){
 		super();
+		this.layout=layout;
 	}
 	
 	/**
@@ -50,6 +54,8 @@ public class BAWriter<
 		this.addVertexData("name", "name", "", this.getStateNameTransformer());
 		this.addVertexData("initial", "initial", "false", this.getStateInitialTransformer());
 		this.addVertexData("accepting", "accepting", "false", this.getStateAcceptingTransformer());
+		this.addVertexData("x", "x position of the state", "0", new BAStateXPositionTransformer(layout));
+		this.addVertexData("y", "y position of the state", "0", new BAStateYPositionTransformer(layout));
 				
 		this.setEdgeIDs(this.getTransitionIdTransformer());
 		this.addEdgeData("DNFFormula", "DNFFormula", "", this.getTransitionDNFFormulaTransformer());
@@ -94,6 +100,9 @@ public class BAWriter<
 	protected Transformer<STATE, String> getStateInitialTransformer(){
 		return new BAStateInitialToStringTransformer(ba);
 	}
+	
+	
+	
 	
 	/**
 	 * returns a transformer that given a STATE returns the {@link String} "true" if it is accepting, "false" otherwise
@@ -199,6 +208,39 @@ public class BAWriter<
 		@Override
 		public String transform(STATE input) {
 			return Boolean.toString(ba.isAccept(input));
+		}
+	}
+	
+
+	protected class BAStateXPositionTransformer implements Transformer<STATE, String>  {
+
+		private  AbstractLayout<STATE, TRANSITION> vv;
+		public BAStateXPositionTransformer(AbstractLayout<STATE, TRANSITION> vv){
+			if(vv==null){
+				throw new NullPointerException("The vv cannot be null");
+			}
+			this.vv=vv;
+		}
+		
+		@Override
+		public String transform(STATE input) {
+			return Double.toString(this.vv.getX(input));
+		}
+	}
+	protected class BAStateYPositionTransformer implements Transformer<STATE, String>  {
+
+		private  AbstractLayout<STATE, TRANSITION> vv;
+		
+		public BAStateYPositionTransformer(AbstractLayout<STATE, TRANSITION> vv){
+			if(vv==null){
+				throw new NullPointerException("The vv cannot be null");
+			}
+			this.vv=vv;
+		}
+		
+		@Override
+		public String transform(STATE input) {
+			return Double.toString(this.vv.getY(input));
 		}
 	}
 }

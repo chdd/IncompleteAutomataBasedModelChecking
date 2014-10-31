@@ -11,6 +11,8 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import org.apache.commons.collections15.Transformer;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+
 public class IntBAWriter
 	<STATE extends State, 
 	TRANSITION extends LabelledTransition,
@@ -20,6 +22,11 @@ public class IntBAWriter
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
 	AUTOMATON extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
 		extends IBAWriter<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AUTOMATON>{
+
+	public IntBAWriter(
+			AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> layout) {
+		super(layout);
+	}
 
 	/**
 	 * sets the transformers of an {@link IntBAWriter}

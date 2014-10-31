@@ -24,15 +24,16 @@ import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections15.Transformer;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
 
 public class BuchiAutomatonJPanel<
-	S extends State, 
-	T extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<T>, 
-	A extends DrawableBA<S,T, TRANSITIONFACTORY>> extends AutomatonJPanel<S,T, TRANSITIONFACTORY,A>  {
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
+	A extends DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>> extends AutomatonJPanel<STATE,TRANSITION, TRANSITIONFACTORY,A>  {
 
 	/**
 	 * 
@@ -45,8 +46,8 @@ public class BuchiAutomatonJPanel<
 	 * @param a is the {@link BAImpl} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
-	public BuchiAutomatonJPanel(A a, ActionListener l){
-		super(a, l); 
+	public BuchiAutomatonJPanel(A a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout){
+		super(a, l, layout); 
 		this.setEditingMode();
 	}
 	
@@ -55,32 +56,32 @@ public class BuchiAutomatonJPanel<
 	}
 	
 	
-	protected BuchiAutomatonShapeTransformer<S,T, TRANSITIONFACTORY, A> getShapeTransformer(A a){
-		return new BuchiAutomatonShapeTransformer<S, T, TRANSITIONFACTORY, A>(a);
+	protected BuchiAutomatonShapeTransformer<STATE,TRANSITION, TRANSITIONFACTORY, A> getShapeTransformer(A a){
+		return new BuchiAutomatonShapeTransformer<STATE, TRANSITION, TRANSITIONFACTORY, A>(a);
 	}
 	
-	protected BuchiAutomatonStatePaintTransformer<S,T, TRANSITIONFACTORY, A> getPaintTransformer(A a){
-		return new BuchiAutomatonStatePaintTransformer<S,T, TRANSITIONFACTORY, A>(a);
+	protected BuchiAutomatonStatePaintTransformer<STATE,TRANSITION, TRANSITIONFACTORY, A> getPaintTransformer(A a){
+		return new BuchiAutomatonStatePaintTransformer<STATE,TRANSITION, TRANSITIONFACTORY, A>(a);
 	}
 	
 	
 
 	@Override
-	protected Transformer<T, Stroke> getStrokeEdgeStrokeTransformer() {
-		return new BuchiAutomatonEdgeStrokeTransormer<T>();
+	protected Transformer<TRANSITION, Stroke> getStrokeEdgeStrokeTransformer() {
+		return new BuchiAutomatonEdgeStrokeTransormer<TRANSITION>();
 	}
 
 	@Override
-	protected Transformer<S, Stroke> getStateStrokeTransformer(A a) {
-		return new BuchiAutomatonStateStrokeTransofmer<S, T, TRANSITIONFACTORY, A>(a);
+	protected Transformer<STATE, Stroke> getStateStrokeTransformer(A a) {
+		return new BuchiAutomatonStateStrokeTransofmer<STATE, TRANSITION, TRANSITIONFACTORY, A>(a);
 	}
 
 	@Override
 	public void setEditingMode() {
 		
-		LabelledTransitionFactory<T> tf=(LabelledTransitionFactory<T>) new LabelledTransitionFactoryImpl();
-		EditingModalGraphMouse<S,T> gm = new EditingModalGraphMouse<S,T>(this.getRenderContext(), 
-                new StateFactory<S>(), tf); 
+		LabelledTransitionFactory<TRANSITION> tf=(LabelledTransitionFactory<TRANSITION>) new LabelledTransitionFactoryImpl();
+		EditingModalGraphMouse<STATE,TRANSITION> gm = new EditingModalGraphMouse<STATE,TRANSITION>(this.getRenderContext(), 
+                new StateFactory<STATE>(), tf); 
 		this.setGraphMouse(gm);
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);

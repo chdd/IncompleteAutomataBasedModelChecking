@@ -6,7 +6,6 @@ import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.Collection;
@@ -21,33 +20,43 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
-public class LTLtoBATransformer implements Transformer<String, BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>> {
+public class LTLtoBATransformer<
+	STATE extends State,
+	STATEFACTORY extends StateFactory<STATE>,
+	TRANSITION extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> implements Transformer<String, BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>> {
 
-	private StateFactory<State> factory=new StateFactory<State>();
-	private LabelledTransitionFactoryImpl transitionFactory=new LabelledTransitionFactoryImpl();
+	private STATEFACTORY stateFactory;
+	private TRANSITIONFACTORY transitionFactory;
+	
+	public LTLtoBATransformer(STATEFACTORY stateFactory,TRANSITIONFACTORY transitionFactory){
+		this.transitionFactory=transitionFactory;
+		this.stateFactory=stateFactory;
+		
+	}
 	
 	@Override
-	public BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> transform(String input) {
+	public BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> transform(String input) {
 		
-		BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> ba=new BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>(new LabelledTransitionFactoryImpl());
+		BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> ba=new BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>(transitionFactory);
 		
-		Map<IState, State> map=new HashMap<IState, State>();
+		Map<IState, STATE> map=new HashMap<IState, STATE>();
 		
 		LTL2BA4J.formulaToBA(input);
 		Collection<ITransition> transitions=LTL2BA4J.formulaToBA(input);
 		
 		for(ITransition t: transitions){
 			 if(!map.containsKey(t.getSourceState())){
-				State s=factory.create(t.getSourceState().getLabel());
+				 STATE s=stateFactory.create(t.getSourceState().getLabel());
 				map.put(t.getSourceState(), s);
 			 }
 			 if(!map.containsKey(t.getTargetState())){
-				State s=factory.create(t.getTargetState().getLabel());
+				 STATE s=stateFactory.create(t.getTargetState().getLabel());
 				map.put(t.getTargetState(), s);
 			 }
 		}
 		
-		for(Entry<IState, State> e: map.entrySet()){
+		for(Entry<IState, STATE> e: map.entrySet()){
 			ba.addVertex(e.getValue());
 			if(e.getKey().isInitial()){
 				ba.addInitialState(e.getValue());

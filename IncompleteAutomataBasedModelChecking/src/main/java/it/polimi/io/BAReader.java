@@ -8,7 +8,10 @@ import it.polimi.model.interfaces.automata.BAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.antlr.v4.runtime.atn.Transition;
 import org.apache.commons.collections15.Factory;
@@ -50,6 +53,8 @@ public class BAReader<
 	 */
 	protected AUTOMATON ba;
 	
+	protected Map<STATE, Point2D> statesandlocations;
+	
 	/**
 	 * creates a new {@link BAReader} which can be used to load the {@link DrawableBA}
 	 * @param transitionFactory is the {@link Factory} which is used to crate the {@link LabelledTransition}s
@@ -75,6 +80,7 @@ public class BAReader<
 		if(fileReader==null){
 			throw new NullPointerException("The fileReader cannot be null");
 		}
+		this.statesandlocations=new HashMap<STATE, Point2D>();
 		
 		this.ba=automatonFactory.create();
 		
@@ -104,7 +110,7 @@ public class BAReader<
 		if(stateFactory==null){
 			throw new NullPointerException("The stateFactory cannot be null");
 		}
-		return new BAMetadataStateTransformer(ba, stateFactory); 
+		return new BAMetadataStateTransformer(ba, this.statesandlocations, stateFactory); 
 	}
 
 	/**
@@ -115,6 +121,15 @@ public class BAReader<
 	public AUTOMATON readGraph() throws GraphIOException {
 		return this.graphReader.readGraph();
 	}
+	
+	public Transformer<STATE, Point2D> getStatePositionTransformer(){
+		if(!this.statesandlocations.isEmpty()){
+			return new StatePositionTransformer(this.statesandlocations);
+		}
+		return null;
+	}
+	
+	
 		
 	/**
 	 * contains the {@link Transformer} that given the {@link HyperEdgeMetadata} returns the corresponding {@link Transition}
@@ -167,6 +182,8 @@ public class BAReader<
 		 * contains the {@link DrawableBA} which must be updated by the {@link Transformer}
 		 */
 		protected AUTOMATON a;
+		
+		protected Map<STATE, Point2D> statesandlocations;
 
 		/**
 		 * creates a new BAMetadataStateTransformer
@@ -174,7 +191,7 @@ public class BAReader<
 		 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableBA}
 		 * @throws NullPointerException if the {@link DrawableBA} or the {@link StateFactory} is null
 		 */
-		public BAMetadataStateTransformer(AUTOMATON a, STATEFACTORY stateFactory) {
+		public BAMetadataStateTransformer(AUTOMATON a, Map<STATE, Point2D> statesandlocations, STATEFACTORY stateFactory) {
 			if(a==null){
 				throw new NullPointerException("The AUTOMATON cannot be null");
 			}
@@ -183,6 +200,7 @@ public class BAReader<
 			}
 			this.stateFactory = stateFactory;
 			this.a=a;
+			this.statesandlocations=statesandlocations;
 		}
 
 		/**
@@ -202,6 +220,9 @@ public class BAReader<
 			}
 			if(Boolean.parseBoolean(input.getProperty("accepting"))){
 				this.a.addAcceptState(s);
+			}
+			if(input.getProperty("x")!=null && input.getProperty("y")!=null){
+				this.statesandlocations.put(s, new Point2D.Double(Double.parseDouble(input.getProperty("x")),Double.parseDouble(input.getProperty("y"))));
 			}
 			return s;
 		}
@@ -281,6 +302,36 @@ public class BAReader<
 				throw new NullPointerException("The input data cannot be null");
 			}
 			return ba;
+		}
+	}
+	
+	protected  class StatePositionTransformer implements Transformer<STATE, Point2D> {
+		
+		Map<STATE, Point2D> statesandlocations;
+		
+		/**
+		 * creates the new {@link Transformer}
+		 * @param ba is the {@link DrawableBA} that must be updated by the Transforming procedure
+		 * @throws NullPointerException if the ba is null
+		 */
+		public StatePositionTransformer(Map<STATE, Point2D> statesandlocations){
+			if(statesandlocations==null){
+				throw new NullPointerException("The be cannot be null");
+			}
+			this.statesandlocations=statesandlocations;
+		}
+		
+		/**
+		 * transforms the {@link GraphMetadata} into the corresponding {@link DrawableBA} 
+		 * @param input the {@link GraphMetadata} which corresponds to the {@link DrawableBA}
+		 * @throws NullPointerException if the input is null
+		 */
+		@Override
+		public Point2D transform(STATE input) {
+			if(input==null){
+				throw new NullPointerException("The input data cannot be null");
+			}
+			return this.statesandlocations.get(input);
 		}
 	}
 }

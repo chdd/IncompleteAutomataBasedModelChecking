@@ -7,6 +7,7 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import org.apache.commons.collections15.Transformer;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.io.GraphMLWriter;
 
 /**
@@ -24,6 +25,10 @@ public class IBAWriter<
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
 	AUTOMATA extends DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY>>
 	extends BAWriter<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATA> {
+
+	public IBAWriter(AbstractLayout<STATE, TRANSITION> layout) {
+		super(layout);
+	}
 
 	/**
 	 * sets the {@link Transformer}s of the {@link DrawableIBA}

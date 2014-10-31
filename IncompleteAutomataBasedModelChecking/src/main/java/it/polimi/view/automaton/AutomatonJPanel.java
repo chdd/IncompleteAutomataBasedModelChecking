@@ -16,7 +16,7 @@ import javax.swing.BorderFactory;
 
 import org.apache.commons.collections15.Transformer;
 
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
@@ -40,8 +40,10 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<T>, A extends DrawableBA<S,T
 	
 	protected ActionListener view;
 	
-	public AutomatonJPanel(A  a, ActionListener view){
-		super(new FRLayout<S,T>(a));
+
+	
+	public AutomatonJPanel(A  a, ActionListener view, AbstractLayout<S, T> layout){
+		super(layout);
 		
 		this.view=view;
 		

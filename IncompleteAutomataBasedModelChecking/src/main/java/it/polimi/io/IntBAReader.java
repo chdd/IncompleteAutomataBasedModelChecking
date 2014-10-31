@@ -13,7 +13,9 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
+import java.util.Map;
 
 import org.antlr.v4.runtime.atn.Transition;
 import org.apache.commons.collections15.Factory;
@@ -63,7 +65,7 @@ public class IntBAReader
 		if(stateFactory==null){
 			throw new NullPointerException("The stateFactory cannot be null");
 		}
-		return new IntBAMetadataStateTransformer(this.ba, stateFactory); 
+		return new IntBAMetadataStateTransformer(this.ba, this.statesandlocations, stateFactory); 
 	}
 	
 	/**
@@ -80,8 +82,8 @@ public class IntBAReader
 		 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableIBA}
 		 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactory} is null
 		 */
-		public IntBAMetadataStateTransformer(AUTOMATON a, INTERSECTIONSTATEFACTORY transitionFactory) {
-			super(a, transitionFactory);
+		public IntBAMetadataStateTransformer(AUTOMATON a, Map<INTERSECTIONSTATE, Point2D> statesandlocations, INTERSECTIONSTATEFACTORY transitionFactory) {
+			super(a, statesandlocations, transitionFactory);
 		}
 
 		/**
@@ -91,20 +93,8 @@ public class IntBAReader
 		 */
 		@Override
 		public INTERSECTIONSTATE transform(NodeMetadata input) {
-			if(input==null){
-				throw new NullPointerException("The NodeMetadata to be converted into a State cannot be null");
-			}
+			INTERSECTIONSTATE s=super.transform(input);
 			
-			INTERSECTIONSTATE s=this.stateFactory.create(input.getProperty("name"), Integer.parseInt(input.getId()));
-			if(Boolean.parseBoolean(input.getProperty("initial"))){
-				this.a.addInitialState(s);
-			}
-			if(Boolean.parseBoolean(input.getProperty("accepting"))){
-				this.a.addAcceptState(s);
-			}
-			if(Boolean.parseBoolean(input.getProperty("transparent"))){
-				this.a.addTransparentState(s);
-			}
 			if(Boolean.parseBoolean(input.getProperty("mixed"))){
 				this.a.addMixedState(s);
 			}
