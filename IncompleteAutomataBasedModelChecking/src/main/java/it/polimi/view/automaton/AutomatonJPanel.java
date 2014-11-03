@@ -5,7 +5,6 @@ import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.view.trasformers.ShowEdgeArrowsPredicate;
 
 import java.awt.Color;
 import java.awt.Paint;
@@ -15,16 +14,18 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 
+import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
-import edu.uci.ics.jung.visualization.renderers.Renderer;
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 /**
  * visualizes the automaton
@@ -60,20 +61,22 @@ public abstract class AutomatonJPanel
 	}
 	
 	public void setTransformers(BA  a){
+		// vertex
+		this.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
 		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
 		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
-		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
+		
 		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
 		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
 		
+		// edges
 		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<TRANSITION>());
-		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate<STATE, TRANSITION>(true, false));
+		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate(true, false));
 		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
 		
-		this.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.S);
 		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
-		this.getRenderContext().setLabelOffset(20);
+		this.getRenderContext().setLabelOffset(40);
 		
 	}
 	
@@ -102,4 +105,25 @@ public abstract class AutomatonJPanel
 	
 	
 	protected abstract Transformer<STATE,Paint> getPaintTransformer(BA a);
+	
+	
+	public class ShowEdgeArrowsPredicate implements Predicate<Context<Graph<STATE, TRANSITION>, TRANSITION>> {
+		
+		protected boolean show_d;
+		protected boolean show_u;
+	
+		public ShowEdgeArrowsPredicate(boolean show_d, boolean show_u)
+		{
+			this.show_d = show_d;
+			this.show_u = show_u;
+		}
+	
+		@Override
+		public boolean evaluate(Context<Graph<STATE, TRANSITION>, TRANSITION> context) {
+			if (show_d) {
+				return true;
+			}
+			return false;
+		}
+	}
 }

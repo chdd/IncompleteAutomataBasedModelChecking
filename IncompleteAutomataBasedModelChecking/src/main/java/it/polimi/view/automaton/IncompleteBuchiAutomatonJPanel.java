@@ -6,9 +6,9 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.IBAStateMenu;
-import it.polimi.view.trasformers.IncompleteBuchiAutomatonPaintTransformer;
-import it.polimi.view.trasformers.ba.BuchiAutomatonStatePaintTransformer;
 
+import java.awt.Color;
+import java.awt.Paint;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPopupMenu;
@@ -31,10 +31,25 @@ IBA extends DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> extends BuchiAutom
 		 super(a, l, layout);
 	}
 	
-	protected BuchiAutomatonStatePaintTransformer<STATE,TRANSITION, TRANSITIONFACTORY, IBA> getPaintTransformer(IBA a){
-		return new IncompleteBuchiAutomatonPaintTransformer<STATE, TRANSITION, TRANSITIONFACTORY, IBA>(a);
+	protected BuchiAutomatonStatePaintTransformer getPaintTransformer(IBA a){
+		return new IncompleteBuchiAutomatonPaintTransformer(a);
 	}
 	protected JPopupMenu getStateMenu(){
 		 return new IBAStateMenu(view);
+	}
+	
+	public class IncompleteBuchiAutomatonPaintTransformer extends BuchiAutomatonStatePaintTransformer {
+
+		public IncompleteBuchiAutomatonPaintTransformer(IBA a) {
+			super(a);
+		}
+		
+		@Override
+		public Paint transform(STATE input) {
+			if(a.isTransparent(input)){
+				return Color.GRAY;
+			}
+			return Color.WHITE;
+		}
 	}
 }

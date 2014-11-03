@@ -9,14 +9,17 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
-import it.polimi.view.trasformers.ba.BuchiAutomatonEdgeStrokeTransormer;
-import it.polimi.view.trasformers.ba.BuchiAutomatonShapeTransformer;
-import it.polimi.view.trasformers.ba.BuchiAutomatonStatePaintTransformer;
-import it.polimi.view.trasformers.ba.BuchiAutomatonStateStrokeTransofmer;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Paint;
+import java.awt.Polygon;
+import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.ActionListener;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -60,12 +63,12 @@ public class BuchiAutomatonJPanel
 	}
 	
 	
-	protected BuchiAutomatonShapeTransformer<STATE,TRANSITION, TRANSITIONFACTORY, BA> getShapeTransformer(BA a){
-		return new BuchiAutomatonShapeTransformer<STATE, TRANSITION, TRANSITIONFACTORY,BA>(a);
+	protected BuchiAutomatonShapeTransformer getShapeTransformer(BA a){
+		return new BuchiAutomatonShapeTransformer(a);
 	}
 	
-	protected BuchiAutomatonStatePaintTransformer<STATE,TRANSITION, TRANSITIONFACTORY, BA> getPaintTransformer(BA a){
-		return new BuchiAutomatonStatePaintTransformer<STATE,TRANSITION, TRANSITIONFACTORY, BA>(a);
+	protected BuchiAutomatonStatePaintTransformer getPaintTransformer(BA a){
+		return new BuchiAutomatonStatePaintTransformer(a);
 	}
 	
 	
@@ -77,7 +80,7 @@ public class BuchiAutomatonJPanel
 
 	@Override
 	protected Transformer<STATE, Stroke> getStateStrokeTransformer(BA a) {
-		return new BuchiAutomatonStateStrokeTransofmer<STATE, TRANSITION, TRANSITIONFACTORY, BA>(a);
+		return new BuchiAutomatonStateStrokeTransofmer(a);
 	}
 
 	@Override
@@ -101,5 +104,93 @@ public class BuchiAutomatonJPanel
         this.setGraphMouse(gm);	
      }
 	
+	public class BuchiAutomatonStatePaintTransformer implements Transformer<STATE, Paint> {
 	
+		protected BA a;
+		
+		public BuchiAutomatonStatePaintTransformer(BA a){
+			this.a=a;
+		}
+		@Override
+		public Paint transform(STATE input) {
+			return Color.WHITE;
+		}
+
+	}
+	
+	public class BuchiAutomatonEdgeStrokeTransormer<T extends LabelledTransition> implements Transformer<T, Stroke>{
+
+		@Override
+		public Stroke transform(T input) {
+			return new BasicStroke();
+		}
+	}
+	
+	public class BuchiAutomatonShapeTransformer implements Transformer<STATE, Shape>{
+
+	private final int stateRadius=30;
+	
+	protected BA a;
+	
+	public BuchiAutomatonShapeTransformer(BA a){
+		this.a=a;
+	}
+
+	@Override
+	public Shape transform(STATE input) {
+		if(a.isAccept(input) && a.isInitial(input)){
+			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
+			ret.subtract(new Area(new Ellipse2D.Float(-stateRadius+2, -stateRadius+2, stateRadius*2-4, stateRadius*2-4)));
+			ret.add(new Area(new Ellipse2D.Float(-stateRadius+3, -stateRadius+3, stateRadius*2-6, stateRadius*2-6)));
+			Polygon p=new Polygon();
+			p.addPoint(11,  14);
+			p.addPoint(7, 7);
+			p.addPoint(14,  11);
+			
+			Polygon p2=new Polygon();
+			p.addPoint(13,  14);
+			p.addPoint(9, 9);
+			p.addPoint(14,  13);
+			ret.add(new Area(p));
+			ret.subtract(new Area(p2));
+			return ret;
+		}
+		if(a.isAccept(input)){
+			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
+			ret.subtract(new Area(new Ellipse2D.Float(-stateRadius+2, -stateRadius+2, stateRadius*2-4, stateRadius*2-4)));
+			ret.add(new Area(new Ellipse2D.Float(-stateRadius+3, -stateRadius+3, stateRadius*2-6, stateRadius*2-6)));
+			
+			return ret;
+		}
+		if(a.isInitial(input)){
+			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
+			Polygon p=new Polygon();
+			p.addPoint(11,  14);
+			p.addPoint(7, 7);
+			p.addPoint(14,  11);
+			
+			Polygon p2=new Polygon();
+			p.addPoint(13,  14);
+			p.addPoint(9, 9);
+			p.addPoint(14,  13);
+			ret.add(new Area(p));
+			ret.subtract(new Area(p2));
+			return ret;
+		}
+		else return new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
+	}
+	}
+	public class BuchiAutomatonStateStrokeTransofmer implements Transformer<STATE, Stroke> {
+
+		protected BA a;
+	
+		public BuchiAutomatonStateStrokeTransofmer(BA a){
+		this.a=a;
+		}
+	
+		@Override
+		public Stroke transform(STATE input) {
+			return new BasicStroke();
+		}
+	}
 }
