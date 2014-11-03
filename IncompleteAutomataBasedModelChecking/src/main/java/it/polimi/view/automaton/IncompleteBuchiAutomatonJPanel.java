@@ -6,8 +6,8 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.IBAStateMenu;
-import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
 import it.polimi.view.trasformers.IncompleteBuchiAutomatonPaintTransformer;
+import it.polimi.view.trasformers.ba.BuchiAutomatonStatePaintTransformer;
 
 import java.awt.event.ActionListener;
 

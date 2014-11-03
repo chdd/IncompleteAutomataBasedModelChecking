@@ -1,4 +1,4 @@
-package it.polimi.view.trasformers;
+package it.polimi.view.trasformers.ba;
 
 import it.polimi.model.impl.transitions.LabelledTransition;
 

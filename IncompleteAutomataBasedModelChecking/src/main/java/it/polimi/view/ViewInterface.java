@@ -32,7 +32,7 @@ public interface ViewInterface<
 	public void updateSpecification(DrawableBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
 	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions);
 	
-	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE> verificationResults,
+	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
 			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
 	public void addObserver(Observer o);
 

@@ -4,13 +4,17 @@ import java.util.Stack;
 
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
  * @author Claudio Menghi
  * contains the report of the model checking parameters
  */
-public class ModelCheckerParameters<S extends State, S1 extends IntersectionState<S>> {
+public class ModelCheckerParameters
+	<STATE extends State, 
+	INTERSECTIONSTATE extends IntersectionState<STATE>,
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>> {
 	
 
 	/**
@@ -48,9 +52,11 @@ public class ModelCheckerParameters<S extends State, S1 extends IntersectionStat
 	/**
 	 * contains the constraint computed by the model checking procedure
 	 */
-	private Constraint<S> constraint;
+	private Constraint<STATE> constraint;
 	
-	private Stack<S1> violatingPath;
+	private Stack<INTERSECTIONSTATE> violatingPath;
+	
+	private Stack<INTERSECTIONTRANSITION> violatingPathTransitions;
 	
 	private double totalTime;
 	
@@ -108,6 +114,7 @@ public class ModelCheckerParameters<S extends State, S1 extends IntersectionStat
 		this.setNumInitialStatesIntersection(0);
 		this.setNumMixedStatesIntersection(0);
 		this.setTotalTime(0);
+		this.violatingPathTransitions=new Stack<INTERSECTIONTRANSITION>();
 	}
 	
 	public void reset(){
@@ -126,6 +133,7 @@ public class ModelCheckerParameters<S extends State, S1 extends IntersectionStat
 		this.setNumAcceptingStatesIntersection(0);
 		this.setNumInitialStatesIntersection(0);
 		this.setNumMixedStatesIntersection(0);
+		this.violatingPathTransitions=new Stack<INTERSECTIONTRANSITION>();
 	}
 
 	/**
@@ -377,29 +385,42 @@ public class ModelCheckerParameters<S extends State, S1 extends IntersectionStat
 	/**
 	 * @return the constraint
 	 */
-	public Constraint<S> getConstraint() {
+	public Constraint<STATE> getConstraint() {
 		return constraint;
 	}
 
 	/**
 	 * @param constraint the constraint to set
 	 */
-	public void setConstraint(Constraint<S> constraint) {
+	public void setConstraint(Constraint<STATE> constraint) {
 		this.constraint = constraint;
 	}
 
 	/**
 	 * @return the violatingPath
 	 */
-	public Stack<S1> getViolatingPath() {
+	public Stack<INTERSECTIONSTATE> getViolatingPath() {
 		return violatingPath;
+	}
+	
+	/**
+	 * @return the violatingPath
+	 */
+	public Stack<INTERSECTIONTRANSITION> getViolatingPathTransitions() {
+		return this.violatingPathTransitions;
 	}
 
 	/**
 	 * @param violatingPath the violatingPath to set
 	 */
-	public void setViolatingPath(Stack<S1> violatingPath) {
+	public void setViolatingPath(Stack<INTERSECTIONSTATE> violatingPath) {
 		this.violatingPath = violatingPath;
+	}
+	/**
+	 * @param violatingPath the violatingPath to set
+	 */
+	public void setViolatingPathTransitions(Stack<INTERSECTIONTRANSITION> violatingPathTransitions) {
+		this.violatingPathTransitions = violatingPathTransitions;
 	}
 
 	

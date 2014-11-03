@@ -54,7 +54,7 @@ public class PerformanceEvaluator{
 
 	public static void main(String args[]) throws  IOException, GraphIOException {
 		
-		ModelCheckerParameters<State, IntersectionState<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>>();
+		ModelCheckerParameters<State, IntersectionState<State>, ConstrainedTransition<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>, ConstrainedTransition<State>>();
 		
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
 			
@@ -98,12 +98,13 @@ public class PerformanceEvaluator{
 					
 					DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> a2=baReader.readGraph();
 					
-					ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-					LabelledTransitionFactory<LabelledTransition>,
+					ModelChecker<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, IntersectionState<State>, ConstrainedTransition<State>,
 					ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> mc=
-					new ModelChecker<State, LabelledTransition, IntersectionState<State>, ConstrainedTransition<State>,
-					LabelledTransitionFactory<LabelledTransition>,
-					ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(a1, a2, mp);
+							new ModelChecker<State, 
+								LabelledTransition, 
+								LabelledTransitionFactory<LabelledTransition>,
+								IntersectionState<State>, ConstrainedTransition<State>,
+								ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(a1, a2, mp);
 					mc.check();
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());

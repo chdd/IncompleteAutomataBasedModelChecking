@@ -126,6 +126,7 @@ public class DNFFormula {
 		if(formula==null){
 			throw new NullPointerException("The formula cannot be null");
 		}
+		
 		DNFFormula ret=new DNFFormula();
 		formula+=orSimbol;
 		String[] andClauses=formula.split(Pattern.quote(orSimbol));

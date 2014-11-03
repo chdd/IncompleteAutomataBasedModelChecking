@@ -1,4 +1,4 @@
-package it.polimi.view.trasformers;
+package it.polimi.view.trasformers.ba;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
@@ -13,21 +13,21 @@ import java.awt.geom.Ellipse2D;
 import org.apache.commons.collections15.Transformer;
 
 public class BuchiAutomatonShapeTransformer<
-	S extends State, 
-	T extends LabelledTransition,
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T>,
-	A extends DrawableBA<S, T, LABELLEDTRANSITIONFACTORY>> implements Transformer<S, Shape>{
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	BA extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>> implements Transformer<STATE, Shape>{
 
 	private final int stateRadius=10;
 	
-	protected A a;
+	protected BA a;
 	
-	public BuchiAutomatonShapeTransformer(A a){
+	public BuchiAutomatonShapeTransformer(BA a){
 		this.a=a;
 	}
 
 	@Override
-	public Shape transform(S input) {
+	public Shape transform(STATE input) {
 		if(a.isAccept(input) && a.isInitial(input)){
 			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
 			ret.subtract(new Area(new Ellipse2D.Float(-stateRadius+2, -stateRadius+2, stateRadius*2-4, stateRadius*2-4)));

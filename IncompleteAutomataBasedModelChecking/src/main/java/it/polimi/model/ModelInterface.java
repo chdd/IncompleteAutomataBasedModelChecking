@@ -133,7 +133,7 @@ public interface ModelInterface<
 
 	public void check();
 	
-	public ModelCheckerParameters<STATE, INTERSECTIONSTATE> getVerificationResults();
+	public ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
 	
 	public void loadClaimFromLTL(String ltlFormula);
 }

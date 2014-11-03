@@ -7,29 +7,31 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.view.trasformers.ba.BuchiAutomatonStatePaintTransformer;
 
 import java.awt.Color;
 import java.awt.Paint;
 import java.util.Stack;
 
 public class HighlighPathPaintTransformer<
-	S1 extends State, 
-	T1 extends LabelledTransition,
-	S extends IntersectionState<S1>, 
-	T extends ConstrainedTransition<S1>, 
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T1>,
-	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<S1, T>,
-	A  extends DrawableIntBA<S1, T1, S, T, CONSTRAINEDTRANSITIONFACTORY>> extends BuchiAutomatonStatePaintTransformer<S,T, CONSTRAINEDTRANSITIONFACTORY, A> {
+	STATE extends State, 
+	TRANSITION extends LabelledTransition,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	INTERSECTIONSTATE extends IntersectionState<STATE>, 
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
+	INTERSECTIONAUTOMATON  extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> 
+	extends BuchiAutomatonStatePaintTransformer<INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, INTERSECTIONAUTOMATON> {
 
-	private Stack<S> states;
+	private Stack<INTERSECTIONSTATE> states;
 	
-	public HighlighPathPaintTransformer(A a, Stack<S> states) {
+	public HighlighPathPaintTransformer(INTERSECTIONAUTOMATON a, Stack<INTERSECTIONSTATE> states) {
 		super(a);
 		this.states=states;
 	}
 	
 	@Override
-	public Paint transform(S input) {
+	public Paint transform(INTERSECTIONSTATE input) {
 		
 		if(this.states!=null){
 			if(this.states.contains(input)){

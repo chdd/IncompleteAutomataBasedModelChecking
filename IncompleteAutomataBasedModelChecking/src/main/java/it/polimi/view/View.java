@@ -432,12 +432,12 @@ public class View<STATE extends State,
 	}
 
 	@Override
-	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE> verificationResults,
+	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
 			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
 		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
-			this.intersectionPanel.highlightPath(verificationResults.getViolatingPath(), intersection);
+			this.intersectionPanel.highlightPath(verificationResults.getViolatingPath(), intersection, verificationResults.getViolatingPathTransitions());
 		}
 		this.jframe.repaint();
 	}

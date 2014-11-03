@@ -110,13 +110,14 @@ public class IntBAImpl<
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
 	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isEmpty(ModelCheckerParameters<STATE, INTERSECTIONSTATE> mp){
+	public boolean isEmpty(ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
 		
 		if(super.isEmpty()){
 			return true;
 		}
 		if(this.completeEmptiness){
 			mp.setViolatingPath(this.stack);
+			mp.setViolatingPathTransitions(this.stacktransitions);
 		}
 		
 		return false;

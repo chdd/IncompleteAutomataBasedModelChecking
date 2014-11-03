@@ -2,6 +2,7 @@ package it.polimi.view.trasformers;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.ConstrainedTransition;
+import it.polimi.view.trasformers.ba.BuchiAutomatonEdgeStrokeTransormer;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

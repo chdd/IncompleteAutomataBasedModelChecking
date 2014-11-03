@@ -9,10 +9,10 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
-import it.polimi.view.trasformers.BuchiAutomatonEdgeStrokeTransormer;
-import it.polimi.view.trasformers.BuchiAutomatonShapeTransformer;
-import it.polimi.view.trasformers.BuchiAutomatonStatePaintTransformer;
-import it.polimi.view.trasformers.BuchiAutomatonStateStrokeTransofmer;
+import it.polimi.view.trasformers.ba.BuchiAutomatonEdgeStrokeTransormer;
+import it.polimi.view.trasformers.ba.BuchiAutomatonShapeTransformer;
+import it.polimi.view.trasformers.ba.BuchiAutomatonStatePaintTransformer;
+import it.polimi.view.trasformers.ba.BuchiAutomatonStateStrokeTransofmer;
 
 import java.awt.Dimension;
 import java.awt.Stroke;

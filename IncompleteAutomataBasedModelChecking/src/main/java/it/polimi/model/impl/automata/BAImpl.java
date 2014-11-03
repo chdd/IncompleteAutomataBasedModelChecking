@@ -279,6 +279,7 @@ public class BAImpl<
 	}
 	
 	protected Stack<STATE> stack;
+	protected Stack<TRANSITION> stacktransitions;
 	/**
 	 * returns true if the automaton is empty
 	 * @return true if the automaton is empty
@@ -286,7 +287,7 @@ public class BAImpl<
 	public boolean isEmpty(){
 		boolean res=true;
 		Set<STATE> visitedStates=new HashSet<STATE>();
-		
+		this.stacktransitions=new Stack<TRANSITION>();
 		for(STATE init: this.getInitialStates()){
 			stack=new Stack<STATE>();
 			if(firstDFS(visitedStates, init, stack)){
@@ -319,20 +320,25 @@ public class BAImpl<
 			if(this.isAccept(currState)){
 				for(TRANSITION t: this.getOutEdges(currState)){
 					
+					this.stacktransitions.add(t);
 					Stack<STATE> stackSecondDFS=new Stack<STATE>();
 					// I start the second DFS if the answer of the second DFS is true I return true
 					if(this.secondDFS(new HashSet<STATE>(), this.getDest(t), statesOfThePath, stackSecondDFS)){
 						statesOfThePath.addAll(stackSecondDFS);
 						return true;
 					}
+					this.stacktransitions.remove(t);
 				}
 			}
 			// otherwise, I check each transition that leaves the state currState
 			for(TRANSITION t: this.getOutEdges(currState)){
+				this.stacktransitions.add(t);
 				// I call the first DFS method, If the answer is true I return true
 				if(firstDFS(visitedStates, this.getDest(t), statesOfThePath)){
 					return true;
 				}
+				this.stacktransitions.remove(t);
+				
 			}
 			// I remove the state from the stack of the states of the current path
 			statesOfThePath.pop();
@@ -364,10 +370,12 @@ public class BAImpl<
 				// for each transition that leaves the current state
 				for(TRANSITION t: this.getOutEdges(currState)){
 					
+					this.stacktransitions.add(t);
 					// if the second DFS returns a true answer than the accepting path has been found
 					if(secondDFS(visitedStates, this.getDest(t), statesOfThePath, stackSecondDFS)){
 						return true;
 					}
+					this.stacktransitions.remove(t);
 				}
 				stackSecondDFS.pop();
 				// otherwise the path is not accepting

@@ -142,7 +142,7 @@ public class Model<
 		DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>> intBaReader;
 	
 	
-	private ModelCheckerParameters<STATE, INTERSECTIONSTATE> mp=new ModelCheckerParameters<STATE, INTERSECTIONSTATE>();
+	private ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
 	
 	
 	public Model(STATEFACTORY stateFactory, TRANSITIONFACTORY transitionFactory, INTERSECTIONSTATEFACTORY intersectionStateFactory, INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory){
@@ -329,18 +329,16 @@ public class Model<
 	
 	@Override
 	public void check(){
-		mp=new ModelCheckerParameters<STATE, INTERSECTIONSTATE>();
-		ModelChecker<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
-		TRANSITIONFACTORY,
+		mp=new ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+		ModelChecker<STATE, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE,INTERSECTIONTRANSITION,
 		INTERSECTIONTRANSITIONFACTORY> mc=new 
-		ModelChecker<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
-		TRANSITIONFACTORY,
+		ModelChecker<STATE, TRANSITION,TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
 		INTERSECTIONTRANSITIONFACTORY>(this.getModel(), this.getSpecification(), mp);
 		mc.check();
 		this.changeIntersection(mc.getIntersection());
 	}
 	
-	public ModelCheckerParameters<STATE, INTERSECTIONSTATE> getVerificationResults(){
+	public ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
 		return this.mp;
 	}
 	@Override
