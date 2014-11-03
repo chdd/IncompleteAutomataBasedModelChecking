@@ -51,7 +51,7 @@ public class IntersectionAutomatonJPanel
 	public void highlightPath(Stack<INTERSECTIONSTATE> states, INTERSECTIONAUTOMATON a, Stack<INTERSECTIONTRANSITION> stackViolatingTransitions){
 		this.setTransformers(a);
 		
-		this.getRenderContext().setEdgeFillPaintTransformer(
+		this.getRenderContext().setEdgeDrawPaintTransformer(
 				new BuchiAutomatonTransitionPaintTransformer(a, stackViolatingTransitions));
 		this.getRenderContext().setVertexFillPaintTransformer(
 				new HighlighPathPaintTransformer<STATE, 

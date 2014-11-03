@@ -388,6 +388,16 @@ public class Model<
 		this.intersection=this.intBaReader.readGraph();
 		return this.intBaReader.getStatePositionTransformer();
 	}
+
+	@Override
+	public void newModel() {
+		this.model=new IBAImpl<STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
+	}
+
+	@Override
+	public void newClaim() {
+		this.specification=new BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
+	}
 	
 	
 }

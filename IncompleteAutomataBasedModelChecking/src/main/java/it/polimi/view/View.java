@@ -2,6 +2,8 @@ package it.polimi.view;
 
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
+import it.polimi.controller.actions.createnew.NewClaim;
+import it.polimi.controller.actions.createnew.NewModel;
 import it.polimi.controller.actions.file.loading.LoadIntersection;
 import it.polimi.controller.actions.file.loading.LoadModel;
 import it.polimi.controller.actions.file.loading.LoadSpecification;
@@ -25,6 +27,7 @@ import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -49,6 +52,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -66,11 +70,13 @@ public class View<STATE extends State,
 			extends Observable implements ViewInterface<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
 
 	// Icons
+	
+	private final ImageIcon newIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-new.png"));
 	private final ImageIcon openIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-open.png"));
 	private final ImageIcon saveIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/devices/media-floppy.png"));
 	private final ImageIcon ltlIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/devices/input-keyboard.png"));
-	private final ImageIcon developmentIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/categories/applications-office.png"));
-	private final ImageIcon editIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/view-fullscreen.png"));
+	private final ImageIcon editingIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/categories/applications-office.png"));
+	private final ImageIcon trasformingIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/view-fullscreen.png"));
 	private final ImageIcon checkIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/categories/applications-system.png"));
 	
 	// Messages
@@ -84,66 +90,96 @@ public class View<STATE extends State,
 			+ "MouseButtonOne+ctrl(or Command)+drag to shear the display<br>"
 			+ "Position the mouse on a state and press p to enter the state selection mode that allows to move the states<br>"
 			+ "Press t to exit the state selection mode<br></html>";
+	private final String ltlLoadingMessage="<html>Loads the claim form an LTL formula</html>";
+	private final String checkingMessage="<html>Checks if the model satisfies, possibly satisfies or not satisfies the claim</html>";		
+	private final String newMessage="<html>Creates a new Model or Claims<br> in relation with the selected tab</html>";
+	private final String openMessage="<html>Load the Model, Claims or Intersection<br> in relation with the selected tab</html>";
+	private final String saveMessage="<html>Save the Model, Claims or Intersection<br> in relation with the selected tab</html>";
+	
+	
+	// ------------------------------------
 	// menuBar
+	// ------------------------------------
 	private JMenuBar menuBar;
-	private JMenu modelMenu;
+	
+	// file menu
+	private JMenu fileMenu;
+	private JMenuItem filenew;
+	private JMenuItem fileopen;
+	private JMenuItem filesave;
+	
+	private JMenuItem loadClaimFromLTLMenuItem;
+	
+	// edit menu
 	private JMenu editMenu;
-	private JMenuItem editItem;
+	private JMenuItem editModeMenu;
+	private JMenuItem transformingModeMenu;
 	
-	private JMenuItem trasformItem;
-	private JMenuItem checkItem;
+	//check menu
+	private JMenu checkMenu;
+	private JMenuItem runCheckerMenuItem;
 	
-	private JMenuItem openModelMenu;
-	private JMenuItem saveModelMenu;
-	private JMenuItem openClaimMenu;
-	private JMenuItem saveClaimMenu;
-	private JMenuItem openIntersectionMenu;
-	private JMenuItem saveIntersectionMenu;
+	// ------------------------------------
+	// instrumentBar
+	// ------------------------------------
+	private JToolBar instrumentBar;
+	
+	// file
+	private JButton saveButton;
+	private JButton openButton;
+	private JButton newButton;
+	
+	// from ltl
+	private JButton loadLTLButton;
+	
+	// editing
+	private JButton editingButton;
+	private JButton transformingButton;
+	
+	// checking
+	private JButton checkButton;
 	
 	
+	
+	// ------------------------------------
+	// tabs
+	// ------------------------------------
 	// model
-	private JButton openModelButton;
-	private JButton saveModelButton;
-	private JButton modelEditingButton;
-	private JButton modelTrasformingButton;
+	private JComponent modelTab;
 	private IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> modelTabmodel;
 	private AbstractLayout<STATE, TRANSITION> modelLayout;
 	
 	
 	// claim
-	private JButton openClaimButton;
-	private JButton saveClaimButton;
-	private JButton ltlLoadClaimButton;
-	
-	private JButton claimEditingButton;
-	private JButton claimTransformingButton;
+	private JComponent claimTab;
 	private BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>>  claimTabClaimPanel;
 	private AbstractLayout<STATE, TRANSITION> claimLayout;
 	
 	
 	// Intersection
-	private JButton openIntersectionButton;
-	private JButton saveIntersectionButton;
-	private JButton checkButton;
+	private JComponent intersectionTab;
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionLayout;
-	
-	private IntersectionAutomatonJPanel
-		<STATE, 
-		STATEFACTORY,
-		TRANSITION, 
-		TRANSITIONFACTORY,
-		INTERSECTIONSTATE, 
-		INTERSECTIONSTATEFACTORY,
-		INTERSECTIONTRANSITION,
-		INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> intersectionPanel;
 	
 	private TextArea brzozowskiSystemArea;
 
 	// verification snapshot
+	private JComponent verificationSnapshotTab;
 	private AbstractLayout<STATE, TRANSITION> verificationModelLayout;
 	private AbstractLayout<STATE, TRANSITION> verificationClaimLayout;
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationIntersectionLayout;
 	
+	private JTabbedPane tabbedPane;
+	
+	private IntersectionAutomatonJPanel
+	<STATE, 
+	STATEFACTORY,
+	TRANSITION, 
+	TRANSITIONFACTORY,
+	INTERSECTIONSTATE, 
+	INTERSECTIONSTATEFACTORY,
+	INTERSECTIONTRANSITION,
+	INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> intersectionPanel;
+
 	
 	private IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>  verificationModelPanel;
 	private BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>>   verificationClaimPanel;
@@ -176,24 +212,24 @@ public class View<STATE extends State,
 		 this.createMenuBar(jframe);
 		 
 		 
-		 JTabbedPane tabbedPane = new JTabbedPane();
+		 tabbedPane = new JTabbedPane();
 		 tabbedPane.setSize(this.jframe.getContentPane().getSize());
 		 tabbedPane.setPreferredSize(this.jframe.getContentPane().getSize());
 		 
-		 JComponent modelTab = makeTextPanel("Model");
+		 modelTab = makeTextPanel("Model");
 		 tabbedPane.addTab("Model",modelTab);
 		 tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 		
-		 JComponent claimTab = makeTextPanel("Claim");
+		 claimTab = makeTextPanel("Claim");
 		 tabbedPane.addTab("Claim", claimTab);
 		 tabbedPane.setMnemonicAt(1, KeyEvent.VK_3);
 		 
 		 
-		 JComponent intersectionTab= makeTextPanel("Intersection");
+		 intersectionTab= makeTextPanel("Intersection");
 		 tabbedPane.addTab("Intersection", intersectionTab);
 		 tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 
-		 JComponent verificationSnapshotTab = makeTextPanel("Verification");
+		 verificationSnapshotTab = makeTextPanel("Verification");
 		 tabbedPane.addTab("Verification", verificationSnapshotTab);
 		 tabbedPane.setMnemonicAt(3, KeyEvent.VK_1);
 		 verificationSnapshotTab.setLayout(new BoxLayout(verificationSnapshotTab,BoxLayout.X_AXIS));
@@ -219,29 +255,8 @@ public class View<STATE extends State,
 		 modelTab.setLayout(new BoxLayout(modelTab, BoxLayout.PAGE_AXIS));
 		 JPanel containerModelMenu=new JPanel();
 		 containerModelMenu.setLayout(new BoxLayout(containerModelMenu, BoxLayout.X_AXIS));
+		  
 		 
-		 this.openModelButton=new JButton(openIcon);
-		 this.openModelButton.addActionListener(this);
-		 this.openModelButton.setFocusPainted(false);
-		 containerModelMenu.add(this.openModelButton);
-		 
-		 this.saveModelButton=new JButton(saveIcon);
-		 this.saveModelButton.addActionListener(this);
-		 this.saveModelButton.setFocusPainted(false);
-		 containerModelMenu.add(saveModelButton);
-		 
-		 this.modelEditingButton=new JButton(this.developmentIcon);
-		 this.modelEditingButton.addActionListener(this);
-		 this.modelEditingButton.setFocusPainted(true);
-		 this.modelEditingButton.setToolTipText(this.editingMessage);
-		 containerModelMenu.add(this.modelEditingButton);
-		 
-		 this.modelTrasformingButton=new JButton(this.editIcon);
-		 this.modelTrasformingButton.addActionListener(this);
-		 this.modelTrasformingButton.setFocusPainted(false);
-		 this.modelTrasformingButton.setToolTipText(this.transorfmingMessage);
-		 
-		 containerModelMenu.add(this.modelTrasformingButton);
 		 modelTab.add(containerModelMenu);
 		 this.modelLayout=new FRLayout<STATE,TRANSITION>(model);
 		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
@@ -255,32 +270,6 @@ public class View<STATE extends State,
 		 JPanel containerClaimMenu=new JPanel();
 		 containerClaimMenu.setLayout(new BoxLayout(containerClaimMenu, BoxLayout.X_AXIS));
 		 
-		 this.openClaimButton=new JButton(openIcon);
-		 this.openClaimButton.addActionListener(this);
-		 this.openClaimButton.setFocusPainted(false);
-		 containerClaimMenu.add(this.openClaimButton);
-		 
-		 this.saveClaimButton=new JButton(saveIcon);
-		 this.saveClaimButton.addActionListener(this);
-		 this.saveClaimButton.setFocusPainted(false);
-		 containerClaimMenu.add(this.saveClaimButton);
-		
-		 this.ltlLoadClaimButton=new JButton(this.ltlIcon);
-		 this.ltlLoadClaimButton.addActionListener(this);
-		 this.ltlLoadClaimButton.setFocusPainted(false);
-		 containerClaimMenu.add(this.ltlLoadClaimButton);
-		 
-		 this.claimEditingButton=new JButton(this.developmentIcon);
-		 this.claimEditingButton.addActionListener(this);
-		 this.claimEditingButton.setFocusPainted(true);
-		 this.claimEditingButton.setToolTipText(this.editingMessage);
-		 containerClaimMenu.add(this.claimEditingButton);
-		 
-		 this.claimTransformingButton=new JButton(this.editIcon);
-		 this.claimTransformingButton.addActionListener(this);
-		 this.claimTransformingButton.setFocusPainted(false);
-		 this.claimTransformingButton.setToolTipText(this.transorfmingMessage);
-		 containerClaimMenu.add(this.claimTransformingButton);
 		 this.claimLayout=new FRLayout<STATE,TRANSITION>(claim);
 		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>>(claim, this,  this.claimLayout);
 		 
@@ -292,29 +281,8 @@ public class View<STATE extends State,
 		 //******************************************************************************************************************************
 		 // intersection tab
 		 //******************************************************************************************************************************
-		 
 		 intersectionTab.setLayout(new BoxLayout(intersectionTab, BoxLayout.Y_AXIS));
 		 
-		 JPanel verificationMenu=new JPanel();
-		 verificationMenu.setLayout(new BoxLayout(verificationMenu, BoxLayout.X_AXIS));
-		 
-		 this.openIntersectionButton=new JButton(openIcon);
-		 this.openIntersectionButton.addActionListener(this);
-		 this.openIntersectionButton.setFocusPainted(false);
-		 verificationMenu.add(this.openIntersectionButton);
-		 
-		 this.saveIntersectionButton=new JButton(this.saveIcon);
-		 this.saveIntersectionButton.addActionListener(this);
-		 this.saveIntersectionButton.setFocusPainted(false);
-		 verificationMenu.add(this.saveIntersectionButton);
-		
-		 this.checkButton=new JButton(this.checkIcon);
-		 this.checkButton.addActionListener(this);
-		 this.checkButton.setFocusPainted(false);
-		 verificationMenu.add(this.checkButton);
-		 
-		 intersectionTab.add(verificationMenu);
-		
 		 this.intersectionLayout=new FRLayout<INTERSECTIONSTATE,INTERSECTIONTRANSITION>(intersection);
 		 this.intersectionPanel=new IntersectionAutomatonJPanel
 				 <STATE, 
@@ -327,7 +295,6 @@ public class View<STATE extends State,
 					INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(intersection, this, this.intersectionLayout);
 		 JPanel containerInt1=new JPanel();
 		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
-		 containerInt1.add(new JLabel("Intersection automaton"));
 		 containerInt1.add(this.intersectionPanel);
 			
 		 intersectionPanel.setTranformingMode();
@@ -450,61 +417,50 @@ public class View<STATE extends State,
 	public void actionPerformed(ActionEvent e) {
 		this.setChanged();
 		
-		if(e.getSource().equals(this.saveClaimMenu) || e.getSource().equals(this.saveClaimButton)){
-			this.notifyObservers(new SaveSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
-			this.saveClaimButton.setFocusPainted(false);
-		}
-		if(e.getSource().equals(this.openClaimMenu) || e.getSource().equals(this.openClaimButton)){
-			this.notifyObservers(new LoadSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
-			this.openClaimButton.setFocusPainted(false);
-		}
-		if(e.getSource().equals(this.saveModelMenu) || e.getSource().equals(this.saveModelButton)){
-			this.notifyObservers(new SaveModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
-			this.saveModelButton.setFocusPainted(false);
-		}
-		if(e.getSource().equals(this.saveIntersectionButton) || e.getSource().equals(this.saveIntersectionMenu)){
-			this.notifyObservers(new SaveIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
-			this.saveModelButton.setFocusPainted(false);
-		}
-		if(e.getSource().equals(this.openIntersectionButton) || e.getSource().equals(this.openIntersectionMenu)){
-			this.notifyObservers(new LoadIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
-			this.saveModelButton.setFocusPainted(false);
-		}
-		if(e.getSource().equals(this.openModelMenu) || e.getSource().equals(this.openModelButton)){
-			this.notifyObservers(new LoadModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
-			this.openModelButton.setFocusPainted(false);
-		}
-		if(e.getSource().equals(this.editItem) || e.getSource().equals(this.modelEditingButton)){
-			this.modelTabmodel.setEditingMode();
-			this.modelEditingButton.setFocusPainted(true);
-			this.modelTrasformingButton.setFocusable(false);
-		}
-		if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.modelTrasformingButton)){
-			this.modelTabmodel.setTranformingMode();
-			this.modelEditingButton.setFocusPainted(false);
-			this.modelTrasformingButton.setFocusable(true);
-		}
-		if(e.getSource().equals(this.editItem) || e.getSource().equals(this.claimEditingButton)){
-			this.claimTabClaimPanel.setEditingMode();
-			this.claimEditingButton.setFocusPainted(true);
-			this.claimTransformingButton.setFocusable(false);
-		}
-		if(e.getSource().equals(this.trasformItem) || e.getSource().equals(this.claimTransformingButton)){
-			this.claimTabClaimPanel.setTranformingMode();
-			this.claimEditingButton.setFocusPainted(false);
-			this.claimTransformingButton.setFocusable(true);
-		}
-		if(e.getSource().equals(this.checkItem) || e.getSource().equals(this.checkButton)){
-			this.notifyObservers(new CheckAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+		
+		// new 
+		if((e.getSource().equals(this.filenew) && this.tabbedPane.getSelectedComponent().equals(this.modelTab))){
+			this.notifyObservers(new NewModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
 		}
-		if(e.getSource().equals(this.ltlLoadClaimButton)){
+		
+		if((e.getSource().equals(this.filenew) && this.tabbedPane.getSelectedComponent().equals(this.claimTab))){
+			this.notifyObservers(new NewClaim<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
+		}
+		//---------------------------------------------
+		// open
+		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+			this.notifyObservers(new LoadModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+		}
+		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+			this.notifyObservers(new LoadSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+		}
+		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
+			this.notifyObservers(new LoadIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+		}
+		
+		
+		// --------------------------------------------
+		// saving
+		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave))  && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+			this.notifyObservers(new SaveModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
+		}
+		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+			this.notifyObservers(new SaveSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
+		}
+		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
+			this.notifyObservers(new SaveIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
+		}
+		
+		// ltlloading
+		if(e.getSource().equals(this.loadLTLButton) || e.getSource().equals(this.loadClaimFromLTLMenuItem)){
 			String ltlFormula=JOptionPane.showInputDialog("Type the LTL formula\n "
 															+ "Syntax:\n"
 															+ "Propositions: true, false, any lowercase string \n"
@@ -513,8 +469,31 @@ public class View<STATE extends State,
 			
 			this.notifyObservers(new LoadClaimAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(ltlFormula));
-			this.ltlLoadClaimButton.setFocusPainted(false);
 		}
+		
+		//editing
+		
+		if((e.getSource().equals(this.editingButton) || e.getSource().equals(this.editModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+			this.modelTabmodel.setEditingMode();
+		}
+		if((e.getSource().equals(this.editingButton)|| e.getSource().equals(this.editModeMenu))  && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+			this.claimTabClaimPanel.setEditingMode();
+		}
+		
+		// transforming
+		if((e.getSource().equals(this.transformingButton) || e.getSource().equals(this.transformingModeMenu))  && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+			this.modelTabmodel.setTranformingMode();
+		}
+		if((e.getSource().equals(this.transformingButton) || e.getSource().equals(this.transformingModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+			this.claimTabClaimPanel.setTranformingMode();
+		}
+		
+		// checking
+		if(e.getSource().equals(this.checkButton) || e.getSource().equals(this.runCheckerMenuItem)){
+			this.notifyObservers(new CheckAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
+		}
+		
 		
 	}
 
@@ -525,65 +504,122 @@ public class View<STATE extends State,
 	
 	private void createMenuBar(JFrame jframe){
 		this.menuBar=new JMenuBar();
-		this.modelMenu=new JMenu("File");
-		
-		// model
-		this.openModelMenu = new JMenuItem("Open Model");
-		this.modelMenu.add(this.openModelMenu);
-		this.openModelMenu.addActionListener(this);
-		
-		this.saveModelMenu = new JMenuItem("Save Model");
-		this.modelMenu.add(this.saveModelMenu);
-		this.saveModelMenu.addActionListener(this);
-		
-		// claim
-		this.openClaimMenu = new JMenuItem("Open Claim");
-		this.modelMenu.add(this.openClaimMenu);
-		this.openClaimMenu.addActionListener(this);
-		
-		this.saveClaimMenu = new JMenuItem("Save Claim");
-		this.modelMenu.add(this.saveClaimMenu);
-		this.saveClaimMenu.addActionListener(this);
-		
-		// intersection
-		this.saveIntersectionMenu=new JMenuItem("Save Intersection");
-		this.modelMenu.add(this.saveIntersectionMenu);
-		this.saveIntersectionMenu.addActionListener(this);
-		
-		this.openIntersectionMenu=new JMenuItem("Save Intersection");
-		this.modelMenu.add(this.openIntersectionMenu);
-		this.openIntersectionMenu.addActionListener(this);
 		
 		
 		
-		menuBar.add(modelMenu);
+		//*****************
+		// MENU
+		//*****************
 		
-		editMenu=new JMenu("Project");
-		editMenu.addActionListener(this);
+		// file
+		this.fileMenu=new JMenu("File");
+		this.filenew = new JMenuItem("New", this.newIcon);
+		this.filenew.addActionListener(this);
+		this.fileMenu.add(this.filenew);
 		
-		editItem = new JMenuItem("Edit", KeyEvent.VK_T);
-		editMenu.add(editItem);
-		editItem.setMnemonic(KeyEvent.VK_O);
-		editItem.addActionListener(this);
+		this.fileopen = new JMenuItem("Open", this.openIcon);
+		this.fileopen.addActionListener(this);
+		this.fileMenu.add(this.fileopen);
 		
-		trasformItem = new JMenuItem("Trasform", KeyEvent.VK_T);
-		editMenu.add(trasformItem);
-		trasformItem.setMnemonic(KeyEvent.VK_O);
-		trasformItem.addActionListener(this);
+		this.filesave = new JMenuItem("Save", this.saveIcon);
+		this.filesave.addActionListener(this);
+		this.fileMenu.add(this.filesave);
 		
-		checkItem=new JMenuItem("Check", KeyEvent.VK_T);
-		editMenu.add(checkItem);
-		checkItem.setMnemonic(KeyEvent.VK_O);
-		checkItem.addActionListener(this);
-
-		trasformItem.setMnemonic(KeyEvent.VK_O);
-		trasformItem.addActionListener(this);
+		this.loadClaimFromLTLMenuItem=new JMenuItem("Load Claim From LTL", this.ltlIcon);
+		this.loadClaimFromLTLMenuItem.addActionListener(this);
+		this.fileMenu.add(this.loadClaimFromLTLMenuItem);
+		
+		this.menuBar.add(this.fileMenu);
+		
+		// editing
+		this.editMenu=new JMenu("Edit");
+		this.editModeMenu= new JMenuItem("Editing Mode", this.editingIcon);
+		this.editModeMenu.addActionListener(this);
+		this.editMenu.add(this.editModeMenu);
+		
+		this.transformingModeMenu= new JMenuItem("Transforming Mode", this.trasformingIcon);
+		this.transformingModeMenu.addActionListener(this);
+		this.editMenu.add(this.transformingModeMenu);
+		
+		this.menuBar.add(this.editMenu);
+		
+		// checking
+		this.checkMenu=new JMenu("Check");
+		this.runCheckerMenuItem= new JMenuItem("Run", this.checkIcon);
+		this.runCheckerMenuItem.addActionListener(this);
+		this.checkMenu.add(this.runCheckerMenuItem);
+		this.menuBar.add(this.checkMenu);
 		
 		
-		menuBar.add(editMenu);
+		
+		
 		
 		jframe.setJMenuBar(menuBar);
 		menuBar.setVisible(true);
+		
+		
+		//*****************
+		// INSTRUMENT BAR
+		//*****************
+		
+		this.instrumentBar=new JToolBar();
+		this.instrumentBar.setBackground(this.jframe.getContentPane().getBackground());
+		
+		// file
+		this.newButton=new JButton(this.newIcon);
+		this.newButton.addActionListener(this);
+		this.newButton.setFocusPainted(false);
+		this.newButton.setToolTipText(this.newMessage);
+		
+		this.openButton=new JButton(this.openIcon);
+		this.openButton.addActionListener(this);
+		this.openButton.setFocusPainted(false);
+		this.openButton.setToolTipText(this.openMessage);
+		
+		this.saveButton=new JButton(this.saveIcon);
+		this.saveButton.addActionListener(this);
+		this.saveButton.setFocusPainted(false);
+		this.saveButton.setToolTipText(this.saveMessage);
+		
+		this.instrumentBar.add(this.newButton);
+		this.instrumentBar.add(this.openButton);
+		this.instrumentBar.add(this.saveButton);
+		
+		this.instrumentBar.addSeparator();
+		
+		// from ltl formula
+		this.loadLTLButton=new JButton(this.ltlIcon);
+		this.loadLTLButton.addActionListener(this);
+		this.loadLTLButton.setFocusPainted(false);
+		this.loadLTLButton.setToolTipText(this.ltlLoadingMessage);
+		
+		this.instrumentBar.add(this.loadLTLButton);
+		this.instrumentBar.addSeparator();
+		
+		// editing
+		this.editingButton=new JButton(this.editingIcon);
+		this.editingButton.addActionListener(this);
+		this.editingButton.setFocusPainted(false);
+		this.editingButton.setToolTipText(this.editingMessage);
+		
+		this.transformingButton=new JButton(this.trasformingIcon);
+		this.transformingButton.addActionListener(this);
+		this.transformingButton.setFocusPainted(false);
+		this.transformingButton.setToolTipText(this.transorfmingMessage);
+		
+		this.instrumentBar.add(this.editingButton);
+		this.instrumentBar.add(this.transformingButton);
+		this.instrumentBar.addSeparator();
+		
+		//checking
+		this.checkButton=new JButton(this.checkIcon);
+		this.checkButton.addActionListener(this);
+		this.checkButton.setFocusPainted(false);
+		this.checkButton.setToolTipText(this.checkingMessage);
+		
+		this.instrumentBar.add(this.checkButton);
+		
+		jframe.getContentPane().add(instrumentBar, BorderLayout.NORTH);
 		
 	}
 	
@@ -592,4 +628,17 @@ public class View<STATE extends State,
         panel.setLayout(new GridLayout(1, 1));
         return panel;
     }
+
+	@Override
+	public void updateModel(
+			DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> model) {
+		this.updateModel(model, null);
+	}
+
+	@Override
+	public void updateClaim(
+			DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> specification) {
+		this.updateSpecification(specification, null);
+		
+	}
 }

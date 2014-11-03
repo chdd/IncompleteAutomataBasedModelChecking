@@ -29,6 +29,16 @@ public interface ViewInterface<
 	 * @param model
 	 */
 	public void updateModel(DrawableIBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions);
+	
+	public void updateModel(DrawableIBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model);
+	
+	/*
+	 * --------------------------------------- CLAIM ---------------------------------------
+	 */
+	
+	public void updateClaim(DrawableBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification);
+	
+	
 	public void updateSpecification(DrawableBA<STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
 	public void updateIntersection(DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions);
 	

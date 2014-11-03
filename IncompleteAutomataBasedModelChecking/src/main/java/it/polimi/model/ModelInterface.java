@@ -126,6 +126,15 @@ public interface ModelInterface<
 	 */
 	public void addRegularStateToTheSpecification(STATE s, boolean initial, boolean accepting);
 	
+	/**
+	 * creates a new model 
+	 */
+	public void newModel();
+	
+	/**
+	 * creates a new claim
+	 */
+	public void newClaim();
 	
 	
 	
