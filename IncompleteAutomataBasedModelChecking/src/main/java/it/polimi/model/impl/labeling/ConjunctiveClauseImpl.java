@@ -1,5 +1,7 @@
 package it.polimi.model.impl.labeling;
 
+import it.polimi.model.interfaces.labeling.ConjunctiveClause;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,7 +13,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  *
  */
-public class ConjunctiveClause {
+public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	
 	/**
 	 * is the operator of the conjunctive clause
@@ -21,32 +23,32 @@ public class ConjunctiveClause {
 	/**
 	 * is the set of propositions {@link IGraphProposition} which are separated by the and operator
 	 */
-	private Set<IGraphProposition> propositions;
+	private Set<Proposition> propositions;
 
 	/**
 	 * creates a new conjunctive clause
 	 */
-	public ConjunctiveClause(){
-		propositions=new HashSet<IGraphProposition>();
+	public ConjunctiveClauseImpl(){
+		propositions=new HashSet<Proposition>();
 	}
 	
 	/**
-	 * creates a new {@link ConjunctiveClause} with the single {@link IGraphProposition} p
-	 * @param p the only proposition of the {@link ConjunctiveClause}
+	 * creates a new {@link ConjunctiveClauseImpl} with the single {@link IGraphProposition} p
+	 * @param p the only proposition of the {@link ConjunctiveClauseImpl}
 	 * @throws NullPointerException if the {@link IGraphProposition} p is null
 	 */
-	public ConjunctiveClause(IGraphProposition p){
+	public ConjunctiveClauseImpl(Proposition p){
 		if(p==null){
 			throw new NullPointerException("The proposition p cannot be null");
 		}
-		propositions=new HashSet<IGraphProposition>();
+		propositions=new HashSet<Proposition>();
 		this.propositions.add(p);
 	}
 	
 	/**
 	 * @return the {@link Set} of the propositions ( {@link IGraphProposition}) of the conjunctive clause
 	 */
-	public Set<IGraphProposition> getPropositions() {
+	public Set<Proposition> getPropositions() {
 		return propositions;
 	}
 
@@ -55,7 +57,7 @@ public class ConjunctiveClause {
 	 * @param propositions contains the set of propositions to be set in the conjunctive clause
 	 * @throws NullPointerException if the set of propositions to be set is null
 	 */
-	public void setPropositions(Set<IGraphProposition> propositions) {
+	public void setPropositions(Set<Proposition> propositions) {
 		if(propositions==null){
 			throw new NullPointerException("The set of propositions to be setted cannot be null");
 		}
@@ -67,7 +69,7 @@ public class ConjunctiveClause {
 	 * @param proposition is the proposition to be added in the set of the propositions
 	 * @throws NullPointerException if the proposition to be added is null
 	 */
-	public void addProposition(IGraphProposition proposition){
+	public void addProposition(Proposition proposition){
 		if(proposition==null){
 			throw new NullPointerException("The proposition to be added cannot be null");
 		}
@@ -76,7 +78,7 @@ public class ConjunctiveClause {
 	
 	/**
 	 * convert the conjunctive clause into its {@link String} representation
-	 * @return the {@link String} description of the {@link ConjunctiveClause}
+	 * @return the {@link String} description of the {@link ConjunctiveClauseImpl}
 	 */
 	public String toString(){
 		if(propositions.isEmpty()){
@@ -85,7 +87,7 @@ public class ConjunctiveClause {
 		if(propositions.size()==1){
 			return propositions.iterator().next().toString();
 		}
-		Iterator<IGraphProposition> it=this.propositions.iterator();
+		Iterator<Proposition> it=this.propositions.iterator();
 		String ret="";
 		for(int i=0;i< this.propositions.size()-1;i++){
 			ret+=it.next().toString()+andSymbol;
@@ -95,14 +97,14 @@ public class ConjunctiveClause {
 	}
 	
 	/**
-	 * loads the {@link ConjunctiveClause} from its {@link String} representation
+	 * loads the {@link ConjunctiveClauseImpl} from its {@link String} representation
 	 * @param clause is the {@link String} representation of the clause
-	 * @return the {@link ConjunctiveClause} loaded from the {@link String}
+	 * @return the {@link ConjunctiveClauseImpl} loaded from the {@link String}
 	 */
-	public static ConjunctiveClause loadFromString(String clause){
+	public static ConjunctiveClauseImpl loadFromString(String clause){
 		
 		clause+=andSymbol;
-		ConjunctiveClause ret=new ConjunctiveClause();
+		ConjunctiveClauseImpl ret=new ConjunctiveClauseImpl();
 		String[] andClauses=clause.split(andSymbol);
 		for(int i=0; i<andClauses.length; i++){
 			ret.addProposition(Proposition.loadProposition(andClauses[i]));
@@ -133,7 +135,7 @@ public class ConjunctiveClause {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConjunctiveClause other = (ConjunctiveClause) obj;
+		ConjunctiveClauseImpl other = (ConjunctiveClauseImpl) obj;
 		if (propositions == null) {
 			if (other.propositions != null)
 				return false;

@@ -1,8 +1,9 @@
 package it.polimi.model.impl.automata;
 
 
-import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
@@ -14,13 +15,12 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
-
 /**
  * @author claudiomenghi
  * contains a possibly incomplete Buchi automaton which extends classical automaton with transparent states
  * @param <STATE> contains the type of the states of the automaton
  * @param <TRANSITION> contains the type of the transitions of the automaton
+ * @param <TRANSITIONFACTORY> contains the factory which allows to create TRANSITIONs
  */
 @SuppressWarnings("serial")
 public class IBAImpl<
@@ -47,7 +47,7 @@ public class IBAImpl<
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
-	public IBAImpl(Set<IGraphProposition> alphabet, TRANSITIONFACTORY transitionFactory) {
+	public IBAImpl(Set<Proposition> alphabet, TRANSITIONFACTORY transitionFactory) {
 		super(alphabet, transitionFactory);
 		transparentStates=new HashSet<STATE>();
 	}
@@ -92,7 +92,7 @@ public class IBAImpl<
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<IGraphProposition> alphabet){
+	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<Proposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -121,8 +121,8 @@ public class IBAImpl<
 			for(STATE s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
-					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					this.addTransition(s1, s2, this.transitionFactory.create(new DNFFormula(new ConjunctiveClause(character))));
+					Proposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					this.addTransition(s1, s2, this.transitionFactory.create(new DNFFormula(new ConjunctiveClauseImpl(character))));
 				}
 			}
 		}
@@ -134,7 +134,7 @@ public class IBAImpl<
 	 * @return a new random graph
 	 */
 
-	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<IGraphProposition> alphabet){
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<Proposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -174,15 +174,15 @@ public class IBAImpl<
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					
-					IGraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
-					this.addTransition(s1, s2, this.transitionFactory.create(new DNFFormula(new ConjunctiveClause(character))));
+					Proposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					this.addTransition(s1, s2, this.transitionFactory.create(new DNFFormula(new ConjunctiveClauseImpl(character))));
 				}
 			}
 		}
 	}
-	public static IGraphProposition getRandomString(Set<IGraphProposition> alphabet, int position){
+	public static Proposition getRandomString(Set<Proposition> alphabet, int position){
 
-		Iterator<IGraphProposition> it=alphabet.iterator();
+		Iterator<Proposition> it=alphabet.iterator();
 		if(position==0)
 		for(int i=0; i<position; i++){
 		

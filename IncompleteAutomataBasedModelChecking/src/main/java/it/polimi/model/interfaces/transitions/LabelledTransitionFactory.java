@@ -1,6 +1,6 @@
 package it.polimi.model.interfaces.transitions;
 
-import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
@@ -18,7 +18,7 @@ public interface LabelledTransitionFactory<
 	extends Factory<TRANSITION> {
 
 	/**
-	 * creates a new transition TRANSITION with a {@link DNFFormula} which contains a single {@link ConjunctiveClause}
+	 * creates a new transition TRANSITION with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl}
 	 * with a single {@link GraphProposition} SIGMA
 	 * @return a new transition TRANSITION labeled with a {@link DNFFormula} which contains only the {@link GraphProposition} SIGMA
 	 */

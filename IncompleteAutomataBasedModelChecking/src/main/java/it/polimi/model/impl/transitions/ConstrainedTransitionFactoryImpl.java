@@ -1,7 +1,8 @@
 package it.polimi.model.impl.transitions;
 
-import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
@@ -34,8 +35,8 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	}
 	
 	/**
-	 * creates a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClause} with a single {@link GraphProposition} SIGMA
-	 * @return a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClause} with a single {@link GraphProposition} SIGMA
+	 * creates a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl} with a single {@link GraphProposition} SIGMA
+	 * @return a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl} with a single {@link GraphProposition} SIGMA
 	 */
 	@Override
 	public ConstrainedTransition<State> create() {
@@ -43,8 +44,8 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		Set<String> labeling=new HashSet<String>();
 		labeling.add("SIGMA");
 		DNFFormula dnfFormula=new DNFFormula();
-		ConjunctiveClause clause=new ConjunctiveClause();
-		clause.addProposition(new GraphProposition("SIGMA", false));
+		ConjunctiveClauseImpl clause=new ConjunctiveClauseImpl();
+		clause.addProposition(new SigmaProposition());
 		dnfFormula.addDisjunctionClause(clause);
 		
 		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);

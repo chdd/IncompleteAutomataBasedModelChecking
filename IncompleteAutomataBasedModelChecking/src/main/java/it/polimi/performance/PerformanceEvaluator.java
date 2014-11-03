@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import edu.uci.ics.jung.io.GraphIOException;
 
 /**
@@ -61,7 +60,7 @@ public class PerformanceEvaluator{
 			for(int i=initialNumberOfTransparentStates; i<=maxNumberTransparentStates;i=i+incrementNumberOfTransparentStates){
 				
 				for(int j=0;j<numeroProve;j++){
-					Set<IGraphProposition> alphabetModel=new HashSet<IGraphProposition>();
+					Set<Proposition> alphabetModel=new HashSet<Proposition>();
 					alphabetModel.add(new Proposition("a", false));
 					alphabetModel.add(new Proposition("b", false));
 					

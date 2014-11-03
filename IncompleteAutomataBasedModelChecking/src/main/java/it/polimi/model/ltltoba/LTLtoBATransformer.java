@@ -1,8 +1,10 @@
 package it.polimi.model.ltltoba;
 
 import it.polimi.model.impl.automata.BAImpl;
-import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.Proposition;
+import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
@@ -66,9 +68,14 @@ public class LTLtoBATransformer<
 			}
 		}
 		for(ITransition t: transitions){
-			ConjunctiveClause conjunctionClause=new ConjunctiveClause();
+			ConjunctiveClauseImpl conjunctionClause=new ConjunctiveClauseImpl();
 			for(IGraphProposition p: t.getLabels()){
-				conjunctionClause.addProposition(p);
+				if(p.getLabel().equals("<SIGMA>")){
+					conjunctionClause.addProposition(new SigmaProposition());
+				}
+				else{
+					conjunctionClause.addProposition(new Proposition(p.getLabel(),p.isNegated()));
+				}
 			}
 			if(ba.isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
 				ba.findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getDnfFormula().addDisjunctionClause(conjunctionClause);

@@ -1,12 +1,11 @@
 package it.polimi.model.interfaces.automata;
 
+import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.Set;
-
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * is the interface of the {@link BA}
@@ -30,7 +29,7 @@ public interface BA<
 	 * returns the alphabet of the {@link BA}
 	 * @return the alphabet of the {@link BA}
 	 */
-	public Set<IGraphProposition> getAlphabet();
+	public Set<Proposition> getAlphabet();
 	
 	public TRANSITIONFACTORY getTransitionFactory();
 		

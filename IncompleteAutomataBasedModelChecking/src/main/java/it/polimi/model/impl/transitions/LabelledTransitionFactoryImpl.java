@@ -1,7 +1,8 @@
 package it.polimi.model.impl.transitions;
 
-import it.polimi.model.impl.labeling.ConjunctiveClause;
+import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
@@ -18,15 +19,15 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 	protected static int transitionCount=0;
 	
 	/**
-	 * creates a new {@link LabelledTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClause}
+	 * creates a new {@link LabelledTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl}
 	 * with a single {@link GraphProposition} SIGMA
 	 * @return a new {@link LabelledTransition} labeled with a {@link DNFFormula} which contains only the {@link GraphProposition} SIGMA
 	 */
 	@Override
 	public LabelledTransition create() {
 		DNFFormula dnfFormula=new DNFFormula();
-		ConjunctiveClause clause=new ConjunctiveClause();
-		clause.addProposition(new GraphProposition("SIGMA", false));
+		ConjunctiveClauseImpl clause=new ConjunctiveClauseImpl();
+		clause.addProposition(new SigmaProposition());
 		dnfFormula.addDisjunctionClause(clause);
 		
 		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
