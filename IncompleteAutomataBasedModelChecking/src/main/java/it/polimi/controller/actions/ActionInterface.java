@@ -19,18 +19,19 @@ public interface ActionInterface<
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE,INTERSECTIONSTATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>> {
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+	 {
 	
 	/**
 	 * performs the action
 	 * @param model is the model upon which the action must be performed
 	 * @throws Exception is generated if there are problems in the action execution 
 	 */
-	public void perform(ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
+	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
+	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
+	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
+	void perform(ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
 			ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception;

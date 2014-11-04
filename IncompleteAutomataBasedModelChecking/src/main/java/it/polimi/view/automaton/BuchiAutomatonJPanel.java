@@ -21,24 +21,32 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 
 public class BuchiAutomatonJPanel
-	<STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+<STATE extends State, 
+STATEFACTORY extends StateFactory<STATE>,
+TRANSITION extends LabelledTransition, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	BA extends DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>> 
-	extends AutomatonJPanel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,BA>  {
-
+	extends  VisualizationViewer<STATE,TRANSITION>  {
+	
+	protected ActionListener view;
+	
 	
 	private TRANSITIONFACTORY transitionFactory;
 	/**
@@ -53,13 +61,58 @@ public class BuchiAutomatonJPanel
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
 	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout){
-		super(a, l, layout); 
+		super(layout);
+		
+		this.view=l;
+		
+		this.setBackground(Color.WHITE);
+		this.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createRaisedBevelBorder(), 
+				BorderFactory.createLoweredBevelBorder()));
+	
+		this.update(a);
+		
 		this.transitionFactory=a.getTransitionFactory();
 		this.setEditingMode();
 	}
 	
+	public void update(BA  a){
+		this.setTransformers(a);
+		
+		this.getGraphLayout().setGraph(a);
+		this.repaint();
+	}
+	
+	public void setTransformers(BA  a){
+		// vertex
+		this.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
+		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
+		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
+		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
+		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
+		
+		// edges
+		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<TRANSITION>());
+		//this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate(true, false));
+		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
+		this.getRenderContext().setLabelOffset(+10);
+		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
+		edgeLabelRenderer.setRotateEdgeLabels(true);
+		
+		this.getRenderer().setEdgeLabelRenderer(new LabelledTransitionRender<STATE,TRANSITION>());
+		
+	}
+	
+	public void setTranformingMode(){
+		DefaultModalGraphMouse<STATE, TRANSITION> gm=new DefaultModalGraphMouse<STATE,TRANSITION>();
+		gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
+		this.setGraphMouse(gm);
+		this.addKeyListener(gm.getModeKeyListener());
+		
+	}
+	
 	protected JPopupMenu getStateMenu(){
-		 return new BAStateMenu(view);
+		 return new BAStateMenu();
 	}
 	
 	
@@ -73,28 +126,28 @@ public class BuchiAutomatonJPanel
 	
 	
 
-	@Override
 	protected Transformer<TRANSITION, Stroke> getStrokeEdgeStrokeTransformer() {
 		return new BuchiAutomatonEdgeStrokeTransormer<TRANSITION>();
 	}
 
-	@Override
 	protected Transformer<STATE, Stroke> getStateStrokeTransformer(BA a) {
 		return new BuchiAutomatonStateStrokeTransofmer(a);
 	}
 
-	@Override
 	public void setEditingMode() {
 		
-		EditingModalGraphMouse<STATE,TRANSITION> gm = new EditingModalGraphMouse<STATE,TRANSITION>(this.getRenderContext(), 
-                new StateFactory<STATE>(), this.transitionFactory); 
+		EditingModalGraphMouse<STATE,TRANSITION> gm = new EditingModalGraphMouse<STATE,TRANSITION>(
+				this.getRenderContext(), 
+                new StateFactory<STATE>(), 
+                this.transitionFactory); 
 		this.setGraphMouse(gm);
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);
 		
-        Plugin myPlugin = new Plugin(view);
+        Plugin myPlugin = new Plugin(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
-        JPopupMenu edgeMenu = new Actions.EdgeMenu();
+        JPopupMenu edgeMenu = new Actions().
+        			new EdgeMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
         JPopupMenu vertexMenu =this.getStateMenu();
         myPlugin.setEdgePopup(edgeMenu);
         myPlugin.setVertexPopup(vertexMenu);

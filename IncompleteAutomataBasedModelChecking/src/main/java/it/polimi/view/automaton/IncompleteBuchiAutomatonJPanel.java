@@ -18,16 +18,19 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 public class IncompleteBuchiAutomatonJPanel
 <STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition,
+TRANSITION extends LabelledTransition, 
 TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-IBA extends DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> extends BuchiAutomatonJPanel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, IBA> {
+IBA extends DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> 
+extends 
+BuchiAutomatonJPanel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, IBA> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public IncompleteBuchiAutomatonJPanel(IBA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout){
+	public IncompleteBuchiAutomatonJPanel(IBA a, 
+			 ActionListener l, AbstractLayout<STATE, TRANSITION> layout){
 		 super(a, l, layout);
 	}
 	
@@ -35,7 +38,7 @@ IBA extends DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> extends BuchiAutom
 		return new IncompleteBuchiAutomatonPaintTransformer(a);
 	}
 	protected JPopupMenu getStateMenu(){
-		 return new IBAStateMenu(view);
+		 return new IBAStateMenu();
 	}
 	
 	public class IncompleteBuchiAutomatonPaintTransformer extends BuchiAutomatonStatePaintTransformer {

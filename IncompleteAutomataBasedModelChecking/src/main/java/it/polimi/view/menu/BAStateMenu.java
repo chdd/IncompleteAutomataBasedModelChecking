@@ -1,29 +1,33 @@
 package it.polimi.view.menu;
 
-import it.polimi.view.menu.Actions.Accepting;
-import it.polimi.view.menu.Actions.DeleteVertexMenuItem;
-import it.polimi.view.menu.Actions.Initial;
-import it.polimi.view.menu.Actions.Rename;
-
-import java.awt.event.ActionListener;
+import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import javax.swing.JPopupMenu;
 
 @SuppressWarnings("serial")
-public class BAStateMenu extends JPopupMenu {
+public class BAStateMenu
+	<
+	STATE extends State, 
+	STATEFACTORY extends StateFactory<STATE>, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+	extends JPopupMenu {
 
-   public BAStateMenu(ActionListener l) {
+   public BAStateMenu() {
        super("State Menu");
        
-       this.stateType(l);
+       this.stateType();
        this.addSeparator();
-       this.add(new DeleteVertexMenuItem(l));
+       this.add(new Actions().new DeleteVertexMenuItem<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
        this.addSeparator();
-       this.add(new Rename(l));
+       this.add(new Actions().new Rename<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
     }
    
-    protected void stateType(ActionListener l){
-    	 this.add(new Initial(l));
-         this.add(new Accepting(l));
+    protected void stateType(){
+    	 this.add(new Actions().new Initial<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+         this.add(new Actions().new Accepting());
     }
 }

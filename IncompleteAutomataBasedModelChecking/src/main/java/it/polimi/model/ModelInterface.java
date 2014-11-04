@@ -138,6 +138,8 @@ public interface ModelInterface<
 	
 	
 	
+	
+	
 	public void changeIntersection(DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersection);
 
 	public void check();

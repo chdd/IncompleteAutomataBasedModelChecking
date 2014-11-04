@@ -23,7 +23,6 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
-import it.polimi.view.automaton.BALayout;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.automaton.IntersectionAutomatonJPanel;
@@ -59,7 +58,6 @@ import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.algorithms.layout.FRLayout2;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 
 public class View<STATE extends State, 
@@ -261,7 +259,7 @@ public class View<STATE extends State,
 		  
 		 
 		 modelTab.add(containerModelMenu);
-		 this.modelLayout=new BALayout<STATE,TRANSITION>(model);
+		 this.modelLayout=new KKLayout<STATE,TRANSITION>(model);
 		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
 		 modelTab.add(modelTabmodel);
 		 
@@ -423,43 +421,37 @@ public class View<STATE extends State,
 		
 		// new 
 		if((e.getSource().equals(this.filenew) && this.tabbedPane.getSelectedComponent().equals(this.modelTab))){
-			this.notifyObservers(new NewModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
+			this.notifyObservers(new NewModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
 		
 		if((e.getSource().equals(this.filenew) && this.tabbedPane.getSelectedComponent().equals(this.claimTab))){
-			this.notifyObservers(new NewClaim<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
+			this.notifyObservers(new NewClaim<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
 		//---------------------------------------------
 		// open
 		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
-			this.notifyObservers(new LoadModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
-			this.notifyObservers(new LoadSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
-			this.notifyObservers(new LoadIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		
 		
 		// --------------------------------------------
 		// saving
 		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave))  && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
-			this.notifyObservers(new SaveModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
+			this.notifyObservers(new SaveModel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
 		}
 		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
-			this.notifyObservers(new SaveSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
+			this.notifyObservers(new SaveSpecification<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
 		}
 		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
-			this.notifyObservers(new SaveIntersection<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
+			this.notifyObservers(new SaveIntersection<STATE, STATEFACTORY,
+					TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, 
+					INTERSECTIONTRANSITION,  AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
 		}
 		
 		// ltlloading
@@ -470,8 +462,7 @@ public class View<STATE extends State,
 															+ "Boolean operators:  ! (negation) ->(implication) <-> (equivalence) &&  (and) ||  (or)\n"
 															+ "Temporal operators: []  (always) <>   (eventually) U   (until) V (realease) X   (next)");
 			
-			this.notifyObservers(new LoadClaimAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(ltlFormula));
+			this.notifyObservers(new LoadClaimAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(ltlFormula));
 		}
 		
 		//editing
@@ -493,8 +484,7 @@ public class View<STATE extends State,
 		
 		// checking
 		if(e.getSource().equals(this.checkButton) || e.getSource().equals(this.runCheckerMenuItem)){
-			this.notifyObservers(new CheckAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-					INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>());
+			this.notifyObservers(new CheckAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
 		
 		

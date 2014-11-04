@@ -22,7 +22,8 @@ public interface ViewInterface<
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
 	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>{
+	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>
+	{
 
 	/**
 	 * 
@@ -46,7 +47,8 @@ public interface ViewInterface<
 			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
 	public void addObserver(Observer o);
 
-	public void displayErrorMessage(String message);
 	
 	public void setBrzozoski(String system);
+
+	public void displayErrorMessage(String message);
 }

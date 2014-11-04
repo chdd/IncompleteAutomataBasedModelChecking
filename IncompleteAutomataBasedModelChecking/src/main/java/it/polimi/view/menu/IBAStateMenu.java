@@ -1,19 +1,29 @@
 package it.polimi.view.menu;
 
-import java.awt.event.ActionListener;
+import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.states.StateFactory;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+
 
 
 @SuppressWarnings("serial")
-public class IBAStateMenu extends BAStateMenu{
+public class IBAStateMenu
+	<
+	STATE extends State, 
+	STATEFACTORY extends StateFactory<STATE>, 
+	TRANSITION extends LabelledTransition, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+	extends BAStateMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>{
 	
-	public IBAStateMenu(ActionListener l){
-		super(l);
+	public IBAStateMenu(){
+		super();
 	    
 	}
 	
-	  protected void stateType(ActionListener l){
-		  super.stateType(l);
-		  this.add(new Actions.Transparent());
+	  protected void stateType(){
+		  super.stateType();
+		  this.add(new Actions().new Transparent<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 	 }
 
 }

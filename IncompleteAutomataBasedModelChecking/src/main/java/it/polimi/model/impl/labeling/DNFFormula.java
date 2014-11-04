@@ -128,6 +128,8 @@ public class DNFFormula {
 	 * @throws NullPointerException if the formula is null
 	 */
 	public static DNFFormula loadFromString(String formula){
+		
+		
 		if(formula==null){
 			throw new NullPointerException("The formula cannot be null");
 		}

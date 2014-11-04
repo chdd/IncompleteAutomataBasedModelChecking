@@ -50,11 +50,11 @@ public class LTLtoBATransformer<
 		
 		for(ITransition t: transitions){
 			 if(!map.containsKey(t.getSourceState())){
-				 STATE s=stateFactory.create(t.getSourceState().getLabel());
+				 STATE s=stateFactory.create();
 				map.put(t.getSourceState(), s);
 			 }
 			 if(!map.containsKey(t.getTargetState())){
-				 STATE s=stateFactory.create(t.getTargetState().getLabel());
+				 STATE s=stateFactory.create();
 				map.put(t.getTargetState(), s);
 			 }
 		}
