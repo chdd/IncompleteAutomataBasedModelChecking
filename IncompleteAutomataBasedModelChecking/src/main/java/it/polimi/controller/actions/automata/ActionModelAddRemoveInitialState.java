@@ -2,7 +2,6 @@ package it.polimi.controller.actions.automata;
 
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
-import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -15,25 +14,21 @@ import it.polimi.view.ViewInterface;
 
 import java.awt.event.ActionEvent;
 
-@SuppressWarnings("serial")
-public class ChangeModelEdgeLabel<
+public class ActionModelAddRemoveInitialState<
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>
-	>
+	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
 	extends ActionEvent
 	implements
-	ActionInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
-	{
+		ActionInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
-	private String edgeLabel;
-	private TRANSITION transition;
+	private STATE s;
 	
-	public ChangeModelEdgeLabel(Object source, int id, String command, String edgeLabel, TRANSITION transition){
+	public ActionModelAddRemoveInitialState(Object source, int id, String command, STATE s){
 		super(source, id, command);
-		this.edgeLabel=edgeLabel;
-		this.transition=transition;
+	
+		this.s=s;
 	}
 	
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
@@ -47,7 +42,12 @@ public class ChangeModelEdgeLabel<
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception{
 	
-			this.transition.setDNFFormula(DNFFormula.loadFromString(edgeLabel));
+			if(model.getModel().isInitial(s)){
+				model.getModel().getInitialStates().remove(s);
+			}
+			else{
+				model.getModel().addInitialState(s);
+			}
+			view.updateModel(model.getModel());
 	}
-	
 }

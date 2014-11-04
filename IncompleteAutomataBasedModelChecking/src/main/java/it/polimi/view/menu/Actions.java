@@ -9,7 +9,8 @@ package it.polimi.view.menu;
  *
  */
 
-import it.polimi.controller.actions.automata.ChangeModelEdgeLabel;
+import it.polimi.controller.actions.automata.ActionModelAddRemoveInitialState;
+import it.polimi.controller.actions.automata.edges.ChangeModelEdgeLabel;
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
@@ -17,6 +18,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.view.menu.actions.ActionTypesInterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +34,12 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 public class Actions {
 
+	public Actions(ActionTypesInterface actionTypesInterface){
+		this.actionTypesInterface=actionTypesInterface;
+	}
+	
+	private ActionTypesInterface actionTypesInterface;
+	
 	@SuppressWarnings("serial")
 	public class EdgeMenu<
 	STATE extends State, 
@@ -58,7 +66,6 @@ public class Actions {
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
 	extends Box implements TransitionListener<STATE, TRANSITION> {
 		private TRANSITION edge;
-		private VisualizationViewer<STATE, TRANSITION> visComp;
 		private ActionListener listener;
 		private JTextField character;
 
@@ -66,16 +73,15 @@ public class Actions {
 		public AddCharacter() {
 			super(BoxLayout.X_AXIS);
 
-			this.add(new JLabel("Character to add: "));
-			this.character = new JTextField("character");
+			this.add(new JLabel("New DNFFormula: "));
+			this.character = new JTextField("Example: (a&&b)||(c&&d)");
 			this.add(character);
 
 			this.character.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 	 						
-							listener.actionPerformed(new ChangeModelEdgeLabel
-									<STATE, STATEFACTORY, 
-									TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand(), character.getText(), edge));
+							listener.actionPerformed
+							(actionTypesInterface.getChangingLabelAction(e.getSource(), e.getID(), e.getActionCommand(), character.getText(), edge));
 	 				
 				}
 			});
@@ -84,7 +90,6 @@ public class Actions {
 		public void setEdgeAndView(TRANSITION edge,
 				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
 			this.edge = edge;
-			this.visComp = visComp;
 			this.listener=l;
 		}
 	}
@@ -160,7 +165,7 @@ public class Actions {
 		}
 
 		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp) {
+				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
 			this.v = v;
 			this.visComp = visComp;
 		}
@@ -173,19 +178,18 @@ public class Actions {
 	TRANSITION extends LabelledTransition, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> extends JMenuItem implements
 			StateMenuListener<STATE, TRANSITION> {
-		STATE v;
-		VisualizationViewer<STATE, TRANSITION> visComp;
+		private STATE v;
+		private ActionListener l;
 		
 		public Initial() {
 			super("Initial");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					visComp.getPickedVertexState().pick(v, false);
-					((BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>) visComp
-							.getGraphLayout().getGraph()).addInitialState(v);
-					;
-					visComp.repaint();
-
+					
+					l.actionPerformed(new ActionModelAddRemoveInitialState
+							<STATE, STATEFACTORY, 
+							TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand(), v));
+	
 		
 				}
 
@@ -193,9 +197,9 @@ public class Actions {
 		}
 
 		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp) {
+				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
 			this.v = v;
-			this.visComp = visComp;
+			this.l=l;
 		}
 
 	}
@@ -227,7 +231,7 @@ public class Actions {
 		}
 
 		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp) {
+				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
 			this.v = v;
 			this.visComp = visComp;
 		}
@@ -256,7 +260,7 @@ public class Actions {
 		}
 
 		public void setVertexAndView(State v,
-				VisualizationViewer<State, LabelledTransition> visComp) {
+				VisualizationViewer<State, LabelledTransition> visComp, ActionListener l) {
 			this.v = v;
 			this.visComp = visComp;
 		}
@@ -292,7 +296,7 @@ public class Actions {
 		 * @param visComp
 		 */
 		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp) {
+				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l ) {
 			this.vertex = v;
 			this.visComp = visComp;
 			this.setText("Delete Vertex " + v.toString());

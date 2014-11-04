@@ -17,7 +17,7 @@ public class Proposition extends GraphProposition {
 	public Proposition(String label, boolean isNegated){
 		super(label, isNegated);
 		if(!label.matches("[a-zA-Z][a-zA-Z0-9]*")) {
-	       throw new IllegalArgumentException("proposition must be of form [a-zA-Z_0-9] (got "+label+")");
+	       throw new IllegalArgumentException("the DNFFormula must have the form (a&&b)||(c&&d) where a, b, c and d are the propositions (got "+label+")");
 	   }
 	}
 	

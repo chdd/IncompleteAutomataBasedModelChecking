@@ -92,7 +92,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSE
         Component[] menuComps = vertexPopup.getComponents();
         for (Component comp: menuComps) {
             if (comp instanceof StateMenuListener) {
-                ((StateMenuListener<STATE, TRANSITION>)comp).setVertexAndView(v, vv);
+                ((StateMenuListener<STATE, TRANSITION>)comp).setVertexAndView(v, vv, this.listener);
             }
             if (comp instanceof MenuPointListener) {
                 ((MenuPointListener)comp).setPoint(point);

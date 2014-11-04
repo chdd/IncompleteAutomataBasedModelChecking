@@ -9,6 +9,8 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.Actions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
+import it.polimi.view.menu.actions.ActionTypesInterface;
+import it.polimi.view.menu.actions.ClaimActionFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -146,7 +148,8 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 		
         Plugin myPlugin = new Plugin(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
-        JPopupMenu edgeMenu = new Actions().
+        JPopupMenu edgeMenu =
+        		new Actions(this.getActionInterface()).
         			new EdgeMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
         JPopupMenu vertexMenu =this.getStateMenu();
         myPlugin.setEdgePopup(edgeMenu);
@@ -156,6 +159,10 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
         gm.add(myPlugin);   // Add our new plugin to the mouse
         this.setGraphMouse(gm);	
      }
+	
+	public ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
+		return new ClaimActionFactory<>();
+	}
 	
 	public class BuchiAutomatonStatePaintTransformer implements Transformer<STATE, Paint> {
 	

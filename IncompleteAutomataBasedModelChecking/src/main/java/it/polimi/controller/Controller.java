@@ -77,6 +77,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERS
 							TRANSITIONFACTORY>) arg;
 			try {
 				a.perform(model, this.view);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.view.displayErrorMessage(e.getMessage().toString());

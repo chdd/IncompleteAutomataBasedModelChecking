@@ -85,7 +85,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 			return "";
 		}
 		if(propositions.size()==1){
-			return propositions.iterator().next().toString();
+			return "("+propositions.iterator().next().toString()+")";
 		}
 		Iterator<Proposition> it=this.propositions.iterator();
 		String ret="";
@@ -93,7 +93,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 			ret+=it.next().toString()+andSymbol;
 		}
 		ret+=it.next().toString();
-		return ret;
+		return "("+ret+")";
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	 * @return the {@link ConjunctiveClauseImpl} loaded from the {@link String}
 	 */
 	public static ConjunctiveClauseImpl loadFromString(String clause){
-		
+		clause=clause.substring(1, clause.length()-1);
 		clause+=andSymbol;
 		ConjunctiveClauseImpl ret=new ConjunctiveClauseImpl();
 		String[] andClauses=clause.split(andSymbol);

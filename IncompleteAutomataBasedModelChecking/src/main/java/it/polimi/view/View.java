@@ -1,7 +1,9 @@
 package it.polimi.view;
 
+import it.polimi.controller.actions.ActionInterface;
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
+import it.polimi.controller.actions.automata.edges.ChangeModelEdgeLabel;
 import it.polimi.controller.actions.createnew.NewClaim;
 import it.polimi.controller.actions.createnew.NewModel;
 import it.polimi.controller.actions.file.loading.LoadIntersection;
@@ -486,7 +488,9 @@ public class View<STATE extends State,
 		if(e.getSource().equals(this.checkButton) || e.getSource().equals(this.runCheckerMenuItem)){
 			this.notifyObservers(new CheckAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
-		
+		if(e instanceof ActionInterface<?, ?, ?, ?>){
+			this.notifyObservers(e);
+		}
 		
 	}
 

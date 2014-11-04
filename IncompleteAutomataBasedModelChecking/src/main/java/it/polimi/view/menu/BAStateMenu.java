@@ -4,6 +4,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.view.menu.actions.ClaimActionFactory;
 
 import javax.swing.JPopupMenu;
 
@@ -21,13 +22,13 @@ public class BAStateMenu
        
        this.stateType();
        this.addSeparator();
-       this.add(new Actions().new DeleteVertexMenuItem<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+       this.add(new Actions(new ClaimActionFactory<>()).new DeleteVertexMenuItem<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
        this.addSeparator();
-       this.add(new Actions().new Rename<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+       this.add(new Actions(new ClaimActionFactory<>()).new Rename<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
     }
    
     protected void stateType(){
-    	 this.add(new Actions().new Initial<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
-         this.add(new Actions().new Accepting());
+    	 this.add(new Actions(new ClaimActionFactory<>()).new Initial<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+         this.add(new Actions(new ClaimActionFactory<>()).new Accepting());
     }
 }
