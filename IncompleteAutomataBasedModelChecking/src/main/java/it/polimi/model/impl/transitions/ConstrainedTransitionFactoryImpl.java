@@ -44,9 +44,7 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		Set<String> labeling=new HashSet<String>();
 		labeling.add("SIGMA");
 		DNFFormula dnfFormula=new DNFFormula();
-		ConjunctiveClauseImpl clause=new ConjunctiveClauseImpl();
-		clause.addProposition(new SigmaProposition());
-		dnfFormula.addDisjunctionClause(clause);
+		dnfFormula.addDisjunctionClause(new SigmaProposition());
 		
 		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
 		LabelledTransitionFactoryImpl.transitionCount++;

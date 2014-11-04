@@ -23,6 +23,7 @@ import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.GradientEdgePaintTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
@@ -65,18 +66,19 @@ public abstract class AutomatonJPanel
 		this.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
 		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
 		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
-		
 		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
 		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
 		
 		// edges
 		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<TRANSITION>());
-		this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate(true, false));
+		this.getRenderContext().setEdgeDrawPaintTransformer(new GradientEdgePaintTransformer(Color.black, Color.black, this));
+		//this.getRenderContext().setEdgeArrowPredicate(new ShowEdgeArrowsPredicate(true, false));
 		this.getRenderContext().setEdgeStrokeTransformer(this.getStrokeEdgeStrokeTransformer());
-		
+		this.getRenderContext().setLabelOffset(+10);
 		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
-		this.getRenderContext().setLabelOffset(40);
+		
+		this.getRenderer().setEdgeLabelRenderer(new LabelledTransitionRender<STATE,TRANSITION>());
 		
 	}
 	
@@ -105,6 +107,7 @@ public abstract class AutomatonJPanel
 	
 	
 	protected abstract Transformer<STATE,Paint> getPaintTransformer(BA a);
+	
 	
 	
 	public class ShowEdgeArrowsPredicate implements Predicate<Context<Graph<STATE, TRANSITION>, TRANSITION>> {

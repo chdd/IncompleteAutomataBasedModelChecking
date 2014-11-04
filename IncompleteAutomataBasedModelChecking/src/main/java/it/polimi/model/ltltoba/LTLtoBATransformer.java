@@ -8,6 +8,7 @@ import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.Collection;
@@ -71,25 +72,30 @@ public class LTLtoBATransformer<
 			ConjunctiveClauseImpl conjunctionClause=new ConjunctiveClauseImpl();
 			for(IGraphProposition p: t.getLabels()){
 				if(p.getLabel().equals("<SIGMA>")){
-					conjunctionClause.addProposition(new SigmaProposition());
+					this.addConjunctionClause(new SigmaProposition(), ba, map, t);
 				}
 				else{
 					conjunctionClause.addProposition(new Proposition(p.getLabel(),p.isNegated()));
 				}
 			}
-			if(ba.isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
-				ba.findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getDnfFormula().addDisjunctionClause(conjunctionClause);
-			}
-			else{
-				DNFFormula dnfFormula=new DNFFormula();
-				dnfFormula.addDisjunctionClause(conjunctionClause);
-				ba.addTransition(
-						map.get(t.getSourceState()),
-						map.get(t.getTargetState()),
-						transitionFactory.create(dnfFormula));
-			}
+			this.addConjunctionClause(conjunctionClause, ba, map, t);
+			
 		}
 		
 		return ba;
+	}
+	
+	private void addConjunctionClause(ConjunctiveClause conjunctionClause, BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> ba, Map<IState, STATE> map, ITransition t){
+		if(ba.isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
+			ba.findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getDnfFormula().addDisjunctionClause(conjunctionClause);
+		}
+		else{
+			DNFFormula dnfFormula=new DNFFormula();
+			dnfFormula.addDisjunctionClause(conjunctionClause);
+			ba.addTransition(
+					map.get(t.getSourceState()),
+					map.get(t.getTargetState()),
+					transitionFactory.create(dnfFormula));
+		}	
 	}
 }

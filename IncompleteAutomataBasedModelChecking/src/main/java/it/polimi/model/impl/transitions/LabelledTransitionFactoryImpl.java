@@ -26,9 +26,7 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 	@Override
 	public LabelledTransition create() {
 		DNFFormula dnfFormula=new DNFFormula();
-		ConjunctiveClauseImpl clause=new ConjunctiveClauseImpl();
-		clause.addProposition(new SigmaProposition());
-		dnfFormula.addDisjunctionClause(clause);
+		dnfFormula.addDisjunctionClause(new SigmaProposition());
 		
 		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
 		LabelledTransitionFactoryImpl.transitionCount++;

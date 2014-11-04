@@ -83,7 +83,7 @@ public class DNFFormula {
 	 * @param clause is the clause to be added in the {@link Set} of {@link ConjunctiveClauseImpl}
 	 * @throws NullPointerException if the clause is null
 	 */
-	public void addDisjunctionClause(ConjunctiveClauseImpl clause){
+	public void addDisjunctionClause(ConjunctiveClause clause){
 		if(clause==null){
 			throw new NullPointerException("The clause to be added in the set of the clause cannot be null");
 		}
@@ -97,7 +97,10 @@ public class DNFFormula {
 	public Set<Proposition> getPropositions(){
 		Set<Proposition> dnfPropositons=new HashSet<Proposition>();
 		for(ConjunctiveClause c: this.disjunctionClause){
-			dnfPropositons.addAll(c.getPropositions());
+			if(c instanceof ConjunctiveClauseImpl){
+				dnfPropositons.addAll(((ConjunctiveClauseImpl)c).getPropositions());
+			}
+			
 		}
 		return dnfPropositons;
 	}

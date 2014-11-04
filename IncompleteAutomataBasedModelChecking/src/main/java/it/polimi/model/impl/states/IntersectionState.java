@@ -108,6 +108,11 @@ public class IntersectionState<STATE extends State> extends State{
 			return false;
 		return true;
 	}
+	
+	
+	public String toString(){
+		return "<HTML>Id: {"+this.id+"}<BR>"+"{"+s1.getId()+"-"+s2.getId()+"}"+"<BR>"+this.getName()+"</HTML>";
+	}
 
 	
 }

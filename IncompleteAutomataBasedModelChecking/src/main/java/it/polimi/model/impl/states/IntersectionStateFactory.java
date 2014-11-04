@@ -47,7 +47,7 @@ public class IntersectionStateFactory<STATE extends State, INTERSECTIONSTATE ext
 	@SuppressWarnings("unchecked")
 	public INTERSECTIONSTATE create(STATE s1, STATE s2, int num) {
 		
-		IntersectionState<STATE> s=new IntersectionState<STATE>(s1, s2, "{"+s1.getId()+"-"+s2.getId()+"}"+s1.getName()+"-"+s2.getName()+"-"+num,  num, IntersectionStateFactory.nodeCount);
+		IntersectionState<STATE> s=new IntersectionState<STATE>(s1, s2, s1.getName()+"-"+s2.getName()+"-"+num,  num, IntersectionStateFactory.nodeCount);
 		IntersectionStateFactory.nodeCount++;
 		return (INTERSECTIONSTATE) s;
 	}

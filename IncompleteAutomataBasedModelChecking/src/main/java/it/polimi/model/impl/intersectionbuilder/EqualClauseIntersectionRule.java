@@ -36,14 +36,21 @@ public class EqualClauseIntersectionRule<
 		
 		Set<ConjunctiveClause> commonClauses=new HashSet<ConjunctiveClause>();
 				
-		if(modelTransition.getDnfFormula().getConjunctiveClauses().contains(new SigmaProposition())){
-			return intersectionTransitionFactory.create(claimTransition.getDnfFormula());
-		}
-		if(claimTransition.getDnfFormula().getConjunctiveClauses().contains(new SigmaProposition())){
-			return intersectionTransitionFactory.create(modelTransition.getDnfFormula());
-		}
 		commonClauses.addAll(modelTransition.getDnfFormula().getConjunctiveClauses());
 		commonClauses.retainAll(claimTransition.getDnfFormula().getConjunctiveClauses());
+		
+		if(modelTransition.
+				getDnfFormula().
+				getConjunctiveClauses().
+				contains(new SigmaProposition())){
+			commonClauses.addAll(claimTransition.getDnfFormula().getConjunctiveClauses());
+		}
+		if(claimTransition.
+				getDnfFormula().
+				getConjunctiveClauses().
+				contains(new SigmaProposition())){
+			commonClauses.addAll(modelTransition.getDnfFormula().getConjunctiveClauses());
+		}
 		
 		if(!commonClauses.isEmpty()){
 			return intersectionTransitionFactory.create(new DNFFormula(commonClauses));

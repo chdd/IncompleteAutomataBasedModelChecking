@@ -128,7 +128,9 @@ public class BuchiAutomatonJPanel
 	
 	public class BuchiAutomatonShapeTransformer implements Transformer<STATE, Shape>{
 
-	private final int stateRadius=30;
+	private static final int stateRadius=30;
+	private static final int borderRadiusDinstance=4;
+	private static final int borderSize=1;
 	
 	protected BA a;
 	
@@ -138,46 +140,47 @@ public class BuchiAutomatonJPanel
 
 	@Override
 	public Shape transform(STATE input) {
+		int diameter=stateRadius*2;
+		
+		int innerRadius=stateRadius-borderRadiusDinstance;
+		int innerDiameter=innerRadius*2;
+		
+		int innerAreaRadius=innerRadius-borderSize;
+		int innerAreaDiameter=innerAreaRadius*2;
+		
+		
 		if(a.isAccept(input) && a.isInitial(input)){
-			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
-			ret.subtract(new Area(new Ellipse2D.Float(-stateRadius+2, -stateRadius+2, stateRadius*2-4, stateRadius*2-4)));
-			ret.add(new Area(new Ellipse2D.Float(-stateRadius+3, -stateRadius+3, stateRadius*2-6, stateRadius*2-6)));
-			Polygon p=new Polygon();
-			p.addPoint(11,  14);
-			p.addPoint(7, 7);
-			p.addPoint(14,  11);
 			
-			Polygon p2=new Polygon();
-			p.addPoint(13,  14);
-			p.addPoint(9, 9);
-			p.addPoint(14,  13);
+			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, diameter, diameter));
+			ret.subtract(new Area(new Ellipse2D.Float(-innerRadius, -innerRadius, innerDiameter, innerDiameter)));
+			ret.add(new Area(new Ellipse2D.Float(-innerAreaRadius, -innerAreaRadius, innerAreaDiameter, innerAreaDiameter)));
+			
+			Polygon p=new Polygon();
+			p.addPoint(-stateRadius+borderRadiusDinstance,  -stateRadius);
+			p.addPoint(-stateRadius+borderRadiusDinstance*2, -stateRadius+borderRadiusDinstance*2);
+			p.addPoint(-stateRadius,  -stateRadius+borderRadiusDinstance);
+			
 			ret.add(new Area(p));
-			ret.subtract(new Area(p2));
 			return ret;
 		}
 		if(a.isAccept(input)){
-			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
-			ret.subtract(new Area(new Ellipse2D.Float(-stateRadius+2, -stateRadius+2, stateRadius*2-4, stateRadius*2-4)));
-			ret.add(new Area(new Ellipse2D.Float(-stateRadius+3, -stateRadius+3, stateRadius*2-6, stateRadius*2-6)));
+			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, diameter, diameter));
+			ret.subtract(new Area(new Ellipse2D.Float(-innerRadius, -innerRadius, innerDiameter, innerDiameter)));
+			ret.add(new Area(new Ellipse2D.Float(-innerAreaRadius, -innerAreaRadius, innerAreaDiameter, innerAreaDiameter)));
 			
 			return ret;
 		}
 		if(a.isInitial(input)){
-			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
+			Area ret=new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, diameter, diameter));
 			Polygon p=new Polygon();
-			p.addPoint(11,  14);
-			p.addPoint(7, 7);
-			p.addPoint(14,  11);
+			p.addPoint(-stateRadius+borderRadiusDinstance,  -stateRadius);
+			p.addPoint(-stateRadius+borderRadiusDinstance*2, -stateRadius+borderRadiusDinstance*2);
+			p.addPoint(-stateRadius,  -stateRadius+borderRadiusDinstance);
 			
-			Polygon p2=new Polygon();
-			p.addPoint(13,  14);
-			p.addPoint(9, 9);
-			p.addPoint(14,  13);
 			ret.add(new Area(p));
-			ret.subtract(new Area(p2));
 			return ret;
 		}
-		else return new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, stateRadius*2, stateRadius*2));
+		else return new Area(new Ellipse2D.Float(-stateRadius, -stateRadius, diameter, diameter));
 	}
 	}
 	public class BuchiAutomatonStateStrokeTransofmer implements Transformer<STATE, Stroke> {

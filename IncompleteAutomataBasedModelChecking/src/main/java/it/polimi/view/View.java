@@ -23,6 +23,7 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.view.automaton.BALayout;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.automaton.IntersectionAutomatonJPanel;
@@ -58,6 +59,8 @@ import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout2;
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
 
 public class View<STATE extends State, 
 			STATEFACTORY extends StateFactory<STATE>,
@@ -258,7 +261,7 @@ public class View<STATE extends State,
 		  
 		 
 		 modelTab.add(containerModelMenu);
-		 this.modelLayout=new FRLayout<STATE,TRANSITION>(model);
+		 this.modelLayout=new BALayout<STATE,TRANSITION>(model);
 		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>>(model, this, this.modelLayout);
 		 modelTab.add(modelTabmodel);
 		 
