@@ -22,13 +22,13 @@ public class BAStateMenu
        
        this.stateType();
        this.addSeparator();
-       this.add(new Actions(new ClaimActionFactory<>()).new DeleteVertexMenuItem<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+       this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateDelete());
        this.addSeparator();
-       this.add(new Actions(new ClaimActionFactory<>()).new Rename<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+       this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new Rename());
     }
    
     protected void stateType(){
-    	 this.add(new Actions(new ClaimActionFactory<>()).new Initial<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
-         this.add(new Actions(new ClaimActionFactory<>()).new Accepting());
+    	 this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateInitial());
+         this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateAccepting());
     }
 }

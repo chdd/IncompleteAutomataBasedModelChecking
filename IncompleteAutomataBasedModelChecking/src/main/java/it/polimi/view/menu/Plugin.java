@@ -10,13 +10,9 @@ package it.polimi.view.menu;
  */
 
 
-import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.Component;
@@ -36,11 +32,7 @@ public class Plugin
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
 TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-INTERSECTIONSTATE extends IntersectionState<STATE>, 
-INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE,INTERSECTIONSTATE>, 
-INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
-INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>
+TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
 	extends AbstractPopupGraphMousePlugin {
 	
     private JPopupMenu edgePopup, vertexPopup;
@@ -91,8 +83,8 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSE
         if (vertexPopup == null) return;
         Component[] menuComps = vertexPopup.getComponents();
         for (Component comp: menuComps) {
-            if (comp instanceof StateMenuListener) {
-                ((StateMenuListener<STATE, TRANSITION>)comp).setVertexAndView(v, vv, this.listener);
+            if (comp instanceof StateListener) {
+                ((StateListener<STATE, TRANSITION>)comp).setVertexAndView(v,  this.listener);
             }
             if (comp instanceof MenuPointListener) {
                 ((MenuPointListener)comp).setPoint(point);
@@ -139,7 +131,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSE
         Component[] menuComps = edgePopup.getComponents();
         for (Component comp: menuComps) {
             if (comp instanceof TransitionListener) {
-                ((TransitionListener<STATE, TRANSITION>)comp).setEdgeAndView(edge, vv, this.listener);
+                ((TransitionListener<STATE, TRANSITION>)comp).setEdgeAndView(edge, this.listener);
             }
             if (comp instanceof MenuPointListener) {
                 ((MenuPointListener)comp).setPoint(point);

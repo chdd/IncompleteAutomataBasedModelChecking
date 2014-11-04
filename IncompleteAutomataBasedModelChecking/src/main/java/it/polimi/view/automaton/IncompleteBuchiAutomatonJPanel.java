@@ -7,7 +7,6 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.IBAStateMenu;
 import it.polimi.view.menu.actions.ActionTypesInterface;
-import it.polimi.view.menu.actions.ClaimActionFactory;
 import it.polimi.view.menu.actions.ModelActionFactory;
 
 import java.awt.Color;
@@ -41,7 +40,7 @@ BuchiAutomatonJPanel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, IBA> {
 		return new IncompleteBuchiAutomatonPaintTransformer(a);
 	}
 	protected JPopupMenu getStateMenu(){
-		 return new IBAStateMenu();
+		 return new IBAStateMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
 	}
 	public ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
 		return new ModelActionFactory<>();

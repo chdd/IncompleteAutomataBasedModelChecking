@@ -114,7 +114,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	}
 	
 	protected JPopupMenu getStateMenu(){
-		 return new BAStateMenu();
+		 return new BAStateMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
 	}
 	
 	
@@ -146,11 +146,11 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);
 		
-        Plugin myPlugin = new Plugin(this.view);
+        Plugin<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> myPlugin = new Plugin<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
         JPopupMenu edgeMenu =
-        		new Actions(this.getActionInterface()).
-        			new EdgeMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
+        		new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.getActionInterface()).
+        			new TransitionMenu();
         JPopupMenu vertexMenu =this.getStateMenu();
         myPlugin.setEdgePopup(edgeMenu);
         myPlugin.setVertexPopup(vertexMenu);

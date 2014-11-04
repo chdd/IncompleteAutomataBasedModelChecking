@@ -1,16 +1,12 @@
 package it.polimi.view.menu;
 
-import javax.swing.JPopupMenu;
-
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.view.menu.Actions.Accepting;
-import it.polimi.view.menu.Actions.DeleteVertexMenuItem;
-import it.polimi.view.menu.Actions.Initial;
-import it.polimi.view.menu.Actions.Rename;
 import it.polimi.view.menu.actions.ModelActionFactory;
+
+import javax.swing.JPopupMenu;
 
 
 
@@ -29,15 +25,15 @@ public class IBAStateMenu
        
        this.stateType();
        this.addSeparator();
-       this.add(new Actions(new ModelActionFactory<>()).new DeleteVertexMenuItem<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+       this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateDelete());
        this.addSeparator();
-       this.add(new Actions(new ModelActionFactory<>()).new Rename<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+       this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new Rename());
     }
    
     protected void stateType(){
-    	 this.add(new Actions(new ModelActionFactory<>()).new Initial<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
-         this.add(new Actions(new ModelActionFactory<>()).new Accepting());
-         this.add(new Actions(new ModelActionFactory<>()).new Transparent<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+    	 this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateInitial());
+         this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateAccepting());
+         this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateTransparent());
     }
 
 

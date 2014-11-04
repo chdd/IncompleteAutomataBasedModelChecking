@@ -9,11 +9,7 @@ package it.polimi.view.menu;
  *
  */
 
-import it.polimi.controller.actions.automata.ActionModelAddRemoveInitialState;
-import it.polimi.controller.actions.automata.edges.ChangeModelEdgeLabel;
-import it.polimi.model.impl.automata.BAImpl;
-import it.polimi.model.impl.automata.IBAImpl;
-import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.controller.actions.automata.states.RenameStateAction;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
@@ -30,47 +26,43 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-
-public class Actions {
-
-	public Actions(ActionTypesInterface actionTypesInterface){
-		this.actionTypesInterface=actionTypesInterface;
-	}
-	
-	private ActionTypesInterface actionTypesInterface;
-	
-	@SuppressWarnings("serial")
-	public class EdgeMenu<
+public class Actions<
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
 	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
+
+	private ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface;
+	
+	public Actions(ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface){
+		this.actionTypesInterface=actionTypesInterface;
+	}
+	
+	
+	@SuppressWarnings("serial")
+	public class TransitionMenu
 	extends JPopupMenu {
 		// private JFrame frame;
-		public EdgeMenu() {
+		public TransitionMenu() {
 			super("Edge Menu");
 			// this.frame = frame;
-			this.add(new AddCharacter<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.add(new TransitionAddCharacter());
 			this.addSeparator();
 			
-			this.add(new DeleteEdgeMenuItem<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.add(new TransitionDelete());
 		}
 	}
 
 	@SuppressWarnings("serial")
-	public class AddCharacter<
-	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+	public class TransitionAddCharacter
+	
 	extends Box implements TransitionListener<STATE, TRANSITION> {
 		private TRANSITION edge;
 		private ActionListener listener;
 		private JTextField character;
 
 		/** Creates a new instance of DeleteEdgeMenuItem */
-		public AddCharacter() {
+		public TransitionAddCharacter() {
 			super(BoxLayout.X_AXIS);
 
 			this.add(new JLabel("New DNFFormula: "));
@@ -87,8 +79,7 @@ public class Actions {
 			});
 		}
 		
-		public void setEdgeAndView(TRANSITION edge,
-				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
+		public void setEdgeAndView(TRANSITION edge, ActionListener l) {
 			this.edge = edge;
 			this.listener=l;
 		}
@@ -98,24 +89,19 @@ public class Actions {
 	
 
 	@SuppressWarnings("serial")
-	public class DeleteEdgeMenuItem<
-	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> extends JMenuItem implements
+	public class TransitionDelete extends JMenuItem implements
 			TransitionListener<STATE, TRANSITION> {
 		
 		private TRANSITION edge;
-		private VisualizationViewer<STATE, TRANSITION> visComp;
+		private ActionListener l;
 
 		/** Creates a new instance of DeleteEdgeMenuItem */
-		public DeleteEdgeMenuItem() {
+		public TransitionDelete() {
 			super("Delete Edge");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					visComp.getPickedEdgeState().pick(edge, false);
-					visComp.getGraphLayout().getGraph().removeEdge(edge);
-					visComp.repaint();
+					l.actionPerformed(actionTypesInterface.deleteEdgeAction(e.getSource(), e.getID(), e.getActionCommand(), edge));
+					
 				}
 			});
 		}
@@ -127,24 +113,19 @@ public class Actions {
 		 * @param edge
 		 * @param visComp
 		 */
-		public void setEdgeAndView(TRANSITION edge,
-				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
+		public void setEdgeAndView(TRANSITION edge, ActionListener l) {
 			this.edge = edge;
-			this.visComp = visComp;
+			this.l = l;
 			this.setText("Delete Edge " + edge.toString());
 		}
 
 	}
 
 	@SuppressWarnings("serial")
-	public class Rename<
-	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> extends Box implements
-			StateMenuListener<STATE, TRANSITION> {
+	public class Rename extends Box implements
+			StateListener<STATE, TRANSITION> {
 		STATE v;
-		VisualizationViewer<STATE, TRANSITION> visComp;
+		ActionListener l;
 		JTextField name;
 	
 		public Rename() {
@@ -156,48 +137,40 @@ public class Actions {
 
 			name.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					v.setName(name.getText());
-					visComp.repaint();
+					l.actionPerformed(new RenameStateAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
+					(e.getSource(), e.getID(), e.getActionCommand(), name.getText(), v));
 
 				}
 
 			});
 		}
 
-		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
+		public void setVertexAndView(STATE v, ActionListener l) {
 			this.v = v;
-			this.visComp = visComp;
+			this.l=l;
 		}
 	}
 
 	@SuppressWarnings("serial")
-	public class Initial<
-	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> extends JMenuItem implements
-			StateMenuListener<STATE, TRANSITION> {
+	public class StateInitial extends JMenuItem implements
+			StateListener<STATE, TRANSITION> {
 		private STATE v;
 		private ActionListener l;
 		
-		public Initial() {
+		public StateInitial() {
 			super("Initial");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					l.actionPerformed(new ActionModelAddRemoveInitialState
-							<STATE, STATEFACTORY, 
-							TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand(), v));
-	
+					l.actionPerformed(actionTypesInterface.setInitial(e.getSource(), e.getID(), e.getActionCommand(), v));
+						
 		
 				}
 
 			});
 		}
 
-		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
+		public void setVertexAndView(STATE v, ActionListener l) {
 			this.v = v;
 			this.l=l;
 		}
@@ -205,86 +178,69 @@ public class Actions {
 	}
 
 	@SuppressWarnings("serial")
-	public class Transparent<
-	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> extends JMenuItem implements
-			StateMenuListener<STATE, TRANSITION> {
+	public class StateTransparent extends JMenuItem implements
+			StateListener<STATE, TRANSITION> {
 		STATE v;
-		VisualizationViewer<STATE, TRANSITION> visComp;
+		ActionListener l;
 
-		public Transparent() {
+		public StateTransparent() {
 			super("Transparent");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					visComp.getPickedVertexState().pick(v, false);
-					((IBAImpl<STATE, TRANSITION, TRANSITIONFACTORY>) visComp
-							.getGraphLayout().getGraph())
-							.addTransparentState(v);
-					;
-					visComp.repaint();
-
+					l.actionPerformed(actionTypesInterface.setTransparent(e.getSource(), e.getID(),e.getActionCommand(), v));
+				
 				}
 
 			});
 		}
 
-		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l) {
+		public void setVertexAndView(STATE v, ActionListener l) {
 			this.v = v;
-			this.visComp = visComp;
+			this.l = l;
 		}
 
 	}
 
 	@SuppressWarnings("serial")
-	public  class Accepting extends JMenuItem implements
-			StateMenuListener<State, LabelledTransition> {
-		State v;
-		VisualizationViewer<State, LabelledTransition> visComp;
+	public  class StateAccepting extends JMenuItem implements
+			StateListener<STATE, TRANSITION> {
+		STATE state;
+		ActionListener l;
 
-		public Accepting() {
+		public StateAccepting() {
 			super("Accepting");
 
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					visComp.getPickedVertexState().pick(v, false);
-					((BAImpl<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>>) visComp
-							.getGraphLayout().getGraph()).addAcceptState(v);
-					;
-					visComp.repaint();
+					l.actionPerformed
+					(actionTypesInterface.setAccepting(e.getSource(), e.getID(), e.getActionCommand(), state));
+				
 				}
 
 			});
 		}
 
-		public void setVertexAndView(State v,
-				VisualizationViewer<State, LabelledTransition> visComp, ActionListener l) {
-			this.v = v;
-			this.visComp = visComp;
+		public void setVertexAndView(STATE v, ActionListener l) {
+			this.state = v;
+			this.l=l;
 		}
 
 	}
 
 	@SuppressWarnings("serial")
-	public class DeleteVertexMenuItem<
-	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> extends JMenuItem implements
-			StateMenuListener<STATE, TRANSITION> {
-		private STATE vertex;
-		private VisualizationViewer<STATE, TRANSITION> visComp;
+	public class StateDelete extends JMenuItem implements
+			StateListener<STATE, TRANSITION> {
+		private STATE state;
+		private ActionListener l;
 		
 		/** Creates a new instance of DeleteVertexMenuItem */
-		public DeleteVertexMenuItem() {
+		public StateDelete() {
 			super("Delete Vertex");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					visComp.getPickedVertexState().pick(vertex, false);
-					visComp.getGraphLayout().getGraph().removeVertex(vertex);
-					visComp.repaint();
+					l.actionPerformed
+					(actionTypesInterface.getDeleteStateAction(e.getSource(), e.getID(), e.getActionCommand(), state));
+				
 				}
 			});
 		}
@@ -295,11 +251,10 @@ public class Actions {
 		 * @param v
 		 * @param visComp
 		 */
-		public void setVertexAndView(STATE v,
-				VisualizationViewer<STATE, TRANSITION> visComp, ActionListener l ) {
-			this.vertex = v;
-			this.visComp = visComp;
-			this.setText("Delete Vertex " + v.toString());
+		public void setVertexAndView(STATE state, ActionListener l ) {
+			this.state = state;
+			this.l=l;
+			this.setText("Delete Vertex " + state.toString());
 		}
 
 	}

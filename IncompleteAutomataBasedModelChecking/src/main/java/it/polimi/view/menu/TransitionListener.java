@@ -12,13 +12,11 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 
 import java.awt.event.ActionListener;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-
 
 public interface TransitionListener
 	<STATE extends State,
 	TRANSITION extends LabelledTransition> {
  
-	void setEdgeAndView(TRANSITION e, VisualizationViewer<STATE, TRANSITION> visComp,  ActionListener visView); 
+	void setEdgeAndView(TRANSITION e, ActionListener visView); 
    
 }
