@@ -3,7 +3,6 @@ package it.polimi.view;
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
-import it.polimi.controller.actions.automata.edges.ChangeModelEdgeLabel;
 import it.polimi.controller.actions.createnew.NewClaim;
 import it.polimi.controller.actions.createnew.NewModel;
 import it.polimi.controller.actions.file.loading.LoadIntersection;
@@ -41,6 +40,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.Observable;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -72,6 +72,7 @@ public class View<STATE extends State,
 			INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
 			extends Observable implements ViewInterface<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
 
+	private static final String appName="CHIA: CHecker for Incompete Automata";
 	// Icons
 	
 	private final ImageIcon newIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-new.png"));
@@ -81,6 +82,11 @@ public class View<STATE extends State,
 	private final ImageIcon editingIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/categories/applications-office.png"));
 	private final ImageIcon trasformingIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/view-fullscreen.png"));
 	private final ImageIcon checkIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/categories/applications-system.png"));
+	private final ImageIcon resultYes=new ImageIcon(this.getClass().getResource("/img/Yes.png"));
+	private final ImageIcon resultNo=new ImageIcon(this.getClass().getResource("/img/No.png"));
+	private final ImageIcon resultMaybe=new ImageIcon(this.getClass().getResource("/img/Maybe.png"));
+	
+	private static final int verificationIconSize=64;
 	
 	// Messages
 	private final String editingMessage="<html>Editing Mode:<br>"
@@ -170,6 +176,7 @@ public class View<STATE extends State,
 	private AbstractLayout<STATE, TRANSITION> verificationModelLayout;
 	private AbstractLayout<STATE, TRANSITION> verificationClaimLayout;
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationIntersectionLayout;
+	private JLabel result;
 	
 	private JTabbedPane tabbedPane;
 	
@@ -205,6 +212,7 @@ public class View<STATE extends State,
 			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
 		
 		 this.jframe=new JFrame();
+		 this.jframe.setTitle(appName);
 		 // setting the size of the jframe
 		 this.jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		 this.jframe.getContentPane().setBackground(Color.getColor("myColor"));
@@ -337,11 +345,27 @@ public class View<STATE extends State,
 		 JPanel container2=new JPanel();
 		 container2.setLayout(new BoxLayout(container2,BoxLayout.Y_AXIS));
 		 
+		 
+		 // verification results
+		 container2.add(new JLabel("Model Checking results"));
+		 JPanel resultPanel=new JPanel();
+		 
+		 resultPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
+				  BorderFactory.createLoweredBevelBorder()));
+		 resultPanel.setBackground(Color.white);
+		 this.result=new JLabel(this.resultMaybe);
+		 this.result.setSize(new Dimension(verificationIconSize, verificationIconSize));
+		 
+		 resultPanel.add(result);
+		 this.verificationSnapshotResultsPanel=new ResultsJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>>();
+		 resultPanel.add(verificationSnapshotResultsPanel);
+		 container2.add(resultPanel);
+		 
+		 // Intersection automaton
+		 
 		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
 		 container2.add(intersectionLabel);
-		 
 		 this.verificationIntersectionLayout=new FRLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>(intersection);
-		 
 		 this.verificationIntersectionPanel=new IntersectionAutomatonJPanel
 				 <STATE, 
 					STATEFACTORY,
@@ -356,10 +380,7 @@ public class View<STATE extends State,
 		 this.verificationIntersectionPanel.setTranformingMode();
 		 container2.add(verificationIntersectionPanel);
 		 
-		 container2.add(new JLabel("Model Checking results"));
 		 
-		 this.verificationSnapshotResultsPanel=new ResultsJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>>();
-		 container2.add(verificationSnapshotResultsPanel);
 			
 		 verificationSnapshotTab.add(container2);
 		 jframe.setResizable(true);
@@ -405,10 +426,28 @@ public class View<STATE extends State,
 	public void updateVerificationResults(ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
 			DrawableIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
 		
+		
+		if(verificationResults.getResult()==1){
+			this.result.setIcon(this.resultYes);
+			this.result.setText("The property is satisfied");
+			this.result.repaint();
+		}
+		if(verificationResults.getResult()==0){
+			this.result.setIcon(this.resultNo);
+			this.result.setText("The property is not satisfied");
+			this.result.repaint();
+		}
+		if(verificationResults.getResult()==-1){
+			this.result.setIcon(this.resultMaybe);
+			this.result.setText("The property is possibly satisfied");
+			this.result.repaint();
+		}
+		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
-			this.intersectionPanel.highlightPath(verificationResults.getViolatingPath(), intersection, verificationResults.getViolatingPathTransitions());
+			this.verificationIntersectionPanel.highlightPath(verificationResults.getViolatingPath(), intersection, verificationResults.getViolatingPathTransitions());
 		}
+		this.tabbedPane.setSelectedComponent(this.verificationSnapshotTab);
 		this.jframe.repaint();
 	}
 

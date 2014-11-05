@@ -26,14 +26,8 @@ CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactory<S, T1>, A  exte
 		 this.add(this.xmlArea);
 	}
 	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){
-		if(results.getResult()==1){
-			this.xmlArea.setText("The property is satisfied");
-		}
-		if(results.getResult()==0){
-			this.xmlArea.setText("The property is not satisfied");
-		}
+		
 		if(results.getResult()==-1){
-			this.xmlArea.setText("The property is possibly satisfied\n\n");
 			this.xmlArea.setText(this.xmlArea.getText()+"Constraint:\n"+results.getConstraint());
 		}
 	}

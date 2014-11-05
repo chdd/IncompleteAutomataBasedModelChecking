@@ -97,7 +97,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 		/** Creates a new instance of DeleteEdgeMenuItem */
 		public TransitionDelete() {
-			super("Delete Edge");
+			super("Delete Transition");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					l.actionPerformed(actionTypesInterface.deleteEdgeAction(e.getSource(), e.getID(), e.getActionCommand(), edge));
@@ -116,7 +116,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 		public void setEdgeAndView(TRANSITION edge, ActionListener l) {
 			this.edge = edge;
 			this.l = l;
-			this.setText("Delete Edge " + edge.toString());
+			this.setText("Delete Transition");
 		}
 
 	}
@@ -235,7 +235,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 		
 		/** Creates a new instance of DeleteVertexMenuItem */
 		public StateDelete() {
-			super("Delete Vertex");
+			super("Delete State");
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					l.actionPerformed
@@ -254,7 +254,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 		public void setVertexAndView(STATE state, ActionListener l ) {
 			this.state = state;
 			this.l=l;
-			this.setText("Delete Vertex " + state.toString());
+			this.setText("Delete State");
 		}
 
 	}

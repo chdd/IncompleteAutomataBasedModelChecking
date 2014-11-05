@@ -89,7 +89,7 @@ public class IntersectionAutomatonJPanel
 			if(this.stackOfHighLightedTransitions.contains(input)){
 				return Color.red;
 			}
-			return Color.WHITE;
+			return Color.black;
 		}
 	}
 	
