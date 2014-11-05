@@ -73,8 +73,8 @@ public class View<STATE extends State,
 			extends Observable implements ViewInterface<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
 
 	private static final String appName="CHIA: CHecker for Incompete Automata";
-	// Icons
 	
+	// Icons
 	private final ImageIcon newIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-new.png"));
 	private final ImageIcon openIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/actions/document-open.png"));
 	private final ImageIcon saveIcon = new ImageIcon(this.getClass().getResource("/org/freedesktop/tango/22x22/devices/media-floppy.png"));
@@ -85,6 +85,8 @@ public class View<STATE extends State,
 	private final ImageIcon resultYes=new ImageIcon(this.getClass().getResource("/img/Yes.png"));
 	private final ImageIcon resultNo=new ImageIcon(this.getClass().getResource("/img/No.png"));
 	private final ImageIcon resultMaybe=new ImageIcon(this.getClass().getResource("/img/Maybe.png"));
+	private final ImageIcon resultInitial=new ImageIcon(this.getClass().getResource("/img/QuestionMark.png"));
+	
 	
 	private static final int verificationIconSize=64;
 	
@@ -177,6 +179,7 @@ public class View<STATE extends State,
 	private AbstractLayout<STATE, TRANSITION> verificationClaimLayout;
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationIntersectionLayout;
 	private JLabel result;
+	private JButton viewConstraints;
 	
 	private JTabbedPane tabbedPane;
 	
@@ -352,13 +355,15 @@ public class View<STATE extends State,
 		 
 		 resultPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
 				  BorderFactory.createLoweredBevelBorder()));
-		 resultPanel.setBackground(Color.white);
-		 this.result=new JLabel(this.resultMaybe);
+		 this.result=new JLabel(this.resultInitial);
 		 this.result.setSize(new Dimension(verificationIconSize, verificationIconSize));
 		 
 		 resultPanel.add(result);
+		 this.viewConstraints=new JButton("Explore Constraints");
+		 this.viewConstraints.setVisible(false);
+		 resultPanel.add(viewConstraints);
 		 this.verificationSnapshotResultsPanel=new ResultsJPanel<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>>();
-		 resultPanel.add(verificationSnapshotResultsPanel);
+		 //resultPanel.add(verificationSnapshotResultsPanel);
 		 container2.add(resultPanel);
 		 
 		 // Intersection automaton
@@ -430,16 +435,20 @@ public class View<STATE extends State,
 		if(verificationResults.getResult()==1){
 			this.result.setIcon(this.resultYes);
 			this.result.setText("The property is satisfied");
+			this.viewConstraints.setVisible(false);
 			this.result.repaint();
 		}
 		if(verificationResults.getResult()==0){
 			this.result.setIcon(this.resultNo);
 			this.result.setText("The property is not satisfied");
+			this.viewConstraints.setVisible(false);
 			this.result.repaint();
 		}
 		if(verificationResults.getResult()==-1){
 			this.result.setIcon(this.resultMaybe);
 			this.result.setText("The property is possibly satisfied");
+			this.viewConstraints.setVisible(true);
+			this.viewConstraints.setEnabled(true);
 			this.result.repaint();
 		}
 		
