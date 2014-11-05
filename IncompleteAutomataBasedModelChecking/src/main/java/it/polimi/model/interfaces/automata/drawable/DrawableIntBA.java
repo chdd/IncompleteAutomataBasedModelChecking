@@ -2,7 +2,6 @@ package it.polimi.model.interfaces.automata.drawable;
 
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
@@ -20,7 +19,7 @@ public interface DrawableIntBA<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION  extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITION  extends LabelledTransition, 
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>> 
 	extends IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>, DrawableIBA<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> {
 

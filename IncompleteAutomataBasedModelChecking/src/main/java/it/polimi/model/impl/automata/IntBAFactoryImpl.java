@@ -1,11 +1,8 @@
 package it.polimi.model.impl.automata;
 
-import org.apache.commons.collections15.Factory;
-
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
@@ -15,11 +12,13 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
+import org.apache.commons.collections15.Factory;
+
 public class IntBAFactoryImpl<
 	STATE extends State,
 	INTERSECTIONSTATE extends IntersectionState<STATE>,
 	INTERSECTIONSTATEFACTORY extends StateFactory<INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITION extends LabelledTransition, 
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
 	TRANSITION extends LabelledTransition,
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>

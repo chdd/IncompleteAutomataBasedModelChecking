@@ -2,7 +2,6 @@ package it.polimi.io;
 
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
@@ -17,7 +16,7 @@ public class IntBAWriter
 	<STATE extends State, 
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITION extends LabelledTransition, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
 	AUTOMATON extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
@@ -41,24 +40,26 @@ public class IntBAWriter
 			new  Transformer<INTERSECTIONTRANSITION, String>(){
 				@Override
 				public String transform(INTERSECTIONTRANSITION input) {
-					if(input.getConstrainedState()==null){
+					/*if(input.getConstrainedState()==null){
 						return "";
 					}
 					else{
 						return Integer.toString(input.getConstrainedState().getId());
-					}
+					//}*/
+					return "";
 				}
 			});
 		this.addEdgeData("cstateName", "constrained state name", null, 
 				new  Transformer<INTERSECTIONTRANSITION, String>(){
 					@Override
 					public String transform(INTERSECTIONTRANSITION input) {
-						if(input.getConstrainedState()==null){
+						/*if(input.getConstrainedState()==null){
 							return "";
 						}
 						else{
 							return input.getConstrainedState().getName();
-						}
+						}*/
+						return "";
 					}
 				});
 	}

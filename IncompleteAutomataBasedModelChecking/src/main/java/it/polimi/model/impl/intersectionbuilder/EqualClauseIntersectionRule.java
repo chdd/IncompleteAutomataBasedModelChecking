@@ -1,15 +1,14 @@
 package it.polimi.model.impl.intersectionbuilder;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Makes the transition fireable only when the clauses of the model and the claim are equals
@@ -23,7 +22,7 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 public class EqualClauseIntersectionRule<
 	STATE extends State,
 	TRANSITION extends LabelledTransition,
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITION extends LabelledTransition,
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>
 	extends
 		IntersectionRule<STATE, TRANSITION, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> {

@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 
 /**
@@ -90,12 +91,19 @@ public class DNFFormula {
 		this.disjunctionClause.add(clause);
 	}
 	
+	public void addDisjunctionClause(Set<ConjunctiveClause> clauses){
+		if(clauses==null){
+			throw new NullPointerException("The clause to be added in the set of the clause cannot be null");
+		}
+		this.disjunctionClause.addAll(clauses);
+	}
+	
 	/**
 	 * returns the {@link Set} of {@link IGraphProposition} involved in the {@link DNFFormula}
 	 * @return the {@link Set} of {@link IGraphProposition} involved in the {@link DNFFormula}
 	 */
-	public Set<Proposition> getPropositions(){
-		Set<Proposition> dnfPropositons=new HashSet<Proposition>();
+	public Set<GraphProposition> getPropositions(){
+		Set<GraphProposition> dnfPropositons=new HashSet<GraphProposition>();
 		for(ConjunctiveClause c: this.disjunctionClause){
 			if(c instanceof ConjunctiveClauseImpl){
 				dnfPropositons.addAll(((ConjunctiveClauseImpl)c).getPropositions());

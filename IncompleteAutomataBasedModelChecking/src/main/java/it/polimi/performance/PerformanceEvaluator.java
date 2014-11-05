@@ -7,7 +7,6 @@ import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
 import it.polimi.model.interfaces.automata.BAFactory;
@@ -26,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import edu.uci.ics.jung.io.GraphIOException;
 
 /**
@@ -53,14 +53,14 @@ public class PerformanceEvaluator{
 
 	public static void main(String args[]) throws  IOException, GraphIOException {
 		
-		ModelCheckerParameters<State, IntersectionState<State>, ConstrainedTransition<State>> mp=new ModelCheckerParameters<State, IntersectionState<State>, ConstrainedTransition<State>>();
+		ModelCheckerParameters<State, IntersectionState<State>, LabelledTransition> mp=new ModelCheckerParameters<State, IntersectionState<State>, LabelledTransition>();
 		
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
 			
 			for(int i=initialNumberOfTransparentStates; i<=maxNumberTransparentStates;i=i+incrementNumberOfTransparentStates){
 				
 				for(int j=0;j<numeroProve;j++){
-					Set<Proposition> alphabetModel=new HashSet<Proposition>();
+					Set<GraphProposition> alphabetModel=new HashSet<GraphProposition>();
 					alphabetModel.add(new Proposition("a", false));
 					alphabetModel.add(new Proposition("b", false));
 					
@@ -97,13 +97,13 @@ public class PerformanceEvaluator{
 					
 					DrawableBA<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>> a2=baReader.readGraph();
 					
-					ModelChecker<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, IntersectionState<State>, ConstrainedTransition<State>,
-					ConstrainedTransitionFactory<State, ConstrainedTransition<State>>> mc=
+					ModelChecker<State, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, IntersectionState<State>, LabelledTransition,
+					ConstrainedTransitionFactory<State, LabelledTransition>> mc=
 							new ModelChecker<State, 
 								LabelledTransition, 
 								LabelledTransitionFactory<LabelledTransition>,
-								IntersectionState<State>, ConstrainedTransition<State>,
-								ConstrainedTransitionFactory<State, ConstrainedTransition<State>>>(a1, a2, mp);
+								IntersectionState<State>, LabelledTransition,
+								ConstrainedTransitionFactory<State, LabelledTransition>>(a1, a2, mp);
 					mc.check();
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());

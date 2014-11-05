@@ -4,7 +4,6 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
@@ -29,7 +28,7 @@ public class IntersectionAutomatonJPanel
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITION extends LabelledTransition,
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
 	INTERSECTIONAUTOMATON  extends DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
 	extends
@@ -133,18 +132,18 @@ public class IntersectionAutomatonJPanel
 		}	
 	}
 	
-	public class IntersectionAutomatonEdgeStrokeTransformed<S extends State, T extends ConstrainedTransition<S>> extends
+	public class IntersectionAutomatonEdgeStrokeTransformed<S extends State, T extends LabelledTransition> extends
 	BuchiAutomatonEdgeStrokeTransormer<T> {
 		@Override
 		public Stroke transform(T input) {
-			if(input.getConstrainedState()!=null)
+			/*if(input.getConstrainedState()!=null)
 			{
 				float dash[]={10.0f};
 				return new BasicStroke(0.5f,  BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 5.0f, dash, 0.0f);
 			}
-			else{
+			else{*/
 				return super.transform(input);
-			}
+			//}
 		}
 	}
 	

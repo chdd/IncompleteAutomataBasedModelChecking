@@ -5,7 +5,6 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.IntBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
@@ -29,7 +28,7 @@ public class IntBAReader
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE,INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITION extends LabelledTransition, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
 	AUTOMATON extends DrawableIntBA<STATE, TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>,

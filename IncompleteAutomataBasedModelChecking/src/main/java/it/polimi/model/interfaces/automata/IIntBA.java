@@ -3,7 +3,6 @@ package it.polimi.model.interfaces.automata;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
@@ -20,7 +19,7 @@ public interface IIntBA<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITION extends LabelledTransition, 
 	TRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>
 	extends IBA<INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
 

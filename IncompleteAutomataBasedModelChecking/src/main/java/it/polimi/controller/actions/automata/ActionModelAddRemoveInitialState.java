@@ -6,7 +6,6 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
@@ -14,6 +13,7 @@ import it.polimi.view.ViewInterface;
 
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class ActionModelAddRemoveInitialState<
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
@@ -33,7 +33,7 @@ public class ActionModelAddRemoveInitialState<
 	
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITION extends LabelledTransition,
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>
 	> void perform(
 			ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE , 

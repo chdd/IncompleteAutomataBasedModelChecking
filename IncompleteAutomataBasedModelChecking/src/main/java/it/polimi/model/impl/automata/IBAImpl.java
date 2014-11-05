@@ -3,7 +3,6 @@ package it.polimi.model.impl.automata;
 
 import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
-import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
@@ -14,6 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
+
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 /**
  * @author claudiomenghi
@@ -47,7 +48,7 @@ public class IBAImpl<
 	 * @param alphabet is the alphabet of the extended automaton
 	 * @throws NullPointerException is generated if the alphabet of the automaton is null
 	 */
-	public IBAImpl(Set<Proposition> alphabet, TRANSITIONFACTORY transitionFactory) {
+	public IBAImpl(Set<GraphProposition> alphabet, TRANSITIONFACTORY transitionFactory) {
 		super(alphabet, transitionFactory);
 		transparentStates=new HashSet<STATE>();
 	}
@@ -92,7 +93,7 @@ public class IBAImpl<
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<Proposition> alphabet){
+	public void getRandomAutomaton(int n, double transitionProbability, double initialStateProbability, double acceptingStateProbability, double transparentStateProbability, Set<GraphProposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -121,7 +122,7 @@ public class IBAImpl<
 			for(STATE s2: this.getVertices()){
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
-					Proposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					GraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					this.addTransition(s1, s2, this.transitionFactory.create(new DNFFormula(new ConjunctiveClauseImpl(character))));
 				}
 			}
@@ -134,7 +135,7 @@ public class IBAImpl<
 	 * @return a new random graph
 	 */
 
-	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<Proposition> alphabet){
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, int numTransparentStates, Set<GraphProposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -174,22 +175,13 @@ public class IBAImpl<
 				double randInt=r.nextInt(11)/10.0;
 				if(randInt<=transitionProbability){
 					
-					Proposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					GraphProposition character=BAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					this.addTransition(s1, s2, this.transitionFactory.create(new DNFFormula(new ConjunctiveClauseImpl(character))));
 				}
 			}
 		}
 	}
-	public static Proposition getRandomString(Set<Proposition> alphabet, int position){
-
-		Iterator<Proposition> it=alphabet.iterator();
-		if(position==0)
-		for(int i=0; i<position; i++){
-		
-			it.next();
-		}
-		return it.next();
-	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

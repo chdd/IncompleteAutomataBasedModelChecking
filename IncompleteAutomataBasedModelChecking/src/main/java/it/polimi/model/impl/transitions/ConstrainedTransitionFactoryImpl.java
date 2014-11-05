@@ -1,6 +1,7 @@
 package it.polimi.model.impl.transitions;
 
 import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
+import it.polimi.model.impl.labeling.ConstraintProposition;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
@@ -16,37 +17,23 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author claudiomenghi
  *
  */
-public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFactory<State, ConstrainedTransition<State>>{
+public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFactory<State, LabelledTransition>{
 
-	/**
-	 * creates a new {@link ConstrainedTransition} with the specified {@link State} and {@link DNFFormula}
-	 * @param s is the {@link State} constrained by the {@link ConstrainedTransition} (null if no state are constrained)
-	 * @param dnfFormula is the {@link DNFFormula} which labels the {@link ConstrainedTransition}
-	 * @throws NullPointerException if the {@link DNFFormula} is null
-	 * @return a new {@link ConstrainedTransition} with the specified {@link DNFFormula} and the constrained {@link State}	  
-	 */
-	public ConstrainedTransition<State> create(int id, DNFFormula dnfFormula, State s) {
-		if(dnfFormula==null){
-			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
-		}
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, s,  id);
-		LabelledTransitionFactoryImpl.transitionCount++;
-		return t;
-	}
+	
 	
 	/**
 	 * creates a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl} with a single {@link GraphProposition} SIGMA
 	 * @return a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl} with a single {@link GraphProposition} SIGMA
 	 */
 	@Override
-	public ConstrainedTransition<State> create() {
+	public LabelledTransition create() {
 		
 		Set<String> labeling=new HashSet<String>();
 		labeling.add("SIGMA");
 		DNFFormula dnfFormula=new DNFFormula();
 		dnfFormula.addDisjunctionClause(new SigmaProposition());
 		
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition t=new LabelledTransition(dnfFormula,  LabelledTransitionFactoryImpl.transitionCount);
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
@@ -57,13 +44,15 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	 * @return a new {@link ConstrainedTransition} with the {@link DNFFormula} as label and a null {@link State}
 	 * @throws NullPointerException if the {@link DNFFormula} is null
 	 */
-	public ConstrainedTransition<State> create(DNFFormula dnfFormula) {
+	public LabelledTransition create(DNFFormula dnfFormula) {
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
 		
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
-		LabelledTransitionFactoryImpl.transitionCount++;
+		
+		
+		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
+		this.updateCounter(LabelledTransitionFactoryImpl.transitionCount);
 		return t;
 	}
 
@@ -76,29 +65,37 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	 * @throws IllegalArgumentException if the id is not grater than or equal to zero
 	 */
 	@Override
-	public ConstrainedTransition<State> create(int id, DNFFormula dnfFormula) {
+	public LabelledTransition create(int id, DNFFormula dnfFormula) {
 		if(id<0){
 			throw new IllegalArgumentException("The id must be grater than or equal to zero");
 		}
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
-		ConstrainedTransition<State> t=new ConstrainedTransition<State>(dnfFormula, null, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
 		
-		LabelledTransitionFactoryImpl.transitionCount=Math.max(id++, LabelledTransitionFactoryImpl.transitionCount++);
-		LabelledTransitionFactoryImpl.transitionCount++;
+		this.updateCounter(id);;
 		return t;
 	}
 
-	@Override
-	public ConstrainedTransition<State> create(DNFFormula dnfFormula,
-			State state) {
-		ConstrainedTransition<State> t=this.create(LabelledTransitionFactoryImpl.transitionCount, dnfFormula, state);
-		this.updateCounter(LabelledTransitionFactoryImpl.transitionCount);
-		return t;
-	}
+	
 	
 	private void updateCounter(int id){
 		LabelledTransitionFactoryImpl.transitionCount=Math.max(id++, LabelledTransitionFactoryImpl.transitionCount++);
+	}
+
+	@Override
+	public LabelledTransition create(DNFFormula dnfFormula, State state) {
+		return this.create(LabelledTransitionFactoryImpl.transitionCount, dnfFormula, state);
+	}
+
+	@Override
+	public LabelledTransition create(int id, DNFFormula dnfFormula, State state) {
+		ConjunctiveClauseImpl c=new ConjunctiveClauseImpl(new ConstraintProposition<State>(state, dnfFormula.toString()));
+		LabelledTransition t=new LabelledTransition(new DNFFormula(c), id);
+		
+		
+		this.updateCounter(LabelledTransitionFactoryImpl.transitionCount);
+		return t;
 	}
 }

@@ -3,7 +3,6 @@ package it.polimi.model.impl.automata;
 import it.polimi.model.impl.intersectionbuilder.IntersectionBuilder;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
@@ -30,7 +29,7 @@ public class IntBAImpl<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>, 
+	INTERSECTIONTRANSITION extends LabelledTransition, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
 	extends IBAImpl<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> 

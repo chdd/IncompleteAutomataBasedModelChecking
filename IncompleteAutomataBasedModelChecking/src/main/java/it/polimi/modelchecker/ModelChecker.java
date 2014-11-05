@@ -5,7 +5,6 @@ import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.ConstrainedTransitionFactoryImpl;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.BA;
@@ -28,7 +27,7 @@ public class ModelChecker
 	TRANSITION extends LabelledTransition, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITION extends LabelledTransition,
 	INTERSECTIONTRANSITIONFACTORY  extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>> 
 {
 	

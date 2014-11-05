@@ -21,6 +21,7 @@ public class Proposition extends GraphProposition {
 	   }
 	}
 	
+	
 	/**
 	 * return the {@link String} representation of the {@link GraphProposition}
 	 * @return the {@link String} representation of the {@link GraphProposition}

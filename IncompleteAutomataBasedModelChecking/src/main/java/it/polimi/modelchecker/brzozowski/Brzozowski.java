@@ -3,7 +3,6 @@ package it.polimi.modelchecker.brzozowski;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransition;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
@@ -31,7 +30,7 @@ public class Brzozowski<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends ConstrainedTransition<STATE>,
+	INTERSECTIONTRANSITION extends LabelledTransition,
 	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	INTERSECTIONTRANSITIONFACTORY  extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>> {
 
@@ -163,7 +162,7 @@ public class Brzozowski<
 				for(INTERSECTIONTRANSITION t: a.getOutEdges(s1)){
 					if(a.getDest(t).equals(s2)){
 						// if the first state of s1 does not change and the state is transparent
-						if(t.getConstrainedState()!=null){
+						/*if(t.getConstrainedState()!=null){
 							if(!setted){
 								ret[i][j]=new AtomicProposition<STATE>(s1.getS1(),t.getDnfFormula().toString()+"");
 							}
@@ -171,7 +170,7 @@ public class Brzozowski<
 								ret[i][j]=ret[i][j].union(new AtomicProposition<STATE>(s1.getS1(),"("+t.getDnfFormula().toString()+")"));
 							}
 						}
-						else{
+						else{*/
 							if(a.isMixed(s1)){
 								if(!setted){
 									ret[i][j]=new AtomicProposition<STATE>(s1.getS1(), "λ");
@@ -188,7 +187,7 @@ public class Brzozowski<
 									ret[i][j]=ret[i][j].union(new EpsilonProposition<STATE>());
 								}
 							}
-						}
+						//}
 						setted=true;
 					}	
 				}

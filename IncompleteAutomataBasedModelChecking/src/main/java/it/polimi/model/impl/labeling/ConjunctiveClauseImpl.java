@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 /**
  * contains a Conjunctive clause, i.e., a set of propositions {@link IGraphProposition} separated by the and operator 
@@ -23,13 +24,13 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	/**
 	 * is the set of propositions {@link IGraphProposition} which are separated by the and operator
 	 */
-	private Set<Proposition> propositions;
+	private Set<GraphProposition> propositions;
 
 	/**
 	 * creates a new conjunctive clause
 	 */
 	public ConjunctiveClauseImpl(){
-		propositions=new HashSet<Proposition>();
+		propositions=new HashSet<GraphProposition>();
 	}
 	
 	/**
@@ -37,18 +38,18 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	 * @param p the only proposition of the {@link ConjunctiveClauseImpl}
 	 * @throws NullPointerException if the {@link IGraphProposition} p is null
 	 */
-	public ConjunctiveClauseImpl(Proposition p){
+	public ConjunctiveClauseImpl(GraphProposition p){
 		if(p==null){
 			throw new NullPointerException("The proposition p cannot be null");
 		}
-		propositions=new HashSet<Proposition>();
+		propositions=new HashSet<GraphProposition>();
 		this.propositions.add(p);
 	}
 	
 	/**
 	 * @return the {@link Set} of the propositions ( {@link IGraphProposition}) of the conjunctive clause
 	 */
-	public Set<Proposition> getPropositions() {
+	public Set<GraphProposition> getPropositions() {
 		return propositions;
 	}
 
@@ -57,7 +58,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	 * @param propositions contains the set of propositions to be set in the conjunctive clause
 	 * @throws NullPointerException if the set of propositions to be set is null
 	 */
-	public void setPropositions(Set<Proposition> propositions) {
+	public void setPropositions(Set<GraphProposition> propositions) {
 		if(propositions==null){
 			throw new NullPointerException("The set of propositions to be setted cannot be null");
 		}
@@ -87,7 +88,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 		if(propositions.size()==1){
 			return "("+propositions.iterator().next().toString()+")";
 		}
-		Iterator<Proposition> it=this.propositions.iterator();
+		Iterator<GraphProposition> it=this.propositions.iterator();
 		String ret="";
 		for(int i=0;i< this.propositions.size()-1;i++){
 			ret+=it.next().toString()+andSymbol;
