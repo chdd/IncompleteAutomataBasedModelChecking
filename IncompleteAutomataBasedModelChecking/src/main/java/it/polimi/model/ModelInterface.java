@@ -10,7 +10,7 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
@@ -144,7 +144,7 @@ public interface ModelInterface<
 
 	public void check();
 	
-	public ModelCheckerParameters<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
+	public ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
 	
 	public void loadClaimFromLTL(String ltlFormula);
 }

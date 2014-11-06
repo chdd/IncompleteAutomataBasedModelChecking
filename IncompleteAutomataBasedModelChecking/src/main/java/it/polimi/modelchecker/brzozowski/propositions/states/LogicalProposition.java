@@ -62,22 +62,19 @@ public abstract class LogicalProposition<CONSTRAINTELEMENT extends State, TRANSI
 		int inserted=0;
 		List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> value=getPredicates();
 		for(int i=0; i<value.size();i++){
-			if(!(value.get(i) instanceof EpsilonProposition)){
-				if(inserted>0){
-					if(inserted==1){
-						inserted=2;
-						ret="("+ret+")"+this.getType()+"("+value.get(i)+")";
-					}
-					else{
-						ret=ret+this.getType()+"("+value.get(i)+")";
-					}
+			if(inserted>0){
+				if(inserted==1){
+					inserted=2;
+					ret="("+ret+")"+this.getType()+"("+value.get(i)+")";
 				}
 				else{
-					inserted=1;
-					ret=value.get(i).toString();
+					ret=ret+this.getType()+"("+value.get(i)+")";
 				}
 			}
-			
+			else{
+				inserted=1;
+				ret=value.get(i).toString();
+			}
 		}
 		return ret;
 	}

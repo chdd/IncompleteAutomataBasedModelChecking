@@ -52,7 +52,7 @@ public class ModelChecker
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
 	 */
-	private ModelCheckerParameters<CONSTRAINEDELEMENT,STATE,TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION> parameters;
+	private ModelCheckingResults<CONSTRAINEDELEMENT,STATE,TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION> parameters;
 	
 	/**
 	 * creates a new {@link ModelChecker}
@@ -61,7 +61,7 @@ public class ModelChecker
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, BA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY> specification, ModelCheckerParameters<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE,INTERSECTIONTRANSITION> mp){
+	public ModelChecker(IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, BA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY> specification, ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE,INTERSECTIONTRANSITION> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}
@@ -178,7 +178,7 @@ public class ModelChecker
 	 * @return the resulting parameters of the verification, the number of the states of the intersection automaton the time required 
 	 * from the verification procedure etc
 	 */
-	public ModelCheckerParameters<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getParameters() {
+	public ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getParameters() {
 		return parameters;
 	}
 	

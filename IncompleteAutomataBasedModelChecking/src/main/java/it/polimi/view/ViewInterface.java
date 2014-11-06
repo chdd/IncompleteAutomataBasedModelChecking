@@ -8,7 +8,7 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.geom.Point2D;
 import java.util.Observer;
@@ -43,8 +43,11 @@ public interface ViewInterface<
 	public void updateSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
 	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions);
 	
-	public void updateVerificationResults(ModelCheckerParameters<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
+	public void updateVerificationResults(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
 			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection);
+	
+	public void showConstraints(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults);
+	
 	public void addObserver(Observer o);
 
 	

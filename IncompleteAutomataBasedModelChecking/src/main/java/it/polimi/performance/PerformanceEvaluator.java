@@ -14,7 +14,7 @@ import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelChecker;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -52,7 +52,7 @@ public class PerformanceEvaluator{
 
 	public static void main(String args[]) throws  IOException, GraphIOException {
 		
-		ModelCheckerParameters<State, State,LabelledTransition<State>, IntersectionState<State>, LabelledTransition<State>> mp=new ModelCheckerParameters<State, State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<State>>();
+		ModelCheckingResults<State, State,LabelledTransition<State>, IntersectionState<State>, LabelledTransition<State>> mp=new ModelCheckingResults<State, State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<State>>();
 		
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
 			

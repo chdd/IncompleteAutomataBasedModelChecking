@@ -3,6 +3,7 @@ package it.polimi.view;
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
+import it.polimi.controller.actions.ShowConstraint;
 import it.polimi.controller.actions.createnew.NewClaim;
 import it.polimi.controller.actions.createnew.NewModel;
 import it.polimi.controller.actions.file.loading.LoadIntersection;
@@ -22,7 +23,7 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.automaton.IntersectionAutomatonJPanel;
@@ -30,6 +31,7 @@ import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.Toolkit;
@@ -53,6 +55,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.apache.commons.collections15.Transformer;
@@ -183,6 +186,11 @@ public class View<
 	private JButton viewConstraints;
 	
 	private JTabbedPane tabbedPane;
+	private JTextField intersectionTime;
+	private JTextField emptinessTime;
+	private JTextField constraintComputationTime;
+	private JTextField verificationTime;
+	
 	
 	private IntersectionAutomatonJPanel
 	<CONSTRAINEDELEMENT, STATE, 
@@ -353,20 +361,50 @@ public class View<
 		 
 		 // verification results
 		 container2.add(new JLabel("Model Checking results"));
-		 JPanel resultPanel=new JPanel();
 		 
-		 resultPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
+		 JPanel resultContainer=new JPanel(new GridLayout(2,1));
+		 resultContainer.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
 				  BorderFactory.createLoweredBevelBorder()));
+		
+		 JPanel resultPanel=new JPanel();
 		 this.result=new JLabel(this.resultInitial);
 		 this.result.setSize(new Dimension(verificationIconSize, verificationIconSize));
 		 
 		 resultPanel.add(result);
 		 this.viewConstraints=new JButton("Explore Constraints");
+		 this.viewConstraints.addActionListener(this);
 		 this.viewConstraints.setVisible(false);
 		 resultPanel.add(viewConstraints);
+		 resultContainer.add(resultPanel);
+		 
+		 JPanel timePanel=new JPanel(new GridLayout(4,2));
+		 timePanel.add(new JLabel("Intersection Time (s)"));
+		 this.intersectionTime=new JTextField(20);
+		 this.intersectionTime.setEditable(false);
+		 timePanel.add(this.intersectionTime);
+		
+		 timePanel.add(new JLabel("Emptiness Time (s)"));
+		 this.emptinessTime=new JTextField(20);
+		 this.emptinessTime.setEditable(false);
+		 timePanel.add(this.emptinessTime);
+		
+		 timePanel.add(new JLabel("Constraint Computation Time (s)"));
+		 this.constraintComputationTime=new JTextField(20);
+		 this.constraintComputationTime.setEditable(false);
+		 timePanel.add(this.constraintComputationTime);
+		 
+		 timePanel.add(new JLabel("Total Verification Time (s)"));
+		 this.verificationTime=new JTextField(20);
+		 this.verificationTime.setEditable(false);
+		 timePanel.add(this.verificationTime);
+		 resultContainer.add(timePanel);
+		 
+		 container2.add(resultContainer);
+		 
+		 
 		 this.verificationSnapshotResultsPanel=new ResultsJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY, IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>>();
 		 //resultPanel.add(verificationSnapshotResultsPanel);
-		 container2.add(resultPanel);
+		 
 		 
 		 // Intersection automaton
 		 
@@ -428,10 +466,13 @@ public class View<
 		this.jframe.repaint();
 		
 	}
+	
+	
 
 	@Override
-	public void updateVerificationResults(ModelCheckerParameters<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
+	public void updateVerificationResults(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
 			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
+		
 		
 		
 		if(verificationResults.getResult()==1){
@@ -453,6 +494,10 @@ public class View<
 			this.viewConstraints.setEnabled(true);
 			this.result.repaint();
 		}
+		this.intersectionTime.setText(Double.toString(verificationResults.getIntersectionTime()));
+		this.emptinessTime.setText(Double.toString(verificationResults.getEmptyTime()));
+		this.constraintComputationTime.setText(Double.toString(verificationResults.getConstraintComputationTime()));
+		this.verificationTime.setText(Double.toString(verificationResults.getTotalVerificationTime()));
 		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
@@ -538,9 +583,16 @@ public class View<
 		if(e.getSource().equals(this.checkButton) || e.getSource().equals(this.runCheckerMenuItem)){
 			this.notifyObservers(new CheckAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
+		// constraint exploring
+		if(e.getSource().equals(this.viewConstraints)){
+			this.notifyObservers(new ShowConstraint<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			
+		}
 		if(e instanceof ActionInterface<?, ?, ?, ?, ?>){
 			this.notifyObservers(e);
 		}
+		
+		
 		
 	}
 
@@ -596,8 +648,6 @@ public class View<
 		this.runCheckerMenuItem.addActionListener(this);
 		this.checkMenu.add(this.runCheckerMenuItem);
 		this.menuBar.add(this.checkMenu);
-		
-		
 		
 		
 		
@@ -686,6 +736,13 @@ public class View<
 	public void updateClaim(
 			DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification) {
 		this.updateSpecification(specification, null);
+		
+	}
+
+	@Override
+	public void showConstraints(
+			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults) {
+		JOptionPane.showMessageDialog(this.jframe, "Constraints"+verificationResults.getConstraint().toString());
 		
 	}
 }

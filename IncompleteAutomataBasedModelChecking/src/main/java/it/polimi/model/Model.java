@@ -27,7 +27,7 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
@@ -143,7 +143,7 @@ public class Model<
 		DrawableIntBA<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>> intBaReader;
 	
 	
-	private ModelCheckerParameters<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckerParameters<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+	private ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
 	
 	
 	public Model(STATEFACTORY stateFactory, TRANSITIONFACTORY transitionFactory, INTERSECTIONSTATEFACTORY intersectionStateFactory, INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory){
@@ -332,7 +332,7 @@ public class Model<
 	
 	@Override
 	public void check(){
-		mp=new ModelCheckerParameters<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+		mp=new ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
 		ModelChecker<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE,INTERSECTIONTRANSITION,
 		INTERSECTIONTRANSITIONFACTORY> mc=new 
 		ModelChecker<CONSTRAINEDELEMENT, STATE, TRANSITION,TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
@@ -341,7 +341,7 @@ public class Model<
 		this.changeIntersection(mc.getIntersection());
 	}
 	
-	public ModelCheckerParameters<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
+	public ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
 		return this.mp;
 	}
 	@Override

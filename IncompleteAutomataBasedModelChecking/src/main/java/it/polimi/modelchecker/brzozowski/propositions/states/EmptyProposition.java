@@ -1,5 +1,7 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
+import java.util.HashSet;
+
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 
@@ -31,7 +33,7 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	 */
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> star() {
-		return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
+		return new EpsilonProposition<CONSTRAINTELEMENT, TRANSITION>(new HashSet<TRANSITION>());
 	}
 	
 	/**
@@ -40,7 +42,7 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	 */
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> omega() {
-		return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
+		return new EpsilonProposition<CONSTRAINTELEMENT, TRANSITION>(new HashSet<TRANSITION>());
 	}
 
 	/**

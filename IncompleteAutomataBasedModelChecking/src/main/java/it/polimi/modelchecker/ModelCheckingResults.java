@@ -11,7 +11,7 @@ import java.util.Stack;
  * @author Claudio Menghi
  * contains the report of the model checking parameters
  */
-public class ModelCheckerParameters
+public class ModelCheckingResults
 	<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
@@ -100,7 +100,7 @@ public class ModelCheckerParameters
 	private int numMixedStatesIntersection;
 	
 	
-	public ModelCheckerParameters(){
+	public ModelCheckingResults(){
 		this.setResult(0);
 		this.setIntersectionTime(0);
 		this.setEmptyTime(0);
@@ -310,7 +310,7 @@ public class ModelCheckerParameters
 				+ numAcceptStatesSpecification+ ", " 
 				+ numTransitionSpecification+ ", " + numAcceptStatesModel
 				+ ", " + numTransitionModel+ ", " + numTransparentStatesModel+", "+numStatesIntersection+", "+
-				numAcceptingStatesIntersection+", "+numInitialStatesIntersection+", "+numMixedStatesIntersection+", "+numTransparentStatesModel+", "+this.getTotalTime();
+				numAcceptingStatesIntersection+", "+numInitialStatesIntersection+", "+numMixedStatesIntersection+", "+numTransparentStatesModel+", "+this.getTotalVerificationTime();
 	}
 
 	
@@ -374,7 +374,7 @@ public class ModelCheckerParameters
 	/**
 	 * @return the totalTime
 	 */
-	public double getTotalTime() {
+	public double getTotalVerificationTime() {
 		return totalTime;
 	}
 

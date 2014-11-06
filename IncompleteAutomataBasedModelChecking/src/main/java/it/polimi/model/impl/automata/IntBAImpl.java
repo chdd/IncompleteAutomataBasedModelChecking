@@ -9,7 +9,7 @@ import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -106,7 +106,7 @@ public class IntBAImpl<
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
 	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isEmpty(ModelCheckerParameters<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
+	public boolean isEmpty(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
 		
 		if(super.isEmpty()){
 			return true;

@@ -7,13 +7,13 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.modelchecker.DnfToLogicalItemTransformer;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
-import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
-import it.polimi.modelchecker.brzozowski.propositions.states.EpsilonProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,34 +39,32 @@ public class Brzozowski<
 	/**
 	 * contains the {@link IntBAImpl} to be analyzed
 	 */
-	private final DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> a;
+	private final DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton;
 	
-	private final INTERSECTIONSTATE[] orderedStates;
+	private final ArrayList<INTERSECTIONSTATE> orderedStates;
 	
 	private final LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][] constraintmatrix;
 	
 	
 	/**
 	 * creates a new modified Brzozowski solved which is responsible for finding the {@link Constraint} associated with a particular {@link IntBAImpl}
-	 * @param a is the {@link IntBAImpl} to be analyzed
+	 * @param intersectionAutomaton is the {@link IntBAImpl} to be analyzed
 	 * @throws IllegalArgumentException is generated if the {@link IntBAImpl} a is null
 	 */
-	public Brzozowski(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> a){
-		if(a==null){
+	public Brzozowski(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton){
+		if(intersectionAutomaton==null){
 			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
 		}
-		this.a=a;
-		this.orderedStates=(INTERSECTIONSTATE[]) a.getVertices().toArray(new IntersectionState[a.getVertexCount()]);
+		this.intersectionAutomaton=intersectionAutomaton;
+		this.orderedStates=new ArrayList<INTERSECTIONSTATE>(intersectionAutomaton.getVertices());
+				
 		this.constraintmatrix=this.getConstraintT();
 	}
 	
 	private void setInit(INTERSECTIONSTATE init){
-		for(int i=0; i< orderedStates.length; i++){
-			if(orderedStates[i].equals(init)){
-				orderedStates[i]=orderedStates[0];
-				orderedStates[0]=init;
-			}
-		}
+		
+		this.orderedStates.set(this.orderedStates.indexOf(init), this.orderedStates.get(0));
+		this.orderedStates.set(0, init);
 	}
 	
 	/**
@@ -81,10 +79,10 @@ public class Brzozowski<
 		Set<AbstractProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> predicates=new HashSet<AbstractProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>();
 		
 		// for each accepting states
-		for(INTERSECTIONSTATE accept: a.getAcceptStates()){
+		for(INTERSECTIONSTATE accept: intersectionAutomaton.getAcceptStates()){
 			
 			// each initial state is analyzed
-			for(INTERSECTIONSTATE init: a.getInitialStates()){
+			for(INTERSECTIONSTATE init: intersectionAutomaton.getInitialStates()){
 				
 				// 	the language (constraint) associated with the initial state is concatenated with the language associated
 				// with the accepting state to the omega
@@ -132,7 +130,7 @@ public class Brzozowski<
 			throw new IllegalArgumentException("The vector s cannot be null");
 		}
 		
-		int m=a.getVertexCount();
+		int m=intersectionAutomaton.getVertexCount();
 		for(int n=m-1; n>=0; n--){
 			s[n]=t[n][n].star().concatenate(s[n]);
 			for(int j=0; j<n;j++){
@@ -155,50 +153,26 @@ public class Brzozowski<
 	 */
 	protected LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]  getConstraintT(){
 		
-		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]  ret=new LogicalItem[a.getVertexCount()][a.getVertexCount()];
-		int i=0;
-		for(INTERSECTIONSTATE s1: this.orderedStates){
-			int j=0;
-			for(INTERSECTIONSTATE s2: this.orderedStates){
+		DnfToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> dnfToLogic=new 
+				DnfToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(this.intersectionAutomaton);
+		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]  ret=new LogicalItem[intersectionAutomaton.getVertexCount()][intersectionAutomaton.getVertexCount()];
+		
+		for(int i=0; i< this.orderedStates.size(); i++){
+			INTERSECTIONSTATE s1=this.orderedStates.get(i);
+			for(int j=0; j<this.orderedStates.size(); j++){
+				INTERSECTIONSTATE s2=this.orderedStates.get(j);
 				boolean setted=false;
-				for(INTERSECTIONTRANSITION t: a.getOutEdges(s1)){
-					if(a.getDest(t).equals(s2)){
-						// if the first state of s1 does not change and the state is transparent
-						/*if(t.getConstrainedState()!=null){
-							if(!setted){
-								ret[i][j]=new AtomicProposition<STATE, TRANSITION>(s1.getS1(),t.getDnfFormula().toString()+"");
-							}
-							else{
-								ret[i][j]=ret[i][j].union(new AtomicProposition<STATE, TRANSITION>(s1.getS1(),"("+t.getDnfFormula().toString()+")"));
-							}
-						}
-						else{*/
-							if(a.isMixed(s1)){
-								if(!setted){
-									ret[i][j]=new AtomicProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t,(CONSTRAINEDELEMENT) s1.getS1(), "λ");
-								}
-								else{
-									ret[i][j]=ret[i][j].union(new AtomicProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t, (CONSTRAINEDELEMENT) s1.getS1(), "λ"));
-								}
-							}
-							else{
-								if(!setted){
-									ret[i][j]=new EpsilonProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t);
-								}
-								else{
-									ret[i][j]=ret[i][j].union(new EpsilonProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t));
-								}
-							}
-						//}
+				for(INTERSECTIONTRANSITION t: intersectionAutomaton.getOutEdges(s1)){
+					if(intersectionAutomaton.getDest(t).equals(s2)){
+						
+						ret[i][j]=dnfToLogic.transform(t);
 						setted=true;
-					}	
+					}
 				}
 				if(!setted){
 					ret[i][j]=new EmptyProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>();
 				}
-				j++;
 			}
-			i++;
 		}
 		return ret;
 	}
@@ -216,10 +190,10 @@ public class Brzozowski<
 		if(accept==null){
 			throw new IllegalArgumentException("The accepting state cannot be null");
 		}
-		if(!a.isAccept(accept)){
+		if(!intersectionAutomaton.isAccept(accept)){
 			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
 		}
-		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] ret=new LogicalItem[a.getVertexCount()];
+		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] ret=new LogicalItem[intersectionAutomaton.getVertexCount()];
 		
 		int i=0;
 		// for each state in the stateOrdered vector
@@ -244,21 +218,21 @@ public class Brzozowski<
 	 */
 	public String getConstraintmatrix() {
 		String ret="";
-		for(int i=0; i< this.orderedStates.length; i++){
-			ret+=this.orderedStates[i].getId()+"=";
+		for(int i=0; i< this.orderedStates.size(); i++){
+			ret+=this.orderedStates.get(i).getId()+"=";
 			boolean first=true;
-			for(int j=0; j< this.orderedStates.length; j++){
+			for(int j=0; j< this.orderedStates.size(); j++){
 				if(!this.constraintmatrix[i][j].equals(new EmptyProposition<CONSTRAINEDELEMENT, TRANSITION>())){
 					if(first){
-						ret+=this.constraintmatrix[i][j].toString()+""+this.orderedStates[j].getId();
+						ret+=this.constraintmatrix[i][j].toString()+""+this.orderedStates.get(j).getId();
 						first=false;
 					}
 					else{
-						ret+=" + "+this.constraintmatrix[i][j].toString()+""+this.orderedStates[j].getId();
+						ret+=" + "+this.constraintmatrix[i][j].toString()+""+this.orderedStates.get(j).getId();
 					}
 				}
 			}
-			if(a.isAccept(this.orderedStates[i])){
+			if(intersectionAutomaton.isAccept(this.orderedStates.get(i))){
 				ret+="+"+new LambdaProposition<CONSTRAINEDELEMENT, TRANSITION>().toString();
 			}
 			ret+="\n";

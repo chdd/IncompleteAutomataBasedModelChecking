@@ -6,7 +6,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.ModelCheckerParameters;
+import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.TextArea;
 
@@ -29,7 +29,7 @@ public class ResultsJPanel<
 		 	
 		 this.add(this.xmlArea);
 	}
-	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckerParameters results){
+	public void updateResults(@SuppressWarnings("rawtypes") ModelCheckingResults results){
 		
 		if(results.getResult()==-1){
 			this.xmlArea.setText(this.xmlArea.getText()+"Constraint:\n"+results.getConstraint());
