@@ -1,6 +1,9 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
+import java.util.Set;
+
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
@@ -8,7 +11,16 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * contains an {@link EpsilonProposition} Predicate. This predicate is associated with regular transitions of the (I)BA since these transitions
  * are not relevant in the {@link Constraint} computation
  */
-public class EpsilonProposition<S extends State> implements AbstractProposition<S>{
+public class EpsilonProposition<STATE extends State, TRANSITION extends LabelledTransition<STATE>> extends AbstractProposition<STATE, TRANSITION>{
+
+	
+	public EpsilonProposition(Set<TRANSITION> transitions) {
+		super(transitions);
+	}
+	
+	public EpsilonProposition(TRANSITION transition) {
+		super(transition);
+	}
 
 	private final String ret="ε";
 	/**
@@ -27,7 +39,7 @@ public class EpsilonProposition<S extends State> implements AbstractProposition<
 	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
+	public LogicalItem<STATE, TRANSITION> concatenate(LogicalItem<STATE, TRANSITION> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The predicate to be concatenated cannot be null");
 		}
@@ -45,17 +57,17 @@ public class EpsilonProposition<S extends State> implements AbstractProposition<
 		}
 		// the concatenation of an epsilon predicate and a predicate is a new and predicate that contains the epsilon predicate and the predicate
 		if(a instanceof AtomicProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<STATE, TRANSITION>(this, a);
 		}
 		// the concatenation of an epsilon predicate and an and predicate is a new and predicate that contains the epsilon predicate
 		// and the original and predicate
 		if(a instanceof AndProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<STATE, TRANSITION>(this, a);
 		}
 		// the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
 		// and the original or predicate
 		if(a instanceof OrProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<STATE, TRANSITION>(this, a);
 		}
 		// is generated if the type of the predicate is not supported by the predicate computation
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");
@@ -72,7 +84,7 @@ public class EpsilonProposition<S extends State> implements AbstractProposition<
 	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> union(AbstractProposition<S> a) {
+	public LogicalItem<STATE, TRANSITION> union(LogicalItem<STATE, TRANSITION> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The predicate to be concatenated cannot be null");
 		}
@@ -90,15 +102,15 @@ public class EpsilonProposition<S extends State> implements AbstractProposition<
 		}
 		//  the union of an epsilon predicate and an epsilon predicate is an or predicate that contains the epsilon predicate and the predicate
 		if(a instanceof AtomicProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<STATE, TRANSITION>(this, a);
 		}
 		//  the union of an epsilon predicate and an or predicate is an or predicate that contains the epsilon predicate and the or predicate 
 		if(a instanceof OrProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<STATE, TRANSITION>(this, a);
 		}
 		//  the union of an epsilon predicate and an and predicate is an or predicate that contains the epsilon predicate and the and predicate 
 		if(a instanceof AndProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<STATE, TRANSITION>(this, a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");
 	}
@@ -107,15 +119,15 @@ public class EpsilonProposition<S extends State> implements AbstractProposition<
 	 * @return the {@link EpsilonProposition}
 	 */
 	@Override
-	public AbstractProposition<S> star() {
-		return new EpsilonProposition<S>();
+	public LogicalItem<STATE, TRANSITION> star() {
+		return new EpsilonProposition<STATE, TRANSITION>(this.getTransitions());
 	}
 	/**
 	 * the omega operator applied to an {@link EpsilonProposition} returns the {@link EpsilonProposition}
 	 * @return the {@link EpsilonProposition}
 	 */
 	@Override
-	public AbstractProposition<S> omega() {
+	public LogicalItem<STATE, TRANSITION> omega() {
 		return this;
 	}
 	
@@ -151,7 +163,7 @@ public class EpsilonProposition<S extends State> implements AbstractProposition<
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		EpsilonProposition<S> other = (EpsilonProposition<S>) obj;
+		EpsilonProposition<STATE, TRANSITION> other = (EpsilonProposition<STATE, TRANSITION>) obj;
 		if (ret == null) {
 			if (other.ret != null)
 				return false;

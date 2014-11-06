@@ -17,7 +17,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author claudiomenghi
  *
  */
-public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFactory<State, LabelledTransition>{
+public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFactory<State,  LabelledTransition<State>>{
 
 	
 	
@@ -26,14 +26,14 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	 * @return a new {@link ConstrainedTransition} with a {@link DNFFormula} which contains a single {@link ConjunctiveClauseImpl} with a single {@link GraphProposition} SIGMA
 	 */
 	@Override
-	public LabelledTransition create() {
+	public LabelledTransition<State> create() {
 		
 		Set<String> labeling=new HashSet<String>();
 		labeling.add("SIGMA");
-		DNFFormula dnfFormula=new DNFFormula();
-		dnfFormula.addDisjunctionClause(new SigmaProposition());
+		DNFFormula<State> dnfFormula=new DNFFormula<State>();
+		dnfFormula.addDisjunctionClause(new SigmaProposition<State>());
 		
-		LabelledTransition t=new LabelledTransition(dnfFormula,  LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition<State> t=new LabelledTransition<State>(dnfFormula,  LabelledTransitionFactoryImpl.transitionCount);
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
@@ -44,14 +44,14 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	 * @return a new {@link ConstrainedTransition} with the {@link DNFFormula} as label and a null {@link State}
 	 * @throws NullPointerException if the {@link DNFFormula} is null
 	 */
-	public LabelledTransition create(DNFFormula dnfFormula) {
+	public LabelledTransition<State> create(DNFFormula<State> dnfFormula) {
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
 		
 		
 		
-		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition<State> t=new LabelledTransition<State>(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
 		this.updateCounter(LabelledTransitionFactoryImpl.transitionCount);
 		return t;
 	}
@@ -65,14 +65,14 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	 * @throws IllegalArgumentException if the id is not grater than or equal to zero
 	 */
 	@Override
-	public LabelledTransition create(int id, DNFFormula dnfFormula) {
+	public LabelledTransition<State> create(int id, DNFFormula<State> dnfFormula) {
 		if(id<0){
 			throw new IllegalArgumentException("The id must be grater than or equal to zero");
 		}
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
-		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition<State> t=new LabelledTransition<State>(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
 		
 		this.updateCounter(id);;
 		return t;
@@ -85,14 +85,13 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 	}
 
 	@Override
-	public LabelledTransition create(DNFFormula dnfFormula, State state) {
+	public LabelledTransition<State> create(DNFFormula<State> dnfFormula, State state) {
 		return this.create(LabelledTransitionFactoryImpl.transitionCount, dnfFormula, state);
 	}
 
 	@Override
-	public LabelledTransition create(int id, DNFFormula dnfFormula, State state) {
-		ConjunctiveClauseImpl c=new ConjunctiveClauseImpl(new ConstraintProposition<State>(state, dnfFormula.toString()));
-		LabelledTransition t=new LabelledTransition(new DNFFormula(c), id);
+	public LabelledTransition<State> create(int id, DNFFormula<State> dnfFormula, State state) {
+		LabelledTransition<State> t=new LabelledTransition<State>(new DNFFormula<State>(new ConstraintProposition<State>(state, dnfFormula.toString())), id);
 		
 		
 		this.updateCounter(LabelledTransitionFactoryImpl.transitionCount);

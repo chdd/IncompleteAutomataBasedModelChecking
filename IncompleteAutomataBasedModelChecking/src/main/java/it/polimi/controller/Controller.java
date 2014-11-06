@@ -19,26 +19,28 @@ import java.util.Observer;
  * 
  * @author claudiomenghi
  */
-public class Controller<STATE extends State, 
+public class Controller<
+CONSTRAINEDELEMENT extends State,
+STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
 INTERSECTIONSTATE extends IntersectionState<STATE>, 
 INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-INTERSECTIONTRANSITION extends LabelledTransition,
-INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>  implements Observer{
+INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  implements Observer{
 
 	/**
 	 * is the (graphical) interface of the application
 	 */
-	private ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+	private ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 	TRANSITIONFACTORY,
 	INTERSECTIONTRANSITIONFACTORY> view;
 	
 	/**
 	 * is the interface to the model of the application
 	 */
-	private ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,
+	private ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,
 	INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model;
 	
 	/**
@@ -47,9 +49,9 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERS
 	 * @param view is the view of the application
 	 * @throws IllegalArgumentException if the model or the specification is null
 	 */
-	public Controller(ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,
+	public Controller(ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,
 			INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model, 
-			ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view) {
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view) {
 		if(model==null){
 			throw new IllegalArgumentException("The model cannot be null");
 		}
@@ -66,10 +68,12 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERS
 		if(arg instanceof ActionInterface)
 		{	@SuppressWarnings("unchecked")
 			ActionInterface<
+			CONSTRAINEDELEMENT,
 				STATE, 
 				STATEFACTORY, 
 				TRANSITION , 
 				TRANSITIONFACTORY> a=(ActionInterface<
+						CONSTRAINEDELEMENT,
 							STATE, 
 							STATEFACTORY, 
 							TRANSITION , 

@@ -40,11 +40,13 @@ import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 
 public class BuchiAutomatonJPanel
-<STATE extends State, 
+<
+CONSTRAINTELEMENT extends State,
+STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-	BA extends DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>> 
+TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITION>,
+	BA extends DrawableBA<CONSTRAINTELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> 
 	extends  VisualizationViewer<STATE,TRANSITION>  {
 	
 	protected ActionListener view;
@@ -114,7 +116,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 	}
 	
 	protected JPopupMenu getStateMenu(){
-		 return new BAStateMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
+		 return new BAStateMenu<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
 	}
 	
 	
@@ -146,10 +148,10 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);
 		
-        Plugin<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> myPlugin = new Plugin<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.view);
+        Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> myPlugin = new Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
         JPopupMenu edgeMenu =
-        		new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.getActionInterface()).
+        		new Actions<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.getActionInterface()).
         			new TransitionMenu();
         JPopupMenu vertexMenu =this.getStateMenu();
         myPlugin.setEdgePopup(edgeMenu);
@@ -160,7 +162,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
         this.setGraphMouse(gm);	
      }
 	
-	public ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
+	public ActionTypesInterface<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
 		return new ClaimActionFactory<>();
 	}
 	

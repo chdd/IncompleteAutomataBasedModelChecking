@@ -14,8 +14,10 @@ import java.awt.event.ActionListener;
 
 
 public interface TransitionListener
-	<STATE extends State,
-	TRANSITION extends LabelledTransition> {
+	<
+	CONSTRAINEDELEMENT extends State,
+	STATE extends State,
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>> {
  
 	void setEdgeAndView(TRANSITION e, ActionListener visView); 
    

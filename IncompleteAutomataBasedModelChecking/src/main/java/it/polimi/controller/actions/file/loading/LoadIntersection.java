@@ -17,11 +17,12 @@ import org.apache.commons.collections15.Transformer;
 
 @SuppressWarnings("serial")
 public class LoadIntersection<
+CONSTRAINEDELEMENT extends State,
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
-extends LoadingAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>  {
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
+extends LoadingAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>  {
 
 	public LoadIntersection(Object source, int id, String command) {
 		super(source, id, command);
@@ -30,17 +31,17 @@ extends LoadingAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>  {
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>  void  perform(ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  void  perform(ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
 			INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception {
 		String file=this.getFile();
 		if(file!=null){
 			Transformer<INTERSECTIONSTATE, Point2D> positions=model.loadIntersection(file);
 			view.updateIntersection(model.getIntersection(),positions);
-			view.setBrzozoski(new Brzozowski<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>(model.getIntersection()).getConstraintmatrix());
+			view.setBrzozoski(new Brzozowski<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>(model.getIntersection()).getConstraintmatrix());
 			
 			
 		}

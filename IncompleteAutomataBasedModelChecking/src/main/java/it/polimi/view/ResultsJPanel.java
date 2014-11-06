@@ -13,9 +13,14 @@ import java.awt.TextArea;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class ResultsJPanel<S extends State, T extends LabelledTransition, S1 extends IntersectionState<S>, T1 extends LabelledTransition, 
-LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<T>,
-CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactory<S, T1>, A  extends IntBAImpl<S, T, S1, T1, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>> extends JPanel {
+public class ResultsJPanel<
+	CONSTRAINTELEMENT extends State,
+	S extends State, T extends LabelledTransition<CONSTRAINTELEMENT>, 
+	S1 extends IntersectionState<S>, 
+	T1 extends LabelledTransition<CONSTRAINTELEMENT>, 
+	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, T>,
+	CONSTRAINTTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINTELEMENT,  T1>, A  
+	extends IntBAImpl<CONSTRAINTELEMENT, S, T, S1, T1, LABELLEDTRANSITIONFACTORY, CONSTRAINTTRANSITIONFACTORY>> extends JPanel {
 
 	private TextArea xmlArea;
 	

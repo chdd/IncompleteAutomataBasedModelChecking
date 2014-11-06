@@ -2,6 +2,7 @@ package it.polimi.model.impl.automata;
 
 import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
@@ -16,7 +17,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
@@ -29,10 +29,11 @@ import edu.uci.ics.jung.graph.util.Pair;
  */
 @SuppressWarnings("serial")
 public class BAImpl<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
-	extends DirectedSparseGraph<STATE,TRANSITION> implements DrawableBA<STATE,TRANSITION, TRANSITIONFACTORY>{
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
+	extends DirectedSparseGraph<STATE,TRANSITION> implements DrawableBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>{
 	
 	/**
 	 * contains the initial states of the {@link BAImpl}
@@ -42,7 +43,7 @@ public class BAImpl<
 	/**
 	 * contains the set of the character of the {@link BAImpl}
 	 */
-	protected Set<GraphProposition> alphabet;
+	protected Set<Proposition> alphabet;
 	
 	/**
 	 * contains the accepting states of the {@link BAImpl}
@@ -59,7 +60,7 @@ public class BAImpl<
 	public BAImpl(TRANSITIONFACTORY transitionFactory) {
 		super();
 		
-		this.alphabet=new HashSet<GraphProposition>(0);
+		this.alphabet=new HashSet<Proposition>(0);
 		this.acceptStates=new HashSet<STATE>();
 		this.initialStates=new HashSet<STATE>();
 		this.mapNameState=new HashMap<Integer,STATE>();
@@ -72,7 +73,7 @@ public class BAImpl<
 	 * @param alphabet: is the alphabet of the {@link BAImpl}
 	 * @throws NullPointerException is generated if the alphabet of the {@link BAImpl} is null
 	 */
-	public BAImpl(Set<GraphProposition> alphabet, TRANSITIONFACTORY transitionFactory) {
+	public BAImpl(Set<Proposition> alphabet, TRANSITIONFACTORY transitionFactory) {
 		super();
 		if(alphabet==null){
 			throw new IllegalArgumentException();
@@ -88,7 +89,7 @@ public class BAImpl<
 	 * Returns the alphabet of the {@link BAImpl}
 	 * @return the alphabet of the {@link BAImpl}
 	 */
-	public Set<GraphProposition> getAlphabet() {
+	public Set<Proposition> getAlphabet() {
 		return alphabet;
 	}
 	
@@ -97,18 +98,18 @@ public class BAImpl<
 	 * @param character is the character to be added in the alphabet of the automaton
 	 * @throws IllegalArgumentException if the character is null or if the character is already contained into the alphabet of the automaton
 	 */
-	public void addCharacter(GraphProposition character){
+	public void addCharacter(Proposition character){
 		if(character==null){
 			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
 		}
 		this.alphabet.add(character);
 	}
 	
-	public void addCharacters(Set<GraphProposition> characters){
+	public void addCharacters(Set<Proposition> characters){
 		if(characters==null){
 			throw new IllegalArgumentException("The character to be inserted into the alphabet cannot be null");
 		}
-		for(GraphProposition character: characters){
+		for(Proposition character: characters){
 			this.addCharacter(character);
 		}
 	}
@@ -210,7 +211,7 @@ public class BAImpl<
 	 */
 	public void reset(){
 		this.initialStates=new HashSet<STATE>();
-		this.alphabet=new HashSet<GraphProposition>();
+		this.alphabet=new HashSet<Proposition>();
 		this.acceptStates=new HashSet<STATE>();
 		this.edges=new HashMap<TRANSITION,Pair<STATE>>();
 		this.vertices=new HashMap<STATE,Pair<Map<STATE,TRANSITION>>>();
@@ -224,7 +225,7 @@ public class BAImpl<
 	 * @param p: probability through which each transition is included in the graph
 	 * @return a new random graph
 	 */
-	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<GraphProposition> alphabet){
+	public void getRandomAutomaton2(int n, double transitionProbability, int numInitial, int numAccepting, Set<Proposition> alphabet){
 		if(transitionProbability>=1||transitionProbability<0){
 			throw new IllegalArgumentException("The value of p must be included in the trange [0,1]");
 		}
@@ -264,18 +265,18 @@ public class BAImpl<
 				if(randInt<=transitionProbability){
 					
 					
-					GraphProposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
+					Proposition character=IBAImpl.getRandomString(alphabet, r.nextInt(alphabet.size()));
 					this.addTransition(s1, s2,  this.transitionFactory.create(
-							new DNFFormula(new ConjunctiveClauseImpl(character))));
+							new DNFFormula<CONSTRAINEDELEMENT>(new ConjunctiveClauseImpl<CONSTRAINEDELEMENT>(character))));
 					
 				}
 				
 			}
 		}
 	}
-	public static GraphProposition getRandomString(Set<GraphProposition> alphabet, int position){
+	public static Proposition getRandomString(Set<Proposition> alphabet, int position){
 
-		Iterator<GraphProposition> it=alphabet.iterator();
+		Iterator<Proposition> it=alphabet.iterator();
 		for(int i=0; i<position; i++){
 		
 			it.next();

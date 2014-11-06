@@ -2,8 +2,9 @@ package it.polimi.model.impl.labeling;
 
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 
-public class ConstraintProposition<STATE extends State> extends GraphProposition {
+public class ConstraintProposition<STATE extends State> extends GraphProposition implements ConjunctiveClause<STATE> {
 
 	private STATE constrainedState;
 	

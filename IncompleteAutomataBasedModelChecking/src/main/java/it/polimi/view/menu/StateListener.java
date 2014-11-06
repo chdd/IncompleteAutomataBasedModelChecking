@@ -6,7 +6,9 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import java.awt.event.ActionListener;
 
 public interface StateListener
-	<STATE extends State, 
-	TRANSITION extends LabelledTransition> {
+	<
+	CONSTRAINEDELEMENT extends State,
+	STATE extends State, 
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>> {
     void setVertexAndView(STATE v, ActionListener l);    
 }

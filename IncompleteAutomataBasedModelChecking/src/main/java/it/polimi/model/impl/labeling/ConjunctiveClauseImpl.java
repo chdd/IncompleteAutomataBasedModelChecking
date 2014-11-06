@@ -1,5 +1,6 @@
 package it.polimi.model.impl.labeling;
 
+import it.polimi.model.impl.states.State;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 
 import java.util.HashSet;
@@ -7,14 +8,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 /**
  * contains a Conjunctive clause, i.e., a set of propositions {@link IGraphProposition} separated by the and operator 
  * @author claudiomenghi
  *
  */
-public class ConjunctiveClauseImpl implements ConjunctiveClause {
+public class ConjunctiveClauseImpl<STATE extends State> implements ConjunctiveClause<STATE> {
 	
 	/**
 	 * is the operator of the conjunctive clause
@@ -24,13 +24,13 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	/**
 	 * is the set of propositions {@link IGraphProposition} which are separated by the and operator
 	 */
-	private Set<GraphProposition> propositions;
+	private Set<Proposition> propositions;
 
 	/**
 	 * creates a new conjunctive clause
 	 */
 	public ConjunctiveClauseImpl(){
-		propositions=new HashSet<GraphProposition>();
+		propositions=new HashSet<Proposition>();
 	}
 	
 	/**
@@ -38,18 +38,18 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	 * @param p the only proposition of the {@link ConjunctiveClauseImpl}
 	 * @throws NullPointerException if the {@link IGraphProposition} p is null
 	 */
-	public ConjunctiveClauseImpl(GraphProposition p){
+	public ConjunctiveClauseImpl(Proposition p){
 		if(p==null){
 			throw new NullPointerException("The proposition p cannot be null");
 		}
-		propositions=new HashSet<GraphProposition>();
+		propositions=new HashSet<Proposition>();
 		this.propositions.add(p);
 	}
 	
 	/**
 	 * @return the {@link Set} of the propositions ( {@link IGraphProposition}) of the conjunctive clause
 	 */
-	public Set<GraphProposition> getPropositions() {
+	public Set<Proposition> getPropositions() {
 		return propositions;
 	}
 
@@ -58,7 +58,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	 * @param propositions contains the set of propositions to be set in the conjunctive clause
 	 * @throws NullPointerException if the set of propositions to be set is null
 	 */
-	public void setPropositions(Set<GraphProposition> propositions) {
+	public void setPropositions(Set<Proposition> propositions) {
 		if(propositions==null){
 			throw new NullPointerException("The set of propositions to be setted cannot be null");
 		}
@@ -88,7 +88,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 		if(propositions.size()==1){
 			return "("+propositions.iterator().next().toString()+")";
 		}
-		Iterator<GraphProposition> it=this.propositions.iterator();
+		Iterator<Proposition> it=this.propositions.iterator();
 		String ret="";
 		for(int i=0;i< this.propositions.size()-1;i++){
 			ret+=it.next().toString()+andSymbol;
@@ -102,10 +102,10 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 	 * @param clause is the {@link String} representation of the clause
 	 * @return the {@link ConjunctiveClauseImpl} loaded from the {@link String}
 	 */
-	public static ConjunctiveClauseImpl loadFromString(String clause){
+	public static <STATE extends State> ConjunctiveClauseImpl<STATE> loadFromString(String clause){
 		clause=clause.substring(1, clause.length()-1);
 		clause+=andSymbol;
-		ConjunctiveClauseImpl ret=new ConjunctiveClauseImpl();
+		ConjunctiveClauseImpl<STATE> ret=new ConjunctiveClauseImpl<STATE>();
 		String[] andClauses=clause.split(andSymbol);
 		for(int i=0; i<andClauses.length; i++){
 			ret.addProposition(Proposition.loadProposition(andClauses[i]));
@@ -136,7 +136,8 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConjunctiveClauseImpl other = (ConjunctiveClauseImpl) obj;
+		@SuppressWarnings("unchecked")
+		ConjunctiveClauseImpl<STATE> other = (ConjunctiveClauseImpl<STATE>) obj;
 		if (propositions == null) {
 			if (other.propositions != null)
 				return false;

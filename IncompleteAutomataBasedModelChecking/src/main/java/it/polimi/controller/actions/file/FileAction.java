@@ -10,12 +10,13 @@ import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public abstract class FileAction<
+CONSTRAINEDELEMENT extends State,
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
 extends ActionEvent 
-implements ActionInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>{
+implements ActionInterface<CONSTRAINEDELEMENT,STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>{
 	
 	public FileAction(Object source, int id, String command) {
 		super(source, id, command);

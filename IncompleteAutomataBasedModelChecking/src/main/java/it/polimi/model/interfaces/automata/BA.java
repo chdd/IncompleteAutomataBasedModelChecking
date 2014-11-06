@@ -1,12 +1,11 @@
 package it.polimi.model.interfaces.automata;
 
+import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.util.Set;
-
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 /**
  * is the interface of the {@link BA}
@@ -16,9 +15,10 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @param <TRANSITION> is the type of the transitions of the {@link BA}
  */
 public interface BA<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> {
 
 	/**
 	 * returns the initial states of the {@link BA}
@@ -30,7 +30,7 @@ public interface BA<
 	 * returns the alphabet of the {@link BA}
 	 * @return the alphabet of the {@link BA}
 	 */
-	public Set<GraphProposition> getAlphabet();
+	public Set<Proposition> getAlphabet();
 	
 	public TRANSITIONFACTORY getTransitionFactory();
 		

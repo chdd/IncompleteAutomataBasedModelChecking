@@ -1,16 +1,19 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author claudiomenghi
  * contains an {@link AndProposition}, which is a set of {@link AbstractProposition} that must be simultaneously satisfied to get the final property
  * satisfied
  */
-public class AndProposition<S extends State> extends LogicalProposition<S>{
+public class AndProposition<S extends State, T extends LabelledTransition<S>> extends LogicalProposition<S, T>{
 	
 	private final String type="^";
 	
@@ -20,7 +23,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 	 * @param secondPredicate is the second {@link AbstractProposition} included in the {@link AndProposition}
 	 * @throws IllegalArgumentException is the first or the second {@link AbstractProposition} are null
 	 */
-	 public AndProposition(AbstractProposition<S> firstPredicate, AbstractProposition<S> secondPredicate){
+	 public AndProposition(LogicalItem<S, T> firstPredicate, LogicalItem<S, T> secondPredicate){
 	 	super(firstPredicate, secondPredicate);
 	 }
 	 /**
@@ -28,7 +31,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
      * @param l: is the list of {@link AbstractProposition} to be added in the and predicate
      * @throws IllegalArgumentException if the list of the {@link AbstractProposition} contains less than 2 {@link AbstractProposition}
      */
-	 public AndProposition(List<AbstractProposition<S>> l) {
+	 public AndProposition(List<LogicalItem<S, T>> l) {
 		super(l);
 	 }
 	
@@ -52,7 +55,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
    	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
    	 */
 	@Override
-	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
+	public LogicalItem<S, T> concatenate(LogicalItem<S, T> a) {
 		
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
@@ -71,7 +74,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 				return this;
 			}
 			else{
-				return new AndProposition<S>(this, a);
+				return new AndProposition<S, T>(this, a);
 			}
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
@@ -80,40 +83,57 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 		// 		a new and constraint that contains the original constrained and the predicate a is generated
 		if(a instanceof AtomicProposition){
 			if(this.getLastPredicate() instanceof AtomicProposition &&
-					((AtomicProposition<S>)a).getState().equals(((AtomicProposition<S>)this.getLastPredicate()).getState())){
+					((AtomicProposition<S, T>)a).getState().equals(((AtomicProposition<S, T>)this.getLastPredicate()).getState())){
 						
-						List<AbstractProposition<S>> l=new ArrayList<AbstractProposition<S>>();
+						AtomicProposition<S, T> lastPredicate=(AtomicProposition<S, T>)this.getLastPredicate();
+						Set<T> transitions=new HashSet<T>();
+						transitions.addAll(lastPredicate.getTransitions());
+						transitions.addAll(((AtomicProposition<S, T>) a).getTransitions());
+					
+				
+						List<LogicalItem<S, T>> l=new ArrayList<LogicalItem<S, T>>();
 						l.addAll(this.getPredicates().subList(0, this.getPredicates().size()-1));
-						l.add(new AtomicProposition<S>(((AtomicProposition<S>)this.getLastPredicate()).getState(), ((AtomicProposition<S>)this.getLastPredicate()).getRegularExpression().concat(((AtomicProposition<S>)a).getRegularExpression())))
-;						AndProposition<S> cret=new AndProposition<S>(l);
+						l.add(new AtomicProposition<S, T>(transitions,
+								lastPredicate.getState(),
+								lastPredicate.getRegularExpression().concat(((AtomicProposition<S, T>)a).getRegularExpression())))
+;						AndProposition<S, T> cret=new AndProposition<S, T>(l);
 						return cret;
 				}
 			else{
-				return new AndProposition<S>(this, a);
+				return new AndProposition<S, T>(this, a);
 			}
 		}
 		// if a is an or constraint a new and constraint that contains the constraint of this and constraint and the or constraint is generated
 		if(a instanceof OrProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<S, T>(this, a);
 		}
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of a have the same state, their regular expressions are merged
 		// if a is an and constraint and  the last predicate of this constraint and the first predicate of do not have the same state, a new and constraint
 		// that contains all of the constraints of these two and constraints is generated.
 		if(a instanceof AndProposition){
-			AndProposition<S> c=(AndProposition<S>)a;
+			AndProposition<S, T> c=(AndProposition<S, T>)a;
 			
 			if((c.getFistPredicate() instanceof AtomicProposition) && (this.getLastPredicate() instanceof AtomicProposition) &&
-				((AtomicProposition<S>)c.getFistPredicate()).getState().equals(((AtomicProposition<S>)this.getLastPredicate()).getState())){
+				((AtomicProposition<S, T>)c.getFistPredicate()).getState().equals(((AtomicProposition<S, T>)this.getLastPredicate()).getState())){
 				
-				List<AbstractProposition<S>> l=new ArrayList<AbstractProposition<S>>();
+				List<LogicalItem<S, T>> l=new ArrayList<LogicalItem<S, T>>();
 				l.addAll(this.getPredicates().subList(0, this.getPredicates().size()-1));
-				l.add(new AtomicProposition<S>(((AtomicProposition<S>)this.getLastPredicate()).getState(), ((AtomicProposition<S>)this.getLastPredicate()).getRegularExpression()+((AtomicProposition<S>)c.getFistPredicate()).getRegularExpression()));
+				
+				AtomicProposition<S, T> lastPredicate=(AtomicProposition<S, T>)this.getLastPredicate();
+				AtomicProposition<S, T> initialPredicate=(AtomicProposition<S, T>)c.getFistPredicate();
+				Set<T> transitions=new HashSet<T>();
+				transitions.addAll(lastPredicate.getTransitions());
+				transitions.addAll(initialPredicate.getTransitions());
+				
+				l.add(new AtomicProposition<S, T>(transitions,
+						lastPredicate.getState(), 
+						lastPredicate.getRegularExpression()+initialPredicate.getRegularExpression()));
 				l.addAll(c.getPredicates().subList(1, c.getPredicates().size()));
-				AndProposition<S> cret=new AndProposition<S>(l);
+				AndProposition<S, T> cret=new AndProposition<S, T>(l);
 				return cret;
 			}
 			else{
-				return new AndProposition<S>(this,  a);
+				return new AndProposition<S, T>(this,  a);
 			}
 			
 		}
@@ -132,7 +152,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> union(AbstractProposition<S> a) {
+	public LogicalItem<S, T> union(LogicalItem<S, T> a) {
 		//System.out.println("and union");
 		
 		if(a==null){
@@ -145,23 +165,23 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 		}
 		// the union of an and constraint and a LambdaConstraint is a new orConstraint that contains the and constraint and lambda
 		if(a instanceof LambdaProposition){
-			return new OrProposition<S>(this,a);
+			return new OrProposition<S, T>(this,a);
 		}
 		// the union of an and constraint and an EpsilonConstrain is a new orConstraint that contains the and constraint and the EpsilonConstrain
 		if(a instanceof EpsilonProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		// the union of an and constraint and a Predicate is a new orConstraint that contains the and constraint and the Predicate
 		if(a instanceof AtomicProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		// the union of an and constraint and an orConstraint is a new orConstraint that contains the and and the or constraints 
 		if(a instanceof OrProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		// the union of an and constraint and an andConstraint is a new orConstraint that contains the two and constraints
 		if(a instanceof AndProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
@@ -172,7 +192,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 	 * @return the {@link AndProposition}
 	 */
 	@Override
-	public AbstractProposition<S> star() {
+	public LogicalItem<S, T> star() {
 		return this;
 	}
 	
@@ -181,7 +201,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 	 * @return the {@link AndProposition}
 	 */
 	@Override
-	public AbstractProposition<S> omega() {
+	public LogicalItem<S, T> omega() {
 		return this;
 	}
 	
@@ -191,14 +211,14 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 	 * returns the first {@link AbstractProposition} of the {@link List}
 	 * @return the first {@link AbstractProposition} of the {@link List}
 	 */
-	public AbstractProposition<S> getFistPredicate(){
+	public LogicalItem<S, T> getFistPredicate(){
     	return this.getPredicates().get(0);
     }
 	/**
 	 * returns the last {@link AbstractProposition} of the {@link List}
 	 * @return the last {@link AbstractProposition} of the {@link List}
 	 */
-    public AbstractProposition<S> getLastPredicate(){
+    public LogicalItem<S, T> getLastPredicate(){
     	return this.getPredicates().get(this.getPredicates().size()-1);
     }
     
@@ -227,7 +247,7 @@ public class AndProposition<S extends State> extends LogicalProposition<S>{
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		AndProposition<S> other = (AndProposition<S>) obj;
+		AndProposition<S, T> other = (AndProposition<S, T>) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;

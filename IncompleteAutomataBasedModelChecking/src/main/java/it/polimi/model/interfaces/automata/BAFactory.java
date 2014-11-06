@@ -16,10 +16,11 @@ import org.apache.commons.collections15.Factory;
  * @param <TRANSITIONFACTORY> is the {@link Factory} which is used to create transitions of the {@link DrawableBA}
  */
 public interface BAFactory<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	AUTOMATON extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
+	AUTOMATON extends DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>
 	extends Factory<AUTOMATON>{
 
 }

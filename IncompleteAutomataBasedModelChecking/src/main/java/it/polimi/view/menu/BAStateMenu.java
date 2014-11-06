@@ -11,10 +11,11 @@ import javax.swing.JPopupMenu;
 @SuppressWarnings("serial")
 public class BAStateMenu
 	<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 	extends JPopupMenu {
 
    public BAStateMenu() {
@@ -22,13 +23,13 @@ public class BAStateMenu
        
        this.stateType();
        this.addSeparator();
-       this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateDelete());
+       this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateDelete());
        this.addSeparator();
-       this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new Rename());
+       this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new Rename());
     }
    
     protected void stateType(){
-    	 this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateInitial());
-         this.add(new Actions<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateAccepting());
+    	 this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateInitial());
+         this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateAccepting());
     }
 }

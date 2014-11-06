@@ -1,9 +1,10 @@
 package it.polimi.model.impl.labeling;
 
+import it.polimi.model.impl.states.State;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 
 
-public class SigmaProposition implements ConjunctiveClause{
+public class SigmaProposition<STATE extends State> implements ConjunctiveClause<STATE>{
 
 	private final String sigma="SIGMA";
 	
@@ -34,7 +35,8 @@ public class SigmaProposition implements ConjunctiveClause{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SigmaProposition other = (SigmaProposition) obj;
+		@SuppressWarnings("unchecked")
+		SigmaProposition<STATE> other = (SigmaProposition<STATE>) obj;
 		if (sigma == null) {
 			if (other.sigma != null)
 				return false;

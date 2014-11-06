@@ -1,20 +1,24 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author claudiomenghi
  * contains a {@link AtomicProposition} which constraints a state to be able to recognize a particular regular expression
  */
-public class AtomicProposition<S extends State> implements AbstractProposition<S>{
+public class AtomicProposition<STATE extends State, TRANSITION extends LabelledTransition<STATE>> extends AbstractProposition<STATE, TRANSITION>{
 
+	
 	/**
 	 * contains the state of the predicate
 	 */
-	private final S state;
+	private final STATE state;
 	/**
 	 * contains the regular expression of the predicate
 	 */
@@ -26,7 +30,8 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 * @param regularExpression is the regular expression that the state must satisfy
 	 * @throws IllegalArgumentException if the state or the regular expression of the predicate are null
 	 */
-	public AtomicProposition(S state, String regularExpression){
+	public AtomicProposition(TRANSITION transition, STATE state, String regularExpression){
+		super(transition);
 		if(state==null){
 			throw new IllegalArgumentException("It is not possible to create a predicate with a null state");
 		}
@@ -36,11 +41,24 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		this.state=state;
 		this.regularExpression=regularExpression;
 	}
+	
+	public AtomicProposition(Set<TRANSITION> transitions, STATE state, String regularExpression){
+		super(transitions);
+		if(state==null){
+			throw new IllegalArgumentException("It is not possible to create a predicate with a null state");
+		}
+		if(regularExpression==null){
+			throw new IllegalArgumentException("It is not possible to create a predicate with a null regular expression");
+		}
+		this.state=state;
+		this.regularExpression=regularExpression;
+	}
+	
 	/**
 	 * returns the state of the predicate
 	 * @return the state of the predicate
 	 */
-	public S getState() {
+	public STATE getState() {
 		return state;
 	}
 	
@@ -82,7 +100,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 * @throws IllegalArgumentException if a is null or if the constraint type is not supported
 	 */
 	@Override
-	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
+	public LogicalItem<STATE, TRANSITION> concatenate(LogicalItem<STATE, TRANSITION> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint a to be concatenated cannot be null");
 		}
@@ -97,13 +115,16 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		
 		if(a instanceof AtomicProposition){
 			// the concatenation of two predicate with the same state constrained is a new predicate where the regular expressions are concatenated
-			AtomicProposition<S> a1=(AtomicProposition<S>)a;
+			AtomicProposition<STATE, TRANSITION> a1=(AtomicProposition<STATE, TRANSITION>)a;
 			if(a1.state.equals(this.state)){
-				return new AtomicProposition<S>(this.state, this.regularExpression+a1.regularExpression);
+				Set<TRANSITION> newtransitions=new HashSet<TRANSITION>();
+				newtransitions.addAll(a1.getTransitions());
+				newtransitions.addAll(this.getTransitions());
+				return new AtomicProposition<STATE, TRANSITION>(newtransitions, this.state, this.regularExpression+a1.regularExpression);
 			}
 			// the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
 			else{
-				AndProposition<S> cret=new AndProposition<S>(this, a);
+				AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(this, a);
 				return cret;
 			}
 		}
@@ -113,19 +134,24 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		 *  	the first predicate of the and constraint have a different state
 		 */
 		if(a instanceof AndProposition){
-			AndProposition<S> andPredicate=(AndProposition<S>)a;
+			AndProposition<STATE, TRANSITION> andPredicate=(AndProposition<STATE, TRANSITION>)a;
 			
 			if(andPredicate.getFistPredicate() instanceof AtomicProposition &&
-					this.state.equals(((AtomicProposition<S>)andPredicate.getFistPredicate()).state)){
-						List<AbstractProposition<S>> l=new ArrayList<AbstractProposition<S>>();
-						l.add(new AtomicProposition<S>(this.state, this.regularExpression.concat(((AtomicProposition<S>)andPredicate.getFistPredicate()).regularExpression)));
+					this.state.equals(((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).state)){
+						List<LogicalItem<STATE, TRANSITION>> l=new ArrayList<LogicalItem<STATE, TRANSITION>>();
+						
+						Set<TRANSITION> newtransition=new HashSet<TRANSITION>();
+						newtransition.addAll(this.getTransitions());
+						newtransition.addAll(((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).getTransitions());
+						
+						l.add(new AtomicProposition<STATE, TRANSITION>(newtransition, this.state, this.regularExpression.concat(((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).regularExpression)));
 						l.addAll(andPredicate.getPredicates().subList(1, andPredicate.getPredicates().size()));
-						AndProposition<S> cret=new AndProposition<S>(l);;
+						AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(l);;
 						return cret;
 				}
 			
 			else{
-				AndProposition<S> cret=new AndProposition<S>(this,a);
+				AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(this,a);
 				return cret;
 			}
 		}
@@ -133,7 +159,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		 * 		and the second one is the or constraint
 		*/
 		if(a instanceof OrProposition){
-			AndProposition<S> cret=new AndProposition<S>(this, a);
+			AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(this, a);
 			return cret;
 		}
 		/*
@@ -141,7 +167,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		 * 		and the second one is the EpsilonConstraint
 		 */
 		if(a instanceof EpsilonProposition){
-			AndProposition<S> cret=new AndProposition<S>(this, a);
+			AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(this, a);
 			return cret;
 		}
 
@@ -163,7 +189,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 * @throws IllegalArgumentException id the {@link AbstractProposition} a is null or the type of predicate is not supported
 	 */
 	@Override
-	public AbstractProposition<S> union(AbstractProposition<S> a) {
+	public LogicalItem<STATE, TRANSITION> union(LogicalItem<STATE, TRANSITION> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The constraint a cannot be null");
 		}
@@ -173,11 +199,11 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		}
 		// the union of a predicate and lambda is a new or constraint that contains the predicate and lambda
 		if(a instanceof LambdaProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<STATE, TRANSITION>(this, a);
 		}
 		// if a is a predicate
 		if(a instanceof AtomicProposition){
-			AtomicProposition<S> a1=(AtomicProposition<S>) a;
+			AtomicProposition<STATE, TRANSITION> a1=(AtomicProposition<STATE, TRANSITION>) a;
 			
 			if(this.equals(a1)){
 				return this;
@@ -185,20 +211,23 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 			// the union of two predicates <s, reg1>, <s, reg2> with the same state s is a new predicate that contains the or combination 
 			// of their regular expressions <s, (reg1)+(reg2)>
 			if(a1.getState().equals(this.getState())){
-				return new AtomicProposition<S>(this.getState(), "(("+this.regularExpression+")|("+a1.regularExpression+"))");
+				Set<TRANSITION> transitions=new HashSet<TRANSITION>();
+				transitions.addAll(this.getTransitions());
+				transitions.addAll(a1.getTransitions());
+				return new AtomicProposition<STATE, TRANSITION>(transitions, this.getState(), "(("+this.regularExpression+")|("+a1.regularExpression+"))");
 			}
 			// the union of two predicates <s1, reg1>, <s2, reg2> with a different state is a new or constraint that contains the two predicates 
 			else{
-				return new OrProposition<S>(this, a1);
+				return new OrProposition<STATE, TRANSITION>(this, a1);
 			}
 		}
 		// the union of the predicate and an or constraint is a new or constraint where the predicate is added
 		if(a instanceof OrProposition){
-			return new OrProposition<S>(this,a);
+			return new OrProposition<STATE, TRANSITION>(this,a);
 		}
 		// the union of the predicate and an and constraint is a new or constraint where the predicate and the and constraint are added
 		if(a instanceof AndProposition){
-			return new OrProposition<S>(this,a);
+			return new OrProposition<STATE, TRANSITION>(this,a);
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
 		if(a instanceof EpsilonProposition){
@@ -212,8 +241,8 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 * @return the new {@link AtomicProposition} where the star operator is applied to the regular expression
 	 */
 	@Override
-	public AbstractProposition<S> star() {
-		return new AtomicProposition<S>(this.state, "("+this.regularExpression+")*");
+	public AbstractProposition<STATE, TRANSITION> star() {
+		return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(), this.state, "("+this.regularExpression+")*");
 	}
 	
 	/**
@@ -221,11 +250,11 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 	 * @return the new {@link AtomicProposition} where the omega operator is applied to the regular expression
 	 */
 	@Override
-	public AbstractProposition<S> omega() {
+	public AbstractProposition<STATE, TRANSITION> omega() {
 		if(this.getRegularExpression().endsWith("*")){
-			return new AtomicProposition<S>(this.getState(), "("+this.getRegularExpression().substring(1,this.getRegularExpression().lastIndexOf(")*"))+")ω");
+			return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(),this.getState(), "("+this.getRegularExpression().substring(1,this.getRegularExpression().lastIndexOf(")*"))+")ω");
 		}
-		return new AtomicProposition<S>(this.getState(), "("+this.getRegularExpression()+")ω");
+		return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(),this.getState(), "("+this.getRegularExpression()+")ω");
 	}
 	
 	/**
@@ -260,7 +289,7 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		AtomicProposition<S> other = (AtomicProposition<S>) obj;
+		AtomicProposition<STATE, TRANSITION> other = (AtomicProposition<STATE, TRANSITION>) obj;
 		if (regularExpression == null) {
 			if (other.regularExpression != null)
 				return false;
@@ -273,7 +302,4 @@ public class AtomicProposition<S extends State> implements AbstractProposition<S
 			return false;
 		return true;
 	}
-	
-	
-	
 }

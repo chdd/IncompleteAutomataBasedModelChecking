@@ -24,10 +24,12 @@ import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
 public class LTLtoBATransformer<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
 	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> implements Transformer<String, BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>> {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
+	implements Transformer<String, BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>> {
 
 	private STATEFACTORY stateFactory;
 	private TRANSITIONFACTORY transitionFactory;
@@ -39,9 +41,9 @@ public class LTLtoBATransformer<
 	}
 	
 	@Override
-	public BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> transform(String input) {
+	public BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> transform(String input) {
 		
-		BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> ba=new BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>(transitionFactory);
+		BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba=new BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>(transitionFactory);
 		
 		Map<IState, STATE> map=new HashMap<IState, STATE>();
 		
@@ -69,10 +71,10 @@ public class LTLtoBATransformer<
 			}
 		}
 		for(ITransition t: transitions){
-			ConjunctiveClauseImpl conjunctionClause=new ConjunctiveClauseImpl();
+			ConjunctiveClauseImpl<CONSTRAINEDELEMENT> conjunctionClause=new ConjunctiveClauseImpl<CONSTRAINEDELEMENT>();
 			for(IGraphProposition p: t.getLabels()){
 				if(p.getLabel().equals("<SIGMA>")){
-					this.addConjunctionClause(new SigmaProposition(), ba, map, t);
+					this.addConjunctionClause(new SigmaProposition<CONSTRAINEDELEMENT>(), ba, map, t);
 				}
 				else{
 					conjunctionClause.addProposition(new Proposition(p.getLabel(),p.isNegated()));
@@ -85,12 +87,12 @@ public class LTLtoBATransformer<
 		return ba;
 	}
 	
-	private void addConjunctionClause(ConjunctiveClause conjunctionClause, BAImpl<STATE, TRANSITION, TRANSITIONFACTORY> ba, Map<IState, STATE> map, ITransition t){
+	private void addConjunctionClause(ConjunctiveClause<CONSTRAINEDELEMENT> conjunctionClause, BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba, Map<IState, STATE> map, ITransition t){
 		if(ba.isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
 			ba.findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getDnfFormula().addDisjunctionClause(conjunctionClause);
 		}
 		else{
-			DNFFormula dnfFormula=new DNFFormula();
+			DNFFormula<CONSTRAINEDELEMENT> dnfFormula=new DNFFormula<CONSTRAINEDELEMENT>();
 			dnfFormula.addDisjunctionClause(conjunctionClause);
 			ba.addTransition(
 					map.get(t.getSourceState()),

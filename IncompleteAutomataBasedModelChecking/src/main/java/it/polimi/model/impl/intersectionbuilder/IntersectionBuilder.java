@@ -16,12 +16,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class IntersectionBuilder<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition,
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>{
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT,  TRANSITION>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>{
 	
 	private INTERSECTIONTRANSITIONFACTORY transitionFactory;
 	/**
@@ -31,10 +32,10 @@ public class IntersectionBuilder<
 	 * @throws IllegalArgumentException if the automaton a2 is null
 	 */
 	public void computeIntersection(
-			IntBAImpl<STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+			IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> intersection, 
-			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
-			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification,
+			IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification,
 			INTERSECTIONTRANSITIONFACTORY transitionFactory){
 		
 		if(model==null){
@@ -66,12 +67,12 @@ public class IntersectionBuilder<
 	 * @param currentState contains the current state of the intersection automaton under analysis
 	 */
 	private void computeIntersection(
-			IntBAImpl<STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+			IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> intersection, 
 									Map<Entry<Entry<STATE, STATE>,Integer>, INTERSECTIONSTATE> visitedStatesMap, 
 									INTERSECTIONSTATE currentState,
-									IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
-									BA<STATE, TRANSITION, TRANSITIONFACTORY> specification
+									IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+									BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification
 									){
 		// if the state currentState has been already been visited it returns
 		if(visitedStatesMap.containsKey(
@@ -90,7 +91,7 @@ public class IntersectionBuilder<
 				for(TRANSITION t2: specification.getOutTransition(currentState.getS2())){
 					// if the characters of the two transitions are equal
 					
-					INTERSECTIONTRANSITION t=new EqualClauseIntersectionRule<STATE,
+					INTERSECTIONTRANSITION t=new EqualClauseIntersectionRule<CONSTRAINEDELEMENT, STATE,
 							TRANSITION, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>().getIntersectionTransition(t1, t2, this.transitionFactory);
 					if(t!=null){
 							
@@ -140,7 +141,7 @@ public class IntersectionBuilder<
 					}
 					
 					// the new state is connected by the previous one through a constrained transition
-					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), currentState.getS1());
+					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), (CONSTRAINEDELEMENT)currentState.getS1());
 					intersection.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(intersection, visitedStatesMap, p, model, specification);
@@ -158,9 +159,9 @@ public class IntersectionBuilder<
 	 * @return the new intersection state
 	 */
 	private INTERSECTIONSTATE addIntersectionState(STATE s1, STATE s2, int number, boolean initial,
-			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
-			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification,
-			IntBAImpl<STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+			IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification,
+			IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> intersection 
 			){
 
@@ -186,16 +187,16 @@ public class IntersectionBuilder<
 	 * @return a new intersection state
 	 */
 	protected INTERSECTIONSTATE generateIntersectionState(STATE s1, STATE s2, int number,
-			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
-			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
+			IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification){
 		
 		IntersectionStateFactory<STATE, INTERSECTIONSTATE> factory=new IntersectionStateFactory<STATE, INTERSECTIONSTATE>();
 		return factory.create(s1, s2, number);
 	}
 	
 	protected int comuteNumber(STATE s1, STATE s2, int prevNumber,
-			IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, 
-			BA<STATE, TRANSITION, TRANSITIONFACTORY> specification){
+			IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification){
 		int num=0;
 		
 		if(prevNumber==0 && model.isAccept(s1)){

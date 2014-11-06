@@ -18,13 +18,15 @@ import javax.swing.JPopupMenu;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 
 public class IncompleteBuchiAutomatonJPanel
-<STATE extends State, 
+<
+CONSTRAINEDELEMENT extends State, 
+STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-IBA extends DrawableIBA<STATE,TRANSITION, TRANSITIONFACTORY>> 
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+IBA extends DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> 
 extends 
-BuchiAutomatonJPanel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, IBA> {
+BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, IBA> {
 
 	/**
 	 * 
@@ -40,9 +42,9 @@ BuchiAutomatonJPanel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, IBA> {
 		return new IncompleteBuchiAutomatonPaintTransformer(a);
 	}
 	protected JPopupMenu getStateMenu(){
-		 return new IBAStateMenu<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
+		 return new IBAStateMenu<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
 	}
-	public ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
+	public ActionTypesInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
 		return new ModelActionFactory<>();
 	}
 	

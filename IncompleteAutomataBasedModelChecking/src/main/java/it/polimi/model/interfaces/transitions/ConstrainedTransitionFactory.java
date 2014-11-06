@@ -10,12 +10,12 @@ import it.polimi.model.impl.transitions.LabelledTransition;
  * @author claudiomenghi
  */
 public interface ConstrainedTransitionFactory<
-		STATE extends State, 
-		TRANSITION extends LabelledTransition> 
-		extends LabelledTransitionFactory<TRANSITION> {
+		CONSTRAINEDELEMENT extends State,
+		TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>> 
+		extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION> {
 
 	
 	
-	public TRANSITION create(DNFFormula dnfFormula, STATE state);
-	public TRANSITION create(int id, DNFFormula dnfFormula, STATE state);
+	public TRANSITION create(DNFFormula<CONSTRAINEDELEMENT> dnfFormula, CONSTRAINEDELEMENT state);
+	public TRANSITION create(int id, DNFFormula<CONSTRAINEDELEMENT> dnfFormula, CONSTRAINEDELEMENT state);
 }

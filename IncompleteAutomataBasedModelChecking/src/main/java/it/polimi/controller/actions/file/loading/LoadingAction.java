@@ -17,11 +17,12 @@ import javax.swing.JFileChooser;
  */
 public abstract class LoadingAction
 <
+CONSTRAINEDELEMENT extends State,
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
-	extends FileAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+	extends FileAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
 	public LoadingAction(Object source, int id, String command) {
 		super(source, id, command);

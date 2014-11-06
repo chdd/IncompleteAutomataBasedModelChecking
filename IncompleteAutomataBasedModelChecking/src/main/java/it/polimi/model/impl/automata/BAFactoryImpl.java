@@ -17,11 +17,12 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
  * @param <TRANSITIONFACTORY> is the {@link Factory} which is used to create transitions of the {@link DrawableBA}
  */
 public class BAFactoryImpl<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
-	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 	implements
-	BAFactory<STATE, TRANSITION, TRANSITIONFACTORY, DrawableBA<STATE,TRANSITION,TRANSITIONFACTORY>>{
+	BAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, DrawableBA<CONSTRAINEDELEMENT, STATE,TRANSITION,TRANSITIONFACTORY>>{
 	
 	/**
 	 * contains the {@link Factory} of the {@link LabelledTransition} of the {@link DrawableBA}
@@ -45,7 +46,7 @@ public class BAFactoryImpl<
 	 * @return a new empty {@link DrawableBA}
 	 */
 	@Override
-	public DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> create() {
-		return new BAImpl<STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
+	public DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> create() {
+		return new BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
 	}
 }

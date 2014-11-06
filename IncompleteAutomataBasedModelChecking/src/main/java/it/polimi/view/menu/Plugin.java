@@ -29,10 +29,11 @@ import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 
 public class Plugin
 <
+CONSTRAINEDELEMENT extends State,
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 	extends AbstractPopupGraphMousePlugin {
 	
     private JPopupMenu edgePopup, vertexPopup;
@@ -84,7 +85,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
         Component[] menuComps = vertexPopup.getComponents();
         for (Component comp: menuComps) {
             if (comp instanceof StateListener) {
-                ((StateListener<STATE, TRANSITION>)comp).setVertexAndView(v,  this.listener);
+                ((StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION>)comp).setVertexAndView(v,  this.listener);
             }
             if (comp instanceof MenuPointListener) {
                 ((MenuPointListener)comp).setPoint(point);
@@ -131,7 +132,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
         Component[] menuComps = edgePopup.getComponents();
         for (Component comp: menuComps) {
             if (comp instanceof TransitionListener) {
-                ((TransitionListener<STATE, TRANSITION>)comp).setEdgeAndView(edge, this.listener);
+                ((TransitionListener<CONSTRAINEDELEMENT, STATE, TRANSITION>)comp).setEdgeAndView(edge, this.listener);
             }
             if (comp instanceof MenuPointListener) {
                 ((MenuPointListener)comp).setPoint(point);

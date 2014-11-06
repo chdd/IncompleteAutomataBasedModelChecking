@@ -20,11 +20,12 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @param <AUTOMATA> is the automata to be written by the {@link GraphMLWriter}
  */
 public class IBAWriter<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	AUTOMATA extends DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY>>
-	extends BAWriter<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATA> {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
+	AUTOMATA extends DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>
+	extends BAWriter<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATA> {
 
 	public IBAWriter(AbstractLayout<STATE, TRANSITION> layout) {
 		super(layout);

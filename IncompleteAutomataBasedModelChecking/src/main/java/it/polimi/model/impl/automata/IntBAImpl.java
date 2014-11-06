@@ -26,14 +26,15 @@ import java.util.Stack;
  */
 @SuppressWarnings("serial")
 public class IntBAImpl<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition,
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
-	extends IBAImpl<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> 
-	implements DrawableIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>{
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT,  TRANSITION>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,  INTERSECTIONTRANSITION>> 
+	extends IBAImpl<CONSTRAINEDELEMENT, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> 
+	implements DrawableIntBA<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>{
 
 	
 	/**
@@ -52,7 +53,7 @@ public class IntBAImpl<
 	 * @param model: is the model to be considered
 	 * @param specification: is the specification to be considered
 	 */
-	public IntBAImpl(IBA<STATE, TRANSITION, TRANSITIONFACTORY> model, BA<STATE, TRANSITION, TRANSITIONFACTORY> specification, INTERSECTIONTRANSITIONFACTORY transitionFactory){
+	public IntBAImpl(IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification, INTERSECTIONTRANSITIONFACTORY transitionFactory){
 		super(transitionFactory);
 		if(model==null){
 			throw new IllegalArgumentException("The model to be considered cannot be null");
@@ -61,7 +62,7 @@ public class IntBAImpl<
 			throw new IllegalArgumentException("The specification to e considered cannot be null");
 		}
 		this.mixedStates=new HashSet<INTERSECTIONSTATE>();
-		new IntersectionBuilder<STATE, TRANSITION, INTERSECTIONSTATE,
+		new IntersectionBuilder<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE,
 		INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>().
 		computeIntersection(this, model, specification, transitionFactory);
 	}
@@ -105,7 +106,7 @@ public class IntBAImpl<
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
 	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isEmpty(ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
+	public boolean isEmpty(ModelCheckerParameters<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
 		
 		if(super.isEmpty()){
 			return true;
@@ -188,7 +189,7 @@ public class IntBAImpl<
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> other = (IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>) obj;
+		IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> other = (IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>) obj;
 		if (mixedStates == null) {
 			if (other.mixedStates != null)
 				return false;

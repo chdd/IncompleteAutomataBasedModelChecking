@@ -8,13 +8,15 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.event.ActionEvent;
 
-public abstract class SetInitial<STATE extends State, 
+public abstract class SetInitial<
+	CONSTRAINEDELEMENT extends State,
+	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>
 	>
 	extends ActionEvent implements
-	ActionInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+	ActionInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 	
 	/**
 	 * 

@@ -12,12 +12,13 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 
 @SuppressWarnings("serial")
 public abstract class SaveAction<
+CONSTRAINEDELEMENT extends State, 
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
 LAYOUT extends AbstractLayout<?, ?>>
-		extends FileAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		extends FileAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
 	protected LAYOUT layout;
 	

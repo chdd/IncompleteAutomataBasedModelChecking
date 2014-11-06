@@ -16,12 +16,13 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
  * @param <INTERSECTIONTRANSITION> is the type of the transitions of the intersection automata
  */
 public interface IIntBA<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition,
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE,INTERSECTIONTRANSITION>>
-	extends IBA<INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
+	extends IBA<CONSTRAINEDELEMENT, INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
 
 	/**
 	 * returns true if the state s is mixed, false otherwise

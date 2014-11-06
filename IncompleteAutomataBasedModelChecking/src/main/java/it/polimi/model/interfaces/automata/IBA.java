@@ -14,10 +14,11 @@ import java.util.Set;
  * @param <TRANSITION> is the type of the transitions of the {@link IBA}
  */
 public interface IBA<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
-	extends BA<STATE, TRANSITION, TRANSITIONFACTORY> {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
+	extends BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> {
 
 	/**
 	 * check if the state is transparent

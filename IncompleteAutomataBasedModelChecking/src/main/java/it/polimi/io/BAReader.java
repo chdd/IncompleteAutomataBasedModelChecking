@@ -37,12 +37,13 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  * @param <AUTOMATONFACTORY> is a {@link Factory} which is able to create a new empty {@link DrawableBA}
  */
 public class BAReader<
+		CONSTRAINEDELEMENT extends State,
 		STATE extends State, 
-		TRANSITION extends LabelledTransition, 
-		TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
+		TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+		TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
 		STATEFACTORY extends StateFactory<STATE>,
-		AUTOMATON extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>,
-		AUTOMATONFACTORY extends BAFactory<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON>>{
+		AUTOMATON extends DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
+		AUTOMATONFACTORY extends BAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON>>{
 
 	/**
 	 * is the {@link GraphMLReader2} which is used to load the {@link DrawableBA}
@@ -264,7 +265,7 @@ public class BAReader<
 			}
 			return this.transitionFactory.create(
 					Integer.parseInt(input.getId()),
-					DNFFormula.loadFromString(input.getProperty("DNFFormula")));
+					DNFFormula.<CONSTRAINEDELEMENT>loadFromString(input.getProperty("DNFFormula")));
 		}
 	}
 	

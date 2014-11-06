@@ -11,9 +11,12 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.ViewInterface;
 
 @SuppressWarnings("serial")
-public class SetAcceptingClaim<STATE extends State, STATEFACTORY extends StateFactory<STATE>, TRANSITION extends LabelledTransition, TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
+public class SetAcceptingClaim<
+CONSTRAINEDELEMENT extends State,
+STATE extends State, STATEFACTORY extends StateFactory<STATE>, TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 		extends
-		SetAccepting<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		SetAccepting<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
 	public SetAcceptingClaim(Object source, int id, String command, STATE state) {
 		super(source, id, command, state);
@@ -22,10 +25,10 @@ public class SetAcceptingClaim<STATE extends State, STATEFACTORY extends StateFa
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> void perform(
-			ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view)
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> void perform(
+			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view)
 			throws Exception {
 		if (model.getSpecification().isAccept(state)) {
 			model.getSpecification().getAcceptStates().remove(state);

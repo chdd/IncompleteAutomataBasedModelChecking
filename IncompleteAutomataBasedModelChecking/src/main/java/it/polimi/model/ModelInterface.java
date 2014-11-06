@@ -30,14 +30,15 @@ import edu.uci.ics.jung.io.GraphIOException;
  *
  */
 public interface ModelInterface<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
 	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>,
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
 	{
 	/**
 	 * loads the model of the system from the file whose path is specified in the string modelFilePath
@@ -65,17 +66,17 @@ public interface ModelInterface<
 	 * returns the model of the system
 	 * @return the model of the system
 	 */
-	public DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY> getModel();
+	public DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> getModel();
 	/**
 	 * returns the specification of the system
 	 * @return the specification of the system
 	 */
-	public DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY> getSpecification();
+	public DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> getSpecification();
 	/**
 	 * returns the automaton that is intersection between the model and the specification
 	 * @return the automaton that is the intersection between the model and the specification
 	 */
-	public DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> getIntersection();
+	public DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> getIntersection();
 	
 	/**
 	 * save the model in the file with path filePath
@@ -139,11 +140,11 @@ public interface ModelInterface<
 	
 	
 	
-	public void changeIntersection(DrawableIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersection);
+	public void changeIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersection);
 
 	public void check();
 	
-	public ModelCheckerParameters<STATE, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
+	public ModelCheckerParameters<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
 	
 	public void loadClaimFromLTL(String ltlFormula);
 }

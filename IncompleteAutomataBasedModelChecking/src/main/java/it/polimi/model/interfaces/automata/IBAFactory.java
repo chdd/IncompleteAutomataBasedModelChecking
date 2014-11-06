@@ -16,10 +16,11 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
  * @param <TRANSITIONFACTORY> is the {@link Factory} which is used to create the {@link LabelledTransition} of the {@link DrawableIBA}
  */
 public interface IBAFactory<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	AUTOMATON extends DrawableIBA<STATE, TRANSITION, TRANSITIONFACTORY>>
-	extends BAFactory<STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON> {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
+	AUTOMATON extends DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>
+	extends BAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON> {
 
 }

@@ -1,13 +1,18 @@
 package it.polimi.model.impl.transitions;
 
+import it.polimi.model.impl.labeling.ConstraintProposition;
 import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.states.State;
+import it.polimi.model.interfaces.labeling.ConjunctiveClause;
+import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
+import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 
 /**
  * @author Claudio Menghi
  * contains an automata transition. The transition contains the character that labels the transition and the destination state
  * 
  */
-public class LabelledTransition{
+public class LabelledTransition<STATE extends State>{
 	
 	/**
 	 * contains the id of the {@link LabelledTransition}
@@ -17,7 +22,7 @@ public class LabelledTransition{
 	/**
 	 * contains the {@link DNFFormula} which labels the {@link LabelledTransition}
 	 */
-	private DNFFormula dnfFormula;
+	private DNFFormula<STATE> dnfFormula;
 	
 	/** 
 	 * Constructs a new singleton interval transition. 
@@ -26,7 +31,7 @@ public class LabelledTransition{
 	 * @throws IllegalArgumentException is generated is the character that labels the transition is null or if the destination state is null
 	 * or if the value of the id is less than zero
 	 */
-	public LabelledTransition(DNFFormula dnfFormula, int id){
+	public LabelledTransition(DNFFormula<STATE> dnfFormula, int id){
 		if(id<0){
 			throw new IllegalArgumentException("The value of the id cannot be less than zero");
 		}
@@ -40,7 +45,7 @@ public class LabelledTransition{
 	/**
 	 * @return the character that labels the transition
 	 */
-	public DNFFormula getDnfFormula() {
+	public DNFFormula<STATE> getDnfFormula() {
 		return this.dnfFormula;
 	}
 	
@@ -49,7 +54,7 @@ public class LabelledTransition{
 	 * @param dnfFormula the {@link DNFFormula} to be added as a label of the {@link LabelledTransition}
 	 * @throws NullPointerException if the {@link DNFFormula} is null
 	 */
-	public void setDNFFormula(DNFFormula dnfFormula){
+	public void setDNFFormula(DNFFormula<STATE> dnfFormula){
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula cannot be null");
 		}
@@ -70,6 +75,19 @@ public class LabelledTransition{
 	@Override
 	public String toString() {
 		return "{"+Integer.toString(this.id)+"} "+this.dnfFormula.toString()+"";
+	}
+	
+	public LogicalItem<STATE, LabelledTransition<STATE>> toLogicItem(){
+		
+		for(ConjunctiveClause<STATE> c: this.dnfFormula.getConjunctiveClauses()){
+			if(c instanceof ConstraintProposition){
+				return new AtomicProposition<STATE, LabelledTransition<STATE>>(this, 
+						((ConstraintProposition<STATE>) c).getConstrainedState(), 
+						c.toString());
+				
+			}
+		}
+		return null;
 	}
 
 }

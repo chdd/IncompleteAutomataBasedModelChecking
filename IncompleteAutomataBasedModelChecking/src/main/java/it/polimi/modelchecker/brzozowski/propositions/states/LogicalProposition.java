@@ -1,20 +1,23 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LogicalProposition<S extends State> implements AbstractProposition<S>{
+public abstract class LogicalProposition<CONSTRAINTELEMENT extends State, TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>> extends LogicalItem<CONSTRAINTELEMENT, TRANSITION>{
 
+	
+	
 	/** The value is used for character storage. */
-    private List<AbstractProposition<S>> value;
+    private List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> value;
     
     /**
 	 * returns the list of the {@link AbstractProposition} associated with the {@link AndProposition}
 	 * @return the list of the {@link AbstractProposition} associated with the {@link AndProposition}
 	 */
-	public List<AbstractProposition<S>> getPredicates(){
+	public List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> getPredicates(){
 	   return this.value;
     }
 	
@@ -23,7 +26,7 @@ public abstract class LogicalProposition<S extends State> implements AbstractPro
      * @param l: is the list of {@link AbstractProposition} to be added in the and predicate
      * @throws IllegalArgumentException if the list of the {@link AbstractProposition} contains less than 2 {@link AbstractProposition}
      */
-	 public LogicalProposition(List<AbstractProposition<S>> l) {
+	 public LogicalProposition(List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> l) {
 		this.value=l;
         if(this.value.size()<=1){
         	throw new IllegalArgumentException("It is not possible to create a And or Or predicate that contains less than two predicates");
@@ -36,14 +39,14 @@ public abstract class LogicalProposition<S extends State> implements AbstractPro
 	 * @param secondPredicate is the second {@link AbstractProposition} included in the {@link AndProposition}
 	 * @throws IllegalArgumentException is the first or the second {@link AbstractProposition} are null
 	 */
-	 public LogicalProposition(AbstractProposition<S> firstPredicate, AbstractProposition<S> secondPredicate){
-	 	if(firstPredicate==null){
+	 public LogicalProposition(LogicalItem<CONSTRAINTELEMENT, TRANSITION> firstPredicate, LogicalItem<CONSTRAINTELEMENT, TRANSITION> secondPredicate){
+	 	 if(firstPredicate==null){
     		throw new IllegalArgumentException("The first constraint cannot be null");
     	}
     	if(secondPredicate==null){
     		throw new IllegalArgumentException("The second constraint cannot be null");
     	}
-        this.value = new ArrayList<AbstractProposition<S>>();
+        this.value = new ArrayList<LogicalItem<CONSTRAINTELEMENT, TRANSITION>>();
         this.value.add(firstPredicate);
         this.value.add(secondPredicate);
         if(this.value.size()<=1){
@@ -57,7 +60,7 @@ public abstract class LogicalProposition<S extends State> implements AbstractPro
 	public String toString() {
 		String ret="";
 		int inserted=0;
-		List<AbstractProposition<S>> value=getPredicates();
+		List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> value=getPredicates();
 		for(int i=0; i<value.size();i++){
 			if(!(value.get(i) instanceof EpsilonProposition)){
 				if(inserted>0){
@@ -103,7 +106,7 @@ public abstract class LogicalProposition<S extends State> implements AbstractPro
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		LogicalProposition<S> other = (LogicalProposition<S>) obj;
+		LogicalProposition<CONSTRAINTELEMENT, TRANSITION> other = (LogicalProposition<CONSTRAINTELEMENT, TRANSITION>) obj;
 		if (value == null) {
 			if (other.value != null)
 				return false;

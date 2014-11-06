@@ -21,45 +21,45 @@ public class Main{
 	public static void main(String args[]) {
 		
 		// creates the model of the application starting from the model of the system contained in modelPath and the specification contained in the specificationPath
-		ModelInterface<
+		ModelInterface<State,
 			State, StateFactory<State>, 
-			LabelledTransition, 
-			LabelledTransitionFactory<LabelledTransition>, 
+			LabelledTransition<State>, 
+			LabelledTransitionFactory<State, LabelledTransition<State>>, 
 			IntersectionState<State>, 
 			IntersectionStateFactory<State,IntersectionState<State>>, 
-			LabelledTransition, 
-			ConstrainedTransitionFactory<State,LabelledTransition>> model=new Model<
+			LabelledTransition<State>, 
+			ConstrainedTransitionFactory<State,LabelledTransition<State>>> model=new Model<State,
 					State, StateFactory<State>, 
-					LabelledTransition, 
-					LabelledTransitionFactory<LabelledTransition>, 
+					LabelledTransition<State>, 
+					LabelledTransitionFactory<State, LabelledTransition<State>>, 
 					IntersectionState<State>, 
 					IntersectionStateFactory<State,IntersectionState<State>>, 
-					LabelledTransition, 
-					ConstrainedTransitionFactory<State,LabelledTransition>>(
+					LabelledTransition<State>, 
+					ConstrainedTransitionFactory<State,LabelledTransition<State>>>(
 							new StateFactory<State>(),
 							new LabelledTransitionFactoryImpl(),
 							new IntersectionStateFactory<State, IntersectionState<State>>(),
 							new ConstrainedTransitionFactoryImpl());
 		
 		// contains the view of the application
-		ViewInterface<State, LabelledTransition,IntersectionState<State>, LabelledTransition,
-			LabelledTransitionFactory<LabelledTransition>,
-			ConstrainedTransitionFactory<State, LabelledTransition>> view=
-			new View<State, StateFactory<State>, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, IntersectionState<State>, 
+		ViewInterface<State, State, LabelledTransition<State>,IntersectionState<State>, LabelledTransition<State>,
+			LabelledTransitionFactory<State, LabelledTransition <State>>,
+			ConstrainedTransitionFactory<State, LabelledTransition<State>>> view=
+			new View<State, State, StateFactory<State>, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, IntersectionState<State>, 
 			IntersectionStateFactory<State, IntersectionState<State>>,
-			LabelledTransition,
-			ConstrainedTransitionFactory<State, LabelledTransition>>(
+			LabelledTransition<State>,
+			ConstrainedTransitionFactory<State, LabelledTransition<State>>>(
 				 model.getModel(), 
 				 model.getSpecification(), 
 				 model.getIntersection());
 		
 		// creates a new controller with the specified model and view
-		Controller<State, StateFactory<State>, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+		Controller<State, State, StateFactory<State>, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, 
 					IntersectionState<State>, IntersectionStateFactory<State,IntersectionState<State>>,
-					LabelledTransition, ConstrainedTransitionFactory<State,LabelledTransition>> controller=
-					new Controller<State, StateFactory<State>, LabelledTransition, LabelledTransitionFactory<LabelledTransition>, 
+					LabelledTransition<State>, ConstrainedTransitionFactory<State,LabelledTransition<State>>> controller=
+					new Controller<State, State, StateFactory<State>, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, 
 							IntersectionState<State>, IntersectionStateFactory<State,IntersectionState<State>>,
-							LabelledTransition, ConstrainedTransitionFactory<State,LabelledTransition>>(model, view);
+							LabelledTransition<State>, ConstrainedTransitionFactory<State,LabelledTransition<State>>>(model, view);
 		
 		// add  the controller as observer of the view
 		view.addObserver(controller);

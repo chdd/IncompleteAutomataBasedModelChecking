@@ -3,6 +3,7 @@ package it.polimi.model.impl.transitions;
 import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
 import it.polimi.model.impl.labeling.DNFFormula;
 import it.polimi.model.impl.labeling.SigmaProposition;
+import it.polimi.model.impl.states.State;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
@@ -11,7 +12,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author claudiomenghi
  *
  */
-public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<LabelledTransition>{
+public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<State,  LabelledTransition<State>>{
 
 	/**
 	 * contains the next id of the {@link LabelledTransition}
@@ -24,11 +25,11 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 	 * @return a new {@link LabelledTransition} labeled with a {@link DNFFormula} which contains only the {@link GraphProposition} SIGMA
 	 */
 	@Override
-	public LabelledTransition create() {
-		DNFFormula dnfFormula=new DNFFormula();
-		dnfFormula.addDisjunctionClause(new SigmaProposition());
+	public LabelledTransition<State> create() {
+		DNFFormula<State> dnfFormula=new DNFFormula<State>();
+		dnfFormula.addDisjunctionClause(new SigmaProposition<State>());
 		
-		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition<State> t=new LabelledTransition<State>(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
@@ -39,11 +40,11 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 	 * @return a new {@link LabelledTransition} with the {@link DNFFormula} as label
 	 * @throws NullPointerException if the {@link DNFFormula} is null
 	 */
-	public LabelledTransition create(DNFFormula dnfFormula) {
+	public LabelledTransition<State> create(DNFFormula<State> dnfFormula) {
 		if(dnfFormula==null){
 			throw new NullPointerException("The dnfFormula to be added at the LabelledTransition cannot be null");
 		}
-		LabelledTransition t=new LabelledTransition(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
+		LabelledTransition<State> t=new LabelledTransition<State>(dnfFormula, LabelledTransitionFactoryImpl.transitionCount);
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;
 	}
@@ -56,14 +57,14 @@ public class LabelledTransitionFactoryImpl implements LabelledTransitionFactory<
 	 * @throws NullPointerException if the {@link DNFFormula} is null
 	 * @throws IllegalArgumentException if the id is not grater than or equal to zero
 	 */
-	public LabelledTransition create(int id, DNFFormula dnfFormula) {
+	public LabelledTransition<State> create(int id, DNFFormula<State> dnfFormula) {
 		if(id<0){
 			throw new IllegalArgumentException("The id must be grater than or equal to zero");
 		}
 		if(dnfFormula==null){
 			throw new NullPointerException("The dnfFormula to be added at the LabelledTransition cannot be null");
 		}
-		LabelledTransition t=new LabelledTransition(dnfFormula, id);
+		LabelledTransition<State> t=new LabelledTransition<State>(dnfFormula, id);
 		LabelledTransitionFactoryImpl.transitionCount=Math.max(id++, LabelledTransitionFactoryImpl.transitionCount++);
 		LabelledTransitionFactoryImpl.transitionCount++;
 		return t;

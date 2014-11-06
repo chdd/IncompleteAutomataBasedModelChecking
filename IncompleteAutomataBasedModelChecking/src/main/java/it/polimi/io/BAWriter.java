@@ -25,10 +25,11 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @param <AUTOMATON> is the automata to be written by the {@link GraphMLWriter}
  */
 public class BAWriter<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>,
-	AUTOMATON extends DrawableBA<STATE, TRANSITION, TRANSITIONFACTORY>>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	AUTOMATON extends DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>
 	extends GraphMLWriter<STATE, TRANSITION> {
 
 	/**
@@ -158,14 +159,14 @@ public class BAWriter<
 	 */
 	protected class BAStateInitialToStringTransformer implements Transformer<STATE, String>  {
 
-		private BA<STATE, TRANSITION, TRANSITIONFACTORY> ba;
+		private BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba;
 		
 		/**
 		 * creates the  {@link BAStateInitialToStringTransformer}
 		 * @param ba is the {@link BA} where the state is placed
 		 * @throws NullPointerException if the {@link BA} is null
 		 */
-		public BAStateInitialToStringTransformer(BA<STATE, TRANSITION, TRANSITIONFACTORY> ba){
+		public BAStateInitialToStringTransformer(BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba){
 			if(ba==null){
 				throw new NullPointerException("The ba cannot be null");
 			}
@@ -188,14 +189,14 @@ public class BAWriter<
 	 */
 	protected class BAStateAcceptingToStringTransformer implements Transformer<STATE, String>  {
 
-		private BA<STATE, TRANSITION, TRANSITIONFACTORY> ba;
+		private BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba;
 		
 		/**
 		 * creates the  {@link BAStateAcceptingToStringTransformer}
 		 * @param ba is the {@link BA} where the state is placed
 		 * @throws NullPointerException if the {@link BA} is null
 		 */
-		public BAStateAcceptingToStringTransformer(BA<STATE, TRANSITION, TRANSITIONFACTORY> ba){
+		public BAStateAcceptingToStringTransformer(BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba){
 			if(ba==null){
 				throw new NullPointerException("The ba cannot be null");
 			}

@@ -14,9 +14,10 @@ import edu.uci.ics.jung.graph.DirectedGraph;
  * @param <TRANSITION> is the type of the {@link LabelledTransition} of the {@link DrawableBA}
  */
 public interface DrawableBA<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> 
-	extends BA<STATE, TRANSITION, TRANSITIONFACTORY>, DirectedGraph<STATE, TRANSITION> {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
+	extends BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>, DirectedGraph<STATE, TRANSITION> {
 
 }

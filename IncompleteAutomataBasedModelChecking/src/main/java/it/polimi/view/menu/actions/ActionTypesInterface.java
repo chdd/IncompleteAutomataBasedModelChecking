@@ -12,21 +12,22 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 public abstract class ActionTypesInterface<
+CONSTRAINEDELEMENT extends State,
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>> {
+TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> {
 
-	public abstract DeleteEdgeAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> deleteEdgeAction(Object source, int id, String command, TRANSITION transition);
+	public abstract DeleteEdgeAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> deleteEdgeAction(Object source, int id, String command, TRANSITION transition);
 	
-	public abstract ChangeEdgeLabel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getChangingLabelAction(Object source, int id, String command, String edgeLabel, TRANSITION transition);
+	public abstract ChangeEdgeLabel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getChangingLabelAction(Object source, int id, String command, String edgeLabel, TRANSITION transition);
 	
 	// STATES
-	public abstract DeleteState<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>  getDeleteStateAction(Object source, int id, String command, STATE state);
-	public abstract SetAccepting<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setAccepting(Object source, int id, String command, STATE state);
-	public abstract SetInitial<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setInitial(Object source, int id, String command, STATE state);
+	public abstract DeleteState<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>  getDeleteStateAction(Object source, int id, String command, STATE state);
+	public abstract SetAccepting<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setAccepting(Object source, int id, String command, STATE state);
+	public abstract SetInitial<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setInitial(Object source, int id, String command, STATE state);
 	
-	public SetTransparent<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setTransparent(Object source, int id, String command, STATE state){
-		return new SetTransparent<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
+	public SetTransparent<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setTransparent(Object source, int id, String command, STATE state){
+		return new SetTransparent<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
 	}
 }

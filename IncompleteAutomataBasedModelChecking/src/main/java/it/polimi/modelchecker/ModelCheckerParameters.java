@@ -12,9 +12,12 @@ import java.util.Stack;
  * contains the report of the model checking parameters
  */
 public class ModelCheckerParameters
-	<STATE extends State, 
+	<
+	CONSTRAINEDELEMENT extends State,
+	STATE extends State, 
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition> {
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>> {
 	
 
 	/**
@@ -52,7 +55,7 @@ public class ModelCheckerParameters
 	/**
 	 * contains the constraint computed by the model checking procedure
 	 */
-	private Constraint<STATE> constraint;
+	private Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> constraint;
 	
 	private Stack<INTERSECTIONSTATE> violatingPath;
 	
@@ -385,14 +388,14 @@ public class ModelCheckerParameters
 	/**
 	 * @return the constraint
 	 */
-	public Constraint<STATE> getConstraint() {
+	public Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> getConstraint() {
 		return constraint;
 	}
 
 	/**
 	 * @param constraint the constraint to set
 	 */
-	public void setConstraint(Constraint<STATE> constraint) {
+	public void setConstraint(Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> constraint) {
 		this.constraint = constraint;
 	}
 

@@ -24,17 +24,19 @@ import edu.uci.ics.jung.io.graphml.EdgeMetadata;
 import edu.uci.ics.jung.io.graphml.NodeMetadata;
 
 public class IntBAReader 
-	<STATE extends State, 
-	TRANSITION extends LabelledTransition,
+	<
+	CONSTRAINEDELEMENT extends State,
+	STATE extends State, 
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE,INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>,
-	AUTOMATON extends DrawableIntBA<STATE, TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>,
-	AUTOMATONFACTORY extends IntBAFactory<STATE, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AUTOMATON>
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>,
+	AUTOMATON extends DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>,
+	AUTOMATONFACTORY extends IntBAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AUTOMATON>
 	>
-	extends IBAReader<INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, INTERSECTIONSTATEFACTORY, AUTOMATON, AUTOMATONFACTORY>{
+	extends IBAReader<CONSTRAINEDELEMENT, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, INTERSECTIONSTATEFACTORY, AUTOMATON, AUTOMATONFACTORY>{
 
 	
 	public IntBAReader(
@@ -137,6 +139,7 @@ public class IntBAReader
 		 * @param input contains the {@link EdgeMetadata} to be converted
 		 * @throws NullPointerException if the {@link EdgeMetadata} to be converted is null
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		public INTERSECTIONTRANSITION transform(EdgeMetadata input) {
 			if(input==null){
@@ -145,14 +148,14 @@ public class IntBAReader
 			if(input.getProperty("cstateId")==null){
 				return this.transitionFactory.create(
 						Integer.parseInt(input.getId()),
-						DNFFormula.loadFromString(input.getProperty("DNFFormula")));
+						DNFFormula.<CONSTRAINEDELEMENT>loadFromString(input.getProperty("DNFFormula")));
 			}
 			else
 			{
 				return this.transitionFactory.create(
 						Integer.parseInt(input.getId()),
-						DNFFormula.loadFromString(input.getProperty("DNFFormula")),
-						this.stateFactory.create(
+						DNFFormula.<CONSTRAINEDELEMENT>loadFromString(input.getProperty("DNFFormula")),
+						(CONSTRAINEDELEMENT)this.stateFactory.create(
 								input.getProperty("cstateName"), 
 								Integer.parseInt(input.getProperty("cstateId"))));
 			}

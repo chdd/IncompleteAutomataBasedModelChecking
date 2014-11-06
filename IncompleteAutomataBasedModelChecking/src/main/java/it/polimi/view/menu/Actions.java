@@ -27,14 +27,15 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 public class Actions<
+CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>  {
 
-	private ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface;
+	private ActionTypesInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface;
 	
-	public Actions(ActionTypesInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface){
+	public Actions(ActionTypesInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface){
 		this.actionTypesInterface=actionTypesInterface;
 	}
 	
@@ -56,7 +57,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 	@SuppressWarnings("serial")
 	public class TransitionAddCharacter
 	
-	extends Box implements TransitionListener<STATE, TRANSITION> {
+	extends Box implements TransitionListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		private TRANSITION edge;
 		private ActionListener listener;
 		private JTextField character;
@@ -90,7 +91,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 	@SuppressWarnings("serial")
 	public class TransitionDelete extends JMenuItem implements
-			TransitionListener<STATE, TRANSITION> {
+			TransitionListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		
 		private TRANSITION edge;
 		private ActionListener l;
@@ -123,7 +124,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 	@SuppressWarnings("serial")
 	public class Rename extends Box implements
-			StateListener<STATE, TRANSITION> {
+			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		STATE v;
 		ActionListener l;
 		JTextField name;
@@ -137,7 +138,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 			name.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					l.actionPerformed(new RenameStateAction<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
+					l.actionPerformed(new RenameStateAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
 					(e.getSource(), e.getID(), e.getActionCommand(), name.getText(), v));
 
 				}
@@ -153,7 +154,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 	@SuppressWarnings("serial")
 	public class StateInitial extends JMenuItem implements
-			StateListener<STATE, TRANSITION> {
+			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		private STATE v;
 		private ActionListener l;
 		
@@ -179,7 +180,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 	@SuppressWarnings("serial")
 	public class StateTransparent extends JMenuItem implements
-			StateListener<STATE, TRANSITION> {
+			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		STATE v;
 		ActionListener l;
 
@@ -203,7 +204,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 	@SuppressWarnings("serial")
 	public  class StateAccepting extends JMenuItem implements
-			StateListener<STATE, TRANSITION> {
+			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		STATE state;
 		ActionListener l;
 
@@ -229,7 +230,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>  {
 
 	@SuppressWarnings("serial")
 	public class StateDelete extends JMenuItem implements
-			StateListener<STATE, TRANSITION> {
+			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		private STATE state;
 		private ActionListener l;
 		

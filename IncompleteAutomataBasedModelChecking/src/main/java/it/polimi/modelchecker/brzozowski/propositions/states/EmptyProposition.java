@@ -1,13 +1,15 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 /**
  * @author claudiomenghi
  * contains an {@link EmptyProposition}.  This predicate is used when no transitions of the (I)BA are present to connect two states
  */
-public class EmptyProposition<S extends State> implements AbstractProposition<S> {
+public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>> extends LogicalItem<CONSTRAINTELEMENT, TRANSITION> {
 
+	
 	private final String ret="∅";
 	/**
 	 * the concatenation of an {@link EmptyProposition} with another {@link AbstractProposition} is an {@link EmptyProposition}
@@ -16,7 +18,7 @@ public class EmptyProposition<S extends State> implements AbstractProposition<S>
 	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} a is null
 	 */
 	@Override
-	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
+	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> concatenate(LogicalItem<CONSTRAINTELEMENT, TRANSITION> a) {
 		if(a==null){
 			throw new IllegalArgumentException("cannot concatenate an empty contraint with a null element");
 		}
@@ -28,8 +30,8 @@ public class EmptyProposition<S extends State> implements AbstractProposition<S>
 	 * @return a new {@link LambdaProposition}
 	 */
 	@Override
-	public AbstractProposition<S> star() {
-		return new LambdaProposition<S>();
+	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> star() {
+		return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
 	}
 	
 	/**
@@ -37,8 +39,8 @@ public class EmptyProposition<S extends State> implements AbstractProposition<S>
 	 * @return a new {@link LambdaProposition}
 	 */
 	@Override
-	public AbstractProposition<S> omega() {
-		return new LambdaProposition<S>();
+	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> omega() {
+		return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
 	}
 
 	/**
@@ -47,7 +49,7 @@ public class EmptyProposition<S extends State> implements AbstractProposition<S>
 	 * @throws IllegalArgumentException the {@link AbstractProposition} a cannot be null
 	 */
 	@Override
-	public AbstractProposition<S> union(AbstractProposition<S> a) {
+	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> union(LogicalItem<CONSTRAINTELEMENT, TRANSITION> a) {
 		if(a==null){
 			throw new IllegalArgumentException("cannot make the union of an empty contraint with a null element");
 		}
@@ -85,7 +87,7 @@ public class EmptyProposition<S extends State> implements AbstractProposition<S>
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		EmptyProposition<S> other = (EmptyProposition<S>) obj;
+		EmptyProposition<CONSTRAINTELEMENT, TRANSITION> other = (EmptyProposition<CONSTRAINTELEMENT, TRANSITION>) obj;
 		if (ret == null) {
 			if (other.ret != null)
 				return false;

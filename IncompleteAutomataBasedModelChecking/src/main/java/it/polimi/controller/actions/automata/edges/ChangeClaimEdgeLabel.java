@@ -13,11 +13,12 @@ import it.polimi.view.ViewInterface;
 
 @SuppressWarnings("serial")
 public class ChangeClaimEdgeLabel<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<TRANSITION>>
-extends ChangeEdgeLabel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+extends ChangeEdgeLabel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
 {
 
 	public ChangeClaimEdgeLabel(Object source, int id, String command, String edgeLabel, TRANSITION transition){
@@ -25,16 +26,16 @@ extends ChangeEdgeLabel<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
 	}
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>> 
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> 
 	void perform(
-			ModelInterface<STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE , 
+			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE , 
 			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception{
 	
-			this.transition.setDNFFormula(DNFFormula.loadFromString(edgeLabel));
+			this.transition.setDNFFormula(DNFFormula.<CONSTRAINEDELEMENT>loadFromString(edgeLabel));
 			view.updateModel(model.getModel());
 	}
 

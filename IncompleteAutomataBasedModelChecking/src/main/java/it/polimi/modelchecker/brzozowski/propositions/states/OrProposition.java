@@ -1,12 +1,13 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 /**
  * @author claudiomenghi
  * contains an OrPredicate
  */
-public class OrProposition<S extends State> extends LogicalProposition<S> {
+public class OrProposition<S extends State, T extends LabelledTransition<S>> extends LogicalProposition<S, T> {
 
 	private String type="v";
 	
@@ -18,7 +19,7 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 	 * 												 if the first and the second {@link AbstractProposition} are equals
 	 * 							
 	 */
-	 public OrProposition(AbstractProposition<S> firstPredicate, AbstractProposition<S> secondPredicate){
+	 public OrProposition(LogicalItem<S, T> firstPredicate, LogicalItem<S, T> secondPredicate){
 		super(firstPredicate, secondPredicate);
 	 }
 	 
@@ -35,7 +36,7 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 	 * @throws IllegalArgumentException is generated when the constraint to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
+	public LogicalItem<S, T> concatenate(LogicalItem<S, T> a) {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -49,19 +50,19 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 		}
 		// if a is an EpsilonConstraint concatenation of the or constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<S, T>(this, a);
 		}
 		// if a is a Predicate the concatenation of the or constraint and Predicate is returned
 		if(a instanceof AtomicProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<S, T>(this, a);
 		}
 		// if a is an AndConstraint the concatenation of the or constraint and the AndConstraint is returned
 		if(a instanceof AndProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<S, T>(this, a);
 		}
 		// if a is an OrConstraint the concatenation of the or constraint and the OrConstraint is returned
 		if(a instanceof OrProposition){
-			return new AndProposition<S>(this, a);
+			return new AndProposition<S, T>(this, a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
@@ -78,7 +79,7 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> union(AbstractProposition<S> a) {
+	public LogicalItem<S, T> union(LogicalItem<S, T> a) {
 		//System.out.println("or union");
 		
 		if(a==null){
@@ -90,23 +91,23 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 		}
 		// the union of an or constraint and a LambdaConstraint is a new orConstraint that contains the or constraint and lambda
 		if(a instanceof LambdaProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		// the union of an or constraint and an EpsilonConstrain is a new orConstraint that contains the or constraint and the EpsilonConstrain
 		if(a instanceof EpsilonProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		// the union of an or constraint and a Predicate is a new orConstraint that contains the or constraint and the Predicate
 		if(a instanceof AtomicProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		// the union of an or constraint and an orConstraint is a new orConstraint that contains the two or constraints
 		if(a instanceof OrProposition){
-			return new OrProposition<S>(this,a);
+			return new OrProposition<S, T>(this,a);
 		}
 		// the union of an or constraint and an andConstraint is a new orConstraint that contains the or constraint and the andConstraint
 		if(a instanceof AndProposition){
-			return new OrProposition<S>(this, a);
+			return new OrProposition<S, T>(this, a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
 	}
@@ -116,7 +117,7 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 	 * @return the or constraint
 	 */
 	@Override
-	public AbstractProposition<S> star() {
+	public LogicalItem<S, T> star() {
 		return this;
 	}
 
@@ -125,7 +126,7 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 	 * @return the or constraint
 	 */
 	@Override
-	public AbstractProposition<S> omega() {
+	public LogicalItem<S, T> omega() {
 		return this;
 	}
 
@@ -156,7 +157,7 @@ public class OrProposition<S extends State> extends LogicalProposition<S> {
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		OrProposition<S> other = (OrProposition<S>) obj;
+		OrProposition<S, T> other = (OrProposition<S, T>) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;

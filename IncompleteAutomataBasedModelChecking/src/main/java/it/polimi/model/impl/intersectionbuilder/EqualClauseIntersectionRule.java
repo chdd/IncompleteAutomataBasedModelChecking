@@ -20,12 +20,13 @@ import java.util.Set;
  * @param <INTERSECTIONTRANSITIONFACTORY> is the factory which allows to create the transitions of the intersection automaton
  */
 public class EqualClauseIntersectionRule<
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
-	TRANSITION extends LabelledTransition,
-	INTERSECTIONTRANSITION extends LabelledTransition,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
 	extends
-		IntersectionRule<STATE, TRANSITION, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> {
+		IntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> {
 
 	
 	@Override
@@ -33,7 +34,7 @@ public class EqualClauseIntersectionRule<
 			TRANSITION modelTransition, TRANSITION claimTransition, INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory) {
 		
 		
-		Set<ConjunctiveClause> commonClauses=new HashSet<ConjunctiveClause>();
+		Set<ConjunctiveClause<CONSTRAINEDELEMENT>> commonClauses=new HashSet<ConjunctiveClause<CONSTRAINEDELEMENT>>();
 				
 		commonClauses.addAll(modelTransition.getDnfFormula().getConjunctiveClauses());
 		commonClauses.retainAll(claimTransition.getDnfFormula().getConjunctiveClauses());
@@ -41,18 +42,18 @@ public class EqualClauseIntersectionRule<
 		if(modelTransition.
 				getDnfFormula().
 				getConjunctiveClauses().
-				contains(new SigmaProposition())){
+				contains(new SigmaProposition<STATE>())){
 			commonClauses.addAll(claimTransition.getDnfFormula().getConjunctiveClauses());
 		}
 		if(claimTransition.
 				getDnfFormula().
 				getConjunctiveClauses().
-				contains(new SigmaProposition())){
+				contains(new SigmaProposition<STATE>())){
 			commonClauses.addAll(modelTransition.getDnfFormula().getConjunctiveClauses());
 		}
 		
 		if(!commonClauses.isEmpty()){
-			return intersectionTransitionFactory.create(new DNFFormula(commonClauses));
+			return intersectionTransitionFactory.create(new DNFFormula<CONSTRAINEDELEMENT>(commonClauses));
 		}
 		
 		return null;

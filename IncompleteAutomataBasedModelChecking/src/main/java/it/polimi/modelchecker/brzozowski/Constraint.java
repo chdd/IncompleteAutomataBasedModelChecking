@@ -1,12 +1,13 @@
 package it.polimi.modelchecker.brzozowski;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
+import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 
-public class Constraint<S extends State> {
+public class Constraint<STATE extends State, INTERSECTIONTRANSITION extends LabelledTransition<STATE>> {
 
-	private final AbstractProposition<S> p;
-	public Constraint(AbstractProposition<S> p){
+	private final LogicalItem<STATE, INTERSECTIONTRANSITION> p;
+	public Constraint(LogicalItem<STATE, INTERSECTIONTRANSITION> p){
 		this.p=p;
 	}
 	/* (non-Javadoc)
@@ -33,7 +34,7 @@ public class Constraint<S extends State> {
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		Constraint<S> other = (Constraint<S>) obj;
+		Constraint<STATE, INTERSECTIONTRANSITION> other = (Constraint<STATE, INTERSECTIONTRANSITION>) obj;
 		if (p == null) {
 			if (other.p != null)
 				return false;

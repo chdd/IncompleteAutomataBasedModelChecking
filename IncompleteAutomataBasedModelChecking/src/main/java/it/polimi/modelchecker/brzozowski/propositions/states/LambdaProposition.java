@@ -1,14 +1,18 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.impl.transitions.LabelledTransition;
 
 /**
  * @author claudiomenghi
  * contains a {@link LambdaProposition}. The {@link LambdaProposition} is used to identify states that are accepting in the BA (final in the FSA)
  */
-public class LambdaProposition<S extends State> implements AbstractProposition<S> {
+public class LambdaProposition<S extends State, T extends LabelledTransition<S>> extends LogicalItem<S, T> {
 
+	
 	private final String ret="λ";
+	
+	
 	
 	/**
 	 * the concatenation of a {@link LambdaProposition} predicate with another {@link AbstractProposition} is equal to the other {@link AbstractProposition}
@@ -17,7 +21,7 @@ public class LambdaProposition<S extends State> implements AbstractProposition<S
 	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> concatenate(AbstractProposition<S> a) {
+	public LogicalItem<S, T> concatenate(LogicalItem<S, T> a) {
 		if(a==null){
 			throw new IllegalArgumentException("The predicate to be concatenated cannot be null");
 		}
@@ -32,7 +36,7 @@ public class LambdaProposition<S extends State> implements AbstractProposition<S
 	 * @throws IllegalArgumentException is generated if the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
-	public AbstractProposition<S> union(AbstractProposition<S> a) {
+	public LogicalItem<S, T> union(LogicalItem<S, T> a) {
 		if(a==null){
 			throw new IllegalArgumentException("the constraint a cannot be null");
 		}
@@ -43,7 +47,7 @@ public class LambdaProposition<S extends State> implements AbstractProposition<S
 			if(a instanceof LambdaProposition)
 				return this;
 			else{
-				return new OrProposition<S>(this, a);
+				return new OrProposition<S, T>(this, a);
 			}
 		}
 	}
@@ -53,7 +57,7 @@ public class LambdaProposition<S extends State> implements AbstractProposition<S
 	 * @return the {@link LambdaProposition}
 	 */
 	@Override
-	public AbstractProposition<S> star() {
+	public LogicalItem<S, T> star() {
 		return this;
 	}
 	
@@ -62,7 +66,7 @@ public class LambdaProposition<S extends State> implements AbstractProposition<S
 	 * @return the {@link LambdaProposition}
 	 */
 	@Override
-	public AbstractProposition<S> omega() {
+	public LogicalItem<S, T> omega() {
 		return this;
 	}
 	
@@ -97,7 +101,7 @@ public class LambdaProposition<S extends State> implements AbstractProposition<S
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		LambdaProposition<S> other = (LambdaProposition<S>) obj;
+		LambdaProposition<S, T> other = (LambdaProposition<S, T>) obj;
 		if (ret == null) {
 			if (other.ret != null)
 				return false;
