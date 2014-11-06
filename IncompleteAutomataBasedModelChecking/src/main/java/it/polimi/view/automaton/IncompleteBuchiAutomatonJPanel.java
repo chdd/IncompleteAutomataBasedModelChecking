@@ -32,10 +32,12 @@ BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSI
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	protected IBA a;
 	
 	public IncompleteBuchiAutomatonJPanel(IBA a, 
 			 ActionListener l, AbstractLayout<STATE, TRANSITION> layout){
-		 super(a, l, layout);
+		super(a, l, layout);
+		this.a=a; 
 	}
 	
 	protected BuchiAutomatonStatePaintTransformer getPaintTransformer(IBA a){
@@ -46,6 +48,13 @@ BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSI
 	}
 	public ActionTypesInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
 		return new ModelActionFactory<>();
+	}
+	
+	public void highLightState(STATE s){
+		this.getRenderContext().setVertexFillPaintTransformer(new IncompleteBuchiAutomatonHighLightStatePaintTransformer(a, s));
+	}
+	public void defaultTransformers(){
+		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
 	}
 	
 	public class IncompleteBuchiAutomatonPaintTransformer extends BuchiAutomatonStatePaintTransformer {
@@ -60,6 +69,25 @@ BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSI
 				return Color.GRAY;
 			}
 			return Color.WHITE;
+		}
+	}
+	public class IncompleteBuchiAutomatonHighLightStatePaintTransformer extends IncompleteBuchiAutomatonPaintTransformer {
+
+		STATE s;
+		public IncompleteBuchiAutomatonHighLightStatePaintTransformer(IBA a, STATE s) {
+			super(a);
+			this.s=s;
+		}
+		
+		@Override
+		public Paint transform(STATE input) {
+			
+			if(input.equals(s)){
+				return Color.GREEN;
+			}
+			else{
+				return super.transform(input);
+			}
 		}
 	}
 }

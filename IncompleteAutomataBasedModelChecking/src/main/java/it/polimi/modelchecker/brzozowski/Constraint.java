@@ -10,6 +10,10 @@ public class Constraint<STATE extends State, INTERSECTIONTRANSITION extends Labe
 	public Constraint(LogicalItem<STATE, INTERSECTIONTRANSITION> p){
 		this.p=p;
 	}
+	public LogicalItem<STATE, INTERSECTIONTRANSITION> getLogicalItem(){
+		return this.p;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

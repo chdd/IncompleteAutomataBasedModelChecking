@@ -31,7 +31,6 @@ import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.Toolkit;
@@ -40,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.Observable;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -742,7 +742,39 @@ public class View<
 	@Override
 	public void showConstraints(
 			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults) {
-		JOptionPane.showMessageDialog(this.jframe, "Constraints"+verificationResults.getConstraint().toString());
+		ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
+		INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
+		INTERSECTIONTRANSITIONFACTORY> constraintJDialog=new ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
+				INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
+				INTERSECTIONTRANSITIONFACTORY>(verificationResults, this, new Dimension(this.jframe.getWidth(), 200));
+		constraintJDialog.setLocationRelativeTo(this.jframe);
+		constraintJDialog.setVisible(true);
+		
+	}
+	
+	
+
+	@Override
+	public void hightLightConstraint(
+			STATE state,
+			Set<INTERSECTIONTRANSITION> intersectionTransitions) {
+		this.modelTabmodel.highLightState(state);
+		this.verificationModelPanel.highLightState(state);
+		this.jframe.repaint();
+		
+		this.intersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
+	 this.verificationIntersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
+		
+	}
+
+	@Override
+	public void doNothightLightConstraint() {
+		this.modelTabmodel.defaultTransformers();
+		this.verificationModelPanel.defaultTransformers();
+		this.intersectionPanel.defaultTransformers();
+		this.verificationIntersectionPanel.defaultTransformers();
+		
+		this.jframe.repaint();
 		
 	}
 }

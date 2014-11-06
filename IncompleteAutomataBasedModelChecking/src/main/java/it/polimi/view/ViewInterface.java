@@ -12,6 +12,7 @@ import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.geom.Point2D;
 import java.util.Observer;
+import java.util.Set;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -33,12 +34,21 @@ public interface ViewInterface<
 	
 	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model);
 	
+	
+	
 	/*
 	 * --------------------------------------- CLAIM ---------------------------------------
 	 */
 	
 	public void updateClaim(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification);
 	
+	public void hightLightConstraint(
+			STATE state,
+			Set<INTERSECTIONTRANSITION> intersectionState
+			);
+	
+	public void doNothightLightConstraint(
+			);
 	
 	public void updateSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
 	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions);

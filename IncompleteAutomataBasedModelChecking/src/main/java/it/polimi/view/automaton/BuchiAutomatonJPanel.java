@@ -14,7 +14,9 @@ import it.polimi.view.menu.actions.ClaimActionFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.Shape;
@@ -94,6 +96,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		this.getRenderContext().setVertexFillPaintTransformer(this.getPaintTransformer(a));
 		this.getRenderContext().setVertexShapeTransformer(this.getShapeTransformer(a));
 		this.getRenderContext().setVertexStrokeTransformer(this.getStateStrokeTransformer(a));
+		
 		
 		// edges
 		this.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<TRANSITION>());
@@ -187,6 +190,8 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 			return new BasicStroke();
 		}
 	}
+	
+	
 	
 	public class BuchiAutomatonShapeTransformer implements Transformer<STATE, Shape>{
 

@@ -51,7 +51,7 @@ public class DnfToLogicalItemTransformer
 					if(this.intersectionautomaton.isMixed(source)){
 						LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> proposition=
 								new AtomicProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t, 
-										(CONSTRAINEDELEMENT)source, 
+										(CONSTRAINEDELEMENT)source.getS1(), 
 										"λ");
 						item=item.union(proposition.concatenate(new EpsilonProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t)));
 					}

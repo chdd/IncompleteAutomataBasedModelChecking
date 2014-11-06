@@ -11,14 +11,18 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
 
 @SuppressWarnings("serial")
 public class IntersectionAutomatonJPanel
@@ -51,14 +55,29 @@ public class IntersectionAutomatonJPanel
 	public void highlightPath(Stack<INTERSECTIONSTATE> states, INTERSECTIONAUTOMATON a, Stack<INTERSECTIONTRANSITION> stackViolatingTransitions){
 		this.setTransformers(a);
 		
-		this.getRenderContext().setEdgeDrawPaintTransformer(
-				new BuchiAutomatonTransitionPaintTransformer(a, stackViolatingTransitions));
+		this.highlightTransitions(new HashSet<INTERSECTIONTRANSITION>(stackViolatingTransitions), Color.red);
 		this.getRenderContext().setVertexFillPaintTransformer(
 				new HighlighPathPaintTransformer(a, states));
 		
 		this.getGraphLayout().setGraph(a);
 		this.repaint();
 	}
+	public void highlightTransitions(Set<INTERSECTIONTRANSITION> transitions, Color color){
+		this.getRenderContext().setEdgeDrawPaintTransformer(
+				new BuchiAutomatonTransitionPaintTransformer(this.a, transitions, color));
+		
+	}
+	
+	public void defaultTransformers(){
+		this.getRenderContext().setEdgeDrawPaintTransformer(new Transformer<INTERSECTIONTRANSITION, Paint>() {
+
+			@Override
+			public Paint transform(INTERSECTIONTRANSITION input) {
+				return Color.black;
+			}
+		});
+	}
+	
 	
 	@Override
 	protected Transformer<INTERSECTIONSTATE, Stroke> getStateStrokeTransformer(INTERSECTIONAUTOMATON a){
@@ -79,16 +98,18 @@ public class IntersectionAutomatonJPanel
 	public class BuchiAutomatonTransitionPaintTransformer implements Transformer<INTERSECTIONTRANSITION, Paint> {
 
 		protected INTERSECTIONAUTOMATON a;
-		protected Stack<INTERSECTIONTRANSITION> stackOfHighLightedTransitions;
+		protected Set<INTERSECTIONTRANSITION> stackOfHighLightedTransitions;
+		protected Color color;
 		
-		public BuchiAutomatonTransitionPaintTransformer(INTERSECTIONAUTOMATON a, Stack<INTERSECTIONTRANSITION> stackOfHighLightedTransitions){
+		public BuchiAutomatonTransitionPaintTransformer(INTERSECTIONAUTOMATON a, Set<INTERSECTIONTRANSITION> stackOfHighLightedTransitions, Color color){
 			this.a=a;
 			this.stackOfHighLightedTransitions=stackOfHighLightedTransitions;
+			this.color=color;
 		}
 		@Override
 		public Paint transform(INTERSECTIONTRANSITION input) {
 			if(this.stackOfHighLightedTransitions.contains(input)){
-				return Color.red;
+				return color;
 			}
 			return Color.black;
 		}
