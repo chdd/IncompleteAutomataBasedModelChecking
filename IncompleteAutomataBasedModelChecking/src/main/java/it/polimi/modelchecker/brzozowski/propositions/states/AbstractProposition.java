@@ -27,5 +27,10 @@ public abstract class AbstractProposition<STATE extends State, TRANSITION extend
 		return this.transitions;
 	}
 	
+	public void addTransition(TRANSITION transition){
+		this.transitions.add(transition);
+	}
+	
+	
 	
 }

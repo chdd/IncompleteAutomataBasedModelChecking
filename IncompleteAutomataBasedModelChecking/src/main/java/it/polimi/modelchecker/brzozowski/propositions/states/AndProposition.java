@@ -255,6 +255,17 @@ public class AndProposition<S extends State, T extends LabelledTransition<S>> ex
 			return false;
 		return true;
 	}
+	@Override
+	public LogicalItem<S, T> simplify() {
+		List<LogicalItem<S, T>> simplifiedItem=this.simplifyValues();
+		if(simplifiedItem.size()==1){
+			return simplifiedItem.iterator().next();
+		}
+		else{
+			return new AndProposition<S,T>(simplifiedItem); 
+		}
+	}
+	
     
     
     

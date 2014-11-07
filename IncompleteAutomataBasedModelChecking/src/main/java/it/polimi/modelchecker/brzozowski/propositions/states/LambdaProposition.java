@@ -109,6 +109,11 @@ public class LambdaProposition<S extends State, T extends LabelledTransition<S>>
 			return false;
 		return true;
 	}
+
+	@Override
+	public LogicalItem<S, T> simplify() {
+		return this;
+	}
 	
 	
 

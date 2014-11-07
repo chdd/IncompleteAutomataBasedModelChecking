@@ -38,6 +38,8 @@ public class ModelCheckingResults
 	 */
 	private double constraintComputationTime;
 	
+	private double simplificationTime;
+	
 	// specification
 	/**
 	 * contains the number of the states of the specification
@@ -56,6 +58,9 @@ public class ModelCheckingResults
 	 * contains the constraint computed by the model checking procedure
 	 */
 	private Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> constraint;
+	
+	private Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> simplifiedConstraint;
+	
 	
 	private Stack<INTERSECTIONSTATE> violatingPath;
 	
@@ -117,6 +122,7 @@ public class ModelCheckingResults
 		this.setNumInitialStatesIntersection(0);
 		this.setNumMixedStatesIntersection(0);
 		this.setTotalTime(0);
+		this.setSimplificationTime(0);
 		this.violatingPathTransitions=new Stack<INTERSECTIONTRANSITION>();
 	}
 	
@@ -136,6 +142,7 @@ public class ModelCheckingResults
 		this.setNumAcceptingStatesIntersection(0);
 		this.setNumInitialStatesIntersection(0);
 		this.setNumMixedStatesIntersection(0);
+		this.setSimplificationTime(0);
 		this.violatingPathTransitions=new Stack<INTERSECTIONTRANSITION>();
 	}
 
@@ -424,6 +431,34 @@ public class ModelCheckingResults
 	 */
 	public void setViolatingPathTransitions(Stack<INTERSECTIONTRANSITION> violatingPathTransitions) {
 		this.violatingPathTransitions = violatingPathTransitions;
+	}
+
+	/**
+	 * @return the simplifiedConstraint
+	 */
+	public Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> getSimplifiedConstraint() {
+		return simplifiedConstraint;
+	}
+
+	/**
+	 * @param simplifiedConstraint the simplifiedConstraint to set
+	 */
+	public void setSimplifiedConstraint(Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> simplifiedConstraint) {
+		this.simplifiedConstraint = simplifiedConstraint;
+	}
+
+	/**
+	 * @return the simplificationTime
+	 */
+	public double getSimplificationTime() {
+		return simplificationTime;
+	}
+
+	/**
+	 * @param simplificationTime the simplificationTime to set
+	 */
+	public void setSimplificationTime(double simplificationTime) {
+		this.simplificationTime = simplificationTime;
 	}
 
 	

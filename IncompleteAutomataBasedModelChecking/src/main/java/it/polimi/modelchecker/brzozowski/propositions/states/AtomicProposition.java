@@ -302,4 +302,9 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 			return false;
 		return true;
 	}
+
+	@Override
+	public LogicalItem<STATE, TRANSITION> simplify() {
+		return this;
+	}
 }

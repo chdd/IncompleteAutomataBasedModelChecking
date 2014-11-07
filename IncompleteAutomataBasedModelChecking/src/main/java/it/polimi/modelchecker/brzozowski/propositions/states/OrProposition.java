@@ -3,6 +3,8 @@ package it.polimi.modelchecker.brzozowski.propositions.states;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 
+import java.util.List;
+
 /**
  * @author claudiomenghi
  * contains an OrPredicate
@@ -22,6 +24,15 @@ public class OrProposition<S extends State, T extends LabelledTransition<S>> ext
 	 public OrProposition(LogicalItem<S, T> firstPredicate, LogicalItem<S, T> secondPredicate){
 		super(firstPredicate, secondPredicate);
 	 }
+	 
+	 /**
+	     * Initializes a newly created {@link AndProposition} starting from the list l of {@link AbstractProposition} 
+	     * @param l: is the list of {@link AbstractProposition} to be added in the and predicate
+	     * @throws IllegalArgumentException if the list of the {@link AbstractProposition} contains less than 2 {@link AbstractProposition}
+	     */
+		 public OrProposition(List<LogicalItem<S, T>> l) {
+			super(l);
+		 }
 	 
 	 /**
 	 * the concatenation of an {@link OrProposition} is defined as follows:
@@ -166,6 +177,16 @@ public class OrProposition<S extends State, T extends LabelledTransition<S>> ext
 		return true;
 	}
 
+	@Override
+	public LogicalItem<S, T> simplify() {
+		List<LogicalItem<S, T>> simplifiedItem=this.simplifyValues();
+		if(simplifiedItem.size()==1){
+			return simplifiedItem.iterator().next();
+		}
+		else{
+			return new OrProposition<S,T>(simplifiedItem); 
+		}
+	}
 	
 	
 		

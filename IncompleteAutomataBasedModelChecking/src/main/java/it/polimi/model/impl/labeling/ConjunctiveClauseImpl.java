@@ -103,7 +103,9 @@ public class ConjunctiveClauseImpl<STATE extends State> implements ConjunctiveCl
 	 * @return the {@link ConjunctiveClauseImpl} loaded from the {@link String}
 	 */
 	public static <STATE extends State> ConjunctiveClauseImpl<STATE> loadFromString(String clause){
-		clause=clause.substring(1, clause.length()-1);
+		if(clause.startsWith("(")){
+			clause=clause.substring(1, clause.length()-1);
+		}
 		clause+=andSymbol;
 		ConjunctiveClauseImpl<STATE> ret=new ConjunctiveClauseImpl<STATE>();
 		String[] andClauses=clause.split(andSymbol);
@@ -111,6 +113,8 @@ public class ConjunctiveClauseImpl<STATE extends State> implements ConjunctiveCl
 			ret.addProposition(Proposition.loadProposition(andClauses[i]));
 		}
 		return ret;
+		
+		
 	}
 
 	/* (non-Javadoc)

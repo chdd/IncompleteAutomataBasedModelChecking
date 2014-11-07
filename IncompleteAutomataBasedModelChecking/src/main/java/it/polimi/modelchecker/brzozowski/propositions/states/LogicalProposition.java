@@ -111,6 +111,23 @@ public abstract class LogicalProposition<CONSTRAINTELEMENT extends State, TRANSI
 			return false;
 		return true;
 	}
+	
+
+	public List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> simplifyValues() {
+		
+		List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> simplifiedItems=new ArrayList<LogicalItem<CONSTRAINTELEMENT, TRANSITION>>();
+		
+		for(LogicalItem<CONSTRAINTELEMENT, TRANSITION> l: this.value){
+			
+			LogicalItem<CONSTRAINTELEMENT, TRANSITION> simplifiedl=l.simplify();
+			if(!simplifiedItems.contains(simplifiedl)){
+				if(l instanceof LogicalProposition || l instanceof AtomicProposition){
+					simplifiedItems.add(simplifiedl);
+				}
+			}
+		}
+		return simplifiedItems;
+	}
     
     
 }

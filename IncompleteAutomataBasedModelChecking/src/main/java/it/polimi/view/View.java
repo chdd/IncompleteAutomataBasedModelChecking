@@ -32,6 +32,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -190,6 +191,7 @@ public class View<
 	private JTextField emptinessTime;
 	private JTextField constraintComputationTime;
 	private JTextField verificationTime;
+	private JTextField simplificationTime;
 	
 	
 	private IntersectionAutomatonJPanel
@@ -377,7 +379,7 @@ public class View<
 		 resultPanel.add(viewConstraints);
 		 resultContainer.add(resultPanel);
 		 
-		 JPanel timePanel=new JPanel(new GridLayout(4,2));
+		 JPanel timePanel=new JPanel(new GridLayout(6,2));
 		 timePanel.add(new JLabel("Intersection Time (s)"));
 		 this.intersectionTime=new JTextField(20);
 		 this.intersectionTime.setEditable(false);
@@ -397,6 +399,12 @@ public class View<
 		 this.verificationTime=new JTextField(20);
 		 this.verificationTime.setEditable(false);
 		 timePanel.add(this.verificationTime);
+		 resultContainer.add(timePanel);
+		 
+		 timePanel.add(new JLabel("Total Simplification Time (s)"));
+		 this.simplificationTime=new JTextField(20);
+		 this.simplificationTime.setEditable(false);
+		 timePanel.add(this.simplificationTime);
 		 resultContainer.add(timePanel);
 		 
 		 container2.add(resultContainer);
@@ -498,6 +506,7 @@ public class View<
 		this.emptinessTime.setText(Double.toString(verificationResults.getEmptyTime()));
 		this.constraintComputationTime.setText(Double.toString(verificationResults.getConstraintComputationTime()));
 		this.verificationTime.setText(Double.toString(verificationResults.getTotalVerificationTime()));
+		this.simplificationTime.setText(Double.toString(verificationResults.getSimplificationTime()));
 		
 		this.verificationSnapshotResultsPanel.updateResults(verificationResults);
 		if(verificationResults.getResult()==0){
@@ -742,14 +751,21 @@ public class View<
 	@Override
 	public void showConstraints(
 			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults) {
-		ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
-		INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-		INTERSECTIONTRANSITIONFACTORY> constraintJDialog=new ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
-				INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-				INTERSECTIONTRANSITIONFACTORY>(verificationResults, this, new Dimension(this.jframe.getWidth(), 200));
-		constraintJDialog.setLocationRelativeTo(this.jframe);
-		constraintJDialog.setVisible(true);
 		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		this.jframe.setSize(new Dimension(screenSize.width, screenSize.height/10*8-this.jframe.getContentPane().getInsets().top-this.jframe.getContentPane().getInsets().bottom));
+		
+		
+		ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
+			INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
+			INTERSECTIONTRANSITIONFACTORY> constraintJDialog=new ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
+				INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
+				INTERSECTIONTRANSITIONFACTORY>(verificationResults, this, new Dimension(screenSize.width, screenSize.height/100*17));
+		
+
+		constraintJDialog.setLocation(new Point(0, screenSize.height/100*90));
+		constraintJDialog.setVisible(true);
 	}
 	
 	
@@ -762,9 +778,10 @@ public class View<
 		this.verificationModelPanel.highLightState(state);
 		this.jframe.repaint();
 		
-		this.intersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
-	 this.verificationIntersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
-		
+		if(intersectionTransitions!=null){
+			this.intersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
+			this.verificationIntersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
+		}	
 	}
 
 	@Override

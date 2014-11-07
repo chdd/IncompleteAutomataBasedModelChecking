@@ -48,4 +48,8 @@ public abstract class LogicalItem<CONSTRAINTELEMENT extends State, TRANSITION ex
 	 */
 	@Override
 	public abstract int hashCode();
+	
+	public abstract LogicalItem<CONSTRAINTELEMENT, TRANSITION> simplify();
+	
+	
 }

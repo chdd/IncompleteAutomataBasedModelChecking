@@ -34,6 +34,7 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> star() {
 		return new EpsilonProposition<CONSTRAINTELEMENT, TRANSITION>(new HashSet<TRANSITION>());
+		//return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
 	}
 	
 	/**
@@ -43,6 +44,7 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> omega() {
 		return new EpsilonProposition<CONSTRAINTELEMENT, TRANSITION>(new HashSet<TRANSITION>());
+		//return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
 	}
 
 	/**
@@ -96,6 +98,11 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 		} else if (!ret.equals(other.ret))
 			return false;
 		return true;
+	}
+
+	@Override
+	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> simplify() {
+		return this;
 	}
 	
 	
