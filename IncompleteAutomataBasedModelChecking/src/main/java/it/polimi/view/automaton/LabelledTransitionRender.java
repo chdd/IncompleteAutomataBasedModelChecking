@@ -38,8 +38,10 @@ import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
  * 
  */
 public class LabelledTransitionRender
-		<V extends State,	
-		E extends LabelledTransition> 
+		<
+		CONSTRAINEDELEMENT extends State,
+		V extends State,	
+		E extends LabelledTransition<CONSTRAINEDELEMENT>> 
 		extends BasicEdgeLabelRenderer<V,E> {
 
 	  public void labelEdge(RenderContext<V,E> rc, Layout<V,E> layout, E e, String label) {

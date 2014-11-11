@@ -1,14 +1,7 @@
 package it.polimi.model;
 
-import it.polimi.io.BAReader;
-import it.polimi.io.BAWriter;
-import it.polimi.io.IBAReader;
-import it.polimi.io.IBAWriter;
 import it.polimi.io.IntBAReader;
-import it.polimi.io.IntBAWriter;
-import it.polimi.model.impl.automata.BAFactoryImpl;
 import it.polimi.model.impl.automata.BAImpl;
-import it.polimi.model.impl.automata.IBAFactoryImpl;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAFactoryImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
@@ -17,8 +10,6 @@ import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.BAFactory;
-import it.polimi.model.interfaces.automata.IBAFactory;
 import it.polimi.model.interfaces.automata.IntBAFactory;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
@@ -31,19 +22,16 @@ import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.commons.collections15.Transformer;
-import org.xml.sax.SAXException;
 
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.io.GraphIOException;
 
 /**
@@ -72,6 +60,12 @@ public class Model<
 	 */
 	private DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>  specification;
 	
+	private DefaultTreeModel modelRefinement;
+	private DefaultTreeModel flattenModel;
+	
+	private Map<STATE, DefaultMutableTreeNode> stateRefinementMap;
+	private Map<STATE, DefaultMutableTreeNode> flatstateRefinementMap;
+	
 	/**
 	 * contains the intersection between the model and the specification
 	 */
@@ -84,46 +78,24 @@ public class Model<
 	
 	private STATEFACTORY stateFactory;
 	
-	private BAWriter<CONSTRAINEDELEMENT, STATE, 
-	TRANSITION,
-	TRANSITIONFACTORY,
-	DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>> baWriter;
 	
-	private IBAWriter<CONSTRAINEDELEMENT, STATE, 
-	TRANSITION,
-	TRANSITIONFACTORY, 
-	DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>> ibaToFile;
 	
-	/**
-	 * 
-	 */
-	private BAReader<CONSTRAINEDELEMENT, STATE, 
-		TRANSITION,
-		TRANSITIONFACTORY, 
-		STATEFACTORY,
-		DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-		BAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, 
-			DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>> baReader;
+	public TRANSITIONFACTORY getSpecificationTransitionFactory(){
+		return this.transitionFactory;
+	}
 	
-	/**
-	 * 
-	 */
-	private IBAReader<CONSTRAINEDELEMENT, STATE, 
-		TRANSITION,
-		TRANSITIONFACTORY, 
-		STATEFACTORY,
-		DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-		IBAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY,
-			DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>> ibaReader;
+	public STATEFACTORY getSpecificationStateFactory(){
+		return this.stateFactory;
+	}
 	
-	private IntBAWriter<CONSTRAINEDELEMENT,
-		STATE, 
-		TRANSITION, 
-		INTERSECTIONSTATE, 
-		INTERSECTIONTRANSITION, 
-		TRANSITIONFACTORY, 
-		INTERSECTIONTRANSITIONFACTORY,
-		DrawableIntBA<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> intBaWriter;
+	
+	public TRANSITIONFACTORY getModelTransitionFactory(){
+		return this.transitionFactory;
+	}
+	
+	public STATEFACTORY getModelStateFactory(){
+		return this.stateFactory;
+	}
 	
 	
 	private IntBAReader<
@@ -147,6 +119,8 @@ public class Model<
 	
 	
 	public Model(STATEFACTORY stateFactory, TRANSITIONFACTORY transitionFactory, INTERSECTIONSTATEFACTORY intersectionStateFactory, INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory){
+		this.setStateRefinementMap(new HashMap<STATE, DefaultMutableTreeNode>());
+		this.setFlatstateRefinementMap(new HashMap<STATE, DefaultMutableTreeNode>());
 		this.stateFactory=stateFactory;
 		this.transitionFactory=transitionFactory;
 		this.intersectionStateFactory=intersectionStateFactory;
@@ -156,96 +130,24 @@ public class Model<
 		this.intersection=new IntBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
 		TRANSITIONFACTORY,
 		INTERSECTIONTRANSITIONFACTORY>(this.model, this.specification,intersectionTransitionFactory);
+		this.modelRefinement=new DefaultTreeModel(
+				new DefaultMutableTreeNode(new
+						RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (this.stateFactory.create("Model"), this.model)));
+		this.flattenModel=new DefaultTreeModel(
+				new DefaultMutableTreeNode(new
+						RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (this.stateFactory.create("Model"), this.model)));
 	}
 	
-	/**
-	 * creates a new model of the application: the model of the system is loaded from the file with path modelFilePath, its specification is loaded from the 
-	 * file with path specificationFilePath 
-	 * @param modelFilePath is the path of the file which contains the model of the system
-	 * @param specificationFilePath is the path of the file which contains the specification of the system 
-	 * @throws GraphIOException 
-	 * @throws JAXBException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 */
-	public Model(String modelFilePath, String specificationFilePath) throws IOException, GraphIOException{
-		
-		ibaReader=new IBAReader<CONSTRAINEDELEMENT,STATE, 
-				TRANSITION,
-				TRANSITIONFACTORY, 
-				STATEFACTORY,
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>,
-				IBAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>>(
-						this.transitionFactory, 
-						this.stateFactory, 
-						new IBAFactoryImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory),
-						new BufferedReader(new FileReader(modelFilePath))
-						);
-		this.model=this.ibaReader.readGraph();
-		this.baReader=new BAReader<CONSTRAINEDELEMENT,STATE, 
-				TRANSITION,
-				TRANSITIONFACTORY, 
-				STATEFACTORY,
-				DrawableBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>,
-				BAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-					DrawableBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>>(
-							this.transitionFactory,
-							this.stateFactory,
-						new BAFactoryImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory),
-						new BufferedReader(new FileReader(specificationFilePath)));
-		
-		this.specification=this.baReader.readGraph();
-		this.intersection=new IntBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>
-		(model, specification, this.intersectionTransitionFactory);
+	
+	
+	public void setSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification){
+		this.specification=specification;
+	}
+	public void setModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model){
+		this.model=model;
 	}
 	
-	/**
-	 * @see {@link ModelInterface}
-	 */
-	@Override
-	public Transformer<STATE, Point2D> loadModel(String modelFilePath) throws IOException, GraphIOException{
-		this.ibaReader=new IBAReader<
-				CONSTRAINEDELEMENT,
-				STATE, 
-				TRANSITION,
-				TRANSITIONFACTORY, 
-				STATEFACTORY,
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>,
-				IBAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>>(
-						this.transitionFactory,
-						this.stateFactory, 
-						new IBAFactoryImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory),
-						new BufferedReader(new FileReader(modelFilePath)));
-		this.model=this.ibaReader.readGraph();
-		this.intersection=new IntBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY,
-		INTERSECTIONTRANSITIONFACTORY>(model, specification, this.intersectionTransitionFactory);
-		return this.ibaReader.getStatePositionTransformer();
-		
-	}
-	/**
-	 * @see {@link ModelInterface}
-	 */
-	@Override
-	public Transformer<STATE, Point2D> changeSpecification(String specificationFilePath) throws IOException, GraphIOException{
-		this.baReader=new BAReader<CONSTRAINEDELEMENT,STATE, 
-				TRANSITION,
-				TRANSITIONFACTORY, 
-				STATEFACTORY,
-				DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-				BAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-					DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>>(
-							this.transitionFactory,
-							this.stateFactory, 
-						new BAFactoryImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory),
-						new BufferedReader(new FileReader(specificationFilePath)));
-		this.specification=this.baReader.readGraph();
-		this.intersection=new IntBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>
-						(model, specification, this.intersectionTransitionFactory);
-		return this.baReader.getStatePositionTransformer();
-	}
+	
 	/**
 	 * @see {@link ModelInterface}
 	 */
@@ -253,6 +155,10 @@ public class Model<
 	public DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY> getModel(){
 		return this.model;
 	}
+	
+	
+	
+	
 	/**
 	 * @see {@link ModelInterface}
 	 */
@@ -266,32 +172,6 @@ public class Model<
 	@Override
 	public DrawableIntBA<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> getIntersection(){
 		return this.intersection;
-	}
-	
-	/**
-	 * @see {@link ModelInterface}
-	 */
-	@Override
-	public void saveModel(String filePath, AbstractLayout<STATE, TRANSITION> layout) throws IOException, GraphIOException{
-		this.ibaToFile
-				=new IBAWriter<CONSTRAINEDELEMENT,STATE, 
-						TRANSITION,
-						TRANSITIONFACTORY, 
-						DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>(layout);
-		this.ibaToFile.save(this.model, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
-	}
-	/**
-	 * @see {@link ModelInterface}
-	 */
-	@Override
-	public void saveSpecification(String filePath, AbstractLayout<STATE, TRANSITION> layout) throws IOException, GraphIOException{
-		this.baWriter=new BAWriter<CONSTRAINEDELEMENT,STATE, 
-				TRANSITION,
-				TRANSITIONFACTORY,
-				DrawableBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>(layout);
-		
-		
-		baWriter.save(this.specification, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
 	}
 	
 	@Override
@@ -344,25 +224,7 @@ public class Model<
 	public ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
 		return this.mp;
 	}
-	@Override
-	public void saveIntersection(String filePath, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> layout) throws IOException,
-			GraphIOException {
-		this.intBaWriter=new IntBAWriter<CONSTRAINEDELEMENT,
-				STATE, 
-				TRANSITION, 
-				INTERSECTIONSTATE, 
-				INTERSECTIONTRANSITION, 
-				TRANSITIONFACTORY, 
-				INTERSECTIONTRANSITIONFACTORY,
-				DrawableIntBA<CONSTRAINEDELEMENT,STATE, 
-							TRANSITION, 
-							INTERSECTIONSTATE,
-							INTERSECTIONTRANSITION, 
-							INTERSECTIONTRANSITIONFACTORY>>(layout);
 	
-		this.intBaWriter.save(this.intersection, new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
-		
-	}
 	@Override
 	public Transformer<INTERSECTIONSTATE, Point2D> loadIntersection(String intersectionPath) throws IOException,
 			GraphIOException {
@@ -401,6 +263,65 @@ public class Model<
 	public void newClaim() {
 		this.specification=new BAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
 	}
+
+	/**
+	 * @return the modelRefinement
+	 */
+	public DefaultTreeModel getModelRefinement() {
+		return modelRefinement;
+	}
+
+	/**
+	 * @param modelRefinement the modelRefinement to set
+	 */
+	public void setModelRefinement(DefaultTreeModel modelRefinement) {
+		this.modelRefinement = modelRefinement;
+	}
 	
+	/**
+	 * @return the modelRefinement
+	 */
+	public DefaultTreeModel getflattenModelRefinement() {
+		return this.flattenModel;
+	}
+
+	/**
+	 * @param modelRefinement the modelRefinement to set
+	 */
+	public void setflattenModelRefinement(DefaultTreeModel flattenModel) {
+		this.flattenModel = flattenModel;
+	}
+
+
+	/**
+	 * @return the stateRefinementMap
+	 */
+	public Map<STATE, DefaultMutableTreeNode> getStateRefinementMap() {
+		return stateRefinementMap;
+	}
+
+	/**
+	 * @param stateRefinementMap the stateRefinementMap to set
+	 */
+	public void setStateRefinementMap(Map<STATE, DefaultMutableTreeNode> stateRefinementMap) {
+		this.stateRefinementMap = stateRefinementMap;
+	}
+
+	/**
+	 * @return the flatstateRefinementMap
+	 */
+	public Map<STATE, DefaultMutableTreeNode> getFlatstateRefinementMap() {
+		return flatstateRefinementMap;
+	}
+
+	/**
+	 * @param flatstateRefinementMap the flatstateRefinementMap to set
+	 */
+	public void setFlatstateRefinementMap(Map<STATE, DefaultMutableTreeNode> flatstateRefinementMap) {
+		this.flatstateRefinementMap = flatstateRefinementMap;
+	}
 	
+	public void cleanFlatstateRefinementMap(){
+		this.flatstateRefinementMap=new HashMap<STATE, DefaultMutableTreeNode>();
+	}
 }

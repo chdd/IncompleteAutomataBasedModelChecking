@@ -59,13 +59,36 @@ public class BAImpl<
 	 */
 	public BAImpl(TRANSITIONFACTORY transitionFactory) {
 		super();
-		
 		this.alphabet=new HashSet<Proposition>(0);
 		this.acceptStates=new HashSet<STATE>();
 		this.initialStates=new HashSet<STATE>();
 		this.mapNameState=new HashMap<Integer,STATE>();
 		this.transitionFactory=transitionFactory;
-		
+	}
+	
+	public void setTransitionFactory(TRANSITIONFACTORY transitionFactory){
+		this.transitionFactory=transitionFactory;
+	}
+	
+	public void setInitialStates(Set<STATE> initialStates){
+		this.initialStates=new HashSet<STATE>();
+		for(STATE s: initialStates){
+			this.initialStates.add(s);
+		}
+	}
+	
+	public void setAlphabet(Set<Proposition> propositions){
+		this.alphabet=new HashSet<Proposition>();
+		for(Proposition p: propositions){
+			this.addCharacter(p);
+		}
+	}
+	
+	public void setAcceptStates(Set<STATE> acceptStates){
+		this.acceptStates=new HashSet<STATE>();
+		for(STATE s: acceptStates){
+			this.addAcceptState(s);
+		}
 	}
 	
 	/** 
@@ -122,6 +145,16 @@ public class BAImpl<
 		return this.initialStates;
 	}
 	
+	public Set<STATE> getStates(){
+		return new HashSet<STATE>(this.getVertices());
+	}
+	
+	public void setStates(Set<STATE> states){
+		for(STATE s: states){
+			this.addVertex(s);
+		}
+	}
+	
 	/** 
 	 * Add a new initial state in the set of the states of the graph. 
 	 * The state is also added in the set of the states of the graph through the method {@link addState}
@@ -146,6 +179,18 @@ public class BAImpl<
 			throw new IllegalArgumentException("The state s cannot be null");
 		}
 		return this.initialStates.contains(s);
+	}
+	
+	public void addAcceptStates(Set<STATE> states){
+		for(STATE state: states){
+			this.addAcceptState(state);
+		}
+	}
+	
+	public void addInitialStates(Set<STATE> states){
+		for(STATE state: states){
+			this.addInitialState(state);
+		}
 	}
 	
 	/** 

@@ -40,7 +40,6 @@ public class ChangeModelEdgeLabel<
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception{
 	
 			this.transition.setDNFFormula(DNFFormula.<CONSTRAINEDELEMENT>loadFromString(edgeLabel));
-			view.updateModel(model.getModel());
 	}
 	
 }

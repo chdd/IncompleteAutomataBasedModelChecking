@@ -2,6 +2,7 @@ package it.polimi.controller.actions.automata.states.transparent;
 
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
+import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -13,19 +14,23 @@ import it.polimi.view.ViewInterface;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 @SuppressWarnings("serial")
 public class SetTransparent<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, TRANSITIONFACTORY extends 
-	LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 		extends ActionEvent implements
 		ActionInterface<CONSTRAINEDELEMENT,STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 	protected STATE state;
+	protected DefaultMutableTreeNode parent;
 
-	public SetTransparent(Object source, int id, String command, STATE state) {
+	public SetTransparent(Object source, int id, String command, STATE state, DefaultMutableTreeNode parent) {
 		super(source, id, command);
 		this.state = state;
+		this.parent=parent;
 	}
 
 	@Override
@@ -39,8 +44,21 @@ public class SetTransparent<
 			throws Exception {
 		if (model.getModel().isTransparent(state)) {
 			model.getModel().getTransparentStates().remove(state);
+			model.getModelRefinement().removeNodeFromParent(model.getStateRefinementMap().get(state));
 		} else {
 			model.getModel().addTransparentState(state);
+			
+			DefaultMutableTreeNode child=new DefaultMutableTreeNode(
+					new RefinementNode<
+					CONSTRAINEDELEMENT,
+					STATE, 
+					TRANSITION, 
+					TRANSITIONFACTORY>(state, model.getModelTransitionFactory()));
+			//parent.add(child);
+			model.getStateRefinementMap().put(state, child);
+			model.getModelRefinement().insertNodeInto(child, 
+					parent, 
+					model.getModelRefinement().getChildCount(parent));
 		}
 	}
 }

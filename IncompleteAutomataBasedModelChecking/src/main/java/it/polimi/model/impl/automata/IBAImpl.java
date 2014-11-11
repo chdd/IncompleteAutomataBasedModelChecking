@@ -7,6 +7,7 @@ import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
@@ -28,7 +29,8 @@ public class IBAImpl<
 	STATE extends State, 
 	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT,  TRANSITION>> 
-	extends BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> implements DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>{
+	extends BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> 
+	implements DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>, Cloneable{
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -51,6 +53,12 @@ public class IBAImpl<
 	public IBAImpl(Set<Proposition> alphabet, TRANSITIONFACTORY transitionFactory) {
 		super(alphabet, transitionFactory);
 		transparentStates=new HashSet<STATE>();
+	}
+	
+	public void addTransparentStates(Set<STATE> setTransparentStates){
+		for(STATE s: setTransparentStates){
+			this.addTransparentState(s);
+		}
 	}
 	
 	/**
@@ -215,6 +223,93 @@ public class IBAImpl<
 			return false;
 		return true;
 	}
+	
+	@Override
+	public IBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> clone(){
+		IBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> clone=
+				new IBAImpl<CONSTRAINEDELEMENT, 
+				STATE, TRANSITION, TRANSITIONFACTORY>(transitionFactory);
+		clone.setAlphabet(this.getAlphabet());
+		clone.setStates(this.getStates());
+		clone.setAcceptStates(this.getAcceptStates());
+		clone.setInitialStates(this.getInitialStates());
+		for(TRANSITION t: this.getEdges()){
+			clone.addTransition(this.getSource(t), this.getDest(t), t);
+		}
+		clone.addTransparentStates(this.getTransparentStates());
+		
+		return clone;
+	}
+	
+	public void addState(STATE s){
+		this.addVertex(s);
+	}
+	public void addStates(Set<STATE> states){
+		for(STATE s: states){
+			this.addState(s);
+		}
+	}
+	
+	public Set<STATE> getStates(){
+		return new HashSet<STATE>(this.getVertices());
+	}
+	
+	public void replace(STATE transparentState, IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ibaToInject){
+		if(!this.isTransparent(transparentState)){
+			throw new IllegalArgumentException("The state t must be transparent");
+		}
+		
+		IBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ibaToInjectImpl=
+				(IBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>)ibaToInject;
+		
+		this.addStates(ibaToInjectImpl.getStates());
+		this.addTransparentStates(ibaToInjectImpl.getTransparentStates());
+		if(ibaToInjectImpl.getEdges()!=null){
+			for(TRANSITION transition: ibaToInjectImpl.getEdges()){
+				this.addEdge(transition, ibaToInjectImpl.getSource(transition), ibaToInjectImpl.getDest(transition));
+			}
+		}
+		if(this.getInEdges(transparentState)!=null){
+			for(TRANSITION transition: this.getInEdges(transparentState)){
+				
+				if(this.getSource(transition).equals(transparentState)){
+					for(STATE initialState: ibaToInjectImpl.getInitialStates()){
+						for(STATE acceptingState: ibaToInjectImpl.getAcceptStates()){
+							this.addEdge(
+									this.transitionFactory.create(transition.getDnfFormula()), acceptingState, initialState);
+						}
+					}
+				}
+				else{
+					for(STATE initialState: ibaToInjectImpl.getInitialStates()){
+						this.addEdge(
+								this.transitionFactory.create(transition.getDnfFormula()), this.getSource(transition), initialState);
+					}
+				}
+			}
+		}
+		
+		if(this.getOutEdges(transparentState)!=null){
+			for(TRANSITION transition: this.getOutEdges(transparentState)){
+				if(!this.getDest(transition).equals(transparentState)){
+					for(STATE finalState: ibaToInjectImpl.getAcceptStates()){
+						this.addEdge(
+								this.transitionFactory.create(transition.getDnfFormula()), finalState,this.getDest(transition));
+					}
+				}
+			}
+		}
+		
+		if(this.isAccept(transparentState)){
+			this.addAcceptStates(ibaToInjectImpl.getAcceptStates());
+		}
+		if(this.isInitial(transparentState)){
+			this.addInitialStates(ibaToInjectImpl.getInitialStates());
+		}
+		this.removeVertex(transparentState);
+	}
+	
+	
 	/**
 	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.
 	 * @see it.polimi.model.impl.automata.BAImpl#reset()

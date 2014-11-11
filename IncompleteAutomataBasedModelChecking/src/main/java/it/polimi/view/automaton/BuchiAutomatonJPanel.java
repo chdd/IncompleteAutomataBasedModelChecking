@@ -6,17 +6,14 @@ import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.view.menu.Actions;
+import it.polimi.view.menu.BAActions;
 import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
-import it.polimi.view.menu.actions.ActionTypesInterface;
 import it.polimi.view.menu.actions.ClaimActionFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.Shape;
@@ -28,6 +25,7 @@ import java.awt.geom.Ellipse2D;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -53,6 +51,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	
 	protected ActionListener view;
 	
+	protected  JTree parentNode;
 	
 	private TRANSITIONFACTORY transitionFactory;
 	/**
@@ -66,8 +65,11 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	 * @param a is the {@link BAImpl} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
-	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout){
+	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  JTree parentNode){
 		super(layout);
+		if(parentNode!=null){
+			this.parentNode=parentNode;
+		}
 		
 		this.view=l;
 		
@@ -106,7 +108,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		EdgeLabelRenderer edgeLabelRenderer=this.getRenderContext().getEdgeLabelRenderer();
 		edgeLabelRenderer.setRotateEdgeLabels(true);
 		
-		this.getRenderer().setEdgeLabelRenderer(new LabelledTransitionRender<STATE,TRANSITION>());
+		this.getRenderer().setEdgeLabelRenderer(new LabelledTransitionRender<CONSTRAINTELEMENT, STATE,TRANSITION>());
 		
 	}
 	
@@ -134,7 +136,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	
 
 	protected Transformer<TRANSITION, Stroke> getStrokeEdgeStrokeTransformer() {
-		return new BuchiAutomatonEdgeStrokeTransormer<TRANSITION>();
+		return new BuchiAutomatonEdgeStrokeTransormer();
 	}
 
 	protected Transformer<STATE, Stroke> getStateStrokeTransformer(BA a) {
@@ -153,9 +155,8 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		
         Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> myPlugin = new Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
-        JPopupMenu edgeMenu =
-        		new Actions<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.getActionInterface()).
-        			new TransitionMenu();
+        JPopupMenu edgeMenu =this.getActionInterface();
+        		
         JPopupMenu vertexMenu =this.getStateMenu();
         myPlugin.setEdgePopup(edgeMenu);
         myPlugin.setVertexPopup(vertexMenu);
@@ -165,8 +166,10 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
         this.setGraphMouse(gm);	
      }
 	
-	public ActionTypesInterface<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getActionInterface(){
-		return new ClaimActionFactory<>();
+	public JPopupMenu getActionInterface(){
+		return new BAActions<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(
+				new ClaimActionFactory
+				<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new TransitionMenu();
 	}
 	
 	public class BuchiAutomatonStatePaintTransformer implements Transformer<STATE, Paint> {
@@ -183,10 +186,10 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 
 	}
 	
-	public class BuchiAutomatonEdgeStrokeTransormer<T extends LabelledTransition> implements Transformer<T, Stroke>{
+	public class BuchiAutomatonEdgeStrokeTransormer implements Transformer<TRANSITION, Stroke>{
 
 		@Override
-		public Stroke transform(T input) {
+		public Stroke transform(TRANSITION input) {
 			return new BasicStroke();
 		}
 	}

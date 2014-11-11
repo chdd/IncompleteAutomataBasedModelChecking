@@ -27,7 +27,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class ConstraintJDialog<
@@ -40,8 +39,6 @@ INTERSECTIONSTATE extends IntersectionState<STATE>,
 INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
 INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  extends JDialog {
-
-	private static final String appName="CHIA: CHecker for Incompete Automata";
 
 	private JPanel dialogPanel;
 	private JPanel longConstraint;
@@ -67,7 +64,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 			Dimension d
 			){
 		super();
-		this.setTitle(ConstraintJDialog.appName+" - constraint visualizer ");
+		this.setTitle(Constants.appName+" - constraint visualizer ");
 		
 		
 		this.view=view;

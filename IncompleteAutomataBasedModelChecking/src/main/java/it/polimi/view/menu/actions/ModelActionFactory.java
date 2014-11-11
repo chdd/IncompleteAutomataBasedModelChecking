@@ -1,5 +1,7 @@
 package it.polimi.view.menu.actions;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import it.polimi.controller.actions.automata.edges.ChangeEdgeLabel;
 import it.polimi.controller.actions.automata.edges.ChangeModelEdgeLabel;
 import it.polimi.controller.actions.automata.edges.delete.DeleteEdgeAction;
@@ -22,7 +24,7 @@ public class ModelActionFactory<
 	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
 	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 extends
-		ActionTypesInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
 	@Override
 	public ChangeEdgeLabel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getChangingLabelAction(
@@ -31,10 +33,10 @@ extends
 		return new ChangeModelEdgeLabel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, edgeLabel, transition);
 	}
 
-	@Override
+	
 	public DeleteState<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getDeleteStateAction(
-			Object source, int id, String command, STATE state) {
-		return new DeleteModelState<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
+			Object source, int id, String command, STATE state, DefaultMutableTreeNode parent) {
+		return new DeleteModelState<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state, parent);
 		
 	}
 
@@ -57,5 +59,4 @@ extends
 			Object source, int id, String command, STATE state) {
 		return new SetInitialModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
 	}
-
 }

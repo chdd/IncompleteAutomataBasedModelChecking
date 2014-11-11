@@ -9,6 +9,7 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * contains a loading action. The loading action loads the automaton from a specific file which is
@@ -32,8 +33,16 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 	 * returns the file from which loading the automaton
 	 * @return the file from which loading the automaton
 	 */
-	protected String getFile() {
+	protected String getFile(FileNameExtensionFilter filter) {
+		
+		if(filter==null){
+			throw new NullPointerException("The file filter cannot be null");
+		}
+		
 		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(filter);
+		fileChooser.addChoosableFileFilter(filter);
+		
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		int result = fileChooser.showOpenDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {

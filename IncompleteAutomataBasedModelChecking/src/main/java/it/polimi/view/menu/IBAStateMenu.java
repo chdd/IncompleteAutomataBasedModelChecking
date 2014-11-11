@@ -7,6 +7,7 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.actions.ModelActionFactory;
 
 import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 
 
 
@@ -21,20 +22,21 @@ public class IBAStateMenu
 	extends JPopupMenu{
 	
 	
-	public IBAStateMenu() {
+	public IBAStateMenu(JTree treeP) {
        super("State Menu");
        
-       this.stateType();
+       this.stateType(treeP);
        this.addSeparator();
-       this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateDelete());
+       this.add(new IBAActions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateDelete(treeP));
        this.addSeparator();
-       this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new Rename());
+       this.add(new BAActions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new Rename(this));
+       
     }
    
-    protected void stateType(){
-    	 this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateInitial());
-         this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateAccepting());
-         this.add(new Actions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateTransparent());
+    protected void stateType(JTree treeP){
+    	 this.add(new BAActions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateInitial());
+         this.add(new BAActions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateAccepting());
+         this.add(new IBAActions<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new StateTransparent(treeP));
     }
 
 

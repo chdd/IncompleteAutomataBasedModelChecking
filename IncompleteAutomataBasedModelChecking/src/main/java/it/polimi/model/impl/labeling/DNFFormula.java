@@ -26,13 +26,13 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 	/**
 	 * contains the set of {@link ConjunctiveClauseImpl} of the {@link DNFFormula}
 	 */
-	private Set<ConjunctiveClause<CONSTRAINTELEMENT>> disjunctionClause;
+	private Set<ConjunctiveClause<CONSTRAINTELEMENT>> conjunctiveClause;
 	
 	/**
 	 * creates a new empty {@link DNFFormula}
 	 */
 	public DNFFormula(){
-		this.disjunctionClause=new HashSet<ConjunctiveClause<CONSTRAINTELEMENT>>();
+		this.conjunctiveClause=new HashSet<ConjunctiveClause<CONSTRAINTELEMENT>>();
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 		if(conjunctiveClauses==null){
 			throw new NullPointerException("The set of disjunctionClause cannot be null");
 		}
-		this.disjunctionClause=conjunctiveClauses;
+		this.conjunctiveClause=conjunctiveClauses;
 	}
 	
 	/**
@@ -55,8 +55,8 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 		if(conjunctiveClause==null){
 			throw new NullPointerException("The set of disjunctionClause cannot be null");
 		}
-		this.disjunctionClause=new HashSet<ConjunctiveClause<CONSTRAINTELEMENT>>();
-		this.disjunctionClause.add(conjunctiveClause);
+		this.conjunctiveClause=new HashSet<ConjunctiveClause<CONSTRAINTELEMENT>>();
+		this.conjunctiveClause.add(conjunctiveClause);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 	 * @return the {@link Set} o {@link ConjunctiveClauseImpl} of the {@link DNFFormula}
 	 */
 	public Set<ConjunctiveClause<CONSTRAINTELEMENT>> getConjunctiveClauses() {
-		return disjunctionClause;
+		return conjunctiveClause;
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 		if(disjunctionClause==null){
 			throw new NullPointerException("The formula to be setted cannot be null");
 		}
-		this.disjunctionClause = disjunctionClause;
+		this.conjunctiveClause = disjunctionClause;
 	}
 	
 	/**
@@ -88,14 +88,14 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 		if(clause==null){
 			throw new NullPointerException("The clause to be added in the set of the clause cannot be null");
 		}
-		this.disjunctionClause.add(clause);
+		this.conjunctiveClause.add(clause);
 	}
 	
 	public void addDisjunctionClause(Set<ConjunctiveClause<CONSTRAINTELEMENT>> clauses){
 		if(clauses==null){
 			throw new NullPointerException("The clause to be added in the set of the clause cannot be null");
 		}
-		this.disjunctionClause.addAll(clauses);
+		this.conjunctiveClause.addAll(clauses);
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 	 */
 	public Set<Proposition> getPropositions(){
 		Set<Proposition> dnfPropositons=new HashSet<Proposition>();
-		for(ConjunctiveClause<CONSTRAINTELEMENT> c: this.disjunctionClause){
+		for(ConjunctiveClause<CONSTRAINTELEMENT> c: this.conjunctiveClause){
 			if(c instanceof ConjunctiveClauseImpl){
 				dnfPropositons.addAll(((ConjunctiveClauseImpl<CONSTRAINTELEMENT>)c).getPropositions());
 			}
@@ -124,7 +124,7 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 			throw new NullPointerException("The formula cannot be null");
 		}
 		Set<ConjunctiveClause<CONSTRAINTELEMENT>> commonClauses=new HashSet<ConjunctiveClause<CONSTRAINTELEMENT>>();
-		commonClauses.addAll(this.disjunctionClause);
+		commonClauses.addAll(this.conjunctiveClause);
 		commonClauses.retainAll(formula.getConjunctiveClauses());
 		return commonClauses;
 	}
@@ -156,15 +156,15 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 	 * @return the {@link String} representation of the {@link DNFFormula}
 	 */
 	public String toString(){
-		if(disjunctionClause.isEmpty()){
+		if(conjunctiveClause.isEmpty()){
 			return "";
 		}
-		if(disjunctionClause.size()==1){
-			return disjunctionClause.iterator().next().toString();
+		if(conjunctiveClause.size()==1){
+			return conjunctiveClause.iterator().next().toString();
 		}
-		Iterator<ConjunctiveClause<CONSTRAINTELEMENT>> it=this.disjunctionClause.iterator();
+		Iterator<ConjunctiveClause<CONSTRAINTELEMENT>> it=this.conjunctiveClause.iterator();
 		String ret="";
-		for(int i=0;i< this.disjunctionClause.size()-1;i++){
+		for(int i=0;i< this.conjunctiveClause.size()-1;i++){
 			ret+=it.next().toString()+orSimbol;
 		}
 		ret+=it.next().toString();
@@ -180,7 +180,7 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 		int result = 1;
 		result = prime
 				* result
-				+ ((disjunctionClause == null) ? 0 : disjunctionClause
+				+ ((conjunctiveClause == null) ? 0 : conjunctiveClause
 						.hashCode());
 		return result;
 	}
@@ -198,10 +198,10 @@ public class DNFFormula<CONSTRAINTELEMENT extends State> {
 			return false;
 		@SuppressWarnings("unchecked")
 		DNFFormula<CONSTRAINTELEMENT> other = (DNFFormula<CONSTRAINTELEMENT>) obj;
-		if (disjunctionClause == null) {
-			if (other.disjunctionClause != null)
+		if (conjunctiveClause == null) {
+			if (other.conjunctiveClause != null)
 				return false;
-		} else if (!disjunctionClause.equals(other.disjunctionClause))
+		} else if (!conjunctiveClause.equals(other.conjunctiveClause))
 			return false;
 		return true;
 	}	

@@ -24,6 +24,7 @@ public abstract class DeleteState
 	 */	
 	private static final long serialVersionUID = 1L;
 	protected STATE state;
+	
 
 	public DeleteState(Object source, int id, String command, STATE state){
 		super(source, id, command);

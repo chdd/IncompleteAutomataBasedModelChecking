@@ -11,7 +11,6 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.event.ActionListener;
@@ -22,7 +21,6 @@ import java.util.Stack;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
 
 @SuppressWarnings("serial")
 public class IntersectionAutomatonJPanel
@@ -46,7 +44,7 @@ public class IntersectionAutomatonJPanel
 	
 	
 	public IntersectionAutomatonJPanel(INTERSECTIONAUTOMATON a, ActionListener l, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> layout) {
-		super(a, l, layout);
+		super(a, l, layout, null);
 	}
 	
 	
@@ -85,7 +83,7 @@ public class IntersectionAutomatonJPanel
 	}
 	@Override
 	protected Transformer<INTERSECTIONTRANSITION, Stroke> getStrokeEdgeStrokeTransformer(){
-		return new IntersectionAutomatonEdgeStrokeTransformed<STATE,INTERSECTIONTRANSITION>();
+		return new IntersectionAutomatonEdgeStrokeTransformed();
 	}
 	
 	@Override
@@ -155,10 +153,10 @@ public class IntersectionAutomatonJPanel
 		}	
 	}
 	
-	public class IntersectionAutomatonEdgeStrokeTransformed<S extends State, T extends LabelledTransition> extends
-	BuchiAutomatonEdgeStrokeTransormer<T> {
+	public class IntersectionAutomatonEdgeStrokeTransformed extends
+	BuchiAutomatonEdgeStrokeTransormer {
 		@Override
-		public Stroke transform(T input) {
+		public Stroke transform(INTERSECTIONTRANSITION input) {
 			/*if(input.getConstrainedState()!=null)
 			{
 				float dash[]={10.0f};

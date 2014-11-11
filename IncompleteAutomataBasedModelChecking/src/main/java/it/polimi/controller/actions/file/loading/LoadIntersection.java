@@ -13,6 +13,8 @@ import it.polimi.view.ViewInterface;
 
 import java.awt.geom.Point2D;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.apache.commons.collections15.Transformer;
 
 @SuppressWarnings("serial")
@@ -37,7 +39,7 @@ extends LoadingAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANS
 			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception {
-		String file=this.getFile();
+		String file=this.getFile(new FileNameExtensionFilter("Intersection Automaton (*.int)", "int"));
 		if(file!=null){
 			Transformer<INTERSECTIONSTATE, Point2D> positions=model.loadIntersection(file);
 			view.updateIntersection(model.getIntersection(),positions);

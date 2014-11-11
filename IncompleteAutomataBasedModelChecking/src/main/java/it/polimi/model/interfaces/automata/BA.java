@@ -18,7 +18,7 @@ public interface BA<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
 	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> {
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> extends Cloneable {
 
 	/**
 	 * returns the initial states of the {@link BA}
@@ -52,6 +52,8 @@ public interface BA<
 	 * @return set of the accepting states of the {@link BA} (see {@link State})
 	 */
 	public Set<STATE> getAcceptStates();
+	
+	public Set<STATE> getStates();
 	
 	/**
 	 * returns true if the {@link State} state is accepting false otherwise

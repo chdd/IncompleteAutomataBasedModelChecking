@@ -1,5 +1,6 @@
 package it.polimi.model;
 
+import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -14,14 +15,16 @@ import it.polimi.modelchecker.ModelCheckingResults;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.Map;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.collections15.Transformer;
 import org.xml.sax.SAXException;
 
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.io.GraphIOException;
 
 /**
@@ -40,16 +43,6 @@ public interface ModelInterface<
 	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
 	{
-	/**
-	 * loads the model of the system from the file whose path is specified in the string modelFilePath
-	 * @param modelFilePath is the path of the file from which the model must be loaded
-	 * @throws GraphIOException 
-	 * @throws JAXBException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 */
-	public Transformer<STATE, Point2D> loadModel(String modelFilePath) throws IOException, GraphIOException;
 	
 	/**
 	 * loads the model of the system from the file whose path is specified in the string modelFilePath
@@ -78,42 +71,9 @@ public interface ModelInterface<
 	 */
 	public DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> getIntersection();
 	
-	/**
-	 * save the model in the file with path filePath
-	 * @param filePath
-	 * @throws GraphIOException 
-	 * @throws JAXBException
-	 * @throws IOException
-	 */
-	public void saveModel(String filePath, AbstractLayout<STATE, TRANSITION> layout) throws IOException, GraphIOException;
-	/**
-	 * load the model from the specified filePath
-	 * @param specificationFilePath is the path of the file that contains the specification to be loaded
-	 * @throws GraphIOException 
-	 * @throws JAXBException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 */
-	public Transformer<STATE, Point2D> changeSpecification(String specificationFilePath) throws IOException, GraphIOException;
-	/**
-	 * save the specification in the file with path filePath
-	 * @param filePath is the path of the file where the specification must be saved
-	 * @throws GraphIOException 
-	 * @throws JAXBException
-	 * @throws IOException
-	 */
-	public void saveSpecification(String filePath, AbstractLayout<STATE, TRANSITION> layout) throws IOException, GraphIOException;
-	
-	/**
-	 * save the intersection in the file with path filePath
-	 * @param filePath is the path of the file where the specification must be saved
-	 * @throws GraphIOException 
-	 * @throws JAXBException
-	 * @throws IOException
-	 */
-	public void saveIntersection(String filePath, AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>  layout) throws IOException, GraphIOException;
-	
+	public void setSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification);
+		
+	public STATEFACTORY getSpecificationStateFactory();
 	
 	/**
 	 * adds the regular state s into the model
@@ -131,6 +91,8 @@ public interface ModelInterface<
 	 */
 	public void newModel();
 	
+	public TRANSITIONFACTORY getSpecificationTransitionFactory();
+	
 	/**
 	 * creates a new claim
 	 */
@@ -146,5 +108,26 @@ public interface ModelInterface<
 	
 	public ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
 	
+	public void setModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model);
+	
 	public void loadClaimFromLTL(String ltlFormula);
+	
+	public TRANSITIONFACTORY getModelTransitionFactory();
+	
+	public STATEFACTORY getModelStateFactory();
+	
+	public DefaultTreeModel getModelRefinement();
+	
+	public void setModelRefinement(DefaultTreeModel modelRefinement);
+	
+	public Map<STATE, DefaultMutableTreeNode> getStateRefinementMap();
+	public void setStateRefinementMap(Map<STATE, DefaultMutableTreeNode> stateRefinementMap);
+
+	
+	public DefaultTreeModel getflattenModelRefinement();
+	public void setflattenModelRefinement(DefaultTreeModel flattenModel);
+	
+	public Map<STATE, DefaultMutableTreeNode> getFlatstateRefinementMap();
+	public void setFlatstateRefinementMap(Map<STATE, DefaultMutableTreeNode> flatstateRefinementMap);	
+	public void cleanFlatstateRefinementMap();
 }

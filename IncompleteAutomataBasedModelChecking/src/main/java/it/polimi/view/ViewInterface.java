@@ -14,6 +14,8 @@ import java.awt.geom.Point2D;
 import java.util.Observer;
 import java.util.Set;
 
+import javax.swing.tree.DefaultTreeModel;
+
 import org.apache.commons.collections15.Transformer;
 
 public interface ViewInterface<
@@ -22,7 +24,7 @@ public interface ViewInterface<
 	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	LABELLEDTRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
 	CONSTRAINEDTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,INTERSECTIONTRANSITION>>
 	{
 
@@ -30,9 +32,12 @@ public interface ViewInterface<
 	 * 
 	 * @param model
 	 */
-	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions);
+	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions, DefaultTreeModel hierarchicalModelRefinement, DefaultTreeModel flatModelRefinement);
 	
-	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> model);
+	public void updateModel(
+			DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			DefaultTreeModel hierarchicalModelRefinement,
+			DefaultTreeModel flatModelRefinement);
 	
 	
 	
@@ -40,7 +45,7 @@ public interface ViewInterface<
 	 * --------------------------------------- CLAIM ---------------------------------------
 	 */
 	
-	public void updateClaim(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification);
+	public void updateClaim(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification);
 	
 	public void hightLightConstraint(
 			STATE state,
@@ -50,7 +55,7 @@ public interface ViewInterface<
 	public void doNothightLightConstraint(
 			);
 	
-	public void updateSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, LABELLEDTRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
+	public void updateSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions);
 	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, CONSTRAINEDTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions);
 	
 	public void updateVerificationResults(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,

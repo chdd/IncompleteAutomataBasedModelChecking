@@ -80,7 +80,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 							TRANSITIONFACTORY>) arg;
 			try {
 				a.perform(model, this.view);
-				view.updateModel(model.getModel());
+				view.updateModel(model.getModel(), model.getModelRefinement(),model.getflattenModelRefinement());
 				view.updateClaim(model.getSpecification());
 				
 			} catch (Exception e) {

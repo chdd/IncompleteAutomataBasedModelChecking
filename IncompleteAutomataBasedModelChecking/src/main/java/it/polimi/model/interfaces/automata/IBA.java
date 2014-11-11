@@ -1,5 +1,6 @@
 package it.polimi.model.interfaces.automata;
 
+import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
@@ -39,4 +40,7 @@ public interface IBA<
 	 * @param s the state to be added in the {@link IBA}
 	 */
 	public void addTransparentState(STATE s);
+	
+	public void replace(STATE transparentState, IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ibaToInject);
+	
 }

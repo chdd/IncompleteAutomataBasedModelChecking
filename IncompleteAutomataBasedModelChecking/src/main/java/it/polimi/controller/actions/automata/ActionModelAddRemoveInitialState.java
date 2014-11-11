@@ -49,6 +49,5 @@ public class ActionModelAddRemoveInitialState<
 			else{
 				model.getModel().addInitialState(s);
 			}
-			view.updateModel(model.getModel());
 	}
 }

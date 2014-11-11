@@ -49,9 +49,7 @@ public class Main{
 			IntersectionStateFactory<State, IntersectionState<State>>,
 			LabelledTransition<State>,
 			ConstrainedTransitionFactory<State, LabelledTransition<State>>>(
-				 model.getModel(), 
-				 model.getSpecification(), 
-				 model.getIntersection());
+				 model);
 		
 		// creates a new controller with the specified model and view
 		Controller<State, State, StateFactory<State>, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, 
