@@ -28,6 +28,20 @@ import org.apache.commons.collections15.Transformer;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 
+/**
+ * contains the {@link JPanel} which displays the model under development
+ * @author claudiomenghi
+ *
+ * @param <CONSTRAINEDELEMENT>
+ * @param <STATE>
+ * @param <STATEFACTORY>
+ * @param <TRANSITION>
+ * @param <TRANSITIONFACTORY>
+ * @param <INTERSECTIONSTATE>
+ * @param <INTERSECTIONSTATEFACTORY>
+ * @param <INTERSECTIONTRANSITION>
+ * @param <INTERSECTIONTRANSITIONFACTORY>
+ */
 @SuppressWarnings("serial")
 public class ModelTab<
 		CONSTRAINEDELEMENT extends State,
@@ -41,7 +55,14 @@ public class ModelTab<
 		INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
 	extends JPanel {
 
+	/**
+	 * contains the {@link DrawableIBA} to be displayed
+	 */
 	private IncompleteBuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> modelTabmodel;
+	
+	/**
+	 * contains the {@link AbstractLayout} to be used when the model is displayed
+	 */
 	private AbstractLayout<STATE, TRANSITION> modelLayout;
 	
 	private RefinementTree<
@@ -54,7 +75,13 @@ public class ModelTab<
 	private JPanel containerModelMenu;
 	private JPanel jtreePanel;
 
-	
+	/**
+	 * creates a new {@link ModelTab}
+	 * @param model is the model to be displayed in the modelTab
+	 * @param l the actionListener that is notified every time an action is performed on the model
+	 * @param d the dimension of the {@link ModelTab}
+	 * @throws when the model or the action listener or the dimension is null
+	 */
 	public ModelTab(ModelInterface<CONSTRAINEDELEMENT, STATE, 
 			STATEFACTORY, TRANSITION, 
 			TRANSITIONFACTORY, INTERSECTIONSTATE, 
@@ -63,6 +90,15 @@ public class ModelTab<
 			ActionListener l,
 			Dimension d){
 		super(false);
+		if(model==null){
+			throw new NullPointerException("The model cannot be null");
+		}
+		if(l==null){
+			throw new NullPointerException("The action listener cannot be null");
+		}
+		if(d==null){
+			throw new NullPointerException("The dimension o the ModelTab cannot be null");
+		}
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.containerModelMenu=new JPanel();
 		this.containerModelMenu.setBackground(Color.white);
@@ -131,7 +167,7 @@ public class ModelTab<
 		this.modelTabmodel.setTranformingMode();
 	}
 	
-	public void setDefaultTransformer(){
+	public void setEditingMode(){
 		this.modelTabmodel.defaultTransformers();		
 	}
 	
