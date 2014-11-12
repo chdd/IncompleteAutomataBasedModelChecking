@@ -1,21 +1,17 @@
 package it.polimi.view.menu.states;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.automaton.RefinementTree;
 import it.polimi.view.menu.StateListener;
-import it.polimi.view.menu.TransitionListener;
 import it.polimi.view.menu.actions.ModelActionFactory;
-import it.polimi.view.menu.states.BAStateMenu.Rename;
-import it.polimi.view.menu.states.BAStateMenu.StateDelete;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
@@ -37,7 +33,12 @@ public class IBAStateMenu
 		ACTIONFACTORY>{
 	
 
-	public IBAStateMenu(ACTIONFACTORY actionfactory, RefinementTree treeP) {
+	public IBAStateMenu(ACTIONFACTORY actionfactory, RefinementTree<
+														CONSTRAINEDELEMENT,
+														STATE, 
+														STATEFACTORY,
+														TRANSITION, 
+														TRANSITIONFACTORY> treeP) {
        super(actionfactory);
        this.populate(treeP);
     }
@@ -46,7 +47,12 @@ public class IBAStateMenu
 	protected void populate(){
 		  
 	 }
-	protected void populate(RefinementTree treeP){
+	protected void populate(RefinementTree<
+								CONSTRAINEDELEMENT,
+								STATE, 
+								STATEFACTORY,
+								TRANSITION, 
+								TRANSITIONFACTORY> treeP){
 		   this.stateType(this.actionTypesInterface, treeP);
 	       this.addSeparator();
 	       this.add(new StateDelete(treeP));
@@ -54,7 +60,12 @@ public class IBAStateMenu
 	       this.add(new Rename(this));
 	 }
    
-    protected void stateType(ACTIONFACTORY actionfactory, RefinementTree treeP){
+    protected void stateType(ACTIONFACTORY actionfactory, RefinementTree<
+															CONSTRAINEDELEMENT,
+															STATE, 
+															STATEFACTORY,
+															TRANSITION, 
+															TRANSITIONFACTORY> treeP){
     	 this.add(new StateInitial());
          this.add(new StateAccepting());
          this.add(new StateTransparent(treeP));
@@ -64,10 +75,20 @@ public class IBAStateMenu
     	StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		private STATE state;
 		private ActionListener l;
-		RefinementTree tree;
+		RefinementTree<
+					CONSTRAINEDELEMENT,
+					STATE, 
+					STATEFACTORY,
+					TRANSITION, 
+					TRANSITIONFACTORY> tree;
 		
 		/** Creates a new instance of DeleteVertexMenuItem */
-		public StateDelete(RefinementTree treeP) {
+		public StateDelete(RefinementTree<
+									CONSTRAINEDELEMENT,
+									STATE, 
+									STATEFACTORY,
+									TRANSITION, 
+									TRANSITIONFACTORY> treeP) {
 			super("Delete State");
 			this.tree=treeP;
 			this.addActionListener(new ActionListener() {
@@ -92,14 +113,22 @@ public class IBAStateMenu
 			this.setText("Delete State");
 		}
 	}
-    @SuppressWarnings("serial")
+    
 	public class StateTransparent extends JMenuItem implements
 			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		STATE v;
 		ActionListener l;
-		RefinementTree treePanel;
+		RefinementTree<CONSTRAINEDELEMENT,
+						STATE, 
+						STATEFACTORY,
+						TRANSITION, 
+						TRANSITIONFACTORY> treePanel;
 		
-		public StateTransparent(RefinementTree treeP) {
+		public StateTransparent(RefinementTree<CONSTRAINEDELEMENT,
+												STATE, 
+												STATEFACTORY,
+												TRANSITION, 
+												TRANSITIONFACTORY> treeP) {
 			super("Transparent");
 			this.treePanel=treeP;
 			this.addActionListener(new ActionListener() {

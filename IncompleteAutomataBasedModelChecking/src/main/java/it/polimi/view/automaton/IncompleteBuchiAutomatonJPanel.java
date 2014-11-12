@@ -36,8 +36,13 @@ BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSI
 	
 	
 	public IncompleteBuchiAutomatonJPanel(IBA a, 
-			 ActionListener l, AbstractLayout<STATE, TRANSITION> layout,
-			 RefinementTree parentNode){
+			 ActionListener l, 
+			 AbstractLayout<STATE, TRANSITION> layout,
+			 RefinementTree<CONSTRAINEDELEMENT,
+									STATE, 
+									STATEFACTORY,
+									TRANSITION, 
+									TRANSITIONFACTORY> parentNode){
 		super(a, l, layout, parentNode);
 		
 		this.a=a; 

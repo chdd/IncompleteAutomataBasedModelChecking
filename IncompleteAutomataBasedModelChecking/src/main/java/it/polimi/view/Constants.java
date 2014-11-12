@@ -20,6 +20,10 @@ public class Constants {
 	public static final ImageIcon flattenIcon = new ImageIcon(Constants.class.getResource("/img/Packaging.png"));
 	public static final ImageIcon hierarchyIcon = new ImageIcon(Constants.class.getResource("/img/Hierarchy.png"));
 	
+	public static final int verificationResultIconSize=64;
+	
+	public static final double JTreeXProportion=6;
+	
 	// Messages
 	public static final String editingMessage="<html>Editing Mode:<br>"
 				+ "MouseButtonOne press on empty space creates a new State<br>"

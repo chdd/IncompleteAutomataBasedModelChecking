@@ -108,7 +108,8 @@ implements TreeSelectionListener{
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		
-		RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> refnode=(RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>) 
+		RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> refnode=
+				(RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>) 
 		 ((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent())
 		 .getUserObject();
 

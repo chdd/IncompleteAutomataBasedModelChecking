@@ -6,7 +6,6 @@ import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.menu.StateListener;
-import it.polimi.view.menu.TransitionListener;
 import it.polimi.view.menu.actions.ClaimActionFactory;
 
 import java.awt.event.ActionEvent;

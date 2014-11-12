@@ -50,7 +50,12 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	
 	protected ActionListener view;
 	
-	protected  RefinementTree parentNode;
+	protected  RefinementTree<
+							CONSTRAINTELEMENT,
+							STATE, 
+							STATEFACTORY,
+							TRANSITION, 
+							TRANSITIONFACTORY> parentNode;
 	
 	private TRANSITIONFACTORY transitionFactory;
 	/**
@@ -64,7 +69,11 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	 * @param a is the {@link BAImpl} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
-	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  RefinementTree parentNode){
+	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  RefinementTree<							CONSTRAINTELEMENT,
+																										STATE, 
+																										STATEFACTORY,
+																										TRANSITION, 
+																										TRANSITIONFACTORY> parentNode){
 		super(layout);
 		if(parentNode!=null){
 			this.parentNode=parentNode;

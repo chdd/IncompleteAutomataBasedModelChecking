@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+@SuppressWarnings("serial")
 public class IBATransitionMenu<
 	CONSTRAINEDELEMENT extends State, 
 	STATE extends State, 
@@ -26,8 +27,16 @@ public class IBATransitionMenu<
 		TRANSITIONFACTORY, 
 		ACTIONFACTORY>{
 
-	private RefinementTree tree;
-	public IBATransitionMenu(ACTIONFACTORY actionTypesInterface, RefinementTree tree){
+	private RefinementTree<CONSTRAINEDELEMENT,
+							STATE, 
+							STATEFACTORY,
+							TRANSITION, 
+							TRANSITIONFACTORY> tree;
+	public IBATransitionMenu(ACTIONFACTORY actionTypesInterface, RefinementTree<CONSTRAINEDELEMENT,
+																				STATE, 
+																				STATEFACTORY,
+																				TRANSITION, 
+																				TRANSITIONFACTORY> tree){
 		super(actionTypesInterface);
 		this.tree=tree;
 		this.populate(tree);
@@ -36,7 +45,11 @@ public class IBATransitionMenu<
 	public void setActions(){
 		
 	}
-	protected void populate(RefinementTree treeP){
+	protected void populate(RefinementTree<CONSTRAINEDELEMENT,
+											STATE, 
+											STATEFACTORY,
+											TRANSITION, 
+											TRANSITIONFACTORY> treeP){
 		this.add(new TransitionAddCharacter(this));
 		this.addSeparator();
 		
@@ -46,11 +59,24 @@ public class IBATransitionMenu<
 	public class TransitionDelete extends BATransitionMenu<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, ACTIONFACTORY>.TransitionDelete implements
 			TransitionListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		
-		RefinementTree tree;
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		RefinementTree<
+				CONSTRAINEDELEMENT,
+				STATE, 
+				STATEFACTORY,
+				TRANSITION, 
+				TRANSITIONFACTORY> tree;
 		
 		
 		/** Creates a new instance of DeleteEdgeMenuItem */
-		public TransitionDelete(RefinementTree treePar) 
+		public TransitionDelete(RefinementTree<CONSTRAINEDELEMENT,
+												STATE, 
+												STATEFACTORY,
+												TRANSITION, 
+												TRANSITIONFACTORY> treePar) 
 		{
 			super();
 			this.tree=treePar;
