@@ -46,12 +46,12 @@ extends
 		return new SetAcceptingModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
 	}
 
-	@Override
+	
 	public DeleteEdgeAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> deleteEdgeAction(
 			Object source, int id, String command,
-			TRANSITION transition) {
+			TRANSITION transition, DefaultMutableTreeNode treeNode) {
 		
-		return new DeleteEdgeModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, transition);
+		return new DeleteEdgeModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, transition, treeNode);
 	}
 
 	@Override

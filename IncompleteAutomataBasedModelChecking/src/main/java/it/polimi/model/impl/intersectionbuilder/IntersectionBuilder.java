@@ -141,6 +141,7 @@ public class IntersectionBuilder<
 					}
 					
 					// the new state is connected by the previous one through a constrained transition
+					@SuppressWarnings("unchecked")
 					INTERSECTIONTRANSITION t=this.transitionFactory.create(t2.getDnfFormula(), (CONSTRAINEDELEMENT)currentState.getS1());
 					intersection.addTransition(currentState, p, t);
 					// the recursive procedure is recalled

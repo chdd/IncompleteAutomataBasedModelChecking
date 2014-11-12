@@ -1,45 +1,67 @@
-package it.polimi.view.menu;
+package it.polimi.view.menu.states;
 
-/*
- * MyMouseMenus.java
- *
- * Created on March 21, 2007, 3:34 PM; Updated May 29, 2007
- *
- * Copyright March 21, 2007 Grotto Networking
- *
- */
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.automaton.RefinementTree;
+import it.polimi.view.menu.StateListener;
+import it.polimi.view.menu.TransitionListener;
 import it.polimi.view.menu.actions.ModelActionFactory;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import it.polimi.view.menu.states.BAStateMenu.Rename;
+import it.polimi.view.menu.states.BAStateMenu.StateDelete;
 
 import javax.swing.JMenuItem;
-import javax.swing.JTree;
+import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class IBAActions<
-CONSTRAINEDELEMENT extends State,
+
+
+@SuppressWarnings("serial")
+public class IBAStateMenu
+	<
+	CONSTRAINEDELEMENT extends State, 
 	STATE extends State, 
 	STATEFACTORY extends StateFactory<STATE>, 
 	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>  {
+	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	ACTIONFACTORY extends ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>
+	extends BAStateMenu
+		<CONSTRAINEDELEMENT, 
+		STATE, STATEFACTORY, 
+		TRANSITION, 
+		TRANSITIONFACTORY, 
+		ACTIONFACTORY>{
+	
 
-	private ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface;
+	public IBAStateMenu(ACTIONFACTORY actionfactory, RefinementTree treeP) {
+       super(actionfactory);
+       this.populate(treeP);
+    }
 	
-	public IBAActions(ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> actionTypesInterface){
-		this.actionTypesInterface=actionTypesInterface;
-	}
-	
-	
-	@SuppressWarnings("serial")
-	public class StateDelete extends JMenuItem implements
-			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
+	@Override
+	protected void populate(){
+		  
+	 }
+	protected void populate(RefinementTree treeP){
+		   this.stateType(this.actionTypesInterface, treeP);
+	       this.addSeparator();
+	       this.add(new StateDelete(treeP));
+	       this.addSeparator();
+	       this.add(new Rename(this));
+	 }
+   
+    protected void stateType(ACTIONFACTORY actionfactory, RefinementTree treeP){
+    	 this.add(new StateInitial());
+         this.add(new StateAccepting());
+         this.add(new StateTransparent(treeP));
+    }
+    
+    public class StateDelete extends JMenuItem implements
+    	StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		private STATE state;
 		private ActionListener l;
 		RefinementTree tree;
@@ -57,7 +79,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 				}
 			});
 		}
-
+		
 		/**
 		 * Implements the VertexMenuListener interface.
 		 * 
@@ -70,9 +92,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			this.setText("Delete State");
 		}
 	}
-	
-
-	@SuppressWarnings("serial")
+    @SuppressWarnings("serial")
 	public class StateTransparent extends JMenuItem implements
 			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		STATE v;

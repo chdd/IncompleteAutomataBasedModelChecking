@@ -1,13 +1,5 @@
 package it.polimi.controller.actions.file.saving;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.Map.Entry;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import it.polimi.io.IBAWriter;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.RefinementNode;
@@ -20,6 +12,14 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.ViewInterface;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Map.Entry;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 
 @SuppressWarnings("serial")
@@ -60,6 +60,7 @@ LAYOUT extends AbstractLayout<STATE, TRANSITION>>
 		if(filePath!=null){
 			for(Entry<STATE, DefaultMutableTreeNode> entry: model.getStateRefinementMap().entrySet()){
 				
+				@SuppressWarnings("unchecked")
 				RefinementNode<CONSTRAINEDELEMENT,
 						STATE, 
 						TRANSITION, 

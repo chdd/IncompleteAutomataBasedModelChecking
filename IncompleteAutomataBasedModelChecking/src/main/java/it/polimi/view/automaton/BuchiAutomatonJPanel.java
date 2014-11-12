@@ -6,10 +6,10 @@ import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.view.menu.BAActions;
-import it.polimi.view.menu.BAStateMenu;
 import it.polimi.view.menu.Plugin;
 import it.polimi.view.menu.actions.ClaimActionFactory;
+import it.polimi.view.menu.states.BAStateMenu;
+import it.polimi.view.menu.transition.BATransitionMenu;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -120,7 +120,11 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	}
 	
 	protected JPopupMenu getStateMenu(){
-		 return new BAStateMenu<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>();
+		return new BAStateMenu<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, 
+				ClaimActionFactory<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>(
+						new ClaimActionFactory
+						<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()
+				);
 	}
 	
 	
@@ -154,7 +158,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		
         Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> myPlugin = new Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
-        JPopupMenu edgeMenu =this.getActionInterface();
+        JPopupMenu edgeMenu =this.getTransitionPopupMenu();
         		
         JPopupMenu vertexMenu =this.getStateMenu();
         myPlugin.setEdgePopup(edgeMenu);
@@ -165,10 +169,13 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
         this.setGraphMouse(gm);	
      }
 	
-	public JPopupMenu getActionInterface(){
-		return new BAActions<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(
-				new ClaimActionFactory
-				<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new TransitionMenu();
+	public JPopupMenu getTransitionPopupMenu(){
+		
+		return new BATransitionMenu<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, 
+				ClaimActionFactory<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>(
+						new ClaimActionFactory
+						<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()
+				);
 	}
 	
 	public class BuchiAutomatonStatePaintTransformer implements Transformer<STATE, Paint> {

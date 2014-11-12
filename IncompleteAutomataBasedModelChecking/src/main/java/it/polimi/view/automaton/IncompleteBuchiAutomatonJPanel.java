@@ -5,14 +5,15 @@ import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.view.menu.IBAStateMenu;
+import it.polimi.view.menu.actions.ModelActionFactory;
+import it.polimi.view.menu.states.IBAStateMenu;
+import it.polimi.view.menu.transition.IBATransitionMenu;
 
 import java.awt.Color;
 import java.awt.Paint;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPopupMenu;
-import javax.swing.JTree;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 
@@ -45,15 +46,27 @@ BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSI
 	protected BuchiAutomatonStatePaintTransformer getPaintTransformer(IBA a){
 		return new IncompleteBuchiAutomatonPaintTransformer(a);
 	}
-	protected JPopupMenu getStateMenu(){
-		 return new IBAStateMenu<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(parentNode);
-	}
-	/*public JPopupMenu getActionInterface(){
-		return new BAActions<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(
-				new ClaimActionFactory
-				<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()).new TransitionMenu();
-	}*/
 	
+	@Override
+	protected JPopupMenu getStateMenu(){
+		 return new IBAStateMenu<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, 
+				 ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>
+		 	(new ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(), parentNode);
+	}
+	@Override
+	public JPopupMenu getTransitionPopupMenu(){
+		return new IBATransitionMenu<
+				CONSTRAINEDELEMENT, 
+				STATE, 
+				STATEFACTORY, 
+				TRANSITION, 
+				TRANSITIONFACTORY,
+				ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>
+				(
+				new ModelActionFactory
+				<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(), parentNode);
+		
+	}
 	public void highLightState(STATE s){
 		this.getRenderContext().setVertexFillPaintTransformer(new IncompleteBuchiAutomatonHighLightStatePaintTransformer(a, s));
 	}

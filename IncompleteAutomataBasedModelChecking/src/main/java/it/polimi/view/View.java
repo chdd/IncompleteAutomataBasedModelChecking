@@ -127,8 +127,7 @@ public class View<
 	 STATE, 
 	 STATEFACTORY,
 	 TRANSITION, 
-	 TRANSITIONFACTORY, 
-	 DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> tree;
+	 TRANSITIONFACTORY> tree;
 	
 	private JPanel containerModelMenu;
 	private JPanel jtreePanel;
@@ -318,8 +317,7 @@ public class View<
 				 STATE, 
 				 STATEFACTORY,
 				 TRANSITION, 
-				 TRANSITIONFACTORY, 
-				 DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>(new Dimension((int) (screenSize.width/JTreeXProportion), screenSize.height), 
+				 TRANSITIONFACTORY>(new Dimension((int) (screenSize.width/JTreeXProportion), screenSize.height), 
 						 model.getModelRefinementHierarchy(), 
 						 this); 
 		 	jtreePanel.add(tree);

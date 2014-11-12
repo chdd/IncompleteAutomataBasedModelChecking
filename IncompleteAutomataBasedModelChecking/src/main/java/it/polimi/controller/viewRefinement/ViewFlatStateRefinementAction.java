@@ -32,6 +32,7 @@ ActionInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONF
 		this.refinement=refinement;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>, 
 	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>, 

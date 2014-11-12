@@ -1,5 +1,7 @@
 package it.polimi.controller.actions.automata.edges.delete;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
@@ -20,9 +22,13 @@ public class DeleteEdgeModel<
 extends
 		DeleteEdgeAction<CONSTRAINEDELEMENT ,STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
+	protected DefaultMutableTreeNode parent;
+	
+	
 	public DeleteEdgeModel(Object source, int id, String command,
-			TRANSITION transition) {
+			TRANSITION transition, DefaultMutableTreeNode parent) {
 		super(source, id, command, transition);
+		this.parent=parent;
 	}
 
 	@Override
