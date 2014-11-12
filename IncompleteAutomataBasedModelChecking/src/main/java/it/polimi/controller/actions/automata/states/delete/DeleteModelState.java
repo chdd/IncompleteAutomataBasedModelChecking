@@ -38,7 +38,8 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			throws Exception {
 		model.getModel().removeVertex(state);
 		if(model.getModel().isTransparent(state)){
-			model.getModelRefinement().removeNodeFromParent(model.getStateRefinementMap().get(state));
+			model.getStateRefinementMap().get(state).removeFromParent();
+			model.getStateRefinementMap().remove(state);
 		}
 	}
 

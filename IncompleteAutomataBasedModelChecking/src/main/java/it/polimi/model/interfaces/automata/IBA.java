@@ -1,6 +1,5 @@
 package it.polimi.model.interfaces.automata;
 
-import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;

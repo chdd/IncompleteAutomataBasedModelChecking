@@ -24,11 +24,33 @@ public class SetTransparent<
 	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
 		extends ActionEvent implements
 		ActionInterface<CONSTRAINEDELEMENT,STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+	
+	/**
+	 * is the state to be changed into transparent
+	 */
 	protected STATE state;
+	
+	/**
+	 * is the refinement node where the state is contained
+	 */
 	protected DefaultMutableTreeNode parent;
 
+	/**
+	 * creates a new {@link SetTransparent} action
+	 * @param source 
+	 * @param id
+	 * @param command
+	 * @param state: is the state to be changed in transparent
+	 * @param parent: is the current refinement node
+	 */
 	public SetTransparent(Object source, int id, String command, STATE state, DefaultMutableTreeNode parent) {
 		super(source, id, command);
+		if(state==null){
+			throw new NullPointerException("The state to be setted as transparent cannot be null");
+		}
+		if(parent==null){
+			throw new NullPointerException("The refinement node that contains the transparent state cannot be null");
+		}
 		this.state = state;
 		this.parent=parent;
 	}
@@ -44,8 +66,10 @@ public class SetTransparent<
 			throws Exception {
 		if (model.getModel().isTransparent(state)) {
 			model.getModel().getTransparentStates().remove(state);
-			model.getModelRefinement().removeNodeFromParent(model.getStateRefinementMap().get(state));
+			model.getModelRefinementHierarchy().removeNodeFromParent(model.getStateRefinementMap().get(state));
 		} else {
+			
+			
 			model.getModel().addTransparentState(state);
 			
 			DefaultMutableTreeNode child=new DefaultMutableTreeNode(
@@ -54,11 +78,10 @@ public class SetTransparent<
 					STATE, 
 					TRANSITION, 
 					TRANSITIONFACTORY>(state, model.getModelTransitionFactory()));
-			//parent.add(child);
 			model.getStateRefinementMap().put(state, child);
-			model.getModelRefinement().insertNodeInto(child, 
+			model.getModelRefinementHierarchy().insertNodeInto(child, 
 					parent, 
-					model.getModelRefinement().getChildCount(parent));
+					model.getModelRefinementHierarchy().getChildCount(parent));
 		}
 	}
 }

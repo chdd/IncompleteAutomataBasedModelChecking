@@ -25,7 +25,6 @@ import java.awt.geom.Ellipse2D;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
-import javax.swing.JTree;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -51,7 +50,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	
 	protected ActionListener view;
 	
-	protected  JTree parentNode;
+	protected  RefinementTree parentNode;
 	
 	private TRANSITIONFACTORY transitionFactory;
 	/**
@@ -65,7 +64,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	 * @param a is the {@link BAImpl} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
-	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  JTree parentNode){
+	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  RefinementTree parentNode){
 		super(layout);
 		if(parentNode!=null){
 			this.parentNode=parentNode;

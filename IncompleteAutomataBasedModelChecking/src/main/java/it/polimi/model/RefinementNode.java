@@ -44,7 +44,7 @@ public class RefinementNode<
 		if(s==null){
 			return "Model";
 		}
-		return this.s.getName().toString();
+		return this.s.getId()+":"+this.s.getName().toString();
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

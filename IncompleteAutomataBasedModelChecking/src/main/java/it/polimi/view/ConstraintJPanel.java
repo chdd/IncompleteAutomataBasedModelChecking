@@ -17,19 +17,22 @@ import it.polimi.modelchecker.brzozowski.propositions.states.OrProposition;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
-public class ConstraintJDialog<
+public class ConstraintJPanel<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
 STATEFACTORY extends StateFactory<STATE>,
@@ -38,11 +41,15 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 INTERSECTIONSTATE extends IntersectionState<STATE>, 
 INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
 INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  extends JDialog {
+INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  extends JPanel {
 
-	private JPanel dialogPanel;
+	private JPanel container;
+	private JPanel constraintContainer;
+
 	private JPanel longConstraint;
 	private JPanel shortConstraint;
+	
+	private JLabel constraints;
 	
 	private ViewInterface<
 	CONSTRAINEDELEMENT,
@@ -52,48 +59,98 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 	INTERSECTIONTRANSITION,
 	TRANSITIONFACTORY,
 	INTERSECTIONTRANSITIONFACTORY> view;
-	public ConstraintJDialog(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
-			ViewInterface<
+	
+	public void updateConstraintJPanel(ViewInterface<
 			CONSTRAINEDELEMENT,
 			STATE, 
 			TRANSITION, 
 			INTERSECTIONSTATE, 
 			INTERSECTIONTRANSITION,
 			TRANSITIONFACTORY,
-			INTERSECTIONTRANSITIONFACTORY> view, 
-			Dimension d
-			){
-		super();
-		this.setTitle(Constants.appName+" - constraint visualizer ");
-		
-		
+			INTERSECTIONTRANSITIONFACTORY> view,
+			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults){
+		   
 		this.view=view;
-		this.dialogPanel=new JPanel(new GridLayout(4,1));
-		this.dialogPanel.setBackground(Color.white);
-		this.dialogPanel.add(new JLabel("Simplified constraint"));
+		this.shortConstraint.add(new JLabel("¬"));
+		this.addButtons(verificationResults.getSimplifiedConstraint().getLogicalItem(), this.shortConstraint, true);
+		this.longConstraint.add(new JLabel("¬"));
+		this.addButtons(verificationResults.getConstraint().getLogicalItem(), this.longConstraint, false);
+		this.container.repaint();
 		
-		this.shortConstraint = new JPanel(false);
+	}
+	
+	public ConstraintJPanel(Dimension d){
+		super();
+		this.setSize(new Dimension(d.width-50, d.height));
+		this.setPreferredSize(new Dimension(d.width-50, d.height));
+		this.setMinimumSize(new Dimension(d.width-50, d.height));
+		this.setMaximumSize(new Dimension(d.width-50, d.height));
+		
+		Dimension constraintElementDimension=new Dimension( (int) (d.width*Constants.constraintConstraintElements)-50, 50);
+		Dimension constraintLabelDimension=new Dimension(d.width-((int) (d.width*Constants.constraintConstraintElements))-50, 50);
+		
+		this.container=new JPanel();
+		this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
+		this.constraints=new JLabel("Constraints");
+		JPanel constraintLabelContainer=new JPanel();
+		constraintLabelContainer.setSize(new Dimension(d.width-50, 50));
+		constraintLabelContainer.add(this.constraints);
+		this.container.add(constraintLabelContainer);
+		
+		this.constraintContainer=new JPanel(new GridLayout(2,1));
+		this.constraintContainer.setBackground(Color.white);
+		
+		
+		JPanel shortConstraintLabelPanel=new JPanel();
+		shortConstraintLabelPanel.setSize(constraintLabelDimension);
+		shortConstraintLabelPanel.setPreferredSize(constraintLabelDimension);
+		
+		shortConstraintLabelPanel.add(new JLabel("Simplified constraint"));
+		this.shortConstraint = new JPanel();
 		
 		this.shortConstraint.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
 				  BorderFactory.createLoweredBevelBorder()));
-		this.shortConstraint.add(new JLabel("¬"));
-		this.addButtons(verificationResults.getSimplifiedConstraint().getLogicalItem(), this.shortConstraint, true);
-		this.dialogPanel.add(this.shortConstraint);
+		this.shortConstraint.setBackground(Color.white);
+		
+		this.shortConstraint.setSize(constraintElementDimension);
+		this.shortConstraint.setPreferredSize(constraintElementDimension);
+		this.shortConstraint.setMinimumSize(constraintElementDimension);
+		this.shortConstraint.setMaximumSize(constraintElementDimension);
 		
 		
-		this.dialogPanel.add(new JLabel("Full constraint"));
-		this.longConstraint = new JPanel(false);
+		JSplitPane shortConstraintsPanel=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				shortConstraintLabelPanel,shortConstraint
+				);
+		
+		this.constraintContainer.add(shortConstraintsPanel);
+		
+		
+		JPanel longConstraintLabelPanel=new JPanel();
+		longConstraintLabelPanel.add(new JLabel("Full constraint"));
+
+		longConstraintLabelPanel.setSize(constraintLabelDimension);
+		longConstraintLabelPanel.setPreferredSize(constraintLabelDimension);
+		
+		this.longConstraint = new JPanel();
+
 		this.longConstraint.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
 				  BorderFactory.createLoweredBevelBorder()));
-		this.setPreferredSize(d);
-		this.setSize(d);
-		this.longConstraint.add(new JLabel("¬"));
-		this.addButtons(verificationResults.getConstraint().getLogicalItem(), this.longConstraint, false);
-		this.dialogPanel.add(this.longConstraint);
+		this.longConstraint.setBackground(Color.white);
+		this.longConstraint.setSize(constraintElementDimension);
+		this.longConstraint.setPreferredSize(constraintElementDimension);
+		this.longConstraint.setMinimumSize(constraintElementDimension);
+		this.longConstraint.setMaximumSize(constraintElementDimension);
 		
-		this.getContentPane().add(this.dialogPanel);
-		this.pack();
-		}
+		
+		
+		JSplitPane longConstraintsPanel=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, longConstraintLabelPanel,
+				longConstraint);
+		
+		this.constraintContainer.add(longConstraintsPanel);
+		
+		this.container.add(constraintContainer);
+		this.add(this.container);
+	}
 	
 	public void addButtons(LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> item, JPanel panel, Boolean simplified){
 		if(item instanceof AndProposition){

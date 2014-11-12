@@ -9,24 +9,17 @@ package it.polimi.view.menu;
  *
  */
 
-import it.polimi.controller.actions.automata.states.RenameStateAction;
-import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.states.StateFactory;
 import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.view.menu.actions.ActionTypesInterface;
+import it.polimi.view.automaton.RefinementTree;
 import it.polimi.view.menu.actions.ModelActionFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -49,17 +42,17 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		private STATE state;
 		private ActionListener l;
-		JTree tree;
+		RefinementTree tree;
 		
 		/** Creates a new instance of DeleteVertexMenuItem */
-		public StateDelete(JTree treeP) {
+		public StateDelete(RefinementTree treeP) {
 			super("Delete State");
 			this.tree=treeP;
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					l.actionPerformed
 					(actionTypesInterface.getDeleteStateAction(e.getSource(), e.getID(), e.getActionCommand(), state, (DefaultMutableTreeNode) 
-							tree.getLastSelectedPathComponent()));
+							tree.getTree().getLastSelectedPathComponent()));
 				
 				}
 			});
@@ -84,21 +77,21 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			StateListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		STATE v;
 		ActionListener l;
-		JTree tree;
+		RefinementTree treePanel;
 		
-		public StateTransparent(JTree treeP) {
+		public StateTransparent(RefinementTree treeP) {
 			super("Transparent");
-			this.tree=treeP;
+			this.treePanel=treeP;
 			this.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					if(tree.getLastSelectedPathComponent()==null){
+					if(treePanel.getTree().getLastSelectedPathComponent()==null){
 						l.actionPerformed(actionTypesInterface.setTransparent(e.getSource(), e.getID(),e.getActionCommand(), v,
-								(DefaultMutableTreeNode) tree.getModel().getRoot()));
+								(DefaultMutableTreeNode) treePanel.getTree().getModel().getRoot()));
 					}
 					else{
 						l.actionPerformed(actionTypesInterface.setTransparent(e.getSource(), e.getID(),e.getActionCommand(), v,
-								(DefaultMutableTreeNode) tree.getLastSelectedPathComponent()));
+								(DefaultMutableTreeNode) treePanel.getTree().getLastSelectedPathComponent()));
 								
 					}
 					

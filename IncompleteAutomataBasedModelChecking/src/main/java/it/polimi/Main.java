@@ -20,6 +20,7 @@ public class Main{
 
 	public static void main(String args[]) {
 		
+	    
 		// creates the model of the application starting from the model of the system contained in modelPath and the specification contained in the specificationPath
 		ModelInterface<State,
 			State, StateFactory<State>, 

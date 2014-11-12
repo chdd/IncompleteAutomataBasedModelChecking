@@ -3,7 +3,6 @@ package it.polimi.view;
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
-import it.polimi.controller.actions.ShowConstraint;
 import it.polimi.controller.actions.createnew.NewClaim;
 import it.polimi.controller.actions.createnew.NewModel;
 import it.polimi.controller.actions.file.loading.LoadIntersection;
@@ -36,7 +35,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -62,7 +60,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultTreeModel;
@@ -83,7 +80,8 @@ public class View<
 			INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
 			INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
 			INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> 
-			extends Observable implements ViewInterface<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
+			extends Observable 
+			implements ViewInterface<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
 
 	private static final int verificationIconSize=64;
 	
@@ -91,6 +89,9 @@ public class View<
 	// menuBar
 	// ------------------------------------
 	private JMenuBar menuBar;
+	private JPanel container;
+	
+	public boolean reload=false;
 	
 	// file menu
 	private JMenu fileMenu;
@@ -109,27 +110,9 @@ public class View<
 	private JMenu checkMenu;
 	private JMenuItem runCheckerMenuItem;
 	
-	// ------------------------------------
-	// instrumentBar
-	// ------------------------------------
-	private JToolBar instrumentBar;
+	private ViewInstrumentBar instrumentBar;
 	
-	// file
-	private JButton saveButton;
-	private JButton openButton;
-	private JButton newButton;
 	
-	// from ltl
-	private JButton loadLTLButton;
-	
-	// editing
-	private JButton editingButton;
-	private JButton transformingButton;
-	private JButton flattenButton;
-	private JButton hierarchyButton;
-	
-	// checking
-	private JButton checkButton;
 	
 	// ------------------------------------
 	// tabs
@@ -148,6 +131,7 @@ public class View<
 	 DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> tree;
 	
 	private JPanel containerModelMenu;
+	private JPanel jtreePanel;
 	
 	// claim
 	private JComponent claimTab;
@@ -166,7 +150,6 @@ public class View<
 	private AbstractLayout<STATE, TRANSITION> verificationClaimLayout;
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationIntersectionLayout;
 	private JLabel result;
-	private JButton viewConstraints;
 	
 	private JTabbedPane tabbedPane;
 	private JTextField intersectionTime;
@@ -201,6 +184,18 @@ public class View<
 	
 	private Map<Component,Map<JButton, Boolean>> enabledButtons=new HashMap<Component,Map<JButton, Boolean>>();
 	
+	// constraint visualizer
+	private ConstraintJPanel
+		<CONSTRAINEDELEMENT,
+		STATE, 
+		STATEFACTORY,
+		TRANSITION, 
+		TRANSITIONFACTORY,
+		INTERSECTIONSTATE, 
+		INTERSECTIONSTATEFACTORY,
+		INTERSECTIONTRANSITION,
+		INTERSECTIONTRANSITIONFACTORY> constraintVisualizer;
+		
 	// main frame
 	private JFrame jframe;
 	
@@ -210,8 +205,7 @@ public class View<
 			TRANSITIONFACTORY, INTERSECTIONSTATE, 
 			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
 			INTERSECTIONTRANSITIONFACTORY> model) {
-		
-		
+
 		 this.jframe=new JFrame();
 		 this.jframe.setTitle(Constants.appName);
 		 
@@ -232,58 +226,58 @@ public class View<
 		 this.tabbedPane.addTab("Model",modelTab);
 		 this.tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 		 this.enabledButtons.put(this.modelTab, new HashMap<JButton, Boolean>());
-		 this.enabledButtons.get(this.modelTab).put(this.saveButton, true);
-		 this.enabledButtons.get(this.modelTab).put(this.openButton, true);
-		 this.enabledButtons.get(this.modelTab).put(this.newButton, true);
-		 this.enabledButtons.get(this.modelTab).put(this.editingButton, false);
-		 this.enabledButtons.get(this.modelTab).put(this.transformingButton, true);
-		 this.enabledButtons.get(this.modelTab).put(this.flattenButton, true);
-		 this.enabledButtons.get(this.modelTab).put(this.hierarchyButton, false);
-		 this.enabledButtons.get(this.modelTab).put(this.checkButton, true);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.saveButton, true);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.openButton, true);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.newButton, true);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, false);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, true);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.flattenButton, true);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.hierarchyButton, false);
+		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.checkButton, true);
 				
 		 
 		 this.claimTab = makeTextPanel("Claim");
 		 this.tabbedPane.addTab("Claim", claimTab);
 		 this.tabbedPane.setMnemonicAt(1, KeyEvent.VK_3);
 		 this.enabledButtons.put(this.claimTab, new HashMap<JButton, Boolean>());
-		 this.enabledButtons.get(this.claimTab).put(this.saveButton, true);
-		 this.enabledButtons.get(this.claimTab).put(this.openButton, true);
-		 this.enabledButtons.get(this.claimTab).put(this.newButton, true);
-		 this.enabledButtons.get(this.claimTab).put(this.editingButton, false);
-		 this.enabledButtons.get(this.claimTab).put(this.transformingButton, true);
-		 this.enabledButtons.get(this.claimTab).put(this.flattenButton, false);
-		 this.enabledButtons.get(this.claimTab).put(this.hierarchyButton, false);
-		 this.enabledButtons.get(this.claimTab).put(this.checkButton, true);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.saveButton, true);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.openButton, true);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.newButton, true);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.editingButton, false);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.transformingButton, true);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.flattenButton, false);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.hierarchyButton, false);
+		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.checkButton, true);
 		 
 		 this.intersectionTab= makeTextPanel("Intersection");
 		 this.tabbedPane.addTab("Intersection", intersectionTab);
 		 this.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 this.enabledButtons.put(this.intersectionTab, new HashMap<JButton, Boolean>());
-		 this.enabledButtons.get(this.intersectionTab).put(this.saveButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.openButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.newButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.editingButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.transformingButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.flattenButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.hierarchyButton, false);
-		 this.enabledButtons.get(this.intersectionTab).put(this.checkButton, true);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.saveButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.openButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.newButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.editingButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.transformingButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.flattenButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.hierarchyButton, false);
+		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.checkButton, true);
 		 
 		 this.verificationSnapshotTab = makeTextPanel("Verification");
 		 this.enabledButtons.put(this.verificationSnapshotTab, new HashMap<JButton, Boolean>());
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.saveButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.openButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.newButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.editingButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.transformingButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.flattenButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.hierarchyButton, false);
-		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.checkButton, true);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.saveButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.openButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.newButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.editingButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.transformingButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.flattenButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.hierarchyButton, false);
+		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.checkButton, true);
 		 
 		 this.tabbedPane.addTab("Verification", verificationSnapshotTab);
 		 this.tabbedPane.setMnemonicAt(3, KeyEvent.VK_1);
 		 this.verificationSnapshotTab.setLayout(new BoxLayout(verificationSnapshotTab,BoxLayout.X_AXIS));
 		 
-		 tabbedPane.addChangeListener(new ChangeListener() {
+		 this.tabbedPane.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -293,14 +287,14 @@ public class View<
 		 
 		 this.jframe.add(tabbedPane);
 		 
-		 JPanel container = new JPanel();
+		 this.container = new JPanel();
 		 container.setAutoscrolls(false);
 		 
-		 JScrollPane scrPane = new JScrollPane(container);
+		 JScrollPane scrPane = new JScrollPane(this.container);
 		 jframe.add(scrPane);
 		 
-		 container.setLayout(new BoxLayout(container,BoxLayout.X_AXIS));
-		 container.add(tabbedPane);
+		 this.container.setLayout(new BoxLayout(this.container,BoxLayout.Y_AXIS));
+		 this.container.add(tabbedPane);
 		 
 		 
 		 //******************************************************************************************************************************
@@ -312,7 +306,7 @@ public class View<
 		 this.containerModelMenu.setLayout(new BoxLayout(containerModelMenu, BoxLayout.X_AXIS));
 		 
 		 this.modelTab.add(containerModelMenu);
-		 JPanel jtreePanel=new JPanel();
+		 jtreePanel=new JPanel();
 		 jtreePanel.setLayout(new BoxLayout(jtreePanel, BoxLayout.X_AXIS));
 		 jtreePanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createRaisedBevelBorder(), 
@@ -326,7 +320,7 @@ public class View<
 				 TRANSITION, 
 				 TRANSITIONFACTORY, 
 				 DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>(new Dimension((int) (screenSize.width/JTreeXProportion), screenSize.height), 
-						 model.getModelRefinement(), 
+						 model.getModelRefinementHierarchy(), 
 						 this); 
 		 	jtreePanel.add(tree);
 		 	containerModelMenu.add(jtreePanel);
@@ -339,7 +333,7 @@ public class View<
 				 	TRANSITIONFACTORY, 
 				 	DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>
 		 			(model.getModel(), this, this.modelLayout,
-		 					this.tree.getTree());
+		 					this.tree);
 		 containerModelMenu.add(this.modelTabmodel);
 		 modelTab.add(containerModelMenu);
 		 
@@ -430,10 +424,6 @@ public class View<
 		 this.result.setSize(new Dimension(verificationIconSize, verificationIconSize));
 		 
 		 resultPanel.add(result);
-		 this.viewConstraints=new JButton("Explore Constraints");
-		 this.viewConstraints.addActionListener(this);
-		 this.viewConstraints.setVisible(false);
-		 resultPanel.add(viewConstraints);
 		 resultContainer.add(resultPanel);
 		 
 		 JPanel timePanel=new JPanel(new GridLayout(6,2));
@@ -486,8 +476,28 @@ public class View<
 		 container2.add(verificationIntersectionPanel);
 		 
 		 this.verificationSnapshotTab.add(container2);
+		 
+		 //******************************************************************************************************************************
+		 // constraint visualizer
+		 //******************************************************************************************************************************
+		
 		 this.jframe.setResizable(true);
 		 this.jframe.setVisible(true);
+		
+		 this.constraintVisualizer=new ConstraintJPanel<
+											CONSTRAINEDELEMENT,
+											STATE, 
+											STATEFACTORY,
+											TRANSITION, 
+											TRANSITIONFACTORY,
+											INTERSECTIONSTATE, 
+											INTERSECTIONSTATEFACTORY,
+											INTERSECTIONTRANSITION,
+											INTERSECTIONTRANSITIONFACTORY>(
+													new Dimension(this.modelTab.getWidth(), Toolkit.getDefaultToolkit().getScreenSize().height/Constants.constraintPanelYRation));
+		 this.constraintVisualizer.setVisible(false);
+		 
+		 this.container.add(this.constraintVisualizer);
 		 
 		 this.updateButtons(this.tabbedPane.getSelectedComponent());
 		 
@@ -500,11 +510,15 @@ public class View<
 			this.verificationModelLayout.setInitializer(positions);
 		}
 		this.containerModelMenu.repaint();
-		if(this.flatten){
-			this.tree.changeTree(flatModelRefinement, true);
+		if(!reload && (this.flatten && !this.tree.getTree().getModel().getRoot().equals(flatModelRefinement.getRoot()))){
+			
+			this.tree.changeModel(flatModelRefinement);
 		}
 		else{
-			this.tree.changeTree(hierarchicalModelRefinement,false);
+			if(reload || ((!this.flatten) && (!this.tree.getTree().getModel().getRoot().equals(hierarchicalModelRefinement.getRoot())))){
+				this.tree.changeModel(hierarchicalModelRefinement);
+				reload=false;
+			}
 		}
 		
 		this.modelTabmodel.update(model);
@@ -545,20 +559,19 @@ public class View<
 		if(verificationResults.getResult()==1){
 			this.result.setIcon(Constants.resultYes);
 			this.result.setText("The property is satisfied");
-			this.viewConstraints.setVisible(false);
 			this.result.repaint();
+			this.constraintVisualizer.setVisible(false);
 		}
 		if(verificationResults.getResult()==0){
 			this.result.setIcon(Constants.resultNo);
 			this.result.setText("The property is not satisfied");
-			this.viewConstraints.setVisible(false);
 			this.result.repaint();
+			this.constraintVisualizer.setVisible(false);
 		}
 		if(verificationResults.getResult()==-1){
 			this.result.setIcon(Constants.resultMaybe);
 			this.result.setText("The property is possibly satisfied");
-			this.viewConstraints.setVisible(true);
-			this.viewConstraints.setEnabled(true);
+			this.showConstraints(verificationResults);
 			this.result.repaint();
 		}
 		this.intersectionTime.setText(Double.toString(verificationResults.getIntersectionTime()));
@@ -584,42 +597,44 @@ public class View<
 		
 		
 		// new 
-		if((e.getSource().equals(this.filenew) && this.tabbedPane.getSelectedComponent().equals(this.modelTab))){
+		if(((e.getSource().equals(this.instrumentBar.newButton) || e.getSource().equals(this.filenew)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab))){
+			reload=true;
 			this.notifyObservers(new NewModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
 		
-		if((e.getSource().equals(this.filenew) && this.tabbedPane.getSelectedComponent().equals(this.claimTab))){
+		if((e.getSource().equals(this.instrumentBar.newButton) ||(e.getSource().equals(this.filenew)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab))){
 			this.notifyObservers(new NewClaim<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
 		//---------------------------------------------
 		// open
-		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+		if((e.getSource().equals(this.instrumentBar.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+			reload=true;
 			this.notifyObservers(new LoadModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
-		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+		if((e.getSource().equals(this.instrumentBar.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
 			this.notifyObservers(new LoadSpecification<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
-		if((e.getSource().equals(this.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
+		if((e.getSource().equals(this.instrumentBar.openButton) || e.getSource().equals(this.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
 			this.notifyObservers(new LoadIntersection<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		
 		
 		// --------------------------------------------
 		// saving
-		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave))  && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.filesave))  && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
 			this.notifyObservers(new SaveModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelLayout));
 		}
-		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
 			this.notifyObservers(new SaveSpecification<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimLayout));
 		}
-		if((e.getSource().equals(this.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
+		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
 			this.notifyObservers(new SaveIntersection<CONSTRAINEDELEMENT, STATE, STATEFACTORY,
 					TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, 
 					INTERSECTIONTRANSITION,  AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
 		}
 		
 		// ltlloading
-		if(e.getSource().equals(this.loadLTLButton) || e.getSource().equals(this.loadClaimFromLTLMenuItem)){
+		if(e.getSource().equals(this.instrumentBar.loadLTLButton) || e.getSource().equals(this.loadClaimFromLTLMenuItem)){
 			String ltlFormula=JOptionPane.showInputDialog("Type the LTL formula\n "
 															+ "Syntax:\n"
 															+ "Propositions: true, false, any lowercase string \n"
@@ -631,60 +646,56 @@ public class View<
 		
 		//editing
 		
-		if((e.getSource().equals(this.editingButton) || e.getSource().equals(this.editModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+		if((e.getSource().equals(this.instrumentBar.editingButton) || e.getSource().equals(this.editModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
 			if(!flatten){
-				this.enabledButtons.get(this.modelTab).put(this.editingButton, false);
-				this.enabledButtons.get(this.modelTab).put(this.transformingButton, true);
+				this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, false);
+				this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, true);
 				this.modelTabmodel.setEditingMode();
 			}
 		}
 		
-		if((e.getSource().equals(this.editingButton) || e.getSource().equals(this.editModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
-			this.enabledButtons.get(this.claimTab).put(this.editingButton, false);
-			this.enabledButtons.get(this.claimTab).put(this.transformingButton, true);
+		if((e.getSource().equals(this.instrumentBar.editingButton) || e.getSource().equals(this.editModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+			this.enabledButtons.get(this.claimTab).put(this.instrumentBar.editingButton, false);
+			this.enabledButtons.get(this.claimTab).put(this.instrumentBar.transformingButton, true);
 			this.claimTabClaimPanel.setEditingMode();
 		}
 		
 		
 		// transforming
-		if((e.getSource().equals(this.transformingButton) || e.getSource().equals(this.transformingModeMenu))&& this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
+		if((e.getSource().equals(this.instrumentBar.transformingButton) || e.getSource().equals(this.transformingModeMenu))&& this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
 			this.modelTabmodel.setTranformingMode();
-			this.enabledButtons.get(this.modelTab).put(this.editingButton, true);
-			this.enabledButtons.get(this.modelTab).put(this.transformingButton, false);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, true);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, false);
 		}
-		if((e.getSource().equals(this.transformingButton) || e.getSource().equals(this.transformingModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
+		if((e.getSource().equals(this.instrumentBar.transformingButton) || e.getSource().equals(this.transformingModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
 			this.claimTabClaimPanel.setTranformingMode();
-			this.enabledButtons.get(this.claimTab).put(this.editingButton, true);
-			this.enabledButtons.get(this.claimTab).put(this.transformingButton, false);
+			this.enabledButtons.get(this.claimTab).put(this.instrumentBar.editingButton, true);
+			this.enabledButtons.get(this.claimTab).put(this.instrumentBar.transformingButton, false);
 		}
 		
 		
 		// checking
-		if(e.getSource().equals(this.checkButton) || e.getSource().equals(this.runCheckerMenuItem)){
+		if(e.getSource().equals(this.instrumentBar.checkButton) || e.getSource().equals(this.runCheckerMenuItem)){
 			this.notifyObservers(new CheckAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
 		}
-		// constraint exploring
-		if(e.getSource().equals(this.viewConstraints)){
-			this.notifyObservers(new ShowConstraint<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
-			
-		}
-		if(e.getSource().equals(this.flattenButton)){
+		
+		if(e.getSource().equals(this.instrumentBar.flattenButton)){
+			this.flatten=true;
 			this.notifyObservers(new ShowFlattedModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
-			flatten=true;
-			this.enabledButtons.get(this.modelTab).put(this.transformingButton, false);
-			this.enabledButtons.get(this.modelTab).put(this.editingButton, false);
-			this.enabledButtons.get(this.modelTab).put(this.flattenButton, false);
-			this.enabledButtons.get(this.modelTab).put(this.hierarchyButton, true);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, false);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, false);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.flattenButton, false);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.hierarchyButton, true);
 			
 			this.modelTabmodel.setTranformingMode();
 		}
-		if(e.getSource().equals(this.hierarchyButton)){
+		if(e.getSource().equals(this.instrumentBar.hierarchyButton)){
+			this.flatten=false;
 			this.notifyObservers(new ShowHierarchicalModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
-			flatten=false;
-			this.enabledButtons.get(this.modelTab).put(this.transformingButton, false);
-			this.enabledButtons.get(this.modelTab).put(this.editingButton, true);
-			this.enabledButtons.get(this.modelTab).put(this.flattenButton, true);
-			this.enabledButtons.get(this.modelTab).put(this.hierarchyButton, false);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, false);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, true);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.flattenButton, true);
+			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.hierarchyButton, false);
 			
 			this.modelTabmodel.setTranformingMode();
 		}
@@ -692,8 +703,6 @@ public class View<
 			this.notifyObservers(e);
 		}
 		this.updateButtons(this.tabbedPane.getSelectedComponent());
-		
-		
 	}
 
 	public void displayErrorMessage(String message){
@@ -755,80 +764,8 @@ public class View<
 		menuBar.setVisible(true);
 		
 		
-		//*****************
-		// INSTRUMENT BAR
-		//*****************
+		this.instrumentBar=new ViewInstrumentBar(this, this.jframe);
 		
-		this.instrumentBar=new JToolBar();
-		this.instrumentBar.setBackground(this.jframe.getContentPane().getBackground());
-		
-		// file
-		this.newButton=new JButton(Constants.newIcon);
-		this.newButton.addActionListener(this);
-		this.newButton.setFocusPainted(false);
-		this.newButton.setToolTipText(Constants.newMessage);
-		
-		this.openButton=new JButton(Constants.openIcon);
-		this.openButton.addActionListener(this);
-		this.openButton.setFocusPainted(false);
-		this.openButton.setToolTipText(Constants.openMessage);
-		
-		this.saveButton=new JButton(Constants.saveIcon);
-		this.saveButton.addActionListener(this);
-		this.saveButton.setFocusPainted(false);
-		this.saveButton.setToolTipText(Constants.saveMessage);
-		
-		this.instrumentBar.add(this.newButton);
-		this.instrumentBar.add(this.openButton);
-		this.instrumentBar.add(this.saveButton);
-		
-		this.instrumentBar.addSeparator();
-		
-		// from ltl formula
-		this.loadLTLButton=new JButton(Constants.ltlIcon);
-		this.loadLTLButton.addActionListener(this);
-		this.loadLTLButton.setFocusPainted(false);
-		this.loadLTLButton.setToolTipText(Constants.ltlLoadingMessage);
-		
-		this.instrumentBar.add(this.loadLTLButton);
-		this.instrumentBar.addSeparator();
-		
-		// editing
-		this.editingButton=new JButton(Constants.editingIcon);
-		this.editingButton.addActionListener(this);
-		this.editingButton.setFocusPainted(false);
-		this.editingButton.setToolTipText(Constants.editingMessage);
-		this.editingButton.setEnabled(false);
-		
-		this.transformingButton=new JButton(Constants.trasformingIcon);
-		this.transformingButton.addActionListener(this);
-		this.transformingButton.setFocusPainted(false);
-		this.transformingButton.setToolTipText(Constants.transorfmingMessage);
-		
-		this.instrumentBar.add(this.editingButton);
-		this.instrumentBar.add(this.transformingButton);
-		this.instrumentBar.addSeparator();
-		
-		this.flattenButton=new JButton(Constants.flattenIcon);
-		this.instrumentBar.add(this.flattenButton);
-		this.flattenButton.addActionListener(this);
-		this.flattenButton.setToolTipText(Constants.flatMessage);
-		
-		this.hierarchyButton=new JButton(Constants.hierarchyIcon);
-		this.instrumentBar.add(this.hierarchyButton);
-		this.hierarchyButton.addActionListener(this);
-		this.hierarchyButton.setToolTipText(Constants.hierarchyMessage);
-		
-		this.instrumentBar.addSeparator();
-		
-		
-		//checking
-		this.checkButton=new JButton(Constants.checkIcon);
-		this.checkButton.addActionListener(this);
-		this.checkButton.setFocusPainted(false);
-		this.checkButton.setToolTipText(Constants.checkingMessage);
-		
-		this.instrumentBar.add(this.checkButton);
 		
 		jframe.getContentPane().add(instrumentBar, BorderLayout.NORTH);
 		
@@ -856,24 +793,16 @@ public class View<
 		
 	}
 
-	@Override
-	public void showConstraints(
-			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults) {
+	private void showConstraints(ModelCheckingResults
+									<CONSTRAINEDELEMENT, 
+									STATE, 
+									TRANSITION, 
+									INTERSECTIONSTATE, 
+									INTERSECTIONTRANSITION> verificationResults) {
 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		this.jframe.setSize(new Dimension(screenSize.width, screenSize.height/10*8-this.jframe.getContentPane().getInsets().top-this.jframe.getContentPane().getInsets().bottom));
-		
-		
-		ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
-			INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-			INTERSECTIONTRANSITIONFACTORY> constraintJDialog=new ConstraintJDialog<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,
-				INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-				INTERSECTIONTRANSITIONFACTORY>(verificationResults, this, new Dimension(screenSize.width, screenSize.height/100*17));
-		
+		this.constraintVisualizer.updateConstraintJPanel(this,  verificationResults);
+		this.constraintVisualizer.setVisible(true);
 
-		constraintJDialog.setLocation(new Point(0, screenSize.height/100*90));
-		constraintJDialog.setVisible(true);
 	}
 	
 	
@@ -905,14 +834,14 @@ public class View<
 	
 	private void updateButtons(Component component){
 		
-		 this.saveButton.setEnabled(this.enabledButtons.get(component).get(this.saveButton));
-		 this.openButton.setEnabled(this.enabledButtons.get(component).get(this.openButton));
-		 this.newButton.setEnabled(this.enabledButtons.get(component).get(this.newButton));
-		 this.editingButton.setEnabled(this.enabledButtons.get(component).get(this.editingButton));
-		 this.transformingButton.setEnabled(this.enabledButtons.get(component).get(this.transformingButton));
-		 this.flattenButton.setEnabled(this.enabledButtons.get(component).get(this.flattenButton));
-		 this.hierarchyButton.setEnabled(this.enabledButtons.get(component).get(this.hierarchyButton));
-		 this.checkButton.setEnabled(this.enabledButtons.get(component).get(this.checkButton));
+		this.instrumentBar.saveButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.saveButton));
+		this.instrumentBar.openButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.openButton));
+		this.instrumentBar.newButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.newButton));
+		 this.instrumentBar.editingButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.editingButton));
+		 this.instrumentBar.transformingButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.transformingButton));
+		 this.instrumentBar.flattenButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.flattenButton));
+		 this.instrumentBar.hierarchyButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.hierarchyButton));
+		 this.instrumentBar.checkButton.setEnabled(this.enabledButtons.get(component).get(this.instrumentBar.checkButton));
 				
 	}
 }

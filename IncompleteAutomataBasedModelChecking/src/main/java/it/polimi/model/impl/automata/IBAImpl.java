@@ -308,7 +308,14 @@ public class IBAImpl<
 		}
 		this.removeVertex(transparentState);
 	}
+	@Override
+	public boolean removeVertex(STATE vertex) {
 	
+		if(this.transparentStates.contains(vertex)){
+			this.transparentStates.remove(vertex);
+		}
+		return super.removeVertex(vertex);
+	}
 	
 	/**
 	 * resets the set of transparent states and all the other fields of the (I)BA alphabet, transitions etc.

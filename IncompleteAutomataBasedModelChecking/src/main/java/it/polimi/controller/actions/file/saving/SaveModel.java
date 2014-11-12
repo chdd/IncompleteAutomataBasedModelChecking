@@ -3,11 +3,14 @@ package it.polimi.controller.actions.file.saving;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.Map.Entry;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import it.polimi.io.IBAWriter;
 import it.polimi.model.ModelInterface;
+import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -53,9 +56,24 @@ LAYOUT extends AbstractLayout<STATE, TRANSITION>>
 			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view) throws Exception {
-		String filePath=this.getFile(new FileNameExtensionFilter("Incomplete Buchi Automaton (*.iba)", "iba"));
+		String filePath=this.getDirectory("model.iba");
 		if(filePath!=null){
-			this.ibaToFile.save(model.getModel(), new PrintWriter(new BufferedWriter(new FileWriter(filePath))));
+			for(Entry<STATE, DefaultMutableTreeNode> entry: model.getStateRefinementMap().entrySet()){
+				
+				RefinementNode<CONSTRAINEDELEMENT,
+						STATE, 
+						TRANSITION, 
+						TRANSITIONFACTORY> refinementNode= (RefinementNode<CONSTRAINEDELEMENT,
+								STATE, 
+								TRANSITION, 
+								TRANSITIONFACTORY>)entry.getValue().getUserObject();
+				System.out.println(filePath);
+				this.ibaToFile.save(refinementNode.getAutomaton()
+						, new PrintWriter(new BufferedWriter(new FileWriter(filePath+"/"+refinementNode.getState().getId()+"-"+refinementNode.getState().getName()+".iba"))));
+			}
+		}
+		else{
+			throw new NullPointerException("The directory cannot be null");
 		}
 	}
 

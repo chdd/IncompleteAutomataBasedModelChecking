@@ -1,6 +1,5 @@
 package it.polimi.model;
 
-import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -116,7 +115,7 @@ public interface ModelInterface<
 	
 	public STATEFACTORY getModelStateFactory();
 	
-	public DefaultTreeModel getModelRefinement();
+	public DefaultTreeModel getModelRefinementHierarchy();
 	
 	public void setModelRefinement(DefaultTreeModel modelRefinement);
 	
@@ -130,4 +129,6 @@ public interface ModelInterface<
 	public Map<STATE, DefaultMutableTreeNode> getFlatstateRefinementMap();
 	public void setFlatstateRefinementMap(Map<STATE, DefaultMutableTreeNode> flatstateRefinementMap);	
 	public void cleanFlatstateRefinementMap();
+	
+	public void resetModel(STATE rootState, DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> rootModel);
 }

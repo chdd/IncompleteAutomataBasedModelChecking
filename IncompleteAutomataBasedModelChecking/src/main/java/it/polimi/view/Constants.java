@@ -47,5 +47,7 @@ public class Constants {
 		
 	public static final String appName="CHIA: CHecker for Incompete Automata";
 
+	public static final int constraintPanelYRation=7;
+	public static final double constraintConstraintElements=3/4.0;
 	
 }

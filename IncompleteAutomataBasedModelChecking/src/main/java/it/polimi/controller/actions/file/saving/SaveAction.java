@@ -58,4 +58,20 @@ LAYOUT extends AbstractLayout<?, ?>>
 		}
 		throw new NullPointerException("It is not possible to save a null file");
 	}
+	protected String getDirectory(String fileName){
+		
+		JFileChooser saveFile = new JFileChooser();
+		
+		saveFile.setDialogTitle("Select the folder where the model must be saved");
+		saveFile.setAcceptAllFileFilterUsed(false);
+		saveFile.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		saveFile.setAcceptAllFileFilterUsed(false);
+		saveFile.showSaveDialog(null);
+		saveFile.setSelectedFile(new File(fileName));
+		
+		if(saveFile.getCurrentDirectory()!=null){
+			return saveFile.getCurrentDirectory().getAbsolutePath();
+		}
+		throw new NullPointerException("It is not possible to save a null folder");
+	}
 }

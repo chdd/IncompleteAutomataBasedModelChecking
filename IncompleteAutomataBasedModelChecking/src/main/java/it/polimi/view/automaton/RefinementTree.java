@@ -63,44 +63,50 @@ implements TreeSelectionListener{
 	
 	private JTree tree;
     private ActionListener l;
+    private Dimension d;
 
     public JTree getTree(){
     	return this.tree;
     }
     
+    
+    
     public RefinementTree(Dimension d, DefaultTreeModel treeModel, ActionListener l) {
         super();
+        this.d=d;
+        this.tree = new JTree(treeModel);
+        this.l=l;
+        this.setTreeProperties();
+    }
+    
+    private void setTreeProperties(){
         this.setSize(d);
         this.setPreferredSize(d);
         this.setMaximumSize(d);
         this.setMinimumSize(d);
-        
-        this.tree = new JTree(treeModel);
-        this.tree.setSize(d);
-        this.tree.setPreferredSize(d);
-        this.tree.setMaximumSize(d);
-        this.tree.setMinimumSize(d);
-        this.tree.setEditable(true);
-        this.tree.getSelectionModel().setSelectionMode
-                (TreeSelectionModel.SINGLE_TREE_SELECTION);
-        this.tree.setShowsRootHandles(true);
-        this.add(tree);
-        this.tree.setCellEditor(new NullCellEditor());
-        this.tree.addTreeSelectionListener(this);
-        this.tree.setCellRenderer(new MyRender());
-        this.tree.setLargeModel(true);
-        
-        this.l=l;
+  
+    	 this.tree.setSize(d);
+         this.tree.setPreferredSize(d);
+         this.tree.setMaximumSize(d);
+         this.tree.setMinimumSize(d);
+         this.tree.setEditable(true);
+         this.tree.getSelectionModel().setSelectionMode
+                 (TreeSelectionModel.SINGLE_TREE_SELECTION);
+         this.tree.setShowsRootHandles(true);
+         this.add(tree);
+         this.tree.setCellEditor(new NullCellEditor());
+         this.tree.addTreeSelectionListener(this);
+         this.tree.setCellRenderer(new MyRender());
+         this.tree.setLargeModel(true);
     }
     
-    public void changeTree(DefaultTreeModel treeModel, boolean flat){
-    	this.flat=flat;
-    	 this.tree = new JTree(treeModel);
-    	 this.tree.repaint();
-    	 this.tree.setLargeModel(true);
-         
-    	 this.repaint();
-    }
+
+    public void changeModel(DefaultTreeModel treeModel){
+    	this.remove(this.tree);
+		this.tree=new JTree(treeModel);
+		this.add(this.tree);
+		this.setTreeProperties();
+	}
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
@@ -116,7 +122,6 @@ implements TreeSelectionListener{
 					TRANSITION, 
 					TRANSITIONFACTORY>(e.getSource(), 0, "Refinement", 
 							refnode));
-			this.tree.setSelectionPath(new TreePath(this.tree.getModel().getRoot()));
 		}
 		else{
 			l.actionPerformed(new ViewHierarchyStateRefinementAction
@@ -128,17 +133,6 @@ implements TreeSelectionListener{
 		}
 	}
 	
-	public DefaultMutableTreeNode getCurrentSelectedNode(){
-		TreePath selectionPath = tree.getSelectionPath();  
-		   
-		if ( selectionPath != null )  {  
-			return (DefaultMutableTreeNode) this.tree.getLastSelectedPathComponent();
-		}  
-		else{
-			return (DefaultMutableTreeNode) this.tree.getModel().getRoot(); 
-		}
-		
-	}
 	
 	private class NullCellEditor implements TreeCellEditor{
 

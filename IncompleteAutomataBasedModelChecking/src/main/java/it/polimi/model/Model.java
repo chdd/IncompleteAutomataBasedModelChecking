@@ -55,16 +55,28 @@ public class Model<
 	 */
 	private DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model;
 	
+	private DefaultTreeModel modelRefinement;
+	private DefaultTreeModel modelflattenModel;
+	
+	private Map<STATE, DefaultMutableTreeNode> modelstateRefinementMap;
+	private Map<STATE, DefaultMutableTreeNode> modelflatstateRefinementMap;
+	
+	
+	public void resetModel(STATE rootState, DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> rootModel){
+		this.model=rootModel;
+		DefaultMutableTreeNode rootnode=new DefaultMutableTreeNode(new
+				RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (rootState, rootModel));
+		
+		this.modelRefinement.setRoot(rootnode);
+		this.modelstateRefinementMap.put(rootState, rootnode);
+		this.modelflatstateRefinementMap=new HashMap<STATE, DefaultMutableTreeNode>();
+	}
+	
 	/**
-	 * contains the specification of the system
+	 * contains the specification o the system
 	 */
 	private DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>  specification;
 	
-	private DefaultTreeModel modelRefinement;
-	private DefaultTreeModel flattenModel;
-	
-	private Map<STATE, DefaultMutableTreeNode> stateRefinementMap;
-	private Map<STATE, DefaultMutableTreeNode> flatstateRefinementMap;
 	
 	/**
 	 * contains the intersection between the model and the specification
@@ -130,12 +142,12 @@ public class Model<
 		this.intersection=new IntBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
 		TRANSITIONFACTORY,
 		INTERSECTIONTRANSITIONFACTORY>(this.model, this.specification,intersectionTransitionFactory);
-		this.modelRefinement=new DefaultTreeModel(
-				new DefaultMutableTreeNode(new
-						RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (this.stateFactory.create("Model"), this.model)));
-		this.flattenModel=new DefaultTreeModel(
-				new DefaultMutableTreeNode(new
-						RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (this.stateFactory.create("Model"), this.model)));
+		
+		STATE s=this.stateFactory.create("Model");
+		DefaultMutableTreeNode rootnode=new DefaultMutableTreeNode(new
+				RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (s, this.model));
+		this.modelRefinement=new DefaultTreeModel(rootnode);
+		this.modelstateRefinementMap.put(s, rootnode);
 	}
 	
 	
@@ -267,7 +279,7 @@ public class Model<
 	/**
 	 * @return the modelRefinement
 	 */
-	public DefaultTreeModel getModelRefinement() {
+	public DefaultTreeModel getModelRefinementHierarchy() {
 		return modelRefinement;
 	}
 
@@ -282,46 +294,47 @@ public class Model<
 	 * @return the modelRefinement
 	 */
 	public DefaultTreeModel getflattenModelRefinement() {
-		return this.flattenModel;
+		return this.modelflattenModel;
 	}
 
 	/**
 	 * @param modelRefinement the modelRefinement to set
 	 */
 	public void setflattenModelRefinement(DefaultTreeModel flattenModel) {
-		this.flattenModel = flattenModel;
+		this.modelflattenModel = flattenModel;
 	}
 
+	
 
 	/**
 	 * @return the stateRefinementMap
 	 */
 	public Map<STATE, DefaultMutableTreeNode> getStateRefinementMap() {
-		return stateRefinementMap;
+		return modelstateRefinementMap;
 	}
 
 	/**
 	 * @param stateRefinementMap the stateRefinementMap to set
 	 */
 	public void setStateRefinementMap(Map<STATE, DefaultMutableTreeNode> stateRefinementMap) {
-		this.stateRefinementMap = stateRefinementMap;
+		this.modelstateRefinementMap = stateRefinementMap;
 	}
 
 	/**
 	 * @return the flatstateRefinementMap
 	 */
 	public Map<STATE, DefaultMutableTreeNode> getFlatstateRefinementMap() {
-		return flatstateRefinementMap;
+		return modelflatstateRefinementMap;
 	}
 
 	/**
 	 * @param flatstateRefinementMap the flatstateRefinementMap to set
 	 */
 	public void setFlatstateRefinementMap(Map<STATE, DefaultMutableTreeNode> flatstateRefinementMap) {
-		this.flatstateRefinementMap = flatstateRefinementMap;
+		this.modelflatstateRefinementMap = flatstateRefinementMap;
 	}
 	
 	public void cleanFlatstateRefinementMap(){
-		this.flatstateRefinementMap=new HashMap<STATE, DefaultMutableTreeNode>();
+		this.modelflatstateRefinementMap=new HashMap<STATE, DefaultMutableTreeNode>();
 	}
 }

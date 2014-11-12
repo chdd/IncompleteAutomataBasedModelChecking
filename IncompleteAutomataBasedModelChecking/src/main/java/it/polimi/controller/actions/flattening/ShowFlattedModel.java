@@ -3,7 +3,6 @@ package it.polimi.controller.actions.flattening;
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.RefinementNode;
-import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -15,8 +14,11 @@ import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.ViewInterface;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 public class ShowFlattedModel<
 CONSTRAINEDELEMENT extends State,
@@ -27,7 +29,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 		implements
 		ActionInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
 
-	
+	Map<STATE, DefaultMutableTreeNode> newMap=new HashMap<STATE, DefaultMutableTreeNode>();
 	
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>, INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> void perform(
@@ -36,14 +38,16 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			throws Exception {
 		
 		model.cleanFlatstateRefinementMap();
-		DefaultMutableTreeNode ret=this.getRefinedIBA((DefaultMutableTreeNode) model.getModelRefinement().getRoot(), model);
-		model.setModel(((RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>)ret.getUserObject()).getAutomaton());
-		model.getflattenModelRefinement().setRoot(ret);
+		DefaultMutableTreeNode ret=this.getRefinedIBA((DefaultMutableTreeNode) model.getModelRefinementHierarchy().getRoot());
+		model.setModel(((RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>)ret.getUserObject()).
+				getAutomaton());
+		model.setFlatstateRefinementMap(newMap);
+		model.setflattenModelRefinement(new DefaultTreeModel(ret));
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>, INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
-		DefaultMutableTreeNode getRefinedIBA(DefaultMutableTreeNode currNode, ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model){
+		DefaultMutableTreeNode getRefinedIBA(DefaultMutableTreeNode currNode){
 		
 		DefaultMutableTreeNode retNode=new DefaultMutableTreeNode();
 		DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> retAutomaton=((RefinementNode<CONSTRAINEDELEMENT,
@@ -54,7 +58,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 		Enumeration<DefaultMutableTreeNode> nodes=currNode.children();
 		while(nodes.hasMoreElements()){
 			DefaultMutableTreeNode nextNode=nodes.nextElement();
-			DefaultMutableTreeNode flattenedNode=this.getRefinedIBA(nextNode, model);
+			DefaultMutableTreeNode flattenedNode=this.getRefinedIBA(nextNode);
 			retNode.add(flattenedNode);
 			
 			DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> childAutomaton=((RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>)flattenedNode.getUserObject()).getAutomaton();
@@ -67,11 +71,10 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			}	
 		}
 		
-		
 		retNode.setUserObject(new RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>((
 				(RefinementNode<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>) currNode.getUserObject()
 				).getState(), retAutomaton));
-		model.getFlatstateRefinementMap().put(
+		newMap.put(
 				((RefinementNode<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>) currNode.getUserObject()
 				).getState(), retNode);
 		return retNode;

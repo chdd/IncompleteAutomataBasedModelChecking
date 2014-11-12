@@ -33,7 +33,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view)
 			throws Exception {
 		
-		model.setModel(((RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>)((DefaultMutableTreeNode)model.getModelRefinement().getRoot()).getUserObject()).getAutomaton());
+		model.setModel(((RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>)((DefaultMutableTreeNode)model.getModelRefinementHierarchy().getRoot()).getUserObject()).getAutomaton());
 	}
 	
 
