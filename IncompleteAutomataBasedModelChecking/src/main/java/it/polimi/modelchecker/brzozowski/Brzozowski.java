@@ -11,6 +11,7 @@ import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
+import it.polimi.modelchecker.brzozowski.transformers.AcceptingStatesTransformer;
 import it.polimi.modelchecker.brzozowski.transformers.TransitionMatrixTranformer;
 
 import java.util.ArrayList;
@@ -104,11 +105,7 @@ public class Brzozowski<
 				LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> newconstraint=constr1[0]
 						.concatenate(constr2[0].omega());
 				
-				// the language (is added to the set of predicates that will generate the final constraint)
-				//if(!predicates.contains(newconstraint)){
-					//predicates.add(newconstraint);
-					ret=ret.union(newconstraint);
-				//}
+				ret=ret.union(newconstraint);
 			}
 		}
 		// creates the final constraint to be returned
@@ -120,14 +117,14 @@ public class Brzozowski<
 	 * @param t: is the matrix t which describes the transition relation of the {@link IntBAImpl}
 	 * @param s: is the matrix s which describes the accepting states of the {@link IntBAImpl}
 	 * @return the constraint associated with the {@link IntBAImpl}
-	 * @throws IllegalArgumentException if the matrix t or s is null
+	 * @throws NullPointerException if the matrix t or s is null
 	 */
 	protected  void solveSystem(LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][] t, LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] s) {
 		if(t==null){
-			throw new IllegalArgumentException("The matrix t cannot be null");
+			throw new NullPointerException("The matrix t cannot be null");
 		}
 		if(s==null){
-			throw new IllegalArgumentException("The vector s cannot be null");
+			throw new NullPointerException("The vector s cannot be null");
 		}
 		
 		int m=intersectionAutomaton.getVertexCount();
@@ -142,8 +139,11 @@ public class Brzozowski<
 					t[i][j]=t[i][j].union(t[i][n].concatenate(t[n][j]));
 				}
 			}
+			for(int i=0;i<n;i++){
+				t[i][n]=new EmptyProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>();
+			}
 		}
-}
+	}
 	/**
 	 * returns the matrix associated with the {@link IntBAImpl} a
 	 * @param a is the {@link IntBAImpl} to be converted into a matrix t
@@ -174,31 +174,15 @@ public class Brzozowski<
 	 * if the state accept is not in the set of accepting states of the {@link IntBAImpl}
 	 */
 	protected LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] getConstrainedS(INTERSECTIONSTATE accept){
-		if(accept==null){
-			throw new IllegalArgumentException("The accepting state cannot be null");
-		}
-		if(!intersectionAutomaton.isAccept(accept)){
-			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
-		}
-		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] ret=new LogicalItem[intersectionAutomaton.getVertexCount()];
 		
-		int i=0;
-		// for each state in the stateOrdered vector
-		for(INTERSECTIONSTATE s: this.orderedStates){
-			
-			// if the state is equal to the state accept
-			if(accept.equals(s)){
-				// I add the lambda predicate in the s[i] cell of the vector
-				ret[i]=new LambdaProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>();
-			}
-			else{
-				// I add the empty predicate in the s[i] cell of the vector
-				ret[i]=new EmptyProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>();
-			}
-			i++;
-		}
-		// returns the vector s
-		return ret;
+		return new AcceptingStatesTransformer<
+				CONSTRAINEDELEMENT,
+				STATE, 
+				TRANSITION,
+				TRANSITIONFACTORY,
+				INTERSECTIONSTATE, 
+				INTERSECTIONTRANSITION,
+				INTERSECTIONTRANSITIONFACTORY>(orderedStates, intersectionAutomaton, accept).transform(intersectionAutomaton);
 	}
 	/**
 	 * @return the constraintmatrix

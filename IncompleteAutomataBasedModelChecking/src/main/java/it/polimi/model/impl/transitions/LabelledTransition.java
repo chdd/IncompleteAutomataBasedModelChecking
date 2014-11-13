@@ -83,7 +83,7 @@ public class LabelledTransition<STATE extends State>{
 			if(c instanceof ConstraintProposition){
 				return new AtomicProposition<STATE, LabelledTransition<STATE>>(this, 
 						((ConstraintProposition<STATE>) c).getConstrainedState(), 
-						c.toString());
+						c.toString(), false);
 				
 			}
 		}

@@ -70,12 +70,13 @@ public class AndProposition<S extends State, T extends LabelledTransition<S>> ex
 		}
 		// if a is an EpsilonConstraint the concatenation of the and constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonProposition){
-			if(this.getLastPredicate() instanceof EpsilonProposition){
+			return this;
+			/*if(this.getLastPredicate() instanceof EpsilonProposition){
 				return this;
 			}
 			else{
 				return new AndProposition<S, T>(this, a);
-			}
+			}*/
 		}
 		// -	if a is a Predicate and the last element p of this constraint is a Predicate that has the same state of a, 
 		// 		the regular expression of p is modified and concatenated to the one of the predicate a
@@ -95,7 +96,8 @@ public class AndProposition<S extends State, T extends LabelledTransition<S>> ex
 						l.addAll(this.getPredicates().subList(0, this.getPredicates().size()-1));
 						l.add(new AtomicProposition<S, T>(transitions,
 								lastPredicate.getState(),
-								lastPredicate.getRegularExpression().concat(((AtomicProposition<S, T>)a).getRegularExpression())))
+								lastPredicate.getRegularExpression().concat(((AtomicProposition<S, T>)a).getRegularExpression()),
+								lastPredicate.isFinalStateReacher() || ((AtomicProposition<S, T>)a).isFinalStateReacher()))
 ;						AndProposition<S, T> cret=new AndProposition<S, T>(l);
 						return cret;
 				}
@@ -127,7 +129,9 @@ public class AndProposition<S extends State, T extends LabelledTransition<S>> ex
 				
 				l.add(new AtomicProposition<S, T>(transitions,
 						lastPredicate.getState(), 
-						lastPredicate.getRegularExpression()+initialPredicate.getRegularExpression()));
+						lastPredicate.getRegularExpression()+initialPredicate.getRegularExpression(),
+						lastPredicate.isFinalStateReacher() || initialPredicate.isFinalStateReacher()
+						));
 				l.addAll(c.getPredicates().subList(1, c.getPredicates().size()));
 				AndProposition<S, T> cret=new AndProposition<S, T>(l);
 				return cret;
@@ -149,13 +153,12 @@ public class AndProposition<S extends State, T extends LabelledTransition<S>> ex
 	 * -	the union of an {@link AndProposition} and an {@link AndProposition} is a new {@link OrProposition} that contains the two {@link AndProposition}
 	 * @param a: is the {@link AbstractProposition} to be unified
 	 * @return the {@link AbstractProposition} which is the union of the {@link AndProposition} and the {@link AbstractProposition} a
-	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
+	 * @throws NullPointerException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
 	public LogicalItem<S, T> union(LogicalItem<S, T> a) {
-		
 		if(a==null){
-			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");
+			throw new NullPointerException("The constraint to be concatenated cannot be null");
 		}
 		
 		// the union of an and constraint and an empty constraint returns the or constraint

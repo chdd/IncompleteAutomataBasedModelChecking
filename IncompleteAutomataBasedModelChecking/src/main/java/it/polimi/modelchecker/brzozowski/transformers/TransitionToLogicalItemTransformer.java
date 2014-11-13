@@ -4,7 +4,6 @@ import it.polimi.model.impl.labeling.ConstraintProposition;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
@@ -66,7 +65,7 @@ public class TransitionToLogicalItemTransformer
 				if(clause instanceof ConstraintProposition){
 					item=item.union(new AtomicProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t, 
 							(CONSTRAINEDELEMENT)((ConstraintProposition) clause).getConstrainedState(), 
-							((ConstraintProposition) clause).getLabel()));
+							((ConstraintProposition) clause).getLabel(), false));
 					
 				}
 				else{
@@ -75,7 +74,7 @@ public class TransitionToLogicalItemTransformer
 						LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> proposition=
 								new AtomicProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t, 
 										(CONSTRAINEDELEMENT)source.getS1(), 
-										"λ");
+										"λ", true);
 						//item=item.union(proposition.concatenate(new EpsilonProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(t)));
 						item=item.union(proposition);
 					}

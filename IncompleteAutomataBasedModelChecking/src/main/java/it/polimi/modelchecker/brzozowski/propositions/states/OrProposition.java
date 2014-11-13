@@ -61,7 +61,8 @@ public class OrProposition<S extends State, T extends LabelledTransition<S>> ext
 		}
 		// if a is an EpsilonConstraint concatenation of the or constraint and EpsilonConstraint is returned
 		if(a instanceof EpsilonProposition){
-			return new AndProposition<S, T>(this, a);
+			return this;
+	//		return new AndProposition<S, T>(this, a);
 		}
 		// if a is a Predicate the concatenation of the or constraint and Predicate is returned
 		if(a instanceof AtomicProposition){

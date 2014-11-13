@@ -17,12 +17,12 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	 * the concatenation of an {@link EmptyProposition} with another {@link AbstractProposition} is an {@link EmptyProposition}
 	 * @param a: is the {@link AbstractProposition} to be concatenated with this
 	 * @return the concatenation of this {@link EmptyProposition} with the {@link AbstractProposition}
-	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} a is null
+	 * @throws NullPointerException is generated when the {@link AbstractProposition} a is null
 	 */
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> concatenate(LogicalItem<CONSTRAINTELEMENT, TRANSITION> a) {
 		if(a==null){
-			throw new IllegalArgumentException("cannot concatenate an empty contraint with a null element");
+			throw new NullPointerException("cannot concatenate an empty contraint with a null element");
 		}
 		return this;
 	}
@@ -33,8 +33,7 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	 */
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> star() {
-		return new EpsilonProposition<CONSTRAINTELEMENT, TRANSITION>(new HashSet<TRANSITION>());
-		//return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
+		return new LambdaProposition<CONSTRAINTELEMENT, TRANSITION>();
 	}
 	
 	/**
@@ -43,19 +42,18 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 	 */
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> omega() {
-		return new EpsilonProposition<CONSTRAINTELEMENT, TRANSITION>(new HashSet<TRANSITION>());
-		//return new EmptyProposition<CONSTRAINTELEMENT, TRANSITION>();
+		return new LambdaProposition<CONSTRAINTELEMENT, TRANSITION>();
 	}
 
 	/**
 	 * The union operator of an {@link EmptyProposition} and another {@link AbstractProposition} a returns the other {@link AbstractProposition}
 	 * @return the {@link AbstractProposition} a
-	 * @throws IllegalArgumentException the {@link AbstractProposition} a cannot be null
+	 * @throws NullPointerException the {@link AbstractProposition} a cannot be null
 	 */
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> union(LogicalItem<CONSTRAINTELEMENT, TRANSITION> a) {
 		if(a==null){
-			throw new IllegalArgumentException("cannot make the union of an empty contraint with a null element");
+			throw new NullPointerException("cannot make the union of an empty contraint with a null element");
 		}
 		return a;
 	}

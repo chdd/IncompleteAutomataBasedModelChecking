@@ -57,17 +57,20 @@ public class EpsilonProposition<STATE extends State, TRANSITION extends Labelled
 		}
 		// the concatenation of an epsilon predicate and a predicate is a new and predicate that contains the epsilon predicate and the predicate
 		if(a instanceof AtomicProposition){
-			return new AndProposition<STATE, TRANSITION>(this, a);
+			return a;
+			//return new AndProposition<STATE, TRANSITION>(this, a);
 		}
 		// the concatenation of an epsilon predicate and an and predicate is a new and predicate that contains the epsilon predicate
 		// and the original and predicate
 		if(a instanceof AndProposition){
-			return new AndProposition<STATE, TRANSITION>(this, a);
+			return a;
+			//return new AndProposition<STATE, TRANSITION>(this, a);
 		}
 		// the concatenation of an epsilon predicate and an or predicate is a new and predicate that contains the epsilon predicate
 		// and the original or predicate
 		if(a instanceof OrProposition){
-			return new AndProposition<STATE, TRANSITION>(this, a);
+			return a;
+			//return new AndProposition<STATE, TRANSITION>(this, a);
 		}
 		// is generated if the type of the predicate is not supported by the predicate computation
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the predefined types");

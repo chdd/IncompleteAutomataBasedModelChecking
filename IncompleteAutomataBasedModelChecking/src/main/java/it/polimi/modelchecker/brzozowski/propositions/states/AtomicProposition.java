@@ -14,6 +14,12 @@ import java.util.Set;
  */
 public class AtomicProposition<STATE extends State, TRANSITION extends LabelledTransition<STATE>> extends AbstractProposition<STATE, TRANSITION>{
 
+	private boolean finalStateReached;
+	
+	
+	public boolean isFinalStateReacher(){
+		return this.finalStateReached;
+	}
 	
 	/**
 	 * contains the state of the predicate
@@ -30,7 +36,7 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 	 * @param regularExpression is the regular expression that the state must satisfy
 	 * @throws IllegalArgumentException if the state or the regular expression of the predicate are null
 	 */
-	public AtomicProposition(TRANSITION transition, STATE state, String regularExpression){
+	public AtomicProposition(TRANSITION transition, STATE state, String regularExpression, boolean finalStateReached){
 		super(transition);
 		if(state==null){
 			throw new IllegalArgumentException("It is not possible to create a predicate with a null state");
@@ -40,9 +46,10 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 		}
 		this.state=state;
 		this.regularExpression=regularExpression;
+		this.finalStateReached=finalStateReached;
 	}
 	
-	public AtomicProposition(Set<TRANSITION> transitions, STATE state, String regularExpression){
+	public AtomicProposition(Set<TRANSITION> transitions, STATE state, String regularExpression, boolean finalStateReached){
 		super(transitions);
 		if(state==null){
 			throw new IllegalArgumentException("It is not possible to create a predicate with a null state");
@@ -52,6 +59,7 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 		}
 		this.state=state;
 		this.regularExpression=regularExpression;
+		this.finalStateReached=finalStateReached;
 	}
 	
 	/**
@@ -120,7 +128,8 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 				Set<TRANSITION> newtransitions=new HashSet<TRANSITION>();
 				newtransitions.addAll(a1.getTransitions());
 				newtransitions.addAll(this.getTransitions());
-				return new AtomicProposition<STATE, TRANSITION>(newtransitions, this.state, this.regularExpression+a1.regularExpression);
+				return new AtomicProposition<STATE, TRANSITION>(newtransitions, this.state, this.regularExpression+a1.regularExpression,
+						this.isFinalStateReacher() || a1.isFinalStateReacher());
 			}
 			// the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
 			else{
@@ -144,7 +153,9 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 						newtransition.addAll(this.getTransitions());
 						newtransition.addAll(((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).getTransitions());
 						
-						l.add(new AtomicProposition<STATE, TRANSITION>(newtransition, this.state, this.regularExpression.concat(((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).regularExpression)));
+						l.add(new AtomicProposition<STATE, TRANSITION>
+								(newtransition, this.state, this.regularExpression.concat(((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).regularExpression),
+										this.isFinalStateReacher() || ((AtomicProposition<STATE, TRANSITION>)andPredicate.getFistPredicate()).isFinalStateReacher()));
 						l.addAll(andPredicate.getPredicates().subList(1, andPredicate.getPredicates().size()));
 						AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(l);;
 						return cret;
@@ -167,8 +178,9 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 		 * 		and the second one is the EpsilonConstraint
 		 */
 		if(a instanceof EpsilonProposition){
-			AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(this, a);
-			return cret;
+			return this;
+			//AndProposition<STATE, TRANSITION> cret=new AndProposition<STATE, TRANSITION>(this, a);
+			//return cret;
 		}
 
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the constraint is not in the set of the predefined types");
@@ -214,7 +226,8 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 				Set<TRANSITION> transitions=new HashSet<TRANSITION>();
 				transitions.addAll(this.getTransitions());
 				transitions.addAll(a1.getTransitions());
-				return new AtomicProposition<STATE, TRANSITION>(transitions, this.getState(), "(("+this.regularExpression+")|("+a1.regularExpression+"))");
+				return new AtomicProposition<STATE, TRANSITION>(transitions, this.getState(), "(("+this.regularExpression+")|("+a1.regularExpression+"))",
+						this.isFinalStateReacher() || a1.isFinalStateReacher());
 			}
 			// the union of two predicates <s1, reg1>, <s2, reg2> with a different state is a new or constraint that contains the two predicates 
 			else{
@@ -231,7 +244,7 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 		}
 		// the union of a predicate and epsilon is a new or constraint that contains the predicate
 		if(a instanceof EpsilonProposition){
-			return new OrProposition<>(this,a);
+			return new OrProposition<STATE, TRANSITION>(this,a);
 		}
 		throw new IllegalArgumentException("The type:"+a.getClass()+" of the predicate is not in the set of the supported types");
 	}
@@ -242,7 +255,13 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 	 */
 	@Override
 	public AbstractProposition<STATE, TRANSITION> star() {
-		return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(), this.state, "("+this.regularExpression+")*");
+		if(!finalStateReached){
+			return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(), this.state, "("+this.regularExpression+")*",
+					this.isFinalStateReacher());
+		}
+		else{
+			return this;
+		}
 	}
 	
 	/**
@@ -251,10 +270,12 @@ public class AtomicProposition<STATE extends State, TRANSITION extends LabelledT
 	 */
 	@Override
 	public AbstractProposition<STATE, TRANSITION> omega() {
-		if(this.getRegularExpression().endsWith("*")){
-			return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(),this.getState(), "("+this.getRegularExpression().substring(1,this.getRegularExpression().lastIndexOf(")*"))+")ω");
+		if(!finalStateReached){
+			return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(),this.getState(), "("+this.getRegularExpression()+")ω", this.isFinalStateReacher());
 		}
-		return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(),this.getState(), "("+this.getRegularExpression()+")ω");
+		else{
+			return this;
+		}
 	}
 	
 	/**

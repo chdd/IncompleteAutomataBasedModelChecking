@@ -12,18 +12,16 @@ public class LambdaProposition<S extends State, T extends LabelledTransition<S>>
 	
 	private final String ret="λ";
 	
-	
-	
 	/**
 	 * the concatenation of a {@link LambdaProposition} predicate with another {@link AbstractProposition} is equal to the other {@link AbstractProposition}
 	 * @param a: is the {@link AbstractProposition} to be concatenated
 	 * @return the {@link AbstractProposition} a since the {@link LambdaProposition} has no effect
-	 * @throws IllegalArgumentException is generated when the {@link AbstractProposition} to be concatenated is null
+	 * @throws NullPointerException is generated when the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
 	public LogicalItem<S, T> concatenate(LogicalItem<S, T> a) {
 		if(a==null){
-			throw new IllegalArgumentException("The predicate to be concatenated cannot be null");
+			throw new NullPointerException("The predicate to be concatenated cannot be null");
 		}
 		return a;
 	}
@@ -33,23 +31,14 @@ public class LambdaProposition<S extends State, T extends LabelledTransition<S>>
 	 * is equal to the {@link LambdaProposition} if a is an {@link EmptyProposition} or a {@link LambdaProposition}
 	 * while is equal to a new {@link OrProposition} that contains the {@link LambdaProposition} and the {@link AbstractProposition} a in the other cases
 	 * @param the {@link AbstractProposition} a to be concatenated with the {@link LambdaProposition}
-	 * @throws IllegalArgumentException is generated if the {@link AbstractProposition} to be concatenated is null
+	 * @throws NullPointerException is generated if the {@link AbstractProposition} to be concatenated is null
 	 */
 	@Override
 	public LogicalItem<S, T> union(LogicalItem<S, T> a) {
 		if(a==null){
-			throw new IllegalArgumentException("the constraint a cannot be null");
+			throw new NullPointerException("the constraint a cannot be null");
 		}
-		if(a instanceof EmptyProposition){
-			return this;
-		}
-		else{
-			if(a instanceof LambdaProposition)
-				return this;
-			else{
-				return new OrProposition<S, T>(this, a);
-			}
-		}
+		return this;
 	}
 	
 	/**
