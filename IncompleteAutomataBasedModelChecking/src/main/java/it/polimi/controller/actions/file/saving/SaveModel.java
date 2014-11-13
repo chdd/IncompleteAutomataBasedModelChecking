@@ -68,7 +68,6 @@ LAYOUT extends AbstractLayout<STATE, TRANSITION>>
 								STATE, 
 								TRANSITION, 
 								TRANSITIONFACTORY>)entry.getValue().getUserObject();
-				System.out.println(filePath);
 				this.ibaToFile.save(refinementNode.getAutomaton()
 						, new PrintWriter(new BufferedWriter(new FileWriter(filePath+"/"+refinementNode.getState().getId()+"-"+refinementNode.getState().getName()+".iba"))));
 			}

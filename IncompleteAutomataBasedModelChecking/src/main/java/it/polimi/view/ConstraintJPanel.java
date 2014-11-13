@@ -49,6 +49,13 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 	
 	private JLabel constraints;
 	
+	private Dimension d;
+	
+	private JSplitPane shortConstraintsPanel;
+	private JSplitPane longConstraintsPanel;
+	
+	private Dimension constraintElementDimension;
+	
 	private ViewInterface<
 	CONSTRAINEDELEMENT,
 	STATE, 
@@ -67,8 +74,18 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 			TRANSITIONFACTORY,
 			INTERSECTIONTRANSITIONFACTORY> view,
 			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults){
-		   
+		
+		
 		this.view=view;
+		this.shortConstraintsPanel.remove(this.shortConstraint);
+		this.longConstraintsPanel.remove(this.longConstraint);
+		
+		this.createShortConstraintPanel();
+		this.createLongConstraintPanel();
+		this.shortConstraintsPanel.add(this.shortConstraint);
+		this.longConstraintsPanel.add(this.longConstraint);
+		
+		
 		this.shortConstraint.add(new JLabel("¬"));
 		this.addButtons(verificationResults.getSimplifiedConstraint().getLogicalItem(), this.shortConstraint, true);
 		this.longConstraint.add(new JLabel("¬"));
@@ -79,12 +96,18 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 	
 	public ConstraintJPanel(Dimension d){
 		super();
+		
 		this.setSize(new Dimension(d.width-50, d.height));
 		this.setPreferredSize(new Dimension(d.width-50, d.height));
 		this.setMinimumSize(new Dimension(d.width-50, d.height));
 		this.setMaximumSize(new Dimension(d.width-50, d.height));
 		
-		Dimension constraintElementDimension=new Dimension( (int) (d.width*Constants.constraintConstraintElements)-50, 50);
+		this.d=d;
+		this.populateConstraintPanel();
+	}
+	
+	private void populateConstraintPanel(){
+		this.constraintElementDimension=new Dimension( (int) (d.width*Constants.constraintConstraintElements)-50, 50);
 		Dimension constraintLabelDimension=new Dimension(d.width-((int) (d.width*Constants.constraintConstraintElements))-50, 50);
 		
 		this.container=new JPanel();
@@ -104,19 +127,10 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 		shortConstraintLabelPanel.setPreferredSize(constraintLabelDimension);
 		
 		shortConstraintLabelPanel.add(new JLabel("Simplified constraint"));
-		this.shortConstraint = new JPanel();
-		
-		this.shortConstraint.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
-				  BorderFactory.createLoweredBevelBorder()));
-		this.shortConstraint.setBackground(Color.white);
-		
-		this.shortConstraint.setSize(constraintElementDimension);
-		this.shortConstraint.setPreferredSize(constraintElementDimension);
-		this.shortConstraint.setMinimumSize(constraintElementDimension);
-		this.shortConstraint.setMaximumSize(constraintElementDimension);
+		this.createShortConstraintPanel();
 		
 		
-		JSplitPane shortConstraintsPanel=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+		this.shortConstraintsPanel=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				shortConstraintLabelPanel,shortConstraint
 				);
 		
@@ -129,6 +143,33 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 		longConstraintLabelPanel.setSize(constraintLabelDimension);
 		longConstraintLabelPanel.setPreferredSize(constraintLabelDimension);
 		
+		this.createLongConstraintPanel();
+		
+		
+		
+		longConstraintsPanel=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, longConstraintLabelPanel,
+				longConstraint);
+		
+		this.constraintContainer.add(longConstraintsPanel);
+		
+		this.container.add(constraintContainer);
+		this.add(this.container);
+	}
+	
+	private void createShortConstraintPanel(){
+		this.shortConstraint = new JPanel();
+		
+		this.shortConstraint.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
+				  BorderFactory.createLoweredBevelBorder()));
+		this.shortConstraint.setBackground(Color.white);
+		
+		this.shortConstraint.setSize(this.constraintElementDimension);
+		this.shortConstraint.setPreferredSize(this.constraintElementDimension);
+		this.shortConstraint.setMinimumSize(this.constraintElementDimension);
+		this.shortConstraint.setMaximumSize(this.constraintElementDimension);
+	}
+	
+	private void createLongConstraintPanel(){
 		this.longConstraint = new JPanel();
 
 		this.longConstraint.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
@@ -138,16 +179,6 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 		this.longConstraint.setPreferredSize(constraintElementDimension);
 		this.longConstraint.setMinimumSize(constraintElementDimension);
 		this.longConstraint.setMaximumSize(constraintElementDimension);
-		
-		
-		
-		JSplitPane longConstraintsPanel=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, longConstraintLabelPanel,
-				longConstraint);
-		
-		this.constraintContainer.add(longConstraintsPanel);
-		
-		this.container.add(constraintContainer);
-		this.add(this.container);
 	}
 	
 	public void addButtons(LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> item, JPanel panel, Boolean simplified){

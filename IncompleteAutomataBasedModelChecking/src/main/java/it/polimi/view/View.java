@@ -49,7 +49,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -142,13 +141,21 @@ public class View<
 		 // creating the instrument bar
 		 this.instrumentBar=new ViewInstrumentBar(this, this.jframe);
 		 this.jframe.getContentPane().add(this.instrumentBar, BorderLayout.NORTH);
-
 		 
 		 this.tabbedPane = new JTabbedPane();
 		 this.tabbedPane.setSize(this.jframe.getContentPane().getSize());
 		 this.tabbedPane.setPreferredSize(this.jframe.getContentPane().getSize());
 		 
-		 modelTab=new ModelTab<>(model, this, screenSize);
+		 // creates the container panel
+		 this.container = new JPanel();
+		 this.container.setAutoscrolls(false);
+		 this.container.setLayout(new BoxLayout(this.container,BoxLayout.Y_AXIS));
+		 
+		 
+		 //******************************************************************************************************************************
+		 // model tab
+		 //******************************************************************************************************************************
+		 this.modelTab=new ModelTab<>(model, this, screenSize);
 		 this.tabbedPane.addTab("Model",modelTab);
 		 this.tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 		 this.enabledButtons.put(this.modelTab, new HashMap<JButton, Boolean>());
@@ -161,6 +168,9 @@ public class View<
 		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.hierarchyButton, false);
 		 this.enabledButtons.get(this.modelTab).put(this.instrumentBar.checkButton, true);
 				
+		 //******************************************************************************************************************************
+		 // claim tab
+		 //******************************************************************************************************************************
 		 
 		 this.claimTab = new ClaimTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
 		 
@@ -176,6 +186,9 @@ public class View<
 		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.hierarchyButton, false);
 		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.checkButton, true);
 		 
+		 //******************************************************************************************************************************
+		 // intersection tab
+		 //******************************************************************************************************************************
 		 
 		 this.intersectionTab=new IntersectionTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
 		 this.tabbedPane.addTab("Intersection", intersectionTab);
@@ -190,6 +203,9 @@ public class View<
 		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.hierarchyButton, false);
 		 this.enabledButtons.get(this.intersectionTab).put(this.instrumentBar.checkButton, true);
 		 
+		 //******************************************************************************************************************************
+		 // verification snapshot
+		 //******************************************************************************************************************************
 		 this.verificationSnapshotTab = new VerificationTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
 		 this.enabledButtons.put(this.verificationSnapshotTab, new HashMap<JButton, Boolean>());
 		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.saveButton, false);
@@ -213,57 +229,33 @@ public class View<
 			}
 		 });;
 		 
-		 this.jframe.add(tabbedPane);
-		 
-		 this.container = new JPanel();
-		 container.setAutoscrolls(false);
-		 
-		 JScrollPane scrPane = new JScrollPane(this.container);
-		 jframe.add(scrPane);
-		 
-		 this.container.setLayout(new BoxLayout(this.container,BoxLayout.Y_AXIS));
-		 this.container.add(tabbedPane);
-		 
-		 
-		 
-		 
-		 
-		 
-		 //******************************************************************************************************************************
-		 // intersection tab
-		 //******************************************************************************************************************************
-		
-		 
-		 
-		 //******************************************************************************************************************************
-		 // verification snapshot
-		 //******************************************************************************************************************************
-		 
-		 
-		 
 		 //******************************************************************************************************************************
 		 // constraint visualizer
 		 //******************************************************************************************************************************
 		
+		 this.constraintVisualizer=new ConstraintJPanel<
+					CONSTRAINEDELEMENT,
+					STATE, 
+					STATEFACTORY,
+					TRANSITION, 
+					TRANSITIONFACTORY,
+					INTERSECTIONSTATE, 
+					INTERSECTIONSTATEFACTORY,
+					INTERSECTIONTRANSITION,
+					INTERSECTIONTRANSITIONFACTORY>(
+							new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height/Constants.constraintPanelYRation));
+		 this.constraintVisualizer.setVisible(false);
+
+		 
+		 // adding the tabbed panel to the container
+		 this.container.add(tabbedPane);
+		 this.container.add(this.constraintVisualizer);
+		 this.updateButtons(this.tabbedPane.getSelectedComponent());
+		 
+		 this.jframe.add(this.container);
 		 this.jframe.setResizable(true);
 		 this.jframe.setVisible(true);
-		
-		 this.constraintVisualizer=new ConstraintJPanel<
-											CONSTRAINEDELEMENT,
-											STATE, 
-											STATEFACTORY,
-											TRANSITION, 
-											TRANSITIONFACTORY,
-											INTERSECTIONSTATE, 
-											INTERSECTIONSTATEFACTORY,
-											INTERSECTIONTRANSITION,
-											INTERSECTIONTRANSITIONFACTORY>(
-													new Dimension(this.modelTab.getWidth(), Toolkit.getDefaultToolkit().getScreenSize().height/Constants.constraintPanelYRation));
-		 this.constraintVisualizer.setVisible(false);
 		 
-		 this.container.add(this.constraintVisualizer);
-		 
-		 this.updateButtons(this.tabbedPane.getSelectedComponent());
 		 
 	}
 	

@@ -153,7 +153,6 @@ public class AndProposition<S extends State, T extends LabelledTransition<S>> ex
 	 */
 	@Override
 	public LogicalItem<S, T> union(LogicalItem<S, T> a) {
-		//System.out.println("and union");
 		
 		if(a==null){
 			throw new IllegalArgumentException("The constraint to be concatenated cannot be null");

@@ -99,7 +99,6 @@ public class ModelChecker
 		this.verificationResults.setNumTransparentStatesModel(this.model.getTransparentStates().size());
 		
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
-		System.out.println(this.specification.toString());
 		long startIntersectionTime = System.nanoTime();   
 		this.ris=new IntBAImpl<CONSTRAINEDELEMENT,STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>(this.model, this.specification, (INTERSECTIONTRANSITIONFACTORY) new ConstrainedTransitionFactoryImpl());
 		long stopTime = System.nanoTime(); 

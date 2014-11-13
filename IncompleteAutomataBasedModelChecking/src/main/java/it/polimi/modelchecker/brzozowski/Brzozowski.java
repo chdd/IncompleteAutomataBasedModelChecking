@@ -7,11 +7,11 @@ import it.polimi.model.impl.transitions.LabelledTransition;
 import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.DnfToLogicalItemTransformer;
 import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
+import it.polimi.modelchecker.brzozowski.transformers.TransitionMatrixTranformer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -153,28 +153,15 @@ public class Brzozowski<
 	 */
 	protected LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]  getConstraintT(){
 		
-		DnfToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> dnfToLogic=new 
-				DnfToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(this.intersectionAutomaton);
-		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]  ret=new LogicalItem[intersectionAutomaton.getVertexCount()][intersectionAutomaton.getVertexCount()];
-		
-		for(int i=0; i< this.orderedStates.size(); i++){
-			INTERSECTIONSTATE s1=this.orderedStates.get(i);
-			for(int j=0; j<this.orderedStates.size(); j++){
-				INTERSECTIONSTATE s2=this.orderedStates.get(j);
-				boolean setted=false;
-				for(INTERSECTIONTRANSITION t: intersectionAutomaton.getOutEdges(s1)){
-					if(intersectionAutomaton.getDest(t).equals(s2)){
-						
-						ret[i][j]=dnfToLogic.transform(t);
-						setted=true;
-					}
-				}
-				if(!setted){
-					ret[i][j]=new EmptyProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>();
-				}
-			}
-		}
-		return ret;
+		return new TransitionMatrixTranformer<
+				CONSTRAINEDELEMENT,
+				STATE, 
+				TRANSITION,
+				TRANSITIONFACTORY,
+				INTERSECTIONSTATE, 
+				INTERSECTIONTRANSITION,
+				INTERSECTIONTRANSITIONFACTORY> 
+				(this.orderedStates).transform(this.intersectionAutomaton);
 	}
 	
 	/**
