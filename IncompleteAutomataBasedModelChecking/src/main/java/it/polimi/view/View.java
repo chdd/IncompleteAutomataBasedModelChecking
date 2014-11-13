@@ -472,7 +472,7 @@ public class View<
 
 	@Override
 	public void doNothightLightConstraint() {
-		this.modelTab.setEditingMode();
+		this.modelTab.doNothightLightConstraint();
 		this.verificationSnapshotTab.doNothightLightConstraint();
 		this.intersectionTab.doNothightLightConstraint();
 		this.jframe.repaint();

@@ -22,7 +22,7 @@ public class Constants {
 	public static final ImageIcon resultInitial=new ImageIcon(Constants.class.getResource(resourcePath+"img/QuestionMark.png"));
 	public static final ImageIcon flattenIcon = new ImageIcon(Constants.class.getResource(resourcePath+"img/Packaging.png"));
 	public static final ImageIcon hierarchyIcon = new ImageIcon(Constants.class.getResource(resourcePath+"img/Hierarchy.png"));
-	public static final ImageIcon treeIcon= new ImageIcon(Constants.class.getResource(resourcePath+"/img/Node.png"));
+	public static final ImageIcon treeIcon= new ImageIcon(Constants.class.getResource(resourcePath+"img/Node.png"));
 	
 	public static final int verificationResultIconSize=64;
 	

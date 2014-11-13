@@ -174,4 +174,7 @@ public class ModelTab<
 	public void highLightState(STATE s){
 		this.modelTabmodel.highLightState(s);
 	}
+	public void doNothightLightConstraint() {
+		this.modelTabmodel.defaultTransformers();
+	}
 }
