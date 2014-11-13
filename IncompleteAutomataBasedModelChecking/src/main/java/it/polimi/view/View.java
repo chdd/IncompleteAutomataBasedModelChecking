@@ -25,8 +25,8 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckingResults;
-import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 import it.polimi.view.tabs.ClaimTab;
+import it.polimi.view.tabs.IntersectionTab;
 import it.polimi.view.tabs.ModelTab;
 import it.polimi.view.tabs.VerificationTab;
 
@@ -34,8 +34,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,9 +46,7 @@ import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -62,7 +58,6 @@ import javax.swing.tree.DefaultTreeModel;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
 
 public class View<
 			CONSTRAINEDELEMENT extends State,
@@ -77,8 +72,6 @@ public class View<
 			extends Observable 
 			implements ViewInterface<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
 
-	
-	
 	private JPanel container;
 	
 	public boolean reload=false;
@@ -102,19 +95,8 @@ public class View<
 	
 	
 	// Intersection
-	private JComponent intersectionTab;
-	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionLayout;
-	private IntersectionAutomatonJPanel
-	<CONSTRAINEDELEMENT, STATE, 
-	STATEFACTORY,
-	TRANSITION, 
-	TRANSITIONFACTORY,
-	INTERSECTIONSTATE, 
-	INTERSECTIONSTATEFACTORY,
-	INTERSECTIONTRANSITION,
-	INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> intersectionPanel;
-
-	private TextArea brzozowskiSystemArea;
+	private IntersectionTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersectionTab;
+	
 
 	// verification snapshot Tab
 	private VerificationTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> verificationSnapshotTab;
@@ -194,7 +176,8 @@ public class View<
 		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.hierarchyButton, false);
 		 this.enabledButtons.get(this.claimTab).put(this.instrumentBar.checkButton, true);
 		 
-		 this.intersectionTab= makeTextPanel();
+		 
+		 this.intersectionTab=new IntersectionTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
 		 this.tabbedPane.addTab("Intersection", intersectionTab);
 		 this.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 this.enabledButtons.put(this.intersectionTab, new HashMap<JButton, Boolean>());
@@ -249,33 +232,7 @@ public class View<
 		 //******************************************************************************************************************************
 		 // intersection tab
 		 //******************************************************************************************************************************
-		 intersectionTab.setLayout(new BoxLayout(intersectionTab, BoxLayout.Y_AXIS));
-		 
-		 
-		 this.intersectionLayout=new FRLayout<INTERSECTIONSTATE,INTERSECTIONTRANSITION>(model.getIntersection());
-		 this.intersectionPanel=new IntersectionAutomatonJPanel
-				 <CONSTRAINEDELEMENT, 
-				 STATE, 
-					STATEFACTORY,
-					TRANSITION, 
-					TRANSITIONFACTORY,
-					INTERSECTIONSTATE, 
-					INTERSECTIONSTATEFACTORY,
-					INTERSECTIONTRANSITION,
-					INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(model.getIntersection(), this, this.intersectionLayout);
-		 JPanel containerInt1=new JPanel();
-		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
-		 containerInt1.add(this.intersectionPanel);
-			
-		 intersectionPanel.setTranformingMode();
-		 JPanel containerInt2=new JPanel();
-		 containerInt2.setLayout(new BoxLayout(containerInt2,BoxLayout.Y_AXIS));
-		 containerInt2.add(new JLabel("Brzozowski representation"));
-		 this.brzozowskiSystemArea=new TextArea();
-		 containerInt2.add(this.brzozowskiSystemArea);
 		
-		 intersectionTab.add(containerInt1);
-		 intersectionTab.add(containerInt2);
 		 
 		 
 		 //******************************************************************************************************************************
@@ -325,11 +282,10 @@ public class View<
 
 	@Override
 	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
+		
 		this.verificationSnapshotTab.updateIntersection(intersection, positions);
-		if(positions!=null){
-			this.intersectionLayout.setInitializer(positions);
-		}
-		this.intersectionPanel.update(intersection);
+		this.intersectionTab.updateIntersection(intersection, positions);
+		
 		this.jframe.repaint();
 	}
 	
@@ -354,7 +310,7 @@ public class View<
 	}
 
 	public void setBrzozoski(String system){
-		this.brzozowskiSystemArea.setText(system);
+		this.intersectionTab.setBrzozoski(system);
 	}
 	
 	@Override
@@ -396,7 +352,7 @@ public class View<
 		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.menuBar.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
 			this.notifyObservers(new SaveIntersection<CONSTRAINEDELEMENT, STATE, STATEFACTORY,
 					TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, 
-					INTERSECTIONTRANSITION,  AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionLayout));
+					INTERSECTIONTRANSITION,  AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionTab.getIntersectionLayout()));
 		}
 		
 		// ltlloading
@@ -478,11 +434,7 @@ public class View<
 	
 	
 	
-	protected JPanel makeTextPanel() {
-        JPanel panel = new JPanel(false);
-        panel.setLayout(new GridLayout(1, 1));
-        return panel;
-    }
+	
 
 	@Override
 	public void updateModel(
@@ -522,17 +474,14 @@ public class View<
 		this.verificationSnapshotTab.hightLightConstraint(state, intersectionTransitions);
 		this.jframe.repaint();
 		
-		if(intersectionTransitions!=null){
-			this.intersectionPanel.highlightTransitions(intersectionTransitions, Color.GREEN);
-		}	
+		this.intersectionTab.hightLightConstraint(state, intersectionTransitions);	
 	}
 
 	@Override
 	public void doNothightLightConstraint() {
 		this.modelTab.setEditingMode();
 		this.verificationSnapshotTab.doNothightLightConstraint();
-		this.intersectionPanel.defaultTransformers();
-		
+		this.intersectionTab.doNothightLightConstraint();
 		this.jframe.repaint();
 		
 	}
