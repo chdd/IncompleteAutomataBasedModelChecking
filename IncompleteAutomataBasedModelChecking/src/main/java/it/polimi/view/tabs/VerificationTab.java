@@ -1,5 +1,6 @@
 package it.polimi.view.tabs;
 
+import it.polimi.Constants;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
@@ -12,7 +13,6 @@ import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckingResults;
-import it.polimi.view.Constants;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.automaton.IntersectionAutomatonJPanel;

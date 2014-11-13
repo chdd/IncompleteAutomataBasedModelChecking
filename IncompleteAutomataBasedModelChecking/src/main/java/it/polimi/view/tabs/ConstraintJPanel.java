@@ -1,5 +1,6 @@
-package it.polimi.view;
+package it.polimi.view.tabs;
 
+import it.polimi.Constants;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
@@ -14,6 +15,7 @@ import it.polimi.modelchecker.brzozowski.propositions.states.EpsilonProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 import it.polimi.modelchecker.brzozowski.propositions.states.OrProposition;
+import it.polimi.view.ViewInterface;
 
 import java.awt.Color;
 import java.awt.Dimension;

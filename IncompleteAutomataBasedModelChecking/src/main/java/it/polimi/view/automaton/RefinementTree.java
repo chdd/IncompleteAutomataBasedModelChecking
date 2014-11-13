@@ -12,6 +12,7 @@ package it.polimi.view.automaton;
  *    tutorialcont.html
  *    vm.html
  */
+import it.polimi.Constants;
 import it.polimi.controller.viewRefinement.ViewFlatStateRefinementAction;
 import it.polimi.controller.viewRefinement.ViewHierarchyStateRefinementAction;
 import it.polimi.model.RefinementNode;
@@ -36,6 +37,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeSelectionModel;
+
 
 /**
  * @author claudiomenghi
@@ -175,7 +177,6 @@ implements TreeSelectionListener{
 	
 	public class MyRender extends DefaultTreeCellRenderer{
 		
-		private final ImageIcon treeIcon= new ImageIcon(this.getClass().getResource("/img/Node.png"));
 		
 		public Component getTreeCellRendererComponent(
                 JTree tree,
@@ -191,7 +192,7 @@ implements TreeSelectionListener{
 					tree, value, sel,
 					expanded, leaf, row,
 					hasFocus);
-			this.setIcon(this.treeIcon);
+			this.setIcon(Constants.treeIcon);
 			return this;
 		}
 	}

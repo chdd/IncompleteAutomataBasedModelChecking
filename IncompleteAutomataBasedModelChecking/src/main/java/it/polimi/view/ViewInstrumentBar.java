@@ -1,5 +1,7 @@
 package it.polimi.view;
 
+import it.polimi.Constants;
+
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;

@@ -1,5 +1,7 @@
 package it.polimi;
 
+import java.io.IOException;
+
 import it.polimi.controller.Controller;
 import it.polimi.model.Model;
 import it.polimi.model.ModelInterface;
@@ -20,7 +22,6 @@ public class Main{
 
 	public static void main(String args[]) {
 		
-	    
 		// creates the model of the application starting from the model of the system contained in modelPath and the specification contained in the specificationPath
 		ModelInterface<State,
 			State, StateFactory<State>, 

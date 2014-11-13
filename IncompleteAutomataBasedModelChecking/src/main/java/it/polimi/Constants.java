@@ -1,9 +1,11 @@
-package it.polimi.view;
+package it.polimi;
 
 import javax.swing.ImageIcon;
 
 public class Constants {
 
+	public static final String resourcePath="/it/polimi/";
+	
 	// Icons
 	public static final ImageIcon newIcon = new ImageIcon(Constants.class.getResource("/org/freedesktop/tango/22x22/actions/document-new.png"));
 	public static final ImageIcon openIcon = new ImageIcon(Constants.class.getResource("/org/freedesktop/tango/22x22/actions/document-open.png"));
@@ -13,12 +15,14 @@ public class Constants {
 
 	public static final ImageIcon trasformingIcon = new ImageIcon(Constants.class.getResource("/org/freedesktop/tango/22x22/actions/view-fullscreen.png"));
 	public static final ImageIcon checkIcon = new ImageIcon(Constants.class.getResource("/org/freedesktop/tango/22x22/categories/applications-system.png"));
-	public static final ImageIcon resultYes=new ImageIcon(Constants.class.getResource("/img/Yes.png"));
-	public static final ImageIcon resultNo=new ImageIcon(Constants.class.getResource("/img/No.png"));
-	public static final ImageIcon resultMaybe=new ImageIcon(Constants.class.getResource("/img/Maybe.png"));
-	public static final ImageIcon resultInitial=new ImageIcon(Constants.class.getResource("/img/QuestionMark.png"));
-	public static final ImageIcon flattenIcon = new ImageIcon(Constants.class.getResource("/img/Packaging.png"));
-	public static final ImageIcon hierarchyIcon = new ImageIcon(Constants.class.getResource("/img/Hierarchy.png"));
+	
+	public static final ImageIcon resultYes=new ImageIcon(Constants.class.getResource(resourcePath+"img/Yes.png"));
+	public static final ImageIcon resultNo=new ImageIcon(Constants.class.getResource(resourcePath+"img/No.png"));
+	public static final ImageIcon resultMaybe=new ImageIcon(Constants.class.getResource(resourcePath+"img/Maybe.png"));
+	public static final ImageIcon resultInitial=new ImageIcon(Constants.class.getResource(resourcePath+"img/QuestionMark.png"));
+	public static final ImageIcon flattenIcon = new ImageIcon(Constants.class.getResource(resourcePath+"img/Packaging.png"));
+	public static final ImageIcon hierarchyIcon = new ImageIcon(Constants.class.getResource(resourcePath+"img/Hierarchy.png"));
+	public static final ImageIcon treeIcon= new ImageIcon(Constants.class.getResource(resourcePath+"/img/Node.png"));
 	
 	public static final int verificationResultIconSize=64;
 	

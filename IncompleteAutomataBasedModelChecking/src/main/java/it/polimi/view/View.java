@@ -1,5 +1,6 @@
 package it.polimi.view;
 
+import it.polimi.Constants;
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.controller.actions.CheckAction;
 import it.polimi.controller.actions.LoadClaimAction;
@@ -26,6 +27,7 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.ModelCheckingResults;
 import it.polimi.view.tabs.ClaimTab;
+import it.polimi.view.tabs.ConstraintJPanel;
 import it.polimi.view.tabs.IntersectionTab;
 import it.polimi.view.tabs.ModelTab;
 import it.polimi.view.tabs.VerificationTab;
