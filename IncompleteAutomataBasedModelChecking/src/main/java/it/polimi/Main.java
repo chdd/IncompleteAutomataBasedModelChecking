@@ -1,7 +1,5 @@
 package it.polimi;
 
-import java.io.IOException;
-
 import it.polimi.controller.Controller;
 import it.polimi.model.Model;
 import it.polimi.model.ModelInterface;
