@@ -359,12 +359,11 @@ public class View<
 		}
 		
 		//editing
-		
 		if((e.getSource().equals(this.instrumentBar.editingButton) || e.getSource().equals(this.menuBar.editModeMenu)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
 			if(!flatten){
 				this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, false);
 				this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, true);
-				this.modelTab.setTransformingMode();
+				this.modelTab.setEditingMode();
 			}
 		}
 		

@@ -168,7 +168,7 @@ public class ModelTab<
 	}
 	
 	public void setEditingMode(){
-		this.modelTabmodel.defaultTransformers();		
+		this.modelTabmodel.setEditingMode();		
 	}
 	
 	public void highLightState(STATE s){
