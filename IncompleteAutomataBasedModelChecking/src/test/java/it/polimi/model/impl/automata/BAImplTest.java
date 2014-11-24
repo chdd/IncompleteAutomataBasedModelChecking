@@ -107,5 +107,35 @@ public class BAImplTest {
 		
 	}
 	
+	@Test
+	public void testAddState1(){
+		BAImpl<State, Transition> ba=new BAImpl<State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl());
+		State s1=new StateFactoryImpl().create();
+		ba.addState(s1);
+		assertTrue(ba.getStates().contains(s1));
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testAddState2(){
+		BAImpl<State, Transition> ba=new BAImpl<State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl());
+		ba.addState(null);
+	}
+	
+	@Test
+	public void testAddStates1(){
+		BAImpl<State, Transition> ba=new BAImpl<State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl());
+		State s1=new StateFactoryImpl().create();
+		Set<State> states=new HashSet<State>();
+		states.add(s1);
+		ba.addStates(states);
+		assertTrue(ba.getStates().contains(s1));
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testAddStates2(){
+		BAImpl<State, Transition> ba=new BAImpl<State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl());
+		ba.addStates(null);
+	}
+	
 }
 
