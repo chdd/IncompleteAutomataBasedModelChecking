@@ -17,7 +17,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * 
  */
 public class TransitionFactoryImpl implements
-		TransitionFactory<State, Transition> {
+		TransitionFactory<Transition> {
 
 	/**
 	 * contains the next id of the {@link Transition}
