@@ -39,7 +39,7 @@ public class TransitionFactoryImpl implements
 
 		Transition t = new Transition(dnfFormula,
 				TransitionFactoryImpl.transitionCount);
-		TransitionFactoryImpl.transitionCount++;
+		this.updateCounter(TransitionFactoryImpl.transitionCount);
 		return t;
 	}
 
@@ -60,7 +60,8 @@ public class TransitionFactoryImpl implements
 		}
 		Transition t = new Transition(dnfFormula,
 				TransitionFactoryImpl.transitionCount);
-		TransitionFactoryImpl.transitionCount++;
+		this.updateCounter(TransitionFactoryImpl.transitionCount);
+		
 		return t;
 	}
 
@@ -90,9 +91,23 @@ public class TransitionFactoryImpl implements
 					"The dnfFormula to be added at the LabelledTransition cannot be null");
 		}
 		Transition t = new Transition(condition, id);
+		this.updateCounter(id);
+		return t;
+	}
+	
+	/**
+	 * updates the counter of the {@link Transition}
+	 * 
+	 * @param id
+	 *            is the id of the last {@link Transition} that has been created
+	 * @throws InternalError
+	 *             if the id is less than 0
+	 */
+	private void updateCounter(int id) {
+		if (id < 0) {
+			throw new InternalError("The id cannot be less than 0");
+		}
 		TransitionFactoryImpl.transitionCount = Math.max(id++,
 				TransitionFactoryImpl.transitionCount++);
-		TransitionFactoryImpl.transitionCount++;
-		return t;
 	}
 }
