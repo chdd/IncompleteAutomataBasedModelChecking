@@ -201,7 +201,6 @@ public class DNFFormulaImpl implements DNFFormula{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
 		DNFFormulaImpl other = (DNFFormulaImpl) obj;
 		if (conjunctiveClause == null) {
 			if (other.conjunctiveClause != null)
