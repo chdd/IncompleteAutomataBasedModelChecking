@@ -2,40 +2,38 @@ package it.polimi.model;
 
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 public class RefinementNode<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+	TRANSITION extends Transition>
 	{
 
 	
 	private STATE s;
 	
-	private DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> automaton;
+	private IBA< STATE, TRANSITION> automaton;
 	
 	public RefinementNode(
 			STATE s,
-			DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> automaton){
+			IBA<STATE, TRANSITION> automaton){
 		this.s=s;
 		this.automaton=automaton;
 	}
 	public RefinementNode(
-			STATE s, TRANSITIONFACTORY transitionFactory){
+			STATE s, TransitionFactory<TRANSITION> transitionFactory, StateFactory<STATE> stateFactory){
 		this.s=s;
-		this.automaton=new IBAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, 
-				TRANSITIONFACTORY>(transitionFactory);
+		this.automaton=new IBAImpl<STATE, TRANSITION>(transitionFactory, stateFactory);
 	}
 	
 	public STATE getState(){
 		return this.s;
 	}
 	
-	public  DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> getAutomaton(){
+	public IBA<STATE, TRANSITION> getAutomaton(){
 		return this.automaton;
 	}
 	

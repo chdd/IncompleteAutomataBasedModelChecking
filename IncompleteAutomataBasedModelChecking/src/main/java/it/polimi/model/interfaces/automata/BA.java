@@ -167,6 +167,7 @@ public interface BA<STATE extends State, TRANSITION extends Transition> extends
 	public void addTransition(STATE source, STATE destination,
 			TRANSITION transition);
 	
+	public DirectedSparseGraph<STATE, TRANSITION> getGraph();
 	
 	
 }

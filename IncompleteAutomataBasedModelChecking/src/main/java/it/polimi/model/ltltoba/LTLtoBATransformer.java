@@ -2,14 +2,14 @@ package it.polimi.model.ltltoba;
 
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
-import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
 import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,26 +24,23 @@ import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
 public class LTLtoBATransformer<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
-	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
-	implements Transformer<String, BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>> {
+	TRANSITION extends Transition> 
+	implements Transformer<String, BAImpl< STATE, TRANSITION>> {
 
-	private STATEFACTORY stateFactory;
-	private TRANSITIONFACTORY transitionFactory;
+	private StateFactory<STATE> stateFactory;
+	private TransitionFactory<TRANSITION> transitionFactory;
 	
-	public LTLtoBATransformer(STATEFACTORY stateFactory,TRANSITIONFACTORY transitionFactory){
+	public LTLtoBATransformer(StateFactory<STATE> stateFactory,TransitionFactory<TRANSITION> transitionFactory){
 		this.transitionFactory=transitionFactory;
 		this.stateFactory=stateFactory;
 		
 	}
 	
 	@Override
-	public BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> transform(String input) {
+	public BAImpl<STATE, TRANSITION> transform(String input) {
 		
-		BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba=new BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>(transitionFactory);
+		BAImpl<STATE, TRANSITION> ba=new BAImpl<STATE, TRANSITION>(this.transitionFactory, this.stateFactory);
 		
 		Map<IState, STATE> map=new HashMap<IState, STATE>();
 		
@@ -62,7 +59,7 @@ public class LTLtoBATransformer<
 		}
 		
 		for(Entry<IState, STATE> e: map.entrySet()){
-			ba.addVertex(e.getValue());
+			ba.addState(e.getValue());
 			if(e.getKey().isInitial()){
 				ba.addInitialState(e.getValue());
 			}
@@ -71,10 +68,10 @@ public class LTLtoBATransformer<
 			}
 		}
 		for(ITransition t: transitions){
-			ConjunctiveClauseImpl<CONSTRAINEDELEMENT> conjunctionClause=new ConjunctiveClauseImpl<CONSTRAINEDELEMENT>();
+			ConjunctiveClauseImpl conjunctionClause=new ConjunctiveClauseImpl();
 			for(IGraphProposition p: t.getLabels()){
 				if(p.getLabel().equals("<SIGMA>")){
-					this.addConjunctionClause(new SigmaProposition<CONSTRAINEDELEMENT>(), ba, map, t);
+					this.addConjunctionClause(new SigmaProposition<STATE>(), ba, map, t);
 				}
 				else{
 					conjunctionClause.addProposition(new Proposition(p.getLabel(),p.isNegated()));
@@ -87,12 +84,12 @@ public class LTLtoBATransformer<
 		return ba;
 	}
 	
-	private void addConjunctionClause(ConjunctiveClause<CONSTRAINEDELEMENT> conjunctionClause, BAImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba, Map<IState, STATE> map, ITransition t){
-		if(ba.isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
-			ba.findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getDnfFormula().addDisjunctionClause(conjunctionClause);
+	private void addConjunctionClause(ConjunctiveClause conjunctionClause, BAImpl<STATE, TRANSITION> ba, Map<IState, STATE> map, ITransition t){
+		if(ba.getGraph().isSuccessor(map.get(t.getSourceState()), map.get(t.getTargetState()))){
+			ba.getGraph().findEdge(map.get(t.getSourceState()), map.get(t.getTargetState())).getCondition().addDisjunctionClause(conjunctionClause);
 		}
 		else{
-			DNFFormula<CONSTRAINEDELEMENT> dnfFormula=new DNFFormula<CONSTRAINEDELEMENT>();
+			DNFFormulaImpl dnfFormula=new DNFFormulaImpl();
 			dnfFormula.addDisjunctionClause(conjunctionClause);
 			ba.addTransition(
 					map.get(t.getSourceState()),

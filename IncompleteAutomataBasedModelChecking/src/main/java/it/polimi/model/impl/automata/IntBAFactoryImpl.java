@@ -12,7 +12,9 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
 import org.apache.commons.collections15.Factory;
 
-public class IntBAFactoryImpl<STATE extends State, TRANSITION extends Transition, INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONTRANSITION extends Transition>
+public class IntBAFactoryImpl<
+		CONSTRAINEDELEMENT extends State,
+		STATE extends State, TRANSITION extends Transition, INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONTRANSITION extends Transition>
 		implements
 		IntBAFactory<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>
 
@@ -21,7 +23,7 @@ public class IntBAFactoryImpl<STATE extends State, TRANSITION extends Transition
 	/**
 	 * contains the {@link Factory} of the {@link Transition} of the {@link BA}
 	 */
-	protected ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION> transitionFactory;
+	protected ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory;
 
 	/**
 	 * contains the {@link Factory} of the {@link State} of the {@link BA}
@@ -38,7 +40,7 @@ public class IntBAFactoryImpl<STATE extends State, TRANSITION extends Transition
 	 *             if the transitionFactory is null
 	 */
 	public IntBAFactoryImpl(
-			ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION> transitionFactory,
+			ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory,
 			IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory) {
 		this.stateFactory = stateFactory;
 		this.transitionFactory = transitionFactory;

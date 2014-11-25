@@ -482,4 +482,9 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	public TransitionFactory<TRANSITION> getTransitionFactory() {
 		return this.transitionFactory;
 	}
+	
+	public DirectedSparseGraph<STATE, TRANSITION> getGraph(){
+		return this.automataGraph;
+	}
+	
 }

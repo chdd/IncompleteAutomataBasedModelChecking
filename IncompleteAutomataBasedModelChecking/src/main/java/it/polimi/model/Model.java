@@ -6,16 +6,16 @@ import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAFactoryImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.automata.IntBAFactory;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
+import it.polimi.model.interfaces.states.IntersectionStateFactory;
+import it.polimi.model.interfaces.states.StateFactory;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.transitions.TransitionFactory;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckingResults;
@@ -41,19 +41,25 @@ import edu.uci.ics.jung.io.GraphIOException;
 public class Model<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
-	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITION extends Transition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
-	implements ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>{
+	INTERSECTIONTRANSITION extends Transition>
+	implements ModelInterface<CONSTRAINEDELEMENT, STATE,  TRANSITION,  INTERSECTIONSTATE,  INTERSECTIONTRANSITION>{
 
 	/**
 	 * contains the model of the system
 	 */
-	private DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model;
+	private IBA<STATE, TRANSITION> model;
+	
+	/**
+	 * contains the specification o the system
+	 */
+	private BA<STATE, TRANSITION>  specification;
+	
+	/**
+	 * contains the intersection between the model and the specification
+	 */
+	private IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersection;
 	
 	private DefaultTreeModel modelRefinement;
 	private DefaultTreeModel modelflattenModel;
@@ -62,52 +68,26 @@ public class Model<
 	private Map<STATE, DefaultMutableTreeNode> modelflatstateRefinementMap;
 	
 	
-	public void resetModel(STATE rootState, DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> rootModel){
+	public void resetModel(STATE rootState, IBA<STATE, TRANSITION> rootModel){
 		this.model=rootModel;
 		DefaultMutableTreeNode rootnode=new DefaultMutableTreeNode(new
-				RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (rootState, rootModel));
+				RefinementNode< STATE, TRANSITION> (rootState, rootModel));
 		
 		this.modelRefinement.setRoot(rootnode);
 		this.modelstateRefinementMap.put(rootState, rootnode);
 		this.modelflatstateRefinementMap=new HashMap<STATE, DefaultMutableTreeNode>();
 	}
 	
-	/**
-	 * contains the specification o the system
-	 */
-	private DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>  specification;
+	private IntersectionStateFactory<STATE, INTERSECTIONSTATE> intersectionStateFactory;
 	
+	private ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>  intersectionTransitionFactory;
 	
-	/**
-	 * contains the intersection between the model and the specification
-	 */
-	private DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersection;
+	private TransitionFactory<TRANSITION> transitionFactory;
 	
-	private INTERSECTIONSTATEFACTORY intersectionStateFactory;
-	
-	private INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory;
-	private TRANSITIONFACTORY transitionFactory;
-	
-	private STATEFACTORY stateFactory;
+	private StateFactory<STATE> stateFactory;
 	
 	
 	
-	public TRANSITIONFACTORY getSpecificationTransitionFactory(){
-		return this.transitionFactory;
-	}
-	
-	public STATEFACTORY getSpecificationStateFactory(){
-		return this.stateFactory;
-	}
-	
-	
-	public TRANSITIONFACTORY getModelTransitionFactory(){
-		return this.transitionFactory;
-	}
-	
-	public STATEFACTORY getModelStateFactory(){
-		return this.stateFactory;
-	}
 	
 	
 	private IntBAReader<
@@ -115,47 +95,40 @@ public class Model<
 		STATE, 
 		TRANSITION, 
 		INTERSECTIONSTATE, 
-		INTERSECTIONSTATEFACTORY, 
 		INTERSECTIONTRANSITION, 
-		TRANSITIONFACTORY, 
-		INTERSECTIONTRANSITIONFACTORY, 
-		DrawableIntBA<CONSTRAINEDELEMENT,STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>, 
-		IntBAFactory<CONSTRAINEDELEMENT,STATE,TRANSITION ,TRANSITIONFACTORY, INTERSECTIONSTATE,
-			INTERSECTIONSTATEFACTORY,
+		IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION>, 
+		IntBAFactory<STATE,TRANSITION, INTERSECTIONSTATE,
 			INTERSECTIONTRANSITION,
-			INTERSECTIONTRANSITIONFACTORY,
-		DrawableIntBA<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>> intBaReader;
+		IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>> intBaReader;
 	
 	
-	private ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+	private ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
 	
 	
-	public Model(STATEFACTORY stateFactory, TRANSITIONFACTORY transitionFactory, INTERSECTIONSTATEFACTORY intersectionStateFactory, INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory){
+	public Model(StateFactory<STATE> stateFactory, TransitionFactory<TRANSITION> transitionFactory, IntersectionStateFactory<STATE, INTERSECTIONSTATE> intersectionStateFactory, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> intersectionTransitionFactory){
 		this.setStateRefinementMap(new HashMap<STATE, DefaultMutableTreeNode>());
 		this.setFlatstateRefinementMap(new HashMap<STATE, DefaultMutableTreeNode>());
 		this.stateFactory=stateFactory;
 		this.transitionFactory=transitionFactory;
 		this.intersectionStateFactory=intersectionStateFactory;
 		this.intersectionTransitionFactory=intersectionTransitionFactory;
-		this.model=new IBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION,  TRANSITIONFACTORY>(transitionFactory);
-		this.specification=new BAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(transitionFactory);
-		this.intersection=new IntBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
-		TRANSITIONFACTORY,
-		INTERSECTIONTRANSITIONFACTORY>(this.model, this.specification,intersectionTransitionFactory);
+		this.model=new IBAImpl<STATE, TRANSITION>(transitionFactory, this.stateFactory);
+		this.specification=new BAImpl<STATE, TRANSITION>(transitionFactory, this.stateFactory);
+		this.intersection=new IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.intersectionTransitionFactory, this.intersectionStateFactory);
 		
 		STATE s=this.stateFactory.create("Model");
 		DefaultMutableTreeNode rootnode=new DefaultMutableTreeNode(new
-				RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (s, this.model));
+				RefinementNode< STATE, TRANSITION> (s, this.model));
 		this.modelRefinement=new DefaultTreeModel(rootnode);
 		this.modelstateRefinementMap.put(s, rootnode);
 	}
 	
 	
 	
-	public void setSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification){
+	public void setSpecification(BA<STATE, TRANSITION> specification){
 		this.specification=specification;
 	}
-	public void setModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model){
+	public void setModel(IBA<STATE, TRANSITION> model){
 		this.model=model;
 	}
 	
@@ -164,7 +137,7 @@ public class Model<
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY> getModel(){
+	public IBA<STATE, TRANSITION> getModel(){
 		return this.model;
 	}
 	
@@ -175,14 +148,14 @@ public class Model<
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public DrawableBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY> getSpecification(){
+	public BA<STATE, TRANSITION> getSpecification(){
 		return this.specification;
 	}
 	/**
 	 * @see {@link ModelInterface}
 	 */
 	@Override
-	public DrawableIntBA<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> getIntersection(){
+	public IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getIntersection(){
 		return this.intersection;
 	}
 	
@@ -197,7 +170,7 @@ public class Model<
 		if(accepting){
 			this.model.addAcceptState(s);
 		}
-		this.model.addVertex(s);
+		this.model.addState(s);
 	}
 	
 	@Override
@@ -208,57 +181,51 @@ public class Model<
 		if(accepting){
 			this.specification.addAcceptState(s);
 		}
-		this.specification.addVertex(s);
+		this.specification.addState(s);
 	}
 	
-	public void changeIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersection){
+	public void changeIntersection(IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersection){
 		this.intersection=intersection;
 	}
 	
 	
 	@Override
 	public void loadClaimFromLTL(String ltlFormula){
-		LTLtoBATransformer<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> ltltoBa=new LTLtoBATransformer<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.stateFactory, this.transitionFactory);
+		LTLtoBATransformer<STATE,  TRANSITION> ltltoBa=new LTLtoBATransformer<STATE,  TRANSITION>(this.stateFactory, this.transitionFactory);
 		this.specification=ltltoBa.transform(ltlFormula);
 	}
 	
 	@Override
 	public void check(){
-		mp=new ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
-		ModelChecker<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE,INTERSECTIONTRANSITION,
-		INTERSECTIONTRANSITIONFACTORY> mc=new 
-		ModelChecker<CONSTRAINEDELEMENT, STATE, TRANSITION,TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONTRANSITION,
-		INTERSECTIONTRANSITIONFACTORY>(this.getModel(), this.getSpecification(), mp);
+		mp=new ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+		
+		ModelChecker< STATE, TRANSITION,  INTERSECTIONSTATE,INTERSECTIONTRANSITION> mc=new 
+		ModelChecker<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.getModel(), this.getSpecification(), mp);
 		mc.check();
 		this.changeIntersection(mc.getIntersection());
 	}
 	
-	public ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
+	public ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
 		return this.mp;
 	}
 	
 	@Override
 	public Transformer<INTERSECTIONSTATE, Point2D> loadIntersection(String intersectionPath) throws IOException,
 			GraphIOException {
+		
 		this.intBaReader=
-				new IntBAReader<CONSTRAINEDELEMENT,STATE, 
+				new IntBAReader<
+				CONSTRAINEDELEMENT,
+				STATE, 
 				TRANSITION, 
 				INTERSECTIONSTATE, 
-				INTERSECTIONSTATEFACTORY, 
 				INTERSECTIONTRANSITION, 
-				TRANSITIONFACTORY, 
-				INTERSECTIONTRANSITIONFACTORY, 
-				DrawableIntBA<CONSTRAINEDELEMENT,STATE,TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>, 
-				IntBAFactory<CONSTRAINEDELEMENT,STATE,TRANSITION ,TRANSITIONFACTORY,INTERSECTIONSTATE,
-				INTERSECTIONSTATEFACTORY,
-				INTERSECTIONTRANSITION,
-				INTERSECTIONTRANSITIONFACTORY,
-				DrawableIntBA<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>>
-				(intersectionTransitionFactory, 
-						intersectionStateFactory, 
-						new  IntBAFactoryImpl<CONSTRAINEDELEMENT,STATE, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-									INTERSECTIONTRANSITIONFACTORY, TRANSITION,
-									TRANSITIONFACTORY>(this.intersectionTransitionFactory, transitionFactory)
+				IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION>, 
+				IntBAFactory<STATE,TRANSITION, INTERSECTIONSTATE,
+					INTERSECTIONTRANSITION, IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>>(
+						this.intersectionTransitionFactory, 
+						this.intersectionStateFactory, 
+						new  IntBAFactoryImpl<CONSTRAINEDELEMENT, STATE,TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.intersectionTransitionFactory, 	this.intersectionStateFactory)
 						, new BufferedReader(new FileReader(intersectionPath))
 				
 				);
@@ -268,12 +235,12 @@ public class Model<
 
 	@Override
 	public void newModel() {
-		this.model=new IBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
+		this.model=new IBAImpl<STATE, TRANSITION>(this.transitionFactory, this.stateFactory);
 	}
 
 	@Override
 	public void newClaim() {
-		this.specification=new BAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(this.transitionFactory);
+		this.specification=new BAImpl<STATE, TRANSITION>(this.transitionFactory, this.stateFactory);
 	}
 
 	/**
