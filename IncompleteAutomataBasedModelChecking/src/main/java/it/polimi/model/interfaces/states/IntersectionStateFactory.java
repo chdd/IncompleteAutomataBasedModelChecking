@@ -23,5 +23,5 @@ extends StateFactory<INTERSECTIONSTATE> {
 	 * @throws IllegalArgumentException
 	 *             if num is less than 0
 	 */
-	public IntersectionState<State> create(State s1, State s2, int num);
+	public INTERSECTIONSTATE create(State s1, State s2, int num);
 }
