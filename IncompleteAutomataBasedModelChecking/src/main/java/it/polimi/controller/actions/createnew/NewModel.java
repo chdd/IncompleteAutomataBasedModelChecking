@@ -1,23 +1,19 @@
 package it.polimi.controller.actions.createnew;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-
 import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.view.ViewInterface;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  * creates a new Model
@@ -31,36 +27,30 @@ import it.polimi.view.ViewInterface;
  */
 public class NewModel<
 CONSTRAINEDELEMENT extends State,
-STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+STATE extends State,
+TRANSITION extends Transition>
 		implements
-		ActionInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		ActionInterface<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 
 	/** 
 	 * @see {@link ModelInterface}
 	 */
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  
+	INTERSECTIONTRANSITION extends Transition>  
 	void perform(
-			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
-			TRANSITIONFACTORY,
-			INTERSECTIONTRANSITIONFACTORY> view) throws Exception{
+			ModelInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> model,
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view) throws Exception{
 		
 		// creates a new root state
-		STATE rootState=model.getModelStateFactory().create("Model");
+		STATE rootState=model.getModel().getStateFactory().create("Model");
 		
 		// creates a new empty model
-		IBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY> newModel=
-				new IBAImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(model.getModelTransitionFactory());
+		IBAImpl<STATE, TRANSITION> newModel=
+				new IBAImpl<STATE, TRANSITION>(model.getModel().getTransitionFactory(), model.getModel().getStateFactory());
 		
 		// creates a new root node of the refinement tree
 		DefaultMutableTreeNode rootnode=new DefaultMutableTreeNode(new
-				RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> (rootState, newModel));
+				RefinementNode<STATE, TRANSITION> (rootState, newModel));
 		
 		// creates a new model refinement
 		DefaultTreeModel modelRefinement=new DefaultTreeModel(rootnode);
