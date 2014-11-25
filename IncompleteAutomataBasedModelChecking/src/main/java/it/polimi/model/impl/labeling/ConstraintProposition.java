@@ -1,10 +1,11 @@
 package it.polimi.model.impl.labeling;
 
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import it.polimi.model.impl.states.State;
-import it.polimi.model.interfaces.labeling.ConjunctiveClause;
+import java.util.Set;
 
-public class ConstraintProposition<STATE extends State> extends GraphProposition implements ConjunctiveClause<STATE> {
+import it.polimi.model.interfaces.labeling.ConjunctiveClause;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+
+public class ConstraintProposition<STATE> extends GraphProposition implements ConjunctiveClause {
 
 	private STATE constrainedState;
 	
@@ -36,6 +37,16 @@ public class ConstraintProposition<STATE extends State> extends GraphProposition
 
 	@Override
 	public String toString() {
-		return "<"+constrainedState.getName()+","+super.toString()+">";
+		return "<"+constrainedState.toString()+","+super.toString()+">";
+	}
+	@Override
+	public void addProposition(Proposition proposition) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Set<Proposition> getPropositions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,10 +1,12 @@
 package it.polimi.model.impl.labeling;
 
+import java.util.Set;
+
 import it.polimi.model.impl.states.State;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 
 
-public class SigmaProposition<STATE extends State> implements ConjunctiveClause<STATE>{
+public class SigmaProposition<STATE extends State> implements ConjunctiveClause{
 
 	private final String sigma="SIGMA";
 	
@@ -49,5 +51,19 @@ public class SigmaProposition<STATE extends State> implements ConjunctiveClause<
 	@Override
 	public String toString(){
 		return this.sigma;
+	}
+
+
+	@Override
+	public void addProposition(Proposition proposition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Set<Proposition> getPropositions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
