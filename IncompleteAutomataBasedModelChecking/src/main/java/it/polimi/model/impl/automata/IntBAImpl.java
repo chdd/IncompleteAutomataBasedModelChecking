@@ -6,7 +6,6 @@ import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.states.IntersectionStateFactory;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;

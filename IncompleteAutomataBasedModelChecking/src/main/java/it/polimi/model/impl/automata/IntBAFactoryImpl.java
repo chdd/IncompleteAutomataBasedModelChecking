@@ -7,9 +7,8 @@ import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.automata.IntBAFactory;
-import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.states.IntersectionStateFactory;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import org.apache.commons.collections15.Factory;
 
@@ -27,7 +26,7 @@ public class IntBAFactoryImpl<STATE extends State, TRANSITION extends Transition
 	/**
 	 * contains the {@link Factory} of the {@link State} of the {@link BA}
 	 */
-	protected StateFactory<INTERSECTIONSTATE> stateFactory;
+	protected IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory;
 
 	/**
 	 * crates a new {@link Factory} for the {@link DrawableIBA}
@@ -40,7 +39,7 @@ public class IntBAFactoryImpl<STATE extends State, TRANSITION extends Transition
 	 */
 	public IntBAFactoryImpl(
 			ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION> transitionFactory,
-			StateFactory<INTERSECTIONSTATE> stateFactory) {
+			IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory) {
 		this.stateFactory = stateFactory;
 		this.transitionFactory = transitionFactory;
 	}
