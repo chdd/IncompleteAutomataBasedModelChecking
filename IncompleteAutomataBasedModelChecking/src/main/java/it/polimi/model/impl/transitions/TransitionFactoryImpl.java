@@ -3,9 +3,10 @@ package it.polimi.model.impl.transitions;
 import org.apache.commons.collections15.Factory;
 
 import it.polimi.model.impl.labeling.ConjunctiveClauseImpl;
-import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
 import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
+import it.polimi.model.interfaces.labeling.DNFFormula;
 import it.polimi.model.interfaces.labeling.Formula;
 import it.polimi.model.interfaces.transitions.TransitionFactory;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -34,7 +35,7 @@ public class TransitionFactoryImpl implements
 	 */
 	@Override
 	public Transition create() {
-		DNFFormula<State> dnfFormula = new DNFFormula<State>();
+		DNFFormula dnfFormula = new DNFFormulaImpl();
 		dnfFormula.addDisjunctionClause(new SigmaProposition<State>());
 
 		Transition t = new Transition(dnfFormula,
@@ -53,7 +54,7 @@ public class TransitionFactoryImpl implements
 	 * @throws NullPointerException
 	 *             if the {@link Formula} is null
 	 */
-	public Transition create(Formula dnfFormula) {
+	public Transition create(DNFFormula dnfFormula) {
 		if (dnfFormula == null) {
 			throw new NullPointerException(
 					"The dnfFormula to be added at the LabelledTransition cannot be null");
@@ -81,7 +82,7 @@ public class TransitionFactoryImpl implements
 	 * @throws IllegalArgumentException
 	 *             if the id is not grater than or equal to zero
 	 */
-	public Transition create(int id, Formula condition) {
+	public Transition create(int id, DNFFormula condition) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The id must be grater than or equal to zero");

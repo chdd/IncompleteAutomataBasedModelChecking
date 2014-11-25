@@ -1,6 +1,7 @@
 package it.polimi.model.impl.transitions;
 
 import it.polimi.model.impl.states.State;
+import it.polimi.model.interfaces.labeling.DNFFormula;
 import it.polimi.model.interfaces.labeling.Formula;
 
 /**
@@ -18,7 +19,7 @@ public class Transition {
 	/**
 	 * contains the {@link Formula} which labels the {@link Transition}
 	 */
-	private Formula condition;
+	private DNFFormula condition;
 
 	/**
 	 * Constructs a new {@link Transition}.
@@ -35,7 +36,7 @@ public class Transition {
 	 *             is generated if the {@link Formula} that labels the
 	 *             transition is null
 	 */
-	protected Transition(Formula condition, int id) {
+	protected Transition(DNFFormula condition, int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");
@@ -65,7 +66,7 @@ public class Transition {
 	 * @throws NullPointerException
 	 *             if the {@link Formula} is null
 	 */
-	public void setCondition(Formula condition) {
+	public void setCondition(DNFFormula condition) {
 		if (condition == null) {
 			throw new NullPointerException("The DNFFormula cannot be null");
 		}
