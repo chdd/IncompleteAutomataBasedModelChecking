@@ -1,8 +1,8 @@
 package it.polimi.model.interfaces.transitions;
 
-import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
 import it.polimi.model.impl.transitions.Transition;
-import it.polimi.model.interfaces.labeling.Formula;
+import it.polimi.model.interfaces.labeling.DNFFormula;
 
 import org.apache.commons.collections15.Factory;
 
@@ -21,41 +21,41 @@ public interface TransitionFactory<TRANSITION extends Transition> extends
 		Factory<TRANSITION> {
 
 	/**
-	 * creates a new transition TRANSITION with a {@link Formula} which contains
+	 * creates a new transition TRANSITION with a {@link DNFFormula} which contains
 	 * the {@link GraphProposition} SIGMA
 	 * 
-	 * @return a new transition TRANSITION labeled with a {@link Formula} which
+	 * @return a new transition TRANSITION labeled with a {@link DNFFormula} which
 	 *         contains only the {@link GraphProposition} SIGMA
 	 */
 	public TRANSITION create();
 
 	/**
-	 * creates a new {@link Transition} with the specified {@link Formula}
+	 * creates a new {@link Transition} with the specified {@link DNFFormula}
 	 * 
 	 * @param condition
-	 *            is the {@link Formula} to be added as a label of the
+	 *            is the {@link DNFFormula} to be added as a label of the
 	 *            {@link Transition}
-	 * @return a new {@link Transition} with the {@link Formula} as label
+	 * @return a new {@link Transition} with the {@link DNFFormula} as label
 	 * @throws NullPointerException
-	 *             if the {@link Formula} is null
+	 *             if the {@link DNFFormula} is null
 	 */
-	public TRANSITION create(Formula condition);
+	public TRANSITION create(DNFFormula condition);
 
 	/**
-	 * creates a new {@link Transition} with the specified {@link Formula}, and
+	 * creates a new {@link Transition} with the specified {@link DNFFormula}, and
 	 * the specified id
 	 * 
 	 * @param dnfFormula
-	 *            is the {@link Formula} to be added as a label of the
+	 *            is the {@link DNFFormula} to be added as a label of the
 	 *            {@link Transition}
 	 * @param id
 	 *            is the if of the {@link Transition}
-	 * @return a new {@link Transition} with the {@link Formula} as label, and
+	 * @return a new {@link Transition} with the {@link DNFFormula} as label, and
 	 *         the specified id
 	 * @throws NullPointerException
-	 *             if the {@link DNFFormula} is null
+	 *             if the {@link DNFFormulaImpl} is null
 	 * @throws IllegalArgumentException
 	 *             if the id is not grater than or equal to zero
 	 */
-	public TRANSITION create(int id, Formula dnfFormula);
+	public TRANSITION create(int id, DNFFormula dnfFormula);
 }
