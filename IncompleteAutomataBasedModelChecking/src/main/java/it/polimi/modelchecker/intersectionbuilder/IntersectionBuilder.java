@@ -169,7 +169,6 @@ public class IntersectionBuilder<STATE extends State, TRANSITION extends Transit
 
 					// the new state is connected by the previous one through a
 					// constrained transition
-					@SuppressWarnings("unchecked")
 					INTERSECTIONTRANSITION t = this.transitionFactory.create(
 							t2.getCondition(), currentState.getS1());
 					intersection.addTransition(currentState, p, t);

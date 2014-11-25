@@ -1,42 +1,36 @@
 package it.polimi.modelchecker.brzozowski.transformers;
 
-import java.util.ArrayList;
-
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
+
+import java.util.ArrayList;
 
 import org.apache.commons.collections15.Transformer;
 
 public class AcceptingStatesTransformer<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITION extends Transition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY  extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,INTERSECTIONTRANSITION>> 
+	INTERSECTIONTRANSITION extends Transition>
 	implements Transformer<
-					DrawableIntBA<
-						CONSTRAINEDELEMENT, 
+					IIntBA<
 						STATE, 
 						TRANSITION, 
 						INTERSECTIONSTATE, 
-						INTERSECTIONTRANSITION,  
-						INTERSECTIONTRANSITIONFACTORY>, 
+						INTERSECTIONTRANSITION>, 
 						LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[]> {
 
 	private INTERSECTIONSTATE accept;
 	private ArrayList<INTERSECTIONSTATE> orderedStates;			
 	
 	public AcceptingStatesTransformer(ArrayList<INTERSECTIONSTATE> orderedStates,
-			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton,INTERSECTIONSTATE accept){
+			IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton,INTERSECTIONSTATE accept){
 		this.orderedStates=orderedStates;
 		this.accept=accept;
 	}
@@ -44,14 +38,14 @@ public class AcceptingStatesTransformer<
 							
 	@Override
 	public LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] transform(
-			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton) {
+			IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton) {
 		if(accept==null){
 			throw new IllegalArgumentException("The accepting state cannot be null");
 		}
 		if(!intersectionAutomaton.isAccept(accept)){
 			throw new IllegalArgumentException("The state "+accept.getName()+" must be accepting");
 		}
-		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] ret=new LogicalItem[intersectionAutomaton.getVertexCount()];
+		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[] ret=new LogicalItem[intersectionAutomaton.getStates().size()];
 		
 		int i=0;
 		// for each state in the stateOrdered vector

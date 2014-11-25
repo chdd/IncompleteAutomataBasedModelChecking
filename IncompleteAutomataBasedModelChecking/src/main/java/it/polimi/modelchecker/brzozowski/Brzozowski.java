@@ -3,11 +3,8 @@ package it.polimi.modelchecker.brzozowski;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
-import it.polimi.modelchecker.brzozowski.propositions.states.AbstractProposition;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
@@ -15,8 +12,6 @@ import it.polimi.modelchecker.brzozowski.transformers.AcceptingStatesTransformer
 import it.polimi.modelchecker.brzozowski.transformers.TransitionMatrixTranformer;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author claudiomenghi
@@ -24,23 +19,21 @@ import java.util.Set;
  * {@link Constraint}
  * 
  * @param <STATE> the type of the {@link State}s of the original BA, (I)BA
- * @param <TRANSITION> the type of the {@link LabelledTransition}s of the original BA, (I)BA
+ * @param <TRANSITION> the type of the {@link Transition}s of the original BA, (I)BA
  * @param <INTERSECTIONSTATE> the type of the {@link State}s  of the intersection automaton
- * @param <INTERSECTIONTRANSITION> the type of the {@link LabelledTransition}s of the intersection automaton
+ * @param <INTERSECTIONTRANSITION> the type of the {@link Transition}s of the intersection automaton
  */
 public class Brzozowski<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITION extends Transition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
-	INTERSECTIONTRANSITIONFACTORY  extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,INTERSECTIONTRANSITION>> {
+	INTERSECTIONTRANSITION extends Transition> {
 
 	/**
 	 * contains the {@link IntBAImpl} to be analyzed
 	 */
-	private final DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION,  INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton;
+	private final IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton;
 	
 	private final ArrayList<INTERSECTIONSTATE> orderedStates;
 	
@@ -52,12 +45,12 @@ public class Brzozowski<
 	 * @param intersectionAutomaton is the {@link IntBAImpl} to be analyzed
 	 * @throws IllegalArgumentException is generated if the {@link IntBAImpl} a is null
 	 */
-	public Brzozowski(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton){
+	public Brzozowski(IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton){
 		if(intersectionAutomaton==null){
 			throw new IllegalArgumentException("The intersection automaton to be analyzed cannot be null");
 		}
 		this.intersectionAutomaton=intersectionAutomaton;
-		this.orderedStates=new ArrayList<INTERSECTIONSTATE>(intersectionAutomaton.getVertices());
+		this.orderedStates=new ArrayList<INTERSECTIONSTATE>(intersectionAutomaton.getStates());
 				
 		this.constraintmatrix=this.getConstraintT();
 	}
@@ -76,8 +69,6 @@ public class Brzozowski<
 		
 		// contains the predicates that will be inserted in the final constraint
 		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> ret=new EmptyProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>();
-		
-		Set<AbstractProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> predicates=new HashSet<AbstractProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>();
 		
 		// for each accepting states
 		for(INTERSECTIONSTATE accept: intersectionAutomaton.getAcceptStates()){
@@ -127,7 +118,7 @@ public class Brzozowski<
 			throw new NullPointerException("The vector s cannot be null");
 		}
 		
-		int m=intersectionAutomaton.getVertexCount();
+		int m=intersectionAutomaton.getStates().size();
 		for(int n=m-1; n>=0; n--){
 			s[n]=t[n][n].star().concatenate(s[n]);
 			for(int j=0; j<n;j++){
@@ -157,10 +148,8 @@ public class Brzozowski<
 				CONSTRAINEDELEMENT,
 				STATE, 
 				TRANSITION,
-				TRANSITIONFACTORY,
 				INTERSECTIONSTATE, 
-				INTERSECTIONTRANSITION,
-				INTERSECTIONTRANSITIONFACTORY> 
+				INTERSECTIONTRANSITION> 
 				(this.orderedStates).transform(this.intersectionAutomaton);
 	}
 	
@@ -179,10 +168,8 @@ public class Brzozowski<
 				CONSTRAINEDELEMENT,
 				STATE, 
 				TRANSITION,
-				TRANSITIONFACTORY,
 				INTERSECTIONSTATE, 
-				INTERSECTIONTRANSITION,
-				INTERSECTIONTRANSITIONFACTORY>(orderedStates, intersectionAutomaton, accept).transform(intersectionAutomaton);
+				INTERSECTIONTRANSITION>(orderedStates, intersectionAutomaton, accept).transform(intersectionAutomaton);
 	}
 	/**
 	 * @return the constraintmatrix

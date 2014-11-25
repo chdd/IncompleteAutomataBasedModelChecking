@@ -10,7 +10,9 @@ import java.util.Set;
 import java.util.Stack;
 
 public class IntersectionEmptinessChecker
-<STATE extends State,
+<
+CONSTRAINEDELEMENT extends State,
+STATE extends State,
 TRANSITION extends Transition,
 INTERSECTIONSTATE extends IntersectionState<STATE>,
 INTERSECTIONTRANSITION extends Transition,
@@ -33,7 +35,7 @@ extends BAEmptinessChecker<INTERSECTIONSTATE, INTERSECTIONTRANSITION, AUTOMATON>
 	 * returns true if the complete version (without mixed states) of the intersection automaton is  empty
 	 * @return true if the complete version (without mixed states) of the intersection automaton is  empty
 	 */
-	public boolean isEmpty(ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
+	public boolean isEmpty(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp){
 		
 		if(super.isEmpty()){
 			return true;

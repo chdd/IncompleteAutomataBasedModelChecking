@@ -5,14 +5,15 @@ import it.polimi.model.impl.automata.IBAImpl;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.ConstrainedTransitionFactoryImpl;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.IIntBA;
+import it.polimi.model.interfaces.states.IntersectionStateFactory;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
+import it.polimi.modelchecker.emptinesschecker.IntersectionEmptinessChecker;
 
 /**
  * @author claudiomenghi
@@ -26,33 +27,33 @@ public class ModelChecker
 	<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITION extends Transition, 
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY  extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,INTERSECTIONTRANSITION>> 
+	INTERSECTIONTRANSITION extends Transition> 
 {
-	
 	
 	/**
 	 * contains the specification to be checked
 	 */
-	private BA<CONSTRAINEDELEMENT,STATE,TRANSITION, TRANSITIONFACTORY> specification;
+	private BA<STATE,TRANSITION> specification;
 	
 	/**
 	 * contains the model to be checked
 	 */
-	private  IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model;
+	private  IBA<STATE, TRANSITION> model;
 	
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
 	 */
-	private IntBAImpl<CONSTRAINEDELEMENT, STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> ris;
+	private IntBAImpl<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> ris;
+	
+	private IntersectionStateFactory<STATE, INTERSECTIONSTATE> intersectionStateFactory;
+	private ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> intersectionTransitionFactory;
 	
 	/**
 	 * contains the results of the verification (if the specification is satisfied or not, the time required by the model checking procedure etc)
 	 */
-	private ModelCheckingResults<CONSTRAINEDELEMENT,STATE,TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults;
+	private ModelCheckingResults<CONSTRAINEDELEMENT, STATE,TRANSITION,  INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults;
 	
 	/**
 	 * creates a new {@link ModelChecker}
@@ -61,7 +62,7 @@ public class ModelChecker
 	 * @param mp is an object where the results of the verification (e.g., time required from the verification procedure are stored)
 	 * @throws IllegalArgumentException if the model, the specification or the model checking parameters are null
 	 */
-	public ModelChecker(IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, BA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY> specification, ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE,INTERSECTIONTRANSITION> mp){
+	public ModelChecker(IBA<STATE, TRANSITION> model, BA< STATE,TRANSITION> specification, IntersectionStateFactory<STATE, INTERSECTIONSTATE> intersectionStateFactory, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> intersectionTransitionFactory, ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE,INTERSECTIONTRANSITION> mp){
 		if(model==null){
 			throw new IllegalArgumentException("The model to be checked cannot be null");
 		}
@@ -71,6 +72,9 @@ public class ModelChecker
 		if(mp==null){
 			throw new IllegalArgumentException("The model checking parameters cannot be null");
 		}
+		
+		this.intersectionStateFactory=intersectionStateFactory;
+		this.intersectionTransitionFactory=intersectionTransitionFactory;
 		this.specification=specification;
 		this.model=model;
 		this.verificationResults=mp;
@@ -86,13 +90,13 @@ public class ModelChecker
 		
 		// SPECIFICATION
 		// updates the set of the number of the states in the specification
-		this.verificationResults.setNumStatesSpecification(this.specification.getStateNumber());
+		this.verificationResults.setNumStatesSpecification(this.specification.getStates().size());
 		// updates the number of accepting states of the specification
 		this.verificationResults.setNumAcceptStatesSpecification(this.specification.getAcceptStates().size());
 		
 		// MODEL
 		// updates the number of the states of the model
-		this.verificationResults.setNumStatesModel(this.model.getStateNumber());
+		this.verificationResults.setNumStatesModel(this.model.getStates().size());
 		// updates the number of accepting states of the model
 		this.verificationResults.setNumAcceptStatesModel(this.model.getAcceptStates().size());
 		// updates the number of transparent states in the model
@@ -100,7 +104,7 @@ public class ModelChecker
 		
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		long startIntersectionTime = System.nanoTime();   
-		this.ris=new IntBAImpl<CONSTRAINEDELEMENT,STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>(this.model, this.specification, (INTERSECTIONTRANSITIONFACTORY) new ConstrainedTransitionFactoryImpl());
+		this.ris=new IntBAImpl<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.intersectionTransitionFactory, this.intersectionStateFactory);
 		long stopTime = System.nanoTime(); 
 		
 		// updates the time required to compute the intersection between the model and the specification
@@ -108,7 +112,7 @@ public class ModelChecker
 		
 		// INTERSECTION
 		// sets the number of the states in the intersection
-		this.verificationResults.setNumStatesIntersection(this.ris.getVertexCount());
+		this.verificationResults.setNumStatesIntersection(this.ris.getStates().size());
 		
 		// sets the number of accepting states of the intersection
 		this.verificationResults.setNumAcceptingStatesIntersection(this.ris.getAcceptStates().size());
@@ -117,9 +121,11 @@ public class ModelChecker
 		// sets the number of mixed states in the intersection
 		this.verificationResults.setNumMixedStatesIntersection(this.ris.getMixedStates().size());
 		
+		IntersectionEmptinessChecker<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION>> emptinessChecker
+		=new IntersectionEmptinessChecker<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, IIntBA<STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION>>(this.ris);
 		// verifies if the intersection (without mixed states) is empty
 		long startEmptyTime = System.nanoTime();   
-		boolean res=ris.isEmpty(this.verificationResults);
+		boolean res=emptinessChecker.isEmpty();
 		long stopEmptyTime = System.nanoTime();   
 		// sets the time required to verify if the intersection is empty (without mixed states)
 		this.verificationResults.setEmptyTime((stopEmptyTime-startEmptyTime)/1000000000.0);
@@ -135,7 +141,7 @@ public class ModelChecker
 		else{
 			// check if the automaton including its mixed states is empty
 			startEmptyTime = System.nanoTime();   
-			boolean resComplete=ris.isCompleteEmpty();
+			boolean resComplete=emptinessChecker.isCompleteEmpty();
 			stopEmptyTime = System.nanoTime();   
 			// sets the time required from the emptiness procedure
 			this.verificationResults.setEmptyTime(this.verificationResults.getEmptyTime()+((stopEmptyTime-startEmptyTime)/1000000000.0));
@@ -150,7 +156,7 @@ public class ModelChecker
 				// sets the result of the verification
 				this.verificationResults.setResult(-1);
 				// compute the constraints
-				Brzozowski<CONSTRAINEDELEMENT,STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION,TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> brzozowski=new Brzozowski<CONSTRAINEDELEMENT,STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION,TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>(ris);
+				Brzozowski<CONSTRAINEDELEMENT,STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION> brzozowski=new Brzozowski<CONSTRAINEDELEMENT,STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION>(ris);
 				Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> returnConstraint;
 				Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> simplifiedConstraint;
 				long startConstraintTime = System.nanoTime();   
@@ -179,7 +185,7 @@ public class ModelChecker
 	 * returns the intersection between the model and the specification
 	 * @return the intersection automaton that contains the intersection of the model and the specification
 	 */
-	public IntBAImpl<CONSTRAINEDELEMENT, STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> getIntersection(){
+	public IntBAImpl< STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getIntersection(){
 		return this.ris;
 	}
 	/**
@@ -187,7 +193,7 @@ public class ModelChecker
 	 * @return the resulting parameters of the verification, the number of the states of the intersection automaton the time required 
 	 * from the verification procedure etc
 	 */
-	public ModelCheckingResults<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getParameters() {
+	public ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getParameters() {
 		return verificationResults;
 	}
 	

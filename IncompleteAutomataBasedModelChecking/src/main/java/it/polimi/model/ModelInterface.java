@@ -103,7 +103,7 @@ public interface ModelInterface<CONSTRAINEDELEMENT extends State, STATE extends 
 
 	public void check();
 
-	public ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
+	public ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults();
 
 	public void setModel(IBA<STATE, TRANSITION> model);
 

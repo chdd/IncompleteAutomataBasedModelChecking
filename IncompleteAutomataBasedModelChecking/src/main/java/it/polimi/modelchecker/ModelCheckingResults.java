@@ -2,7 +2,7 @@ package it.polimi.modelchecker;
 
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 import java.util.Stack;
@@ -15,9 +15,9 @@ public class ModelCheckingResults
 	<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITION extends Transition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>> {
+	INTERSECTIONTRANSITION extends Transition> {
 	
 
 	/**

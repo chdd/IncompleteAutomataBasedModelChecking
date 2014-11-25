@@ -1,10 +1,10 @@
 package it.polimi.modelchecker.brzozowski;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 
-public class Constraint<STATE extends State, INTERSECTIONTRANSITION extends LabelledTransition<STATE>> {
+public class Constraint<STATE extends State, INTERSECTIONTRANSITION extends Transition> {
 
 	private final LogicalItem<STATE, INTERSECTIONTRANSITION> p;
 	public Constraint(LogicalItem<STATE, INTERSECTIONTRANSITION> p){

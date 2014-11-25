@@ -102,7 +102,7 @@ public class Model<
 		IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>> intBaReader;
 	
 	
-	private ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+	private ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> mp=new ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
 	
 	
 	public Model(StateFactory<STATE> stateFactory, TransitionFactory<TRANSITION> transitionFactory, IntersectionStateFactory<STATE, INTERSECTIONSTATE> intersectionStateFactory, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> intersectionTransitionFactory){
@@ -197,15 +197,15 @@ public class Model<
 	
 	@Override
 	public void check(){
-		mp=new ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
+		mp=new ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>();
 		
-		ModelChecker< STATE, TRANSITION,  INTERSECTIONSTATE,INTERSECTIONTRANSITION> mc=new 
-		ModelChecker<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.getModel(), this.getSpecification(), mp);
+		ModelChecker<CONSTRAINEDELEMENT, STATE, TRANSITION,  INTERSECTIONSTATE,INTERSECTIONTRANSITION> mc=new 
+		ModelChecker<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.getModel(), this.getSpecification(), this.intersectionStateFactory, this.intersectionTransitionFactory, mp);
 		mc.check();
 		this.changeIntersection(mc.getIntersection());
 	}
 	
-	public ModelCheckingResults<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
+	public ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getVerificationResults(){
 		return this.mp;
 	}
 	

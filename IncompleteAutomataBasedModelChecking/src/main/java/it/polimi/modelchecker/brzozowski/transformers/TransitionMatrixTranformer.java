@@ -1,15 +1,13 @@
 package it.polimi.modelchecker.brzozowski.transformers;
 
-import java.util.ArrayList;
-
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
+
+import java.util.ArrayList;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -28,19 +26,15 @@ import org.apache.commons.collections15.Transformer;
 public class TransitionMatrixTranformer<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITION extends Transition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY  extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,INTERSECTIONTRANSITION>> 
+	INTERSECTIONTRANSITION extends Transition> 
 	implements Transformer<
-						DrawableIntBA<
-							CONSTRAINEDELEMENT, 
+						IIntBA<
 							STATE, 
 							TRANSITION, 
-							INTERSECTIONSTATE, 
-							INTERSECTIONTRANSITION,  
-							INTERSECTIONTRANSITIONFACTORY>, 
+							INTERSECTIONSTATE,
+							INTERSECTIONTRANSITION>, 
 							LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]> {
 
 	/**
@@ -64,19 +58,19 @@ public class TransitionMatrixTranformer<
 	 */
 	@Override
 	public LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][] transform(
-			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersectionAutomaton) {
-		TransitionToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> dnfToLogic=new 
-				TransitionToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(intersectionAutomaton);
+			IIntBA< STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton) {
+		TransitionToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> dnfToLogic=new 
+				TransitionToLogicalItemTransformer<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(intersectionAutomaton);
 		LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][]  ret=
-				new LogicalItem[intersectionAutomaton.getVertexCount()][intersectionAutomaton.getVertexCount()];
+				new LogicalItem[intersectionAutomaton.getStates().size()][intersectionAutomaton.getStates().size()];
 		
 		for(int i=0; i< this.orderedStates.size(); i++){
 			INTERSECTIONSTATE s1=this.orderedStates.get(i);
 			for(int j=0; j<this.orderedStates.size(); j++){
 				INTERSECTIONSTATE s2=this.orderedStates.get(j);
 				boolean setted=false;
-				for(INTERSECTIONTRANSITION t: intersectionAutomaton.getOutEdges(s1)){
-					if(intersectionAutomaton.getDest(t).equals(s2)){
+				for(INTERSECTIONTRANSITION t: intersectionAutomaton.getGraph().getOutEdges(s1)){
+					if(intersectionAutomaton.getGraph().getDest(t).equals(s2)){
 						
 						ret[i][j]=dnfToLogic.transform(t);
 						setted=true;
