@@ -1,6 +1,7 @@
 package it.polimi.model.interfaces.transitions;
 
 import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.labeling.DNFFormula;
 import it.polimi.model.interfaces.labeling.Formula;
 
 import org.apache.commons.collections15.Factory;
@@ -24,14 +25,14 @@ public interface ConstrainedTransitionFactory<CONSTRAINEDELEMENT, TRANSITION ext
 	 * CONSTRAINEDELEMENT
 	 * 
 	 * @param condition
-	 *            specifies the {@link Formula} the element must satisfy
+	 *            specifies the {@link DNFFormula} the element must satisfy
 	 * @param element
 	 *            is the element which is constrained
 	 * @return a new {@link Transition} with the specified condition and element
 	 * @throws NullPointerException
 	 *             if the condition or the element are null
 	 */
-	public TRANSITION create(Formula condition, CONSTRAINEDELEMENT element);
+	public TRANSITION create(DNFFormula condition, CONSTRAINEDELEMENT element);
 
 	/**
 	 * creates a new {@link Transition} with the specified id, condition and
@@ -40,15 +41,15 @@ public interface ConstrainedTransitionFactory<CONSTRAINEDELEMENT, TRANSITION ext
 	 * @param id
 	 *            is the id of the {@link Transition} to be created
 	 * @param condition
-	 *            is the {@link Formula} that specifies the condition the
+	 *            is the {@link DNFFormula} that specifies the condition the
 	 *            CONSTRAINEDELEMENT must satisfy
 	 * @param element
 	 *            is the element which is constrained
 	 * @return {@link NullPointerException} if the condition or the
 	 *         CONSTRAINEDELEMENT are null
 	 * @throws NullPointerException
-	 *             if the {@link Formula} or the CONSTRAINEDELEMENT are null
+	 *             if the {@link DNFFormula} or the CONSTRAINEDELEMENT are null
 	 */
-	public TRANSITION create(int id, Formula condition,
+	public TRANSITION create(int id, DNFFormula condition,
 			CONSTRAINEDELEMENT element);
 }
