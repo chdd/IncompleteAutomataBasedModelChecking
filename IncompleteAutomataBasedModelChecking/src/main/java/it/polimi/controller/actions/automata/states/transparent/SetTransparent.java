@@ -4,12 +4,8 @@ import it.polimi.controller.actions.ActionInterface;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.view.ViewInterface;
 
 import java.awt.event.ActionEvent;
@@ -19,11 +15,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 @SuppressWarnings("serial")
 public class SetTransparent<
 	CONSTRAINEDELEMENT extends State,
-	STATE extends State, STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+	STATE extends State, 
+	TRANSITION extends Transition>
 		extends ActionEvent implements
-		ActionInterface<CONSTRAINEDELEMENT,STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		ActionInterface<CONSTRAINEDELEMENT,STATE, TRANSITION> {
 	
 	/**
 	 * is the state to be changed into transparent
@@ -57,12 +52,9 @@ public class SetTransparent<
 
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONSTATEFACTORY extends 
-	IntersectionStateFactory<STATE, INTERSECTIONSTATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> void perform(
-			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY> view)
+	INTERSECTIONTRANSITION extends Transition> void perform(
+			ModelInterface<CONSTRAINEDELEMENT, STATE,  TRANSITION,  INTERSECTIONSTATE,  INTERSECTIONTRANSITION> model,
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view)
 			throws Exception {
 		if (model.getModel().isTransparent(state)) {
 			model.getModel().getTransparentStates().remove(state);
@@ -74,10 +66,9 @@ public class SetTransparent<
 			
 			DefaultMutableTreeNode child=new DefaultMutableTreeNode(
 					new RefinementNode<
-					CONSTRAINEDELEMENT,
 					STATE, 
-					TRANSITION, 
-					TRANSITIONFACTORY>(state, model.getModelTransitionFactory()));
+					TRANSITION
+					>(state, model.getModel().getTransitionFactory(), model.getModel().getStateFactory()));
 			model.getStateRefinementMap().put(state, child);
 			model.getModelRefinementHierarchy().insertNodeInto(child, 
 					parent, 
