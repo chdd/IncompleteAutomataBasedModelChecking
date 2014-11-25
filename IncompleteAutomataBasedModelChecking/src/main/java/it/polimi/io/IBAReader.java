@@ -29,12 +29,11 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  * @param <AUTOMATONFACTORY> is the {@link Factory} which creates an empty {@link DrawableIBA}
  */
 public class IBAReader<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
 	TRANSITION extends Transition, 
 	AUTOMATON extends IBA<STATE, TRANSITION>,
 	AUTOMATONFACTORY extends IBAFactory<STATE, TRANSITION, AUTOMATON>>
-	extends BAReader<CONSTRAINEDELEMENT, STATE, TRANSITION, AUTOMATON, AUTOMATONFACTORY>{
+	extends BAReader<STATE, TRANSITION, AUTOMATON, AUTOMATONFACTORY>{
 
 	/**
 	 * creates a new {@link IBAReader}

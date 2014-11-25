@@ -38,7 +38,6 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  * @param <AUTOMATONFACTORY> is a {@link Factory} which is able to create a new empty {@link DrawableBA}
  */
 public class BAReader<
-		CONSTRAINEDELEMENT extends State,
 		STATE extends State, 
 		TRANSITION extends Transition,
 		AUTOMATON extends BA<STATE, TRANSITION>,
@@ -265,7 +264,7 @@ public class BAReader<
 			}
 			return this.transitionFactory.create(
 					Integer.parseInt(input.getId()),
-					DNFFormulaImpl.<CONSTRAINEDELEMENT>loadFromString(input.getProperty("DNFFormula")));
+					DNFFormulaImpl.loadFromString(input.getProperty("DNFFormula")));
 		}
 	}
 	
