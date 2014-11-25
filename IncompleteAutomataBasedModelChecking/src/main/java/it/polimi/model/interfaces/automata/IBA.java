@@ -1,8 +1,7 @@
 package it.polimi.model.interfaces.automata;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.util.Set;
 
@@ -16,9 +15,8 @@ import java.util.Set;
 public interface IBA<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
-	extends BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> {
+	TRANSITION extends Transition> 
+	extends BA<STATE, TRANSITION> {
 
 	/**
 	 * check if the state is transparent
@@ -40,6 +38,6 @@ public interface IBA<
 	 */
 	public void addTransparentState(STATE s);
 	
-	public void replace(STATE transparentState, IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ibaToInject);
+	public void replace(STATE transparentState, IBA<CONSTRAINEDELEMENT, STATE, TRANSITION> ibaToInject);
 	
 }
