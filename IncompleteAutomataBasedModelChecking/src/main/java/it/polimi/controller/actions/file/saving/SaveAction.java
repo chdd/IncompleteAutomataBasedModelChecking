@@ -1,12 +1,10 @@
 package it.polimi.controller.actions.file.saving;
 
-import java.io.File;
-
 import it.polimi.controller.actions.file.FileAction;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+
+import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,11 +15,9 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 public abstract class SaveAction<
 CONSTRAINEDELEMENT extends State, 
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+TRANSITION extends Transition,
 LAYOUT extends AbstractLayout<?, ?>>
-		extends FileAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		extends FileAction<CONSTRAINEDELEMENT, STATE,  TRANSITION> {
 
 	protected LAYOUT layout;
 	

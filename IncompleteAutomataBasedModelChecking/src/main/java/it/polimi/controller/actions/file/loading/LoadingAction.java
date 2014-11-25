@@ -2,9 +2,7 @@ package it.polimi.controller.actions.file.loading;
 
 import it.polimi.controller.actions.file.FileAction;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.io.File;
 
@@ -20,10 +18,8 @@ public abstract class LoadingAction
 <
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
-	extends FileAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+TRANSITION extends Transition>
+	extends FileAction<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 
 	public LoadingAction(Object source, int id, String command) {
 		super(source, id, command);

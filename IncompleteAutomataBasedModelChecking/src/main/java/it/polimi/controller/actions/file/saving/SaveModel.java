@@ -4,13 +4,9 @@ import it.polimi.io.IBAWriter;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.view.ViewInterface;
 
 import java.io.BufferedWriter;
@@ -26,48 +22,38 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 public class SaveModel<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
+TRANSITION extends Transition, 
 LAYOUT extends AbstractLayout<STATE, TRANSITION>>
-	extends SaveAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, LAYOUT> {
+	extends SaveAction<CONSTRAINEDELEMENT, STATE,  TRANSITION, LAYOUT> {
 
-	private IBAWriter<CONSTRAINEDELEMENT, STATE, 
+	private IBAWriter<STATE, 
 	TRANSITION,
-	TRANSITIONFACTORY, 
-	DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>> ibaToFile;
+	IBA<STATE, TRANSITION>> ibaToFile;
 	
 	public SaveModel(Object source, int id, String command, LAYOUT layout) {
 		super(source, id, command, layout);
-		this.ibaToFile=new IBAWriter<CONSTRAINEDELEMENT,STATE, 
+		this.ibaToFile=new IBAWriter<STATE, 
 				TRANSITION,
-				TRANSITIONFACTORY, 
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>(layout);
+				IBA<STATE, TRANSITION>>(layout);
 		
 	 }
 
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>void perform(
-			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-			INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
-			TRANSITIONFACTORY,
-			INTERSECTIONTRANSITIONFACTORY> view) throws Exception {
+	INTERSECTIONTRANSITION extends Transition>void perform(
+			ModelInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, 
+			INTERSECTIONTRANSITION> model,
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view) throws Exception {
 		String filePath=this.getDirectory("model.iba");
 		if(filePath!=null){
 			for(Entry<STATE, DefaultMutableTreeNode> entry: model.getStateRefinementMap().entrySet()){
 				
 				@SuppressWarnings("unchecked")
-				RefinementNode<CONSTRAINEDELEMENT,
+				RefinementNode<
 						STATE, 
-						TRANSITION, 
-						TRANSITIONFACTORY> refinementNode= (RefinementNode<CONSTRAINEDELEMENT,
+						TRANSITION> refinementNode= (RefinementNode<
 								STATE, 
-								TRANSITION, 
-								TRANSITIONFACTORY>)entry.getValue().getUserObject();
+								TRANSITION>)entry.getValue().getUserObject();
 				this.ibaToFile.save(refinementNode.getAutomaton()
 						, new PrintWriter(new BufferedWriter(new FileWriter(filePath+"/"+refinementNode.getState().getId()+"-"+refinementNode.getState().getName()+".iba"))));
 			}

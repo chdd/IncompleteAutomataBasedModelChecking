@@ -5,14 +5,10 @@ import it.polimi.model.ModelInterface;
 import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.automata.IBAFactoryImpl;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.IBAFactory;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.ViewInterface;
 
 import java.io.BufferedReader;
@@ -28,18 +24,14 @@ import edu.uci.ics.jung.io.GraphIOException;
 public class LoadModel<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
-	extends LoadingAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>{
+TRANSITION extends Transition> 
+	extends LoadingAction<CONSTRAINEDELEMENT, STATE, TRANSITION>{
 
-	private IBAReader<CONSTRAINEDELEMENT, STATE, 
+	private IBAReader<STATE, 
 	TRANSITION,
-	TRANSITIONFACTORY, 
-	STATEFACTORY,
-	DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-	IBAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY,
-		DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>> ibaReader;
+	IBA<STATE, TRANSITION>,
+	IBAFactory<STATE, TRANSITION,
+		IBA<STATE, TRANSITION>>> ibaReader;
 	
 	public LoadModel(Object source, int id, String command) {
 		super(source, id, command);
@@ -47,32 +39,25 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  void perform(
-			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-			INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
-			TRANSITIONFACTORY,
-			INTERSECTIONTRANSITIONFACTORY> view) throws Exception {
+	INTERSECTIONTRANSITION extends Transition>  void perform(
+			ModelInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, 
+			INTERSECTIONTRANSITION> model,
+			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view) throws Exception {
 		String file=this.getFile(new FileNameExtensionFilter("Incomplete Buchi Automaton (*.iba)", "iba"));
 		if(file!=null){
 			
 			this.ibaReader=new IBAReader<
-					CONSTRAINEDELEMENT,
 					STATE, 
 					TRANSITION,
-					TRANSITIONFACTORY, 
-					STATEFACTORY,
-					DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>,
-					IBAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-					DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>>(
-							model.getModelTransitionFactory(),
-							model.getModelStateFactory(), 
-							new IBAFactoryImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(model.getModelTransitionFactory()),
+					IBA<STATE, TRANSITION>,
+					IBAFactory<STATE, TRANSITION, 
+					IBA<STATE, TRANSITION>>>(
+							model.getModel().getTransitionFactory(),
+							model.getModel().getStateFactory(), 
+							new IBAFactoryImpl<STATE, TRANSITION>(model.getModel().getTransitionFactory(), model.getModel().getStateFactory()),
 							new BufferedReader(new FileReader(file)));
 			
-			model.resetModel(model.getModelStateFactory().create("Model"), this.ibaReader.readGraph());
+			model.resetModel(model.getModel().getStateFactory().create("Model"), this.ibaReader.readGraph());
 			for(STATE s: model.getModel().getTransparentStates()){
 				this.recLoading(s, file, model, (DefaultMutableTreeNode) model.getModelRefinementHierarchy().getRoot());
 			}
@@ -81,39 +66,32 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITI
 	}
 	
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
+	INTERSECTIONTRANSITION extends Transition>
 	void  recLoading(STATE transparentState, 
 			String path,
-			ModelInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-			INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
+			ModelInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, 
+			INTERSECTIONTRANSITION> model,
 			DefaultMutableTreeNode parent) throws FileNotFoundException, GraphIOException{
 		
 		String newFilePath=path.replace(path.substring(path.lastIndexOf("/")+1), 
 				transparentState.getId()+"-"+transparentState.getName()+".iba");
 		this.ibaReader=new IBAReader<
-				CONSTRAINEDELEMENT,
 				STATE, 
 				TRANSITION,
-				TRANSITIONFACTORY, 
-				STATEFACTORY,
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>,
-				IBAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-				DrawableIBA<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>>>(
-						model.getModelTransitionFactory(),
-						model.getModelStateFactory(), 
-						new IBAFactoryImpl<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY>(model.getModelTransitionFactory()),
+				IBA<STATE, TRANSITION>,
+				IBAFactory<STATE, TRANSITION, 
+				IBA<STATE, TRANSITION>>>(
+						model.getModel().getTransitionFactory(),
+						model.getModel().getStateFactory(), 
+						new IBAFactoryImpl<STATE, TRANSITION>(model.getModel().getTransitionFactory(), model.getModel().getStateFactory()),
 						new BufferedReader(new FileReader
 								(newFilePath)));
 		
-		DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> childIba=this.ibaReader.readGraph();
+		IBA<STATE, TRANSITION> childIba=this.ibaReader.readGraph();
 		DefaultMutableTreeNode child=new DefaultMutableTreeNode(
 				new RefinementNode<
-				CONSTRAINEDELEMENT,
 				STATE, 
-				TRANSITION, 
-				TRANSITIONFACTORY>(transparentState, childIba));
+				TRANSITION>(transparentState, childIba));
 		
 		model.getStateRefinementMap().put(transparentState, child);
 		model.getModelRefinementHierarchy().insertNodeInto(child, 

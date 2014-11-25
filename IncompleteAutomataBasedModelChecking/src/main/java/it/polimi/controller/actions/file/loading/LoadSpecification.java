@@ -4,14 +4,10 @@ import it.polimi.io.BAReader;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.automata.BAFactoryImpl;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.BAFactory;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 import it.polimi.view.ViewInterface;
 
 import java.io.BufferedReader;
@@ -23,21 +19,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class LoadSpecification<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> 
-extends LoadingAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>{
+TRANSITION extends Transition> 
+extends LoadingAction<CONSTRAINEDELEMENT, STATE, TRANSITION>{
 
 	/**
 	 * 
 	 */
-	private BAReader<CONSTRAINEDELEMENT, STATE, 
+	private BAReader<STATE, 
 		TRANSITION,
-		TRANSITIONFACTORY, 
-		STATEFACTORY,
-		DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-		BAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, 
-			DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>> baReader;
+		BA<STATE, TRANSITION>,
+		BAFactory<STATE, TRANSITION, 
+			BA<STATE, TRANSITION>>> baReader;
 	
 	
 	public LoadSpecification(Object source, int id, String command) {
@@ -46,28 +38,22 @@ extends LoadingAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANS
 
 	@Override
 	public <INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> 
+	INTERSECTIONTRANSITION extends Transition> 
 	void  perform(
-			ModelInterface<CONSTRAINEDELEMENT,STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY, 
-	INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> model,
-	ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, 
-	TRANSITIONFACTORY,
-	INTERSECTIONTRANSITIONFACTORY> view) throws Exception {
+			ModelInterface<CONSTRAINEDELEMENT,STATE, TRANSITION, INTERSECTIONSTATE, 
+	INTERSECTIONTRANSITION> model,
+	ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view) throws Exception {
 		String file=this.getFile(new FileNameExtensionFilter("Buchi Automaton (*.ba)", "ba"));
 		if(file!=null){
 			
-			this.baReader=new BAReader<CONSTRAINEDELEMENT,STATE, 
-					TRANSITION,
-					TRANSITIONFACTORY, 
-					STATEFACTORY,
-					DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-					BAFactory<CONSTRAINEDELEMENT,STATE, TRANSITION, TRANSITIONFACTORY, 
-						DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>>(
-								model.getSpecificationTransitionFactory(),
-								model.getSpecificationStateFactory(), 
-							new BAFactoryImpl<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>(model.getSpecificationTransitionFactory()),
+			this.baReader=new BAReader<STATE, 
+					TRANSITION, 
+					BA<STATE, TRANSITION>,
+					BAFactory<STATE, TRANSITION, 
+						BA< STATE, TRANSITION>>>(
+								model.getSpecification().getTransitionFactory(),
+								model.getSpecification().getStateFactory(), 
+							new BAFactoryImpl<STATE, TRANSITION>(model.getSpecification().getTransitionFactory(), model.getSpecification().getStateFactory()),
 							new BufferedReader(new FileReader(file)));
 			
 			model.setSpecification(this.baReader.readGraph());
