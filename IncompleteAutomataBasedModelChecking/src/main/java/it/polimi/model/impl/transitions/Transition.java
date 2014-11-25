@@ -53,7 +53,7 @@ public class Transition {
 	 * @return the {@link Formula} that is the condition that labels the
 	 *         {@link Transition}
 	 */
-	public Formula getCondition() {
+	public DNFFormula getCondition() {
 		return this.condition;
 	}
 
