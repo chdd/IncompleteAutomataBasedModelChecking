@@ -130,7 +130,7 @@ public class RandomIBAGenerator<STATE extends State, TRANSITION extends Transiti
 	 * @return a new random graph
 	 */
 
-	public void getRandomAutomaton2(int n, double transitionProbability,
+	public IBA<STATE, TRANSITION> getRandomAutomaton2(int n, double transitionProbability,
 			int numInitial, int numAccepting, int numTransparentStates,
 			Set<Proposition> alphabet) {
 		if (transitionProbability >= 1 || transitionProbability < 0) {
@@ -184,5 +184,6 @@ public class RandomIBAGenerator<STATE extends State, TRANSITION extends Transiti
 				}
 			}
 		}
+		return this.iba;
 	}
 }

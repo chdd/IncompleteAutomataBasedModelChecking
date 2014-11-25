@@ -3,16 +3,18 @@ package it.polimi.performance;
 import it.polimi.io.BAReader;
 import it.polimi.model.impl.automata.BAFactoryImpl;
 import it.polimi.model.impl.automata.IBAImpl;
+import it.polimi.model.impl.automata.random.RandomIBAGenerator;
 import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.IntersectionState;
+import it.polimi.model.impl.states.IntersectionStateFactoryImpl;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.impl.transitions.LabelledTransitionFactoryImpl;
+import it.polimi.model.impl.states.StateFactoryImpl;
+import it.polimi.model.impl.transitions.ConstrainedTransitionFactoryImpl;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.impl.transitions.TransitionFactoryImpl;
+import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.BAFactory;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.modelchecker.ModelChecker;
 import it.polimi.modelchecker.ModelCheckingResults;
 
@@ -52,7 +54,7 @@ public class PerformanceEvaluator{
 
 	public static void main(String args[]) throws  IOException, GraphIOException {
 		
-		ModelCheckingResults<State, State,LabelledTransition<State>, IntersectionState<State>, LabelledTransition<State>> mp=new ModelCheckingResults<State, State, LabelledTransition<State>, IntersectionState<State>, LabelledTransition<State>>();
+		ModelCheckingResults<State, State,Transition, IntersectionState<State>, Transition> mp=new ModelCheckingResults<State, State, Transition, IntersectionState<State>, Transition>();
 		
 		for(int n=initialNumberOfStates; n<=maxNumberOfStates; n=n+numberOfStatesIncrement){
 			
@@ -72,45 +74,40 @@ public class PerformanceEvaluator{
 						writer = new PrintWriter(new BufferedWriter(new FileWriter(resultsPath+"res"+j+".dat", true)));
 					}
 					
-					IBAImpl<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>> a1 =new IBAImpl<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>>(new LabelledTransitionFactoryImpl());
-					a1.getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
+					IBA<State, Transition> a1 =new IBAImpl< State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl());
 					
-					BAReader<State,
+					a1=new RandomIBAGenerator<State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl()).getRandomAutomaton2(n, 2*Math.log(n)/n, numInitialStates, numAcceptingStates, i, alphabetModel);
+					
+					BAReader<
 					State, 
-					LabelledTransition<State>,
-					LabelledTransitionFactory<State, LabelledTransition<State>>, 
-					StateFactory<State>,
-					DrawableBA<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>>,
-					BAFactory<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, DrawableBA<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>>>> baReader=
-						new BAReader<State, State, 
-							LabelledTransition<State>,
-							LabelledTransitionFactory<State, LabelledTransition<State>>, 
-							StateFactory<State>,
-							DrawableBA<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>>,
-							BAFactory<State ,State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, 
-							DrawableBA<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>>>>(
-									new LabelledTransitionFactoryImpl(), 
-									new StateFactory<State>(), 
-									new BAFactoryImpl<State ,State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>>(new LabelledTransitionFactoryImpl()),
+					Transition, 
+					BA<State, Transition>,
+					BAFactory<State, Transition, BA<State, Transition>>> baReader=
+						new BAReader<State, 
+						Transition, 
+						BA<State, Transition>,
+						BAFactory<State, Transition, BA<State, Transition>>>(
+									new TransitionFactoryImpl(), 
+									new StateFactoryImpl(), 
+									new BAFactoryImpl<State, Transition>(new TransitionFactoryImpl(), new StateFactoryImpl()),
 									new BufferedReader(new FileReader("src/main/resources/Automaton2.xml")));
 				
 					
 					
-					DrawableBA<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>> a2=baReader.readGraph();
+					BA<State, Transition> a2=baReader.readGraph();
 					
-					ModelChecker<State, State, LabelledTransition<State>, LabelledTransitionFactory<State, LabelledTransition<State>>, IntersectionState<State>, LabelledTransition<State>,
-					ConstrainedTransitionFactory<State, LabelledTransition<State>>> mc=
-							new ModelChecker<State, State, 
-								LabelledTransition<State>, 
-								LabelledTransitionFactory<State, LabelledTransition<State>>,
-								IntersectionState<State>, LabelledTransition<State>,
-								ConstrainedTransitionFactory<State, LabelledTransition<State>>>(a1, a2, mp);
+					ModelChecker<State, State, Transition,
+					IntersectionState<State>, Transition> mc=
+							new ModelChecker<State, State, Transition,
+							IntersectionState<State>, Transition>(a1, a2, 
+									new IntersectionStateFactoryImpl(),
+									new ConstrainedTransitionFactoryImpl(),
+									mp);
 					mc.check();
 					writer.println(mp.toString());
 					System.out.println("Experiment Number: "+j+" \t states: "+n+"\t transparent states: "+i+"\t states in the intersection: "+mp.getNumStatesIntersection()+"\t satisfied: "+mp.getResult()+"\t time: "+mp.getConstraintComputationTime());
 					
 					writer.close();
-					mc.getIntersection().reset();
 				}
 			}
 			PrintWriter confWriter = new PrintWriter("/Users/Claudio1/Desktop/LTLLover/conf.dat", "UTF-8");
