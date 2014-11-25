@@ -3,6 +3,7 @@ package it.polimi.model.interfaces.automata;
 import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.states.StateFactory;
 import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import java.util.Set;
@@ -36,7 +37,6 @@ public interface BA<STATE extends State, TRANSITION extends Transition> extends
 	 */
 	public Set<Proposition> getPropositions();
 
-	public TransitionFactory<TRANSITION> getTransitionFactory();
 
 	/**
 	 * return the {@link Transition}s that exits the {@link State} state
@@ -170,4 +170,12 @@ public interface BA<STATE extends State, TRANSITION extends Transition> extends
 	public DirectedSparseGraph<STATE, TRANSITION> getGraph();
 	
 	
+	public boolean removeState(STATE vertex);
+	
+	
+	public void removeTransition(TRANSITION transition);
+	
+	public StateFactory<STATE> getStateFactory();
+	
+	public TransitionFactory<TRANSITION> getTransitionFactory();
 }

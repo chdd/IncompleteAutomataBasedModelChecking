@@ -212,15 +212,15 @@ public class IBAImpl<STATE extends State, TRANSITION extends Transition>
 		if (this.isInitial(transparentState)) {
 			this.addInitialStates(ibaToInjectImpl.getInitialStates());
 		}
-		this.removeVertex(transparentState);
+		this.removeState(transparentState);
 	}
 
 	@Override
-	public boolean removeVertex(STATE vertex) {
+	public boolean removeState(STATE vertex) {
 
 		if (this.transparentStates.contains(vertex)) {
 			this.transparentStates.remove(vertex);
 		}
-		return super.removeVertex(vertex);
+		return super.removeState(vertex);
 	}
 }

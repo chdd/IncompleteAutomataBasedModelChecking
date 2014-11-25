@@ -443,13 +443,7 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		return EdgeType.DIRECTED;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * edu.uci.ics.jung.graph.DirectedSparseGraph#removeVertex(java.lang.Object)
-	 */
-	protected boolean removeVertex(STATE vertex) {
+	public boolean removeState(STATE vertex) {
 		if (this.initialStates.contains(vertex)) {
 			this.initialStates.remove(vertex);
 		}
@@ -459,6 +453,11 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		return this.automataGraph.removeVertex(vertex);
 	}
 
+	
+	public void removeTransition(TRANSITION transition){
+		this.automataGraph.removeEdge(transition);
+	}
+	
 	/**
 	 * returns the transitions that exits the {@link State} state
 	 * 
@@ -486,5 +485,13 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	public DirectedSparseGraph<STATE, TRANSITION> getGraph(){
 		return this.automataGraph;
 	}
+	
+	public StateFactory<STATE> getStateFactory(){
+		return this.stateFactory;
+	}
+	
+
+	
+	
 	
 }

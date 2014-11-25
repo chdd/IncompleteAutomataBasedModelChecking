@@ -38,5 +38,7 @@ public interface IBA<
 	public void addTransparentState(STATE s);
 	
 	public void replace(STATE transparentState, IBA<STATE, TRANSITION> ibaToInject);
+
+	public IBA<STATE, TRANSITION> clone();
 	
 }
