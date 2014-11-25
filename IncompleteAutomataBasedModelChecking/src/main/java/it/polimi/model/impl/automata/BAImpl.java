@@ -1,20 +1,17 @@
 package it.polimi.model.impl.automata;
 
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
 import it.polimi.model.impl.labeling.Proposition;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.labeling.DNFFormula;
 import it.polimi.model.interfaces.states.StateFactory;
 import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.Stack;
 
 import org.apache.commons.collections15.Factory;
 
@@ -32,15 +29,26 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		implements BA<STATE, TRANSITION> {
 
 	/**
+	 * contains the {@link StateFactory} which allows to create the
+	 * {@link State} of the {@link BA}
+	 */
+	protected StateFactory<STATE> stateFactory;
+
+	/**
+	 * contains the {@link Factory} which allows to create the
+	 * {@link Transition}s of the {@link BA}
+	 */
+	protected TransitionFactory<TRANSITION> transitionFactory;
+
+	/**
 	 * contains the initial states of the {@link BA}
 	 */
 	protected Set<STATE> initialStates;
 
 	/**
-	 * contains the {@link StateFactory} which allows to create the
-	 * {@link State} of the {@link BA}
+	 * contains the accepting {@link State}s of the {@link BA}
 	 */
-	protected StateFactory<STATE> stateFactory;
+	protected Set<STATE> acceptStates;
 
 	/**
 	 * contains the set of the {@link Proposition} of the {@link BA}
@@ -51,20 +59,6 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	 * contains the graph on which the {@link BA} is based
 	 */
 	protected DirectedSparseGraph<STATE, TRANSITION> automataGraph;
-
-	/**
-	 * contains the accepting {@link State}s of the {@link BA}
-	 */
-	protected Set<STATE> acceptStates;
-
-	/**
-	 * contains the {@link Factory} which allows to create the
-	 * {@link Transition}s of the {@link BA}
-	 */
-	protected TransitionFactory<TRANSITION> transitionFactory;
-
-	// TODO to be removed
-	protected Map<Integer, STATE> mapNameState;
 
 	/**
 	 * creates a new empty {@link BAImpl}
@@ -95,7 +89,6 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		this.initialStates = new HashSet<STATE>();
 		this.transitionFactory = transitionFactory;
 		this.stateFactory = stateFactory;
-		this.mapNameState = new HashMap<Integer, STATE>();
 		this.automataGraph = new DirectedSparseGraph<STATE, TRANSITION>();
 	}
 
@@ -152,7 +145,7 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 					"The state s to be added cannot be null");
 		}
 		this.initialStates.add(s);
-		this.addVertex(s);
+		this.addState(s);
 	}
 
 	/**
@@ -184,6 +177,21 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	}
 
 	/**
+	 * sets the {@link Set} of accepting {@link State} of the {@link BA}
+	 * 
+	 * @param acceptStates
+	 *            the {@link Set} of the accepting {@link State} of the
+	 *            {@link BA}
+	 * @throws NullPointerException
+	 *             if the {@link Set} of acceptState is null or if there exists
+	 *             an initial {@link State} which is null
+	 */
+	public void setAcceptStates(Set<STATE> acceptStates) {
+		this.acceptStates = new HashSet<STATE>();
+		this.addAcceptStates(acceptStates);
+	}
+
+	/**
 	 * adds the {@link Set} of the {@link State} to the accepting States of the
 	 * {@link BA}
 	 * 
@@ -191,7 +199,8 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	 *            the {@link Set} of the {@link State} to be added to the
 	 *            {@link Set} of the accepting {@link State}s of the {@link BA}
 	 * @throws NullPointerException
-	 *             if the {@link Set} of the {@link State} is null
+	 *             if the {@link Set} of the {@link State} is null or if there
+	 *             is a {@link State} in the {@link Set} that is null
 	 */
 	public void addAcceptStates(Set<STATE> states) {
 		if (states == null) {
@@ -220,7 +229,7 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 					"The state s to be added cannot be null");
 		}
 		this.acceptStates.add(s);
-		this.addVertex(s);
+		this.addState(s);
 	}
 
 	/**
@@ -229,8 +238,8 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	 * 
 	 * @param s
 	 *            the {@link State} to be checked if accepting
-	 * @return true if the {@link State}s is contained into the {@link Set} of the accept
-	 *         {@link State}s of the automaton, false otherwise
+	 * @return true if the {@link State}s is contained into the {@link Set} of
+	 *         the accept {@link State}s of the automaton, false otherwise
 	 * @throws NullPointerException
 	 *             is generate if the {@link State} s is null
 	 */
@@ -252,6 +261,46 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	}
 
 	/**
+	 * add the {@link Set} of the {@link State} of the {@link BA}
+	 * 
+	 * @param states
+	 *            the {@link Set} of the {@link State} to be added to the
+	 *            {@link BA}
+	 * @throws NullPointerException
+	 *             if the {@link Set} of the {@link State}s is null
+	 * @throws NullPointerException
+	 *             if there exists a null {@link State} in the {@link Set} of
+	 *             the {@link State}s
+	 * 
+	 */
+	public void addStates(Set<STATE> states) {
+		if (states == null) {
+			throw new NullPointerException(
+					"The set of the states cannot be null");
+		}
+		for (STATE s : states) {
+			this.addState(s);
+		}
+	}
+
+	/**
+	 * adds the {@link State} state to the {@link Set} of the {@link State}
+	 * present in the {@link DirectedSparseGraph}
+	 * 
+	 * @param state
+	 *            is the {@link State} to be added to the {@link BA}
+	 * @throws NullPointerException
+	 *             if the {@link State} to be added is null
+	 */
+	public void addState(STATE state) {
+		if (state == null) {
+			throw new NullPointerException(
+					"The state to be added cannot be null");
+		}
+		this.automataGraph.addVertex(state);
+	}
+
+	/**
 	 * returns the {@link Set} of the {@link State}s of the {@link BA}
 	 * 
 	 * @return the {@link Set} of the {@link State}s of the {@link BA}
@@ -261,60 +310,68 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 				this.automataGraph.getVertices()));
 	}
 
-	public void setAlphabet(Set<Proposition> propositions) {
+	/**
+	 * sets the {@link Proposition}s of the {@link BA}
+	 * 
+	 * @param propositions
+	 *            the {@link Proposition} of the {@link BA}
+	 * @throws NullPointerException
+	 *             if the {@link Set} of the {@link Proposition}s is null or if
+	 *             there exists a proposition in the {@link Set} which is null
+	 */
+	public void setPropositions(Set<Proposition> propositions) {
 		this.alphabet = new HashSet<Proposition>();
+		this.addPropositions(propositions);
+	}
+
+	/**
+	 * adds the {@link Set} of the {@link Proposition} to the
+	 * {@link Proposition} of the {@link BA}
+	 * 
+	 * @param propositions
+	 *            the {@link Proposition} to be added to the {@link BA}
+	 * @throws NullPointerException
+	 *             if the {@link Set} of the {@link Proposition}s is null or if
+	 *             there exists a proposition in the {@link Set} which is null
+	 */
+	public void addPropositions(Set<Proposition> propositions) {
+		if (propositions == null) {
+			throw new NullPointerException(
+					"The set of the proposition cannot be null");
+		}
 		for (Proposition p : propositions) {
-			this.addCharacter(p);
-		}
-	}
-
-	public void setAcceptStates(Set<STATE> acceptStates) {
-		this.acceptStates = new HashSet<STATE>();
-		for (STATE s : acceptStates) {
-			this.addAcceptState(s);
+			this.addProposition(p);
 		}
 	}
 
 	/**
-	 * Returns the alphabet of the {@link BAImpl}
+	 * adds the {@link Proposition} to the alphabet of the {@link BA}
 	 * 
-	 * @return the alphabet of the {@link BAImpl}
-	 */
-	public Set<Proposition> getAlphabet() {
-		return alphabet;
-	}
-
-	/**
-	 * adds the character character in the alphabet of the automaton
-	 * 
-	 * @param character
-	 *            is the character to be added in the alphabet of the automaton
+	 * @param proposition
+	 *            is the {@link Proposition} to be added in the alphabet of the
+	 *            {@link BA}
 	 * @throws IllegalArgumentException
-	 *             if the character is null or if the character is already
-	 *             contained into the alphabet of the automaton
+	 *             if the {@link Proposition} is null or if the
+	 *             {@link Proposition} is already contained into the
+	 *             {@link Proposition}s of the {@link BA}
 	 */
-	public void addCharacter(Proposition character) {
-		if (character == null) {
+	public void addProposition(Proposition proposition) {
+		if (proposition == null) {
 			throw new IllegalArgumentException(
-					"The character to be inserted into the alphabet cannot be null");
+					"The proposition to be inserted cannot be null");
 		}
-		this.alphabet.add(character);
+		this.alphabet.add(proposition);
 	}
 
-	public void addCharacters(Set<Proposition> characters) {
-		if (characters == null) {
-			throw new IllegalArgumentException(
-					"The character to be inserted into the alphabet cannot be null");
-		}
-		for (Proposition character : characters) {
-			this.addCharacter(character);
-		}
-	}
-
-	public void setStates(Set<STATE> states) {
-		for (STATE s : states) {
-			this.addVertex(s);
-		}
+	/**
+	 * Returns the {@link Set} which contains the {@link Proposition} that is
+	 * the alphabet of the {@link BAImpl}
+	 * 
+	 * @return the {@link Set} which contains the {@link Proposition} that is
+	 *         the alphabet of the {@link BAImpl}
+	 */
+	public Set<Proposition> getPropositions() {
+		return Collections.unmodifiableSet(alphabet);
 	}
 
 	/**
@@ -322,9 +379,15 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	 * the automaton
 	 * 
 	 * @param source
-	 *            is the source of the transition
-	 * @param t
-	 *            is the transition to be added
+	 *            is the source {@link State} of the transition
+	 * @param destination
+	 *            is the destination {@link State} of the transition
+	 * @param transition
+	 *            is the {@link Transition} to be added
+	 * @throws NullPointerException
+	 *             if the source {@link State}, the destination {@link State} or
+	 *             the {@link Transition} is null
+	 * 
 	 * @throws IllegalArgumentException
 	 *             is generated in one of the following cases <br/>
 	 *             the source is null <br/>
@@ -338,18 +401,33 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	 */
 	public void addTransition(STATE source, STATE destination,
 			TRANSITION transition) {
+		if (source == null) {
+			throw new NullPointerException("The source state cannot be null");
+		}
+		if (destination == null) {
+			throw new NullPointerException(
+					"The destination state cannot be null");
+		}
+		if (transition == null) {
+			throw new NullPointerException("The transition cannot be null");
+		}
+
 		this.alphabet.addAll(transition.getCondition().getPropositions());
 
 		if (this.automataGraph.isSuccessor(source, destination)) {
+			// removes the old transition
 			TRANSITION t = this.automataGraph.findEdge(source, destination);
 			this.automataGraph.removeEdge(t);
 
-			// TODO to be changed the merging of the transitions
-			/*
-			 * TRANSITION t=this.transitionFactory.create( new dnfFormula)
-			 * .getCondition() .addDisjunctionClause(
-			 * transition.getCondition().getConjunctiveClauses());
-			 */
+			// creates the new transition
+			DNFFormula f = new DNFFormulaImpl();
+			f.addDisjunctionClause(t.getCondition());
+			f.addDisjunctionClauses(transition.getCondition()
+					.getConjunctiveClauses());
+			TRANSITION newTransition = this.transitionFactory.create(f);
+
+			// adds the new transition
+			this.automataGraph.addEdge(newTransition, source, destination);
 		} else {
 			this.automataGraph.addEdge(transition, source, destination,
 					EdgeType.DIRECTED);
@@ -368,209 +446,9 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		this.alphabet.clear();
 	}
 
-	/**
-	 * generates a new random graph (note that almost every graph is connected
-	 * with the parameters n, 2ln(n)/n
-	 * 
-	 * @param n
-	 *            : number of nodes
-	 * @param p
-	 *            : probability through which each transition is included in the
-	 *            graph
-	 * @return a new random graph
-	 */
-	public void getRandomAutomaton2(int n, double transitionProbability,
-			int numInitial, int numAccepting, Set<Proposition> alphabet) {
-		if (transitionProbability >= 1 || transitionProbability < 0) {
-			throw new IllegalArgumentException(
-					"The value of p must be included in the trange [0,1]");
-		}
-
-		this.reset();
-		this.addCharacters(alphabet);
-		Random r = new Random();
-
-		for (int i = 0; i < n; i++) {
-
-			STATE s = stateFactory.create("s" + i);
-			this.addVertex(s);
-		}
-
-		for (int i = 0; i < numInitial; i++) {
-			int transp = r.nextInt(this.automataGraph.getVertices().size());
-			Iterator<STATE> it = this.automataGraph.getVertices().iterator();
-			for (int j = 0; j < transp; j++) {
-				it.next();
-			}
-			this.addInitialState(it.next());
-		}
-		for (int i = 0; i < numAccepting; i++) {
-			int transp = r.nextInt(this.automataGraph.getVertices().size());
-			Iterator<STATE> it = this.automataGraph.getVertices().iterator();
-			for (int j = 0; j < transp; j++) {
-				it.next();
-			}
-			this.addAcceptState(it.next());
-		}
-		for (STATE s1 : this.automataGraph.getVertices()) {
-			for (STATE s2 : this.automataGraph.getVertices()) {
-				double randInt = r.nextInt(11) / 10.0;
-				if (randInt <= transitionProbability) {
-
-					Proposition character = this.getRandomString(alphabet,
-							r.nextInt(alphabet.size()));
-					// TODO to be changed the merging of the transitions
-					/*
-					 * this.addTransition( s1, s2, this.transitionFactory
-					 * .create(new DNFFormula<CONSTRAINEDELEMENT>( new
-					 * ConjunctiveClauseImpl<CONSTRAINEDELEMENT>( character))));
-					 */
-
-				}
-
-			}
-		}
-	}
-
-	public Proposition getRandomString(Set<Proposition> alphabet, int position) {
-
-		Iterator<Proposition> it = alphabet.iterator();
-		for (int i = 0; i < position; i++) {
-
-			it.next();
-		}
-		return it.next();
-	}
-
-	protected Stack<STATE> stack;
-	protected Stack<TRANSITION> stacktransitions;
-
-	/**
-	 * returns true if the automaton is empty
-	 * 
-	 * @return true if the automaton is empty
-	 */
-	public boolean isEmpty() {
-		boolean res = true;
-		Set<STATE> visitedStates = new HashSet<STATE>();
-		this.stacktransitions = new Stack<TRANSITION>();
-		for (STATE init : this.getInitialStates()) {
-			stack = new Stack<STATE>();
-			if (firstDFS(visitedStates, init, stack)) {
-
-				return false;
-			}
-		}
-		// clear the set of the visited states
-		visitedStates.clear();
-		return res;
-	}
-
-	/**
-	 * returns true if an accepting path is found
-	 * 
-	 * @param visitedStates
-	 *            contains the set of the visited states by the algorithm
-	 * @param currState
-	 *            is the current states under analysis
-	 * @return true if an accepting path is found, false otherwise
-	 */
-	protected boolean firstDFS(Set<STATE> visitedStates, STATE currState,
-			Stack<STATE> statesOfThePath) {
-		// if the current state have been already visited (and the second DFS
-		// has not been started) it means that the path is not accepting
-		if (visitedStates.contains(currState)) {
-			return false;
-		} else {
-			// I add the state in the set of visited states
-			visitedStates.add(currState);
-			// I add the state in the state of the path
-			statesOfThePath.push(currState);
-			// if the state is accepting
-			if (this.isAccept(currState)) {
-				for (TRANSITION t : this.automataGraph.getOutEdges(currState)) {
-
-					this.stacktransitions.add(t);
-					Stack<STATE> stackSecondDFS = new Stack<STATE>();
-					// I start the second DFS if the answer of the second DFS is
-					// true I return true
-					if (this.secondDFS(new HashSet<STATE>(),
-							this.automataGraph.getDest(t), statesOfThePath,
-							stackSecondDFS)) {
-						statesOfThePath.addAll(stackSecondDFS);
-						return true;
-					}
-					this.stacktransitions.remove(t);
-				}
-			}
-			// otherwise, I check each transition that leaves the state
-			// currState
-			for (TRANSITION t : this.automataGraph.getOutEdges(currState)) {
-				this.stacktransitions.add(t);
-				// I call the first DFS method, If the answer is true I return
-				// true
-				if (firstDFS(visitedStates, this.automataGraph.getDest(t),
-						statesOfThePath)) {
-					return true;
-				}
-				this.stacktransitions.remove(t);
-
-			}
-			// I remove the state from the stack of the states of the current
-			// path
-			statesOfThePath.pop();
-			return false;
-		}
-	}
-
-	/**
-	 * contains the second DFS procedure
-	 * 
-	 * @param visitedStates
-	 *            contains the set of the states visited in the SECOND DFS
-	 *            procedure
-	 * @param currState
-	 *            is the current state under analysis
-	 * @param statesOfThePath
-	 *            is the state of the path that is currently analyzed
-	 * @return true if an accepting path is found (a path that contains a state
-	 *         in the set of the states statesOfThePath), false otherwise
-	 */
-	// note that at the beginning the visited states do not contain the current
-	// state
-	protected boolean secondDFS(Set<STATE> visitedStates, STATE currState,
-			Stack<STATE> statesOfThePath, Stack<STATE> stackSecondDFS) {
-		// if the state is in the set of the states on the path the an accepting
-		// path is found
-		if (statesOfThePath.contains(currState)) {
-			return true;
-		} else {
-			// if the state is in the set of the visited states of the second
-			// DFS, the path is not accepting
-			if (visitedStates.contains(currState)) {
-				return false;
-			} else {
-				stackSecondDFS.push(currState);
-				// add the state into the set of the visited states
-				visitedStates.add(currState);
-				// for each transition that leaves the current state
-				for (TRANSITION t : this.automataGraph.getOutEdges(currState)) {
-
-					this.stacktransitions.add(t);
-					// if the second DFS returns a true answer than the
-					// accepting path has been found
-					if (secondDFS(visitedStates, this.automataGraph.getDest(t),
-							statesOfThePath, stackSecondDFS)) {
-						return true;
-					}
-					this.stacktransitions.remove(t);
-				}
-				stackSecondDFS.pop();
-				// otherwise the path is not accepting
-				return false;
-			}
-		}
-	}
+	
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -581,30 +459,13 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		return EdgeType.DIRECTED;
 	}
 
-	/**
-	 * adds the {@link State} state to the {@link Set} of the {@link State}
-	 * present in the {@link DirectedSparseGraph}
-	 * 
-	 * @param state
-	 *            is the {@link State} to be added to the {@link BA}
-	 * @throws InternalError
-	 *             if the {@link State} to be added is null
-	 */
-	protected void addVertex(STATE state) {
-		if (state == null) {
-			throw new InternalError("The state to be added cannot be null");
-		}
-		this.automataGraph.addVertex(state);
-		this.mapNameState.put(state.getId(), state);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * edu.uci.ics.jung.graph.DirectedSparseGraph#removeVertex(java.lang.Object)
 	 */
-	public boolean removeVertex(STATE vertex) {
+	protected boolean removeVertex(STATE vertex) {
 		if (this.initialStates.contains(vertex)) {
 			this.initialStates.remove(vertex);
 		}
@@ -615,37 +476,11 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 	}
 
 	/**
-	 * returns the {@link State} with the specified id
-	 * 
-	 * @param id
-	 *            is the id of the {@link State} to be searched
-	 * @return the {@link State} with the specified id
-	 * @throws IllegalArgumentException
-	 *             if the id is not an id of the states of the automaton or if
-	 *             the id is not grater than or equal to zero
-	 * 
-	 */
-	public STATE getState(int id) {
-		if (id < 0) {
-			throw new IllegalArgumentException(
-					"the id must be grater than or equal to zero");
-		}
-		if (!this.mapNameState.containsKey(id)) {
-			throw new IllegalArgumentException(
-					"The state with the id "
-							+ id
-							+ " is not contained in the set of the states of the automaton");
-		}
-
-		return this.mapNameState.get(id);
-	}
-
-	/**
 	 * returns the transitions that exits the {@link State} state
 	 * 
 	 * @return the transitions that exits the {@link State} state
 	 */
-	public Set<TRANSITION> getOutTransition(STATE state) {
+	public Set<TRANSITION> getOutTransitions(STATE state) {
 		return new HashSet<TRANSITION>(this.automataGraph.getOutEdges(state));
 	}
 
@@ -659,13 +494,7 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		return this.automataGraph.getDest(transition);
 	}
 
-	/**
-	 * returns the number of the states of the {@link BAImpl}
-	 */
-	public int getStateNumber() {
-		return this.automataGraph.getVertexCount();
-	}
-
+	
 	public TransitionFactory<TRANSITION> getTransitionFactory() {
 		return this.transitionFactory;
 	}
