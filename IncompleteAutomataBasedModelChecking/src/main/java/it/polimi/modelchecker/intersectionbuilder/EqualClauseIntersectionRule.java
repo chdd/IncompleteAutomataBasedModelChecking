@@ -1,9 +1,9 @@
-package it.polimi.model.impl.intersectionbuilder;
+package it.polimi.modelchecker.intersectionbuilder;
 
-import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
 import it.polimi.model.impl.labeling.SigmaProposition;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
@@ -22,8 +22,8 @@ import java.util.Set;
 public class EqualClauseIntersectionRule<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITION extends Transition,
+	INTERSECTIONTRANSITION extends Transition,
 	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
 	extends
 		IntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> {
@@ -34,26 +34,26 @@ public class EqualClauseIntersectionRule<
 			TRANSITION modelTransition, TRANSITION claimTransition, INTERSECTIONTRANSITIONFACTORY intersectionTransitionFactory) {
 		
 		
-		Set<ConjunctiveClause<CONSTRAINEDELEMENT>> commonClauses=new HashSet<ConjunctiveClause<CONSTRAINEDELEMENT>>();
+		Set<ConjunctiveClause> commonClauses=new HashSet<ConjunctiveClause>();
 				
-		commonClauses.addAll(modelTransition.getDnfFormula().getConjunctiveClauses());
-		commonClauses.retainAll(claimTransition.getDnfFormula().getConjunctiveClauses());
+		commonClauses.addAll(modelTransition.getCondition().getConjunctiveClauses());
+		commonClauses.retainAll(claimTransition.getCondition().getConjunctiveClauses());
 		
 		if(modelTransition.
-				getDnfFormula().
+				getCondition().
 				getConjunctiveClauses().
 				contains(new SigmaProposition<STATE>())){
-			commonClauses.addAll(claimTransition.getDnfFormula().getConjunctiveClauses());
+			commonClauses.addAll(claimTransition.getCondition().getConjunctiveClauses());
 		}
 		if(claimTransition.
-				getDnfFormula().
+				getCondition().
 				getConjunctiveClauses().
 				contains(new SigmaProposition<STATE>())){
-			commonClauses.addAll(modelTransition.getDnfFormula().getConjunctiveClauses());
+			commonClauses.addAll(modelTransition.getCondition().getConjunctiveClauses());
 		}
 		
 		if(!commonClauses.isEmpty()){
-			return intersectionTransitionFactory.create(new DNFFormula<CONSTRAINEDELEMENT>(commonClauses));
+			return intersectionTransitionFactory.create(new DNFFormulaImpl(commonClauses));
 		}
 		
 		return null;
