@@ -4,6 +4,7 @@ import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.IIntBA;
+import it.polimi.model.interfaces.states.IntersectionStateFactory;
 import it.polimi.model.interfaces.states.StateFactory;
 import it.polimi.model.interfaces.transitions.TransitionFactory;
 
@@ -40,7 +41,7 @@ public class IntBAImpl<
 	 */
 	public IntBAImpl(
 			TransitionFactory<INTERSECTIONTRANSITION> transitionFactory,
-			StateFactory<INTERSECTIONSTATE> stateFactory){
+			IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory){
 		super(transitionFactory, stateFactory);
 		this.mixedStates=new HashSet<INTERSECTIONSTATE>();
 	}
