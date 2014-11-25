@@ -8,10 +8,10 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.BA;
 
-public class EmptinessChecker<STATE extends State, TRANSITION extends Transition, AUTOMATON extends BA<STATE, TRANSITION>> {
+public class BAEmptinessChecker<STATE extends State, TRANSITION extends Transition, AUTOMATON extends BA<STATE, TRANSITION>> {
 
 	/**
-	 * contains the automaton to be considered by the {@link EmptinessChecker}
+	 * contains the automaton to be considered by the {@link BAEmptinessChecker}
 	 */
 	private AUTOMATON automaton;
 	
@@ -20,11 +20,11 @@ public class EmptinessChecker<STATE extends State, TRANSITION extends Transition
 
 
 	/**
-	 * creates a new {@link EmptinessChecker}
+	 * creates a new {@link BAEmptinessChecker}
 	 * @param automaton is the automaton to be considered
 	 * @throws NullPointerException if the automaton to be considered is null
 	 */
-	public EmptinessChecker(AUTOMATON automaton) {
+	public BAEmptinessChecker(AUTOMATON automaton) {
 		if(automaton==null){
 			throw new NullPointerException("The automaton to be considered cannot be null");
 		}
