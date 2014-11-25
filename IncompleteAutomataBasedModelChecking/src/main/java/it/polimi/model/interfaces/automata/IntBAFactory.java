@@ -2,26 +2,25 @@ package it.polimi.model.interfaces.automata;
 
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
+import it.polimi.model.impl.states.StateFactoryImpl;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 public interface IntBAFactory<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT,  TRANSITION>,
+	TRANSITION extends Transition,
+	TRANSITIONFACTORY extends TransitionFactory<TRANSITION>,
 	INTERSECTIONSTATE extends IntersectionState<STATE>,
-	INTERSECTIONSTATEFACTORY extends StateFactory<INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT,  INTERSECTIONTRANSITION>,
-	AUTOMATON extends DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
+	INTERSECTIONSTATEFACTORY extends StateFactoryImpl,
+	INTERSECTIONTRANSITION extends Transition, 
+	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	AUTOMATON extends IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>
 	extends
-		IBAFactory<CONSTRAINEDELEMENT, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, AUTOMATON>{
+		IBAFactory<INTERSECTIONSTATE, INTERSECTIONTRANSITION, AUTOMATON>{
 
-	public DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> create(
-			IBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model,
-			BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification);
+	public IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> create(
+			IBA<STATE, TRANSITION> model,
+			BA<STATE, TRANSITION> specification);
 }

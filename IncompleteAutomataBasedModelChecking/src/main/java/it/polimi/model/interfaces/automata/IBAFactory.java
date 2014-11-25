@@ -2,7 +2,6 @@ package it.polimi.model.interfaces.automata;
 
 import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
-import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import org.apache.commons.collections15.Factory;
 
@@ -16,7 +15,7 @@ import org.apache.commons.collections15.Factory;
  * @param <TRANSITION>
  *            is the type of the {@link Transition} of the {@link DrawableIBA}
  */
-public interface IBAFactory<CONSTRAINEDELEMENT extends State, STATE extends State, TRANSITION extends Transition, TRANSITIONFACTORY extends TransitionFactory<TRANSITION>, AUTOMATON extends IBA<CONSTRAINEDELEMENT, STATE, TRANSITION>>
+public interface IBAFactory<STATE extends State, TRANSITION extends Transition, AUTOMATON extends IBA<STATE, TRANSITION>>
 		extends BAFactory<STATE, TRANSITION, AUTOMATON> {
 
 }

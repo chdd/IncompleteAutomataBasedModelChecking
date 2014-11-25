@@ -3,8 +3,7 @@ package it.polimi.model.interfaces.automata;
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 
 /**
  * is the interface the {@link IntBAImpl} must implement
@@ -16,13 +15,11 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
  * @param <INTERSECTIONTRANSITION> is the type of the transitions of the intersection automata
  */
 public interface IIntBA<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
+	TRANSITION extends Transition,
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
-	extends IBA<CONSTRAINEDELEMENT, INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY> {
+	INTERSECTIONTRANSITION extends Transition>
+	extends IBA<INTERSECTIONSTATE,INTERSECTIONTRANSITION> {
 
 	/**
 	 * returns true if the state s is mixed, false otherwise

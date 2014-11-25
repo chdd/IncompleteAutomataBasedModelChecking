@@ -13,7 +13,6 @@ import java.util.Set;
  * @param <TRANSITION> is the type of the transitions of the {@link IBA}
  */
 public interface IBA<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
 	TRANSITION extends Transition> 
 	extends BA<STATE, TRANSITION> {
@@ -38,6 +37,6 @@ public interface IBA<
 	 */
 	public void addTransparentState(STATE s);
 	
-	public void replace(STATE transparentState, IBA<CONSTRAINEDELEMENT, STATE, TRANSITION> ibaToInject);
+	public void replace(STATE transparentState, IBA<STATE, TRANSITION> ibaToInject);
 	
 }
