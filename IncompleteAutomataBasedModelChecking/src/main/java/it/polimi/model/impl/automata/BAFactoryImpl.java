@@ -17,7 +17,6 @@ import org.apache.commons.collections15.Factory;
  * @param <TRANSITION> is the type of the {@link Transition} of the {@link BA}
  */
 public class BAFactoryImpl<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State,
 	TRANSITION extends Transition>
 	implements

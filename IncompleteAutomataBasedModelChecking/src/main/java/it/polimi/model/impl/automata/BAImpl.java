@@ -434,22 +434,6 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		}
 	}
 
-	/**
-	 * resets the automaton, removes its states, its initial states, the
-	 * accepting states, the transitions and the alphabet
-	 */
-	public void reset() {
-		this.initialStates = new HashSet<STATE>();
-		this.alphabet = new HashSet<Proposition>();
-		this.acceptStates = new HashSet<STATE>();
-		this.automataGraph = new DirectedSparseGraph<STATE, TRANSITION>();
-		this.alphabet.clear();
-	}
-
-	
-	
-	
-
 	/*
 	 * (non-Javadoc)
 	 * 
