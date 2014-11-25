@@ -1,9 +1,8 @@
 package it.polimi.io;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IBA;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -20,12 +19,10 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @param <AUTOMATA> is the automata to be written by the {@link GraphMLWriter}
  */
 public class IBAWriter<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
-	AUTOMATA extends DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>
-	extends BAWriter<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATA> {
+	TRANSITION extends Transition,
+	AUTOMATA extends IBA<STATE, TRANSITION>>
+	extends BAWriter<STATE, TRANSITION, AUTOMATA> {
 
 	public IBAWriter(AbstractLayout<STATE, TRANSITION> layout) {
 		super(layout);

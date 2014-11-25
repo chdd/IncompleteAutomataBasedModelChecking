@@ -1,11 +1,9 @@
 package it.polimi.io;
 
-import it.polimi.model.impl.labeling.DNFFormula;
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.BA;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -25,11 +23,9 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @param <AUTOMATON> is the automata to be written by the {@link GraphMLWriter}
  */
 public class BAWriter<
-	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
-	AUTOMATON extends DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>>
+	TRANSITION extends Transition,
+	AUTOMATON extends BA<STATE, TRANSITION>>
 	extends GraphMLWriter<STATE, TRANSITION> {
 
 	/**
@@ -79,7 +75,7 @@ public class BAWriter<
 		}
 		this.ba=ba;
 		this.setTransformers();
-		super.save(ba, w);
+		super.save(ba.getGraph(), w);
 	}
 	
 	/**
@@ -129,7 +125,7 @@ public class BAWriter<
 	
 	/**
 	 * returns a transformer that given a TRANSITION return its id as {@link String}
-	 * @return returns the id of a {@link LabelledTransition} as a {@link String}
+	 * @return returns the id of a {@link Transition} as a {@link String}
 	 */
 	protected Transformer<TRANSITION, String> getTransitionIdTransformer(){
 		return new Transformer<TRANSITION, String>() {
@@ -141,14 +137,14 @@ public class BAWriter<
 	}
 	
 	/**
-	 * returns a transformer that given a TRANSITION return the {@link String} representation of the {@link DNFFormula} that labels the {@link LabelledTransition}
-	 * @return a transformer that given a TRANSITION return the {@link String} representation of the {@link DNFFormula} that labels the {@link LabelledTransition}
+	 * returns a transformer that given a TRANSITION return the {@link String} representation of the {@link DNFFormulaImpl} that labels the {@link Transition}
+	 * @return a transformer that given a TRANSITION return the {@link String} representation of the {@link DNFFormulaImpl} that labels the {@link Transition}
 	 */
 	protected Transformer<TRANSITION, String> getTransitionDNFFormulaTransformer(){
 		return new Transformer<TRANSITION, String>() {
 			@Override
 			public String transform(TRANSITION input) {
-				return input.getDnfFormula().toString();
+				return input.getCondition().toString();
 			}
 		};
 	}
@@ -159,14 +155,14 @@ public class BAWriter<
 	 */
 	protected class BAStateInitialToStringTransformer implements Transformer<STATE, String>  {
 
-		private BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba;
+		private BA<STATE, TRANSITION> ba;
 		
 		/**
 		 * creates the  {@link BAStateInitialToStringTransformer}
 		 * @param ba is the {@link BA} where the state is placed
 		 * @throws NullPointerException if the {@link BA} is null
 		 */
-		public BAStateInitialToStringTransformer(BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba){
+		public BAStateInitialToStringTransformer(BA<STATE, TRANSITION> ba){
 			if(ba==null){
 				throw new NullPointerException("The ba cannot be null");
 			}
@@ -189,14 +185,14 @@ public class BAWriter<
 	 */
 	protected class BAStateAcceptingToStringTransformer implements Transformer<STATE, String>  {
 
-		private BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba;
+		private BA<STATE, TRANSITION> ba;
 		
 		/**
 		 * creates the  {@link BAStateAcceptingToStringTransformer}
 		 * @param ba is the {@link BA} where the state is placed
 		 * @throws NullPointerException if the {@link BA} is null
 		 */
-		public BAStateAcceptingToStringTransformer(BA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> ba){
+		public BAStateAcceptingToStringTransformer(BA<STATE, TRANSITION> ba){
 			if(ba==null){
 				throw new NullPointerException("The ba cannot be null");
 			}

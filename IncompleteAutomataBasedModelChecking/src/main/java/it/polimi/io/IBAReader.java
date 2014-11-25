@@ -1,12 +1,12 @@
 package it.polimi.io;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.states.StateFactoryImpl;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.model.interfaces.automata.IBAFactory;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
@@ -22,33 +22,31 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  * @author claudiomenghi
  *
  * @param <STATE> is the type of the {@link State} of the {@link IBA}
- * @param <TRANSITION> is the type of the {@link LabelledTransition} of the {@link IBA}
- * @param <TRANSITIONFACTORY> is the {@link Factory} which creates the {@link LabelledTransition}
+ * @param <TRANSITION> is the type of the {@link Transition} of the {@link IBA}
+ * @param <TRANSITIONFACTORY> is the {@link Factory} which creates the {@link Transition}
  * @param <STATEFACTORY> is the {@link Factory} which creates the {@link State} of the {@link IBA}
  * @param <AUTOMATON> is the type of the {@link DrawableIBA} to be generated
  * @param <AUTOMATONFACTORY> is the {@link Factory} which creates an empty {@link DrawableIBA}
  */
 public class IBAReader<
-CONSTRAINEDELEMENT extends State,
+	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>, 
-	STATEFACTORY extends StateFactory<STATE>,
-	AUTOMATON extends DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>,
-	AUTOMATONFACTORY extends IBAFactory<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, AUTOMATON>>
-	extends BAReader<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY, STATEFACTORY, AUTOMATON, AUTOMATONFACTORY>{
+	TRANSITION extends Transition, 
+	AUTOMATON extends IBA<STATE, TRANSITION>,
+	AUTOMATONFACTORY extends IBAFactory<STATE, TRANSITION, AUTOMATON>>
+	extends BAReader<CONSTRAINEDELEMENT, STATE, TRANSITION, AUTOMATON, AUTOMATONFACTORY>{
 
 	/**
 	 * creates a new {@link IBAReader}
-	 * @param transitionFactory is the {@link Factory} which creates the {@link LabelledTransition}
+	 * @param transitionFactory is the {@link Factory} which creates the {@link Transition}
 	 * @param stateFactory is the {@link Factory} which creates the {@link State} of the {@link IBA}
 	 * @param automatonFactory is the {@link Factory} which creates a new empty {@link DrawableIBA}
 	 * @param fileReader is the {@link BufferedReader} which is able to create an empty {@link DrawableIBA}
 	 * @throws NullPointerException if the transitionFactory or the stateFactory or the automatonFactory or the fileReader is null
 	 */
 	public IBAReader( 
-			TRANSITIONFACTORY transitionFactory,
-			STATEFACTORY stateFactory, 
+			TransitionFactory<TRANSITION> transitionFactory,
+			StateFactory<STATE> stateFactory, 
 			AUTOMATONFACTORY automatonFactory,
 			BufferedReader fileReader) {
 		super(transitionFactory, stateFactory, automatonFactory, fileReader);
@@ -56,11 +54,12 @@ CONSTRAINEDELEMENT extends State,
 	
 	/**
 	 * returns the {@link Transformer} that given a {@link State} returns its {@link NodeMetadata}
-	 * @param stateFactory is the {@link StateFactory}
+	 * @param stateFactory is the {@link StateFactoryImpl}
 	 * @return the {@link Transformer} that given a {@link State} returns its {@link NodeMetadata}
-	 * @throws NullPointerException if the {@link StateFactory} is null
+	 * @throws NullPointerException if the {@link StateFactoryImpl} is null
 	 */
-	protected Transformer<NodeMetadata, STATE> getStateTransformer(STATEFACTORY stateFactory){
+	@Override
+	protected Transformer<NodeMetadata, STATE> getStateTransformer(StateFactory<STATE> stateFactory){
 		if(stateFactory==null){
 			throw new NullPointerException("The stateFactory cannot be null");
 		}
@@ -71,7 +70,7 @@ CONSTRAINEDELEMENT extends State,
 	 * creates a new IBAMetadataStateTransformer
 	 * @param a is the {@link DrawableIBA} that must be updated by the {@link Transformer}
 	 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableIBA}
-	 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactory} is null
+	 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactoryImpl} is null
 	 */
 	protected class IBAMetadataStateTransformer extends BAMetadataStateTransformer{
 
@@ -79,9 +78,9 @@ CONSTRAINEDELEMENT extends State,
 		 * creates a new IBAMetadataStateTransformer
 		 * @param a is the {@link DrawableIBA} that must be updated by the {@link Transformer}
 		 * @param stateFactory contains the {@link Factory} which creates the {@link State} of the {@link DrawableIBA}
-		 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactory} is null
+		 * @throws NullPointerException if the {@link DrawableIBA} or the {@link StateFactoryImpl} is null
 		 */
-		public IBAMetadataStateTransformer(AUTOMATON a, Map<STATE, Point2D> statesandlocations, STATEFACTORY transitionFactory) {
+		public IBAMetadataStateTransformer(AUTOMATON a, Map<STATE, Point2D> statesandlocations, StateFactory<STATE> transitionFactory) {
 			super(a, statesandlocations, transitionFactory);
 		}
 
