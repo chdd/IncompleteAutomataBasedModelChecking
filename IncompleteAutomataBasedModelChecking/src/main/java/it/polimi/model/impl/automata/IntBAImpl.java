@@ -5,7 +5,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.states.IntersectionStateFactory;
-import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.model.interfaces.transitions.TransitionFactory;
 
 import java.util.HashSet;
@@ -40,7 +40,7 @@ public class IntBAImpl<
 	 * @param specification: is the specification to be considered
 	 */
 	public IntBAImpl(
-			TransitionFactory<INTERSECTIONTRANSITION> transitionFactory,
+			ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION> transitionFactory,
 			IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory){
 		super(transitionFactory, stateFactory);
 		this.mixedStates=new HashSet<INTERSECTIONSTATE>();
