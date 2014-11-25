@@ -13,7 +13,7 @@ public class BAEmptinessChecker<STATE extends State, TRANSITION extends Transiti
 	/**
 	 * contains the automaton to be considered by the {@link BAEmptinessChecker}
 	 */
-	private AUTOMATON automaton;
+	protected AUTOMATON automaton;
 	
 	protected Stack<STATE> stack;
 	protected Stack<TRANSITION> stacktransitions;
