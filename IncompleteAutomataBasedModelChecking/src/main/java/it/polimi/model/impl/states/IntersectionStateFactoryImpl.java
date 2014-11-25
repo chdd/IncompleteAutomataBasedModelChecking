@@ -1,16 +1,15 @@
 package it.polimi.model.impl.states;
 
-import org.apache.commons.collections15.Factory;
-
 import it.polimi.model.impl.automata.IntBAImpl;
-import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.states.IntersectionStateFactory;
+
+import org.apache.commons.collections15.Factory;
 
 /**
  * @author claudiomenghi contains the {@link Factory} method which is in charge
  *         of instantiating the {@link IntersectionState}
  */
-public class IntersectionStateFactory implements
-		StateFactory<IntersectionState<State>> {
+public class IntersectionStateFactoryImpl implements IntersectionStateFactory<State, IntersectionState<State>>{
 
 	/**
 	 * contains the counter whose value will be associated to the next
@@ -26,7 +25,7 @@ public class IntersectionStateFactory implements
 	/**
 	 * creates a new {@link IntersectionStateFactory}
 	 */
-	public IntersectionStateFactory() {
+	public IntersectionStateFactoryImpl() {
 		this.stateFactory = new StateFactoryImpl();
 	}
 
@@ -42,8 +41,8 @@ public class IntersectionStateFactory implements
 
 		IntersectionState<State> s = new IntersectionState<State>(
 				this.stateFactory.create(), this.stateFactory.create(), "", 0,
-				IntersectionStateFactory.nodeCount);
-		IntersectionStateFactory.nodeCount++;
+				IntersectionStateFactoryImpl.nodeCount);
+		IntersectionStateFactoryImpl.nodeCount++;
 		return s;
 	}
 
@@ -79,8 +78,8 @@ public class IntersectionStateFactory implements
 
 		IntersectionState<State> s = new IntersectionState<State>(s1, s2,
 				s1.getName() + "-" + s2.getName() + "-" + num, num,
-				IntersectionStateFactory.nodeCount);
-		IntersectionStateFactory.nodeCount++;
+				IntersectionStateFactoryImpl.nodeCount);
+		IntersectionStateFactoryImpl.nodeCount++;
 		return s;
 	}
 
@@ -111,8 +110,8 @@ public class IntersectionStateFactory implements
 		IntersectionState<State> s = new IntersectionState<State>(
 				this.stateFactory.create(), this.stateFactory.create(), name,
 				0, id);
-		IntersectionStateFactory.nodeCount = Math.max(
-				IntersectionStateFactory.nodeCount++, id + 1);
+		IntersectionStateFactoryImpl.nodeCount = Math.max(
+				IntersectionStateFactoryImpl.nodeCount++, id + 1);
 		return s;
 	}
 
@@ -132,8 +131,8 @@ public class IntersectionStateFactory implements
 		}
 		IntersectionState<State> s = new IntersectionState<State>(
 				this.stateFactory.create(), this.stateFactory.create(), name,
-				0, IntersectionStateFactory.nodeCount);
-		IntersectionStateFactory.nodeCount++;
+				0, IntersectionStateFactoryImpl.nodeCount);
+		IntersectionStateFactoryImpl.nodeCount++;
 		return s;
 	}
 }
