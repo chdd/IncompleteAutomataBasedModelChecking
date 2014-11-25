@@ -1,12 +1,11 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
-import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LogicalProposition<CONSTRAINTELEMENT extends State, TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>> extends LogicalItem<CONSTRAINTELEMENT, TRANSITION>{
+public abstract class LogicalProposition<CONSTRAINTELEMENT, TRANSITION extends Transition> extends LogicalItem<CONSTRAINTELEMENT, TRANSITION>{
 
 	
 	

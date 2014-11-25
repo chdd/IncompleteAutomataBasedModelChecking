@@ -3,7 +3,7 @@ package it.polimi.modelchecker.brzozowski.propositions.states;
 import java.util.Set;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
@@ -11,7 +11,7 @@ import it.polimi.modelchecker.brzozowski.Constraint;
  * contains an {@link EpsilonProposition} Predicate. This predicate is associated with regular transitions of the (I)BA since these transitions
  * are not relevant in the {@link Constraint} computation
  */
-public class EpsilonProposition<STATE extends State, TRANSITION extends LabelledTransition<STATE>> extends AbstractProposition<STATE, TRANSITION>{
+public class EpsilonProposition<STATE extends State, TRANSITION extends Transition> extends AbstractProposition<STATE, TRANSITION>{
 
 	
 	public EpsilonProposition(Set<TRANSITION> transitions) {

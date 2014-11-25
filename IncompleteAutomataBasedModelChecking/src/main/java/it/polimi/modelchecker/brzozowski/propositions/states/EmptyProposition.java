@@ -1,15 +1,13 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
-import java.util.HashSet;
-
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 /**
  * @author claudiomenghi
  * contains an {@link EmptyProposition}.  This predicate is used when no transitions of the (I)BA are present to connect two states
  */
-public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>> extends LogicalItem<CONSTRAINTELEMENT, TRANSITION> {
+public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extends Transition> extends LogicalItem<CONSTRAINTELEMENT, TRANSITION> {
 
 	
 	private final String ret="∅";

@@ -1,9 +1,8 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
-import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
-public abstract class LogicalItem<CONSTRAINTELEMENT extends State, TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>> {
+public abstract class LogicalItem<CONSTRAINTELEMENT, TRANSITION extends Transition> {
 
 	/**
 	 * the concatenate method generates the concatenation of the this {@link AbstractProposition}  with the 

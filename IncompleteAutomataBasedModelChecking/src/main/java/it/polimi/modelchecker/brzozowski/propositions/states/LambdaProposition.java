@@ -1,13 +1,13 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 /**
  * @author claudiomenghi
  * contains a {@link LambdaProposition}. The {@link LambdaProposition} is used to identify states that are accepting in the BA (final in the FSA)
  */
-public class LambdaProposition<S extends State, T extends LabelledTransition<S>> extends LogicalItem<S, T> {
+public class LambdaProposition<S extends State, T extends Transition> extends LogicalItem<S, T> {
 
 	
 	private final String ret="λ";

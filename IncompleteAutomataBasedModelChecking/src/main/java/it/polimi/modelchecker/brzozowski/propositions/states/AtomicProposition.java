@@ -1,7 +1,7 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import java.util.Set;
  * @author claudiomenghi
  * contains a {@link AtomicProposition} which constraints a state to be able to recognize a particular regular expression
  */
-public class AtomicProposition<STATE extends State, TRANSITION extends LabelledTransition<STATE>> extends AbstractProposition<STATE, TRANSITION>{
+public class AtomicProposition<STATE extends State, TRANSITION extends Transition> extends AbstractProposition<STATE, TRANSITION>{
 
 	private boolean finalStateReached;
 	

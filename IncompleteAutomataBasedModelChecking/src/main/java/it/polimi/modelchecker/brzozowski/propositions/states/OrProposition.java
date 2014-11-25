@@ -1,7 +1,7 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @author claudiomenghi
  * contains an OrPredicate
  */
-public class OrProposition<S extends State, T extends LabelledTransition<S>> extends LogicalProposition<S, T> {
+public class OrProposition<S extends State, T extends Transition> extends LogicalProposition<S, T> {
 
 	private String type="v";
 	

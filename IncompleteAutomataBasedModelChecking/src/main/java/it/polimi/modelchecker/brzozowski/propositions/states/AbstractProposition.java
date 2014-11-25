@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 /**
  * @author claudiomenghi
  * Is the abstract class which specifies the abstract behavior (methods) of the predicates
  * @param <STATE> is the type of the states that are involved in the constraints
  */
-public abstract class AbstractProposition<STATE extends State, TRANSITION extends LabelledTransition<STATE>> extends LogicalItem<STATE, TRANSITION>{
+public abstract class AbstractProposition<STATE extends State, TRANSITION extends Transition> extends LogicalItem<STATE, TRANSITION>{
 	
 	/**
 	 * contains the transitions which are involved by the {@link AbstractProposition} 

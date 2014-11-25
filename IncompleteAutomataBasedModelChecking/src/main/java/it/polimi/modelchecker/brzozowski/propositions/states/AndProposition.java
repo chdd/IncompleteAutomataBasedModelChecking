@@ -1,7 +1,7 @@
 package it.polimi.modelchecker.brzozowski.propositions.states;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import java.util.Set;
  * contains an {@link AndProposition}, which is a set of {@link AbstractProposition} that must be simultaneously satisfied to get the final property
  * satisfied
  */
-public class AndProposition<S extends State, T extends LabelledTransition<S>> extends LogicalProposition<S, T>{
+public class AndProposition<S extends State, T extends Transition> extends LogicalProposition<S, T>{
 	
 	private final String type="^";
 	
