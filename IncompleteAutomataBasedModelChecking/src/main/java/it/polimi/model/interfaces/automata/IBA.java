@@ -41,4 +41,6 @@ public interface IBA<
 
 	public IBA<STATE, TRANSITION> clone();
 	
+	public void removeStateFromTransparent(STATE state);
+	
 }

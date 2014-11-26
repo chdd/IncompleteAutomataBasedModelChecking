@@ -39,6 +39,16 @@ public class IBAImpl<STATE extends State, TRANSITION extends Transition>
 	}
 
 	
+	public void removeStateFromTransparent(STATE state){
+		if(state==null){
+			throw new NullPointerException("The state cannot be null");
+		}
+		if(!this.transparentStates.contains(state)){
+			throw new IllegalArgumentException("The state: "+state.getId()+" must be contained in the set of the transparent states");
+		}
+		this.transparentStates.remove(state);
+	}
+	
 	public void addTransparentStates(Set<STATE> setTransparentStates) {
 		for (STATE s : setTransparentStates) {
 			this.addTransparentState(s);

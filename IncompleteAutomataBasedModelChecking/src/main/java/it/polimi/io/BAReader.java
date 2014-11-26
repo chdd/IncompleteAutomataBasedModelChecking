@@ -32,8 +32,6 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  *
  * @param <STATE> is the type of the {@link State}s of the {@link DrawableBA}
  * @param <TRANSITION> is the type of the {@link Transition} of the {@link DrawableBA}
- * @param <TRANSITIONFACTORY> is the {@link Factory} which is used to create the TRANSITION of the {@link DrawableBA}
- * @param <STATEFACTORY> is the {@link Factory} which is used to create the {@link State}s of the {@link DrawableBA}
  * @param <AUTOMATON> is the type of the automaton (which extends the {@link DrawableBA}) to be loaded
  * @param <AUTOMATONFACTORY> is a {@link Factory} which is able to create a new empty {@link DrawableBA}
  */

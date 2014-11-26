@@ -453,6 +453,26 @@ public class BAImpl<STATE extends State, TRANSITION extends Transition>
 		return this.automataGraph.removeVertex(vertex);
 	}
 
+	public void removeStateFromAccepting(STATE state){
+		if(state==null){
+			throw new NullPointerException("The state cannot be null");
+		}
+		if(!this.acceptStates.contains(state)){
+			throw new IllegalArgumentException("The state: "+state.getId()+" must be contained in the set of the accepting states");
+		}
+		this.acceptStates.remove(state);
+	}
+	
+	public void removeStateFromInitial(STATE state){
+		if(state==null){
+			throw new NullPointerException("The state cannot be null");
+		}
+		if(!this.initialStates.contains(state)){
+			throw new IllegalArgumentException("The state: "+state.getId()+" must be contained in the set of the initial states");
+		}
+		this.initialStates.remove(state);
+	}
+
 	
 	public void removeTransition(TRANSITION transition){
 		this.automataGraph.removeEdge(transition);

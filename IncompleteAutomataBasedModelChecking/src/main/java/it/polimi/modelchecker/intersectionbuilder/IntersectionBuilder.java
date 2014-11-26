@@ -6,6 +6,7 @@ import it.polimi.model.impl.states.State;
 import it.polimi.model.impl.transitions.Transition;
 import it.polimi.model.interfaces.automata.BA;
 import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.states.IntersectionStateFactory;
 import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 
@@ -14,13 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class IntersectionBuilder<STATE extends State, TRANSITION extends Transition, INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONTRANSITION extends Transition> {
+public class IntersectionBuilder<CONSTRAINEDELEMENT extends State, STATE extends State, TRANSITION extends Transition, INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONTRANSITION extends Transition> {
 
 	private IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersection;
 
 	private IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory;
 
-	private ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION> transitionFactory;
+	private ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory;
 
 	/**
 	 * computes the intersection of the current automaton and the automaton a2
@@ -32,10 +33,10 @@ public class IntersectionBuilder<STATE extends State, TRANSITION extends Transit
 	 * @throws IllegalArgumentException
 	 *             if the automaton a2 is null
 	 */
-	public void computeIntersection(IBA<STATE, TRANSITION> model,
+	public IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> computeIntersection(IBA<STATE, TRANSITION> model,
 			BA<STATE, TRANSITION> specification,
 			IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory,
-			ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION> transitionFactory) {
+			ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory) {
 
 		if (model == null) {
 			throw new IllegalArgumentException("The model cannot be null");
@@ -61,6 +62,7 @@ public class IntersectionBuilder<STATE extends State, TRANSITION extends Transit
 						specification);
 			}
 		}
+		return this.intersection;
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class IntersectionBuilder<STATE extends State, TRANSITION extends Transit
 						.getOutTransitions(currentState.getS2())) {
 					// if the characters of the two transitions are equal
 
-					INTERSECTIONTRANSITION t = new EqualClauseIntersectionRule<STATE, STATE, TRANSITION, INTERSECTIONTRANSITION, ConstrainedTransitionFactory<STATE, INTERSECTIONTRANSITION>>()
+					INTERSECTIONTRANSITION t = new EqualClauseIntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>()
 							.getIntersectionTransition(t1, t2, this.transitionFactory);
 					if (t != null) {
 
@@ -170,7 +172,7 @@ public class IntersectionBuilder<STATE extends State, TRANSITION extends Transit
 					// the new state is connected by the previous one through a
 					// constrained transition
 					INTERSECTIONTRANSITION t = this.transitionFactory.create(
-							t2.getCondition(), currentState.getS1());
+							t2.getCondition(), (CONSTRAINEDELEMENT) currentState.getS1());
 					intersection.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(intersection, visitedStatesMap, p,

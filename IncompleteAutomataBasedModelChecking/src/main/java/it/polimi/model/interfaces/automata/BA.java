@@ -178,4 +178,7 @@ public interface BA<STATE extends State, TRANSITION extends Transition> extends
 	public StateFactory<STATE> getStateFactory();
 	
 	public TransitionFactory<TRANSITION> getTransitionFactory();
+	
+	public void removeStateFromAccepting(STATE state);
+	public void removeStateFromInitial(STATE state);
 }

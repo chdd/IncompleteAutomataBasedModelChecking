@@ -128,7 +128,7 @@ public class AtomicProposition<STATE extends State, TRANSITION extends Transitio
 				Set<TRANSITION> newtransitions=new HashSet<TRANSITION>();
 				newtransitions.addAll(a1.getTransitions());
 				newtransitions.addAll(this.getTransitions());
-				return new AtomicProposition<STATE, TRANSITION>(newtransitions, this.state, this.regularExpression+a1.regularExpression,
+				return new AtomicProposition<STATE, TRANSITION>(newtransitions, this.state, "("+this.regularExpression+").("+a1.regularExpression+")",
 						this.isFinalStateReacher() || a1.isFinalStateReacher());
 			}
 			// the concatenation of two predicate with different state constrained is a new and constraint that contains the two predicates
@@ -226,7 +226,7 @@ public class AtomicProposition<STATE extends State, TRANSITION extends Transitio
 				Set<TRANSITION> transitions=new HashSet<TRANSITION>();
 				transitions.addAll(this.getTransitions());
 				transitions.addAll(a1.getTransitions());
-				return new AtomicProposition<STATE, TRANSITION>(transitions, this.getState(), "(("+this.regularExpression+")|("+a1.regularExpression+"))",
+				return new AtomicProposition<STATE, TRANSITION>(transitions, this.getState(), "(("+this.regularExpression+")||("+a1.regularExpression+"))",
 						this.isFinalStateReacher() || a1.isFinalStateReacher());
 			}
 			// the union of two predicates <s1, reg1>, <s2, reg2> with a different state is a new or constraint that contains the two predicates 

@@ -14,6 +14,7 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 import it.polimi.modelchecker.emptinesschecker.IntersectionEmptinessChecker;
+import it.polimi.modelchecker.intersectionbuilder.IntersectionBuilder;
 
 /**
  * @author claudiomenghi
@@ -45,7 +46,7 @@ public class ModelChecker
 	/**
 	 * contains the intersection automaton of the model and its specification after the model checking procedure is performed
 	 */
-	private IntBAImpl<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> ris;
+	private IIntBA<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> ris;
 	
 	private IntersectionStateFactory<STATE, INTERSECTIONSTATE> intersectionStateFactory;
 	private ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> intersectionTransitionFactory;
@@ -102,9 +103,12 @@ public class ModelChecker
 		// updates the number of transparent states in the model
 		this.verificationResults.setNumTransparentStatesModel(this.model.getTransparentStates().size());
 		
+		
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		long startIntersectionTime = System.nanoTime();   
-		this.ris=new IntBAImpl<STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(this.intersectionTransitionFactory, this.intersectionStateFactory);
+		
+		this.ris=new IntersectionBuilder<CONSTRAINEDELEMENT, STATE , TRANSITION , INTERSECTIONSTATE , INTERSECTIONTRANSITION>().computeIntersection(model, specification, this.intersectionStateFactory, this.intersectionTransitionFactory);
+		
 		long stopTime = System.nanoTime(); 
 		
 		// updates the time required to compute the intersection between the model and the specification
@@ -185,7 +189,7 @@ public class ModelChecker
 	 * returns the intersection between the model and the specification
 	 * @return the intersection automaton that contains the intersection of the model and the specification
 	 */
-	public IntBAImpl< STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getIntersection(){
+	public IIntBA< STATE,TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> getIntersection(){
 		return this.ris;
 	}
 	/**

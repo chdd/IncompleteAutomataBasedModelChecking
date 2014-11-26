@@ -1,5 +1,7 @@
 package it.polimi.model.interfaces.automata;
 
+import java.util.Set;
+
 import it.polimi.model.impl.automata.IntBAImpl;
 import it.polimi.model.impl.states.IntersectionState;
 import it.polimi.model.impl.states.State;
@@ -34,5 +36,11 @@ public interface IIntBA<
 	 * @param s the mixed state to be added in the {@link IIntBA}
 	 */
 	public void addMixedState(INTERSECTIONSTATE s);
+	
+	/**
+	 * returns the set of the mixed states
+	 * @return the set of the mixed states
+	 */
+	public Set<INTERSECTIONSTATE> getMixedStates();
 	
 }

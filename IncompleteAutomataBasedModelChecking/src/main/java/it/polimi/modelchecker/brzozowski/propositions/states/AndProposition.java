@@ -96,7 +96,7 @@ public class AndProposition<S extends State, T extends Transition> extends Logic
 						l.addAll(this.getPredicates().subList(0, this.getPredicates().size()-1));
 						l.add(new AtomicProposition<S, T>(transitions,
 								lastPredicate.getState(),
-								lastPredicate.getRegularExpression().concat(((AtomicProposition<S, T>)a).getRegularExpression()),
+								"("+lastPredicate.getRegularExpression()+").("+(((AtomicProposition<S, T>)a).getRegularExpression())+")",
 								lastPredicate.isFinalStateReacher() || ((AtomicProposition<S, T>)a).isFinalStateReacher()))
 ;						AndProposition<S, T> cret=new AndProposition<S, T>(l);
 						return cret;
@@ -129,7 +129,7 @@ public class AndProposition<S extends State, T extends Transition> extends Logic
 				
 				l.add(new AtomicProposition<S, T>(transitions,
 						lastPredicate.getState(), 
-						lastPredicate.getRegularExpression()+initialPredicate.getRegularExpression(),
+						"("+lastPredicate.getRegularExpression()+").("+initialPredicate.getRegularExpression()+")",
 						lastPredicate.isFinalStateReacher() || initialPredicate.isFinalStateReacher()
 						));
 				l.addAll(c.getPredicates().subList(1, c.getPredicates().size()));

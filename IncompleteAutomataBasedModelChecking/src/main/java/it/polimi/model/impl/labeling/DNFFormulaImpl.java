@@ -90,9 +90,9 @@ public class DNFFormulaImpl implements DNFFormula{
 		if(clause==null){
 			throw new NullPointerException("The clause to be added in the set of the clause cannot be null");
 		}
-		if(!(clause instanceof ConjunctiveClause)){
+		/*if(!(clause instanceof ConjunctiveClause) && !(clause instanceof )){
 			throw new IllegalArgumentException("The Formula must be of type ConjunctiveClause");
-		}
+		}*/
 		this.conjunctiveClause.add( (ConjunctiveClause) clause);
 	}
 	

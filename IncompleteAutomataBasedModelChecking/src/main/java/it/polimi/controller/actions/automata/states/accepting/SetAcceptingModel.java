@@ -26,7 +26,7 @@ public class SetAcceptingModel
 			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view)
 			throws Exception {
 		if(model.getModel().isAccept(state)){
-			model.getModel().getAcceptStates().remove(state);
+			model.getModel().removeStateFromAccepting(state);
 		}
 		else{
 			model.getModel().addAcceptState(state);

@@ -57,7 +57,7 @@ public class SetTransparent<
 			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view)
 			throws Exception {
 		if (model.getModel().isTransparent(state)) {
-			model.getModel().getTransparentStates().remove(state);
+			model.getModel().removeStateFromTransparent(state);
 			model.getModelRefinementHierarchy().removeNodeFromParent(model.getStateRefinementMap().get(state));
 		} else {
 			

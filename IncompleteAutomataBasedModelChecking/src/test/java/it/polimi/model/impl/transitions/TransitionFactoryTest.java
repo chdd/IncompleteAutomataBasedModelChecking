@@ -1,8 +1,8 @@
 package it.polimi.model.impl.transitions;
 
-import static org.junit.Assert.*;
-import it.polimi.model.impl.labeling.DNFFormula;
-import it.polimi.model.interfaces.labeling.Formula;
+import static org.junit.Assert.assertTrue;
+import it.polimi.model.impl.labeling.DNFFormulaImpl;
+import it.polimi.model.interfaces.labeling.DNFFormula;
 
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class TransitionFactoryTest {
 	@Test
 	public void testConstructor2() {
 		TransitionFactoryImpl factory=new TransitionFactoryImpl();
-		Formula f1=DNFFormula.loadFromString("a");
+		DNFFormula f1=DNFFormulaImpl.loadFromString("a");
 		Transition t=factory.create(f1);
 		assertTrue(t.getId()>=0);
 		assertTrue(t.getCondition().equals(f1));
@@ -34,7 +34,7 @@ public class TransitionFactoryTest {
 	@Test
 	public void testConstructor4() {
 		TransitionFactoryImpl factory=new TransitionFactoryImpl();
-		Formula f1=DNFFormula.loadFromString("a");
+		DNFFormula f1=DNFFormulaImpl.loadFromString("a");
 		
 		Transition t=factory.create(0, f1);
 		assertTrue(t.getId()==0);
@@ -50,7 +50,7 @@ public class TransitionFactoryTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructor6() {
 		TransitionFactoryImpl factory=new TransitionFactoryImpl();
-		Formula f1=DNFFormula.loadFromString("a");
+		DNFFormula f1=DNFFormulaImpl.loadFromString("a");
 		factory.create(-1, f1);
 	}
 }

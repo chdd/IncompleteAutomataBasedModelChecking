@@ -1,6 +1,7 @@
 package it.polimi.model.impl.states;
 
 import static org.junit.Assert.*;
+import it.polimi.model.interfaces.states.IntersectionStateFactory;
 
 import org.junit.Test;
 
@@ -9,7 +10,7 @@ public class IntersectionStateFactoryTest {
 	@Test
 	public void testConstructor1() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		IntersectionState<State> s1 = factory.create();
 		assertTrue(s1.getId() >= 0);
 		assertTrue(s1.getName() != null);
@@ -21,14 +22,14 @@ public class IntersectionStateFactoryTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructor2() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		factory.create(null);
 	}
 
 	@Test
 	public void testConstructor3() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		IntersectionState<State> s1 = factory.create("test");
 		assertTrue(s1.getId() >= 0);
 		assertTrue(s1.getName().equals("test"));
@@ -43,7 +44,7 @@ public class IntersectionStateFactoryTest {
 		State s1 = new State("name1", 0);
 		State s2 = new State("name2", 0);
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		IntersectionState<State> intState = factory.create(s1, s2, 0);
 		assertTrue(intState.getId() >= 0);
 		assertTrue(intState.getName().equals(s1.getName() + "-" + s2.getName() + "-" +intState.getNumber()));
@@ -58,7 +59,7 @@ public class IntersectionStateFactoryTest {
 		State s1 = new State("name1", 0);
 		State s2 = new State("name2", 0);
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		factory.create(s1, s2, 5);
 	}
 
@@ -67,14 +68,14 @@ public class IntersectionStateFactoryTest {
 
 		State s1 = new State("name1", 0);
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		factory.create(s1, null, 2);
 	}
 
 	@Test
 	public void testConstructor7() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		IntersectionState<State> s1 = factory.create("test", 5);
 		assertTrue(s1.getId() == 5);
 		assertTrue(s1.getName().equals("test"));
@@ -86,28 +87,28 @@ public class IntersectionStateFactoryTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructor8() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>> factory = new IntersectionStateFactoryImpl();
 		factory.create(null, 5);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructor9() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>>  factory = new IntersectionStateFactoryImpl();
 		factory.create("name", -2);
 	}
 	
 	@Test(expected = NullPointerException.class)
 	public void testConstructor10() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>>  factory = new IntersectionStateFactoryImpl();
 		factory.create(null);
 	}
 	
 	@Test
 	public void testConstructor11() {
 
-		IntersectionStateFactory factory = new IntersectionStateFactory();
+		IntersectionStateFactory<State,IntersectionState<State>>  factory = new IntersectionStateFactoryImpl();
 		IntersectionState<State> s1 = factory.create("prova");
 		assertTrue(s1.getId() >= 0);
 		assertTrue(s1.getName().equals("prova"));

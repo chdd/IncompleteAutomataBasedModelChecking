@@ -7,6 +7,7 @@ import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.model.interfaces.states.StateFactory;
 import it.polimi.model.interfaces.transitions.TransitionFactory;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -75,7 +76,7 @@ public class IntBAImpl<
 	 * @return the set of the mixed states
 	 */
 	public Set<INTERSECTIONSTATE> getMixedStates(){
-		return this.mixedStates;
+		return Collections.unmodifiableSet(mixedStates);
 	}
 	
 	

@@ -58,23 +58,11 @@ public abstract class LogicalProposition<CONSTRAINTELEMENT, TRANSITION extends T
     @Override
 	public String toString() {
 		String ret="";
-		int inserted=0;
 		List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> value=getPredicates();
-		for(int i=0; i<value.size();i++){
-			if(inserted>0){
-				if(inserted==1){
-					inserted=2;
-					ret="("+ret+")"+this.getType()+"("+value.get(i)+")";
-				}
-				else{
-					ret=ret+this.getType()+"("+value.get(i)+")";
-				}
-			}
-			else{
-				inserted=1;
-				ret=value.get(i).toString();
-			}
+		for(int i=0; i<value.size()-1;i++){
+			ret=ret+"("+value.get(i).toString()+")"+this.getType();
 		}
+		ret=ret+value.get(value.size()-1).toString();
 		return ret;
 	}
     public abstract String getType();

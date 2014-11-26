@@ -25,7 +25,7 @@ TRANSITION extends Transition>
 			ViewInterface<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> view)
 			throws Exception {
 		if (model.getModel().isInitial(state)) {
-			model.getModel().getInitialStates().remove(state);
+			model.getModel().removeStateFromInitial(state);
 		} else {
 			model.getModel().addInitialState(state);
 		}
