@@ -11,9 +11,7 @@ package it.polimi.view.menu;
 
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
@@ -31,9 +29,7 @@ public class Plugin
 <
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+TRANSITION extends Transition>
 	extends AbstractPopupGraphMousePlugin {
 	
     private JPopupMenu edgePopup, vertexPopup;

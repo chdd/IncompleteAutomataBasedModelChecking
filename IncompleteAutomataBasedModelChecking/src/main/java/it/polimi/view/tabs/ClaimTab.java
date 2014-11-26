@@ -2,13 +2,9 @@ package it.polimi.view.tabs;
 
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.BA;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 
 import java.awt.event.ActionListener;
@@ -26,23 +22,18 @@ import edu.uci.ics.jung.algorithms.layout.FRLayout;
 public class ClaimTab<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITION extends Transition, 
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
+	INTERSECTIONTRANSITION extends Transition>
 	extends JPanel  {
 
-	private BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>  claimTabClaimPanel;
+	private BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION, BA<STATE,TRANSITION>>  claimTabClaimPanel;
 	private AbstractLayout<STATE, TRANSITION> claimLayout;
 	
 	public ClaimTab(ModelInterface<CONSTRAINEDELEMENT, STATE, 
-			STATEFACTORY, TRANSITION, 
-			TRANSITIONFACTORY, INTERSECTIONSTATE, 
-			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-			INTERSECTIONTRANSITIONFACTORY> model, 
+			 TRANSITION, 
+			 INTERSECTIONSTATE, 
+			 INTERSECTIONTRANSITION> model, 
 			ActionListener l){
 		super(false);
         
@@ -51,14 +42,14 @@ public class ClaimTab<
 		 JPanel containerClaimMenu=new JPanel();
 		 containerClaimMenu.setLayout(new BoxLayout(containerClaimMenu, BoxLayout.X_AXIS));
 		 
-		 this.claimLayout=new FRLayout<STATE,TRANSITION>(model.getSpecification());
-		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>(model.getSpecification(), l,  this.claimLayout, null);
+		 this.claimLayout=new FRLayout<STATE,TRANSITION>(model.getSpecification().getGraph());
+		 this.claimTabClaimPanel=new BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION,  BA<STATE,TRANSITION>>(model.getSpecification(), l,  this.claimLayout, null);
 		 
 		 this.add(containerClaimMenu);
 		 this.add(this.claimTabClaimPanel);
 		
 	}
-	public void updateSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions){
+	public void updateSpecification(BA<STATE, TRANSITION> specification, Transformer<STATE, Point2D> positions){
 		if(positions!=null){
 			this.claimLayout.setInitializer(positions);
 			//this.verificationClaimLayout.setInitializer(positions);

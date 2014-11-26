@@ -2,13 +2,9 @@ package it.polimi.view.tabs;
 
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.view.automaton.IntersectionAutomatonJPanel;
 
 import java.awt.Color;
@@ -30,52 +26,41 @@ import edu.uci.ics.jung.algorithms.layout.FRLayout;
 public class IntersectionTab<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+	TRANSITION extends Transition, 
 	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
+	INTERSECTIONTRANSITION extends Transition>
 	extends JPanel {
 
 	
 	private AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionLayout;
 	private IntersectionAutomatonJPanel
-	<CONSTRAINEDELEMENT, STATE, 
-	STATEFACTORY,
+	<CONSTRAINEDELEMENT, 
+	STATE, 
 	TRANSITION, 
-	TRANSITIONFACTORY,
 	INTERSECTIONSTATE, 
-	INTERSECTIONSTATEFACTORY,
-	INTERSECTIONTRANSITION,
-	INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> intersectionPanel;
+	INTERSECTIONTRANSITION, IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>> intersectionPanel;
 
 	private TextArea brzozowskiSystemArea;
 	
 	
 	public IntersectionTab(ModelInterface<CONSTRAINEDELEMENT, STATE, 
-			STATEFACTORY, TRANSITION, 
-			TRANSITIONFACTORY, INTERSECTIONSTATE, 
-			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-			INTERSECTIONTRANSITIONFACTORY> model, 
+			 TRANSITION, 
+			 INTERSECTIONSTATE, 
+			 INTERSECTIONTRANSITION> model, 
 			ActionListener l){
 		
 		super(false);
 	       
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		this.intersectionLayout=new FRLayout<INTERSECTIONSTATE,INTERSECTIONTRANSITION>(model.getIntersection());
+		this.intersectionLayout=new FRLayout<INTERSECTIONSTATE,INTERSECTIONTRANSITION>(model.getIntersection().getGraph());
 		 this.intersectionPanel=new IntersectionAutomatonJPanel
 				 <CONSTRAINEDELEMENT, 
 				 STATE, 
-					STATEFACTORY,
 					TRANSITION, 
-					TRANSITIONFACTORY,
 					INTERSECTIONSTATE, 
-					INTERSECTIONSTATEFACTORY,
 					INTERSECTIONTRANSITION,
-					INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>(model.getIntersection(), l, this.intersectionLayout);
+					IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(model.getIntersection(), l, this.intersectionLayout);
 		 JPanel containerInt1=new JPanel();
 		 containerInt1.setLayout(new BoxLayout(containerInt1,BoxLayout.Y_AXIS));
 		 containerInt1.add(this.intersectionPanel);
@@ -91,7 +76,7 @@ public class IntersectionTab<
 		 this.add(containerInt2);
 	}
 	
-	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
+	public void updateIntersection(IIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
 		if(positions!=null){
 			this.intersectionLayout.setInitializer(positions);
 		}

@@ -3,13 +3,9 @@ package it.polimi.view.tabs;
 import it.polimi.Constants;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IBA;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
 import it.polimi.view.automaton.RefinementTree;
 
@@ -46,31 +42,24 @@ import edu.uci.ics.jung.algorithms.layout.KKLayout;
 public class ModelTab<
 		CONSTRAINEDELEMENT extends State,
 		STATE extends State, 
-		STATEFACTORY extends StateFactory<STATE>,
-		TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-		TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+		TRANSITION extends Transition, 
 		INTERSECTIONSTATE extends IntersectionState<STATE>, 
-		INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-		INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-		INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
+		INTERSECTIONTRANSITION extends Transition>
 	extends JPanel {
 
 	/**
 	 * contains the {@link DrawableIBA} to be displayed
 	 */
-	private IncompleteBuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> modelTabmodel;
+	private IncompleteBuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION, IBA<STATE,TRANSITION>> modelTabmodel;
 	
 	/**
 	 * contains the {@link AbstractLayout} to be used when the model is displayed
 	 */
 	private AbstractLayout<STATE, TRANSITION> modelLayout;
 	
-	private RefinementTree<
-	 CONSTRAINEDELEMENT,
+	private RefinementTree<CONSTRAINEDELEMENT, 
 	 STATE, 
-	 STATEFACTORY,
-	 TRANSITION, 
-	 TRANSITIONFACTORY> tree;
+	 TRANSITION> tree;
 	
 	private JPanel containerModelMenu;
 	private JPanel jtreePanel;
@@ -83,10 +72,9 @@ public class ModelTab<
 	 * @throws when the model or the action listener or the dimension is null
 	 */
 	public ModelTab(ModelInterface<CONSTRAINEDELEMENT, STATE, 
-			STATEFACTORY, TRANSITION, 
-			TRANSITIONFACTORY, INTERSECTIONSTATE, 
-			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-			INTERSECTIONTRANSITIONFACTORY> model, 
+			 TRANSITION, 
+			 INTERSECTIONSTATE, 
+			 INTERSECTIONTRANSITION> model, 
 			ActionListener l,
 			Dimension d){
 		super(false);
@@ -115,27 +103,23 @@ public class ModelTab<
 		 this.tree=new RefinementTree<
 				 CONSTRAINEDELEMENT,
 				 STATE, 
-				 STATEFACTORY,
-				 TRANSITION, 
-				 TRANSITIONFACTORY>(new Dimension((int) (d.width/Constants.JTreeXProportion), d.height), 
+				 TRANSITION>(new Dimension((int) (d.width/Constants.JTreeXProportion), d.height), 
 						 model.getModelRefinementHierarchy(), 
 						 l); 
 		 	jtreePanel.add(tree);
 		 	containerModelMenu.add(jtreePanel);
-		 this.modelLayout=new KKLayout<STATE,TRANSITION>(model.getModel());
+		 this.modelLayout=new KKLayout<STATE,TRANSITION>(model.getModel().getGraph());
 		 this.modelTabmodel=new IncompleteBuchiAutomatonJPanel<
 				 	CONSTRAINEDELEMENT, 
 				 	STATE,
-				 	STATEFACTORY, 
 				 	TRANSITION, 
-				 	TRANSITIONFACTORY, 
-				 	DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>
+				 	IBA<STATE,TRANSITION>>
 		 			(model.getModel(), l, this.modelLayout,
 		 					this.tree);
 		 containerModelMenu.add(this.modelTabmodel);
 		 this.add(containerModelMenu);
 	}
-	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions,  
+	public void updateModel(IBA<STATE, TRANSITION> model, Transformer<STATE, Point2D> positions,  
 			DefaultTreeModel hierarchicalModelRefinement, 
 			DefaultTreeModel flatModelRefinement, 
 			boolean flatten,

@@ -1,13 +1,9 @@
 package it.polimi.view.automaton;
 
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.IIntBA;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -27,17 +23,13 @@ public class IntersectionAutomatonJPanel
 	<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>,
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
-	INTERSECTIONSTATE extends IntersectionState<STATE>, 
-	INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-	INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-	INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>,
-	INTERSECTIONAUTOMATON  extends DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
+	TRANSITION extends Transition,
+	INTERSECTIONSTATE extends IntersectionState<STATE>,
+	INTERSECTIONTRANSITION extends Transition,
+	INTERSECTIONAUTOMATON  extends IIntBA< STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>
 	extends
 		IncompleteBuchiAutomatonJPanel<CONSTRAINEDELEMENT,
-		INTERSECTIONSTATE, INTERSECTIONSTATEFACTORY,  INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY, INTERSECTIONAUTOMATON> 
+		INTERSECTIONSTATE,  INTERSECTIONTRANSITION, INTERSECTIONAUTOMATON> 
 
 {
 
@@ -57,7 +49,7 @@ public class IntersectionAutomatonJPanel
 		this.getRenderContext().setVertexFillPaintTransformer(
 				new HighlighPathPaintTransformer(a, states));
 		
-		this.getGraphLayout().setGraph(a);
+		this.getGraphLayout().setGraph(a.getGraph());
 		this.repaint();
 	}
 	public void highlightTransitions(Set<INTERSECTIONTRANSITION> transitions, Color color){

@@ -1,9 +1,7 @@
 package it.polimi.view.menu.transition;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.view.automaton.RefinementTree;
 import it.polimi.view.menu.TransitionListener;
 import it.polimi.view.menu.actions.ModelActionFactory;
@@ -17,26 +15,19 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class IBATransitionMenu<
 	CONSTRAINEDELEMENT extends State, 
 	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
-	ACTIONFACTORY extends ModelActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>
+	TRANSITION extends Transition, 
+	ACTIONFACTORY extends ModelActionFactory<CONSTRAINEDELEMENT, STATE, TRANSITION>>
 	extends BATransitionMenu<CONSTRAINEDELEMENT, 
-		STATE, STATEFACTORY, 
+		STATE, 
 		TRANSITION, 
-		TRANSITIONFACTORY, 
 		ACTIONFACTORY>{
 
 	private RefinementTree<CONSTRAINEDELEMENT,
 							STATE, 
-							STATEFACTORY,
-							TRANSITION, 
-							TRANSITIONFACTORY> tree;
+							TRANSITION> tree;
 	public IBATransitionMenu(ACTIONFACTORY actionTypesInterface, RefinementTree<CONSTRAINEDELEMENT,
 																				STATE, 
-																				STATEFACTORY,
-																				TRANSITION, 
-																				TRANSITIONFACTORY> tree){
+																				TRANSITION> tree){
 		super(actionTypesInterface);
 		this.tree=tree;
 		this.populate(tree);
@@ -47,16 +38,14 @@ public class IBATransitionMenu<
 	}
 	protected void populate(RefinementTree<CONSTRAINEDELEMENT,
 											STATE, 
-											STATEFACTORY,
-											TRANSITION, 
-											TRANSITIONFACTORY> treeP){
+											TRANSITION> treeP){
 		this.add(new TransitionAddCharacter(this));
 		this.addSeparator();
 		
 		this.add(new TransitionDelete(tree));
 	}
 	
-	public class TransitionDelete extends BATransitionMenu<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, ACTIONFACTORY>.TransitionDelete implements
+	public class TransitionDelete extends BATransitionMenu<CONSTRAINEDELEMENT, STATE, TRANSITION, ACTIONFACTORY>.TransitionDelete implements
 			TransitionListener<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		
 		/**
@@ -66,17 +55,13 @@ public class IBATransitionMenu<
 		RefinementTree<
 				CONSTRAINEDELEMENT,
 				STATE, 
-				STATEFACTORY,
-				TRANSITION, 
-				TRANSITIONFACTORY> tree;
+				TRANSITION> tree;
 		
 		
 		/** Creates a new instance of DeleteEdgeMenuItem */
 		public TransitionDelete(RefinementTree<CONSTRAINEDELEMENT,
-												STATE, 
-												STATEFACTORY,
-												TRANSITION, 
-												TRANSITIONFACTORY> treePar) 
+												STATE,
+												TRANSITION> treePar) 
 		{
 			super();
 			this.tree=treePar;

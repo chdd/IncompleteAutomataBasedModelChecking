@@ -16,15 +16,11 @@ import it.polimi.controller.actions.flattening.ShowFlattedModel;
 import it.polimi.controller.actions.flattening.ShowHierarchicalModel;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.modelchecker.ModelCheckingResults;
 import it.polimi.view.tabs.ClaimTab;
 import it.polimi.view.tabs.ConstraintJPanel;
@@ -63,15 +59,11 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 public class View<
 			CONSTRAINEDELEMENT extends State,
 			STATE extends State, 
-			STATEFACTORY extends StateFactory<STATE>,
-			TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-			TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+			TRANSITION extends Transition, 
 			INTERSECTIONSTATE extends IntersectionState<STATE>, 
-			INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-			INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-			INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> 
+			INTERSECTIONTRANSITION extends Transition> 
 			extends Observable 
-			implements ViewInterface<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, TRANSITIONFACTORY, INTERSECTIONTRANSITIONFACTORY>, ActionListener{
+			implements ViewInterface<CONSTRAINEDELEMENT, STATE,TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION>, ActionListener{
 
 	private JPanel container;
 	
@@ -89,18 +81,18 @@ public class View<
 	private JTabbedPane tabbedPane;
 	
 	// model
-	private ModelTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> modelTab;
+	private ModelTab<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION> modelTab;
 	
 	// claim
-	private ClaimTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> claimTab;
+	private ClaimTab<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION> claimTab;
 	
 	
 	// Intersection
-	private IntersectionTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersectionTab;
+	private IntersectionTab<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionTab;
 	
 
 	// verification snapshot Tab
-	private VerificationTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> verificationSnapshotTab;
+	private VerificationTab<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationSnapshotTab;
 	
 	private Map<Component,Map<JButton, Boolean>> enabledButtons=new HashMap<Component,Map<JButton, Boolean>>();
 	
@@ -108,23 +100,16 @@ public class View<
 	private ConstraintJPanel
 		<CONSTRAINEDELEMENT,
 		STATE, 
-		STATEFACTORY,
 		TRANSITION, 
-		TRANSITIONFACTORY,
 		INTERSECTIONSTATE, 
-		INTERSECTIONSTATEFACTORY,
-		INTERSECTIONTRANSITION,
-		INTERSECTIONTRANSITIONFACTORY> constraintVisualizer;
+		INTERSECTIONTRANSITION> constraintVisualizer;
 		
 	// main frame
 	private JFrame jframe;
 	
 	public View(
 			ModelInterface<CONSTRAINEDELEMENT, STATE, 
-			STATEFACTORY, TRANSITION, 
-			TRANSITIONFACTORY, INTERSECTIONSTATE, 
-			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-			INTERSECTIONTRANSITIONFACTORY> model) {
+			 TRANSITION,  INTERSECTIONSTATE,  INTERSECTIONTRANSITION> model) {
 
 		 this.jframe=new JFrame();
 		 this.jframe.setTitle(Constants.appName);
@@ -174,7 +159,7 @@ public class View<
 		 // claim tab
 		 //******************************************************************************************************************************
 		 
-		 this.claimTab = new ClaimTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
+		 this.claimTab = new ClaimTab<CONSTRAINEDELEMENT, STATE,  TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(model, this);
 		 
 		 this.tabbedPane.addTab("Claim", claimTab);
 		 this.tabbedPane.setMnemonicAt(1, KeyEvent.VK_3);
@@ -192,7 +177,7 @@ public class View<
 		 // intersection tab
 		 //******************************************************************************************************************************
 		 
-		 this.intersectionTab=new IntersectionTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
+		 this.intersectionTab=new IntersectionTab<CONSTRAINEDELEMENT, STATE,  TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(model, this);
 		 this.tabbedPane.addTab("Intersection", intersectionTab);
 		 this.tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		 this.enabledButtons.put(this.intersectionTab, new HashMap<JButton, Boolean>());
@@ -208,7 +193,7 @@ public class View<
 		 //******************************************************************************************************************************
 		 // verification snapshot
 		 //******************************************************************************************************************************
-		 this.verificationSnapshotTab = new VerificationTab<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY,INTERSECTIONSTATE,INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>(model, this);
+		 this.verificationSnapshotTab = new VerificationTab<CONSTRAINEDELEMENT, STATE,  TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(model, this);
 		 this.enabledButtons.put(this.verificationSnapshotTab, new HashMap<JButton, Boolean>());
 		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.saveButton, false);
 		 this.enabledButtons.get(this.verificationSnapshotTab).put(this.instrumentBar.openButton, false);
@@ -238,13 +223,9 @@ public class View<
 		 this.constraintVisualizer=new ConstraintJPanel<
 					CONSTRAINEDELEMENT,
 					STATE, 
-					STATEFACTORY,
 					TRANSITION, 
-					TRANSITIONFACTORY,
 					INTERSECTIONSTATE, 
-					INTERSECTIONSTATEFACTORY,
-					INTERSECTIONTRANSITION,
-					INTERSECTIONTRANSITIONFACTORY>(
+					INTERSECTIONTRANSITION>(
 							new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height/Constants.constraintPanelYRation));
 		 this.constraintVisualizer.setVisible(false);
 
@@ -262,20 +243,20 @@ public class View<
 	}
 	
 	@Override
-	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions,  DefaultTreeModel hierarchicalModelRefinement, DefaultTreeModel flatModelRefinement){
+	public void updateModel(IBA<STATE, TRANSITION> model, Transformer<STATE, Point2D> positions,  DefaultTreeModel hierarchicalModelRefinement, DefaultTreeModel flatModelRefinement){
 		this.modelTab.updateModel(model, positions, hierarchicalModelRefinement, flatModelRefinement, this.flatten, this.reload);
 		this.modelTab.repaint();
 		this.verificationSnapshotTab.updateModel(model, positions, hierarchicalModelRefinement, flatModelRefinement);;
 		this.jframe.repaint();
 	}
 	@Override
-	public void updateSpecification(DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification, Transformer<STATE, Point2D> positions){
+	public void updateSpecification(BA<STATE, TRANSITION> specification, Transformer<STATE, Point2D> positions){
 		this.claimTab.updateSpecification(specification, positions);
 		this.jframe.repaint();
 	}
 
 	@Override
-	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
+	public void updateIntersection(IIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
 		
 		this.verificationSnapshotTab.updateIntersection(intersection, positions);
 		this.intersectionTab.updateIntersection(intersection, positions);
@@ -287,7 +268,7 @@ public class View<
 
 	@Override
 	public void updateVerificationResults(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
-			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
+			IIntBA<STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION> intersection) {
 		
 		if(verificationResults.getResult()==1){
 			this.constraintVisualizer.setVisible(false);
@@ -315,37 +296,37 @@ public class View<
 		// new 
 		if(((e.getSource().equals(this.instrumentBar.newButton) || e.getSource().equals(this.menuBar.filenew)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab))){
 			reload=true;
-			this.notifyObservers(new NewModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.notifyObservers(new NewModel<CONSTRAINEDELEMENT, STATE,  TRANSITION>());
 		}
 		
 		if((e.getSource().equals(this.instrumentBar.newButton) ||(e.getSource().equals(this.menuBar.filenew)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab))){
-			this.notifyObservers(new NewClaim<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.notifyObservers(new NewClaim<CONSTRAINEDELEMENT, STATE,  TRANSITION>());
 		}
 		//---------------------------------------------
 		// open
 		if((e.getSource().equals(this.instrumentBar.openButton) || e.getSource().equals(this.menuBar.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
 			reload=true;
-			this.notifyObservers(new LoadModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadModel<CONSTRAINEDELEMENT, STATE,  TRANSITION>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		if((e.getSource().equals(this.instrumentBar.openButton) || e.getSource().equals(this.menuBar.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
-			this.notifyObservers(new LoadSpecification<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadSpecification<CONSTRAINEDELEMENT, STATE,  TRANSITION>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		if((e.getSource().equals(this.instrumentBar.openButton) || e.getSource().equals(this.menuBar.fileopen)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
-			this.notifyObservers(new LoadIntersection<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(e.getSource(), e.getID(), e.getActionCommand()));
+			this.notifyObservers(new LoadIntersection<CONSTRAINEDELEMENT, STATE,  TRANSITION>(e.getSource(), e.getID(), e.getActionCommand()));
 		}
 		
 		
 		// --------------------------------------------
 		// saving
 		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.menuBar.filesave))  && this.tabbedPane.getSelectedComponent().equals(this.modelTab)){
-			this.notifyObservers(new SaveModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelTab.getModelLayout()));
+			this.notifyObservers(new SaveModel<CONSTRAINEDELEMENT, STATE,  TRANSITION,  AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.modelTab.getModelLayout()));
 		}
 		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.menuBar.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.claimTab)){
-			this.notifyObservers(new SaveSpecification<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimTab.getClaimLayout()));
+			this.notifyObservers(new SaveSpecification<CONSTRAINEDELEMENT, STATE,  TRANSITION,  AbstractLayout<STATE, TRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.claimTab.getClaimLayout()));
 		}
 		if((e.getSource().equals(this.instrumentBar.saveButton) || e.getSource().equals(this.menuBar.filesave)) && this.tabbedPane.getSelectedComponent().equals(this.intersectionTab)){
-			this.notifyObservers(new SaveIntersection<CONSTRAINEDELEMENT, STATE, STATEFACTORY,
-					TRANSITION, TRANSITIONFACTORY, INTERSECTIONSTATE, 
+			this.notifyObservers(new SaveIntersection<CONSTRAINEDELEMENT, STATE, 
+					TRANSITION,  INTERSECTIONSTATE, 
 					INTERSECTIONTRANSITION,  AbstractLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>>(e.getSource(), e.getID(), e.getActionCommand(), this.intersectionTab.getIntersectionLayout()));
 		}
 		
@@ -357,7 +338,7 @@ public class View<
 															+ "Boolean operators:  ! (negation) ->(implication) <-> (equivalence) &&  (and) ||  (or)\n"
 															+ "Temporal operators: []  (always) <>   (eventually) U   (until) V (realease) X   (next)");
 			
-			this.notifyObservers(new LoadClaimAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(ltlFormula));
+			this.notifyObservers(new LoadClaimAction<CONSTRAINEDELEMENT, STATE,  TRANSITION>(ltlFormula));
 		}
 		
 		//editing
@@ -391,12 +372,12 @@ public class View<
 		
 		// checking
 		if(e.getSource().equals(this.instrumentBar.checkButton) || e.getSource().equals(this.menuBar.runCheckerMenuItem)){
-			this.notifyObservers(new CheckAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.notifyObservers(new CheckAction<CONSTRAINEDELEMENT, STATE,  TRANSITION>());
 		}
 		
 		if(e.getSource().equals(this.instrumentBar.flattenButton)){
 			this.flatten=true;
-			this.notifyObservers(new ShowFlattedModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.notifyObservers(new ShowFlattedModel<CONSTRAINEDELEMENT, STATE,  TRANSITION>());
 			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, false);
 			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, false);
 			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.flattenButton, false);
@@ -406,7 +387,7 @@ public class View<
 		}
 		if(e.getSource().equals(this.instrumentBar.hierarchyButton)){
 			this.flatten=false;
-			this.notifyObservers(new ShowHierarchicalModel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>());
+			this.notifyObservers(new ShowHierarchicalModel<CONSTRAINEDELEMENT, STATE,  TRANSITION>());
 			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.transformingButton, false);
 			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.editingButton, true);
 			this.enabledButtons.get(this.modelTab).put(this.instrumentBar.flattenButton, true);
@@ -414,7 +395,7 @@ public class View<
 			
 			this.modelTab.setTransformingMode();
 		}
-		if(e instanceof ActionInterface<?, ?, ?, ?, ?>){
+		if(e instanceof ActionInterface<?, ?, ?>){
 			this.notifyObservers(e);
 		}
 		this.updateButtons(this.tabbedPane.getSelectedComponent());
@@ -431,7 +412,7 @@ public class View<
 
 	@Override
 	public void updateModel(
-			DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, 
+			IBA<STATE, TRANSITION> model, 
 			DefaultTreeModel hierarchicalModelRefinement,
 			DefaultTreeModel flatModelRefinement) {
 		this.updateModel(model, null, hierarchicalModelRefinement, flatModelRefinement);
@@ -440,7 +421,7 @@ public class View<
 
 	@Override
 	public void updateClaim(
-			DrawableBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> specification) {
+			BA<STATE, TRANSITION> specification) {
 		this.updateSpecification(specification, null);
 		
 	}

@@ -3,15 +3,11 @@ package it.polimi.view.tabs;
 import it.polimi.Constants;
 import it.polimi.model.ModelInterface;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIBA;
-import it.polimi.model.interfaces.automata.drawable.DrawableIntBA;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.automata.IBA;
+import it.polimi.model.interfaces.automata.IIntBA;
 import it.polimi.modelchecker.ModelCheckingResults;
 import it.polimi.view.automaton.BuchiAutomatonJPanel;
 import it.polimi.view.automaton.IncompleteBuchiAutomatonJPanel;
@@ -40,13 +36,9 @@ import edu.uci.ics.jung.algorithms.layout.FRLayout;
 public class VerificationTab<
 		CONSTRAINEDELEMENT extends State,
 		STATE extends State, 
-		STATEFACTORY extends StateFactory<STATE>,
-		TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-		TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+		TRANSITION extends Transition, 
 		INTERSECTIONSTATE extends IntersectionState<STATE>, 
-		INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-		INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-		INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>
+		INTERSECTIONTRANSITION extends Transition>
 	extends JPanel {
 	
 	
@@ -63,22 +55,17 @@ public class VerificationTab<
 	
 	
 	
-	private IncompleteBuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>  verificationModelPanel;
-	private BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>>   verificationClaimPanel;
+	private IncompleteBuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION,  IBA<STATE,TRANSITION>>  verificationModelPanel;
+	private BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION,  BA<STATE,TRANSITION>>   verificationClaimPanel;
 	private IntersectionAutomatonJPanel<CONSTRAINEDELEMENT, STATE, 
-		STATEFACTORY,
 		TRANSITION, 
-		TRANSITIONFACTORY,
 		INTERSECTIONSTATE, 
-		INTERSECTIONSTATEFACTORY,
 		INTERSECTIONTRANSITION,
-		INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>> verificationIntersectionPanel;
+		IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>> verificationIntersectionPanel;
 
 	public VerificationTab(ModelInterface<CONSTRAINEDELEMENT, STATE, 
-			STATEFACTORY, TRANSITION, 
-			TRANSITIONFACTORY, INTERSECTIONSTATE, 
-			INTERSECTIONSTATEFACTORY, INTERSECTIONTRANSITION, 
-			INTERSECTIONTRANSITIONFACTORY> model, 
+			 TRANSITION, 
+			 INTERSECTIONSTATE, INTERSECTIONTRANSITION> model, 
 			ActionListener l){
 		
 		 super(false);
@@ -88,18 +75,18 @@ public class VerificationTab<
 		 container1.setLayout(new BoxLayout(container1,BoxLayout.Y_AXIS));
 		
 		 
-		 this.verificationModelLayout=new FRLayout<STATE,TRANSITION>(model.getModel());
+		 this.verificationModelLayout=new FRLayout<STATE,TRANSITION>(model.getModel().getGraph());
 		 container1.add(new JLabel("Model"));
 		 this.verificationModelPanel=new IncompleteBuchiAutomatonJPanel
-				 <CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableIBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> (model.getModel(), l, this.verificationModelLayout, 
+				 <CONSTRAINEDELEMENT, STATE, TRANSITION,  IBA<STATE,TRANSITION>> (model.getModel(), l, this.verificationModelLayout, 
 						 null);
 		 this.verificationModelPanel.setTranformingMode();
 		 container1.add(verificationModelPanel);
 		
 
-		 this.verificationClaimLayout=new FRLayout<STATE,TRANSITION>(model.getSpecification());
+		 this.verificationClaimLayout=new FRLayout<STATE,TRANSITION>(model.getSpecification().getGraph());
 		 container1.add(new JLabel("Claim"));
-		 this.verificationClaimPanel=new BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE,STATEFACTORY, TRANSITION, TRANSITIONFACTORY, DrawableBA<CONSTRAINEDELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> (model.getSpecification(), l, this.verificationClaimLayout, null);
+		 this.verificationClaimPanel=new BuchiAutomatonJPanel<CONSTRAINEDELEMENT, STATE, TRANSITION,  BA<STATE,TRANSITION>> (model.getSpecification(), l, this.verificationClaimLayout, null);
 		 this.verificationClaimPanel.setTranformingMode();
 		 container1.add(verificationClaimPanel);
 		 this.add(container1);
@@ -156,16 +143,13 @@ public class VerificationTab<
 		 // Intersection automaton
 		 JLabel intersectionLabel=new JLabel("Intersection Automaton");
 		 container2.add(intersectionLabel);
-		 this.verificationIntersectionLayout=new FRLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>(model.getIntersection());
+		 this.verificationIntersectionLayout=new FRLayout<INTERSECTIONSTATE, INTERSECTIONTRANSITION>(model.getIntersection().getGraph());
 		 this.verificationIntersectionPanel=new IntersectionAutomatonJPanel
 				 <CONSTRAINEDELEMENT, STATE, 
-					STATEFACTORY,
 					TRANSITION, 
-					TRANSITIONFACTORY,
 					INTERSECTIONSTATE, 
-					INTERSECTIONSTATEFACTORY,
 					INTERSECTIONTRANSITION,
-					INTERSECTIONTRANSITIONFACTORY,DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY>>
+					IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>>
 		 	(model.getIntersection(), l, this.verificationIntersectionLayout);
 		 
 		 this.verificationIntersectionPanel.setTranformingMode();
@@ -175,7 +159,7 @@ public class VerificationTab<
 	}
 	
 	public void updateVerificationResults(ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults,
-			DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection) {
+			IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersection) {
 		
 		if(verificationResults.getResult()==1){
 			this.result.setIcon(Constants.resultYes);
@@ -204,14 +188,14 @@ public class VerificationTab<
 		
 	}
 	
-	public void updateIntersection(DrawableIntBA<CONSTRAINEDELEMENT, STATE, TRANSITION,INTERSECTIONSTATE,INTERSECTIONTRANSITION, INTERSECTIONTRANSITIONFACTORY> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
+	public void updateIntersection(IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersection, Transformer<INTERSECTIONSTATE, Point2D> positions){
 		if(positions!=null){
 			this.verificationIntersectionLayout.setInitializer(positions);
 		}
 		this.verificationIntersectionPanel.update(intersection);
 	}
 	
-	public void updateModel(DrawableIBA<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> model, Transformer<STATE, Point2D> positions,  DefaultTreeModel hierarchicalModelRefinement, DefaultTreeModel flatModelRefinement){
+	public void updateModel(IBA<STATE, TRANSITION> model, Transformer<STATE, Point2D> positions,  DefaultTreeModel hierarchicalModelRefinement, DefaultTreeModel flatModelRefinement){
 		this.verificationModelPanel.update(model);
 	}
 	

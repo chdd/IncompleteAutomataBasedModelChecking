@@ -12,7 +12,7 @@ package it.polimi.view.automaton;
 
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.transitions.LabelledTransition;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -41,7 +41,7 @@ public class LabelledTransitionRender
 		<
 		CONSTRAINEDELEMENT extends State,
 		V extends State,	
-		E extends LabelledTransition<CONSTRAINEDELEMENT>> 
+		E extends Transition> 
 		extends BasicEdgeLabelRenderer<V,E> {
 
 	  public void labelEdge(RenderContext<V,E> rc, Layout<V,E> layout, E e, String label) {

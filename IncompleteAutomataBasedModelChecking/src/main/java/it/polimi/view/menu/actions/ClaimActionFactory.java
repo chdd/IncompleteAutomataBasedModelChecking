@@ -11,50 +11,46 @@ import it.polimi.controller.actions.automata.states.delete.DeleteState;
 import it.polimi.controller.actions.automata.states.initial.SetInitial;
 import it.polimi.controller.actions.automata.states.initial.SetInitialClaim;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 
 public class ClaimActionFactory<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>, 
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>>
+TRANSITION extends Transition>
 		extends
-		ActionTypesInterface<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> {
+		ActionTypesInterface<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 
 	@Override
-	public ChangeEdgeLabel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getChangingLabelAction(
+	public ChangeEdgeLabel<CONSTRAINEDELEMENT, STATE, TRANSITION> getChangingLabelAction(
 			Object source, int id, String command, String edgeLabel,
 			TRANSITION transition) {
-		return new ChangeClaimEdgeLabel<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, edgeLabel, transition);
+		return new ChangeClaimEdgeLabel<CONSTRAINEDELEMENT, STATE, TRANSITION>(source, id, command, edgeLabel, transition);
 	}
 
-	public DeleteState<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> getDeleteStateAction(
+	public DeleteState<CONSTRAINEDELEMENT, STATE, TRANSITION> getDeleteStateAction(
 			Object source, int id, String command, STATE state) {
-		return new DeleteClaimState<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
+		return new DeleteClaimState<CONSTRAINEDELEMENT, STATE, TRANSITION>(source, id, command, state);
 	}
 
 	@Override
-	public SetAccepting<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setAccepting(
+	public SetAccepting<CONSTRAINEDELEMENT, STATE, TRANSITION> setAccepting(
 			Object source, int id, String command, STATE state) {
-		return new SetAcceptingClaim<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
+		return new SetAcceptingClaim<CONSTRAINEDELEMENT, STATE, TRANSITION>(source, id, command, state);
 	}
 
 	@Override
-	public DeleteEdgeAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> deleteEdgeAction(
+	public DeleteEdgeAction<CONSTRAINEDELEMENT, STATE, TRANSITION> deleteEdgeAction(
 			Object source, int id, String command,
 			TRANSITION transition) 
 	{
-		return new DeleteEdgeClaimAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, transition);
+		return new DeleteEdgeClaimAction<CONSTRAINEDELEMENT, STATE, TRANSITION>(source, id, command, transition);
 	}
 
 	@Override
-	public SetInitial<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> setInitial(
+	public SetInitial<CONSTRAINEDELEMENT, STATE, TRANSITION> setInitial(
 			Object source, int id, String command, STATE state) {
 		
-		return new SetInitialClaim<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(source, id, command, state);
+		return new SetInitialClaim<CONSTRAINEDELEMENT, STATE, TRANSITION>(source, id, command, state);
 	}
 
 }

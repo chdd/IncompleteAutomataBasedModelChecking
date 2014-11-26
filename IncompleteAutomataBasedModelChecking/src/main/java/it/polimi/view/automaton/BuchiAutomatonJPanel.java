@@ -2,10 +2,10 @@ package it.polimi.view.automaton;
 
 import it.polimi.model.impl.automata.BAImpl;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.automata.drawable.DrawableBA;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
+import it.polimi.model.interfaces.automata.BA;
+import it.polimi.model.interfaces.states.StateFactory;
+import it.polimi.model.interfaces.transitions.TransitionFactory;
 import it.polimi.view.menu.Plugin;
 import it.polimi.view.menu.actions.ClaimActionFactory;
 import it.polimi.view.menu.states.BAStateMenu;
@@ -42,10 +42,8 @@ public class BuchiAutomatonJPanel
 <
 CONSTRAINTELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition<CONSTRAINTELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITION>,
-	BA extends DrawableBA<CONSTRAINTELEMENT, STATE,TRANSITION, TRANSITIONFACTORY>> 
+TRANSITION extends Transition,
+	AUTOMATON extends BA<STATE,TRANSITION>> 
 	extends  VisualizationViewer<STATE,TRANSITION>  {
 	
 	protected ActionListener view;
@@ -53,11 +51,11 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	protected  RefinementTree<
 							CONSTRAINTELEMENT,
 							STATE, 
-							STATEFACTORY,
-							TRANSITION, 
-							TRANSITIONFACTORY> parentNode;
+							TRANSITION> parentNode;
 	
-	private TRANSITIONFACTORY transitionFactory;
+	private TransitionFactory<TRANSITION> transitionFactory;
+	private StateFactory<STATE> stateFactory;
+	
 	/**
 	 * 
 	 */
@@ -69,11 +67,9 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	 * @param a is the {@link BAImpl} to be printed
 	 * @throws IllegalArgumentException if the {@link Dimension} d of the {@link BAImpl} d is null
 	 */
-	public BuchiAutomatonJPanel(BA a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  RefinementTree<							CONSTRAINTELEMENT,
+	public BuchiAutomatonJPanel(AUTOMATON a, ActionListener l, AbstractLayout<STATE, TRANSITION> layout,  RefinementTree<							CONSTRAINTELEMENT,
 																										STATE, 
-																										STATEFACTORY,
-																										TRANSITION, 
-																										TRANSITIONFACTORY> parentNode){
+																										TRANSITION> parentNode){
 		super(layout);
 		if(parentNode!=null){
 			this.parentNode=parentNode;
@@ -89,17 +85,18 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		this.update(a);
 		
 		this.transitionFactory=a.getTransitionFactory();
+		this.stateFactory=a.getStateFactory();
 		this.setEditingMode();
 	}
 	
-	public void update(BA  a){
+	public void update(AUTOMATON  a){
 		this.setTransformers(a);
 		
-		this.getGraphLayout().setGraph(a);
+		this.getGraphLayout().setGraph(a.getGraph());
 		this.repaint();
 	}
 	
-	public void setTransformers(BA  a){
+	public void setTransformers(AUTOMATON  a){
 		// vertex
 		this.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
 		this.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<STATE>());
@@ -129,19 +126,19 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	}
 	
 	protected JPopupMenu getStateMenu(){
-		return new BAStateMenu<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, 
-				ClaimActionFactory<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>(
+		return new BAStateMenu<CONSTRAINTELEMENT, STATE,  TRANSITION, 
+				ClaimActionFactory<CONSTRAINTELEMENT, STATE,  TRANSITION>>(
 						new ClaimActionFactory
-						<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()
+						<CONSTRAINTELEMENT, STATE,  TRANSITION>()
 				);
 	}
 	
 	
-	protected BuchiAutomatonShapeTransformer getShapeTransformer(BA a){
+	protected BuchiAutomatonShapeTransformer getShapeTransformer(AUTOMATON a){
 		return new BuchiAutomatonShapeTransformer(a);
 	}
 	
-	protected BuchiAutomatonStatePaintTransformer getPaintTransformer(BA a){
+	protected BuchiAutomatonStatePaintTransformer getPaintTransformer(AUTOMATON a){
 		return new BuchiAutomatonStatePaintTransformer(a);
 	}
 	
@@ -151,7 +148,7 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		return new BuchiAutomatonEdgeStrokeTransormer();
 	}
 
-	protected Transformer<STATE, Stroke> getStateStrokeTransformer(BA a) {
+	protected Transformer<STATE, Stroke> getStateStrokeTransformer(AUTOMATON a) {
 		return new BuchiAutomatonStateStrokeTransofmer(a);
 	}
 
@@ -159,13 +156,13 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 		
 		EditingModalGraphMouse<STATE,TRANSITION> gm = new EditingModalGraphMouse<STATE,TRANSITION>(
 				this.getRenderContext(), 
-                new StateFactory<STATE>(), 
+                this.stateFactory, 
                 this.transitionFactory); 
 		this.setGraphMouse(gm);
 		
 		gm.setMode(ModalGraphMouse.Mode.EDITING);
 		
-        Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY> myPlugin = new Plugin<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>(this.view);
+        Plugin<CONSTRAINTELEMENT, STATE,  TRANSITION> myPlugin = new Plugin<CONSTRAINTELEMENT, STATE,  TRANSITION>(this.view);
         // Add some popup menus for the edges and vertices to our mouse plugin.
         JPopupMenu edgeMenu =this.getTransitionPopupMenu();
         		
@@ -180,18 +177,18 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	
 	public JPopupMenu getTransitionPopupMenu(){
 		
-		return new BATransitionMenu<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY, 
-				ClaimActionFactory<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>(
+		return new BATransitionMenu<CONSTRAINTELEMENT, STATE,  TRANSITION, 
+				ClaimActionFactory<CONSTRAINTELEMENT, STATE,  TRANSITION>>(
 						new ClaimActionFactory
-						<CONSTRAINTELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>()
+						<CONSTRAINTELEMENT, STATE,  TRANSITION>()
 				);
 	}
 	
 	public class BuchiAutomatonStatePaintTransformer implements Transformer<STATE, Paint> {
 	
-		protected BA a;
+		protected AUTOMATON a;
 		
-		public BuchiAutomatonStatePaintTransformer(BA a){
+		public BuchiAutomatonStatePaintTransformer(AUTOMATON a){
 			this.a=a;
 		}
 		@Override
@@ -217,9 +214,9 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	private static final int borderRadiusDinstance=4;
 	private static final int borderSize=1;
 	
-	protected BA a;
+	protected AUTOMATON a;
 	
-	public BuchiAutomatonShapeTransformer(BA a){
+	public BuchiAutomatonShapeTransformer(AUTOMATON a){
 		this.a=a;
 	}
 
@@ -270,9 +267,9 @@ TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINTELEMENT, TRANSITIO
 	}
 	public class BuchiAutomatonStateStrokeTransofmer implements Transformer<STATE, Stroke> {
 
-		protected BA a;
+		protected AUTOMATON a;
 	
-		public BuchiAutomatonStateStrokeTransofmer(BA a){
+		public BuchiAutomatonStateStrokeTransofmer(AUTOMATON a){
 		this.a=a;
 		}
 	

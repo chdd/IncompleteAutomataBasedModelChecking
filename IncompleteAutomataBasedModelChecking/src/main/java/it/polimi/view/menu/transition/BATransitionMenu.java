@@ -1,9 +1,7 @@
 package it.polimi.view.menu.transition;
 
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.view.menu.TransitionListener;
 import it.polimi.view.menu.actions.ClaimActionFactory;
 
@@ -21,10 +19,8 @@ import javax.swing.JTextField;
 public class BATransitionMenu<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
-	ACTIONFACTORY extends ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>  extends JPopupMenu{
+	TRANSITION extends Transition, 
+	ACTIONFACTORY extends ClaimActionFactory<CONSTRAINEDELEMENT, STATE, TRANSITION>>  extends JPopupMenu{
 
 	protected ACTIONFACTORY actionTypesInterface;
 	

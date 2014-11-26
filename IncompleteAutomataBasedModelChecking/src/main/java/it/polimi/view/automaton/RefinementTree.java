@@ -17,16 +17,13 @@ import it.polimi.controller.viewRefinement.ViewFlatStateRefinementAction;
 import it.polimi.controller.viewRefinement.ViewHierarchyStateRefinementAction;
 import it.polimi.model.RefinementNode;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.EventObject;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.event.CellEditorListener;
@@ -53,9 +50,7 @@ import javax.swing.tree.TreeSelectionModel;
 public class RefinementTree<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>> extends JPanel 
+TRANSITION extends Transition> extends JPanel 
 implements TreeSelectionListener{
     
 	private boolean flat=false;
@@ -110,25 +105,22 @@ implements TreeSelectionListener{
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		
-		RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY> refnode=
-				(RefinementNode<CONSTRAINEDELEMENT, STATE, TRANSITION, TRANSITIONFACTORY>) 
+		@SuppressWarnings("unchecked")
+		RefinementNode<STATE, TRANSITION> refnode=
+				(RefinementNode<STATE, TRANSITION>) 
 		 ((DefaultMutableTreeNode)e.getNewLeadSelectionPath().getLastPathComponent())
 		 .getUserObject();
 
 		if(flat){
 			l.actionPerformed(new ViewFlatStateRefinementAction
 					<CONSTRAINEDELEMENT, STATE, 
-					STATEFACTORY, 
-					TRANSITION, 
-					TRANSITIONFACTORY>(e.getSource(), 0, "Refinement", 
+					TRANSITION>(e.getSource(), 0, "Refinement", 
 							refnode));
 		}
 		else{
 			l.actionPerformed(new ViewHierarchyStateRefinementAction
-					<CONSTRAINEDELEMENT, STATE, 
-					STATEFACTORY, 
-					TRANSITION, 
-					TRANSITIONFACTORY>(e.getSource(), 0, "Refinement", 
+					<CONSTRAINEDELEMENT, STATE,
+					TRANSITION>(e.getSource(), 0, "Refinement", 
 							refnode));
 		}
 	}

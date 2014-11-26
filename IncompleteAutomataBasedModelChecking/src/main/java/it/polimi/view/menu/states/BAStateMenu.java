@@ -2,9 +2,7 @@ package it.polimi.view.menu.states;
 
 import it.polimi.controller.actions.automata.states.RenameStateAction;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.view.menu.StateListener;
 import it.polimi.view.menu.actions.ClaimActionFactory;
 
@@ -23,10 +21,8 @@ public class BAStateMenu
 	<
 	CONSTRAINEDELEMENT extends State,
 	STATE extends State, 
-	STATEFACTORY extends StateFactory<STATE>, 
-	TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-	TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
-	ACTIONFACTORY extends ClaimActionFactory<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>>
+	TRANSITION extends Transition,
+	ACTIONFACTORY extends ClaimActionFactory<CONSTRAINEDELEMENT, STATE, TRANSITION>>
 	extends JPopupMenu {
 
 	ACTIONFACTORY actionTypesInterface;
@@ -99,7 +95,7 @@ public class BAStateMenu
 
 			name.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					l.actionPerformed(new RenameStateAction<CONSTRAINEDELEMENT, STATE, STATEFACTORY, TRANSITION, TRANSITIONFACTORY>
+					l.actionPerformed(new RenameStateAction<CONSTRAINEDELEMENT, STATE, TRANSITION>
 					(e.getSource(), e.getID(), e.getActionCommand(), name.getText(), v));
 					popupmenu.setVisible(false);
 				}

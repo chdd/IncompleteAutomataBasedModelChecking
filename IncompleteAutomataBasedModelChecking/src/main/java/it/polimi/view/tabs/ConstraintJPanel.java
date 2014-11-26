@@ -2,12 +2,8 @@ package it.polimi.view.tabs;
 
 import it.polimi.Constants;
 import it.polimi.model.impl.states.IntersectionState;
-import it.polimi.model.impl.states.IntersectionStateFactory;
 import it.polimi.model.impl.states.State;
-import it.polimi.model.impl.states.StateFactory;
-import it.polimi.model.impl.transitions.LabelledTransition;
-import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
-import it.polimi.model.interfaces.transitions.LabelledTransitionFactory;
+import it.polimi.model.impl.transitions.Transition;
 import it.polimi.modelchecker.ModelCheckingResults;
 import it.polimi.modelchecker.brzozowski.propositions.states.AndProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.AtomicProposition;
@@ -35,13 +31,9 @@ import javax.swing.JSplitPane;
 public class ConstraintJPanel<
 CONSTRAINEDELEMENT extends State,
 STATE extends State, 
-STATEFACTORY extends StateFactory<STATE>,
-TRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>, 
-TRANSITIONFACTORY extends LabelledTransitionFactory<CONSTRAINEDELEMENT, TRANSITION>,
+TRANSITION extends Transition, 
 INTERSECTIONSTATE extends IntersectionState<STATE>, 
-INTERSECTIONSTATEFACTORY extends IntersectionStateFactory<STATE, INTERSECTIONSTATE>,
-INTERSECTIONTRANSITION extends LabelledTransition<CONSTRAINEDELEMENT>,
-INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>  extends JPanel {
+INTERSECTIONTRANSITION extends Transition>  extends JPanel {
 
 	private JPanel container;
 	private JPanel constraintContainer;
@@ -63,18 +55,14 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 	STATE, 
 	TRANSITION, 
 	INTERSECTIONSTATE, 
-	INTERSECTIONTRANSITION,
-	TRANSITIONFACTORY,
-	INTERSECTIONTRANSITIONFACTORY> view;
+	INTERSECTIONTRANSITION> view;
 	
 	public void updateConstraintJPanel(ViewInterface<
 			CONSTRAINEDELEMENT,
 			STATE, 
 			TRANSITION, 
 			INTERSECTIONSTATE, 
-			INTERSECTIONTRANSITION,
-			TRANSITIONFACTORY,
-			INTERSECTIONTRANSITIONFACTORY> view,
+			INTERSECTIONTRANSITION> view,
 			ModelCheckingResults<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> verificationResults){
 		
 		
@@ -229,9 +217,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 		STATE, 
 		TRANSITION, 
 		INTERSECTIONSTATE, 
-		INTERSECTIONTRANSITION,
-		TRANSITIONFACTORY,
-		INTERSECTIONTRANSITIONFACTORY> view;
+		INTERSECTIONTRANSITION> view;
 		public PropositionButton(AtomicProposition<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> item, 
 				
 				ViewInterface<
@@ -239,9 +225,7 @@ INTERSECTIONTRANSITIONFACTORY extends ConstrainedTransitionFactory<CONSTRAINEDEL
 				STATE, 
 				TRANSITION, 
 				INTERSECTIONSTATE, 
-				INTERSECTIONTRANSITION,
-				TRANSITIONFACTORY,
-				INTERSECTIONTRANSITIONFACTORY> view, Boolean simplified){
+				INTERSECTIONTRANSITION> view, Boolean simplified){
 			super(item.toString());
 			this.simplified=simplified;
 			this.item=item;
