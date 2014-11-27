@@ -62,7 +62,7 @@ public abstract class LogicalProposition<CONSTRAINTELEMENT, TRANSITION extends T
 		for(int i=0; i<value.size()-1;i++){
 			ret=ret+"("+value.get(i).toString()+")"+this.getType();
 		}
-		ret=ret+value.get(value.size()-1).toString();
+		ret=ret+"("+value.get(value.size()-1).toString()+")";
 		return ret;
 	}
     public abstract String getType();

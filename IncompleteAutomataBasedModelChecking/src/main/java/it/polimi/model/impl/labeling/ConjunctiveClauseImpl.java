@@ -174,4 +174,20 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 			return false;
 		return true;
 	}
+
+	@Override
+	public boolean satisfies(ConjunctiveClause conjunctiveClause) {
+		if(conjunctiveClause instanceof SigmaProposition){
+			return true;
+		}
+		for(Proposition p: conjunctiveClause.getPropositions()){
+			if(p.isNegated() && this.propositions.contains(new Proposition(p.getLabel(), false))){
+				return false;
+			}
+			if(!p.isNegated() && !this.propositions.contains(p)){
+				return false;
+			}
+		}
+		return true;
+	}
 }

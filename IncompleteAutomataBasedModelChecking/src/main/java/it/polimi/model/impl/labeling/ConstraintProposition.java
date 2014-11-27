@@ -50,4 +50,9 @@ public class ConstraintProposition<STATE extends State> extends GraphProposition
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public boolean satisfies(ConjunctiveClause conjunctiveClause) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

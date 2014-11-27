@@ -15,51 +15,112 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections15.Factory;
+
+/**
+ * Is responsible of the creation of the {@link IIntBA}, i.e., the intersection
+ * automaton
+ * 
+ * @author claudiomenghi
+ * 
+ * @param <CONSTRAINEDELEMENT>
+ *            is the type of the constrained element that can be put over the
+ *            intersection transition
+ * @param <STATE>
+ *            is the type of the {@link State} of the original {@link BA} and
+ *            {@link IBA}, that is the specification and the model of the system
+ * @param <TRANSITION>
+ *            is the type of the {@link Transition} of the original {@link BA}
+ *            and {@link IBA}
+ * @param <INTERSECTIONSTATE>
+ *            is the type of the {@link IntersectionState} of the intersection
+ *            automaton
+ * @param <INTERSECTIONTRANSITION>
+ *            is the type of the {@link Transition} of the intersection
+ *            automaton
+ */
 public class IntersectionBuilder<CONSTRAINEDELEMENT extends State, STATE extends State, TRANSITION extends Transition, INTERSECTIONSTATE extends IntersectionState<STATE>, INTERSECTIONTRANSITION extends Transition> {
 
+	/**
+	 * contains the intersection automaton generated
+	 */
 	private IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersection;
 
+	/**
+	 * contains the {@link Factory} that allows to create intersection states
+	 */
 	private IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory;
 
+	/**
+	 * contains the {@link Factory} that allows to create intersection
+	 * transitions
+	 */
 	private ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory;
+	
+	/**
+	 * contains the {@link IntersectionRule} which is used to build the intersection transitions
+	 */
+	private IntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> intersectionrule;
 
 	/**
-	 * computes the intersection of the current automaton and the automaton a2
+	 * computes the intersection of the model and the claim specified as
+	 * parameter
 	 * 
-	 * @param a2
-	 *            the automaton with which the current automaton must be
-	 *            intersected
+	 * @param model
+	 *            is the model under analysis
+	 * @param claim
+	 *            is the claim under analysis
+	 * @param stateFactory
+	 *            is the {@link Factory} that allows to create
+	 *            {@link IntersectionState}
+	 * @param transitionFactory
+	 *            is the {@link Factory} that allows to create intersection
+	 *            transitions
+	 * @param intersectionrule contains the rule that is used to compute the intersection transitions
+	 * 
 	 * @return the intersection of this automaton and the automaton a2
-	 * @throws IllegalArgumentException
-	 *             if the automaton a2 is null
+	 * @throws NullPointerException
+	 *             if the model, the claim, the stateFactory, the
+	 *             transitionFactory or the intesection rule is null
 	 */
-	public IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> computeIntersection(IBA<STATE, TRANSITION> model,
-			BA<STATE, TRANSITION> specification,
+	public IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> computeIntersection(
+			IBA<STATE, TRANSITION> model,
+			BA<STATE, TRANSITION> claim,
 			IntersectionStateFactory<STATE, INTERSECTIONSTATE> stateFactory,
-			ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory) {
+			ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> transitionFactory,
+			IntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>> intersectionrule) {
 
 		if (model == null) {
-			throw new IllegalArgumentException("The model cannot be null");
+			throw new NullPointerException("The model cannot be null");
 		}
-		if (specification == null) {
-			throw new IllegalArgumentException(
-					"The specification cannot be null");
+		if (claim == null) {
+			throw new NullPointerException("The specification cannot be null");
+		}
+		if (stateFactory == null) {
+			throw new NullPointerException("The state factory cannot be null");
+		}
+		if (transitionFactory == null) {
+			throw new NullPointerException(
+					"The transition factory cannot be null");
+		}
+		if(intersectionrule==null){
+			throw new NullPointerException("The intersection rule used to generate the intersection cannot be null");
 		}
 		this.stateFactory = stateFactory;
 		this.transitionFactory = transitionFactory;
 		this.intersection = new IntBAImpl<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(
 				transitionFactory, stateFactory);
 		this.intersection.addPropositions(model.getPropositions());
-		this.intersection.addPropositions(specification.getPropositions());
-
+		this.intersection.addPropositions(claim.getPropositions());
+		this.intersectionrule=intersectionrule;
+		
 		for (STATE s1 : model.getInitialStates()) {
-			for (STATE s2 : specification.getInitialStates()) {
+			for (STATE s2 : claim.getInitialStates()) {
 				INTERSECTIONSTATE p = this.addIntersectionState(s1, s2, 0,
-						true, model, specification, intersection);
+						true, model, claim, intersection);
 
 				Map<Entry<Entry<STATE, STATE>, Integer>, INTERSECTIONSTATE> map = new HashMap<Entry<Entry<STATE, STATE>, Integer>, INTERSECTIONSTATE>();
-				this.computeIntersection(intersection, map, p, model,
-						specification);
+				this.computeIntersection(intersection, map, p, model, claim);
 			}
 		}
 		return this.intersection;
@@ -107,8 +168,9 @@ public class IntersectionBuilder<CONSTRAINEDELEMENT extends State, STATE extends
 						.getOutTransitions(currentState.getS2())) {
 					// if the characters of the two transitions are equal
 
-					INTERSECTIONTRANSITION t = new EqualClauseIntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>()
-							.getIntersectionTransition(t1, t2, this.transitionFactory);
+					INTERSECTIONTRANSITION t = this.intersectionrule
+							.getIntersectionTransition(t1, t2,
+									this.transitionFactory);
 					if (t != null) {
 
 						// creates a new state made by the states s1next and s2
@@ -172,7 +234,8 @@ public class IntersectionBuilder<CONSTRAINEDELEMENT extends State, STATE extends
 					// the new state is connected by the previous one through a
 					// constrained transition
 					INTERSECTIONTRANSITION t = this.transitionFactory.create(
-							t2.getCondition(), (CONSTRAINEDELEMENT) currentState.getS1());
+							t2.getCondition(),
+							(CONSTRAINEDELEMENT) currentState.getS1());
 					intersection.addTransition(currentState, p, t);
 					// the recursive procedure is recalled
 					this.computeIntersection(intersection, visitedStatesMap, p,

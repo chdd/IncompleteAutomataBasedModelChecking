@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class AndProposition<S extends State, T extends Transition> extends LogicalProposition<S, T>{
 	
-	private final String type="^";
+	private static final String type="&&";
 	
 	/**
 	 * creates a new {@link AndProposition} that contains the two {@link AbstractProposition} firstPredicate, secondPredicate 

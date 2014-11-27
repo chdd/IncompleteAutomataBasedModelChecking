@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class OrProposition<S extends State, T extends Transition> extends LogicalProposition<S, T> {
 
-	private String type="v";
+	private static final String type="||";
 	
 	/**
 	 * creates a new {@link OrProposition} that contains the two {@link AbstractProposition} firstPredicate, secondPredicate 

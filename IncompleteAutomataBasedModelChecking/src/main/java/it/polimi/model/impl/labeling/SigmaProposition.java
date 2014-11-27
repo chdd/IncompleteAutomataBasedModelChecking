@@ -66,4 +66,13 @@ public class SigmaProposition<STATE extends State> implements ConjunctiveClause{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public boolean satisfies(ConjunctiveClause conjunctiveClause) {
+		if(conjunctiveClause instanceof SigmaProposition){
+			return true;
+		}
+		return false;
+	}
 }

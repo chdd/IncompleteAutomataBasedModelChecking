@@ -14,6 +14,7 @@ import it.polimi.model.interfaces.transitions.ConstrainedTransitionFactory;
 import it.polimi.modelchecker.brzozowski.Brzozowski;
 import it.polimi.modelchecker.brzozowski.Constraint;
 import it.polimi.modelchecker.emptinesschecker.IntersectionEmptinessChecker;
+import it.polimi.modelchecker.intersectionbuilder.LogicalClauseCompartingIntersectionRule;
 import it.polimi.modelchecker.intersectionbuilder.IntersectionBuilder;
 
 /**
@@ -107,7 +108,8 @@ public class ModelChecker
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE SPECIFICATION
 		long startIntersectionTime = System.nanoTime();   
 		
-		this.ris=new IntersectionBuilder<CONSTRAINEDELEMENT, STATE , TRANSITION , INTERSECTIONSTATE , INTERSECTIONTRANSITION>().computeIntersection(model, specification, this.intersectionStateFactory, this.intersectionTransitionFactory);
+		this.ris=new IntersectionBuilder<CONSTRAINEDELEMENT, STATE , TRANSITION , INTERSECTIONSTATE , INTERSECTIONTRANSITION>().computeIntersection(model, specification, this.intersectionStateFactory, this.intersectionTransitionFactory, new LogicalClauseCompartingIntersectionRule<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONTRANSITION, ConstrainedTransitionFactory<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>>()
+				);
 		
 		long stopTime = System.nanoTime(); 
 		
