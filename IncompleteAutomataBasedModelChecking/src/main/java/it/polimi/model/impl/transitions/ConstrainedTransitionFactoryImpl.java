@@ -18,7 +18,8 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author claudiomenghi
  *
  */
-public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFactory<State,  Transition>{
+public class ConstrainedTransitionFactoryImpl extends TransitionFactoryImpl
+implements ConstrainedTransitionFactory<State,  Transition>{
 
 	
 	
@@ -35,7 +36,7 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		dnfFormula.addDisjunctionClause(new SigmaProposition<State>());
 		
 		Transition t=new Transition(dnfFormula,  TransitionFactoryImpl.transitionCount);
-		TransitionFactoryImpl.transitionCount++;
+		this.updateCounter(TransitionFactoryImpl.transitionCount);
 		return t;
 	}
 	
@@ -73,7 +74,7 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		if(dnfFormula==null){
 			throw new NullPointerException("The DNFFormula to be added at the transition cannot be null");
 		}
-		Transition t=new Transition(dnfFormula, TransitionFactoryImpl.transitionCount);
+		Transition t=new Transition(dnfFormula, id);
 		
 		this.updateCounter(id);;
 		return t;
@@ -81,10 +82,7 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 
 	
 	
-	private void updateCounter(int id){
-		TransitionFactoryImpl.transitionCount=Math.max(id++, TransitionFactoryImpl.transitionCount++);
-	}
-
+	
 	@Override
 	public Transition create(DNFFormula dnfFormula, State state) {
 		return this.create(TransitionFactoryImpl.transitionCount, dnfFormula, state);
@@ -95,7 +93,7 @@ public class ConstrainedTransitionFactoryImpl implements ConstrainedTransitionFa
 		Transition t=new Transition(new DNFFormulaImpl(new ConstraintProposition<State>(state, dnfFormula.toString())), id);
 		
 		
-		this.updateCounter(TransitionFactoryImpl.transitionCount);
+		this.updateCounter(id);
 		return t;
 	}
 }

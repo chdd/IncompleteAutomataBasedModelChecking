@@ -104,11 +104,11 @@ public class TransitionFactoryImpl implements
 	 * @throws InternalError
 	 *             if the id is less than 0
 	 */
-	private void updateCounter(int id) {
+	protected void updateCounter(int id) {
 		if (id < 0) {
 			throw new InternalError("The id cannot be less than 0");
 		}
-		TransitionFactoryImpl.transitionCount = Math.max(id++,
-				TransitionFactoryImpl.transitionCount++);
+		TransitionFactoryImpl.transitionCount = Math.max(id+1,
+				TransitionFactoryImpl.transitionCount+1);
 	}
 }
