@@ -326,6 +326,13 @@ public class AtomicProposition<STATE extends State, TRANSITION extends Transitio
 
 	@Override
 	public LogicalItem<STATE, TRANSITION> simplify() {
-		return this;
+		return this.clone();
 	}
+	
+	@Override
+	public LogicalItem<STATE, TRANSITION> clone() {
+		return new AtomicProposition<STATE, TRANSITION>(this.getTransitions(), this.getState(), this.getRegularExpression(), this.finalStateReached);
+	}
+
+	
 }

@@ -12,6 +12,7 @@ import it.polimi.modelchecker.brzozowski.transformers.AcceptingStatesTransformer
 import it.polimi.modelchecker.brzozowski.transformers.TransitionMatrixTranformer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author claudiomenghi
@@ -35,7 +36,7 @@ public class Brzozowski<
 	 */
 	private final IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton;
 	
-	private final ArrayList<INTERSECTIONSTATE> orderedStates;
+	private final List<INTERSECTIONSTATE> orderedStates;
 	
 	private final LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[][] constraintmatrix;
 	

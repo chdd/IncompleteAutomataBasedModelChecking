@@ -8,6 +8,7 @@ import it.polimi.modelchecker.brzozowski.propositions.states.EmptyProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -40,14 +41,14 @@ public class TransitionMatrixTranformer<
 	/**
 	 * contains the array of the ordered states
 	 */
-	private ArrayList<INTERSECTIONSTATE> orderedStates;			
+	private List<INTERSECTIONSTATE> orderedStates;			
 	
 	/**
 	 * creates a new {@link TransitionMatrixTranformer} with the specified order for the states
 	 * @param orderedStates is the array which contains an order between the states
 	 * @throws NullPointerException if the {@link ArrayList} of the ordered states is null
 	 */
-	public TransitionMatrixTranformer(ArrayList<INTERSECTIONSTATE> orderedStates){
+	public TransitionMatrixTranformer(List<INTERSECTIONSTATE> orderedStates){
 		if(orderedStates==null){
 			throw new NullPointerException("The array of the ordered states cannot be null");
 		}

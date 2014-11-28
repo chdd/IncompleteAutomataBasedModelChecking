@@ -103,10 +103,9 @@ public class LambdaProposition<S extends State, T extends Transition> extends Lo
 	public LogicalItem<S, T> simplify() {
 		return this;
 	}
-	
-	
 
-	
-	
-
+	@Override
+	public LogicalItem<S, T> clone() {
+		return this;
+	}
 }

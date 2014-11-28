@@ -150,6 +150,10 @@ public class DNFFormulaImpl implements DNFFormula{
 		DNFFormulaImpl ret=new DNFFormulaImpl();
 		formula+=orSimbol;
 		String[] andClauses=formula.split(Pattern.quote(orSimbol));
+		if(andClauses[0].equals(SigmaProposition.sigma)){
+			ret.addDisjunctionClause(new SigmaProposition<>());
+			return ret;
+		}
 		for(int i=0; i<andClauses.length; i++){
 			ret.addDisjunctionClause(ConjunctiveClauseImpl.loadFromString(andClauses[i]));
 		}
@@ -171,6 +175,8 @@ public class DNFFormulaImpl implements DNFFormula{
 		String ret="";
 		for(int i=0;i< this.conjunctiveClause.size()-1;i++){
 			ret+=it.next().toString()+orSimbol;
+			//ret+=it.next().toString()+"+";
+			
 		}
 		ret+=it.next().toString();
 		return ret;

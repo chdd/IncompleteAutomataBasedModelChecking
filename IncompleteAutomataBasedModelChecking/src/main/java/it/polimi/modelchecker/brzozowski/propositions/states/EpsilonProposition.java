@@ -177,6 +177,11 @@ public class EpsilonProposition<STATE extends State, TRANSITION extends Transiti
 
 	@Override
 	public LogicalItem<STATE, TRANSITION> simplify() {
+		return this.clone();
+	}
+
+	@Override
+	public LogicalItem<STATE, TRANSITION> clone() {
 		return this;
 	}
 	

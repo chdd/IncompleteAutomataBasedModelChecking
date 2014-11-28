@@ -98,6 +98,11 @@ public class EmptyProposition<CONSTRAINTELEMENT extends State, TRANSITION extend
 
 	@Override
 	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> simplify() {
+		return this.clone();
+	}
+
+	@Override
+	public LogicalItem<CONSTRAINTELEMENT, TRANSITION> clone() {
 		return this;
 	}
 	

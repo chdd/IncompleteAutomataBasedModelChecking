@@ -25,7 +25,7 @@ implements ActionInterface<CONSTRAINEDELEMENT, STATE, TRANSITION> {
 		view.updateIntersection(model.getIntersection(),null);
 		view.setBrzozoski(new Brzozowski<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(model.getIntersection()).getConstraintmatrix());
 		view.updateVerificationResults(model.getVerificationResults(), model.getIntersection());
-		System.out.println(model.getVerificationResults().getConstraint().toString());
+		System.out.println(model.getVerificationResults().getConstraint().getLogicalItem().simplify().toString());
 	}
 
 }

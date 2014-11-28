@@ -260,9 +260,11 @@ public class BAReader<
 			if(input==null){
 				throw new NullPointerException("The EdgeMetadata to be converted cannot be null");
 			}
+			System.out.println(input.getProperty("DNFFormula"));
+			System.out.println(input.getProperty("DNFFormula").replace("^", "&&"));
 			return this.transitionFactory.create(
 					Integer.parseInt(input.getId()),
-					DNFFormulaImpl.loadFromString(input.getProperty("DNFFormula")));
+					DNFFormulaImpl.loadFromString(input.getProperty("DNFFormula").replace("^", "&&")));
 		}
 	}
 	

@@ -111,6 +111,7 @@ public class ConjunctiveClauseImpl implements ConjunctiveClause {
 		String ret = "";
 		for (int i = 0; i < this.propositions.size() - 1; i++) {
 			ret += it.next().toString() + andSymbol;
+			//ret += it.next().toString() + ".";
 		}
 		ret += it.next().toString();
 		return "(" + ret + ")";

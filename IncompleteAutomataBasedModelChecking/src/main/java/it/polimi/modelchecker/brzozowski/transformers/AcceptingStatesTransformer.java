@@ -9,6 +9,7 @@ import it.polimi.modelchecker.brzozowski.propositions.states.LambdaProposition;
 import it.polimi.modelchecker.brzozowski.propositions.states.LogicalItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -27,9 +28,9 @@ public class AcceptingStatesTransformer<
 						LogicalItem<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>[]> {
 
 	private INTERSECTIONSTATE accept;
-	private ArrayList<INTERSECTIONSTATE> orderedStates;			
+	private List<INTERSECTIONSTATE> orderedStates;			
 	
-	public AcceptingStatesTransformer(ArrayList<INTERSECTIONSTATE> orderedStates,
+	public AcceptingStatesTransformer(List<INTERSECTIONSTATE> orderedStates,
 			IIntBA<STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> intersectionAutomaton,INTERSECTIONSTATE accept){
 		this.orderedStates=orderedStates;
 		this.accept=accept;

@@ -1,14 +1,14 @@
 package it.polimi.model.impl.labeling;
 
-import java.util.Set;
-
 import it.polimi.model.impl.states.State;
 import it.polimi.model.interfaces.labeling.ConjunctiveClause;
+
+import java.util.Set;
 
 
 public class SigmaProposition<STATE extends State> implements ConjunctiveClause{
 
-	private final String sigma="SIGMA";
+	public static final String sigma="SIGMA";
 	
 	public SigmaProposition() {
 	}

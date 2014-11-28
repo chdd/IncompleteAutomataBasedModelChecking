@@ -144,7 +144,7 @@ public class BAWriter<
 		return new Transformer<TRANSITION, String>() {
 			@Override
 			public String transform(TRANSITION input) {
-				return input.getCondition().toString();
+				return input.getCondition().toString().replace("&&", "^");
 			}
 		};
 	}
