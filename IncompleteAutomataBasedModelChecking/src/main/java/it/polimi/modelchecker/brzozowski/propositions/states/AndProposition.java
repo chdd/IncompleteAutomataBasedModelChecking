@@ -180,11 +180,11 @@ public class AndProposition<S extends State, T extends Transition> extends
 						this.getPredicates().size() - 1));
 				l.add(new AtomicProposition<S, T>(transitions, lastPredicate
 						.getState(),
-						"("
-								+ lastPredicate.getRegularExpression()
-								+ ").("
+						
+								 lastPredicate.getRegularExpression()
+								+ "."
 								+ (((AtomicProposition<S, T>) a)
-										.getRegularExpression()) + ")",
+										.getRegularExpression()),
 						lastPredicate.isFinalStateReacher()
 								|| ((AtomicProposition<S, T>) a)
 										.isFinalStateReacher()));
@@ -232,8 +232,8 @@ public class AndProposition<S extends State, T extends Transition> extends
 				l.add(new AtomicProposition<S, T>(
 						transitions,
 						lastPredicate.getState(),
-						"(" + lastPredicate.getRegularExpression() + ").("
-								+ initialPredicate.getRegularExpression() + ")",
+						 lastPredicate.getRegularExpression() + "."
+								+ initialPredicate.getRegularExpression(),
 						lastPredicate.isFinalStateReacher()
 								|| initialPredicate.isFinalStateReacher()));
 				l.addAll(c.getPredicates().subList(1, c.getPredicates().size()));
@@ -515,4 +515,6 @@ public class AndProposition<S extends State, T extends Transition> extends
 		}
 		return simplifiedItems;
 	}
+	
+	
 }

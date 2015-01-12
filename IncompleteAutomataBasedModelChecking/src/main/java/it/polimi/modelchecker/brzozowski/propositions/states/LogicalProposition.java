@@ -29,6 +29,7 @@ public abstract class LogicalProposition<CONSTRAINTELEMENT, TRANSITION extends T
 	public String toString() {
 		String ret = "";
 		List<LogicalItem<CONSTRAINTELEMENT, TRANSITION>> value = getPredicates();
+			
 		for (int i = 0; i < value.size() - 1; i++) {
 			ret = ret + "(" + value.get(i).toString() + ")" + this.getType();
 		}
