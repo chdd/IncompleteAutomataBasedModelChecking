@@ -1,30 +1,32 @@
 package it.polimi.model.impl.states;
 
+import it.polimi.model.State;
+
 /**
- * @author claudiomenghi contains an automata {@link State}. The {@link State}
+ * @author claudiomenghi contains an automata {@link StateImpl}. The {@link StateImpl}
  *         is identified by its id
  */
-public class State {
+public class StateImpl implements State{
 
 	/**
-	 * contains the id of the {@link State}
+	 * contains the id of the {@link StateImpl}
 	 */
 	protected final int id;
 
 	/**
-	 * contains the name of the {@link State}
+	 * contains the name of the {@link StateImpl}
 	 */
 	protected String name;
 
 	/**
-	 * creates a {@link State} with the specified id and an empty name
+	 * creates a {@link StateImpl} with the specified id and an empty name
 	 * 
 	 * @param id
 	 *            is the id of the state
 	 * @throws IllegalArgumentException
 	 *             if the value of the id is less than 0
 	 */
-	protected State(int id) {
+	protected StateImpl(int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException("The id cannot be < 0");
 		}
@@ -33,16 +35,16 @@ public class State {
 	}
 
 	/**
-	 * creates a new {@link State} with the specified name
+	 * creates a new {@link StateImpl} with the specified name
 	 * 
 	 * @param name
-	 *            : contains the name of the {@link State} the name of the {@link State}
+	 *            : contains the name of the {@link StateImpl} the name of the {@link StateImpl}
 	 * @throws IllegalArgumentException
 	 *             if the value of the id is less than 0
 	 * @throws IllegalArgumentException
 	 *             is generated when the name of the state is null
 	 */
-	protected State(String name, int id) {
+	protected StateImpl(String name, int id) {
 		this(id);
 		if (name == null) {
 			throw new NullPointerException(
@@ -51,31 +53,23 @@ public class State {
 		this.name = name;
 	}
 
-	/**
-	 * returns the id of the {@link State}
-	 * 
-	 * @return the id of the {@link State}
-	 */
+	@Override
 	public int getId() {
 		return this.id;
 	}
 
-	/**
-	 * returns the name of the {@link State}
-	 * 
-	 * @return the name of the {@link State}
-	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * sets the name of the {@link State}
+	 * sets the name of the {@link StateImpl}
 	 * 
 	 * @param name
-	 *            the name of the {@link State}
+	 *            the name of the {@link StateImpl}
 	 * @throws NullPointerException
-	 *             if the name of the {@link State} is null
+	 *             if the name of the {@link StateImpl} is null
 	 */
 	public void setName(String name) {
 		if (this.name == null) {
@@ -121,7 +115,7 @@ public class State {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		State other = (State) obj;
+		StateImpl other = (StateImpl) obj;
 		if (id != other.id)
 			return false;
 		return true;
