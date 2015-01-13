@@ -1,42 +1,43 @@
 package it.polimi.model.impl.transitions;
 
-import it.polimi.model.impl.states.State;
+import it.polimi.automata.Transition;
+import it.polimi.model.impl.states.StateImpl;
 import it.polimi.model.interfaces.labeling.DNFFormula;
 import it.polimi.model.interfaces.labeling.Formula;
 
 /**
- * @author claudiomenghi contains an automata {@link Transition}. The
- *         {@link Transition} contains the character that labels the
- *         {@link Transition} and the destination {@link State}
+ * @author claudiomenghi contains an automata {@link TransitionImpl}. The
+ *         {@link TransitionImpl} contains the character that labels the
+ *         {@link TransitionImpl} and the destination {@link StateImpl}
  */
-public class Transition {
+public class TransitionImpl implements Transition{
 
 	/**
-	 * contains the id of the {@link Transition}
+	 * contains the id of the {@link TransitionImpl}
 	 */
 	private final int id;
 
 	/**
-	 * contains the {@link Formula} which labels the {@link Transition}
+	 * contains the {@link Formula} which labels the {@link TransitionImpl}
 	 */
 	private DNFFormula condition;
 
 	/**
-	 * Constructs a new {@link Transition}.
+	 * Constructs a new {@link TransitionImpl}.
 	 * 
 	 * @param condition
 	 *            is the {@link Formula} that represent the condition of the
-	 *            {@link Transition} to be fired
+	 *            {@link TransitionImpl} to be fired
 	 * @param id
-	 *            is the id of the {@link Transition}
+	 *            is the id of the {@link TransitionImpl}
 	 * @throws IllegalArgumentException
-	 *             is generated is the id of the {@link Transition} is less than
+	 *             is generated is the id of the {@link TransitionImpl} is less than
 	 *             zero
 	 * @throws NullPointerException
 	 *             is generated if the {@link Formula} that labels the
 	 *             transition is null
 	 */
-	protected Transition(DNFFormula condition, int id) {
+	protected TransitionImpl(DNFFormula condition, int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");
@@ -51,18 +52,18 @@ public class Transition {
 
 	/**
 	 * @return the {@link Formula} that is the condition that labels the
-	 *         {@link Transition}
+	 *         {@link TransitionImpl}
 	 */
 	public DNFFormula getCondition() {
 		return this.condition;
 	}
 
 	/**
-	 * sets the {@link Formula} that labels the {@link Transition}
+	 * sets the {@link Formula} that labels the {@link TransitionImpl}
 	 * 
 	 * @param condition
 	 *            the {@link Formula} to be set as a label of the
-	 *            {@link Transition}
+	 *            {@link TransitionImpl}
 	 * @throws NullPointerException
 	 *             if the {@link Formula} is null
 	 */
@@ -74,9 +75,9 @@ public class Transition {
 	}
 
 	/**
-	 * returns the id of the {@link Transition}
+	 * returns the id of the {@link TransitionImpl}
 	 * 
-	 * @return the id of the {@link Transition}
+	 * @return the id of the {@link TransitionImpl}
 	 */
 	public int getId() {
 		return id;
