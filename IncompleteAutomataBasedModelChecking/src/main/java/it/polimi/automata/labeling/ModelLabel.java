@@ -1,4 +1,4 @@
-package it.polimi.automata;
+package it.polimi.automata.labeling;
 
 import java.util.Set;
 

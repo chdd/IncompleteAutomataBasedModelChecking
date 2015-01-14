@@ -1,5 +1,7 @@
 package it.polimi.automata;
 
+import it.polimi.automata.labeling.Label;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package it.polimi.automata.factories;
 
-import it.polimi.automata.Label;
 import it.polimi.automata.Transition;
+import it.polimi.automata.labeling.Label;
 
 import org.apache.commons.collections15.Factory;
 

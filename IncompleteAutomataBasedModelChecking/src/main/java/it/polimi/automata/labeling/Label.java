@@ -1,4 +1,8 @@
-package it.polimi.automata;
+package it.polimi.automata.labeling;
+
+import it.polimi.automata.BA;
+import it.polimi.automata.State;
+import it.polimi.automata.Transition;
 
 
 /**

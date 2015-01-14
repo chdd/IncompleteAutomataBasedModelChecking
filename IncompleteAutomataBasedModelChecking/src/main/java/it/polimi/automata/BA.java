@@ -1,5 +1,7 @@
 package it.polimi.automata;
 
+import it.polimi.automata.labeling.Label;
+
 import java.util.Set;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
