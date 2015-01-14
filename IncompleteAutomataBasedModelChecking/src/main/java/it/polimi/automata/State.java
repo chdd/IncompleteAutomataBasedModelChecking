@@ -1,6 +1,6 @@
 package it.polimi.automata;
 
-import it.polimi.model.impl.states.StateImpl;
+import it.polimi.automata.impl.StateImpl;
 
 /**
  * <p>Represents a state of an automaton. <br>
