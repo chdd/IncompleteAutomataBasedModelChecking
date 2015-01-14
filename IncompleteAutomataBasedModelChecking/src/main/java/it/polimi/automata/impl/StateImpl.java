@@ -65,7 +65,7 @@ public class StateImpl implements State {
 	 * @throws IllegalArgumentException
 	 *             is generated when the name of the state is null
 	 */
-	protected StateImpl(String name, int id) {
+	public StateImpl(String name, int id) {
 		this(id);
 		if (name == null) {
 			throw new NullPointerException(

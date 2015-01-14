@@ -32,6 +32,8 @@ public interface StateFactory<STATE extends State> extends Factory<STATE> {
 	 * @param name
 	 *            the name of the state
 	 * @return a new state with the specified name
+	 * @throws NullPointerException
+	 *             if the name of the state is null
 	 */
 	public STATE create(String name);
 
