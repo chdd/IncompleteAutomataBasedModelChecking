@@ -1,11 +1,10 @@
 package it.polimi.automata.impl;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * contains the implementation of a transition an Incomplete or a complete Buchi automaton.

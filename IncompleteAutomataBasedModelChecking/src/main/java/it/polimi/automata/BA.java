@@ -91,7 +91,29 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             of the automaton
 	 */
 	public STATE getTransitionDestination(TRANSITION transition);
+	
+	/**
+	 * returns the state that is the source of the transition
+	 * 
+	 * @param transition
+	 *            is the transition to be analyzed
+	 * @return the state which is the source of the transition
+	 * 
+	 * @throws NullPointerException
+	 *             if the transition is null
+	 * @throws IllegalArgumentException
+	 *             if the transition is not contained in the set of transitions
+	 *             of the automaton
+	 */
+	public STATE getTransitionSource(TRANSITION transition);
 
+	/**
+	 * returns the set of the transitions of the Buchi automaton
+	 * 
+	 * @return the set of the transitions of the Buchi automaton
+	 */
+	public Set<TRANSITION> getTransitions();
+	
 	/**
 	 * adds the initial state to the Buchi automaton. If the state is not
 	 * contained into the states of the automaton it is also added to the states

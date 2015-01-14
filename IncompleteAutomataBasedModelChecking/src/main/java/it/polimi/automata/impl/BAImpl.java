@@ -118,6 +118,21 @@ public class BAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ext
 	/**
 	 * {@inheritDoc}
 	 */
+	public STATE getTransitionSource(TRANSITION transition) {
+		return this.automataGraph.getSource(transition);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<TRANSITION> getTransitions() {
+		return Collections.unmodifiableSet(new HashSet<TRANSITION>(
+				this.automataGraph.getEdges()));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addInitialState(STATE s) {
 		if (s == null) {
 			throw new NullPointerException(
@@ -233,7 +248,7 @@ public class BAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ext
 		}
 		this.automataGraph.removeEdge(transition);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -247,7 +262,7 @@ public class BAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ext
 		}
 		this.acceptStates.remove(state);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -261,6 +276,7 @@ public class BAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ext
 		}
 		this.initialStates.remove(state);
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */

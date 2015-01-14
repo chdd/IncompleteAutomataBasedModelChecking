@@ -59,8 +59,11 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	public Set<STATE> getTransparentStates();
 
 	/**
-	 * adds the transparent state s to the states of the {@link IBA} if the
-	 * state is already transparent no action is performed
+	 * adds the transparent state s to the states of the {@link IBA} and to the
+	 * set of the transparent state<br>
+	 * if the state is already transparent no action is performed <br>
+	 * if the state is a state of the BA but is not transparent, it is also
+	 * added to the set of the transparent state
 	 * 
 	 * @param s
 	 *            the state to be added in the {@link IBA}
@@ -73,7 +76,11 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	 * returns a new Incomplete Buchi automaton where the transparent state is
 	 * replaced by the ibaToInject the inComing and outComing transitions
 	 * specifies how the initial and the accepting states are connected with the
-	 * current Incomplete Buchi automaton
+	 * current Incomplete Buchi automaton <br>
+	 * If the transparent state to be replaced is also accepting, all the states
+	 * of the ibaToInject become also accepting for the whole automaton<br>
+	 * Similarly, if the transparent state is also initial, all the initial
+	 * states of the ibaToInject become initial for the whole automaton
 	 * 
 	 * @see IBA#clone()
 	 * 
@@ -91,11 +98,26 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	 * @throws NullPointerException
 	 *             if the transparent state, the ibaToInject, the inComing or
 	 *             outComing transitions are null
+	 * @throws IllegalArgumentException
+	 *             if the transparentState is not transparent
+	 * @throws IllegalArgumentException
+	 *             if the source of an incoming transition was not connected to
+	 *             the transparent state
+	 * @throws IllegalArgumentException
+	 *             if the state pointed by an incoming transition is not an
+	 *             initial state of the ibaToInject
+	 * @throws IllegalArgumentException
+	 *             if the destination of an out-coming transition was not connected to
+	 *             the transparent state
+	 * @throws IllegalArgumentException
+	 *             if the source of an out-coming transition is not a
+	 *             final state of the ibaToInject
+	 * 
 	 */
 	public IBA<LABEL, STATE, TRANSITION> replace(STATE transparentState,
 			IBA<LABEL, STATE, TRANSITION> ibaToInject,
-			Map<STATE, Entry<TRANSITION, STATE>> inComing,
-			Map<STATE, Entry<TRANSITION, STATE>> outComing);
+			Map<STATE, Set<Entry<TRANSITION, STATE>>> inComing,
+			Map<STATE, Set<Entry<TRANSITION, STATE>>> outComing);
 
 	/**
 	 * creates a copy of the Incomplete Buchi Automaton
