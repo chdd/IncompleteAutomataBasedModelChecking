@@ -37,7 +37,7 @@ import edu.uci.ics.jung.io.graphml.GraphMetadata;
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class MetadataBATransformer<LABEL extends Label, STATE extends StateImpl, TRANSITION extends Transition<LABEL>> implements
+public class MetadataToBATransformer<LABEL extends Label, STATE extends StateImpl, TRANSITION extends Transition<LABEL>> implements
 		Transformer<GraphMetadata, DirectedSparseGraph<STATE, TRANSITION>> {
 	/**
 	 * contains the Buchi automaton to be returned after the Transforming
@@ -53,7 +53,7 @@ public class MetadataBATransformer<LABEL extends Label, STATE extends StateImpl,
 	 * @throws NullPointerException
 	 *             if the Buchi automaton to be updated is null
 	 */
-	public MetadataBATransformer(BA<LABEL, STATE, TRANSITION> ba) {
+	public MetadataToBATransformer(BA<LABEL, STATE, TRANSITION> ba) {
 		if (ba == null) {
 			throw new NullPointerException("The be cannot be null");
 		}
