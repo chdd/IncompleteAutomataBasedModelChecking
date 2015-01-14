@@ -52,7 +52,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	 * @throws NullPointerException
 	 *             is generated if the label of the transition is null
 	 */
-	protected TransitionImpl(Set<LABEL> label, int id) {
+	public TransitionImpl(Set<LABEL> label, int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");

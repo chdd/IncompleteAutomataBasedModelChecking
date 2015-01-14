@@ -1,5 +1,7 @@
 package it.polimi.automata.factories;
 
+import java.util.Set;
+
 import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
 
@@ -19,28 +21,23 @@ public interface TransitionFactory<LABEL extends Label, TRANSITION extends Trans
 		extends Factory<TRANSITION> {
 
 	/**
-	 * creates a new transition with the empty label epsilon
-	 * 
-	 * @return a new transition labeled with the empty label epsilon
-	 */
-	public TRANSITION create();
-
-	/**
 	 * creates a new transition labeled with the specified condition
 	 * 
-	 * @param condition
-	 *            is the condition that labels the transition
+	 * @param labels
+	 *            are the labels of the transitions. If one of the labels is
+	 *            satisfied the transition may be fired
 	 * @return a new transition labeled with the specified condition
 	 * @throws NullPointerException
 	 *             if the label is null
 	 */
-	public TRANSITION create(LABEL condition);
+	public TRANSITION create(Set<LABEL> labels);
 
 	/**
 	 * creates a new transition with the specified condition and id
 	 * 
-	 * @param condition
-	 *            is the condition that labels the transition
+	 * @param labels
+	 *            are the labels of the transitions. If one of the labels is
+	 *            satisfied the transition may be fired
 	 * @param id
 	 *            is the id of the transition
 	 * @return a new transition with the specified id and condition as label
@@ -49,5 +46,5 @@ public interface TransitionFactory<LABEL extends Label, TRANSITION extends Trans
 	 * @throws IllegalArgumentException
 	 *             if the id is not grater than or equal to zero
 	 */
-	public TRANSITION create(int id, LABEL condition);
+	public TRANSITION create(int id, Set<LABEL> labels);
 }
