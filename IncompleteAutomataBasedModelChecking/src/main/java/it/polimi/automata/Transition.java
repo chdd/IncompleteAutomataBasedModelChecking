@@ -1,5 +1,7 @@
 package it.polimi.automata;
 
+import java.util.Set;
+
 import it.polimi.automata.impl.TransitionImpl;
 import it.polimi.automata.labeling.Label;
 
@@ -12,8 +14,8 @@ import it.polimi.automata.labeling.Label;
  * @author claudiomenghi
  * @see TransitionImpl
  * @param <LABEL>
- *            is the label of the transition which must extend the interface 
- *            {@link Label}. Depending on whether the transition is associated 
+ *            is the label of the transition which must extend the interface
+ *            {@link Label}. Depending on whether the transition is associated
  *            with the model or a property it is associated with a set of atomic
  *            propositions or a propositional logic formula, respectively.
  */
@@ -32,11 +34,12 @@ public interface Transition<LABEL extends Label> {
 	 * <p>
 	 * returns <b>the label</b> associated with the transition. Depending on
 	 * whether the transition is associated with the model or a property it is
-	 * associated with a set of atomic propositions or a propositional logic
-	 * formula, respectively.
+	 * associated with a set of labels or a propositional logic formula,
+	 * respectively. The semantic of the different labels is that the transition
+	 * can be performed if one of the labels (conditions) is satisfied
 	 * </p>
 	 * 
 	 * @return the <b>label</b> associated with the transition
 	 */
-	public LABEL getLabel();
+	public Set<LABEL> getLabels();
 }

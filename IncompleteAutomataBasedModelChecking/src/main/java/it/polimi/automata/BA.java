@@ -129,18 +129,16 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	public void addState(STATE state);
 
 	/**
-	 * adds the set of the characters to the characters of the Buchi automaton.
-	 * If a character is already contained in the set of characters of the Buchi
+	 * adds the character to the characters of the Buchi automaton. If a
+	 * character is already contained in the set of characters of the Buchi
 	 * automaton no actions are performed
 	 * 
-	 * @param characters
-	 *            the characters to be added to the Buchi automaton
+	 * @param character
+	 *            the character to be added to the Buchi automaton
 	 * @throws NullPointerException
-	 *             is generated if the set of the of the characters to be added
-	 *             to the Buchi automaton is null or if there exists a character
-	 *             in the set which is null
+	 *             is generated if the character to be added is null
 	 */
-	public void addCharacter(Set<LABEL> characters);
+	public void addCharacter(LABEL character);
 
 	/**
 	 * add the transition t which connects the source and the destination state
@@ -163,6 +161,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             automaton <br/>
 	 *             the destination of the transition is not contained into the
 	 *             set of the states of the automaton <br/>
+	 *             a transition that connect source to the destination is already present
 	 */
 	public void addTransition(STATE source, STATE destination,
 			TRANSITION transition);

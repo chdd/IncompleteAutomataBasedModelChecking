@@ -1,5 +1,9 @@
 package it.polimi.automata.impl;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
 
@@ -18,15 +22,16 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	private final int id;
 
 	/**
-	 * contains the label of the transition
+	 * contains the labels of the transition
+	 * the transition can be fired if one of the label is satisfied
 	 */
-	private LABEL label;
+	private Set<LABEL> labels;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public LABEL getLabel() {
-		return this.label;
+	public Set<LABEL> getLabels() {
+		return  Collections.unmodifiableSet(this.labels);
 	}
 
 	/**
@@ -48,7 +53,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	 * @throws NullPointerException
 	 *             is generated if the label of the transition is null
 	 */
-	protected TransitionImpl(LABEL label, int id) {
+	protected TransitionImpl(Set<LABEL> label, int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");
@@ -58,23 +63,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 			throw new NullPointerException(
 					"The character that labels the transition cannot be null");
 		}
-		this.label = label;
-	}
-
-	
-	/**
-	 * sets the label of the transition
-	 * 
-	 * @param label
-	 *            the label of the transition
-	 * @throws NullPointerException
-	 *             if the label of the transition is null
-	 */
-	public void setCondition(LABEL label) {
-		if (label == null) {
-			throw new NullPointerException("The DNFFormula cannot be null");
-		}
-		this.label = label;
+		this.labels = Collections.unmodifiableSet(label);
 	}
 
 	/**
@@ -83,6 +72,6 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	@Override
 	public String toString() {
 		return "{" + Integer.toString(this.id) + "} "
-				+ this.label.toString() + "";
+				+ this.labels.toString() + "";
 	}
 }
