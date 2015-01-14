@@ -1,5 +1,7 @@
 package it.polimi.automata.factories;
 
+import java.util.Set;
+
 import it.polimi.automata.labeling.Label;
 
 import org.apache.commons.collections15.Factory;
@@ -17,7 +19,7 @@ public interface LabelFactory<LABEL extends Label> extends Factory<LABEL> {
 	/**
 	 * parses the label of the transition from a string
 	 * @param label the label of the transition represented as a String
-	 * @return a new instance of the label parsed from the string
+	 * @return the set of labels parsed from the string
 	 */
-	public LABEL create(String label);
+	public Set<LABEL> create(String labels);
 }
