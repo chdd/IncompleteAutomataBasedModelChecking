@@ -1,7 +1,7 @@
 package it.polimi.automata;
 
+import it.polimi.automata.impl.TransitionImpl;
 import it.polimi.automata.labeling.Label;
-import it.polimi.model.impl.transitions.TransitionImpl;
 
 /**
  * <p>
