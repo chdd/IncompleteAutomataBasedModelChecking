@@ -28,4 +28,9 @@ import org.apache.commons.collections15.Factory;
 public interface BAFactory<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>, AUTOMATON extends BA<LABEL, STATE, TRANSITION>>
 		extends Factory<AUTOMATON> {
 
+	/**
+	 * creates the Buchi Automaton
+	 * @return the Buchi automaton
+	 */
+	public BA<LABEL, STATE, TRANSITION> createBA();
 }
