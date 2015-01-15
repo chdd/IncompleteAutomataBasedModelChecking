@@ -1,9 +1,9 @@
 package it.polimi.checker.emptiness;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
 import java.util.Set;
