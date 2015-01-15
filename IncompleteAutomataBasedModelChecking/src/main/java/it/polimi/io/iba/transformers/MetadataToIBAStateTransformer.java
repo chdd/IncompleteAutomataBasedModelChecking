@@ -1,4 +1,4 @@
-package it.polimi.io.ba.transformers;
+package it.polimi.io.iba.transformers;
 
 import it.polimi.Constants;
 import it.polimi.automata.IBA;
