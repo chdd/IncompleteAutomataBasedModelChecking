@@ -8,12 +8,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * is the factory that allows to create transitions of the type Transition<LABEL>
+ * is the factory that allows to create transitions of the type
+ * Transition<LABEL>
  * 
- * @see {@link Transition}. It implements the {@link TransitionFactory} interface
+ * @see {@link Transition}. It implements the {@link TransitionFactory}
+ *      interface
  * 
  * @author claudiomenghi
- * 
+ * @param <LABEL>
+ *            is the type of the label of the transitions depending on whether
+ *            the automaton represents the model or the claim it is a set of
+ *            proposition or a propositional logic formula {@link Label}
  */
 public class ClaimTransitionFactoryImpl<LABEL extends Label> implements
 		TransitionFactory<LABEL, Transition<LABEL>> {
@@ -26,14 +31,14 @@ public class ClaimTransitionFactoryImpl<LABEL extends Label> implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public Transition<LABEL> create(){
+	public Transition<LABEL> create() {
 		Transition<LABEL> t = new TransitionImpl<LABEL>(new HashSet<LABEL>(),
 				ClaimTransitionFactoryImpl.transitionCount);
 		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount++;
 
 		return t;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
