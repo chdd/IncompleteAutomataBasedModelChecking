@@ -13,8 +13,8 @@ import it.polimi.automata.labeling.Label;
 import it.polimi.io.ba.BAReader;
 import it.polimi.io.ba.transformers.HyperMetadataToTransitionTransformer;
 import it.polimi.io.ba.transformers.MetadataToBATransformer;
-import it.polimi.io.ba.transformers.MetadataToIBAStateTransformer;
 import it.polimi.io.ba.transformers.MetadataToTransitionTransformer;
+import it.polimi.io.iba.transformers.MetadataToIBAStateTransformer;
 
 import java.io.BufferedReader;
 

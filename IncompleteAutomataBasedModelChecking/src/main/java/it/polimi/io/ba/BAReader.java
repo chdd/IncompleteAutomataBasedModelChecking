@@ -10,7 +10,7 @@ import it.polimi.automata.factories.TransitionFactory;
 import it.polimi.automata.labeling.Label;
 import it.polimi.io.ba.transformers.HyperMetadataToTransitionTransformer;
 import it.polimi.io.ba.transformers.MetadataToBATransformer;
-import it.polimi.io.ba.transformers.MetadataToStateTransformer;
+import it.polimi.io.ba.transformers.MetadataToBAStateTransformer;
 import it.polimi.io.ba.transformers.MetadataToTransitionTransformer;
 
 import java.io.BufferedReader;
@@ -109,7 +109,7 @@ public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LAB
 		this.ba = automatonFactory.create();
 		this.graphReader = new GraphMLReader2<DirectedSparseGraph<STATE, TRANSITION>, STATE, TRANSITION>(
 				fileReader, new MetadataToBATransformer<LABEL, STATE, TRANSITION>(ba),
-				new MetadataToStateTransformer<LABEL, STATE, TRANSITION>(stateFactory, ba),
+				new MetadataToBAStateTransformer<LABEL, STATE, TRANSITION>(stateFactory, ba),
 				new MetadataToTransitionTransformer<LABEL, LABELFACTORY, TRANSITION, TRANSITIONFACTORY>(transitionFactory, labelFactory),
 				new HyperMetadataToTransitionTransformer<LABEL, TRANSITION, TRANSITIONFACTORY>(transitionFactory));
 	}
