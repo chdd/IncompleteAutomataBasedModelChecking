@@ -1,6 +1,5 @@
 package it.polimi.automata.labeling.impl;
 
-import it.polimi.automata.labeling.ClaimLabel;
 import it.polimi.automata.labeling.Label;
 
 import java.util.Collections;
@@ -19,7 +18,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * 
  * @author claudiomenghi
  */
-public class ClaimLabelImpl implements ClaimLabel {
+public class LabelImpl implements Label {
 	/**
 	 * contains the labels that label the transitions to be performed all the
 	 * conditions of the Label must be satisfied
@@ -35,7 +34,7 @@ public class ClaimLabelImpl implements ClaimLabel {
 	 * @throws NullPointerException
 	 *             if the set of propositions is null
 	 */
-	public ClaimLabelImpl(Set<IGraphProposition> propositions) {
+	public LabelImpl(Set<IGraphProposition> propositions) {
 		if (propositions == null) {
 			throw new NullPointerException(
 					"The set of propositions that label the transitions cannot be null");

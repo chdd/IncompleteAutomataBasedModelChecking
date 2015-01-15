@@ -16,7 +16,7 @@ import java.util.Set;
  * @author claudiomenghi
  * 
  */
-public class TransitionFactoryImpl<LABEL extends Label> implements
+public class ClaimTransitionFactoryImpl<LABEL extends Label> implements
 		TransitionFactory<LABEL, Transition<LABEL>> {
 
 	/**
@@ -29,8 +29,8 @@ public class TransitionFactoryImpl<LABEL extends Label> implements
 	 */
 	public Transition<LABEL> create(){
 		Transition<LABEL> t = new TransitionImpl<LABEL>(new HashSet<LABEL>(),
-				TransitionFactoryImpl.transitionCount);
-		TransitionFactoryImpl.transitionCount = TransitionFactoryImpl.transitionCount++;
+				ClaimTransitionFactoryImpl.transitionCount);
+		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount++;
 
 		return t;
 	}
@@ -44,8 +44,8 @@ public class TransitionFactoryImpl<LABEL extends Label> implements
 					"The labels to be added at the Transition cannot be null");
 		}
 		Transition<LABEL> t = new TransitionImpl<LABEL>(labels,
-				TransitionFactoryImpl.transitionCount);
-		TransitionFactoryImpl.transitionCount = TransitionFactoryImpl.transitionCount++;
+				ClaimTransitionFactoryImpl.transitionCount);
+		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount++;
 
 		return t;
 	}
@@ -63,8 +63,8 @@ public class TransitionFactoryImpl<LABEL extends Label> implements
 					"The labels to be added at the Transition cannot be null");
 		}
 		TransitionImpl<LABEL> t = new TransitionImpl<LABEL>(labels, id);
-		TransitionFactoryImpl.transitionCount = Math.max(
-				TransitionFactoryImpl.transitionCount++, id++);
+		ClaimTransitionFactoryImpl.transitionCount = Math.max(
+				ClaimTransitionFactoryImpl.transitionCount++, id++);
 
 		return t;
 	}

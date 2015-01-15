@@ -4,6 +4,9 @@ import it.polimi.automata.BA;
 import it.polimi.automata.State;
 import it.polimi.automata.Transition;
 
+import java.util.Set;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * <p>
@@ -19,4 +22,9 @@ import it.polimi.automata.Transition;
  */
 public interface Label {
 
+	/**
+	 * returns the set of propositions that labels the transition.  
+	 * @return the set of atomic propositions that labels the transition that refers to the claim
+	 */
+	public Set<IGraphProposition> getAtomicPropositions();
 }
