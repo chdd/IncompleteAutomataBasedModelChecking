@@ -7,17 +7,13 @@ import it.polimi.automata.factories.BAFactory;
 import it.polimi.automata.factories.LabelFactory;
 import it.polimi.automata.factories.StateFactory;
 import it.polimi.automata.factories.TransitionFactory;
-import it.polimi.automata.impl.StateImpl;
 import it.polimi.automata.labeling.Label;
 import it.polimi.io.ba.transformers.HyperMetadataToTransitionTransformer;
 import it.polimi.io.ba.transformers.MetadataToBATransformer;
 import it.polimi.io.ba.transformers.MetadataToStateTransformer;
 import it.polimi.io.ba.transformers.MetadataToTransitionTransformer;
 
-import java.awt.geom.Point2D;
 import java.io.BufferedReader;
-import java.util.HashMap;
-import java.util.Map;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.io.GraphIOException;
@@ -54,18 +50,16 @@ import edu.uci.ics.jung.io.graphml.GraphMLReader2;
  *            is the factory which is able to create a new empty Buchi
  *            Automaton. It must implement the interface {@link BAFactory}
  */
-public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LABEL>, STATE extends StateImpl, STATEFACTORY extends StateFactory<STATE>, TRANSITION extends Transition<LABEL>, TRANSITIONFACTORY extends TransitionFactory<LABEL, TRANSITION>, AUTOMATONFACTORY extends BAFactory<LABEL, STATE, TRANSITION>> {
+public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LABEL>, STATE extends State, STATEFACTORY extends StateFactory<STATE>, TRANSITION extends Transition<LABEL>, TRANSITIONFACTORY extends TransitionFactory<LABEL, TRANSITION>, AUTOMATONFACTORY extends BAFactory<LABEL, STATE, TRANSITION>> {
 
 	/**
-	 * is the reader which is used to par
+	 * is the reader which is used to parse the Buchi Automaton
 	 */
 	protected GraphMLReader2<DirectedSparseGraph<STATE, TRANSITION>, STATE, TRANSITION> graphReader = null;
 	/**
 	 * contains the Buchi Automaton loaded from the file
 	 */
 	protected BA<LABEL, STATE, TRANSITION> ba;
-
-	protected Map<STATE, Point2D> statesandlocations;
 
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
@@ -111,10 +105,8 @@ public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LAB
 		if (fileReader == null) {
 			throw new NullPointerException("The fileReader cannot be null");
 		}
-		this.statesandlocations = new HashMap<STATE, Point2D>();
-
+		
 		this.ba = automatonFactory.create();
-
 		this.graphReader = new GraphMLReader2<DirectedSparseGraph<STATE, TRANSITION>, STATE, TRANSITION>(
 				fileReader, new MetadataToBATransformer<LABEL, STATE, TRANSITION>(ba),
 				new MetadataToStateTransformer<LABEL, STATE, TRANSITION>(stateFactory, ba),
