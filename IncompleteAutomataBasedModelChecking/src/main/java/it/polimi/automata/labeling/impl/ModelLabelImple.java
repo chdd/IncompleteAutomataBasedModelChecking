@@ -18,9 +18,9 @@ import java.util.Set;
 public class ModelLabelImple implements ModelLabel {
 
 	/**
-	 * contains the set of propositions that label the transitions
+	 * contains the labels that label the transitions
 	 */
-	public Set<String> propositions;
+	public Set<String> labels;
 
 	/**
 	 * creates a new label for the transition with the specified set of
@@ -35,7 +35,7 @@ public class ModelLabelImple implements ModelLabel {
 		if(propositions==null){
 			throw new NullPointerException("The set of propositions that label the transitions cannot be null");
 		}
-		this.propositions=Collections.unmodifiableSet(propositions);
+		this.labels=Collections.unmodifiableSet(propositions);
 	}
 
 	/**
@@ -43,6 +43,6 @@ public class ModelLabelImple implements ModelLabel {
 	 */
 	@Override
 	public Set<String> getAtomicPropositions() {
-		return propositions;
+		return labels;
 	}
 }
