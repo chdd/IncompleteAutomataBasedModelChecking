@@ -2,9 +2,9 @@ package it.polimi.io.ba;
 
 import it.polimi.Constants;
 import it.polimi.automata.BA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 import it.polimi.io.ba.transformers.BAStateAcceptingToStringTransformer;
 import it.polimi.io.ba.transformers.BAStateInitialToStringTransformer;
 import it.polimi.io.ba.transformers.BATransitionToStringTransformer;

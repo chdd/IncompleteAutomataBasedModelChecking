@@ -2,10 +2,10 @@ package it.polimi.io.iba.transformers;
 
 import it.polimi.Constants;
 import it.polimi.automata.IBA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
-import it.polimi.automata.factories.StateFactory;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.Transition;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;

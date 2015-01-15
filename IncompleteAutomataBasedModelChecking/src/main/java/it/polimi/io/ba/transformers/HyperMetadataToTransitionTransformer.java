@@ -1,9 +1,9 @@
 package it.polimi.io.ba.transformers;
 
-import it.polimi.automata.Transition;
-import it.polimi.automata.factories.TransitionFactory;
-import it.polimi.automata.impl.TransitionImpl;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
 import org.apache.commons.collections15.Transformer;
 

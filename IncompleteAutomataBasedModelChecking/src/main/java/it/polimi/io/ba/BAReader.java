@@ -1,13 +1,13 @@
 package it.polimi.io.ba;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
-import it.polimi.automata.factories.BAFactory;
-import it.polimi.automata.factories.LabelFactory;
-import it.polimi.automata.factories.StateFactory;
-import it.polimi.automata.factories.TransitionFactory;
+import it.polimi.automata.BAFactory;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.labeling.LabelFactory;
+import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.io.ba.transformers.HyperMetadataToTransitionTransformer;
 import it.polimi.io.ba.transformers.MetadataToBATransformer;
 import it.polimi.io.ba.transformers.MetadataToBAStateTransformer;
