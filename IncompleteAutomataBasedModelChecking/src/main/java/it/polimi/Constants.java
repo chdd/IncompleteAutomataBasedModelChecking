@@ -58,4 +58,21 @@ public class Constants {
 	public static final int constraintPanelYRation=7;
 	public static final double constraintConstraintElements=3/4.0;
 	
+	/**
+	 * IO Tags
+	 */
+	public static final String initialTag="initial";
+	public static final String acceptingTag="accepting";
+	public static final String labelsTag="labels";
+	public static final String nameTag="name";
+	/**
+	 * defaults
+	 */
+	public static final String labelsDefault="";
+	public static final String falseValue="";
+	public static final String defaultName="";
+	
+	
+	
+	
 }
