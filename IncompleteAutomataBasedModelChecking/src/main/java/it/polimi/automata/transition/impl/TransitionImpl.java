@@ -1,7 +1,7 @@
-package it.polimi.automata.impl;
+package it.polimi.automata.transition.impl;
 
-import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.transition.Transition;
 
 import java.util.Collections;
 import java.util.Set;
@@ -52,7 +52,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	 * @throws NullPointerException
 	 *             is generated if the label of the transition is null
 	 */
-	public TransitionImpl(Set<LABEL> label, int id) {
+	protected TransitionImpl(Set<LABEL> label, int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");

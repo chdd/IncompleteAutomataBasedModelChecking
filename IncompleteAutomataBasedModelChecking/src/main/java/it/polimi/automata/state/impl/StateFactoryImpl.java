@@ -1,7 +1,6 @@
-package it.polimi.automata.factories.impl;
+package it.polimi.automata.state.impl;
 
-import it.polimi.automata.factories.StateFactory;
-import it.polimi.automata.impl.StateImpl;
+import it.polimi.automata.state.StateFactory;
 
 /**
  * is the factory that allows to create states of the type StateImpl

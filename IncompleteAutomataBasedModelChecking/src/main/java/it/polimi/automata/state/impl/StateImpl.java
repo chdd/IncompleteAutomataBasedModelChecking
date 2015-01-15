@@ -1,6 +1,6 @@
-package it.polimi.automata.impl;
+package it.polimi.automata.state.impl;
 
-import it.polimi.automata.State;
+import it.polimi.automata.state.State;
 
 /**
  * contains the implementation of a state of the automaton. It implements the
@@ -65,7 +65,7 @@ public class StateImpl implements State {
 	 * @throws IllegalArgumentException
 	 *             is generated when the name of the state is null
 	 */
-	public StateImpl(String name, int id) {
+	protected StateImpl(String name, int id) {
 		this(id);
 		if (name == null) {
 			throw new NullPointerException(

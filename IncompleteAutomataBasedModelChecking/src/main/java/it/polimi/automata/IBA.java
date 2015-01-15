@@ -1,6 +1,8 @@
 package it.polimi.automata;
 
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 
 import java.util.Map;
 import java.util.Map.Entry;

@@ -1,7 +1,7 @@
-package it.polimi.automata.factories.impl;
+package it.polimi.automata.transition.impl;
 
-import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.transition.Transition;
 
 import java.util.Set;
 

@@ -1,9 +1,8 @@
-package it.polimi.automata.factories.impl;
+package it.polimi.automata.transition.impl;
 
-import it.polimi.automata.Transition;
-import it.polimi.automata.factories.TransitionFactory;
-import it.polimi.automata.impl.TransitionImpl;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;

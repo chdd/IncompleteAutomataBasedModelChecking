@@ -1,8 +1,6 @@
-package it.polimi.automata.factories;
+package it.polimi.automata.labeling;
 
 import java.util.Set;
-
-import it.polimi.automata.labeling.Label;
 
 import org.apache.commons.collections15.Factory;
 

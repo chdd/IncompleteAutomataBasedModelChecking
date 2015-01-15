@@ -1,8 +1,8 @@
 package it.polimi.automata.labeling;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 
 import java.util.Set;
 

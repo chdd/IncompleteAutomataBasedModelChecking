@@ -1,6 +1,4 @@
-package it.polimi.automata.factories;
-
-import it.polimi.automata.State;
+package it.polimi.automata.state;
 
 import org.apache.commons.collections15.Factory;
 

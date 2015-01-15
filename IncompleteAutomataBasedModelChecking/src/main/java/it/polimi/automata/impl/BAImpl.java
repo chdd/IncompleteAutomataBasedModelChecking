@@ -1,9 +1,11 @@
 package it.polimi.automata.impl;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
+import it.polimi.automata.state.impl.StateImpl;
+import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -63,7 +65,7 @@ public class BAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ext
 	/**
 	 * creates a new empty Buchi automaton
 	 */
-	public BAImpl() {
+	protected BAImpl() {
 
 		this.alphabet = new HashSet<LABEL>();
 		this.acceptStates = new HashSet<STATE>();

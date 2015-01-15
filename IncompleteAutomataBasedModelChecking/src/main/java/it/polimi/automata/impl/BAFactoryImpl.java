@@ -1,13 +1,12 @@
-package it.polimi.automata.factories.impl;
+package it.polimi.automata.impl;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.State;
-import it.polimi.automata.Transition;
-import it.polimi.automata.factories.BAFactory;
-import it.polimi.automata.impl.BAImpl;
-import it.polimi.automata.impl.StateImpl;
-import it.polimi.automata.impl.TransitionImpl;
+import it.polimi.automata.BAFactory;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
+import it.polimi.automata.state.impl.StateImpl;
+import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
 /**
  * <p>

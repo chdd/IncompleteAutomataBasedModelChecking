@@ -1,9 +1,9 @@
-package it.polimi.automata;
+package it.polimi.automata.transition;
 
 import java.util.Set;
 
-import it.polimi.automata.impl.TransitionImpl;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
 /**
  * <p>
