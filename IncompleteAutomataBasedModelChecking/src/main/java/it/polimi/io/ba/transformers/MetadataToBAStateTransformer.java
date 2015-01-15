@@ -34,7 +34,7 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  *            the interface {@link Transition}
  * @author claudiomenghi
  */
-public class MetadataToStateTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
+public class MetadataToBAStateTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
 		implements Transformer<NodeMetadata, STATE> {
 
 	/**
@@ -58,7 +58,7 @@ public class MetadataToStateTransformer<LABEL extends Label, STATE extends State
 	 * @throws NullPointerException
 	 *             if the Buchi automaton or the factory are null
 	 */
-	public MetadataToStateTransformer(StateFactory<STATE> stateFactory,
+	public MetadataToBAStateTransformer(StateFactory<STATE> stateFactory,
 			BA<LABEL, STATE, TRANSITION> a) {
 		if (a == null) {
 			throw new NullPointerException("The Buchi automaton cannot be null");
