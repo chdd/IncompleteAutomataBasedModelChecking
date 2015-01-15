@@ -52,7 +52,7 @@ public class IntBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION 
 	/**
 	 * creates a new intersection automaton
 	 */
-	public IntBAImpl() {
+	protected IntBAImpl() {
 		super();
 		this.mixedStates = new HashSet<STATE>();
 	}
