@@ -27,7 +27,7 @@ public class IBATransparentStateRemoval<LABEL extends Label, STATE extends State
 
 	/**
 	 * removes from the Incomplete Buchi Automaton all the transparent states
-	 * and the corresponding incoming and outcoming transitions
+	 * and the corresponding incoming and out coming transitions
 	 * 
 	 * @param iba
 	 *            is the Incomplete Buchi Automaton to be modified
