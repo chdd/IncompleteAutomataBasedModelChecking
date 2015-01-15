@@ -2,7 +2,7 @@ package it.polimi.checker.intersection.impl;
 
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.IntersectionTransitionFactoryImpl;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.intersection.IntersectionRule;
 
 import java.util.HashSet;
@@ -25,17 +25,17 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionRuleImpl<LABEL extends Label>
-		implements IntersectionRule<LABEL> {
+public class IntersectionRuleImpl<LABEL extends Label, TRANSITION extends Transition<LABEL>>
+		implements IntersectionRule<LABEL,TRANSITION> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Transition<LABEL> getIntersectionTransition(
-			Transition<LABEL> modelTransition,
-			Transition<LABEL> claimTransition,
-			IntersectionTransitionFactoryImpl<LABEL> intersectionTransitionFactory) {
+	public TRANSITION getIntersectionTransition(
+			TRANSITION modelTransition,
+			TRANSITION claimTransition,
+			TransitionFactory<LABEL, TRANSITION> intersectionTransitionFactory) {
 		if (modelTransition == null) {
 			throw new NullPointerException(
 					"The model transition cannot be null");
