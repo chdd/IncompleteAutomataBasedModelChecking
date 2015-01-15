@@ -5,7 +5,6 @@ import it.polimi.automata.State;
 import it.polimi.automata.Transition;
 import it.polimi.automata.factories.LabelFactory;
 import it.polimi.automata.factories.StateFactory;
-import it.polimi.automata.impl.StateImpl;
 import it.polimi.automata.labeling.Label;
 
 import org.apache.commons.collections15.Transformer;
@@ -37,7 +36,7 @@ import edu.uci.ics.jung.io.graphml.GraphMetadata;
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class MetadataToBATransformer<LABEL extends Label, STATE extends StateImpl, TRANSITION extends Transition<LABEL>> implements
+public class MetadataToBATransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> implements
 		Transformer<GraphMetadata, DirectedSparseGraph<STATE, TRANSITION>> {
 	/**
 	 * contains the Buchi automaton to be returned after the Transforming

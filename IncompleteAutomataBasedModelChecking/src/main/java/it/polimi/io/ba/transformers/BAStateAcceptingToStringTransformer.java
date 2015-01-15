@@ -29,6 +29,9 @@ import org.apache.commons.collections15.Transformer;
 public class BAStateAcceptingToStringTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
 		implements Transformer<STATE, String> {
 
+	/**
+	 * is the Buchi Automaton to be transformed
+	 */
 	private BA<LABEL, STATE, TRANSITION> ba;
 
 	/**
