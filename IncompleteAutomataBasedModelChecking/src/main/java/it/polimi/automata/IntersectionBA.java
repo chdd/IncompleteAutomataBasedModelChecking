@@ -38,4 +38,17 @@ public interface IntersectionBA<LABEL extends Label, STATE extends State, TRANSI
 	 */
 	public Set<STATE> getMixedStates();
 	
+	/**
+	 * adds the mixed state s to the states of the {@link IBA} and to the
+	 * set of the mixed state<br>
+	 * if the state is already mixed no action is performed <br>
+	 * if the state is a state of the BA but is not mixed, it is also
+	 * added to the set of the mixed state
+	 * 
+	 * @param s
+	 *            the state to be added in the {@link IBA}
+	 * @throws NullPointerException
+	 *             if the state s is null
+	 */
+	public void addMixedState(STATE s);
 }
