@@ -117,5 +117,4 @@ public class AcceptingStatesTransformer<LABEL extends Label, STATE extends State
 		// returns the vector s
 		return ret;
 	}
-
 }

@@ -108,7 +108,7 @@ public class Brzozowski<LABEL extends Label, STATE extends State, TRANSITION ext
 		String[][] t = new TransitionMatrixTranformer<LABEL, STATE, TRANSITION>(
 				this.orderedStates).transform(this.automaton);
 		String[] constr1 = new AcceptingStatesTransformer<LABEL, STATE, TRANSITION>(
-				orderedStates, automaton, this.finalState).transform(automaton);
+				orderedStates, this.finalState).transform(automaton);
 		this.solveSystem(t, constr1);
 
 		return constr1[0];
