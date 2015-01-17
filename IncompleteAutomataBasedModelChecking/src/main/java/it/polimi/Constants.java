@@ -64,6 +64,7 @@ public class Constants {
 	public static final String initialTag="initial";
 	public static final String acceptingTag="accepting";
 	public static final String labelsTag="labels";
+	public static final String transparentTag="transparent";
 	public static final String nameTag="name";
 	/**
 	 * defaults

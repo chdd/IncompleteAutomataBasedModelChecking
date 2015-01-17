@@ -14,8 +14,6 @@ import it.polimi.checker.ibaTransparentStateRemoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
-import it.polimi.modelchecker.brzozowski.Brzozowski;
-import it.polimi.modelchecker.brzozowski.Constraint;
 
 /**
  * @author claudiomenghi
@@ -132,7 +130,7 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 		this.verificationResults
 				.setViolationTime((stopTime - startIntersectionTime) / 1000000000.0);
 		if (violated) {
-			return -1;
+			return 0;
 		}
 
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE CLAIM
@@ -207,14 +205,14 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 		return !new EmptinessChecker<LABEL, STATE, TRANSITION>(this.ris)
 				.isEmpty();
 	}
-	
+	/*
 	private boolean computeConstraints() {
 		Brzozowski<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> brzozowski = new Brzozowski<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(
 				ris);
 		Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> returnConstraint;
 		Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> simplifiedConstraint;
 		long startConstraintTime = System.nanoTime();
-		returnConstraint = brzozowski.getConstraint();
+		returnConstraint = brzozowski.getRegularExpression();
 		long stopConstraintTime = System.nanoTime();
 
 		long startSimplificationTime = System.nanoTime();
@@ -240,17 +238,7 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 		// returns -1 which indicates that the property is possibly
 		// satisfied
 		return -1;
-	}
-
-	/**
-	 * returns the intersection between the model and the specification
-	 * 
-	 * @return the intersection automaton that contains the intersection of the
-	 *         model and the specification
-	 */
-	public IntersectionBA<LABEL, STATE, TRANSITION> getIntersection() {
-		return this.ris;
-	}
+	}*/
 
 	/**
 	 * returns the verification results, the time required from the verification
