@@ -109,6 +109,13 @@ public class BAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ext
 		return Collections.unmodifiableSet(new HashSet<TRANSITION>(
 				this.automataGraph.getOutEdges(state)));
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<TRANSITION> getInTransitions(STATE state) {
+		return Collections.unmodifiableSet(new HashSet<TRANSITION>(
+				this.automataGraph.getInEdges(state)));
+	}
 
 	/**
 	 * {@inheritDoc}

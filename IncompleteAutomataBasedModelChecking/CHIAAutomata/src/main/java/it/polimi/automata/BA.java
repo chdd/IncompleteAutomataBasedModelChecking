@@ -78,6 +78,22 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             Buchi automaton
 	 */
 	public Set<TRANSITION> getOutTransitions(STATE state);
+	
+	/**
+	 * return the set of transitions that enters the state
+	 * 
+	 * @param state
+	 *            is the state under analysis
+	 * 
+	 * @return the set of transitions that enter the state
+	 * 
+	 * @throws NullPointerException
+	 *             if the state is null
+	 * @throws IllegalArgumentException
+	 *             if the state is not contained into the set of state of the
+	 *             Buchi automaton
+	 */
+	public Set<TRANSITION> getInTransitions(STATE state);
 
 	/**
 	 * returns the state that is the destination of the transition
