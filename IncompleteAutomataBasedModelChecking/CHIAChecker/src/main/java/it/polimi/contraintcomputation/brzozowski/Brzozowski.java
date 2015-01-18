@@ -1,4 +1,4 @@
-package it.polimi.constraints.brzozowski;
+package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
