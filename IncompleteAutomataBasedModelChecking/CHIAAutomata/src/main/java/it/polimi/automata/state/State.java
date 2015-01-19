@@ -26,4 +26,14 @@ public interface State {
 	 * @return the <br>name</br> of the state
 	 */
 	public String getName();
+	
+	/**
+	 * sets the name of the state
+	 * 
+	 * @param name
+	 *            the name of the {@link StateImpl}
+	 * @throws AssertionError 
+	 *             if the name of the {@link StateImpl} is null
+	 */
+	public void setName(String name);
 }

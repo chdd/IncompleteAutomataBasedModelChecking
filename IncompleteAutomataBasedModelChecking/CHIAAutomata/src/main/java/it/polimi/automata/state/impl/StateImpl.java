@@ -43,13 +43,11 @@ public class StateImpl implements State {
 	 * 
 	 * @param id
 	 *            is the id of the state
-	 * @throws IllegalArgumentException
+	 * @throws AssertionError 
 	 *             if the value of the id is less than 0
 	 */
 	protected StateImpl(int id) {
-		if (id < 0) {
-			throw new IllegalArgumentException("The id cannot be < 0");
-		}
+		assert id >= 0 : "The id cannot be < 0";
 		this.id = id;
 		this.name = "";
 	}
@@ -62,33 +60,22 @@ public class StateImpl implements State {
 	 * @param id
 	 *            contains the id of the state
 	 * @see StateImpl#StateImpl(int)
-	 * @throws IllegalArgumentException
+	 * @throws AssertionError 
 	 *             if the value of the id is less than 0
-	 * @throws IllegalArgumentException
+	 * @throws AssertionError 
 	 *             is generated when the name of the state is null
 	 */
 	protected StateImpl(String name, int id) {
 		this(id);
-		if (name == null) {
-			throw new NullPointerException(
-					"The name of the state cannot be null");
-		}
+		assert name != null : "The name of the state cannot be null";
 		this.name = name;
 	}
 
 	/**
-	 * sets the name of the state
-	 * 
-	 * @param name
-	 *            the name of the {@link StateImpl}
-	 * @throws NullPointerException
-	 *             if the name of the {@link StateImpl} is null
+	 * {@inheritDoc}
 	 */
 	public void setName(String name) {
-		if (this.name == null) {
-			throw new NullPointerException(
-					"It is not possible to create a state with a null name");
-		}
+		assert this.name != null : "It is not possible to create a state with a null name";
 		this.name = name;
 	}
 
