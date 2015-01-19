@@ -4,7 +4,9 @@ import it.polimi.automata.state.State;
 
 /**
  * contains the implementation of a state of the automaton. It implements the
- * interface @see {@link State}
+ * interface <br>
+ * 
+ * @see {@link State}
  * 
  * @author claudiomenghi
  */
