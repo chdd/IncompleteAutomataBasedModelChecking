@@ -34,7 +34,7 @@ public class LabelImpl implements Label {
 	 * @throws NullPointerException
 	 *             if the set of propositions is null
 	 */
-	protected LabelImpl(Set<IGraphProposition> propositions) {
+	public LabelImpl(Set<IGraphProposition> propositions) {
 		if (propositions == null) {
 			throw new NullPointerException(
 					"The set of propositions that label the transitions cannot be null");
