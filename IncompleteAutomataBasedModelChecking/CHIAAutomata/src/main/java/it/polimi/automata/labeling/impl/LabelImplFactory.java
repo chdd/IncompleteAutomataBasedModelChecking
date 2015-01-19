@@ -9,15 +9,27 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
 
+/**
+ * is the factory which allows to create labels
+ * @author claudiomenghi
+ *
+ */
 public class LabelImplFactory implements LabelFactory<Label>{
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Label create() {
 		return new LabelImpl(new HashSet<IGraphProposition>());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Label create(Set<Entry<String, Boolean>> labels) {
+		assert labels!=null: "The set of labels cannot be null";
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		for(Entry<String, Boolean> entry: labels){
 			propositions.add(new GraphProposition(entry.getKey(), entry.getValue()));

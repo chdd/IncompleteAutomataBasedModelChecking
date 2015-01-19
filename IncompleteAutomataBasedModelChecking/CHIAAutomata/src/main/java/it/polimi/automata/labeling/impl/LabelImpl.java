@@ -31,14 +31,12 @@ public class LabelImpl implements Label {
 	 * 
 	 * @param propositions
 	 *            is the set of propositions that label the transitions
-	 * @throws NullPointerException
+	 * @throws AssertionError
 	 *             if the set of propositions is null
 	 */
-	public LabelImpl(Set<IGraphProposition> propositions) {
-		if (propositions == null) {
-			throw new NullPointerException(
-					"The set of propositions that label the transitions cannot be null");
-		}
+	protected LabelImpl(Set<IGraphProposition> propositions) {
+		assert propositions != null: "The set of propositions that label the transitions cannot be null";
+		
 		this.labels = Collections.unmodifiableSet(propositions);
 	}
 

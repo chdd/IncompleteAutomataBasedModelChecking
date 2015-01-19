@@ -19,6 +19,7 @@ public interface LabelFactory<LABEL extends Label> extends Factory<LABEL> {
 	 * parses the label of the transition from a string
 	 * @param label the label of the transition represented as a String
 	 * @return the set of labels parsed from the string
+	 * @throws AssertionError if the set of labels is null
 	 */
 	public LABEL create(Set<Entry<String, Boolean>> labels);
 }
