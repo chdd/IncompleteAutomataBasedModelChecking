@@ -47,21 +47,16 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	 *            is the label of the transition
 	 * @param id
 	 *            is the id of the transition
-	 * @throws IllegalArgumentException
+	 * @throws AssertionError
 	 *             is generated if the id is less than zero
-	 * @throws NullPointerException
+	 * @throws AssertionError
 	 *             is generated if the label of the transition is null
 	 */
 	protected TransitionImpl(Set<LABEL> label, int id) {
-		if (id < 0) {
-			throw new IllegalArgumentException(
-					"The value of the id cannot be less than zero");
-		}
+		assert id >= 0: "The value of the id cannot be less than zero";
+		assert label != null: "The character that labels the transition cannot be null";
+		
 		this.id = id;
-		if (label == null) {
-			throw new NullPointerException(
-					"The character that labels the transition cannot be null");
-		}
 		this.labels = Collections.unmodifiableSet(label);
 	}
 

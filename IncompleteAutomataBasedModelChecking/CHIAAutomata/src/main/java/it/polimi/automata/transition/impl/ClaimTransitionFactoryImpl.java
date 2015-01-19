@@ -43,10 +43,8 @@ public class ClaimTransitionFactoryImpl<LABEL extends Label> implements
 	 * {@inheritDoc}
 	 */
 	public Transition<LABEL> create(Set<LABEL> labels) {
-		if (labels == null) {
-			throw new NullPointerException(
-					"The labels to be added at the Transition cannot be null");
-		}
+		assert labels != null : "The labels to be added at the Transition cannot be null";
+
 		Transition<LABEL> t = new TransitionImpl<LABEL>(labels,
 				ClaimTransitionFactoryImpl.transitionCount);
 		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount++;
@@ -58,14 +56,9 @@ public class ClaimTransitionFactoryImpl<LABEL extends Label> implements
 	 * {@inheritDoc}
 	 */
 	public Transition<LABEL> create(int id, Set<LABEL> labels) {
-		if (id < 0) {
-			throw new IllegalArgumentException(
-					"The id must be grater than or equal to zero");
-		}
-		if (labels == null) {
-			throw new NullPointerException(
-					"The labels to be added at the Transition cannot be null");
-		}
+		assert id >= 0 : "The id must be grater than or equal to zero";
+		assert labels != null : "The labels to be added at the Transition cannot be null";
+
 		TransitionImpl<LABEL> t = new TransitionImpl<LABEL>(labels, id);
 		ClaimTransitionFactoryImpl.transitionCount = Math.max(
 				ClaimTransitionFactoryImpl.transitionCount++, id++);
