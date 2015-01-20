@@ -45,7 +45,9 @@ public interface StateFactory<STATE extends State> extends Factory<STATE> {
 	 * @return a new state with the specified name and id
 	 * @throws IllegalArgumentException
 	 *             if the id is less than 0
-	 *             
+	 * @throws NullPointerException
+	 *             if the name of the state is null
+	 * 
 	 */
 	public STATE create(String name, int id);
 }

@@ -78,7 +78,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             Buchi automaton
 	 */
 	public Set<TRANSITION> getOutTransitions(STATE state);
-	
+
 	/**
 	 * return the set of transitions that enters the state
 	 * 
@@ -109,7 +109,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             of the automaton
 	 */
 	public STATE getTransitionDestination(TRANSITION transition);
-	
+
 	/**
 	 * returns the state that is the source of the transition
 	 * 
@@ -131,7 +131,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @return the set of the transitions of the Buchi automaton
 	 */
 	public Set<TRANSITION> getTransitions();
-	
+
 	/**
 	 * adds the initial state to the Buchi automaton. If the state is not
 	 * contained into the states of the automaton it is also added to the states
@@ -201,7 +201,8 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             automaton <br/>
 	 *             the destination of the transition is not contained into the
 	 *             set of the states of the automaton <br/>
-	 *             a transition that connect source to the destination is already present
+	 *             a transition that connect source to the destination is
+	 *             already present
 	 */
 	public void addTransition(STATE source, STATE destination,
 			TRANSITION transition);
@@ -218,6 +219,10 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @throws IllegalArgumentException
 	 *             if the state to be removed is not contained into the set of
 	 *             the states of the Buchi automaton
+	 * 
+	 * <pre>
+	 * state != null
+	 * </pre>
 	 */
 	public void removeState(STATE state);
 

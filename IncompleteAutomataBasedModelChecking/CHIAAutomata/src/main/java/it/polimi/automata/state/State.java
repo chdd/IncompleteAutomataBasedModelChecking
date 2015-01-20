@@ -32,7 +32,7 @@ public interface State {
 	 * 
 	 * @param name
 	 *            the name of the {@link StateImpl}
-	 * @throws AssertionError 
+	 * @throws NullPointerException
 	 *             if the name of the {@link StateImpl} is null
 	 */
 	public void setName(String name);

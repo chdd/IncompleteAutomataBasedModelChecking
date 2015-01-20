@@ -1,5 +1,8 @@
 package it.polimi.automata.io.ba.transformers;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
@@ -82,7 +85,8 @@ public class MetadataToTransitionTransformer<LABEL extends Label, LABELFACTORY e
 			throw new NullPointerException(
 					"The EdgeMetadata to be converted cannot be null");
 		}
+		String labels=input.getProperty(Constants.labelsTag);
 		return this.transitionFactory.create(Integer.parseInt(input.getId()),
-				labelFactory.create(input.getProperty(Constants.labelsTag)));
+				new HashSet<LABEL>());
 	}
 }

@@ -2,9 +2,8 @@ package it.polimi.automata.impl;
 
 import it.polimi.automata.IntersectionBAFactory;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.state.impl.StateImpl;
+import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionImpl;
 
 
 /**
@@ -29,7 +28,7 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntBAFactoryImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION extends TransitionImpl<LABEL>> implements IntersectionBAFactory<LABEL, STATE, TRANSITION>{
+public class IntBAFactoryImpl<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> implements IntersectionBAFactory<LABEL, STATE, TRANSITION>{
 	/**
 	 * {@inheritDoc}
 	 */

@@ -29,7 +29,8 @@ public class LabelImplFactory implements LabelFactory<Label>{
 	 */
 	@Override
 	public Label create(Set<Entry<String, Boolean>> labels) {
-		assert labels!=null: "The set of labels cannot be null";
+		if( labels==null)
+			throw new NullPointerException("The set of labels cannot be null");
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		for(Entry<String, Boolean> entry: labels){
 			propositions.add(new GraphProposition(entry.getKey(), entry.getValue()));

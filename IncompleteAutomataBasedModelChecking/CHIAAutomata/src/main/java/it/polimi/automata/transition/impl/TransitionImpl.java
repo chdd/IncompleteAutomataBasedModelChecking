@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * contains the implementation of a transition an Incomplete or a complete Buchi automaton.
- * It implements the interface {@link Transition}
+ * contains the implementation of a transition an Incomplete or a complete Buchi
+ * automaton. It implements the interface {@link Transition}
  * 
- * @author claudiomenghi 
+ * @author claudiomenghi
  * @see {@link Transition}
  */
-public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
+public class TransitionImpl<LABEL extends Label> implements Transition<LABEL> {
 
 	/**
 	 * contains the id of the transition
@@ -21,8 +21,8 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	private final int id;
 
 	/**
-	 * contains the labels of the transition
-	 * the transition can be fired if one of the label is satisfied
+	 * contains the labels of the transition the transition can be fired if one
+	 * of the label is satisfied
 	 */
 	private Set<LABEL> labels;
 
@@ -30,7 +30,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	 * {@inheritDoc}
 	 */
 	public Set<LABEL> getLabels() {
-		return  Collections.unmodifiableSet(this.labels);
+		return Collections.unmodifiableSet(this.labels);
 	}
 
 	/**
@@ -39,23 +39,18 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
-	 * Constructs a new transition
-	 * 
-	 * @param label
-	 *            is the label of the transition
-	 * @param id
-	 *            is the id of the transition
-	 * @throws AssertionError
-	 *             is generated if the id is less than zero
-	 * @throws AssertionError
-	 *             is generated if the label of the transition is null
+	 * {@inheritDoc}
 	 */
 	protected TransitionImpl(Set<LABEL> label, int id) {
-		assert id >= 0: "The value of the id cannot be less than zero";
-		assert label != null: "The character that labels the transition cannot be null";
-		
+		if (id < 0)
+			throw new IllegalArgumentException(
+					"The value of the id cannot be less than zero");
+		if (label == null)
+			throw new NullPointerException(
+					"The character that labels the transition cannot be null");
+
 		this.id = id;
 		this.labels = Collections.unmodifiableSet(label);
 	}
@@ -65,7 +60,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL>{
 	 */
 	@Override
 	public String toString() {
-		return "{" + Integer.toString(this.id) + "} "
-				+ this.labels.toString() + "";
+		return "{" + Integer.toString(this.id) + "} " + this.labels.toString()
+				+ "";
 	}
 }

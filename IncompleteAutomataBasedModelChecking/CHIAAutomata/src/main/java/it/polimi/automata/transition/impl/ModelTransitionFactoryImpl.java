@@ -31,7 +31,8 @@ public class ModelTransitionFactoryImpl<LABEL extends Label> extends
 	 *             if one of the proposition in the label is negated
 	 */
 	public Transition<LABEL> create(Set<LABEL> labels) {
-		assert labels != null: "The labels to be added at the Transition cannot be null";
+		if( labels == null)
+			throw new NullPointerException("The labels to be added at the Transition cannot be null");
 		
 		for (LABEL label : labels) {
 			for (IGraphProposition p : label.getAtomicPropositions()) {
@@ -54,7 +55,8 @@ public class ModelTransitionFactoryImpl<LABEL extends Label> extends
 	 *             if one of the proposition in the label is negated
 	 */
 	public Transition<LABEL> create(int id, Set<LABEL> labels) {
-		assert labels != null: "The labels to be added at the Transition cannot be null";
+		if( labels == null) 
+			throw new NullPointerException("The labels to be added at the Transition cannot be null");
 		
 		for (LABEL label : labels) {
 			for (IGraphProposition p : label.getAtomicPropositions()) {

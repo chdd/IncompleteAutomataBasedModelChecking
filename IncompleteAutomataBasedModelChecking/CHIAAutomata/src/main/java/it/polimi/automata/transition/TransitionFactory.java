@@ -26,7 +26,7 @@ public interface TransitionFactory<LABEL extends Label, TRANSITION extends Trans
 	 *            are the labels of the transitions. If one of the labels is
 	 *            satisfied the transition may be fired
 	 * @return a new transition labeled with the specified condition
-	 * @throws AssertionError
+	 * @throws NullPointerException
 	 *             if the label is null
 	 */
 	public TRANSITION create(Set<LABEL> labels);
@@ -40,9 +40,9 @@ public interface TransitionFactory<LABEL extends Label, TRANSITION extends Trans
 	 * @param id
 	 *            is the id of the transition
 	 * @return a new transition with the specified id and condition as label
-	 * @throws AssertionError
+	 * @throws NullPointerException
 	 *             if the condition is null
-	 * @throws AssertionError
+	 * @throws IllegalArgumentException
 	 *             if the id is not grater than or equal to zero
 	 */
 	public TRANSITION create(int id, Set<LABEL> labels);
