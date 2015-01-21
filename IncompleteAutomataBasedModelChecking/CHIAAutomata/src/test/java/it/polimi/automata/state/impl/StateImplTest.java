@@ -1,6 +1,3 @@
-/**
- * 
- */
 package it.polimi.automata.state.impl;
 
 import static org.junit.Assert.*;
@@ -79,9 +76,18 @@ public class StateImplTest {
 	@Test
 	public void testStateImplInt() {
 		this.state4=new StateImpl(6);
-		assertEquals(6, this.state4.id);
-		assertEquals("", this.state4.name);
+		assertEquals(6, this.state4.getId());
+		assertEquals("", this.state4.getName());
 		
+	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateImpl#StateImpl(-1)}.
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testStateImplInt_NegativeNumber() {
+		new StateImpl(-1);
 	}
 
 	/**
@@ -92,8 +98,17 @@ public class StateImplTest {
 	@Test
 	public void testStateImplStringInt() {
 		this.state4=new StateImpl("name", 6);
-		assertEquals(6, this.state4.id);
-		assertEquals("name", this.state4.name);
+		assertEquals(6, this.state4.getId());
+		assertEquals("name", this.state4.getName());
+	}
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateImpl#StateImpl(java.lang.String, null)}
+	 * .
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testStateImplStringInt_null() {
+		new StateImpl(null, 6);
 	}
 
 	/**
@@ -104,8 +119,18 @@ public class StateImplTest {
 	@Test
 	public void testSetName() {
 		this.state4.setName("prova");
-		assertEquals("prova", this.state4.name);
+		assertEquals("prova", this.state4.getName());
 	}
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateImpl#setName(null)}
+	 * .
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testSetName_null() {
+		this.state4.setName(null);
+	}
+
 
 	/**
 	 * Test method for
@@ -123,7 +148,35 @@ public class StateImplTest {
 	@Test
 	public void testEqualsObject() {
 		assertEquals(this.state2 , this.state3);
+		assertFalse(this.state2.equals(this.state1));
 		assertEquals(this.state5 , this.state6);
+	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 */
+	@Test
+	public void testEqualsObject_Other() {
+		assertFalse(this.state2.equals(new String()));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 */
+	@Test
+	public void testEqualsObject_Same() {
+		assertTrue(this.state2.equals(this.state2));
+	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 */
+	@Test
+	public void testEqualsObject_Null() {
+		assertFalse(this.state2.equals(null));
 	}
 
 }

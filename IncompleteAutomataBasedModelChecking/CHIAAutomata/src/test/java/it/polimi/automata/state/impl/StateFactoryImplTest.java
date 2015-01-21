@@ -3,10 +3,9 @@
  */
 package it.polimi.automata.state.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import it.polimi.automata.state.State;
+import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -15,12 +14,15 @@ import org.junit.Test;
  */
 public class StateFactoryImplTest {
 
-	private static final String name1 = "name";
-	private static final String name2 = "name2";
+	private StateFactoryImpl stateFactory;
 
-	private static final String emptyName = "";
-	private static final int id1 = 1;
-	private static final int id2 = 2;
+	/**
+	 * creates a new StateFactory
+	 */
+	@Before
+	public void setUp() {
+		this.stateFactory = new StateFactoryImpl();
+	}
 
 	/**
 	 * Test method for
@@ -28,12 +30,10 @@ public class StateFactoryImplTest {
 	 */
 	@Test
 	public void testCreate() {
-		StateFactoryImpl factory = new StateFactoryImpl();
-		State state1 = factory.create();
-		State state2 = factory.create();
-		assertFalse(state1.equals(state2));
-		assertTrue(state1.getName().equals(emptyName));
-		assertTrue(state2.getName().equals(emptyName));
+		StateImpl state = this.stateFactory.create();
+		assertNotNull(state);
+		assertEquals(state.getName(), "");
+		assertTrue(state.getId() >= 0);
 	}
 
 	/**
@@ -43,13 +43,19 @@ public class StateFactoryImplTest {
 	 */
 	@Test
 	public void testCreateString() {
-		StateFactoryImpl factory = new StateFactoryImpl();
-		State state1 = factory.create(StateFactoryImplTest.name1);
-		State state2 = factory.create(StateFactoryImplTest.name1);
-		assertFalse(state1.equals(state2));
-		assertTrue(state1.getName().equals(StateFactoryImplTest.name1));
-		assertTrue(state2.getName().equals(StateFactoryImplTest.name1));
+		StateImpl state = this.stateFactory.create("name");
+		assertNotNull(state);
+		assertEquals(state.getName(), "name");
+		assertTrue(state.getId() >= 0);
+	}
 
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create(null)} .
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testCreateString_Null() {
+		this.stateFactory.create(null);
 	}
 
 	/**
@@ -59,13 +65,30 @@ public class StateFactoryImplTest {
 	 */
 	@Test
 	public void testCreateStringInt() {
-		StateFactoryImpl factory = new StateFactoryImpl();
-		State state1 = factory.create(StateFactoryImplTest.name1,
-				StateFactoryImplTest.id1);
-		State state2 = factory.create(StateFactoryImplTest.name2,
-				StateFactoryImplTest.id2);
-		assertFalse(state1.equals(state2));
-		assertTrue(state1.getName().equals(StateFactoryImplTest.name1));
-		assertTrue(state2.getName().equals(StateFactoryImplTest.name2));
+		StateImpl state = this.stateFactory.create("name", 5);
+		assertNotNull(state);
+		assertEquals(state.getName(), "name");
+		assertEquals(state.getId(), 5);
 	}
+
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create(null, int)}
+	 * .
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testCreateNullInt() {
+		this.stateFactory.create(null, 5);
+	}
+
+	/**
+	 * Test method for {@link
+	 * it.polimi.automata.state.impl.StateFactoryImpl#create(java.lang.String,
+	 * -1)} .
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateStringNegInt() {
+		this.stateFactory.create("name", -1);
+	}
+
 }
