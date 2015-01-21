@@ -3,14 +3,18 @@
  */
 package it.polimi.automata.transition.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+import it.polimi.automata.labeling.Label;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import it.polimi.automata.labeling.Label;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * @author claudiomenghi
@@ -18,6 +22,19 @@ import org.junit.Test;
  */
 public class TransitionImplTest {
 
+	@Mock
+	private Label label1;
+	
+	@Mock
+	private Label label2;
+	
+	@Before
+	public void setUp(){
+		MockitoAnnotations.initMocks(this);
+		when(label1.toString()).thenReturn("a");
+		when(label2.toString()).thenReturn("b");
+	}
+	
 	/**
 	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#TransitionImpl(java.util.Set, int)}.
 	 */
@@ -73,10 +90,20 @@ public class TransitionImplTest {
 	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#toString()}.
 	 */
 	@Test
-	public void testToString() {
+	public void testToStringEmpty() {
 		Set<Label> labels=new HashSet<Label>();
 		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
-		//TODO
+		assertTrue(t.toString().equals("{1} "));
 	}
-
+	/**
+	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#toString()}.
+	 */
+	@Test
+	public void testToString() {
+		Set<Label> labels=new HashSet<Label>();
+		labels.add(label1);
+		labels.add(label2);
+		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		assertTrue(t.toString().equals("{1} (a)∨(b)") || t.toString().equals("{1} (b)∨(a)"));
+	}
 }
