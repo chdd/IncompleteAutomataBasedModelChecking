@@ -26,5 +26,5 @@ public interface Label {
 	 * returns the set of propositions that labels the transition.  
 	 * @return the set of atomic propositions that labels the transition that refers to the claim
 	 */
-	public Set<IGraphProposition> getAtomicPropositions();
+	public Set<IGraphProposition> getLabels();
 }

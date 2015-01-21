@@ -1,7 +1,6 @@
 package it.polimi.automata.io.ba.transformers;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
@@ -23,31 +22,31 @@ import edu.uci.ics.jung.io.graphml.GraphMetadata;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <LABELFACTORY>
+ * @param <F>
  *            is the factory which allows to create the labels of the
  *            transitions. It must implement the interface {@link LabelFactory}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
- * @param <TRANSITIONFACTORY>
+ * @param <G>
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
  */
-public class MetadataToTransitionTransformer<LABEL extends Label, LABELFACTORY extends LabelFactory<LABEL>, TRANSITION extends Transition<LABEL>, TRANSITIONFACTORY extends TransitionFactory<LABEL, TRANSITION>>
-		implements Transformer<EdgeMetadata, TRANSITION> {
+public class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>, T extends Transition<L>, G extends TransitionFactory<L, T>>
+		implements Transformer<EdgeMetadata, T> {
 	/**
 	 * contains the {@link TransitionFactory}
 	 */
-	protected TRANSITIONFACTORY transitionFactory;
+	protected G transitionFactory;
 
 	/**
 	 * contains the factory which is used to parse the label
 	 */
-	protected LABELFACTORY labelFactory;
+	protected F labelFactory;
 
 	/**
 	 * creates a new {@link EdgeMetadata} {@link Transformer}
@@ -60,8 +59,8 @@ public class MetadataToTransitionTransformer<LABEL extends Label, LABELFACTORY e
 	 * @throws NullPointerException
 	 *             if the transitionFactory is null
 	 */
-	public MetadataToTransitionTransformer(TRANSITIONFACTORY transitionFactory,
-			LABELFACTORY labelFactory) {
+	public MetadataToTransitionTransformer(G transitionFactory,
+			F labelFactory) {
 		if (transitionFactory == null) {
 			throw new NullPointerException(
 					"The transition factory cannot be null");
@@ -80,13 +79,13 @@ public class MetadataToTransitionTransformer<LABEL extends Label, LABELFACTORY e
 	 *             if the {@link EdgeMetadata} to be converted is null
 	 */
 	@Override
-	public TRANSITION transform(EdgeMetadata input) {
+	public T transform(EdgeMetadata input) {
 		if (input == null) {
 			throw new NullPointerException(
 					"The EdgeMetadata to be converted cannot be null");
 		}
-		String labels=input.getProperty(Constants.labelsTag);
+		String labels=input.getProperty(Constants.LABELSTAG);
 		return this.transitionFactory.create(Integer.parseInt(input.getId()),
-				new HashSet<LABEL>());
+				new HashSet<L>());
 	}
 }

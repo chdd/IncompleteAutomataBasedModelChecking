@@ -13,13 +13,13 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  * 
  * @author claudiomenghi
  * @see TransitionImpl
- * @param <LABEL>
+ * @param <L>
  *            is the label of the transition which must extend the interface
  *            {@link Label}. Depending on whether the transition is associated
  *            with the model or a property it is associated with a set of atomic
  *            propositions or a propositional logic formula, respectively.
  */
-public interface Transition<LABEL extends Label> {
+public interface Transition<L extends Label> {
 
 	/**
 	 * <p>
@@ -41,5 +41,5 @@ public interface Transition<LABEL extends Label> {
 	 * 
 	 * @return the <b>label</b> associated with the transition
 	 */
-	public Set<LABEL> getLabels();
+	public Set<L> getLabels();
 }

@@ -25,123 +25,133 @@ import edu.uci.ics.jung.graph.util.EdgeType;
  * </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		implements BA<LABEL, STATE, TRANSITION> {
+public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
+		implements BA<L, S, T> {
 
 	/**
 	 * contains the initial states of the Buchi automaton
 	 */
-	protected Set<STATE> initialStates;
+	protected Set<S> initialStates;
 
 	/**
 	 * contains the accepting states of the Buchi automaton
 	 */
-	protected Set<STATE> acceptStates;
+	protected Set<S> acceptStates;
 
 	/**
 	 * contains the set of the alphabet of the Buchi automaton
 	 */
-	protected Set<LABEL> alphabet;
+	protected Set<L> alphabet;
 
 	/**
 	 * contains the graph on which the Buchi automaton is based
 	 */
-	protected DirectedSparseGraph<STATE, TRANSITION> automataGraph;
+	protected DirectedSparseGraph<S, T> automataGraph;
 
 	/**
 	 * creates a new empty Buchi automaton
 	 */
 	protected BAImpl() {
 
-		this.alphabet = new HashSet<LABEL>();
-		this.acceptStates = new HashSet<STATE>();
-		this.initialStates = new HashSet<STATE>();
-		this.automataGraph = new DirectedSparseGraph<STATE, TRANSITION>();
+		this.alphabet = new HashSet<L>();
+		this.acceptStates = new HashSet<S>();
+		this.initialStates = new HashSet<S>();
+		this.automataGraph = new DirectedSparseGraph<S, T>();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<STATE> getInitialStates() {
+	@Override
+	public Set<S> getInitialStates() {
 		return Collections.unmodifiableSet(this.initialStates);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<STATE> getStates() {
-		return Collections.unmodifiableSet(new HashSet<STATE>(
+	@Override
+	public Set<S> getStates() {
+		return Collections.unmodifiableSet(new HashSet<S>(
 				this.automataGraph.getVertices()));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<STATE> getAcceptStates() {
+	@Override
+	public Set<S> getAcceptStates() {
 		return Collections.unmodifiableSet(this.acceptStates);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<LABEL> getAlphabet() {
+	@Override
+	public Set<L> getAlphabet() {
 		return Collections.unmodifiableSet(alphabet);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<TRANSITION> getOutTransitions(STATE state) {
-		return Collections.unmodifiableSet(new HashSet<TRANSITION>(
+	@Override
+	public Set<T> getOutTransitions(S state) {
+		return Collections.unmodifiableSet(new HashSet<T>(
 				this.automataGraph.getOutEdges(state)));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<TRANSITION> getInTransitions(STATE state) {
-		return Collections.unmodifiableSet(new HashSet<TRANSITION>(
+	@Override
+	public Set<T> getInTransitions(S state) {
+		return Collections.unmodifiableSet(new HashSet<T>(
 				this.automataGraph.getInEdges(state)));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public STATE getTransitionDestination(TRANSITION transition) {
+	@Override
+	public S getTransitionDestination(T transition) {
 		return this.automataGraph.getDest(transition);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public STATE getTransitionSource(TRANSITION transition) {
+	@Override
+	public S getTransitionSource(T transition) {
 		return this.automataGraph.getSource(transition);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<TRANSITION> getTransitions() {
-		return Collections.unmodifiableSet(new HashSet<TRANSITION>(
+	@Override
+	public Set<T> getTransitions() {
+		return Collections.unmodifiableSet(new HashSet<T>(
 				this.automataGraph.getEdges()));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addInitialState(STATE s) {
+	@Override
+	public void addInitialState(S s) {
 		if( s == null)
 			throw new NullPointerException("The state s to be added cannot be null");
 		this.initialStates.add(s);
@@ -151,7 +161,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addAcceptState(STATE s) {
+	@Override
+	public void addAcceptState(S s) {
 		if(s == null)
 			throw new NullPointerException("The state s to be added cannot be null");
 		this.acceptStates.add(s);
@@ -161,7 +172,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addState(STATE state) {
+	@Override
+	public void addState(S state) {
 		if( state == null)
 			throw new NullPointerException("The state to be added cannot be null");
 		this.automataGraph.addVertex(state);
@@ -170,7 +182,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addCharacter(LABEL character) {
+	@Override
+	public void addCharacter(L character) {
 		if(character == null)
 			throw new NullPointerException("The set of the proposition cannot be null");
 		this.alphabet.add(character);
@@ -179,8 +192,9 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addTransition(STATE source, STATE destination,
-			TRANSITION transition) {
+	@Override
+	public void addTransition(S source, S destination,
+			T transition) {
 
 		if( source == null)
 			throw new NullPointerException("The source state cannot be null");
@@ -204,7 +218,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeState(STATE state) {
+	@Override
+	public void removeState(S state) {
 		if(state == null)
 			throw new NullPointerException("The state to removed is null");
 		if(!this.automataGraph.containsVertex(state))
@@ -222,7 +237,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeTransition(TRANSITION transition) {
+	@Override
+	public void removeTransition(T transition) {
 		if(transition == null)
 			throw new NullPointerException("The transition to be removed cannot be null");
 		if( this.automataGraph.getEdges().contains(transition))
@@ -234,7 +250,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeAcceptingState(STATE state) {
+	@Override
+	public void removeAcceptingState(S state) {
 		if(state == null)
 			throw new NullPointerException("The state cannot be null");
 		if(!this.acceptStates.contains(state))
@@ -248,7 +265,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeInitialState(STATE state) {
+	@Override
+	public void removeInitialState(S state) {
 		if(state == null)
 			throw new NullPointerException("The state cannot be null");
 		if(!this.initialStates.contains(state))
@@ -261,7 +279,8 @@ public class BAImpl<LABEL extends Label, STATE extends State, TRANSITION extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public DirectedSparseGraph<STATE, TRANSITION> getGraph() {
+	@Override
+	public DirectedSparseGraph<S, T> getGraph() {
 		return this.automataGraph;
 	}
 

@@ -33,6 +33,7 @@ public class StateFactoryImpl implements StateFactory<StateImpl> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public StateImpl create(String name) {
 
 		if (name == null) {
@@ -47,10 +48,15 @@ public class StateFactoryImpl implements StateFactory<StateImpl> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public StateImpl create(String name, int id) {
 		if (id < 0) {
 			throw new IllegalArgumentException(
 					"The id must be grater than or equal to 0");
+		}
+		if (name == null) {
+			throw new NullPointerException(
+					"The name of the state cannot be null");
 		}
 		StateImpl s = new StateImpl(name, id);
 		StateFactoryImpl.stateCount = Math.max(StateFactoryImpl.stateCount++,

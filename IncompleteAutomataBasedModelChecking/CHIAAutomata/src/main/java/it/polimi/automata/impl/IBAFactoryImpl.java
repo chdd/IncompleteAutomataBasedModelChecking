@@ -17,27 +17,27 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  *      </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Incomplete Buchi Automaton. The
  *            type of the states of the Incomplete automaton must implement the
  *            interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Incomplete Buchi Automaton.
  *            The type of the transitions of the automaton must implement the
  *            interface {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IBAFactoryImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION extends TransitionImpl<LABEL>>
-		implements IBAFactory<LABEL, STATE, TRANSITION> {
+public class IBAFactoryImpl<L extends Label, S extends StateImpl, T extends TransitionImpl<L>>
+		implements IBAFactory<L, S, T> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBA<LABEL, STATE, TRANSITION> create() {
-		return new IBAImpl<LABEL, STATE, TRANSITION>();
+	public IBA<L, S, T> create() {
+		return new IBAImpl<L, S, T>();
 	}
 }

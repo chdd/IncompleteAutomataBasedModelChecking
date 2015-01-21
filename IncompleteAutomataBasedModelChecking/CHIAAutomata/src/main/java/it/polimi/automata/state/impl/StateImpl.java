@@ -15,12 +15,12 @@ public class StateImpl implements State {
 	/**
 	 * contains the id of the state
 	 */
-	protected final int id;
+	private final int id;
 
 	/**
 	 * contains the name of the state
 	 */
-	protected String name;
+	private String name;
 
 	/**
 	 * {@inheritDoc}
@@ -84,6 +84,7 @@ public class StateImpl implements State {
 	 * @throws NullPointerException
 	 *             if the name of the {@link StateImpl} is null
 	 */
+	@Override
 	public void setName(String name) {
 		if(name == null)
 			throw new NullPointerException("It is not possible to create a state with a null name");

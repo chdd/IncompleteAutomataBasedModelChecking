@@ -15,23 +15,23 @@ import org.apache.commons.collections15.Transformer;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Incomplete Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <STATE>
+ * @param <S>
  *            is the type of the State of the Incomplete Buchi Automaton. It must extend
  *            the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class IBAStateTransparentToStringTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> implements Transformer<STATE, String> {
+public class IBAStateTransparentToStringTransformer<L extends Label, S extends State, T extends Transition<L>> implements Transformer<S, String> {
 
 	/**
 	 * is the Incomplete Buchi Automaton to be transformed
 	 */
-	private IBA<LABEL, STATE, TRANSITION> iba;
+	private IBA<L, S, T> iba;
 	
 	/**
 	 * creates the Transformer
@@ -41,7 +41,7 @@ public class IBAStateTransparentToStringTransformer<LABEL extends Label, STATE e
 	 * @throws NullPointerException
 	 *             if the Incomplete Buchi Automaton is null
 	 */
-	public IBAStateTransparentToStringTransformer(IBA<LABEL, STATE, TRANSITION>  ba){
+	public IBAStateTransparentToStringTransformer(IBA<L, S, T>  ba){
 		if(ba==null){
 			throw new NullPointerException("The ba cannot be null");
 		}
@@ -56,7 +56,7 @@ public class IBAStateTransparentToStringTransformer<LABEL extends Label, STATE e
 	 *             if the state to be transformed is null
 	 */
 	@Override
-	public String transform(STATE input) {
+	public String transform(S input) {
 		return Boolean.toString(iba.isTransparent(input));
 	}
 }

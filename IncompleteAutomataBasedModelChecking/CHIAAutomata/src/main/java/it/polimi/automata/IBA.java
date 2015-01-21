@@ -23,20 +23,20 @@ import java.util.Set;
  *      </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		extends BA<LABEL, STATE, TRANSITION> {
+public interface IBA<L extends Label, S extends State, T extends Transition<L>>
+		extends BA<L, S, T> {
 
 	/**
 	 * check if the state is transparent
@@ -48,7 +48,7 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	 *             if the state s is null or if the state is not contained into
 	 *             the set of the states of the automaton
 	 */
-	public boolean isTransparent(STATE s);
+	public boolean isTransparent(S s);
 
 	/**
 	 * returns the set of the transparent states of the Incomplete Buchi
@@ -58,7 +58,7 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	 *         Automaton (if no transparent states are present an empty set is
 	 *         returned)
 	 */
-	public Set<STATE> getTransparentStates();
+	public Set<S> getTransparentStates();
 
 	/**
 	 * adds the transparent state s to the states of the {@link IBA} and to the
@@ -72,7 +72,7 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	 * @throws NullPointerException
 	 *             if the state s is null
 	 */
-	public void addTransparentState(STATE s);
+	public void addTransparentState(S s);
 
 	/**
 	 * returns a new Incomplete Buchi automaton where the transparent state is
@@ -116,15 +116,15 @@ public interface IBA<LABEL extends Label, STATE extends State, TRANSITION extend
 	 *             final state of the ibaToInject
 	 * 
 	 */
-	public IBA<LABEL, STATE, TRANSITION> replace(STATE transparentState,
-			IBA<LABEL, STATE, TRANSITION> ibaToInject,
-			Map<STATE, Set<Entry<TRANSITION, STATE>>> inComing,
-			Map<STATE, Set<Entry<TRANSITION, STATE>>> outComing);
+	public IBA<L, S, T> replace(S transparentState,
+			IBA<L, S, T> ibaToInject,
+			Map<S, Set<Entry<T, S>>> inComing,
+			Map<S, Set<Entry<T, S>>> outComing);
 
 	/**
 	 * creates a copy of the Incomplete Buchi Automaton
 	 * 
 	 * @return a copy of the Incomplete Buchi Automaton
 	 */
-	public IBA<LABEL, STATE, TRANSITION> clone();
+	public IBA<L, S, T> clone();
 }

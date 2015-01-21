@@ -26,30 +26,30 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * @author claudiomenghi
  *
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <STATE>
+ * @param <S>
  *            is the type of the State of the Buchi Automaton. It must extend
  *            the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class IBAWriter<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-extends GraphMLWriter<STATE, TRANSITION> {
+public class IBAWriter<L extends Label, S extends State, T extends Transition<L>>
+extends GraphMLWriter<S, T> {
 
 	/**
 	 * contains the Incomplete Buchi Automaton to be written
 	 */
-	protected IBA<LABEL, STATE, TRANSITION> iba;
+	protected IBA<L, S, T> iba;
 
 
 	/**
 	 * creates a new Writer for the specified automaton
 	 */
-	public IBAWriter(IBA<LABEL, STATE, TRANSITION> ba) {
+	public IBAWriter(IBA<L, S, T> ba) {
 		super();
 		this.iba = ba;
 		this.setTransformers();
@@ -59,41 +59,41 @@ extends GraphMLWriter<STATE, TRANSITION> {
 	 * sets the Transformers of the automaton
 	 */
 	protected void setTransformers() {
-		this.setVertexIDs(new Transformer<STATE, String>() {
+		this.setVertexIDs(new Transformer<S, String>() {
 			@Override
-			public String transform(STATE input) {
+			public String transform(S input) {
 				return Integer.toString(input.getId());
 			}
 		});
-		this.addVertexData(Constants.nameTag, Constants.nameTag, Constants.defaultName,
-				new Transformer<STATE, String>() {
+		this.addVertexData(Constants.NAMETAG, Constants.NAMETAG, Constants.DEFAULTNAME,
+				new Transformer<S, String>() {
 					@Override
-					public String transform(STATE input) {
+					public String transform(S input) {
 						return input.getName();
 					}
 				});
 		this.addVertexData(
-				Constants.initialTag,
-				Constants.initialTag,
-				Constants.falseValue,
-				new BAStateInitialToStringTransformer<LABEL, STATE, TRANSITION>(
+				Constants.INITIALTAG,
+				Constants.INITIALTAG,
+				Constants.FALSEVALUE,
+				new BAStateInitialToStringTransformer<L, S, T>(
 						iba));
 		this.addVertexData(
-				Constants.acceptingTag,
-				Constants.acceptingTag,
-				Constants.falseValue,
-				new BAStateAcceptingToStringTransformer<LABEL, STATE, TRANSITION>(
+				Constants.ACCEPTINGTAG,
+				Constants.ACCEPTINGTAG,
+				Constants.FALSEVALUE,
+				new BAStateAcceptingToStringTransformer<L, S, T>(
 						iba));
-		this.setEdgeIDs(new Transformer<TRANSITION, String>() {
+		this.setEdgeIDs(new Transformer<T, String>() {
 			@Override
-			public String transform(TRANSITION input) {
+			public String transform(T input) {
 				return Integer.toString(input.getId());
 			}
 		});
-		this.addVertexData(Constants.transparentTag, Constants.transparentTag, Constants.falseValue, 
-				new IBAStateTransparentToStringTransformer<LABEL, STATE, TRANSITION>(this.iba));
+		this.addVertexData(Constants.TRANSPARENTTAG, Constants.TRANSPARENTTAG, Constants.FALSEVALUE, 
+				new IBAStateTransparentToStringTransformer<L, S, T>(this.iba));
 		
-		this.addEdgeData(Constants.labelsTag, Constants.labelsTag, Constants.labelsDefault, new BATransitionToStringTransformer<LABEL, TRANSITION>());
+		this.addEdgeData(Constants.LABELSTAG, Constants.LABELSTAG, Constants.LABELSDEFAULT, new BATransitionToStringTransformer<L, T>());
 	}
 	
 	/**

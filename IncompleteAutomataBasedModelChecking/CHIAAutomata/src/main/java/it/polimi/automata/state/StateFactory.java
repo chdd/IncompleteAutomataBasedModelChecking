@@ -8,11 +8,11 @@ import org.apache.commons.collections15.Factory;
  * 
  * @author claudiomenghi
  * 
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the automaton which must extend the
  *            interface {@link State}
  */
-public interface StateFactory<STATE extends State> extends Factory<STATE> {
+public interface StateFactory<S extends State> extends Factory<S> {
 
 	/**
 	 * crates a new state with an empty name the id is auto-assigned to the
@@ -21,7 +21,7 @@ public interface StateFactory<STATE extends State> extends Factory<STATE> {
 	 * @return a new state with an empty name
 	 */
 	@Override
-	public STATE create();
+	public S create();
 
 	/**
 	 * creates a new state with the specified name the id is auto-assigned to
@@ -33,7 +33,7 @@ public interface StateFactory<STATE extends State> extends Factory<STATE> {
 	 * @throws NullPointerException
 	 *             if the name of the state is null
 	 */
-	public STATE create(String name);
+	public S create(String name);
 
 	/**
 	 * creates a new state with the specified name and id
@@ -49,5 +49,5 @@ public interface StateFactory<STATE extends State> extends Factory<STATE> {
 	 *             if the name of the state is null
 	 * 
 	 */
-	public STATE create(String name, int id);
+	public S create(String name, int id);
 }

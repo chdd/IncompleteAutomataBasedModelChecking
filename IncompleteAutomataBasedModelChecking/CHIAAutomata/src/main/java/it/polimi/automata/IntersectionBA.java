@@ -19,28 +19,28 @@ import java.util.Set;
  * </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Intersection Buchi Automaton. The
  *            type of the states of the automaton must implement the interface
  *            {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Intersection Buchi Automaton.
  *            The typer of the transitions of the automaton must implement the
  *            interface {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IntersectionBA<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		extends BA<LABEL, STATE, TRANSITION> {
+public interface IntersectionBA<L extends Label, S extends State, T extends Transition<L>>
+		extends BA<L, S, T> {
 
 	/**
 	 * returns the set of the mixed states of the Intersection Buchi automaton
 	 * 
 	 * @return the set of the mixed states of the Intersection Buchi automaton
 	 */
-	public Set<STATE> getMixedStates();
+	public Set<S> getMixedStates();
 
 	/**
 	 * adds the mixed state s to the states of the {@link IBA} and to the set of
@@ -54,12 +54,12 @@ public interface IntersectionBA<LABEL extends Label, STATE extends State, TRANSI
 	 * @throws NullPointerException
 	 *             if the state s is null
 	 */
-	public void addMixedState(STATE s);
+	public void addMixedState(S s);
 
 	/**
 	 * creates a copy of the Intersection Buchi Automaton
 	 * 
 	 * @return a copy of the Intersection Buchi Automaton
 	 */
-	public IntersectionBA<LABEL, STATE, TRANSITION> clone();
+	public IntersectionBA<L, S, T> clone();
 }

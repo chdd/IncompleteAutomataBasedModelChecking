@@ -24,42 +24,39 @@ import edu.uci.ics.jung.io.graphml.GraphMLReader2;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <LABELFACTORY>
+ * @param <F>
  *            is the factory which allows to create the labels of the
  *            transitions. It must implement the interface {@link LabelFactory}
- * @param <STATE>
+ * @param <S>
  *            is the type of the State of the Buchi Automaton. It must extend
  *            the interface {@link State}
- * @param <STATEFACTORY>
+ * @param <G>
  *            is the factory which is used to create the states of the Buchi
  *            Automaton. it must implement the interface {@link StateFactory}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
- * @param <TRANSITIONFACTORY>
+ * @param <H>
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
- * @param <AUTOMATON>
- *            is the type of the automaton. It must extend the interface
- *            {@link BA}
- * @param <AUTOMATONFACTORY>
+ * @param <I>
  *            is the factory which is able to create a new empty Buchi
  *            Automaton. It must implement the interface {@link BAFactory}
  */
-public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LABEL>, STATE extends State, STATEFACTORY extends StateFactory<STATE>, TRANSITION extends Transition<LABEL>, TRANSITIONFACTORY extends TransitionFactory<LABEL, TRANSITION>, AUTOMATONFACTORY extends BAFactory<LABEL, STATE, TRANSITION>> {
+public class BAReader<L extends Label, F extends LabelFactory<L>, S extends State, G extends StateFactory<S>, T extends Transition<L>, H extends TransitionFactory<L, T>, I extends BAFactory<L, S, T>> {
 
 	/**
 	 * is the reader which is used to parse the Buchi Automaton
 	 */
-	protected GraphMLReader2<DirectedSparseGraph<STATE, TRANSITION>, STATE, TRANSITION> graphReader = null;
+	protected GraphMLReader2<DirectedSparseGraph<S, T>, S, T> graphReader = null;
 	/**
 	 * contains the Buchi Automaton loaded from the file
 	 */
-	protected BA<LABEL, STATE, TRANSITION> ba;
+	protected BA<L, S, T> ba;
 
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
@@ -84,9 +81,9 @@ public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LAB
 	 *             if the labelFactory, transitionFactory, stateFactory,
 	 *             automatonFactory or the fileReader is null
 	 */
-	public BAReader(LABELFACTORY labelFactory,
-			TRANSITIONFACTORY transitionFactory, STATEFACTORY stateFactory,
-			AUTOMATONFACTORY automatonFactory, BufferedReader fileReader) {
+	public BAReader(F labelFactory,
+			H transitionFactory, G stateFactory,
+			I automatonFactory, BufferedReader fileReader) {
 		if (labelFactory == null) {
 			throw new NullPointerException(
 					"The labeling factory cannot be null");
@@ -107,11 +104,11 @@ public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LAB
 		}
 		
 		this.ba = automatonFactory.create();
-		this.graphReader = new GraphMLReader2<DirectedSparseGraph<STATE, TRANSITION>, STATE, TRANSITION>(
-				fileReader, new MetadataToBATransformer<LABEL, STATE, TRANSITION>(ba),
-				new MetadataToBAStateTransformer<LABEL, STATE, TRANSITION>(stateFactory, ba),
-				new MetadataToTransitionTransformer<LABEL, LABELFACTORY, TRANSITION, TRANSITIONFACTORY>(transitionFactory, labelFactory),
-				new HyperMetadataToTransitionTransformer<LABEL, TRANSITION, TRANSITIONFACTORY>(transitionFactory));
+		this.graphReader = new GraphMLReader2<DirectedSparseGraph<S, T>, S, T>(
+				fileReader, new MetadataToBATransformer<L, S, T>(ba),
+				new MetadataToBAStateTransformer<L, S, T>(stateFactory, ba),
+				new MetadataToTransitionTransformer<L, F, T, H>(transitionFactory, labelFactory),
+				new HyperMetadataToTransitionTransformer<L, T, H>(transitionFactory));
 	}
 
 	/**
@@ -122,7 +119,7 @@ public class BAReader<LABEL extends Label, LABELFACTORY extends LabelFactory<LAB
 	 *             is generated if a problem occurs in the loading of the
 	 *             Buchi Automaton
 	 */
-	public BA<LABEL, STATE, TRANSITION> read() throws GraphIOException {
+	public BA<L, S, T> read() throws GraphIOException {
 		this.graphReader.readGraph();
 		return this.ba;
 	}	

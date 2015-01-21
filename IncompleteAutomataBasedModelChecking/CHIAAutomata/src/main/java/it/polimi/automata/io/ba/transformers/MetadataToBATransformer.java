@@ -2,9 +2,7 @@ package it.polimi.automata.io.ba.transformers;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 
 import org.apache.commons.collections15.Transformer;
@@ -19,30 +17,24 @@ import edu.uci.ics.jung.io.graphml.GraphMetadata;
  * 
  * @author claudiomenghi
  *
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <LABELFACTORY>
- *            is the factory which allows to create the labels of the
- *            transitions. It must implement the interface {@link LabelFactory}
- * @param <STATE>
+ * @param <S>
  *            is the type of the State of the Buchi Automaton. It must extend
  *            the interface {@link State}
- * @param <STATEFACTORY>
- *            is the factory which is used to create the states of the Buchi
- *            Automaton. it must implement the interface {@link StateFactory}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class MetadataToBATransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> implements
-		Transformer<GraphMetadata, DirectedSparseGraph<STATE, TRANSITION>> {
+public class MetadataToBATransformer<L extends Label, S extends State, T extends Transition<L>> implements
+		Transformer<GraphMetadata, DirectedSparseGraph<S, T>> {
 	/**
 	 * contains the Buchi automaton to be returned after the Transforming
 	 * procedure
 	 */
-	private BA<LABEL, STATE, TRANSITION> ba;
+	private BA<L, S, T> ba;
 
 	/**
 	 * creates the new transformer that converts the metadata into the corresponding Buchi automaton
@@ -52,7 +44,7 @@ public class MetadataToBATransformer<LABEL extends Label, STATE extends State, T
 	 * @throws NullPointerException
 	 *             if the Buchi automaton to be updated is null
 	 */
-	public MetadataToBATransformer(BA<LABEL, STATE, TRANSITION> ba) {
+	public MetadataToBATransformer(BA<L, S, T> ba) {
 		if (ba == null) {
 			throw new NullPointerException("The be cannot be null");
 		}
@@ -70,7 +62,7 @@ public class MetadataToBATransformer<LABEL extends Label, STATE extends State, T
 	 *             if the metadata are null
 	 */
 	@Override
-	public DirectedSparseGraph<STATE, TRANSITION> transform(
+	public DirectedSparseGraph<S, T> transform(
 			GraphMetadata input) {
 		if (input == null) {
 			throw new NullPointerException("The input data cannot be null");

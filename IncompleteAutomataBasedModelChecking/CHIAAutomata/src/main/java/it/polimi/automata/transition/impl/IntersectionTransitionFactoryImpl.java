@@ -13,12 +13,12 @@ import it.polimi.automata.transition.TransitionFactory;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionTransitionFactoryImpl<LABEL extends Label> extends
-		ClaimTransitionFactoryImpl<LABEL> {
+public class IntersectionTransitionFactoryImpl<L extends Label> extends
+		ClaimTransitionFactoryImpl<L> {
 
 }

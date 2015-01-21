@@ -20,19 +20,19 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  * </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
+public interface BA<L extends Label, S extends State, T extends Transition<L>>
 		extends Cloneable {
 
 	/**
@@ -40,28 +40,28 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * 
 	 * @return the set of initial states of the Buchi automaton
 	 */
-	public Set<STATE> getInitialStates();
+	public Set<S> getInitialStates();
 
 	/**
 	 * returns the set of the states of the Buchi automaton
 	 * 
 	 * @return the set of the states of the Buchi automaton
 	 */
-	public Set<STATE> getStates();
+	public Set<S> getStates();
 
 	/**
 	 * returns the set of accepting states of the Buchi automaton
 	 * 
 	 * @return set of the accepting states of the Buchi automaton
 	 */
-	public Set<STATE> getAcceptStates();
+	public Set<S> getAcceptStates();
 
 	/**
 	 * returns the alphabet of the Buchi automaton
 	 * 
 	 * @return the alphabet of the Buchi automaton
 	 */
-	public Set<LABEL> getAlphabet();
+	public Set<L> getAlphabet();
 
 	/**
 	 * return the set of transitions that exits the state
@@ -77,7 +77,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the state is not contained into the set of state of the
 	 *             Buchi automaton
 	 */
-	public Set<TRANSITION> getOutTransitions(STATE state);
+	public Set<T> getOutTransitions(S state);
 
 	/**
 	 * return the set of transitions that enters the state
@@ -93,7 +93,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the state is not contained into the set of state of the
 	 *             Buchi automaton
 	 */
-	public Set<TRANSITION> getInTransitions(STATE state);
+	public Set<T> getInTransitions(S state);
 
 	/**
 	 * returns the state that is the destination of the transition
@@ -108,7 +108,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the transition is not contained in the set of transitions
 	 *             of the automaton
 	 */
-	public STATE getTransitionDestination(TRANSITION transition);
+	public S getTransitionDestination(T transition);
 
 	/**
 	 * returns the state that is the source of the transition
@@ -123,14 +123,14 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the transition is not contained in the set of transitions
 	 *             of the automaton
 	 */
-	public STATE getTransitionSource(TRANSITION transition);
+	public S getTransitionSource(T transition);
 
 	/**
 	 * returns the set of the transitions of the Buchi automaton
 	 * 
 	 * @return the set of the transitions of the Buchi automaton
 	 */
-	public Set<TRANSITION> getTransitions();
+	public Set<T> getTransitions();
 
 	/**
 	 * adds the initial state to the Buchi automaton. If the state is not
@@ -142,7 +142,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @throws NullPointerException
 	 *             if the state is null
 	 */
-	public void addInitialState(STATE state);
+	public void addInitialState(S state);
 
 	/**
 	 * adds the accepting state to the Buchi automaton. If the state is not
@@ -154,7 +154,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @throws NullPointerException
 	 *             if the state is null
 	 */
-	public void addAcceptState(STATE state);
+	public void addAcceptState(S state);
 
 	/**
 	 * adds the state to the set of the state of the Buchi automaton. If the
@@ -166,7 +166,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @throws NullPointerException
 	 *             if the state to be added is null
 	 */
-	public void addState(STATE state);
+	public void addState(S state);
 
 	/**
 	 * adds the character to the characters of the Buchi automaton. If a
@@ -178,7 +178,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @throws NullPointerException
 	 *             is generated if the character to be added is null
 	 */
-	public void addCharacter(LABEL character);
+	public void addCharacter(L character);
 
 	/**
 	 * add the transition t which connects the source and the destination state
@@ -204,8 +204,8 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             a transition that connect source to the destination is
 	 *             already present
 	 */
-	public void addTransition(STATE source, STATE destination,
-			TRANSITION transition);
+	public void addTransition(S source, S destination,
+			T transition);
 
 	/**
 	 * removes the specified state from the set of the states of the Buchi
@@ -224,7 +224,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * state != null
 	 * </pre>
 	 */
-	public void removeState(STATE state);
+	public void removeState(S state);
 
 	/**
 	 * removes the specified transitions from the set of transitions of the
@@ -239,7 +239,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the transition to be removed is not contained into the set
 	 *             of transitions of the automaton
 	 */
-	public void removeTransition(TRANSITION transition);
+	public void removeTransition(T transition);
 
 	/**
 	 * removes the specified state from the set of the accepting states of the
@@ -255,7 +255,7 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the state to be removed is not contained into the set of
 	 *             the accepting states of the Buchi automaton
 	 */
-	public void removeAcceptingState(STATE state);
+	public void removeAcceptingState(S state);
 
 	/**
 	 * removes the specified state from the set of the initial states of the
@@ -271,13 +271,13 @@ public interface BA<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the state to be removed is not contained into the set of
 	 *             the initial states of the Buchi automaton
 	 */
-	public void removeInitialState(STATE state);
+	public void removeInitialState(S state);
 
 	/**
 	 * returns the graph associated with the Buchi automaton
 	 * 
 	 * @return the graph associated with the Buchi automaton
 	 */
-	public DirectedSparseGraph<STATE, TRANSITION> getGraph();
+	public DirectedSparseGraph<S, T> getGraph();
 
 }

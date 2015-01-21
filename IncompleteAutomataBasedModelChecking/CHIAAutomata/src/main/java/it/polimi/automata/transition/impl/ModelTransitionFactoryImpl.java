@@ -16,13 +16,13 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *      interface
  * 
  * @author claudiomenghi
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class ModelTransitionFactoryImpl<LABEL extends Label> extends
-		ClaimTransitionFactoryImpl<LABEL> {
+public class ModelTransitionFactoryImpl<L extends Label> extends
+		ClaimTransitionFactoryImpl<L> {
 	/**
 	 * {@inheritDoc} <br>
 	 * also guarantees that no transition with a negated proposition is created
@@ -30,19 +30,20 @@ public class ModelTransitionFactoryImpl<LABEL extends Label> extends
 	 * @throws IllegalArgumentException
 	 *             if one of the proposition in the label is negated
 	 */
-	public Transition<LABEL> create(Set<LABEL> labels) {
+	@Override
+	public Transition<L> create(Set<L> labels) {
 		if( labels == null)
 			throw new NullPointerException("The labels to be added at the Transition cannot be null");
 		
-		for (LABEL label : labels) {
-			for (IGraphProposition p : label.getAtomicPropositions()) {
+		for (L label : labels) {
+			for (IGraphProposition p : label.getLabels()) {
 				if (p.isNegated()) {
 					throw new IllegalArgumentException(
 							"The propositions of the model cannot be negated");
 				}
 			}
 		}
-		Transition<LABEL> t = super.create(labels);
+		Transition<L> t = super.create(labels);
 
 		return t;
 	}
@@ -54,19 +55,20 @@ public class ModelTransitionFactoryImpl<LABEL extends Label> extends
 	 * @throws IllegalArgumentException
 	 *             if one of the proposition in the label is negated
 	 */
-	public Transition<LABEL> create(int id, Set<LABEL> labels) {
+	@Override
+	public Transition<L> create(int id, Set<L> labels) {
 		if( labels == null) 
 			throw new NullPointerException("The labels to be added at the Transition cannot be null");
 		
-		for (LABEL label : labels) {
-			for (IGraphProposition p : label.getAtomicPropositions()) {
+		for (L label : labels) {
+			for (IGraphProposition p : label.getLabels()) {
 				if (p.isNegated()) {
 					throw new IllegalArgumentException(
 							"The propositions of the model cannot be negated");
 				}
 			}
 		}
-		Transition<LABEL> t = super.create(id, labels);
+		Transition<L> t = super.create(id, labels);
 
 		return t;
 	}

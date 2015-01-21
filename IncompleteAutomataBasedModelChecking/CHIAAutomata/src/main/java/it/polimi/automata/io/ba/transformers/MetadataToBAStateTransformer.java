@@ -22,31 +22,31 @@ import edu.uci.ics.jung.io.graphml.NodeMetadata;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <STATE>
+ * @param <S>
  *            is the type of the State of the Buchi Automaton. It must extend
  *            the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  * @author claudiomenghi
  */
-public class MetadataToBAStateTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		implements Transformer<NodeMetadata, STATE> {
+public class MetadataToBAStateTransformer<L extends Label, S extends State, T extends Transition<L>>
+		implements Transformer<NodeMetadata, S> {
 
 	/**
 	 * contains the {@link Factory} which is used to create the states
 	 * {@link StateImpl}s
 	 */
-	protected StateFactory<STATE> stateFactory;
+	protected StateFactory<S> stateFactory;
 	
 	/**
 	 * contains the Buchi automaton to be updated by the transformer
 	 */
-	protected BA<LABEL, STATE, TRANSITION> a;
+	protected BA<L, S, T> a;
 
 	/**
 	 * creates a new BAMetadataStateTransformer
@@ -58,8 +58,8 @@ public class MetadataToBAStateTransformer<LABEL extends Label, STATE extends Sta
 	 * @throws NullPointerException
 	 *             if the Buchi automaton or the factory are null
 	 */
-	public MetadataToBAStateTransformer(StateFactory<STATE> stateFactory,
-			BA<LABEL, STATE, TRANSITION> a) {
+	public MetadataToBAStateTransformer(StateFactory<S> stateFactory,
+			BA<L, S, T> a) {
 		if (a == null) {
 			throw new NullPointerException("The Buchi automaton cannot be null");
 		}
@@ -80,18 +80,18 @@ public class MetadataToBAStateTransformer<LABEL extends Label, STATE extends Sta
 	 *             if the input is null
 	 */
 	@Override
-	public STATE transform(NodeMetadata input) {
+	public S transform(NodeMetadata input) {
 		if (input == null) {
 			throw new NullPointerException(
 					"The NodeMetadata to be converted into a State cannot be null");
 		}
 
-		STATE s = this.stateFactory.create(input.getProperty(Constants.nameTag),
+		S s = this.stateFactory.create(input.getProperty(Constants.NAMETAG),
 				Integer.parseInt(input.getId()));
-		if (Boolean.parseBoolean(input.getProperty(Constants.initialTag))) {
+		if (Boolean.parseBoolean(input.getProperty(Constants.INITIALTAG))) {
 			this.a.addInitialState(s);
 		}
-		if (Boolean.parseBoolean(input.getProperty(Constants.acceptingTag))) {
+		if (Boolean.parseBoolean(input.getProperty(Constants.ACCEPTINGTAG))) {
 			this.a.addAcceptState(s);
 		}
 

@@ -13,15 +13,15 @@ import org.apache.commons.collections15.Transformer;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class BATransitionToStringTransformer<LABEL extends Label, TRANSITION extends Transition<LABEL>> implements Transformer<TRANSITION, String>{
+public class BATransitionToStringTransformer<L extends Label, T extends Transition<L>> implements Transformer<T, String>{
 
 	/**
 	 * returns the string representation of the transition
@@ -31,7 +31,7 @@ public class BATransitionToStringTransformer<LABEL extends Label, TRANSITION ext
 	 *             if the transition to be transformed is null
 	 */
 	@Override
-	public String transform(TRANSITION input) {
+	public String transform(T input) {
 		if(input==null){
 			throw new NullPointerException("The transition to be converted cannot be null");
 		}

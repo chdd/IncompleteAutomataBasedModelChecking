@@ -30,39 +30,39 @@ import java.util.Set;
  *      </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION extends TransitionImpl<LABEL>>
-		extends BAImpl<LABEL, STATE, TRANSITION> implements
-		IBA<LABEL, STATE, TRANSITION> {
+public class IBAImpl<L extends Label, S extends StateImpl, T extends TransitionImpl<L>>
+		extends BAImpl<L, S, T> implements
+		IBA<L, S, T> {
 
 	/**
 	 * contains the set of the transparent states of the automaton
 	 */
-	private Set<STATE> transparentStates;
+	private Set<S> transparentStates;
 
 	/**
 	 * creates a new incomplete Buchi automaton
 	 */
 	protected IBAImpl() {
 		super();
-		this.transparentStates = new HashSet<STATE>();
+		this.transparentStates = new HashSet<S>();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isTransparent(STATE s) {
+	public boolean isTransparent(S s) {
 		if (s == null) {
 			throw new IllegalArgumentException(
 					"The state to be added cannot be null");
@@ -77,14 +77,15 @@ public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ex
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<STATE> getTransparentStates() {
+	@Override
+	public Set<S> getTransparentStates() {
 		return Collections.unmodifiableSet(this.transparentStates);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addTransparentState(STATE s) {
+	public void addTransparentState(S s) {
 		if (s == null) {
 			throw new IllegalArgumentException(
 					"The state to be added cannot be null");
@@ -119,7 +120,7 @@ public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ex
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IBAImpl<LABEL, STATE, TRANSITION> other = (IBAImpl<LABEL, STATE, TRANSITION>) obj;
+		IBAImpl<L, S, T> other = (IBAImpl<L, S, T>) obj;
 		if (transparentStates == null) {
 			if (other.transparentStates != null)
 				return false;
@@ -132,19 +133,19 @@ public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ex
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBAImpl<LABEL, STATE, TRANSITION> clone() {
-		IBAImpl<LABEL, STATE, TRANSITION> clone = new IBAImpl<LABEL, STATE, TRANSITION>();
-		clone.alphabet = new HashSet<LABEL>(this.getAlphabet());
-		clone.acceptStates = new HashSet<STATE>(this.getAcceptStates());
-		clone.initialStates = new HashSet<STATE>(this.getInitialStates());
-		for (TRANSITION t : this.automataGraph.getEdges()) {
+	public IBAImpl<L, S, T> clone() {
+		IBAImpl<L, S, T> clone = new IBAImpl<L, S, T>();
+		clone.alphabet = new HashSet<L>(this.getAlphabet());
+		clone.acceptStates = new HashSet<S>(this.getAcceptStates());
+		clone.initialStates = new HashSet<S>(this.getInitialStates());
+		for (T t : this.automataGraph.getEdges()) {
 			clone.addTransition(this.automataGraph.getSource(t),
 					this.automataGraph.getDest(t), t);
 		}
-		for (STATE s : this.getStates()) {
+		for (S s : this.getStates()) {
 			clone.addState(s);
 		}
-		clone.transparentStates = new HashSet<STATE>(
+		clone.transparentStates = new HashSet<S>(
 				this.getTransparentStates());
 
 		return clone;
@@ -154,10 +155,10 @@ public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ex
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBA<LABEL, STATE, TRANSITION> replace(STATE transparentState,
-			IBA<LABEL, STATE, TRANSITION> ibaToInject,
-			Map<STATE, Set<Entry<TRANSITION, STATE>>> inComing,
-			Map<STATE, Set<Entry<TRANSITION, STATE>>> outComing) {
+	public IBA<L, S, T> replace(S transparentState,
+			IBA<L, S, T> ibaToInject,
+			Map<S, Set<Entry<T, S>>> inComing,
+			Map<S, Set<Entry<T, S>>> outComing) {
 		if (transparentState == null) {
 			throw new NullPointerException("The state to be replaced is null");
 		}
@@ -174,23 +175,23 @@ public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ex
 			throw new IllegalArgumentException(
 					"The state t must be transparent");
 		}
-		for (STATE s : inComing.keySet()) {
+		for (S s : inComing.keySet()) {
 			if (!this.automataGraph.getPredecessors(transparentState).contains(
 					s)) {
 				throw new IllegalArgumentException(
 						"The source of an incoming transition to be injected was not connected to the transparent state");
 			}
 		}
-		for (Set<Entry<TRANSITION, STATE>> e : inComing.values()) {
-			for (Entry<TRANSITION, STATE> entry : e) {
+		for (Set<Entry<T, S>> e : inComing.values()) {
+			for (Entry<T, S> entry : e) {
 				if (!ibaToInject.getInitialStates().contains(entry.getValue())) {
 					throw new IllegalArgumentException(
 							"The state pointed by an incoming transition is not an initial state of the ibaToInject");
 				}
 			}
 		}
-		for (Set<Entry<TRANSITION, STATE>> e : outComing.values()) {
-			for (Entry<TRANSITION, STATE> entry : e) {
+		for (Set<Entry<T, S>> e : outComing.values()) {
+			for (Entry<T, S> entry : e) {
 				if (!this.automataGraph.getSuccessors(transparentState)
 						.contains(entry.getValue())) {
 					throw new IllegalArgumentException(
@@ -198,54 +199,54 @@ public class IBAImpl<LABEL extends Label, STATE extends StateImpl, TRANSITION ex
 				}
 			}
 		}
-		for (STATE s : outComing.keySet()) {
+		for (S s : outComing.keySet()) {
 			if (!ibaToInject.getAcceptStates().contains(s)) {
 				throw new IllegalArgumentException(
 						"The source of an out-coming transition is not a final state of the ibaToInject");
 			}
 		}
 
-		IBAImpl<LABEL, STATE, TRANSITION> newIba = (IBAImpl<LABEL, STATE, TRANSITION>) this
+		IBAImpl<L, S, T> newIba = (IBAImpl<L, S, T>) this
 				.clone();
 
-		for (STATE s : ibaToInject.getStates()) {
+		for (S s : ibaToInject.getStates()) {
 			newIba.addState(s);
 		}
-		for (STATE s : ibaToInject.getTransparentStates()) {
+		for (S s : ibaToInject.getTransparentStates()) {
 			newIba.addTransparentState(s);
 		}
 		// copy the transition into the refinement
-		for (TRANSITION t : ibaToInject.getTransitions()) {
+		for (T t : ibaToInject.getTransitions()) {
 			newIba.addTransition(ibaToInject.getTransitionSource(t),
 					ibaToInject.getTransitionDestination(t), t);
 		}
 		// if the transparent state is accepting
 		if (this.getAcceptStates().contains(transparentState)) {
 			// adding the accepting states of the IBA to inject to the accepting states of the refinement 
-			for (STATE s : ibaToInject.getAcceptStates()) {
+			for (S s : ibaToInject.getAcceptStates()) {
 				newIba.addAcceptState(s);
 			}
 		}
 		// if the transparent state is initial
 		if (this.getInitialStates().contains(transparentState)) {
 			// add the initial state of the IBA to inject to the initial states of the refinement
-			for (STATE s : ibaToInject.getInitialStates()) {
+			for (S s : ibaToInject.getInitialStates()) {
 				newIba.addInitialState(s);
 			}
 		}
 		// processing the incoming transitions
 		// for each entry
-		for(Entry<STATE, Set<Entry<TRANSITION, STATE>>> entry: inComing.entrySet()){
+		for(Entry<S, Set<Entry<T, S>>> entry: inComing.entrySet()){
 			// for each transition
-			for(Entry<TRANSITION, STATE> transitionEntry: entry.getValue()){
+			for(Entry<T, S> transitionEntry: entry.getValue()){
 				newIba.addTransition(entry.getKey(), transitionEntry.getValue(), transitionEntry.getKey());
 			}
 		}
 		
 		// processing the out-coming transitions
-		for(Entry<STATE, Set<Entry<TRANSITION, STATE>>> entry: outComing.entrySet()){
+		for(Entry<S, Set<Entry<T, S>>> entry: outComing.entrySet()){
 			// for each transition
-			for(Entry<TRANSITION, STATE> transitionEntry: entry.getValue()){
+			for(Entry<T, S> transitionEntry: entry.getValue()){
 				newIba.addTransition(entry.getKey(), transitionEntry.getValue(), transitionEntry.getKey());
 			}
 		}

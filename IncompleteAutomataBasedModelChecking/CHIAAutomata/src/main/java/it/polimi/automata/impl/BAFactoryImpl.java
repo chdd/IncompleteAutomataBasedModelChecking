@@ -16,30 +16,30 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  * </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
 public class BAFactoryImpl<
-	LABEL extends Label,
-	STATE extends StateImpl,
-	TRANSITION extends TransitionImpl<LABEL>>
+	L extends Label,
+	S extends StateImpl,
+	T extends TransitionImpl<L>>
 	implements
-	BAFactory<LABEL, STATE, TRANSITION>{
+	BAFactory<L, S, T>{
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BA<LABEL, STATE, TRANSITION> create() {
-		return new BAImpl<LABEL, STATE, TRANSITION>();
+	public BA<L, S, T> create() {
+		return new BAImpl<L, S, T>();
 	}
 }

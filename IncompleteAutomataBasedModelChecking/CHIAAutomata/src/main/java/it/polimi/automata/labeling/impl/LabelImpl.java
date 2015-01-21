@@ -23,29 +23,45 @@ public class LabelImpl implements Label {
 	 * contains the labels that label the transitions to be performed all the
 	 * conditions of the Label must be satisfied
 	 */
-	public Set<IGraphProposition> labels;
+	private Set<IGraphProposition> labels;
 
 	/**
 	 * creates a new label for the transition with the specified set of
 	 * propositions
 	 * 
-	 * @param propositions
+	 * @param labels
 	 *            is the set of propositions that label the transitions
 	 * @throws NullPointerException
 	 *             if the set of propositions is null
 	 */
-	protected LabelImpl(Set<IGraphProposition> propositions) {
-		if(propositions == null)
-			throw new NullPointerException("The set of propositions that label the transitions cannot be null");
-		
-		this.labels = Collections.unmodifiableSet(propositions);
+	protected LabelImpl(Set<IGraphProposition> labels) {
+		if (labels == null)
+			throw new NullPointerException(
+					"The set of propositions that label the transitions cannot be null");
+
+		this.labels = Collections.unmodifiableSet(labels);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<IGraphProposition> getAtomicPropositions() {
+	public Set<IGraphProposition> getLabels() {
 		return labels;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		String ret="";
+		for(IGraphProposition label: labels){
+			ret=ret+label.toString()+"^";
+		}
+		if(ret.endsWith("^")){
+			ret=ret.substring(0, ret.length()-1);
+		}
+		return ret;
 	}
 }

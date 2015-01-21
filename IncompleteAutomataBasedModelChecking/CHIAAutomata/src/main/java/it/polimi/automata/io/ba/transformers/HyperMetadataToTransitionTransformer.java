@@ -18,24 +18,24 @@ import edu.uci.ics.jung.io.graphml.HyperEdgeMetadata;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
- * @param <TRANSITIONFACTORY>
+ * @param <F>
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
  */
-public class HyperMetadataToTransitionTransformer<LABEL extends Label, TRANSITION extends Transition<LABEL>, TRANSITIONFACTORY extends TransitionFactory<LABEL, TRANSITION>>
-		implements Transformer<HyperEdgeMetadata, TRANSITION> {
+public class HyperMetadataToTransitionTransformer<L extends Label, T extends Transition<L>, F extends TransitionFactory<L, T>>
+		implements Transformer<HyperEdgeMetadata, T> {
 
 	/**
 	 * contains the {@link TransitionFactory}
 	 */
-	protected TRANSITIONFACTORY transitionFactory;
+	protected F transitionFactory;
 
 	/**
 	 * creates a new {@link HyperEdgeMetadata} {@link Transformer}
@@ -47,7 +47,7 @@ public class HyperMetadataToTransitionTransformer<LABEL extends Label, TRANSITIO
 	 *             if the transitionFactory is null
 	 */
 	public HyperMetadataToTransitionTransformer(
-			TRANSITIONFACTORY transitionFactory) {
+			F transitionFactory) {
 		if (transitionFactory == null) {
 			throw new NullPointerException(
 					"The transitionFactory cannot be null");
@@ -65,7 +65,7 @@ public class HyperMetadataToTransitionTransformer<LABEL extends Label, TRANSITIO
 	 *             if the {@link HyperEdgeMetadata} are null
 	 */
 	@Override
-	public TRANSITION transform(HyperEdgeMetadata input) {
+	public T transform(HyperEdgeMetadata input) {
 		if (input == null) {
 			throw new NullPointerException(
 					"The HyperEdgeMetadata cannot be null");

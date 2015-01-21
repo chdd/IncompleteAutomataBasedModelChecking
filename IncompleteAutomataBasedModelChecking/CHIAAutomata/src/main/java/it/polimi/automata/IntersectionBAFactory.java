@@ -10,23 +10,23 @@ import it.polimi.automata.transition.Transition;
  * </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Intersection Automaton. The type of the
  *            states of the Incomplete automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Intersection Automaton. The type of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IntersectionBAFactory<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>{
+public interface IntersectionBAFactory<L extends Label, S extends State, T extends Transition<L>>{
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public IntersectionBA<LABEL, STATE, TRANSITION> create();
+	public IntersectionBA<L, S, T> create();
 }
 

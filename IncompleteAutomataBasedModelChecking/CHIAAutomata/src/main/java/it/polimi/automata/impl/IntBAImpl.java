@@ -26,41 +26,41 @@ import java.util.Set;
  *      </p>
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Intersection Buchi Automaton. The
  *            type of the states of the automaton must implement the interface
  *            {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Intersection Buchi Automaton.
  *            The type of the transitions of the automaton must implement the
  *            interface {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntBAImpl<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		extends BAImpl<LABEL, STATE, TRANSITION> implements
-		IntersectionBA<LABEL, STATE, TRANSITION> {
+public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>>
+		extends BAImpl<L, S, T> implements
+		IntersectionBA<L, S, T> {
 
 	/**
 	 * contains the set of the mixed states
 	 */
-	private Set<STATE> mixedStates;
+	private Set<S> mixedStates;
 
 	/**
 	 * creates a new intersection automaton
 	 */
 	protected IntBAImpl() {
 		super();
-		this.mixedStates = new HashSet<STATE>();
+		this.mixedStates = new HashSet<S>();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addMixedState(STATE s) {
+	public void addMixedState(S s) {
 		if (s == null) {
 			throw new NullPointerException(
 					"The state to be added cannot be null");
@@ -73,7 +73,7 @@ public class IntBAImpl<LABEL extends Label, STATE extends State, TRANSITION exte
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<STATE> getMixedStates() {
+	public Set<S> getMixedStates() {
 		return Collections.unmodifiableSet(mixedStates);
 	}
 
@@ -91,10 +91,10 @@ public class IntBAImpl<LABEL extends Label, STATE extends State, TRANSITION exte
 	 * @return a copy of the intersection automaton
 	 */
 	@Override
-	public IntersectionBA<LABEL, STATE, TRANSITION> clone() {
-		IntersectionBA<LABEL, STATE, TRANSITION> retBA = new IntBAFactoryImpl<LABEL, STATE, TRANSITION>()
+	public IntersectionBA<L, S, T> clone() {
+		IntersectionBA<L, S, T> retBA = new IntBAFactoryImpl<L, S, T>()
 				.create();
-		for (STATE s : this.getStates()) {
+		for (S s : this.getStates()) {
 			retBA.addState(s);
 			if (this.getAcceptStates().contains(s)) {
 				retBA.addAcceptState(s);
@@ -106,7 +106,7 @@ public class IntBAImpl<LABEL extends Label, STATE extends State, TRANSITION exte
 				retBA.addMixedState(s);
 			}
 		}
-		for (TRANSITION t : this.getTransitions()) {
+		for (T t : this.getTransitions()) {
 			retBA.addTransition(this.getTransitionSource(t),
 					this.getTransitionDestination(t), t);
 		}
@@ -140,7 +140,7 @@ public class IntBAImpl<LABEL extends Label, STATE extends State, TRANSITION exte
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		IntBAImpl<LABEL, STATE, TRANSITION> other = (IntBAImpl<LABEL, STATE, TRANSITION>) obj;
+		IntBAImpl<L, S, T> other = (IntBAImpl<L, S, T>) obj;
 		if (mixedStates == null) {
 			if (other.mixedStates != null)
 				return false;

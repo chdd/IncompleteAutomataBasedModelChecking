@@ -15,24 +15,24 @@ import org.apache.commons.collections15.Transformer;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the Label which is applied to the transitions of
  *            the Buchi Automaton which must implement the interface
  *            {@link Label}
- * @param <STATE>
+ * @param <S>
  *            is the type of the State of the Buchi Automaton. It must extend
  *            the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-public class BAStateAcceptingToStringTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		implements Transformer<STATE, String> {
+public class BAStateAcceptingToStringTransformer<L extends Label, S extends State, T extends Transition<L>>
+		implements Transformer<S, String> {
 
 	/**
 	 * is the Buchi Automaton to be transformed
 	 */
-	private BA<LABEL, STATE, TRANSITION> ba;
+	private BA<L, S, T> ba;
 
 	/**
 	 * creates the Transformer
@@ -42,7 +42,7 @@ public class BAStateAcceptingToStringTransformer<LABEL extends Label, STATE exte
 	 * @throws NullPointerException
 	 *             if the Buchi Automaton is null
 	 */
-	public BAStateAcceptingToStringTransformer(BA<LABEL, STATE, TRANSITION> ba) {
+	public BAStateAcceptingToStringTransformer(BA<L, S, T> ba) {
 		if (ba == null) {
 			throw new NullPointerException("The ba cannot be null");
 		}
@@ -57,7 +57,7 @@ public class BAStateAcceptingToStringTransformer<LABEL extends Label, STATE exte
 	 *             if the state to be transformed is null
 	 */
 	@Override
-	public String transform(STATE state) {
+	public String transform(S state) {
 		if(state==null){
 			throw new NullPointerException("The state to be transformed cannot be null");
 		}

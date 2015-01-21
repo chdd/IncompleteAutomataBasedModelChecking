@@ -1,9 +1,10 @@
 package it.polimi.automata.labeling;
 
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.collections15.Factory;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * contains the factory that is used to create the Labels of the transitions of a Buchi
@@ -13,13 +14,13 @@ import org.apache.commons.collections15.Factory;
  * @param LABEL
  *            is the type of the label of the transition to be created
  */
-public interface LabelFactory<LABEL extends Label> extends Factory<LABEL> {
+public interface LabelFactory<L extends Label> extends Factory<L> {
 
 	/**
-	 * parses the label of the transition from a string
-	 * @param label the label of the transition represented as a String
+	 * parses the label of the transition
+	 * @param label the label of the transition, the set of atomic proposition to be true
 	 * @return the set of labels parsed from the string
 	 * @throws NullPointerException if the set of labels is null
 	 */
-	public LABEL create(Set<Entry<String, Boolean>> labels);
+	public L create(Set<IGraphProposition> labels);
 }

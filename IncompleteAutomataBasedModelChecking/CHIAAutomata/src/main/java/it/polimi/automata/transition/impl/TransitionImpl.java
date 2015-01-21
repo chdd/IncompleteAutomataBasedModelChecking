@@ -13,7 +13,7 @@ import java.util.Set;
  * @author claudiomenghi
  * @see {@link Transition}
  */
-public class TransitionImpl<LABEL extends Label> implements Transition<LABEL> {
+public class TransitionImpl<L extends Label> implements Transition<L> {
 
 	/**
 	 * contains the id of the transition
@@ -24,18 +24,20 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL> {
 	 * contains the labels of the transition the transition can be fired if one
 	 * of the label is satisfied
 	 */
-	private Set<LABEL> labels;
+	private Set<L> labels;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<LABEL> getLabels() {
+	@Override
+	public Set<L> getLabels() {
 		return Collections.unmodifiableSet(this.labels);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -43,7 +45,7 @@ public class TransitionImpl<LABEL extends Label> implements Transition<LABEL> {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected TransitionImpl(Set<LABEL> label, int id) {
+	protected TransitionImpl(Set<L> label, int id) {
 		if (id < 0)
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");
