@@ -62,7 +62,7 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	public boolean isTransparent(S s) {
 		if (s == null) {
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"The state to be added cannot be null");
 		}
 		if (!this.getGraph().containsVertex(s)) {
@@ -85,49 +85,14 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	public void addTransparentState(S s) {
 		if (s == null) {
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"The state to be added cannot be null");
 		}
 		this.transparentStates.add(s);
 		this.addState(s);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime
-				* result
-				+ ((transparentStates == null) ? 0 : transparentStates
-						.hashCode());
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		IBAImpl<L, S, T> other = (IBAImpl<L, S, T>) obj;
-		if (transparentStates == null) {
-			if (other.transparentStates != null)
-				return false;
-		} else if (!transparentStates.equals(other.transparentStates))
-			return false;
-		return true;
-	}
-
-	/**
+		/**
 	 * {@inheritDoc}
 	 */
 	@Override

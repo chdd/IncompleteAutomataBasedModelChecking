@@ -78,14 +78,6 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return super.toString() + "mixedStates: " + this.mixedStates + "\n";
-	}
-
-	/**
 	 * returns a copy of the intersection automaton
 	 * 
 	 * @return a copy of the intersection automaton
@@ -94,6 +86,10 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 	public IntersectionBA<L, S, T> clone() {
 		IntersectionBA<L, S, T> retBA = new IntBAFactoryImpl<L, S, T>()
 				.create();
+		for(L l: this.getAlphabet()){
+			retBA.addCharacter(l);
+		}
+		
 		for (S s : this.getStates()) {
 			retBA.addState(s);
 			if (this.getAcceptStates().contains(s)) {
@@ -111,41 +107,6 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 					this.getTransitionDestination(t), t);
 		}
 		
-		
-
 		return retBA;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((mixedStates == null) ? 0 : mixedStates.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		@SuppressWarnings("unchecked")
-		IntBAImpl<L, S, T> other = (IntBAImpl<L, S, T>) obj;
-		if (mixedStates == null) {
-			if (other.mixedStates != null)
-				return false;
-		} else if (!mixedStates.equals(other.mixedStates))
-			return false;
-		return true;
 	}
 }

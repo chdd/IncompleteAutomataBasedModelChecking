@@ -44,9 +44,11 @@ public interface IBA<L extends Label, S extends State, T extends Transition<L>>
 	 * @param s
 	 *            is the state to be checked if transparent
 	 * @return true if the state s is transparent, false otherwise
+	 * @throws NullPointerException
+	 *             if the state s is null
 	 * @throws IllegalArgumentException
-	 *             if the state s is null or if the state is not contained into
-	 *             the set of the states of the automaton
+	 *             if the state is not contained into the set of the states of
+	 *             the automaton
 	 */
 	public boolean isTransparent(S s);
 
@@ -109,15 +111,14 @@ public interface IBA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the state pointed by an incoming transition is not an
 	 *             initial state of the ibaToInject
 	 * @throws IllegalArgumentException
-	 *             if the destination of an out-coming transition was not connected to
-	 *             the transparent state
+	 *             if the destination of an out-coming transition was not
+	 *             connected to the transparent state
 	 * @throws IllegalArgumentException
-	 *             if the source of an out-coming transition is not a
-	 *             final state of the ibaToInject
+	 *             if the source of an out-coming transition is not a final
+	 *             state of the ibaToInject
 	 * 
 	 */
-	public IBA<L, S, T> replace(S transparentState,
-			IBA<L, S, T> ibaToInject,
+	public IBA<L, S, T> replace(S transparentState, IBA<L, S, T> ibaToInject,
 			Map<S, Set<Entry<T, S>>> inComing,
 			Map<S, Set<Entry<T, S>>> outComing);
 

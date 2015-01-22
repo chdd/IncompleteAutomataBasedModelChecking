@@ -204,9 +204,9 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 			throw new NullPointerException("The transition cannot be null");
 		if(!this.alphabet.containsAll(transition.getLabels()))
 			throw new IllegalArgumentException("The label of the transition is not contained into the alphabet of the automaton");
-		if(!this.automataGraph.getVertices().contains(source))
+		if(!this.getStates().contains(source))
 			throw new IllegalArgumentException("The source state is not contained into the set of the states of the automaton");
-		if(!this.automataGraph.getVertices().contains(destination))
+		if(!this.getStates().contains(destination))
 			throw new IllegalArgumentException("The destination state is not contained into the set of the states of the automaton");
 		if(this.automataGraph.getSuccessors(source).contains(destination))
 			throw new IllegalArgumentException("A transition that connect the source and the destination is already present");
@@ -241,7 +241,7 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	public void removeTransition(T transition) {
 		if(transition == null)
 			throw new NullPointerException("The transition to be removed cannot be null");
-		if( this.automataGraph.getEdges().contains(transition))
+		if(!this.automataGraph.getEdges().contains(transition))
 			throw new IllegalArgumentException("The transition to be removed must be contained into the set of the transitions of the Buchi automaton");
 
 		this.automataGraph.removeEdge(transition);

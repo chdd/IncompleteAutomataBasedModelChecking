@@ -21,7 +21,7 @@ public class IntBAFactoryImplTest {
 	 */
 	@Test
 	public void testCreate() {
-		assertNotNull(new IntBAFactoryImpl<Label, State, Transition<Label>>());
+		assertNotNull(new IntBAFactoryImpl<Label, State, Transition<Label>>().create());
 	}
 
 }
