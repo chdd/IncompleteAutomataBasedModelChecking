@@ -91,6 +91,17 @@ public class MetadataToTransitionTransformerTest {
 		new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
 				transitionFactory, null, this.ba);
 	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.automata.io.MetadataToTransitionTransformer#MetadataToTransitionTransformer(it.polimi.automata.transition.TransitionFactory, ,null)}
+	 * .
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testMetadataToTransitionTransformerNullBA() {
+		new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
+				transitionFactory, labelFactory, null);
+	}
 
 	/**
 	 * Test method for
