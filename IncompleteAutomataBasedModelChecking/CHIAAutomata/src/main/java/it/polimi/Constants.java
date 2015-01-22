@@ -17,7 +17,8 @@ public class Constants {
 	 * defaults
 	 */
 	public static final String LABELSDEFAULT = "";
-	public static final String FALSEVALUE = "";
+	public static final String FALSEVALUE = "false";
+	public static final String TRUEVALUE = "true";
 	public static final String DEFAULTNAME = "";
 
 }

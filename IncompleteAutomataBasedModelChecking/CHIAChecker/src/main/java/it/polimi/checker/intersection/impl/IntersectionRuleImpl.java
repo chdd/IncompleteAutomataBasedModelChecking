@@ -72,12 +72,12 @@ public class IntersectionRuleImpl<LABEL extends Label, TRANSITION extends Transi
 	 * @return true if the label of the model satisfies the label of the claim
 	 */
 	private boolean satisfies(LABEL modelLabel, LABEL claimLabel){
-		for(IGraphProposition claimProposition: claimLabel.getAtomicPropositions()){
-			if(claimProposition.isNegated() && modelLabel.getAtomicPropositions().contains(new GraphProposition(claimProposition.getLabel(), false))){
+		for(IGraphProposition claimProposition: claimLabel.getLabels()){
+			if(claimProposition.isNegated() && modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
 				return false;
 			}
 			else{
-				if(!modelLabel.getAtomicPropositions().contains(new GraphProposition(claimProposition.getLabel(), false))){
+				if(!modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
 					return false;
 				}
 			}

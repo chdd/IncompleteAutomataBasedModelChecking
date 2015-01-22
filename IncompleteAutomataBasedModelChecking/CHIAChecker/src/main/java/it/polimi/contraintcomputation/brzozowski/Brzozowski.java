@@ -4,6 +4,8 @@ import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.contraintcomputation.brzozowski.transformers.AcceptingStatesTransformer;
+import it.polimi.contraintcomputation.brzozowski.transformers.TransitionMatrixTranformer;
 
 import java.util.ArrayList;
 import java.util.List;

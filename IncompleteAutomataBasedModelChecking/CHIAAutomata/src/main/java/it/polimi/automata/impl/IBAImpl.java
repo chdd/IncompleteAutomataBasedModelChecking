@@ -135,16 +135,23 @@ public class IBAImpl<L extends Label, S extends StateImpl, T extends TransitionI
 	@Override
 	public IBAImpl<L, S, T> clone() {
 		IBAImpl<L, S, T> clone = new IBAImpl<L, S, T>();
-		clone.alphabet = new HashSet<L>(this.getAlphabet());
-		clone.acceptStates = new HashSet<S>(this.getAcceptStates());
-		clone.initialStates = new HashSet<S>(this.getInitialStates());
-		for (T t : this.automataGraph.getEdges()) {
-			clone.addTransition(this.automataGraph.getSource(t),
-					this.automataGraph.getDest(t), t);
+		for(L l: this.getAlphabet()){
+			clone.addCharacter(l);
 		}
 		for (S s : this.getStates()) {
 			clone.addState(s);
 		}
+		for(S s: this.getAcceptStates()){
+			clone.addAcceptState(s);
+		}
+		for(S s: this.getInitialStates()){
+			clone.addInitialState(s);
+		}
+		for (T t : this.getGraph().getEdges()) {
+			clone.addTransition(this.getGraph().getSource(t),
+					this.getGraph().getDest(t), t);
+		}
+		
 		clone.transparentStates = new HashSet<S>(
 				this.getTransparentStates());
 
@@ -176,7 +183,7 @@ public class IBAImpl<L extends Label, S extends StateImpl, T extends TransitionI
 					"The state t must be transparent");
 		}
 		for (S s : inComing.keySet()) {
-			if (!this.automataGraph.getPredecessors(transparentState).contains(
+			if (!this.getGraph().getPredecessors(transparentState).contains(
 					s)) {
 				throw new IllegalArgumentException(
 						"The source of an incoming transition to be injected was not connected to the transparent state");
@@ -192,7 +199,7 @@ public class IBAImpl<L extends Label, S extends StateImpl, T extends TransitionI
 		}
 		for (Set<Entry<T, S>> e : outComing.values()) {
 			for (Entry<T, S> entry : e) {
-				if (!this.automataGraph.getSuccessors(transparentState)
+				if (!this.getGraph().getSuccessors(transparentState)
 						.contains(entry.getValue())) {
 					throw new IllegalArgumentException(
 							"the destination of an out-coming transition was not connected to the transparent state");

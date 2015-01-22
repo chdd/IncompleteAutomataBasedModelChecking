@@ -62,7 +62,14 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 	 */
 	@Override
 	public String toString() {
-		return "{" + Integer.toString(this.id) + "} " + this.labels.toString()
-				+ "";
+		String ret = "";
+		for (L label : labels) {
+			ret = ret + "("+label.toString() + ")∨";
+		}
+		if (ret.endsWith("∨")) {
+			ret = ret.substring(0, ret.length() - 1);
+		}
+
+		return "{" + Integer.toString(this.id) + "} " + ret + "";
 	}
 }

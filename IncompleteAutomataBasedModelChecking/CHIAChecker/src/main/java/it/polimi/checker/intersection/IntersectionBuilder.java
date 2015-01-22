@@ -10,10 +10,10 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Is responsible of the creation of the {@link IntersectionBA}, i.e., the
@@ -51,6 +51,10 @@ public class IntersectionBuilder<LABEL extends Label, STATE extends State, TRANS
 	 */
 	private StateFactory<STATE> stateFactory;
 
+	/**
+	 * is the factory which allows to create a new transition of the
+	 * intersection automaton
+	 */
 	private TransitionFactory<LABEL, TRANSITION> transitionFactory;
 
 	/**
@@ -58,7 +62,7 @@ public class IntersectionBuilder<LABEL extends Label, STATE extends State, TRANS
 	 * and of the claim, given an integer returns the state of the intersection
 	 * automaton
 	 */
-	private Map<Entry<STATE, STATE>, Map<Integer, STATE>> createdStates;
+	private Map<STATE, Map<STATE, Map<Integer, STATE>>> createdStates;
 
 	/**
 	 * contains the model to be considered in the intersection procedure
@@ -132,7 +136,7 @@ public class IntersectionBuilder<LABEL extends Label, STATE extends State, TRANS
 	 */
 	public IntersectionBA<LABEL, STATE, TRANSITION> computeIntersection() {
 
-		this.createdStates = new HashMap<Entry<STATE, STATE>, Map<Integer, STATE>>();
+		this.createdStates = new HashMap<STATE, Map<STATE, Map<Integer, STATE>>>();
 		for (STATE modelInit : model.getInitialStates()) {
 			for (STATE claimInit : claim.getInitialStates()) {
 				this.computeIntersection(modelInit, claimInit, 0);
@@ -149,36 +153,44 @@ public class IntersectionBuilder<LABEL extends Label, STATE extends State, TRANS
 	 *            is the current state of the model under analysis
 	 * @param claimState
 	 *            is the current state of the claim under analysis
-	 * @param number is the number of the state under analysis
+	 * @param number
+	 *            is the number of the state under analysis
 	 * @return the state that is generated
 	 */
 	private STATE computeIntersection(STATE modelState, STATE claimState,
 			int number) {
-		if (this.createdStates
-				.containsKey(new AbstractMap.SimpleEntry<STATE, STATE>(
-						modelState, claimState))
-				&& this.createdStates.get(
-						new AbstractMap.SimpleEntry<STATE, STATE>(modelState,
-								claimState)).containsKey(number)) {
-			this.createdStates.get(
-					new AbstractMap.SimpleEntry<STATE, STATE>(modelState,
-							claimState)).get(number);
-		}
+		STATE intersectionState;
+		// if the state has been already created
+		if (!this.createdStates.containsKey(modelState)
+				|| !this.createdStates.get(modelState).containsKey(claimState)
+				|| !this.createdStates.get(modelState).get(claimState)
+						.containsKey(number)) {
 
-		STATE intersectionState = this.stateFactory.create(modelState.getName()
-				+ " - " + claimState.getName() + " - " + number);
-
-		if (this.createdStates
-				.containsKey(new AbstractMap.SimpleEntry<STATE, STATE>(
-						modelState, claimState))) {
-			this.createdStates.get(
-					new AbstractMap.SimpleEntry<STATE, STATE>(modelState,
-							claimState)).put(number, intersectionState);
+			intersectionState = this.stateFactory.create(modelState.getName()
+					+ " - " + claimState.getName() + " - " + number);
+			if (!this.createdStates.containsKey(modelState)) {
+				Map<STATE, Map<Integer, STATE>> map1 = new HashMap<STATE, Map<Integer, STATE>>();
+				Map<Integer, STATE> map2 = new HashMap<Integer, STATE>();
+				map2.put(number, intersectionState);
+				map1.put(claimState, map2);
+				this.createdStates.put(modelState, map1);
+			} else {
+				if (!this.createdStates.get(modelState).containsKey(claimState)) {
+					Map<Integer, STATE> map2 = new HashMap<Integer, STATE>();
+					map2.put(number, intersectionState);
+					this.createdStates.get(modelState).put(claimState, map2);
+				} else {
+					if (!this.createdStates.get(modelState).get(claimState)
+							.containsKey(number)) {
+						this.createdStates.get(modelState).get(claimState)
+								.put(number, intersectionState);
+					}
+				}
+			}
 		} else {
-			Map<Integer, STATE> map = new HashMap<Integer, STATE>();
-			map.put(number, intersectionState);
-			this.createdStates.put(new AbstractMap.SimpleEntry<STATE, STATE>(
-					modelState, claimState), map);
+			// creating a new intersection state
+			intersectionState = this.createdStates.get(modelState)
+					.get(claimState).get(number);
 		}
 
 		this.intersection.addState(intersectionState);
@@ -188,7 +200,7 @@ public class IntersectionBuilder<LABEL extends Label, STATE extends State, TRANS
 		if (number == 2) {
 			this.intersection.addAcceptState(intersectionState);
 		}
-		if(this.model.isTransparent(modelState)){
+		if (this.model.isTransparent(modelState)) {
 			this.intersection.addMixedState(intersectionState);
 		}
 
@@ -274,5 +286,34 @@ public class IntersectionBuilder<LABEL extends Label, STATE extends State, TRANS
 			num = 0;
 		}
 		return num;
+	}
+
+	/**
+	 * returns for each state of the model the corresponding states of the
+	 * intersection
+	 * 
+	 * @return a map that relates each state of the model to the corresponding
+	 *         states generated in the intersection automaton
+	 */
+	public Map<STATE, Set<STATE>> getMapModelIntersection() {
+		Map<STATE, Set<STATE>> intersectionStateMap = new HashMap<STATE, Set<STATE>>();
+
+		for (STATE modelState : this.createdStates.keySet()) {
+			intersectionStateMap.put(modelState, new HashSet<STATE>());
+
+			Map<STATE, Map<Integer, STATE>> entry = this.createdStates
+					.get(modelState);
+
+			for (STATE claimState : entry.keySet()) {
+
+				Map<Integer, STATE> indexMap = entry.get(claimState);
+
+				for (Integer index : indexMap.keySet()) {
+					intersectionStateMap.get(modelState).add(
+							indexMap.get(index));
+				}
+			}
+		}
+		return intersectionStateMap;
 	}
 }

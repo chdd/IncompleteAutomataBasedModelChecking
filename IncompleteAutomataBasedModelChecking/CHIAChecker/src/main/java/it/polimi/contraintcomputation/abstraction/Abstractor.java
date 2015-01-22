@@ -1,13 +1,12 @@
 package it.polimi.contraintcomputation.abstraction;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.IntersectionBAFactory;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The abstractor allows to generate a more concise version of the intersection
@@ -60,17 +59,12 @@ public class Abstractor<LABEL extends Label, STATE extends State, TRANSITION ext
 	 * @throws NullPointerException
 	 *             if the intersection automaton or the factory is null
 	 */
-	public Abstractor(IntersectionBA<LABEL, STATE, TRANSITION> intBA,
-			IntersectionBAFactory<LABEL, STATE, TRANSITION> intFactory) {
+	public Abstractor(IntersectionBA<LABEL, STATE, TRANSITION> intBA) {
 		if (intBA == null) {
 			throw new NullPointerException(
 					"The intersection automaton cannot be null");
 		}
-		if (intFactory == null) {
-			throw new NullPointerException(
-					"The factory for the intersection automaton cannot be null");
-		}
-
+		
 		this.intBA = intBA.clone();
 		this.abstractedStates = new HashSet<STATE>();
 	}

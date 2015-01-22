@@ -43,22 +43,22 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	/**
 	 * contains the initial states of the Buchi automaton
 	 */
-	protected Set<S> initialStates;
+	private Set<S> initialStates;
 
 	/**
 	 * contains the accepting states of the Buchi automaton
 	 */
-	protected Set<S> acceptStates;
+	private Set<S> acceptStates;
 
 	/**
 	 * contains the set of the alphabet of the Buchi automaton
 	 */
-	protected Set<L> alphabet;
+	private Set<L> alphabet;
 
 	/**
 	 * contains the graph on which the Buchi automaton is based
 	 */
-	protected DirectedSparseGraph<S, T> automataGraph;
+	private DirectedSparseGraph<S, T> automataGraph;
 
 	/**
 	 * creates a new empty Buchi automaton
