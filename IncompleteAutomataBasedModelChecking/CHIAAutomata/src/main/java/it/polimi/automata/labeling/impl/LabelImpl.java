@@ -73,7 +73,7 @@ public class LabelImpl implements Label {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((labels == null) ? 0 : labels.hashCode());
+		result = prime * result + labels.hashCode();
 		return result;
 	}
 
@@ -89,10 +89,7 @@ public class LabelImpl implements Label {
 		if (getClass() != obj.getClass())
 			return false;
 		LabelImpl other = (LabelImpl) obj;
-		if (labels == null) {
-			if (other.labels != null)
-				return false;
-		} else if (!labels.equals(other.labels))
+		if (!labels.equals(other.labels))
 			return false;
 		return true;
 	}

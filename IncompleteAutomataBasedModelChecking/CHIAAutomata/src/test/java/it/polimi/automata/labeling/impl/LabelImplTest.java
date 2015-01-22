@@ -3,9 +3,8 @@
  */
 package it.polimi.automata.labeling.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import it.polimi.Constants;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -72,7 +71,21 @@ public class LabelImplTest {
 		label=new LabelImpl(labels);
 		assertEquals(label.toString(), "p");
 		label=new LabelImpl(labelsSet2);
-		assertTrue(label.toString().equals("p^c") || label.toString().equals("c^p"));
+		assertTrue(label.toString().equals("p"+Constants.AND+"c") || label.toString().equals("c"+Constants.AND+"p"));
+	}
+
+	@Test
+	public void testEquals() throws Exception {
+		LabelImpl label=new LabelImpl(new HashSet<IGraphProposition>());
+		LabelImpl label2=new LabelImpl(new HashSet<IGraphProposition>());
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		labels.add(new GraphProposition("a", true));
+		LabelImpl label3=new LabelImpl(labels);
+		assertTrue(label.equals(label));
+		assertFalse(label.equals(null));
+		assertFalse(label.equals(new GraphProposition("a", false)));
+		assertTrue(label.equals(label2));
+		assertFalse(label.equals(label3));
 	}
 
 }

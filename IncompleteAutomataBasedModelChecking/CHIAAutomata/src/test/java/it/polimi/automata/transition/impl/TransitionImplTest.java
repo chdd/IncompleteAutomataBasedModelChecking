@@ -3,9 +3,9 @@
  */
 package it.polimi.automata.transition.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 
 import java.util.HashSet;
@@ -104,6 +104,47 @@ public class TransitionImplTest {
 		labels.add(label1);
 		labels.add(label2);
 		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
-		assertTrue(t.toString().equals("{1} (a)∨(b)") || t.toString().equals("{1} (b)∨(a)"));
+		assertTrue(t.toString().equals("{1} "+Constants.LPAR+"a"+Constants.RPAR+Constants.OR+ Constants.LPAR+"b"+Constants.RPAR) 
+				|| t.toString().equals("{1} "+Constants.LPAR+"b"+Constants.RPAR+Constants.OR+ Constants.LPAR+"a"+Constants.RPAR));
 	}
+
+	/**
+	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#equals}.
+	 */
+	@Test
+	public void testEquals()  {
+		Set<Label> labels=new HashSet<Label>();
+		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		TransitionImpl<Label> t2=new TransitionImpl<Label>(labels, 2);
+		TransitionImpl<Label> t3=new TransitionImpl<Label>(labels, 1);
+		Set<Label> labels2=new HashSet<Label>();
+		labels2.add(label1);
+		TransitionImpl<Label> t4=new TransitionImpl<Label>(labels2, 1);
+		assertFalse(t.equals(labels));
+		assertFalse(t.equals(null));
+		assertTrue(t.equals(t));
+		assertFalse(t.equals(t2));
+		assertTrue(t.equals(t3));
+		assertFalse(t.equals(t4));
+	}
+
+	/**
+	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#hashCode()}.
+	 */
+	@Test
+	public void testHashCode(){
+		Set<Label> labels=new HashSet<Label>();
+		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		TransitionImpl<Label> t2=new TransitionImpl<Label>(labels, 2);
+		TransitionImpl<Label> t3=new TransitionImpl<Label>(labels, 1);
+		Set<Label> labels2=new HashSet<Label>();
+		labels2.add(label1);
+		TransitionImpl<Label> t4=new TransitionImpl<Label>(labels2, 1);
+		assertFalse(t.hashCode()==labels.hashCode());
+		assertTrue(t.hashCode()==t.hashCode());
+		assertFalse(t.hashCode()==t2.hashCode());
+		assertTrue(t.hashCode()==t3.hashCode());
+		assertFalse(t.hashCode()==t4.hashCode());
+	}
+	
 }

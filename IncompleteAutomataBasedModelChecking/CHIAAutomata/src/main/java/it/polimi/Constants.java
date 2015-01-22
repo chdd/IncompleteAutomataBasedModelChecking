@@ -21,10 +21,12 @@ public class Constants {
 	public static final String TRUEVALUE = "true";
 	public static final String DEFAULTNAME = "";
 	public static final String AND = "&&";
-	public static final String OR = "||";
+	public static final String OR = "|";
 	public static final String NOT = "!";
 	
 	public static final String APREGEX="^[a-zA-Z]+$";
 	public static final String NOTAPREGEX="^![a-zA-Z]+$";
+	public static final String LPAR="(";
+	public static final String RPAR=")";
 
 }

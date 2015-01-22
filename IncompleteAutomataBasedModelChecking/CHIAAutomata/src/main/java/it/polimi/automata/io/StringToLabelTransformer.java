@@ -5,7 +5,7 @@ package it.polimi.automata.io;
 
 import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.LabelFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,8 +20,14 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  * 
  */
-class StringToLabelTransformer implements Transformer<String, Label> {
+class StringToLabelTransformer<L extends Label> implements Transformer<String, L> {
 
+	private LabelFactory<L> labelFactory;
+	
+	public StringToLabelTransformer(LabelFactory<L> labelFactory){
+		this.labelFactory=labelFactory;
+	}
+	
 	/**
 	 * Starting from the string computes the corresponding Label. 
 	 * 
@@ -31,7 +37,7 @@ class StringToLabelTransformer implements Transformer<String, Label> {
 	 *             if the input is null
 	 */
 	@Override
-	public Label transform(String input) {
+	public L transform(String input) {
 
 		if (input == null) {
 			throw new NullPointerException("The input must be not null");
@@ -43,7 +49,7 @@ class StringToLabelTransformer implements Transformer<String, Label> {
 			propositions.add(new APToIGraphPropositionTransformer().transform(ap));
 		}
 		
-		return new LabelImplFactory().create(propositions);
+		return labelFactory.create(propositions);
 	}
 
 }

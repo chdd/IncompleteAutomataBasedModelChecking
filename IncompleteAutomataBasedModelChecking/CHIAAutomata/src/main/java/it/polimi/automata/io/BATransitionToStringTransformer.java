@@ -6,9 +6,9 @@ import it.polimi.automata.transition.Transition;
 
 import org.apache.commons.collections15.Transformer;
 
-
 /**
- * contains the Transformer that given a transition return its string representation
+ * contains the Transformer that given a transition return its string
+ * representation
  * 
  * @see Transformer
  * 
@@ -22,7 +22,8 @@ import org.apache.commons.collections15.Transformer;
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
  */
-class BATransitionToStringTransformer<L extends Label, T extends Transition<L>> implements Transformer<T, String>{
+class BATransitionToStringTransformer<L extends Label, T extends Transition<L>>
+		implements Transformer<T, String> {
 
 	/**
 	 * returns the string representation of the transition
@@ -33,12 +34,14 @@ class BATransitionToStringTransformer<L extends Label, T extends Transition<L>> 
 	 */
 	@Override
 	public String transform(T input) {
-		if(input==null){
-			throw new NullPointerException("The transition to be converted cannot be null");
+		if (input == null) {
+			throw new NullPointerException(
+					"The transition to be converted cannot be null");
 		}
 		String ret = "";
 		for (L label : input.getLabels()) {
-			ret = ret + "("+label.toString() + ")"+Constants.OR;
+			ret = ret + Constants.LPAR + label.toString() + Constants.RPAR
+					+ Constants.OR;
 		}
 		if (ret.endsWith(Constants.OR)) {
 			ret = ret.substring(0, ret.length() - Constants.OR.length());
@@ -46,4 +49,3 @@ class BATransitionToStringTransformer<L extends Label, T extends Transition<L>> 
 		return ret;
 	}
 }
-

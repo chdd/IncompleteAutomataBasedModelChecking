@@ -73,4 +73,37 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 
 		return "{" + Integer.toString(this.id) + "} " + ret + "";
 	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + labels.hashCode();
+		return result;
+	}
+
+	/** 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		TransitionImpl<L> other = (TransitionImpl<L>) obj;
+		if (id != other.id)
+			return false;
+		if (!labels.equals(other.labels))
+			return false;
+		return true;
+	}
+	
 }

@@ -6,6 +6,7 @@ package it.polimi.automata.io;
 import static org.junit.Assert.assertTrue;
 import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
+import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.labeling.impl.LabelImplFactory;
 
 import java.util.HashSet;
@@ -24,22 +25,27 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 public class StringToLabelTransformerTest {
 
 	private Label label;
+	private LabelFactory<Label> factory;
+	
 	@Before
 	public void setUp() {
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		propositions.add(new GraphProposition("a", false));
 		propositions.add(new GraphProposition("b", true));
 		
-		label=new LabelImplFactory().create(propositions);
+		this.factory=new LabelImplFactory();
+		label=factory.create(propositions);
+		
 	}
 
+	
 	
 	/**
 	 * Test method for {@link it.polimi.automata.io.StringToLabelTransformer#transform(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testTransformNull() {
-		new StringToLabelTransformer().transform(null);
+		new StringToLabelTransformer<Label>(factory).transform(null);
 	}
 
 	
@@ -48,7 +54,7 @@ public class StringToLabelTransformerTest {
 	 */
 	@Test
 	public void testTransform() {
-		Label l=new StringToLabelTransformer().transform("a"+Constants.AND+"!b");
+		Label l=new StringToLabelTransformer<Label>(factory).transform("a"+Constants.AND+"!b");
 		
 		assertTrue(label.equals(l));
 	}

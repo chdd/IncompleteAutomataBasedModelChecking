@@ -1,6 +1,9 @@
 package it.polimi.automata.io;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
@@ -57,11 +60,15 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 	 * @param labelFactory
 	 *            is the {@link Factory} which is used to parse the label
 	 * @throws NullPointerException
-	 *             if the transitionFactory is null
+	 *             if the transitionFactory or the labelFactory is null
 	 */
 	public MetadataToTransitionTransformer(G transitionFactory,
 			F labelFactory) {
 		if (transitionFactory == null) {
+			throw new NullPointerException(
+					"The transition factory cannot be null");
+		}
+		if (labelFactory == null) {
 			throw new NullPointerException(
 					"The transition factory cannot be null");
 		}
@@ -84,9 +91,14 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 			throw new NullPointerException(
 					"The EdgeMetadata to be converted cannot be null");
 		}
-		//TODO
-		//String labels=input.getProperty(Constants.LABELSTAG).;
+		String[] labels=input.getProperty(Constants.LABELSTAG).split(Pattern.quote(Constants.OR));
+		
+		Set<L> propositions=new HashSet<L>();
+		for(String label: new HashSet<String>(Arrays.asList(labels))){
+			L l=new StringToLabelTransformer<L>(labelFactory).transform(label.substring(Constants.LPAR.length(), label.length()-Constants.RPAR.length()));
+			propositions.add(l);
+		}
 		return this.transitionFactory.create(Integer.parseInt(input.getId()),
-				new HashSet<L>());
+				propositions);
 	}
 }
