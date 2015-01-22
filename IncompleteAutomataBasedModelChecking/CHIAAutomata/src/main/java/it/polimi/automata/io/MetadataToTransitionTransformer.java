@@ -84,7 +84,8 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 			throw new NullPointerException(
 					"The EdgeMetadata to be converted cannot be null");
 		}
-		String labels=input.getProperty(Constants.LABELSTAG);
+		//TODO
+		//String labels=input.getProperty(Constants.LABELSTAG).;
 		return this.transitionFactory.create(Integer.parseInt(input.getId()),
 				new HashSet<L>());
 	}

@@ -37,7 +37,7 @@ class MetadataToBATransformer<L extends Label, S extends State, T extends Transi
 	private BA<L, S, T> ba;
 
 	/**
-	 * creates the new transformer that converts the metadata into the corresponding Buchi automaton
+	 * creates the new transformer that converts the meta data into the corresponding Buchi automaton
 	 * 
 	 * @param ba
 	 *            is the Buchi automaton to be updated by the transforming activity

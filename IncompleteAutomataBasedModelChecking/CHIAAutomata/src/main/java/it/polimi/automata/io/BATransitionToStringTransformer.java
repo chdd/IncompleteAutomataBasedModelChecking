@@ -1,5 +1,6 @@
 package it.polimi.automata.io;
 
+import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.transition.Transition;
 
@@ -35,7 +36,14 @@ class BATransitionToStringTransformer<L extends Label, T extends Transition<L>> 
 		if(input==null){
 			throw new NullPointerException("The transition to be converted cannot be null");
 		}
-		return input.getLabels().toString();
+		String ret = "";
+		for (L label : input.getLabels()) {
+			ret = ret + "("+label.toString() + ")"+Constants.OR;
+		}
+		if (ret.endsWith(Constants.OR)) {
+			ret = ret.substring(0, ret.length() - Constants.OR.length());
+		}
+		return ret;
 	}
 }
 

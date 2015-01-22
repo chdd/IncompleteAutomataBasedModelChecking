@@ -1,5 +1,6 @@
 package it.polimi.automata.transition.impl;
 
+import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.transition.Transition;
 
@@ -64,10 +65,10 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 	public String toString() {
 		String ret = "";
 		for (L label : labels) {
-			ret = ret + "("+label.toString() + ")∨";
+			ret = ret + "("+label.toString() + ")"+Constants.OR;
 		}
-		if (ret.endsWith("∨")) {
-			ret = ret.substring(0, ret.length() - 1);
+		if (ret.endsWith(Constants.OR)) {
+			ret = ret.substring(0, ret.length() - Constants.OR.length());
 		}
 
 		return "{" + Integer.toString(this.id) + "} " + ret + "";

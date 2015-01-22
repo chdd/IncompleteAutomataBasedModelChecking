@@ -1,5 +1,6 @@
 package it.polimi.automata.labeling.impl;
 
+import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 
 import java.util.Collections;
@@ -57,11 +58,42 @@ public class LabelImpl implements Label {
 	public String toString() {
 		String ret="";
 		for(IGraphProposition label: labels){
-			ret=ret+label.toString()+"^";
+			ret=ret+label.toString()+Constants.AND;
 		}
-		if(ret.endsWith("^")){
-			ret=ret.substring(0, ret.length()-1);
+		if(ret.endsWith(Constants.AND)){
+			ret=ret.substring(0, ret.length()-Constants.AND.length());
 		}
 		return ret;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((labels == null) ? 0 : labels.hashCode());
+		return result;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LabelImpl other = (LabelImpl) obj;
+		if (labels == null) {
+			if (other.labels != null)
+				return false;
+		} else if (!labels.equals(other.labels))
+			return false;
+		return true;
 	}
 }

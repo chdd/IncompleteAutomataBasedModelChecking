@@ -96,7 +96,7 @@ public class StateImpl implements State {
 	 */
 	@Override
 	public String toString() {
-		return this.id + ": " + this.getName();
+		return this.getId() + ": " + this.getName();
 	}
 
 	/**
