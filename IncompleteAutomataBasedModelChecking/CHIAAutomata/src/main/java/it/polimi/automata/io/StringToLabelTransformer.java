@@ -10,6 +10,7 @@ import it.polimi.automata.labeling.LabelFactory;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -42,7 +43,7 @@ class StringToLabelTransformer<L extends Label> implements Transformer<String, L
 		if (input == null) {
 			throw new NullPointerException("The input must be not null");
 		}
-		String[] aps=input.split(Constants.AND);
+		String[] aps=input.split(Pattern.quote(Constants.AND));
 		
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		for(String ap: new HashSet<String>(Arrays.asList(aps))){

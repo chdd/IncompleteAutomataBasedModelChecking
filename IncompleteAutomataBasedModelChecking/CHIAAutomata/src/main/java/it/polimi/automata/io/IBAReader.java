@@ -116,7 +116,7 @@ public class IBAReader<L extends Label,
 				fileReader, 
 				new MetadataToBATransformer<L, S, T>(iba),
 				new MetadataToIBAStateTransformer<L, S, T>(stateFactory, iba),
-				new MetadataToTransitionTransformer<L, F, T, H>(transitionFactory, labelFactory),
+				new MetadataToTransitionTransformer<L, F, S, T, H>(transitionFactory, labelFactory, iba),
 				new HyperMetadataToTransitionTransformer<L, T, H>(transitionFactory));
 	}
 
@@ -128,7 +128,7 @@ public class IBAReader<L extends Label,
 	 *             is generated if a problem occurs in the loading of the
 	 *             Buchi Automaton
 	 */
-	public BA<L, S, T> read() throws GraphIOException {
+	public IBA<L, S, T> read() throws GraphIOException {
 		this.graphReader.readGraph();
 		return this.iba;
 	}	

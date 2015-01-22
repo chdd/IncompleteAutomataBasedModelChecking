@@ -88,6 +88,7 @@ class MetadataToBAStateTransformer<L extends Label, S extends State, T extends T
 
 		S s = this.stateFactory.create(input.getProperty(Constants.NAMETAG),
 				Integer.parseInt(input.getId()));
+		this.a.addState(s);
 		if (Boolean.parseBoolean(input.getProperty(Constants.INITIALTAG))) {
 			this.a.addInitialState(s);
 		}

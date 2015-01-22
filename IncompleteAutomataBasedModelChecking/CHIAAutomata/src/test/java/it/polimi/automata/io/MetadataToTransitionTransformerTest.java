@@ -10,6 +10,8 @@ import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.state.State;
+import it.polimi.automata.BA;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
@@ -39,6 +41,9 @@ public class MetadataToTransitionTransformerTest {
 	@Mock
 	private EdgeMetadata input;
 
+	@Mock
+	private BA<Label, State, Transition<Label>> ba;
+
 	private Transition<Label> ret;
 
 	@Before
@@ -46,11 +51,12 @@ public class MetadataToTransitionTransformerTest {
 		MockitoAnnotations.initMocks(this);
 		when(input.getId()).thenReturn("1");
 		when(input.getProperty(Constants.LABELSTAG)).thenReturn(
-				Constants.LPAR +"a"+Constants.RPAR  + Constants.OR + Constants.LPAR +"!b"+Constants.RPAR);
+				Constants.LPAR + "a" + Constants.RPAR + Constants.OR
+						+ Constants.LPAR + "!b" + Constants.RPAR);
 
-		labelFactory=new LabelImplFactory();
-		transitionFactory=new ClaimTransitionFactoryImpl<Label>();
-		
+		labelFactory = new LabelImplFactory();
+		transitionFactory = new ClaimTransitionFactoryImpl<Label>();
+
 		Set<IGraphProposition> labels1 = new HashSet<IGraphProposition>();
 		labels1.add(new GraphProposition("a", false));
 
@@ -71,8 +77,8 @@ public class MetadataToTransitionTransformerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testMetadataToTransitionTransformerNullTransitionFactory() {
-		new MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
-				null, labelFactory);
+		new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
+				null, labelFactory, this.ba);
 	}
 
 	/**
@@ -82,8 +88,8 @@ public class MetadataToTransitionTransformerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testMetadataToTransitionTransformerNullLabelFactory() {
-		new MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
-				transitionFactory, null);
+		new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
+				transitionFactory, null, this.ba);
 	}
 
 	/**
@@ -93,8 +99,8 @@ public class MetadataToTransitionTransformerTest {
 	 */
 	@Test
 	public void testMetadataToTransitionTransformer() {
-		assertNotNull(new MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
-				transitionFactory, labelFactory));
+		assertNotNull(new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
+				transitionFactory, labelFactory, this.ba));
 	}
 
 	/**
@@ -104,8 +110,8 @@ public class MetadataToTransitionTransformerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testTransformNull() {
-		MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>> transformer = new MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
-				transitionFactory, labelFactory);
+		MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>> transformer = new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
+				transitionFactory, labelFactory, this.ba);
 		transformer.transform(null);
 	}
 
@@ -116,10 +122,8 @@ public class MetadataToTransitionTransformerTest {
 	 */
 	@Test
 	public void testTransform() {
-		MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>> transformer = new MetadataToTransitionTransformer<Label, LabelFactory<Label>, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
-				transitionFactory, labelFactory);
-		System.out.println(ret);
-		System.out.println(transformer.transform(input));
+		MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>> transformer = new MetadataToTransitionTransformer<Label, LabelFactory<Label>, State, Transition<Label>, TransitionFactory<Label, Transition<Label>>>(
+				transitionFactory, labelFactory, this.ba);
 		assertEquals(ret, transformer.transform(input));
 	}
 

@@ -87,13 +87,15 @@ class MetadataToIBAStateTransformer<L extends Label, S extends State, T extends 
 
 		S s = this.stateFactory.create(input.getProperty(Constants.NAMETAG),
 				Integer.parseInt(input.getId()));
+		
 		if (Boolean.parseBoolean(input.getProperty(Constants.INITIALTAG))) {
 			this.a.addInitialState(s);
 		}
 		if (Boolean.parseBoolean(input.getProperty(Constants.ACCEPTINGTAG))) {
 			this.a.addAcceptState(s);
 		}
-		if (Boolean.parseBoolean(input.getProperty("transparent"))) {
+		if (Boolean.parseBoolean(input.getProperty(Constants.TRANSPARENTTAG))) {
+			System.out.println("Adding the state"+s);
 			this.a.addTransparentState(s);
 		}
 		return s;

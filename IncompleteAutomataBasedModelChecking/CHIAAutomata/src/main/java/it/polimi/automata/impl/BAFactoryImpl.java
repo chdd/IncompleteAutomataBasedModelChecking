@@ -4,9 +4,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.BAFactory;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionImpl;
 
 /**
  * <p>
@@ -30,8 +28,8 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  */
 public class BAFactoryImpl<
 	L extends Label,
-	S extends StateImpl,
-	T extends TransitionImpl<L>>
+	S extends State,
+	T extends Transition<L>>
 	implements
 	BAFactory<L, S, T>{
 	

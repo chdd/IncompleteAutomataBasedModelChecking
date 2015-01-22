@@ -19,7 +19,7 @@ import edu.uci.ics.jung.io.GraphMLWriter;
  * 
  * @see {@link BA}
  * @author claudiomenghi
- *
+ * 
  * 
  * @param <L>
  *            is the type of the Label which is applied to the transitions of
@@ -40,12 +40,20 @@ public class BAWriter<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	protected BA<L, S, T> ba;
 
-
 	/**
 	 * creates a new Writer for the specified automaton
+	 * 
+	 * @param ba
+	 *            the Buchi automaton to be written
+	 * @throws NullPointerException
+	 *             if the Buchi automaton to be written is null
 	 */
 	public BAWriter(BA<L, S, T> ba) {
 		super();
+		if (ba == null) {
+			throw new NullPointerException(
+					"The ba to be written cannot be null");
+		}
 		this.ba = ba;
 		this.setTransformers();
 	}
@@ -60,44 +68,40 @@ public class BAWriter<L extends Label, S extends State, T extends Transition<L>>
 				return Integer.toString(input.getId());
 			}
 		});
-		this.addVertexData(Constants.NAMETAG, Constants.NAMETAG, Constants.DEFAULTNAME,
-				new Transformer<S, String>() {
+		this.addVertexData(Constants.NAMETAG, Constants.NAMETAG,
+				Constants.DEFAULTNAME, new Transformer<S, String>() {
 					@Override
 					public String transform(S input) {
 						return input.getName();
 					}
 				});
-		this.addVertexData(
-				Constants.INITIALTAG,
-				Constants.INITIALTAG,
+		this.addVertexData(Constants.INITIALTAG, Constants.INITIALTAG,
 				Constants.FALSEVALUE,
-				new BAStateInitialToStringTransformer<L, S, T>(
-						ba));
-		this.addVertexData(
-				Constants.ACCEPTINGTAG,
-				Constants.ACCEPTINGTAG,
+				new BAStateInitialToStringTransformer<L, S, T>(ba));
+		this.addVertexData(Constants.ACCEPTINGTAG, Constants.ACCEPTINGTAG,
 				Constants.FALSEVALUE,
-				new BAStateAcceptingToStringTransformer<L, S, T>(
-						ba));
+				new BAStateAcceptingToStringTransformer<L, S, T>(ba));
 		this.setEdgeIDs(new Transformer<T, String>() {
 			@Override
 			public String transform(T input) {
 				return Integer.toString(input.getId());
 			}
 		});
-		this.addEdgeData(Constants.LABELSTAG, Constants.LABELSTAG, Constants.LABELSDEFAULT, new BATransitionToStringTransformer<L, T>());
+		this.addEdgeData(Constants.LABELSTAG, Constants.LABELSTAG,
+				Constants.LABELSDEFAULT,
+				new BATransitionToStringTransformer<L, T>());
 	}
 
 	/**
 	 * saves the Buchi automaton
 	 * 
 	 * @param w
-	 *            is the Writer ({@link Writer}) in charge of saving the Buchi automaton
+	 *            is the Writer ({@link Writer}) in charge of saving the Buchi
+	 *            automaton
 	 * @throws NullPointerException
 	 *             if the Writer is null
 	 */
-	public void save(Writer w)
-			throws IOException {
+	public void save(Writer w) throws IOException {
 		if (w == null) {
 			throw new NullPointerException("The writer cannot be null");
 		}

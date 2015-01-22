@@ -292,4 +292,6 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	public EdgeType getDefaultEdgeType() {
 		return EdgeType.DIRECTED;
 	}
+	
+	
 }

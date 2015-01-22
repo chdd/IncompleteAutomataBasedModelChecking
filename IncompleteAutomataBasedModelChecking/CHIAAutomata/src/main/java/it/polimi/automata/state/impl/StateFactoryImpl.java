@@ -1,5 +1,6 @@
 package it.polimi.automata.state.impl;
 
+import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 
 /**
@@ -10,7 +11,7 @@ import it.polimi.automata.state.StateFactory;
  * @author claudiomenghi
  * 
  */
-public class StateFactoryImpl implements StateFactory<StateImpl> {
+public class StateFactoryImpl implements StateFactory<State> {
 
 	/**
 	 * contains the counter whose value is associated to the next id of the

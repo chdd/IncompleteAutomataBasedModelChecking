@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import it.polimi.Constants;
+import it.polimi.automata.state.*;
+import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.transition.Transition;
@@ -39,7 +41,7 @@ import edu.uci.ics.jung.io.graphml.GraphMetadata;
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
  */
-class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>, T extends Transition<L>, G extends TransitionFactory<L, T>>
+class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>, S extends State, T extends Transition<L>, G extends TransitionFactory<L, T>>
 		implements Transformer<EdgeMetadata, T> {
 	/**
 	 * contains the {@link TransitionFactory}
@@ -50,6 +52,11 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 	 * contains the factory which is used to parse the label
 	 */
 	protected F labelFactory;
+	
+	/**
+	 * the automaton to which the transition must be added;
+	 */
+	protected BA<L, S, T> a;
 
 	/**
 	 * creates a new {@link EdgeMetadata} {@link Transformer}
@@ -63,7 +70,7 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 	 *             if the transitionFactory or the labelFactory is null
 	 */
 	public MetadataToTransitionTransformer(G transitionFactory,
-			F labelFactory) {
+			F labelFactory, BA<L, S, T> a) {
 		if (transitionFactory == null) {
 			throw new NullPointerException(
 					"The transition factory cannot be null");
@@ -72,6 +79,10 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 			throw new NullPointerException(
 					"The transition factory cannot be null");
 		}
+		if(a==null){
+			throw new NullPointerException("The automaton cannot be null");
+		}
+		this.a=a;
 		this.transitionFactory = transitionFactory;
 		this.labelFactory = labelFactory;
 	}
@@ -97,6 +108,7 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 		for(String label: new HashSet<String>(Arrays.asList(labels))){
 			L l=new StringToLabelTransformer<L>(labelFactory).transform(label.substring(Constants.LPAR.length(), label.length()-Constants.RPAR.length()));
 			propositions.add(l);
+			this.a.addCharacter(l);
 		}
 		return this.transitionFactory.create(Integer.parseInt(input.getId()),
 				propositions);

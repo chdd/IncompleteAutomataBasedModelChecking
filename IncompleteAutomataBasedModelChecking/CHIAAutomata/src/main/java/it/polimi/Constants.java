@@ -20,7 +20,7 @@ public class Constants {
 	public static final String FALSEVALUE = "false";
 	public static final String TRUEVALUE = "true";
 	public static final String DEFAULTNAME = "";
-	public static final String AND = "&&";
+	public static final String AND = "^";
 	public static final String OR = "|";
 	public static final String NOT = "!";
 	

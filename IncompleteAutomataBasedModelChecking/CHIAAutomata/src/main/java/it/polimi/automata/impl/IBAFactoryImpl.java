@@ -4,9 +4,7 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.IBAFactory;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionImpl;
 
 /**
  * <p>
@@ -30,7 +28,7 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IBAFactoryImpl<L extends Label, S extends StateImpl, T extends TransitionImpl<L>>
+public class IBAFactoryImpl<L extends Label, S extends State, T extends Transition<L>>
 		implements IBAFactory<L, S, T> {
 
 	/**

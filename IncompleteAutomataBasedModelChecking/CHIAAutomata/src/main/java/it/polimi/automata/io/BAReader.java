@@ -103,7 +103,7 @@ public class BAReader<L extends Label, F extends LabelFactory<L>, S extends Stat
 		this.graphReader = new GraphMLReader2<DirectedSparseGraph<S, T>, S, T>(
 				fileReader, new MetadataToBATransformer<L, S, T>(ba),
 				new MetadataToBAStateTransformer<L, S, T>(stateFactory, ba),
-				new MetadataToTransitionTransformer<L, F, T, H>(transitionFactory, labelFactory),
+				new MetadataToTransitionTransformer<L, F, S, T, H>(transitionFactory, labelFactory, ba),
 				new HyperMetadataToTransitionTransformer<L, T, H>(transitionFactory));
 	}
 
