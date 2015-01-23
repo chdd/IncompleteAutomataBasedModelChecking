@@ -110,7 +110,7 @@
 	</dependencies>
 	<modules>
 		<module>IncompleteAutomataBasedModelCheckingGUI</module>
-		<module>CHIAChecker</module>
+
 	</modules>
 	<dependencyManagement>
 		<dependencies>
