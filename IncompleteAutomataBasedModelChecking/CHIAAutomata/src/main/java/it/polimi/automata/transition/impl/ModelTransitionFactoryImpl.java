@@ -32,9 +32,10 @@ public class ModelTransitionFactoryImpl<L extends Label> extends
 	 */
 	@Override
 	public Transition<L> create(Set<L> labels) {
-		if( labels == null)
-			throw new NullPointerException("The labels to be added at the Transition cannot be null");
-		
+		if (labels == null)
+			throw new NullPointerException(
+					"The labels to be added at the Transition cannot be null");
+
 		for (L label : labels) {
 			for (IGraphProposition p : label.getLabels()) {
 				if (p.isNegated()) {
@@ -43,9 +44,7 @@ public class ModelTransitionFactoryImpl<L extends Label> extends
 				}
 			}
 		}
-		Transition<L> t = super.create(labels);
-
-		return t;
+		return super.create(labels);
 	}
 
 	/**
@@ -57,9 +56,10 @@ public class ModelTransitionFactoryImpl<L extends Label> extends
 	 */
 	@Override
 	public Transition<L> create(int id, Set<L> labels) {
-		if( labels == null) 
-			throw new NullPointerException("The labels to be added at the Transition cannot be null");
-		
+		if (labels == null)
+			throw new NullPointerException(
+					"The labels to be added at the Transition cannot be null");
+
 		for (L label : labels) {
 			for (IGraphProposition p : label.getLabels()) {
 				if (p.isNegated()) {
@@ -68,8 +68,7 @@ public class ModelTransitionFactoryImpl<L extends Label> extends
 				}
 			}
 		}
-		Transition<L> t = super.create(id, labels);
 
-		return t;
+		return super.create(id, labels);
 	}
 }

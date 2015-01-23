@@ -23,22 +23,6 @@ public class StateImpl implements State {
 	private String name;
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getId() {
-		return this.id;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	/**
 	 * creates a state with the specified id and an empty name
 	 * 
 	 * @param id
@@ -76,6 +60,24 @@ public class StateImpl implements State {
 		this.name = name;
 	}
 
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getId() {
+		return this.id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	
 	/**
 	 * sets the name of the state
 	 * 

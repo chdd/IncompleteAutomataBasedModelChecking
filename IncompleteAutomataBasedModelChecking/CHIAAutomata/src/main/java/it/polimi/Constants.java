@@ -1,10 +1,7 @@
 package it.polimi;
 
-public class Constants {
-
-	private Constants() {
-		// Utility classes should always be final and have an private constructor
-	}
+public final class Constants {
+	
 	/**
 	 * IO Tags
 	 */
@@ -28,5 +25,9 @@ public class Constants {
 	public static final String NOTAPREGEX="^![a-zA-Z]+$";
 	public static final String LPAR="(";
 	public static final String RPAR=")";
+	
+	private Constants() {
+		// Utility classes should always be final and have an private constructor
+	}
 
 }

@@ -27,6 +27,23 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 	 */
 	private Set<L> labels;
 
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	protected TransitionImpl(Set<L> label, int id) {
+		if (id < 0)
+			throw new IllegalArgumentException(
+					"The value of the id cannot be less than zero");
+		if (label == null)
+			throw new NullPointerException(
+					"The character that labels the transition cannot be null");
+
+		this.id = id;
+		this.labels = Collections.unmodifiableSet(label);
+	}
+
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -43,21 +60,7 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 		return id;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected TransitionImpl(Set<L> label, int id) {
-		if (id < 0)
-			throw new IllegalArgumentException(
-					"The value of the id cannot be less than zero");
-		if (label == null)
-			throw new NullPointerException(
-					"The character that labels the transition cannot be null");
-
-		this.id = id;
-		this.labels = Collections.unmodifiableSet(label);
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */

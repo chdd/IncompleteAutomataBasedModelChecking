@@ -6,9 +6,14 @@ package it.polimi.automata.impl;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import it.polimi.automata.IBA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -27,12 +32,21 @@ public class IBAImplTest {
 
 	@Mock
 	private State state1;
+	
+	@Mock
+	private State state1Inject;
 
 	@Mock
 	private State state2;
+	
+	@Mock
+	private State state2Inject;
 
 	@Mock
 	private State state3;
+	
+	@Mock
+	private State state3Inject;
 
 	@Mock
 	private State state4;
@@ -54,9 +68,34 @@ public class IBAImplTest {
 
 	@Mock
 	private Transition<Label> t3;
+	
+	@Mock
+	private Transition<Label> t1Inject;
 
+	@Mock
+	private Transition<Label> t2Inject;
+
+	@Mock
+	private Transition<Label> t3Inject;
+
+	@Mock
+	private Transition<Label> inConnection1;
+	
+	@Mock
+	private Transition<Label> inConnection2;
+	
+	@Mock
+	private Transition<Label> outConnection1;
+	
+	@Mock
+	private Transition<Label> outConnection2;
+	
 	private IBAImpl<Label, State, Transition<Label>> ba;
+	private IBAImpl<Label, State, Transition<Label>> baInject;
 
+	private Map<State, Set<Entry<Transition<Label>, State >>> inEntry;
+	private Map<State, Set<Entry<Transition<Label>, State >>> outEntry;
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -69,9 +108,32 @@ public class IBAImplTest {
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
 		this.ba.addTransparentState(state2);
+		
 		Set<Label> returnSet=new HashSet<Label>();
 		returnSet.add(l3);
 		when(t3.getLabels()).thenReturn(returnSet);
+		
+		this.baInject = new IBAImpl<Label, State, Transition<Label>>();
+		baInject.addInitialState(state1Inject);
+		baInject.addState(state2Inject);
+		baInject.addAcceptState(state3Inject);
+		this.baInject.addCharacter(l1);
+		this.baInject.addCharacter(l2);
+		this.baInject.addTransition(state1Inject, state2Inject, t1Inject);
+		this.baInject.addTransition(state2Inject, state3Inject, t2Inject);
+		this.baInject.addTransparentState(state2Inject);
+		
+		Set<Entry<Transition<Label>, State>> incomingTransition=new HashSet<Entry<Transition<Label>, State>>();
+		incomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(inConnection1, state1Inject));
+		inEntry=new HashMap<State, Set<Entry<Transition<Label>,State>>>();
+		inEntry.put(state1, incomingTransition);
+		
+		Set<Entry<Transition<Label>, State>> outcomingTransition=new HashSet<Entry<Transition<Label>, State>>();
+		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(outConnection2, state3));
+		outEntry=new HashMap<State, Set<Entry<Transition<Label>,State>>>();
+		outEntry.put(state3Inject, outcomingTransition);
+		
+		
 	}
 	
 	/**
@@ -158,13 +220,258 @@ public class IBAImplTest {
 		assertEquals(clone.getOutTransitions(state2), this.ba.getOutTransitions(state2));
 		assertEquals(clone.getInTransitions(state2), this.ba.getInTransitions(state2));
 	}
-
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(null, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testReplaceNullTransparentState() {
+		this.ba.replace(null, this.baInject, this.inEntry, this.outEntry);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, null, java.util.Map, java.util.Map)}.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testReplaceNullIBA() {
+		this.ba.replace(this.state2, null, this.inEntry, this.outEntry);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, null, java.util.Map)}.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testReplaceNullIncoming() {
+		this.ba.replace(this.state2, this.baInject, null, this.outEntry);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, null)}.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void testReplaceNullOutcoming() {
+		this.ba.replace(this.state2, this.baInject, this.inEntry, null);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testReplaceNotTransparent() {
+		this.ba.replace(this.state1, this.baInject, this.inEntry, this.outEntry);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, IllegalMap, java.util.Map)}.
+	 * when one of the NEW incoming connection does not correspond to an old incoming connection
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testReplaceInvalidIncoming() {
+		Set<Entry<Transition<Label>, State>> incomingTransition=new HashSet<Entry<Transition<Label>, State>>();
+		incomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(inConnection1, state1Inject));
+		inEntry.put(state3, incomingTransition);
+		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+	}
+	
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, IllegalMap, java.util.Map)}.
+	 * when the destination of the NEW incoming connection does not correspond to an initial state of the BA to be injected
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testReplaceInvalidIcomingFinal() {
+		Set<Entry<Transition<Label>, State>> incomingTransition=new HashSet<Entry<Transition<Label>, State>>();
+		incomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(inConnection1, state2Inject));
+		inEntry.put(state1, incomingTransition);
+		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, IllegalMap)}.
+	 * when one of the NEW out-coming connection does not correspond to an old out-coming connection
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testReplaceInvalidOutcoming() {
+		Set<Entry<Transition<Label>, State>> outcomingTransition=new HashSet<Entry<Transition<Label>, State>>();
+		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(outConnection2, state1));
+		outEntry.put(state3Inject, outcomingTransition);
+		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, IllegalMap)}.
+	 * when the initial state of the NEW out-coming connection does not correspond to a final state of the refinement
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void testReplaceOutcomingInitial() {
+		Set<Entry<Transition<Label>, State>> outcomingTransition=new HashSet<Entry<Transition<Label>, State>>();
+		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(outConnection2, state3));
+		outEntry.put(state2Inject, outcomingTransition);
+		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+	}
+	
+	
 	/**
 	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
 	 */
 	@Test
 	public void testReplace() {
-		//TODO
+		
+		IBA<Label, State, Transition<Label>> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		assertTrue(refinement.getStates().contains(state1));
+		assertFalse(refinement.getStates().contains(state2));
+		assertTrue(refinement.getStates().contains(state3));
+		assertTrue(refinement.getStates().contains(state1Inject));
+		assertTrue(refinement.getStates().contains(state2Inject));
+		assertTrue(refinement.getStates().contains(state3Inject));
+		
+		assertTrue(refinement.getInitialStates().contains(state1));
+		assertFalse(refinement.getInitialStates().contains(state2));
+		assertFalse(refinement.getInitialStates().contains(state3));
+		assertFalse(refinement.getInitialStates().contains(state1Inject));
+		assertFalse(refinement.getInitialStates().contains(state2Inject));
+		assertFalse(refinement.getInitialStates().contains(state3Inject));
+		
+		assertTrue(refinement.getAcceptStates().contains(state3));
+		assertFalse(refinement.getAcceptStates().contains(state2));
+		assertFalse(refinement.getAcceptStates().contains(state1));
+		assertFalse(refinement.getAcceptStates().contains(state1Inject));
+		assertFalse(refinement.getAcceptStates().contains(state2Inject));
+		assertFalse(refinement.getAcceptStates().contains(state3Inject));
+		
+		assertFalse(refinement.getTransitions().contains(t1));
+		assertFalse(refinement.getTransitions().contains(t2));
+		assertFalse(refinement.getTransitions().contains(t3));
+		assertTrue(refinement.getTransitions().contains(t1Inject));
+		assertTrue(refinement.getTransitions().contains(t2Inject));
+		assertTrue(refinement.getTransitions().contains(inConnection1));
+		assertTrue(refinement.getTransitions().contains(outConnection2));
+		
+		assertTrue(refinement.getTransparentStates().contains(state2Inject));
+		
+		assertTrue(refinement.getOutTransitions(state1).contains(inConnection1));
+		assertTrue(refinement.getTransitionDestination(inConnection1).equals(state1Inject));
+		
+		assertTrue(refinement.getOutTransitions(state1Inject).contains(t1Inject));
+		assertTrue(refinement.getTransitionDestination(t1Inject).equals(state2Inject));
+		
+		assertTrue(refinement.getOutTransitions(state2Inject).contains(t2Inject));
+		assertTrue(refinement.getTransitionDestination(t2Inject).equals(state3Inject));
+		
+		assertTrue(refinement.getOutTransitions(state3Inject).contains(outConnection2));
+		assertTrue(refinement.getTransitionDestination(outConnection2).equals(state3));
+		
 	}
+	
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * performs the same test but considers the state state2 as accepting
+	 */
+	@Test
+	public void testReplace2() {
+		
+		this.ba.addAcceptState(state2);
+		IBA<Label, State, Transition<Label>> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		assertTrue(refinement.getStates().contains(state1));
+		assertFalse(refinement.getStates().contains(state2));
+		assertTrue(refinement.getStates().contains(state3));
+		assertTrue(refinement.getStates().contains(state1Inject));
+		assertTrue(refinement.getStates().contains(state2Inject));
+		assertTrue(refinement.getStates().contains(state3Inject));
+		
+		assertTrue(refinement.getInitialStates().contains(state1));
+		assertFalse(refinement.getInitialStates().contains(state2));
+		assertFalse(refinement.getInitialStates().contains(state3));
+		assertFalse(refinement.getInitialStates().contains(state1Inject));
+		assertFalse(refinement.getInitialStates().contains(state2Inject));
+		assertFalse(refinement.getInitialStates().contains(state3Inject));
+		
+		assertTrue(refinement.getAcceptStates().contains(state3));
+		assertFalse(refinement.getAcceptStates().contains(state2));
+		assertFalse(refinement.getAcceptStates().contains(state1));
+		assertFalse(refinement.getAcceptStates().contains(state1Inject));
+		assertFalse(refinement.getAcceptStates().contains(state2Inject));
+		assertTrue(refinement.getAcceptStates().contains(state3Inject));
+		
+		assertFalse(refinement.getTransitions().contains(t1));
+		assertFalse(refinement.getTransitions().contains(t2));
+		assertFalse(refinement.getTransitions().contains(t3));
+		assertTrue(refinement.getTransitions().contains(t1Inject));
+		assertTrue(refinement.getTransitions().contains(t2Inject));
+		assertTrue(refinement.getTransitions().contains(inConnection1));
+		assertTrue(refinement.getTransitions().contains(outConnection2));
+		
+		assertTrue(refinement.getTransparentStates().contains(state2Inject));
+		
+		assertTrue(refinement.getOutTransitions(state1).contains(inConnection1));
+		assertTrue(refinement.getTransitionDestination(inConnection1).equals(state1Inject));
+		
+		assertTrue(refinement.getOutTransitions(state1Inject).contains(t1Inject));
+		assertTrue(refinement.getTransitionDestination(t1Inject).equals(state2Inject));
+		
+		assertTrue(refinement.getOutTransitions(state2Inject).contains(t2Inject));
+		assertTrue(refinement.getTransitionDestination(t2Inject).equals(state3Inject));
+		
+		assertTrue(refinement.getOutTransitions(state3Inject).contains(outConnection2));
+		assertTrue(refinement.getTransitionDestination(outConnection2).equals(state3));
+		
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * performs the same test but considers the state state2 as initial
+	 */
+	@Test
+	public void testReplace3() {
+		
+		this.ba.addAcceptState(state2);
+		this.ba.addInitialState(state2);
+		IBA<Label, State, Transition<Label>> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		assertTrue(refinement.getStates().contains(state1));
+		assertFalse(refinement.getStates().contains(state2));
+		assertTrue(refinement.getStates().contains(state3));
+		assertTrue(refinement.getStates().contains(state1Inject));
+		assertTrue(refinement.getStates().contains(state2Inject));
+		assertTrue(refinement.getStates().contains(state3Inject));
+		
+		assertTrue(refinement.getInitialStates().contains(state1));
+		assertFalse(refinement.getInitialStates().contains(state2));
+		assertFalse(refinement.getInitialStates().contains(state3));
+		assertTrue(refinement.getInitialStates().contains(state1Inject));
+		assertFalse(refinement.getInitialStates().contains(state2Inject));
+		assertFalse(refinement.getInitialStates().contains(state3Inject));
+		
+		assertTrue(refinement.getAcceptStates().contains(state3));
+		assertFalse(refinement.getAcceptStates().contains(state2));
+		assertFalse(refinement.getAcceptStates().contains(state1));
+		assertFalse(refinement.getAcceptStates().contains(state1Inject));
+		assertFalse(refinement.getAcceptStates().contains(state2Inject));
+		assertTrue(refinement.getAcceptStates().contains(state3Inject));
+		
+		assertFalse(refinement.getTransitions().contains(t1));
+		assertFalse(refinement.getTransitions().contains(t2));
+		assertFalse(refinement.getTransitions().contains(t3));
+		assertTrue(refinement.getTransitions().contains(t1Inject));
+		assertTrue(refinement.getTransitions().contains(t2Inject));
+		assertTrue(refinement.getTransitions().contains(inConnection1));
+		assertTrue(refinement.getTransitions().contains(outConnection2));
+		
+		assertTrue(refinement.getTransparentStates().contains(state2Inject));
+		
+		assertTrue(refinement.getOutTransitions(state1).contains(inConnection1));
+		assertTrue(refinement.getTransitionDestination(inConnection1).equals(state1Inject));
+		
+		assertTrue(refinement.getOutTransitions(state1Inject).contains(t1Inject));
+		assertTrue(refinement.getTransitionDestination(t1Inject).equals(state2Inject));
+		
+		assertTrue(refinement.getOutTransitions(state2Inject).contains(t2Inject));
+		assertTrue(refinement.getTransitionDestination(t2Inject).equals(state3Inject));
+		
+		assertTrue(refinement.getOutTransitions(state3Inject).contains(outConnection2));
+		assertTrue(refinement.getTransitionDestination(outConnection2).equals(state3));
+		
+	}
+
 
 }
