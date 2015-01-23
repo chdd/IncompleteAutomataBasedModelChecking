@@ -1,4 +1,4 @@
-package it.polimi.contraintcomputation.brzozowski.transformers;
+package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
@@ -18,25 +18,25 @@ import org.apache.commons.collections15.Transformer;
  * 
  * @author claudiomenghi
  * 
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class TransitionMatrixTranformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		implements Transformer<BA<LABEL, STATE, TRANSITION>, String[][]> {
+public class TransitionMatrixTranformer<L extends Label, S extends State, T extends Transition<L>>
+		implements Transformer<BA<L, S, T>, String[][]> {
 
 	/**
 	 * contains the array of the ordered states
 	 */
-	private List<STATE> orderedStates;
+	private List<S> orderedStates;
 
 	/**
 	 * creates a new {@link TransitionMatrixTranformer} with the specified order
@@ -47,7 +47,7 @@ public class TransitionMatrixTranformer<LABEL extends Label, STATE extends State
 	 * @throws NullPointerException
 	 *             if the {@link ArrayList} of the ordered states is null
 	 */
-	public TransitionMatrixTranformer(List<STATE> orderedStates) {
+	public TransitionMatrixTranformer(List<S> orderedStates) {
 		if (orderedStates == null) {
 			throw new NullPointerException(
 					"The array of the ordered states cannot be null");
@@ -70,7 +70,7 @@ public class TransitionMatrixTranformer<LABEL extends Label, STATE extends State
 	 *             automaton and vice-versa
 	 */
 	@Override
-	public String[][] transform(BA<LABEL, STATE, TRANSITION> automaton) {
+	public String[][] transform(BA<L, S, T> automaton) {
 		if (!automaton.getStates().containsAll(orderedStates)) {
 			throw new IllegalArgumentException(
 					"The ordered states must be contained into the set of the states of the automaton");
@@ -84,11 +84,11 @@ public class TransitionMatrixTranformer<LABEL extends Label, STATE extends State
 				.getStates().size()];
 
 		for (int i = 0; i < this.orderedStates.size(); i++) {
-			STATE s1 = this.orderedStates.get(i);
+			S s1 = this.orderedStates.get(i);
 			for (int j = 0; j < this.orderedStates.size(); j++) {
-				STATE s2 = this.orderedStates.get(j);
+				S s2 = this.orderedStates.get(j);
 				boolean setted = false;
-				for (TRANSITION t : automaton.getGraph().getOutEdges(s1)) {
+				for (T t : automaton.getGraph().getOutEdges(s1)) {
 					if (automaton.getGraph().getDest(t).equals(s2)) {
 
 						ret[i][j] = t.toString();

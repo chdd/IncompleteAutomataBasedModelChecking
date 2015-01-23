@@ -14,30 +14,30 @@ import java.util.Set;
  * 
  * @author claudiomenghi
  * 
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Filter<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class Filter<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the filtered intersection automaton
 	 */
-	private IntersectionBA<LABEL, STATE, TRANSITION> newIntersection;
+	private IntersectionBA<L, S, T> newIntersection;
 
 	/**
 	 * contains the set of the states to be included in the intersection
 	 * automaton
 	 */
-	private Set<STATE> componentStates;
+	private Set<S> componentStates;
 
 	/**
 	 * creates a new Filter
@@ -51,8 +51,8 @@ public class Filter<LABEL extends Label, STATE extends State, TRANSITION extends
 	 *             if the set of the states in the intersection automaton or the
 	 *             set of the states in the componentStates is null
 	 */
-	public Filter(IntersectionBA<LABEL, STATE, TRANSITION> intersection,
-			Set<STATE> componentStates) {
+	public Filter(IntersectionBA<L, S, T> intersection,
+			Set<S> componentStates) {
 		if (intersection == null) {
 			throw new NullPointerException(
 					"The intersection automaton to be filtered cannot be null");
@@ -73,26 +73,26 @@ public class Filter<LABEL extends Label, STATE extends State, TRANSITION extends
 	 * @return a new Intersection automaton which contains the only states in
 	 *         the set componentStates
 	 */
-	public IntersectionBA<LABEL, STATE, TRANSITION> filter() {
-		for (STATE s : componentStates) {
+	public IntersectionBA<L, S, T> filter() {
+		for (S s : componentStates) {
 
-			for (TRANSITION t : this.newIntersection.getInTransitions(s)) {
+			for (T t : this.newIntersection.getInTransitions(s)) {
 				if (!componentStates.contains(this.newIntersection
 						.getTransitionSource(t))) {
 					this.newIntersection.addInitialState(s);
 				}
 			}
-			for (TRANSITION t : this.newIntersection.getOutTransitions(s)) {
+			for (T t : this.newIntersection.getOutTransitions(s)) {
 				if (!componentStates.contains(this.newIntersection
 						.getTransitionDestination(t))) {
 					this.newIntersection.addAcceptState(s);
 				}
 			}
 		}
-		Set<STATE> statesToBeRemoved = new HashSet<STATE>(
+		Set<S> statesToBeRemoved = new HashSet<S>(
 				this.newIntersection.getStates());
 		statesToBeRemoved.removeAll(componentStates);
-		for (STATE s : statesToBeRemoved) {
+		for (S s : statesToBeRemoved) {
 			this.newIntersection.removeState(s);
 		}
 

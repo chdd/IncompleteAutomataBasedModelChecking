@@ -1,4 +1,4 @@
-package it.polimi.checker.ibaTransparentStateRemoval;
+package it.polimi.checker.ibatransparentstateremoval;
 
 import it.polimi.automata.IBA;
 import it.polimi.automata.labeling.Label;
@@ -11,19 +11,19 @@ import it.polimi.automata.transition.Transition;
  * incoming and out-coming transitions are simply removed
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IBATransparentStateRemoval<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class IBATransparentStateRemoval<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * removes from the Incomplete Buchi Automaton all the transparent states
@@ -37,15 +37,15 @@ public class IBATransparentStateRemoval<LABEL extends Label, STATE extends State
 	 * @throws NullPointerException
 	 *             if the Incomplete Buchi Automaton is null
 	 */
-	public IBA<LABEL, STATE, TRANSITION> transparentStateRemoval(
-			IBA<LABEL, STATE, TRANSITION> iba) {
+	public IBA<L, S, T> transparentStateRemoval(
+			IBA<L, S, T> iba) {
 		if (iba == null) {
 			throw new NullPointerException(
 					"The Incomplete Buchi Automaton cannot be null");
 		}
 
-		IBA<LABEL, STATE, TRANSITION> retIba = iba.clone();
-		for (STATE s : retIba.getTransparentStates()) {
+		IBA<L, S, T> retIba = iba.clone();
+		for (S s : retIba.getTransparentStates()) {
 			retIba.removeState(s);
 		}
 		return retIba;

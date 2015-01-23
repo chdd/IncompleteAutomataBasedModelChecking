@@ -11,12 +11,12 @@ import it.polimi.automata.transition.TransitionFactory;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IntersectionRule<LABEL extends Label, TRANSITION extends Transition<LABEL>> {
+public interface IntersectionRule<L extends Label, T extends Transition<L>> {
 
 	/**
 	 * specifies how the intersection transition between a transition of the
@@ -38,8 +38,8 @@ public interface IntersectionRule<LABEL extends Label, TRANSITION extends Transi
 	 *             intersectionTransitionFactory is null
 	 * 
 	 */
-	public abstract TRANSITION getIntersectionTransition(
-			TRANSITION modelTransition, TRANSITION claimTransition,
-			TransitionFactory<LABEL, TRANSITION> intersectionTransitionFactory);
+	public abstract T getIntersectionTransition(
+			T modelTransition, T claimTransition,
+			TransitionFactory<L, T> intersectionTransitionFactory);
 
 }

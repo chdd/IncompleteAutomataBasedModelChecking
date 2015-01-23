@@ -12,18 +12,18 @@ import it.polimi.automata.transition.Transition;
  * @see {@link Label}
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state constrained by the proposition.
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Proposition<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class Proposition<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * is the regular expression that must be satisfied in the refinement when
@@ -34,17 +34,17 @@ public class Proposition<LABEL extends Label, STATE extends State, TRANSITION ex
 	/**
 	 * contains the state that is constrained
 	 */
-	private final STATE state;
+	private final S state;
 	/**
 	 * contains the transition that is performed to enter the state of the
 	 * automaton
 	 */
-	private final TRANSITION incoming;
+	private final T incoming;
 	/**
 	 * contains the transition that is performed to exit the state of the
 	 * automaton
 	 */
-	private final TRANSITION outcoming;
+	private final T outcoming;
 
 	/**
 	 * creates a new Proposition
@@ -64,8 +64,8 @@ public class Proposition<LABEL extends Label, STATE extends State, TRANSITION ex
 	 *             out-coming transition is null
 	 * 
 	 */
-	public Proposition(STATE state, String regex, TRANSITION incoming,
-			TRANSITION outcoming) {
+	public Proposition(S state, String regex, T incoming,
+			T outcoming) {
 		if (state == null) {
 			throw new NullPointerException(
 					"The state to be constrained cannot be null");
@@ -106,7 +106,7 @@ public class Proposition<LABEL extends Label, STATE extends State, TRANSITION ex
 	 * 
 	 * @return the state that is constrained
 	 */
-	public STATE getState() {
+	public S getState() {
 		return state;
 	}
 
@@ -115,7 +115,7 @@ public class Proposition<LABEL extends Label, STATE extends State, TRANSITION ex
 	 * 
 	 * @return the incoming the transition that is performed to enter the state
 	 */
-	public TRANSITION getIncoming() {
+	public T getIncoming() {
 		return incoming;
 	}
 
@@ -125,7 +125,7 @@ public class Proposition<LABEL extends Label, STATE extends State, TRANSITION ex
 	 * @return the out-coming transition: the transition that is performed to
 	 *         exit the state
 	 */
-	public TRANSITION getOutcoming() {
+	public T getOutcoming() {
 		return outcoming;
 	}
 }

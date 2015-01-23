@@ -20,14 +20,14 @@ import java.util.Set;
  * @author claudiomenghi
  * 
  */
-public class ConstraintGenerator<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class ConstraintGenerator<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains a map that maps each state of the model with a set of states of
 	 * the intersection automaton
 	 */
-	private Map<STATE, Set<STATE>> modelIntersectionStatesMap;
-	private IntersectionBA<LABEL, STATE, TRANSITION> intBA;
+	private Map<S, Set<S>> modelIntersectionStatesMap;
+	private IntersectionBA<L, S, T> intBA;
 
 	/**
 	 * creates a new ConstraintGenerator object which starting from the
@@ -43,8 +43,8 @@ public class ConstraintGenerator<LABEL extends Label, STATE extends State, TRANS
 	 * @throws NullPointerException
 	 *             if the intersection automaton or the map is null
 	 */
-	public ConstraintGenerator(IntersectionBA<LABEL, STATE, TRANSITION> intBA,
-			Map<STATE, Set<STATE>> modelIntersectionStatesMap) {
+	public ConstraintGenerator(IntersectionBA<L, S, T> intBA,
+			Map<S, Set<S>> modelIntersectionStatesMap) {
 		if (intBA == null) {
 			throw new NullPointerException(
 					"The intersection model cannot be null");
@@ -63,39 +63,39 @@ public class ConstraintGenerator<LABEL extends Label, STATE extends State, TRANS
 		 * the parts of the automaton that refer to different states of the
 		 * model
 		 */
-		Map<STATE, Set<Set<STATE>>> modelStateSubAutomataMap = new SubAutomataIdentifier<LABEL, STATE, TRANSITION>(
+		Map<S, Set<Set<S>>> modelStateSubAutomataMap = new SubAutomataIdentifier<L, S, T>(
 				this.intBA, modelIntersectionStatesMap).getSubAutomata();
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which
 		 * do not correspond to transparent states are removed
 		 */
-		IntersectionBA<LABEL, STATE, TRANSITION> abstractedIntersection = new Abstractor<LABEL, STATE, TRANSITION>(
+		IntersectionBA<L, S, T> abstractedIntersection = new Abstractor<L, S, T>(
 				this.intBA).abstractIntersection();
 
 		// each component of the map is analyzed
-		for (STATE s : modelStateSubAutomataMap.keySet()) {
-			for (Set<STATE> component : modelStateSubAutomataMap.get(s)) {
-				IntersectionBA<LABEL, STATE, TRANSITION> filteredIntersection = new Filter<LABEL, STATE, TRANSITION>(
+		for (S s : modelStateSubAutomataMap.keySet()) {
+			for (Set<S> component : modelStateSubAutomataMap.get(s)) {
+				IntersectionBA<L, S, T> filteredIntersection = new Filter<L, S, T>(
 						abstractedIntersection, component)
 						.filter();
 
-				for (STATE initState : filteredIntersection.getInitialStates()) {
-					for (STATE finalState : filteredIntersection
+				for (S initState : filteredIntersection.getInitialStates()) {
+					for (S finalState : filteredIntersection
 							.getAcceptStates()) {
-						String regex = new Brzozowski<LABEL, STATE, TRANSITION>(
+						String regex = new Brzozowski<L, S, T>(
 								filteredIntersection, initState, finalState)
 								.getRegularExpression();
-						for (TRANSITION incomingTransition : this.intBA
+						for (T incomingTransition : this.intBA
 								.getInTransitions(initState)) {
 							if (!filteredIntersection.getInTransitions(
 									initState).contains(incomingTransition)) {
-								for (TRANSITION outcomingTransition : this.intBA
+								for (T outcomingTransition : this.intBA
 										.getOutTransitions(finalState)) {
 									if (!filteredIntersection
 											.getOutTransitions(finalState)
 											.contains(outcomingTransition)) {
-										Proposition<LABEL, STATE, TRANSITION> p = new Proposition<LABEL, STATE, TRANSITION>(
+										Proposition<L, S, T> p = new Proposition<L, S, T>(
 												s, regex, incomingTransition,
 												outcomingTransition);
 									}

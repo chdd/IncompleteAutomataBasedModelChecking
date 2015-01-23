@@ -1,4 +1,4 @@
-package it.polimi.contraintcomputation.brzozowski.transformers;
+package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
@@ -16,29 +16,29 @@ import org.apache.commons.collections15.Transformer;
  * 
  * @author claudiomenghi
  * 
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class AcceptingStatesTransformer<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
-		implements Transformer<BA<LABEL, STATE, TRANSITION>, String[]> {
+class AcceptingStatesTransformer<L extends Label, S extends State, T extends Transition<L>>
+		implements Transformer<BA<L, S, T>, String[]> {
 
 	/**
 	 * contains the state to be considered as final in the automaton
 	 */
-	private final STATE finalState;
+	private final S finalState;
 	/**
 	 * contains the list which describes an ordering between the states
 	 */
-	private final List<STATE> orderedStates;
+	private final List<S> orderedStates;
 
 	/**
 	 * creates the transformer with the specified ordering between states and
@@ -51,8 +51,8 @@ public class AcceptingStatesTransformer<LABEL extends Label, STATE extends State
 	 * @throws NullPointerException
 	 *             if the list of the ordered state or the final state is null
 	 */
-	public AcceptingStatesTransformer(List<STATE> orderedStates,
-			STATE finalState) {
+	public AcceptingStatesTransformer(List<S> orderedStates,
+			S finalState) {
 		if (finalState == null) {
 			throw new NullPointerException("The final state cannot be null");
 		}
@@ -82,7 +82,7 @@ public class AcceptingStatesTransformer<LABEL extends Label, STATE extends State
 	 * 
 	 */
 	@Override
-	public String[] transform(BA<LABEL, STATE, TRANSITION> automaton) {
+	public String[] transform(BA<L, S, T> automaton) {
 
 		if (!automaton.getStates().contains(finalState)) {
 			throw new IllegalArgumentException(
@@ -102,7 +102,7 @@ public class AcceptingStatesTransformer<LABEL extends Label, STATE extends State
 
 		int i = 0;
 		// for each state in the stateOrdered vector
-		for (STATE s : this.orderedStates) {
+		for (S s : this.orderedStates) {
 
 			// if the state is equal to the state accept
 			if (finalState.equals(s)) {

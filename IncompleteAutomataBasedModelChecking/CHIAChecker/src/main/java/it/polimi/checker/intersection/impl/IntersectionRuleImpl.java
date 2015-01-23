@@ -20,22 +20,22 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * 
  * @author claudiomenghi
  * 
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionRuleImpl<LABEL extends Label, TRANSITION extends Transition<LABEL>>
-		implements IntersectionRule<LABEL,TRANSITION> {
+public class IntersectionRuleImpl<L extends Label, T extends Transition<L>>
+		implements IntersectionRule<L,T> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TRANSITION getIntersectionTransition(
-			TRANSITION modelTransition,
-			TRANSITION claimTransition,
-			TransitionFactory<LABEL, TRANSITION> intersectionTransitionFactory) {
+	public T getIntersectionTransition(
+			T modelTransition,
+			T claimTransition,
+			TransitionFactory<L, T> intersectionTransitionFactory) {
 		if (modelTransition == null) {
 			throw new NullPointerException(
 					"The model transition cannot be null");
@@ -49,9 +49,9 @@ public class IntersectionRuleImpl<LABEL extends Label, TRANSITION extends Transi
 					"The intersection factory cannot be null");
 		}
 
-		Set<LABEL> labels=new HashSet<LABEL>();
-		for(LABEL claimLabel: claimTransition.getLabels()){
-			for(LABEL modelLabel: modelTransition.getLabels()){
+		Set<L> labels=new HashSet<L>();
+		for(L claimLabel: claimTransition.getLabels()){
+			for(L modelLabel: modelTransition.getLabels()){
 				if(this.satisfies(modelLabel, claimLabel)){
 					labels.add(modelLabel);
 				}
@@ -71,7 +71,7 @@ public class IntersectionRuleImpl<LABEL extends Label, TRANSITION extends Transi
 	 * @param claimLabel is the label of the claim
 	 * @return true if the label of the model satisfies the label of the claim
 	 */
-	private boolean satisfies(LABEL modelLabel, LABEL claimLabel){
+	private boolean satisfies(L modelLabel, L claimLabel){
 		for(IGraphProposition claimProposition: claimLabel.getLabels()){
 			if(claimProposition.isNegated() && modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
 				return false;

@@ -4,8 +4,6 @@ import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.contraintcomputation.brzozowski.transformers.AcceptingStatesTransformer;
-import it.polimi.contraintcomputation.brzozowski.transformers.TransitionMatrixTranformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,39 +15,39 @@ import java.util.List;
  * 
  * @author claudiomenghi
  * 
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Brzozowski<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class Brzozowski<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the automaton to be analyzed
 	 */
-	private final BA<LABEL, STATE, TRANSITION> automaton;
+	private final BA<L, S, T> automaton;
 
 	/**
 	 * contains the list of the states of the automaton
 	 */
-	private final List<STATE> orderedStates;
+	private final List<S> orderedStates;
 
 	/**
 	 * is the initial state to be considered
 	 */
-	private final STATE initState;
+	private final S initState;
 
 	/**
 	 * is the state to be considered as final
 	 */
-	private final STATE finalState;
+	private final S finalState;
 
 	/**
 	 * creates a new Brzozowski solver
@@ -66,8 +64,8 @@ public class Brzozowski<LABEL extends Label, STATE extends State, TRANSITION ext
 	 *             if the initState or the finalState are not contained in the
 	 *             automaton
 	 */
-	public Brzozowski(BA<LABEL, STATE, TRANSITION> automaton, STATE initState,
-			STATE finalState) {
+	public Brzozowski(BA<L, S, T> automaton, S initState,
+			S finalState) {
 		if (automaton == null) {
 			throw new NullPointerException(
 					"The automaton to be analyzed cannot be null");
@@ -89,7 +87,7 @@ public class Brzozowski<LABEL extends Label, STATE extends State, TRANSITION ext
 					"The final state must be contained into the set of the states of the automaton");
 		}
 		this.automaton = automaton;
-		this.orderedStates = new ArrayList<STATE>(automaton.getStates());
+		this.orderedStates = new ArrayList<S>(automaton.getStates());
 		this.initState = initState;
 		this.finalState = finalState;
 	}
@@ -107,9 +105,9 @@ public class Brzozowski<LABEL extends Label, STATE extends State, TRANSITION ext
 		this.orderedStates.remove(this.initState);
 		this.orderedStates.add(0, initState);
 
-		String[][] t = new TransitionMatrixTranformer<LABEL, STATE, TRANSITION>(
+		String[][] t = new TransitionMatrixTranformer<L, S, T>(
 				this.orderedStates).transform(this.automaton);
-		String[] constr1 = new AcceptingStatesTransformer<LABEL, STATE, TRANSITION>(
+		String[] constr1 = new AcceptingStatesTransformer<L, S, T>(
 				orderedStates, this.finalState).transform(automaton);
 		this.solveSystem(t, constr1);
 

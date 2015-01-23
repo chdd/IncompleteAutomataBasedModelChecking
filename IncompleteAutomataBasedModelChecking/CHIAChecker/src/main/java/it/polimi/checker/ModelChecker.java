@@ -10,7 +10,7 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.emptiness.EmptinessChecker;
-import it.polimi.checker.ibaTransparentStateRemoval.IBATransparentStateRemoval;
+import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
@@ -19,31 +19,31 @@ import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
  * @author claudiomenghi
  * 
  */
-public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>>
+public class ModelChecker<L extends Label, S extends State, T extends Transition<L>>
 
 {
 
 	/**
 	 * contains the specification to be checked
 	 */
-	private BA<LABEL, STATE, TRANSITION> claim;
+	private BA<L, S, T> claim;
 
 	/**
 	 * contains the model to be checked
 	 */
-	private IBA<LABEL, STATE, TRANSITION> model;
+	private IBA<L, S, T> model;
 
 	/**
 	 * contains the intersection automaton of the model and its specification
 	 * after the model checking procedure is performed
 	 */
-	private IntersectionBA<LABEL, STATE, TRANSITION> ris;
+	private IntersectionBA<L, S, T> ris;
 
-	private IntersectionRule<LABEL, TRANSITION> intersectionRule;
+	private IntersectionRule<L, T> intersectionRule;
 
-	private StateFactory<STATE> intersectionStateFactory;
-	private IntersectionBAFactory<LABEL, STATE, TRANSITION> intersectionBAFactory;
-	private TransitionFactory<LABEL, TRANSITION> intersectionTransitionFactory;
+	private StateFactory<S> intersectionStateFactory;
+	private IntersectionBAFactory<L, S, T> intersectionBAFactory;
+	private TransitionFactory<L, T> intersectionTransitionFactory;
 
 	/**
 	 * contains the results of the verification (if the specification is
@@ -65,8 +65,8 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public ModelChecker(IBA<LABEL, STATE, TRANSITION> model,
-			BA<LABEL, STATE, TRANSITION> claim, ModelCheckingResults mp) {
+	public ModelChecker(IBA<L, S, T> model,
+			BA<L, S, T> claim, ModelCheckingResults mp) {
 		if (model == null) {
 			throw new IllegalArgumentException(
 					"The model to be checked cannot be null");
@@ -83,7 +83,7 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 		this.claim = claim;
 		this.model = model;
 		this.verificationResults = mp;
-		this.intersectionRule = new IntersectionRuleImpl<LABEL, TRANSITION>();
+		this.intersectionRule = new IntersectionRuleImpl<L, T>();
 
 	}
 
@@ -175,14 +175,14 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 	private boolean checkViolation() {
 
 		// removes the transparent states from the model
-		IBA<LABEL, STATE, TRANSITION> mc = new IBATransparentStateRemoval<LABEL, STATE, TRANSITION>()
+		IBA<L, S, T> mc = new IBATransparentStateRemoval<L, S, T>()
 				.transparentStateRemoval(model);
 		// computing the intersection
-		BA<LABEL, STATE, TRANSITION> intersection = new IntersectionBuilder<LABEL, STATE, TRANSITION>(
+		BA<L, S, T> intersection = new IntersectionBuilder<L, S, T>(
 				this.intersectionRule, intersectionStateFactory,
 				intersectionBAFactory, intersectionTransitionFactory, mc, claim)
 				.computeIntersection();
-		return !new EmptinessChecker<LABEL, STATE, TRANSITION>(intersection)
+		return !new EmptinessChecker<L, S, T>(intersection)
 				.isEmpty();
 	}
 
@@ -198,11 +198,11 @@ public class ModelChecker<LABEL extends Label, STATE extends State, TRANSITION e
 	private boolean checkPossibleViolation() {
 
 		// computing the intersection
-		this.ris = new IntersectionBuilder<LABEL, STATE, TRANSITION>(
+		this.ris = new IntersectionBuilder<L, S, T>(
 				this.intersectionRule, intersectionStateFactory,
 				intersectionBAFactory, intersectionTransitionFactory, model,
 				claim).computeIntersection();
-		return !new EmptinessChecker<LABEL, STATE, TRANSITION>(this.ris)
+		return !new EmptinessChecker<L, S, T>(this.ris)
 				.isEmpty();
 	}
 	/*

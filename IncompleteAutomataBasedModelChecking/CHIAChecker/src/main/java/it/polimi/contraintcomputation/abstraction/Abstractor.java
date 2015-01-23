@@ -30,21 +30,21 @@ import java.util.Set;
  *            is the type of the state of the Intersection Buchi Automaton. The
  *            type of the states of the automaton must implement the interface
  *            {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Intersection Buchi Automaton.
  *            The typer of the transitions of the automaton must implement the
  *            interface {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Abstractor<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class Abstractor<L extends Label, STATE extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the intersection automaton to be simplified
 	 */
-	private IntersectionBA<LABEL, STATE, TRANSITION> intBA;
+	private IntersectionBA<L, STATE, T> intBA;
 
 	/**
 	 * contains the set of already visited states
@@ -59,7 +59,7 @@ public class Abstractor<LABEL extends Label, STATE extends State, TRANSITION ext
 	 * @throws NullPointerException
 	 *             if the intersection automaton or the factory is null
 	 */
-	public Abstractor(IntersectionBA<LABEL, STATE, TRANSITION> intBA) {
+	public Abstractor(IntersectionBA<L, STATE, T> intBA) {
 		if (intBA == null) {
 			throw new NullPointerException(
 					"The intersection automaton cannot be null");
@@ -88,7 +88,7 @@ public class Abstractor<LABEL extends Label, STATE extends State, TRANSITION ext
 	 * 
 	 * @return the abstracted version of the state space
 	 */
-	public IntersectionBA<LABEL, STATE, TRANSITION> abstractIntersection() {
+	public IntersectionBA<L, STATE, T> abstractIntersection() {
 
 		for (STATE s : this.intBA.getInitialStates()) {
 			this.abstractStateSpace(s);
@@ -109,7 +109,7 @@ public class Abstractor<LABEL extends Label, STATE extends State, TRANSITION ext
 			return;
 		}
 		// get the out transitions
-		for (TRANSITION successorTransition : this.intBA
+		for (T successorTransition : this.intBA
 				.getOutTransitions(currState)) {
 			// get the next state of the Buchi automaton
 			STATE nextState = this.intBA
@@ -124,7 +124,7 @@ public class Abstractor<LABEL extends Label, STATE extends State, TRANSITION ext
 				// contains the successors of the next state
 				Set<STATE> nextStates = new HashSet<STATE>();
 				// for each transition that follow the nextState
-				for (TRANSITION followingTransition : this.intBA
+				for (T followingTransition : this.intBA
 						.getOutTransitions(nextState)) {
 					// contains the state that follow the nextState
 					STATE nextNextState = this.intBA

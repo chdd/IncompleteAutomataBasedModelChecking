@@ -18,7 +18,7 @@ import it.polimi.automata.transition.Transition;
  * @author claudiomenghi
  * 
  */
-public class SubAutomataIdentifier<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class SubAutomataIdentifier<L extends Label, STATE extends State, TRANSITION extends Transition<L>> {
 
 	/**
 	 * contains a map that maps each state of the model with a set of states of
@@ -35,7 +35,7 @@ public class SubAutomataIdentifier<LABEL extends Label, STATE extends State, TRA
 	/**
 	 * contains the intersection automaton
 	 */
-	private IntersectionBA<LABEL, STATE, TRANSITION> intersectionBA;
+	private IntersectionBA<L, STATE, TRANSITION> intersectionBA;
 
 	/**
 	 * contains the map that connect each state of the model with the
@@ -55,7 +55,7 @@ public class SubAutomataIdentifier<LABEL extends Label, STATE extends State, TRA
 	 *             if the intersection automaton or the map is null
 	 */
 	public SubAutomataIdentifier(
-			IntersectionBA<LABEL, STATE, TRANSITION> intersectionBA,
+			IntersectionBA<L, STATE, TRANSITION> intersectionBA,
 			Map<STATE, Set<STATE>> map) {
 
 		if (intersectionBA == null) {

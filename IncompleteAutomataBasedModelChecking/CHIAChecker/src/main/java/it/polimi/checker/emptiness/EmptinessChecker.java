@@ -22,35 +22,35 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  * 
  * @author claudiomenghi
  * 
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Buchi Automaton. The type of the
  *            states of the automaton must implement the interface {@link State}
- * @param <TRANSITION>
+ * @param <T>
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <LABEL>
+ * @param <L>
  *            is the type of the label of the transitions depending on whether
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class EmptinessChecker<LABEL extends Label, STATE extends State, TRANSITION extends Transition<LABEL>> {
+public class EmptinessChecker<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the automaton to be considered by the {@link EmptinessChecker}
 	 */
-	private BA<LABEL, STATE, TRANSITION> automaton;
+	private BA<L, S, T> automaton;
 	
 
 	/**
 	 * contains the set of the states that has been encountered by <i>some<i> invocation of the first DFS
 	 */
-	private Set<STATE> hashedStates;
+	private Set<S> hashedStates;
 
 	/**
 	 * contains the set of the states that has been encountered by <i>some<i> invocation of the second DFS
 	 */
-	private Set<STATE> flaggedStates;
+	private Set<S> flaggedStates;
 	
 	/**
 	 * creates a new Emptiness checker
@@ -60,14 +60,14 @@ public class EmptinessChecker<LABEL extends Label, STATE extends State, TRANSITI
 	 * @throws NullPointerException
 	 *             if the automaton to be considered is null
 	 */
-	public EmptinessChecker(BA<LABEL, STATE, TRANSITION> automaton) {
+	public EmptinessChecker(BA<L, S, T> automaton) {
 		if (automaton == null) {
 			throw new NullPointerException(
 					"The automaton to be considered cannot be null");
 		}
 		this.automaton = automaton;
-		this.hashedStates=new HashSet<STATE>();
-		this.flaggedStates=new HashSet<STATE>();
+		this.hashedStates=new HashSet<S>();
+		this.flaggedStates=new HashSet<S>();
 	}
 
 	/**
@@ -79,9 +79,9 @@ public class EmptinessChecker<LABEL extends Label, STATE extends State, TRANSITI
 	 */
 	public boolean isEmpty() {
 		
-		DirectedSparseGraph<STATE, TRANSITION> graph=this.automaton.getGraph();
+		DirectedSparseGraph<S, T> graph=this.automaton.getGraph();
 		boolean res = true;
-		for (STATE init : this.automaton.getInitialStates()) {
+		for (S init : this.automaton.getInitialStates()) {
 			if (firstDFS(init,graph)) {
 				return false;
 			}
@@ -96,10 +96,10 @@ public class EmptinessChecker<LABEL extends Label, STATE extends State, TRANSITI
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
 	 */
-	protected boolean firstDFS(STATE currState, DirectedSparseGraph<STATE, TRANSITION> graph) {
+	protected boolean firstDFS(S currState, DirectedSparseGraph<S, T> graph) {
 		
 			this.hashedStates.add(currState);
-			for (STATE t : graph.getSuccessors(currState)) {
+			for (S t : graph.getSuccessors(currState)) {
 				if(!this.hashedStates.contains(t)){
 					this.firstDFS(t, graph);
 				}
@@ -119,9 +119,9 @@ public class EmptinessChecker<LABEL extends Label, STATE extends State, TRANSITI
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
 	 */
-	protected boolean secondDFS(STATE currState, DirectedSparseGraph<STATE, TRANSITION> graph) {
+	protected boolean secondDFS(S currState, DirectedSparseGraph<S, T> graph) {
 		this.flaggedStates.add(currState);
-		for (STATE t : graph.getSuccessors(currState)) {
+		for (S t : graph.getSuccessors(currState)) {
 			if(this.hashedStates.contains(t)){
 				return true;
 			}
