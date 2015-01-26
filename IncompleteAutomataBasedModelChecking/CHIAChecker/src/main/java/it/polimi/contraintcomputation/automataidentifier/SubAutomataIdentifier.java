@@ -18,30 +18,30 @@ import it.polimi.automata.transition.Transition;
  * @author claudiomenghi
  * 
  */
-public class SubAutomataIdentifier<L extends Label, STATE extends State, TRANSITION extends Transition<L>> {
+public class SubAutomataIdentifier<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains a map that maps each state of the model with a set of states of
 	 * the intersection automaton
 	 */
-	private Map<STATE, Set<STATE>> modelIntersectionStatesMap;
+	private Map<S, Set<S>> modelIntersectionStatesMap;
 
 	/**
 	 * contains a map that maps each state of the intersection automaton with
 	 * the cluster it belongs with
 	 */
-	private Map<STATE, Set<STATE>> intersectionClusterMap;
+	private Map<S, Set<S>> intersectionClusterMap;
 
 	/**
 	 * contains the intersection automaton
 	 */
-	private IntersectionBA<L, STATE, TRANSITION> intersectionBA;
+	private IntersectionBA<L, S, T> intersectionBA;
 
 	/**
 	 * contains the map that connect each state of the model with the
 	 * corresponding clusters
 	 */
-	private Map<STATE, Set<Set<STATE>>> returnSubAutomata;
+	private Map<S, Set<Set<S>>> returnSubAutomata;
 
 	/**
 	 * creates an identifier for the sub automata of the intersection automata
@@ -55,8 +55,8 @@ public class SubAutomataIdentifier<L extends Label, STATE extends State, TRANSIT
 	 *             if the intersection automaton or the map is null
 	 */
 	public SubAutomataIdentifier(
-			IntersectionBA<L, STATE, TRANSITION> intersectionBA,
-			Map<STATE, Set<STATE>> map) {
+			IntersectionBA<L, S, T> intersectionBA,
+			Map<S, Set<S>> map) {
 
 		if (intersectionBA == null) {
 			throw new NullPointerException(
@@ -68,8 +68,8 @@ public class SubAutomataIdentifier<L extends Label, STATE extends State, TRANSIT
 		}
 		this.modelIntersectionStatesMap = map;
 		this.intersectionBA = intersectionBA;
-		this.intersectionClusterMap = new HashMap<STATE, Set<STATE>>();
-		this.returnSubAutomata = new HashMap<STATE, Set<Set<STATE>>>();
+		this.intersectionClusterMap = new HashMap<S, Set<S>>();
+		this.returnSubAutomata = new HashMap<S, Set<Set<S>>>();
 	}
 
 	/**
@@ -79,23 +79,23 @@ public class SubAutomataIdentifier<L extends Label, STATE extends State, TRANSIT
 	 * @return the sub-automata of the automaton that refer to the transparent
 	 *         states of M.
 	 */
-	public Map<STATE, Set<Set<STATE>>> getSubAutomata() {
+	public Map<S, Set<Set<S>>> getSubAutomata() {
 
-		for (STATE intersectionState : this.intersectionBA.getStates()) {
+		for (S intersectionState : this.intersectionBA.getStates()) {
 			this.intersectionClusterMap.put(intersectionState,
-					new HashSet<STATE>());
+					new HashSet<S>());
 		}
-		for (STATE modelState : modelIntersectionStatesMap.keySet()) {
-			Set<STATE> abstraction = new HashSet<STATE>(
+		for (S modelState : modelIntersectionStatesMap.keySet()) {
+			Set<S> abstraction = new HashSet<S>(
 					modelIntersectionStatesMap.get(modelState));
 			while (!abstraction.isEmpty()) {
-				STATE currState = abstraction.iterator().next();
+				S currState = abstraction.iterator().next();
 				this.exploration(modelState, currState);
 				abstraction.remove(currState);
 			}
 			
-			Set<Set<STATE>> clusters=new HashSet<Set<STATE>>();
-			for(STATE s: modelIntersectionStatesMap.get(modelState)){
+			Set<Set<S>> clusters=new HashSet<Set<S>>();
+			for(S s: modelIntersectionStatesMap.get(modelState)){
 				clusters.add(this.intersectionClusterMap.get(s));
 			}
 			this.returnSubAutomata.put(modelState, clusters);
@@ -117,12 +117,12 @@ public class SubAutomataIdentifier<L extends Label, STATE extends State, TRANSIT
 	 *            contains the current set of states that abstract the state
 	 *            space
 	 */
-	private void exploration(STATE modelState, STATE currState) {
+	private void exploration(S modelState, S currState) {
 
 		this.intersectionClusterMap.get(currState).add(currState);
 
-		for (TRANSITION t : this.intersectionBA.getInTransitions(currState)) {
-			STATE prev = this.intersectionBA.getTransitionSource(t);
+		for (T t : this.intersectionBA.getInTransitions(currState)) {
+			S prev = this.intersectionBA.getTransitionSource(t);
 			if (this.modelIntersectionStatesMap.get(modelState).contains(prev)) {
 				this.intersectionClusterMap.get(prev).addAll(
 						this.intersectionClusterMap.get(currState));

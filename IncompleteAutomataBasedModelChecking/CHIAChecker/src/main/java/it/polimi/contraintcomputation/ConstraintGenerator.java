@@ -4,6 +4,8 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.automata.transition.impl.IntersectionTransitionFactoryImpl;
 import it.polimi.constraints.Proposition;
 import it.polimi.contraintcomputation.abstraction.Abstractor;
 import it.polimi.contraintcomputation.abstraction.Filter;
@@ -28,6 +30,8 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 	 */
 	private Map<S, Set<S>> modelIntersectionStatesMap;
 	private IntersectionBA<L, S, T> intBA;
+	
+	private TransitionFactory<L, T> transitionFactory;
 
 	/**
 	 * creates a new ConstraintGenerator object which starting from the
@@ -71,15 +75,17 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 		 * do not correspond to transparent states are removed
 		 */
 		IntersectionBA<L, S, T> abstractedIntersection = new Abstractor<L, S, T>(
-				this.intBA).abstractIntersection();
+				this.intBA, transitionFactory).abstractIntersection();
 
 		// each component of the map is analyzed
 		for (S s : modelStateSubAutomataMap.keySet()) {
 			for (Set<S> component : modelStateSubAutomataMap.get(s)) {
+				// filter the state space to analyze a specific component
 				IntersectionBA<L, S, T> filteredIntersection = new Filter<L, S, T>(
 						abstractedIntersection, component)
 						.filter();
 
+				// for each initial and final state compute the regular expression
 				for (S initState : filteredIntersection.getInitialStates()) {
 					for (S finalState : filteredIntersection
 							.getAcceptStates()) {

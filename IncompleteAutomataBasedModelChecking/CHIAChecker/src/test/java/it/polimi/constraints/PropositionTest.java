@@ -3,6 +3,7 @@
  */
 package it.polimi.constraints;
 
+import static org.junit.Assert.*;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -74,8 +75,8 @@ public class PropositionTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPropositionNullOutcoming() {
-		new Proposition<Label, State, Transition<Label>>(state, regex, null,
-				outcoming);
+		new Proposition<Label, State, Transition<Label>>(state, regex, incoming,
+				null);
 	}
 
 	/**
@@ -85,7 +86,8 @@ public class PropositionTest {
 	 */
 	@Test
 	public void testProposition() {
-		//TODO
+		assertNotNull(new Proposition<Label, State, Transition<Label>>(state, regex, incoming,
+				outcoming));
 	}
 
 	/**
@@ -93,7 +95,9 @@ public class PropositionTest {
 	 */
 	@Test
 	public void testGetLabel() {
-		//TODO
+		Proposition<Label, State, Transition<Label>> p=new Proposition<Label, State, Transition<Label>>(state, regex, incoming,
+				outcoming);
+		assertEquals(regex, p.getLabel());
 	}
 
 	/**
@@ -101,7 +105,9 @@ public class PropositionTest {
 	 */
 	@Test
 	public void testGetState() {
-		//TODO
+		Proposition<Label, State, Transition<Label>> p=new Proposition<Label, State, Transition<Label>>(state, regex, incoming,
+				outcoming);
+		assertEquals(state, p.getState());
 	}
 
 	/**
@@ -109,7 +115,9 @@ public class PropositionTest {
 	 */
 	@Test
 	public void testGetIncoming() {
-		//TODO
+		Proposition<Label, State, Transition<Label>> p=new Proposition<Label, State, Transition<Label>>(state, regex, incoming,
+				outcoming);
+		assertEquals(incoming, p.getIncoming());
 	}
 
 	/**
@@ -117,7 +125,9 @@ public class PropositionTest {
 	 */
 	@Test
 	public void testGetOutcoming() {
-		//TODO
+		Proposition<Label, State, Transition<Label>> p=new Proposition<Label, State, Transition<Label>>(state, regex, incoming,
+				outcoming);
+		assertEquals(outcoming, p.getOutcoming());
 	}
 
 }

@@ -1,5 +1,6 @@
 package it.polimi.contraintcomputation.brzozowski;
 
+import it.polimi.Constants;
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
@@ -30,7 +31,7 @@ import org.apache.commons.collections15.Transformer;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class TransitionMatrixTranformer<L extends Label, S extends State, T extends Transition<L>>
+class TransitionMatrixTranformer<L extends Label, S extends State, T extends Transition<L>>
 		implements Transformer<BA<L, S, T>, String[][]> {
 
 	/**
@@ -71,6 +72,9 @@ public class TransitionMatrixTranformer<L extends Label, S extends State, T exte
 	 */
 	@Override
 	public String[][] transform(BA<L, S, T> automaton) {
+		if (automaton == null) {
+			throw new NullPointerException("The automaton cannot be null");
+		}
 		if (!automaton.getStates().containsAll(orderedStates)) {
 			throw new IllegalArgumentException(
 					"The ordered states must be contained into the set of the states of the automaton");
@@ -91,12 +95,12 @@ public class TransitionMatrixTranformer<L extends Label, S extends State, T exte
 				for (T t : automaton.getGraph().getOutEdges(s1)) {
 					if (automaton.getGraph().getDest(t).equals(s2)) {
 
-						ret[i][j] = t.toString();
+						ret[i][j] = t.getLabels().toString();
 						setted = true;
 					}
 				}
 				if (!setted) {
-					ret[i][j] = "∅";
+					ret[i][j] = Constants.EMPTYSET;
 				}
 			}
 		}

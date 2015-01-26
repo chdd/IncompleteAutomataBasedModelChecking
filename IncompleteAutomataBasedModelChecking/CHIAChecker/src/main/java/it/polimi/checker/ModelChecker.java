@@ -41,8 +41,9 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 
 	private IntersectionRule<L, T> intersectionRule;
 
-	private StateFactory<S> intersectionStateFactory;
 	private IntersectionBAFactory<L, S, T> intersectionBAFactory;
+	private StateFactory<S> intersectionStateFactory;
+
 	private TransitionFactory<L, T> intersectionTransitionFactory;
 
 	/**
@@ -58,33 +59,66 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 *            is the model to be analyzed by the model checker
 	 * @param specification
 	 *            is the specification to be considered by the model checker
+	 * @param intersectionBAFactory
+	 *            is the factory in charge of creating intersection automata
+	 * @param intersectionRule
+	 *            is the intersection rule to be used in computing the
+	 *            intersection
+	 * @param intersectionStateFactory
+	 *            is the intersection factory to be used in computing the states
+	 *            of the intersection
+	 * @param intersectionTransitionFactory
+	 *            is the intersection factory to be used in computing the
+	 *            transitions of the intersection automaton
 	 * @param mp
 	 *            is an object where the results of the verification (e.g., time
 	 *            required from the verification procedure are stored)
-	 * @throws IllegalArgumentException
+	 * @throws NullPointerException
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public ModelChecker(IBA<L, S, T> model,
-			BA<L, S, T> claim, ModelCheckingResults mp) {
+	public ModelChecker(IBA<L, S, T> model, BA<L, S, T> claim,
+			IntersectionRule<L, T> intersectionRule,
+			IntersectionBAFactory<L, S, T> intersectionBAFactory,
+			StateFactory<S> intersectionStateFactory,
+			TransitionFactory<L, T> intersectionTransitionFactory,
+			ModelCheckingResults mp) {
 		if (model == null) {
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"The model to be checked cannot be null");
 		}
 		if (claim == null) {
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"The specification to be checked cannot be null");
 		}
+		if (intersectionBAFactory == null) {
+			throw new NullPointerException(
+					"The intersection BA factory cannot be null");
+		}
+		if (intersectionRule == null) {
+			throw new NullPointerException(
+					"The intersection rule cannot be null");
+		}
+		if (intersectionStateFactory == null) {
+			throw new NullPointerException(
+					"The intersection state factory cannot be null");
+		}
+		if (intersectionTransitionFactory == null) {
+			throw new NullPointerException(
+					"The intersection transition factory cannot be null");
+		}
 		if (mp == null) {
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"The model checking parameters cannot be null");
 		}
 
 		this.claim = claim;
 		this.model = model;
+		this.intersectionBAFactory=intersectionBAFactory;
 		this.verificationResults = mp;
 		this.intersectionRule = new IntersectionRuleImpl<L, T>();
-
+		this.intersectionStateFactory = intersectionStateFactory;
+		this.intersectionTransitionFactory = intersectionTransitionFactory;
 	}
 
 	/**
@@ -122,20 +156,20 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL WITHOUT TRANSPARENT
 		// STATES AND THE CLAIM
 		long startIntersectionTime = System.nanoTime();
-		boolean violated = this.checkViolation();
+		boolean empty = this.checkEmptyIntersectionMc();
 		long stopTime = System.nanoTime();
 
 		// updates the time required to compute the intersection between the
 		// model without transparent states and the claim
 		this.verificationResults
 				.setViolationTime((stopTime - startIntersectionTime) / 1000000000.0);
-		if (violated) {
+		if (!empty) {
 			return 0;
 		}
 
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE CLAIM
 		long startCheckingPossible = System.nanoTime();
-		boolean possiblyViolated = this.checkPossibleViolation();
+		boolean emptyIntersection = this.checkEmptyIntersection();
 		long stopCheckingPossible = System.nanoTime();
 
 		// updates the time required to compute the intersection between the
@@ -156,12 +190,11 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 		// sets the number of mixed states in the intersection
 		this.verificationResults.setNumMixedStatesIntersection(this.ris
 				.getMixedStates().size());
-		if (!possiblyViolated) {
-			return 1;
+		if (!emptyIntersection) {
+			return -1;
 		}
 
-		
-		return 0;
+		return 1;
 	}
 
 	/**
@@ -172,7 +205,7 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 * 
 	 * @return <code>true</code> if the claim is violated in the model
 	 */
-	private boolean checkViolation() {
+	private boolean checkEmptyIntersectionMc() {
 
 		// removes the transparent states from the model
 		IBA<L, S, T> mc = new IBATransparentStateRemoval<L, S, T>()
@@ -182,8 +215,7 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 				this.intersectionRule, intersectionStateFactory,
 				intersectionBAFactory, intersectionTransitionFactory, mc, claim)
 				.computeIntersection();
-		return !new EmptinessChecker<L, S, T>(intersection)
-				.isEmpty();
+		return new EmptinessChecker<L, S, T>(intersection).isEmpty();
 	}
 
 	/**
@@ -195,50 +227,15 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 * 
 	 * @return <code>true</code> if the claim is possibly violated in the model
 	 */
-	private boolean checkPossibleViolation() {
+	private boolean checkEmptyIntersection() {
 
 		// computing the intersection
-		this.ris = new IntersectionBuilder<L, S, T>(
-				this.intersectionRule, intersectionStateFactory,
-				intersectionBAFactory, intersectionTransitionFactory, model,
-				claim).computeIntersection();
-		return !new EmptinessChecker<L, S, T>(this.ris)
-				.isEmpty();
+		this.ris = new IntersectionBuilder<L, S, T>(this.intersectionRule,
+				intersectionStateFactory, intersectionBAFactory,
+				intersectionTransitionFactory, model, claim)
+				.computeIntersection();
+		return new EmptinessChecker<L, S, T>(this.ris).isEmpty();
 	}
-	/*
-	private boolean computeConstraints() {
-		Brzozowski<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION> brzozowski = new Brzozowski<CONSTRAINEDELEMENT, STATE, TRANSITION, INTERSECTIONSTATE, INTERSECTIONTRANSITION>(
-				ris);
-		Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> returnConstraint;
-		Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION> simplifiedConstraint;
-		long startConstraintTime = System.nanoTime();
-		returnConstraint = brzozowski.getRegularExpression();
-		long stopConstraintTime = System.nanoTime();
-
-		long startSimplificationTime = System.nanoTime();
-		simplifiedConstraint = new Constraint<CONSTRAINEDELEMENT, INTERSECTIONTRANSITION>(
-				returnConstraint.getLogicalItem().simplify());
-		long stopSimplificationTime = System.nanoTime();
-
-		this.verificationResults
-				.setSimplifiedConstraint(simplifiedConstraint);
-		this.verificationResults
-				.setSimplificationTime((startSimplificationTime - stopSimplificationTime) / 1000000000.0);
-
-		this.verificationResults.setConstraint(returnConstraint);
-		// sets the time required to compute the constraints
-		this.verificationResults
-				.setConstraintComputationTime((stopConstraintTime - startConstraintTime) / 1000000000.0);
-		// sets the total time required by the verification procedure
-		this.verificationResults.setTotalTime(this.verificationResults
-				.getViolationTime()
-				+ this.verificationResults.getPossibleViolationTime()
-				+ this.verificationResults
-						.getConstraintComputationTime());
-		// returns -1 which indicates that the property is possibly
-		// satisfied
-		return -1;
-	}*/
 
 	/**
 	 * returns the verification results, the time required from the verification

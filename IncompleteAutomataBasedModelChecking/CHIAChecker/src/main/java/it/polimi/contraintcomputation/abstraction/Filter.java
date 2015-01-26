@@ -61,6 +61,9 @@ public class Filter<L extends Label, S extends State, T extends Transition<L>> {
 			throw new NullPointerException(
 					"The set of the component states cannot be null");
 		}
+		if(!intersection.getStates().containsAll(componentStates)){
+			throw new IllegalArgumentException("The states must be contained into the intersection");
+		}
 		this.newIntersection = intersection.clone();
 		this.componentStates = componentStates;
 

@@ -1,5 +1,6 @@
 package it.polimi.contraintcomputation.brzozowski;
 
+import it.polimi.Constants;
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
@@ -50,15 +51,21 @@ class AcceptingStatesTransformer<L extends Label, S extends State, T extends Tra
 	 *            is the state to be considered as final
 	 * @throws NullPointerException
 	 *             if the list of the ordered state or the final state is null
+	 * @throws IllegalArgumentException
+	 *             if the finalState is not contained in the list of ordered
+	 *             states
 	 */
-	public AcceptingStatesTransformer(List<S> orderedStates,
-			S finalState) {
+	public AcceptingStatesTransformer(List<S> orderedStates, S finalState) {
 		if (finalState == null) {
 			throw new NullPointerException("The final state cannot be null");
 		}
 		if (orderedStates == null) {
 			throw new NullPointerException(
 					"The list of the states cannot be null");
+		}
+		if (!orderedStates.contains(finalState)) {
+			throw new IllegalArgumentException(
+					"The final state must be contained into the list of ordered states");
 		}
 		this.orderedStates = orderedStates;
 		this.finalState = finalState;
@@ -76,7 +83,7 @@ class AcceptingStatesTransformer<L extends Label, S extends State, T extends Tra
 	 *             if the automaton is null
 	 * @throws IllegalArgumentException
 	 *             if the list of states does not contain all the states of the
-	 *             automaton and viceversa
+	 *             automaton and vice versa
 	 * @throws IllegalArgumentException
 	 *             if the final state is not contained into the automaton
 	 * 
@@ -107,10 +114,10 @@ class AcceptingStatesTransformer<L extends Label, S extends State, T extends Tra
 			// if the state is equal to the state accept
 			if (finalState.equals(s)) {
 				// I add the lambda predicate in the s[i] cell of the vector
-				ret[i] = "λ";
+				ret[i] = Constants.LAMBDA;
 			} else {
 				// I add the empty predicate in the s[i] cell of the vector
-				ret[i] = "∅";
+				ret[i] = Constants.EMPTYSET;
 			}
 			i++;
 		}

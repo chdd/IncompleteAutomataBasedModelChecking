@@ -7,6 +7,7 @@ import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 
@@ -80,13 +81,12 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	public boolean isEmpty() {
 		
 		DirectedSparseGraph<S, T> graph=this.automaton.getGraph();
-		boolean res = true;
 		for (S init : this.automaton.getInitialStates()) {
-			if (firstDFS(init,graph)) {
+			if (firstDFS(init,graph, new Stack<S>())) {
 				return false;
 			}
 		}
-		return res;
+		return true;
 	}
 
 	/**
@@ -96,19 +96,22 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
 	 */
-	protected boolean firstDFS(S currState, DirectedSparseGraph<S, T> graph) {
+	private boolean firstDFS(S currState, DirectedSparseGraph<S, T> graph, Stack<S> firstDFSStack) {
 		
 			this.hashedStates.add(currState);
+			firstDFSStack.push(currState);
 			for (S t : graph.getSuccessors(currState)) {
 				if(!this.hashedStates.contains(t)){
-					this.firstDFS(t, graph);
+					if(this.firstDFS(t, graph, firstDFSStack))
+						return true;
 				}
 			}
 			if(this.automaton.getAcceptStates().contains(currState)){
-				if(this.secondDFS(currState, graph)){
+				if(this.secondDFS(currState, graph, firstDFSStack)){
 					return true;
 				}
 			}
+			firstDFSStack.pop();
 			return false;
 	}
 
@@ -119,15 +122,16 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
 	 */
-	protected boolean secondDFS(S currState, DirectedSparseGraph<S, T> graph) {
+	private boolean secondDFS(S currState, DirectedSparseGraph<S, T> graph,  Stack<S> firstDFSStack) {
 		this.flaggedStates.add(currState);
 		for (S t : graph.getSuccessors(currState)) {
-			if(this.hashedStates.contains(t)){
+			if(firstDFSStack.contains(t)){
 				return true;
 			}
 			else{
-				if(!this.flaggedStates.contains(currState)){
-					this.secondDFS(t, graph);
+				if(!this.flaggedStates.contains(t)){
+					if(this.secondDFS(t, graph, firstDFSStack))
+						return true;
 				}
 			}
 		}

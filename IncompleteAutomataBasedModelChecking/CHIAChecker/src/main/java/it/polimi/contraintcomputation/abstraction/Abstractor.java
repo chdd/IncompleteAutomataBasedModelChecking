@@ -4,6 +4,7 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,7 @@ import java.util.Set;
  * that connect q1 with the successors of q2.
  * 
  * @author claudiomenghi
- * @param <STATE>
+ * @param <S>
  *            is the type of the state of the Intersection Buchi Automaton. The
  *            type of the states of the automaton must implement the interface
  *            {@link State}
@@ -39,17 +40,22 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Abstractor<L extends Label, STATE extends State, T extends Transition<L>> {
+public class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the intersection automaton to be simplified
 	 */
-	private IntersectionBA<L, STATE, T> intBA;
+	private IntersectionBA<L, S, T> intBA;
 
 	/**
 	 * contains the set of already visited states
 	 */
-	private Set<STATE> abstractedStates;
+	private Set<S> abstractedStates;
+
+	/**
+	 * contains the transition factory
+	 */
+	private TransitionFactory<L, T> transitionFactory;
 
 	/**
 	 * creates a new Abstractor
@@ -59,14 +65,19 @@ public class Abstractor<L extends Label, STATE extends State, T extends Transiti
 	 * @throws NullPointerException
 	 *             if the intersection automaton or the factory is null
 	 */
-	public Abstractor(IntersectionBA<L, STATE, T> intBA) {
+	public Abstractor(IntersectionBA<L, S, T> intBA,
+			TransitionFactory<L, T> transitionFactory) {
 		if (intBA == null) {
 			throw new NullPointerException(
 					"The intersection automaton cannot be null");
 		}
-		
+		if (transitionFactory == null) {
+			throw new NullPointerException(
+					"The transition factory cannot be null");
+		}
+		this.transitionFactory = transitionFactory;
 		this.intBA = intBA.clone();
-		this.abstractedStates = new HashSet<STATE>();
+		this.abstractedStates = new HashSet<S>();
 	}
 
 	/**
@@ -88,9 +99,9 @@ public class Abstractor<L extends Label, STATE extends State, T extends Transiti
 	 * 
 	 * @return the abstracted version of the state space
 	 */
-	public IntersectionBA<L, STATE, T> abstractIntersection() {
+	public IntersectionBA<L, S, T> abstractIntersection() {
 
-		for (STATE s : this.intBA.getInitialStates()) {
+		for (S s : this.intBA.getInitialStates()) {
 			this.abstractStateSpace(s);
 		}
 		return this.intBA;
@@ -103,55 +114,52 @@ public class Abstractor<L extends Label, STATE extends State, T extends Transiti
 	 * @param currState
 	 *            is the current state to be analyzed
 	 */
-	private void abstractStateSpace(STATE currState) {
+	private void abstractStateSpace(S currState) {
 		// if the currState has already been abstracted
 		if (this.abstractedStates.contains(currState)) {
 			return;
 		}
-		// get the out transitions
-		for (T successorTransition : this.intBA
-				.getOutTransitions(currState)) {
-			// get the next state of the Buchi automaton
-			STATE nextState = this.intBA
-					.getTransitionDestination(successorTransition);
-			// if the next state of the Buchi automaton is mixed
-			if (this.intBA.getMixedStates().contains(nextState)) {
-				// add the state to the set of the already visited states
-				this.abstractedStates.add(currState);
-				// calls the abstract state space method over the next state
-				this.abstractStateSpace(nextState);
-			} else {
-				// contains the successors of the next state
-				Set<STATE> nextStates = new HashSet<STATE>();
-				// for each transition that follow the nextState
-				for (T followingTransition : this.intBA
-						.getOutTransitions(nextState)) {
-					// contains the state that follow the nextState
-					STATE nextNextState = this.intBA
-							.getTransitionDestination(followingTransition);
-					// add the nextNextState to the set of states to be visited
-					// next
-					nextStates.add(nextNextState);
-					// add a transition from the currState to the nextNextState
-					this.intBA.addTransition(currState, nextNextState,
-							successorTransition);
-
-				}
-				// removes the successorTransition
-				this.intBA.removeTransition(successorTransition);
-				// if the nextState does not have any incoming transition and is
-				// not initial
-				if (this.intBA.getInTransitions(nextState).isEmpty()
-						&& !this.intBA.getInitialStates().contains(nextState)) {
-					// the state is removed
-					this.intBA.removeState(nextState);
-				}
-				// for each state s in the nextStates
-				for (STATE s : nextStates) {
-					// procedes with the abstraction procedure
-					this.abstractStateSpace(s);
+		this.abstractedStates.add(currState);
+		if (this.intBA.getMixedStates().contains(currState)
+				|| this.intBA.getInitialStates().contains(currState)
+				|| this.intBA.getAcceptStates().contains(currState)) {
+			for (T successorTransition : this.intBA
+					.getOutTransitions(currState)) {
+				this.abstractStateSpace(this.intBA
+						.getTransitionDestination(successorTransition));
+			}
+		} else {
+			Set<S> toBeAnalyzed=new HashSet<S>();
+			for (T incomingTransition : this.intBA.getInTransitions(currState)) {
+				for (T outcomingTransition : this.intBA
+						.getOutTransitions(currState)) {
+					this.mergeTransitions(incomingTransition,
+							outcomingTransition);
+					toBeAnalyzed.add(this.intBA.getTransitionDestination(outcomingTransition));
 				}
 			}
+			this.intBA.removeState(currState);
+			for(S next: toBeAnalyzed){
+				this.abstractStateSpace(next);
+			}
 		}
+
 	}
+
+	private void mergeTransitions(T incoming, T outcoming) {
+		Set<L> labels = new HashSet<L>(incoming.getLabels());
+		labels.addAll(outcoming.getLabels());
+		for (T t : this.intBA.getOutTransitions(this.intBA
+				.getTransitionSource(incoming))) {
+			if (this.intBA.getTransitionDestination(t).equals(
+					this.intBA.getTransitionDestination(outcoming))) {
+				this.intBA.removeTransition(t);
+				labels.addAll(t.getLabels());
+			}
+		}
+		T newTransition = this.transitionFactory.create(labels);
+		this.intBA.addTransition(this.intBA.getTransitionSource(incoming),
+				this.intBA.getTransitionDestination(outcoming), newTransition);
+	}
+
 }

@@ -1,5 +1,6 @@
 package it.polimi.contraintcomputation.brzozowski;
 
+import it.polimi.Constants;
 import it.polimi.automata.BA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
@@ -79,11 +80,11 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 					"The finals state to be considered cannot be null");
 		}
 		if (!automaton.getStates().contains(initState)) {
-			throw new NullPointerException(
+			throw new IllegalArgumentException(
 					"The initial state must be contained into the states of the automaton");
 		}
 		if (!automaton.getStates().contains(finalState)) {
-			throw new NullPointerException(
+			throw new IllegalArgumentException(
 					"The final state must be contained into the set of the states of the automaton");
 		}
 		this.automaton = automaton;
@@ -129,20 +130,53 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 
 		int m = automaton.getStates().size();
 		for (int n = m - 1; n >= 0; n--) {
-			s[n] = "(" + t[n][n] + ")*" + s[n];
+			s[n] = this.concatenate(this.star(t[n][n]), s[n]);
 			for (int j = 0; j < n; j++) {
-				t[n][j] = "(" + t[n][n] + ")*" + t[n][j];
+				t[n][j] = this.concatenate(this.star(t[n][n]), t[n][j]);
 			}
 			for (int i = 0; i < n; i++) {
-				s[i] = "(" + s[i] + ")|(" + t[i][n] + "." + s[n] + ")";
+				s[i] = this.union(s[i], this.concatenate(t[i][n], s[n]));
 				for (int j = 0; j < n; j++) {
-					t[i][j] = "(" + t[i][j] + ")|(" + t[i][n] + "." + t[n][j]
-							+ ")";
+					t[i][j] = this.union(t[i][j], this.concatenate(t[i][n], t[n][j]));
 				}
 			}
 			for (int i = 0; i < n; i++) {
-				t[i][n] = "∅";
+				t[i][n] = Constants.EMPTYSET;
 			}
 		}
+	}
+	
+	private String star(String a){
+		if(a.equals(Constants.EMPTYSET)){
+			return Constants.LAMBDA;
+		}
+		if(a.equals(Constants.LAMBDA)){
+			return Constants.LAMBDA;
+		}
+		return "("+a+")*";
+	}
+	
+	private String union(String a, String b){
+		if(a.equals(Constants.EMPTYSET)){
+			return b;
+		}
+		if(b.equals(Constants.EMPTYSET)){
+			return a;
+		}
+		return "(("+a+")+("+b+"))";
+	}
+	
+	private String concatenate(String a, String b){
+		if(a.equals(Constants.EMPTYSET) || b.equals(Constants.EMPTYSET)){
+			return Constants.EMPTYSET;
+		}
+		if(a.equals(Constants.LAMBDA)){
+			return b;
+		}
+		if(b.equals(Constants.LAMBDA)){
+			return a;
+		}
+		return a+"."+b;
+		
 	}
 }

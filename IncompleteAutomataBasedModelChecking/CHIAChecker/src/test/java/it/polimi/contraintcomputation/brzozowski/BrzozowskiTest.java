@@ -167,8 +167,10 @@ public class BrzozowskiTest {
 		ret = new Brzozowski<Label, State, Transition<Label>>(this.ba, state1,
 				state3).getRegularExpression();
 
+		System.out.println(ret);
 		assertTrue(ret.equals("(([b])+([a].[b])).([c])*")
-				|| ret.equals("(([a].[b])+([b])).([c])*"));
+				|| ret.equals("(([a].[b])+([b])).([c])*")
+				|| ret.equals("(([b].([c])*)+([a].[b].([c])*))"));
 	}
 
 }

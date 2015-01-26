@@ -72,6 +72,11 @@ public class IntersectionRuleImpl<L extends Label, T extends Transition<L>>
 	 * @return true if the label of the model satisfies the label of the claim
 	 */
 	private boolean satisfies(L modelLabel, L claimLabel){
+		for(IGraphProposition modelProposition: modelLabel.getLabels()){
+			if(modelProposition.isNegated()){
+				throw new IllegalArgumentException("The proposition of the model cannot be negated");
+			}
+		}
 		for(IGraphProposition claimProposition: claimLabel.getLabels()){
 			if(claimProposition.isNegated() && modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
 				return false;

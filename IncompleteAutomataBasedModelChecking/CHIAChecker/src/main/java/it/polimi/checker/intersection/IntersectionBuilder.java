@@ -95,12 +95,10 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	 *             if the intersection rule or the stateFactory or the
 	 *             intersectionBAFactory or the model or the claim is null
 	 */
-	public IntersectionBuilder(
-			IntersectionRule<L, T> intersectionrule,
+	public IntersectionBuilder(IntersectionRule<L, T> intersectionrule,
 			StateFactory<S> stateFactory,
 			IntersectionBAFactory<L, S, T> intersectionBAFactory,
-			TransitionFactory<L, T> transitionFactory,
-			IBA<L, S, T> model,
+			TransitionFactory<L, T> transitionFactory, IBA<L, S, T> model,
 			BA<L, S, T> claim) {
 		if (intersectionrule == null) {
 			throw new NullPointerException(
@@ -112,6 +110,10 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 		if (intersectionBAFactory == null) {
 			throw new NullPointerException(
 					"The factory of the intersection automaton cannot be null");
+		}
+		if (transitionFactory == null) {
+			throw new NullPointerException(
+					"The transition factory cannot be null");
 		}
 		if (model == null) {
 			throw new NullPointerException(
@@ -157,8 +159,7 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	 *            is the number of the state under analysis
 	 * @return the state that is generated
 	 */
-	private S computeIntersection(S modelState, S claimState,
-			int number) {
+	private S computeIntersection(S modelState, S claimState, int number) {
 		S intersectionState;
 		// if the state has been already created
 		if (!this.createdStates.containsKey(modelState)
@@ -188,13 +189,13 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 				}
 			}
 		} else {
-			// creating a new intersection state
-			intersectionState = this.createdStates.get(modelState)
-					.get(claimState).get(number);
+			return this.createdStates.get(modelState).get(claimState).get(number);
 		}
 
 		this.intersection.addState(intersectionState);
-		if (number == 0) {
+		if (this.model.getInitialStates().contains(modelState)&&
+				this.claim.getInitialStates().contains(claimState)
+				) {
 			this.intersection.addInitialState(intersectionState);
 		}
 		if (number == 2) {
@@ -207,8 +208,7 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 		// for each transition in the extended automaton whit source s1
 		for (T modelTransition : model.getOutTransitions(modelState)) {
 			// for each transition in the extended automaton whit source s2
-			for (T claimTransition : claim
-					.getOutTransitions(claimState)) {
+			for (T claimTransition : claim.getOutTransitions(claimState)) {
 				// if the characters of the two transitions are equal
 
 				T t = this.intersectionrule.getIntersectionTransition(
@@ -229,6 +229,9 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 					S nextState = this.computeIntersection(nextModelState,
 							nextClaimState, nextNumber);
 
+					for(L l: t.getLabels()){
+						this.intersection.addCharacter(l);	
+					}
 					this.intersection.addTransition(intersectionState,
 							nextState, t);
 				}
@@ -238,11 +241,10 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 		// if the current state of the extended automaton is transparent
 		if (model.isTransparent(modelState)) {
 			// for each transition in the automaton a2
-			for (T claimTransition : claim
-					.getOutTransitions(claimState)) {
+			for (T claimTransition : claim.getOutTransitions(claimState)) {
 
-				T t = this.transitionFactory.create(claimTransition
-						.getLabels());
+				T t = this.transitionFactory
+						.create(claimTransition.getLabels());
 
 				S nextClaimState = claim
 						.getTransitionDestination(claimTransition);
@@ -301,8 +303,7 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 		for (S modelState : this.createdStates.keySet()) {
 			intersectionStateMap.put(modelState, new HashSet<S>());
 
-			Map<S, Map<Integer, S>> entry = this.createdStates
-					.get(modelState);
+			Map<S, Map<Integer, S>> entry = this.createdStates.get(modelState);
 
 			for (S claimState : entry.keySet()) {
 
