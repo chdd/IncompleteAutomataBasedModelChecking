@@ -27,7 +27,7 @@ public class StateFactoryImpl implements StateFactory<State> {
 
 		StateImpl s = new StateImpl("",
 				StateFactoryImpl.stateCount);
-		StateFactoryImpl.stateCount++;
+		StateFactoryImpl.stateCount=StateFactoryImpl.stateCount+1;
 		return s;
 	}
 
@@ -42,7 +42,7 @@ public class StateFactoryImpl implements StateFactory<State> {
 					"The name of the state cannot be null");
 		}
 		StateImpl s = new StateImpl(name, StateFactoryImpl.stateCount);
-		StateFactoryImpl.stateCount++;
+		StateFactoryImpl.stateCount=StateFactoryImpl.stateCount+1;
 		return s;
 	}
 
@@ -60,7 +60,7 @@ public class StateFactoryImpl implements StateFactory<State> {
 					"The name of the state cannot be null");
 		}
 		StateImpl s = new StateImpl(name, id);
-		StateFactoryImpl.stateCount = Math.max(StateFactoryImpl.stateCount++,
+		StateFactoryImpl.stateCount = Math.max(StateFactoryImpl.stateCount+1,
 				id + 1);
 		return s;
 	}

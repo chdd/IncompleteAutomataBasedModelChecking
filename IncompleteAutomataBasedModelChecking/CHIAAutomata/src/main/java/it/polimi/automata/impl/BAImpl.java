@@ -109,6 +109,9 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	@Override
 	public Set<T> getOutTransitions(S state) {
+		if(state==null){
+			throw new NullPointerException("The state s cannot be null");
+		}
 		return Collections.unmodifiableSet(new HashSet<T>(
 				this.automataGraph.getOutEdges(state)));
 	}
@@ -118,6 +121,9 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	@Override
 	public Set<T> getInTransitions(S state) {
+		if(state==null){
+			throw new NullPointerException("The state s cannot be null");
+		}
 		return Collections.unmodifiableSet(new HashSet<T>(
 				this.automataGraph.getInEdges(state)));
 	}
@@ -127,6 +133,12 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	@Override
 	public S getTransitionDestination(T transition) {
+		if(transition==null){
+			throw new NullPointerException("The transition t cannot be null");
+		}
+		if(!this.getTransitions().contains(transition)){
+			throw new IllegalArgumentException("The transition is not contained into the set of the transition of the BA");
+		}
 		return this.automataGraph.getDest(transition);
 	}
 
@@ -135,6 +147,12 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	@Override
 	public S getTransitionSource(T transition) {
+		if(transition==null){
+			throw new NullPointerException("The transition t cannot be null");
+		}
+		if(!this.getTransitions().contains(transition)){
+			throw new IllegalArgumentException("The transition is not contained into the set of the transition of the BA");
+		}
 		return this.automataGraph.getSource(transition);
 	}
 
@@ -293,5 +311,22 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 		return EdgeType.DIRECTED;
 	}
 	
+	public String toString(){
+		String ret="";
+		ret="ALPHABET: "+this.alphabet+"\n";
+		ret="STATES: "+this.automataGraph.getVertices()+"\n";
+		ret=ret+"INITIAL STATES: "+this.initialStates+"\n";
+		ret=ret+"ACCEPTING STATES: "+this.acceptStates+"\n";
+		ret=ret+"TRANSITIONS\n";
+		for(S s: this.automataGraph.getVertices())	{
+			ret=ret+"state "+s+" ->\n";
+			for(T outEdge: this.automataGraph.getOutEdges(s))	{
+				ret=ret+"\t \t"+outEdge+"\t"+this.getTransitionDestination(outEdge);
+			}
+			ret=ret+"\n";
+			
+		}
+		return ret;
+	}
 	
 }

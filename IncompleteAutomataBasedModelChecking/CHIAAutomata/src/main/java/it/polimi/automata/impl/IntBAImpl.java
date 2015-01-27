@@ -109,4 +109,11 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 		
 		return retBA;
 	}
+	
+	public String toString(){
+		String ret=super.toString();
+		ret=ret+"MIXED STATES: "+this.mixedStates+"\n";
+		
+		return ret;
+	}
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.contraintcomputation.abstraction;
+package it.polimi.contraintcomputation;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -95,7 +95,7 @@ public class AbstractorTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#Abstractor(null)}
+	 * {@link it.polimi.contraintcomputation.Abstractor#Abstractor(null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -105,7 +105,7 @@ public class AbstractorTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#Abstractor(null)}
+	 * {@link it.polimi.contraintcomputation.Abstractor#Abstractor(null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -115,7 +115,7 @@ public class AbstractorTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#Abstractor(it.polimi.automata.IntersectionBA)}
+	 * {@link it.polimi.contraintcomputation.Abstractor#Abstractor(it.polimi.automata.IntersectionBA)}
 	 * .
 	 */
 	@Test
@@ -125,7 +125,7 @@ public class AbstractorTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#abstractIntersection()}
+	 * {@link it.polimi.contraintcomputation.Abstractor#abstractIntersection()}
 	 * .
 	 */
 	@Test
@@ -142,7 +142,7 @@ public class AbstractorTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#abstractIntersection()}
+	 * {@link it.polimi.contraintcomputation.Abstractor#abstractIntersection()}
 	 * .
 	 */
 	@Test
@@ -162,7 +162,7 @@ public class AbstractorTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#abstractIntersection()}
+	 * {@link it.polimi.contraintcomputation.Abstractor#abstractIntersection()}
 	 * .
 	 */
 	@Test
@@ -186,7 +186,7 @@ public class AbstractorTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#abstractIntersection()}
+	 * {@link it.polimi.contraintcomputation.Abstractor#abstractIntersection()}
 	 * .
 	 */
 	@Test
@@ -211,7 +211,7 @@ public class AbstractorTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Abstractor#abstractIntersection()}
+	 * {@link it.polimi.contraintcomputation.Abstractor#abstractIntersection()}
 	 * .
 	 */
 	@Test

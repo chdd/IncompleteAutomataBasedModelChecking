@@ -1,4 +1,4 @@
-package it.polimi.contraintcomputation.abstraction;
+package it.polimi.contraintcomputation;
 
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.labeling.Label;
@@ -40,7 +40,7 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
+class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the intersection automaton to be simplified
@@ -120,46 +120,57 @@ public class Abstractor<L extends Label, S extends State, T extends Transition<L
 			return;
 		}
 		this.abstractedStates.add(currState);
+		
+		Set<S> toBeAnalyzed=new HashSet<S>();
 		if (this.intBA.getMixedStates().contains(currState)
 				|| this.intBA.getInitialStates().contains(currState)
 				|| this.intBA.getAcceptStates().contains(currState)) {
 			for (T successorTransition : this.intBA
 					.getOutTransitions(currState)) {
-				this.abstractStateSpace(this.intBA
+				toBeAnalyzed.add(this.intBA
 						.getTransitionDestination(successorTransition));
 			}
 		} else {
-			Set<S> toBeAnalyzed=new HashSet<S>();
 			for (T incomingTransition : this.intBA.getInTransitions(currState)) {
 				for (T outcomingTransition : this.intBA
 						.getOutTransitions(currState)) {
-					this.mergeTransitions(incomingTransition,
-							outcomingTransition);
-					toBeAnalyzed.add(this.intBA.getTransitionDestination(outcomingTransition));
+					if(!incomingTransition.equals(outcomingTransition)){
+						this.mergeTransitions(incomingTransition,
+								outcomingTransition, currState);
+						toBeAnalyzed.add(this.intBA.getTransitionDestination(outcomingTransition));
+					}
 				}
 			}
 			this.intBA.removeState(currState);
-			for(S next: toBeAnalyzed){
-				this.abstractStateSpace(next);
-			}
+		}
+		for(S next: toBeAnalyzed){
+			this.abstractStateSpace(next);
 		}
 
 	}
 
-	private void mergeTransitions(T incoming, T outcoming) {
+	
+	private void mergeTransitions(T incoming, T outcoming, State currState) {
+		
 		Set<L> labels = new HashSet<L>(incoming.getLabels());
-		labels.addAll(outcoming.getLabels());
-		for (T t : this.intBA.getOutTransitions(this.intBA
-				.getTransitionSource(incoming))) {
-			if (this.intBA.getTransitionDestination(t).equals(
-					this.intBA.getTransitionDestination(outcoming))) {
-				this.intBA.removeTransition(t);
-				labels.addAll(t.getLabels());
+		S source=this.intBA.getTransitionSource(incoming);
+		boolean alreadyPresent=false;
+		if(!source.equals(currState)){
+			S destination=this.intBA.getTransitionDestination(outcoming);
+			if(!destination.equals(currState)){
+				labels.addAll(outcoming.getLabels());
+				for (T t : this.intBA.getOutTransitions(source)) {
+					if (this.intBA.getTransitionDestination(t).equals(destination)) {
+						alreadyPresent=true;
+					}
+				}
+				if(!alreadyPresent){
+					T newTransition = this.transitionFactory.create(labels);
+					this.intBA.addTransition(source, destination, newTransition);
+				}
 			}
 		}
-		T newTransition = this.transitionFactory.create(labels);
-		this.intBA.addTransition(this.intBA.getTransitionSource(incoming),
-				this.intBA.getTransitionDestination(outcoming), newTransition);
+		
 	}
 
 }

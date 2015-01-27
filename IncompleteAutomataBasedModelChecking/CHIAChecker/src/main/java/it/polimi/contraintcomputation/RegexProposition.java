@@ -1,5 +1,6 @@
-package it.polimi.constraints;
+package it.polimi.contraintcomputation;
 
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -23,14 +24,8 @@ import it.polimi.automata.transition.Transition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Proposition<L extends Label, S extends State, T extends Transition<L>> {
+class RegexProposition<L extends Label, S extends State, T extends Transition<L>> extends GraphProposition {
 
-	/**
-	 * is the regular expression that must be satisfied in the refinement when
-	 * the incoming transition is performed to enter the state and the
-	 * out-coming transition is executed to exit it.
-	 */
-	private final String regex;
 	/**
 	 * contains the state that is constrained
 	 */
@@ -64,15 +59,16 @@ public class Proposition<L extends Label, S extends State, T extends Transition<
 	 *             out-coming transition is null
 	 * 
 	 */
-	public Proposition(S state, String regex, T incoming,
+	public RegexProposition(S state, String regex, T incoming,
 			T outcoming) {
+		super(regex, false);
 		if (state == null) {
 			throw new NullPointerException(
 					"The state to be constrained cannot be null");
 		}
-		if (regex == null) {
+		if(regex==null){
 			throw new NullPointerException(
-					"The regular expression associated with the state cannot be null");
+					"The regular expression to be constrained cannot be null");
 		}
 		if (incoming == null) {
 			throw new NullPointerException(
@@ -84,21 +80,8 @@ public class Proposition<L extends Label, S extends State, T extends Transition<
 		}
 
 		this.state = state;
-		this.regex = regex;
 		this.incoming = incoming;
 		this.outcoming = outcoming;
-	}
-
-	/**
-	 * the regular expression that constraint the state when it is entered and
-	 * exited using the incoming and out-coming transition, respectively
-	 * 
-	 * @return the regular expression that constraint the state when it is
-	 *         entered and exited using the incoming and out-coming transition,
-	 *         respectively
-	 */
-	public String getLabel() {
-		return regex;
 	}
 
 	/**

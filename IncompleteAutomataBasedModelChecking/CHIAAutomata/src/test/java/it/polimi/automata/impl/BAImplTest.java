@@ -183,6 +183,8 @@ public class BAImplTest {
 		assertTrue(ba.getTransitions().contains(t1));
 		assertTrue(ba.getTransitions().contains(t2));
 		assertFalse(ba.getTransitions().contains(t3));
+		ba.addState(state4);
+		assertTrue(ba.getOutTransitions(state4).isEmpty());
 	}
 
 	/**

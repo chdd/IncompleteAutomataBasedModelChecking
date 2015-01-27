@@ -197,7 +197,6 @@ public class IBAReaderTest {
 
 		assertTrue(ba.getInitialStates().contains(state1));
 		assertTrue(ba.getAcceptStates().contains(state3));
-		System.out.println(ba.getTransparentStates());
 		assertTrue(ba.getTransparentStates().contains(state2));
 		
 

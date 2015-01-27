@@ -1,11 +1,11 @@
-package it.polimi.contraintcomputation.abstraction;
+package it.polimi.contraintcomputation;
 
 import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.IntersectionBAFactory;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -26,7 +26,7 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Filter<L extends Label, S extends State, T extends Transition<L>> {
+class Filter<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the filtered intersection automaton
@@ -39,6 +39,8 @@ public class Filter<L extends Label, S extends State, T extends Transition<L>> {
 	 */
 	private Set<S> componentStates;
 
+	private IntersectionBA<L, S, T> intersection;
+
 	/**
 	 * creates a new Filter
 	 * 
@@ -47,12 +49,15 @@ public class Filter<L extends Label, S extends State, T extends Transition<L>> {
 	 * @param componentStates
 	 *            is the set of the states to be included in the intersection
 	 *            automaton
+	 * @param intersectionBAFactory
+	 *            is the factory to be used in creating an Intersection buchi
+	 *            automaton
 	 * @throws NullPointerException
 	 *             if the set of the states in the intersection automaton or the
 	 *             set of the states in the componentStates is null
 	 */
-	public Filter(IntersectionBA<L, S, T> intersection,
-			Set<S> componentStates) {
+	public Filter(IntersectionBA<L, S, T> intersection, Set<S> componentStates,
+			IntersectionBAFactory<L, S, T> intersectionBAFactory) {
 		if (intersection == null) {
 			throw new NullPointerException(
 					"The intersection automaton to be filtered cannot be null");
@@ -61,11 +66,17 @@ public class Filter<L extends Label, S extends State, T extends Transition<L>> {
 			throw new NullPointerException(
 					"The set of the component states cannot be null");
 		}
-		if(!intersection.getStates().containsAll(componentStates)){
-			throw new IllegalArgumentException("The states must be contained into the intersection");
+		if (intersectionBAFactory == null) {
+			throw new NullPointerException(
+					"The intersection ba factory cannot be null");
 		}
-		this.newIntersection = intersection.clone();
+		if (!intersection.getStates().containsAll(componentStates)) {
+			throw new IllegalArgumentException(
+					"The states must be contained into the intersection");
+		}
+		this.newIntersection = intersectionBAFactory.create();
 		this.componentStates = componentStates;
+		this.intersection = intersection;
 
 	}
 
@@ -78,27 +89,47 @@ public class Filter<L extends Label, S extends State, T extends Transition<L>> {
 	 */
 	public IntersectionBA<L, S, T> filter() {
 		for (S s : componentStates) {
+			this.newIntersection.addState(s);
 
-			for (T t : this.newIntersection.getInTransitions(s)) {
-				if (!componentStates.contains(this.newIntersection
+			if(this.intersection.getInitialStates().contains(s)){
+				this.newIntersection.addInitialState(s);
+			}
+			
+			if(this.intersection.getAcceptStates().contains(s)){
+				this.newIntersection.addAcceptState(s);
+			}
+			
+			for (T t : this.intersection.getInTransitions(s)) {
+				if (!componentStates.contains(this.intersection
 						.getTransitionSource(t))) {
 					this.newIntersection.addInitialState(s);
 				}
+				else{
+					for(L l: t.getLabels()){
+						this.newIntersection.addCharacter(l);
+					}
+					this.newIntersection.addState(this.intersection.getTransitionSource(t));
+					if(!this.newIntersection.getGraph().isNeighbor(this.intersection.getTransitionSource(t), s)){
+						this.newIntersection.addTransition(this.intersection.getTransitionSource(t), s, t);
+					}
+				}
 			}
-			for (T t : this.newIntersection.getOutTransitions(s)) {
-				if (!componentStates.contains(this.newIntersection
+			for (T t : this.intersection.getOutTransitions(s)) {
+				if (!componentStates.contains(this.intersection
 						.getTransitionDestination(t))) {
 					this.newIntersection.addAcceptState(s);
 				}
+				else{
+					for(L l: t.getLabels()){
+						this.newIntersection.addCharacter(l);
+					}
+					this.newIntersection.addState(this.intersection.getTransitionDestination(t));
+					if(!this.newIntersection.getTransitions().contains(t)){
+						this.newIntersection.addTransition(s, this.intersection.getTransitionDestination(t), t);
+					}
+				}
 			}
 		}
-		Set<S> statesToBeRemoved = new HashSet<S>(
-				this.newIntersection.getStates());
-		statesToBeRemoved.removeAll(componentStates);
-		for (S s : statesToBeRemoved) {
-			this.newIntersection.removeState(s);
-		}
-
 		return this.newIntersection;
 	}
 

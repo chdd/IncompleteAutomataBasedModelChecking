@@ -279,5 +279,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * @return the graph associated with the Buchi automaton
 	 */
 	public DirectedSparseGraph<S, T> getGraph();
+	
+	
 
 }

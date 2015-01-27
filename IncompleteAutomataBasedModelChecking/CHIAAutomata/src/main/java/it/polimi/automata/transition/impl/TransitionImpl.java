@@ -107,6 +107,5 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 		if (!labels.equals(other.labels))
 			return false;
 		return true;
-	}
-	
+	}	
 }

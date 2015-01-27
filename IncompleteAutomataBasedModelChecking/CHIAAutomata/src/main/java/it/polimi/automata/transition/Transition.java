@@ -42,4 +42,5 @@ public interface Transition<L extends Label> {
 	 * @return the <b>label</b> associated with the transition
 	 */
 	public Set<L> getLabels();
+	
 }

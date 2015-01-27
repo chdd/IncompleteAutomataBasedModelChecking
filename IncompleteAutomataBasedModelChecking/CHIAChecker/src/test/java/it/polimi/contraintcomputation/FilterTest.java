@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.contraintcomputation.abstraction;
+package it.polimi.contraintcomputation;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.IntersectionBA;
@@ -99,27 +99,27 @@ public class FilterTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Filter#Filter(null, java.util.Set)}
+	 * {@link it.polimi.contraintcomputation.Filter#Filter(null, java.util.Set)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testFilterNullIntersectionAutomaton() {
-		new Filter<Label, State, Transition<Label>>(null, new HashSet<State>());
+		new Filter<Label, State, Transition<Label>>(null, new HashSet<State>(), new IntBAFactoryImpl<Label, State, Transition<Label>>());
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Filter#Filter(it.polimi.automata.IntersectionBA, null)}
+	 * {@link it.polimi.contraintcomputation.Filter#Filter(it.polimi.automata.IntersectionBA, null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testFilterNullSetOfStates() {
-		new Filter<Label, State, Transition<Label>>(this.intersectionBA, null);
+		new Filter<Label, State, Transition<Label>>(this.intersectionBA, null,new IntBAFactoryImpl<Label, State, Transition<Label>>());
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Filter#Filter(it.polimi.automata.IntersectionBA, null)}
+	 * {@link it.polimi.contraintcomputation.Filter#Filter(it.polimi.automata.IntersectionBA, null)}
 	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -127,12 +127,12 @@ public class FilterTest {
 		Set<State> states = new HashSet<State>();
 		states.add(this.intersectionState1);
 		states.add(this.stateFactory.create("intersectionState4"));
-		new Filter<Label, State, Transition<Label>>(this.intersectionBA, states);
+		new Filter<Label, State, Transition<Label>>(this.intersectionBA, states, new IntBAFactoryImpl<Label, State, Transition<Label>>());
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Filter#Filter(it.polimi.automata.IntersectionBA, java.util.Set)}
+	 * {@link it.polimi.contraintcomputation.Filter#Filter(it.polimi.automata.IntersectionBA, java.util.Set)}
 	 * .
 	 */
 	@Test
@@ -140,12 +140,12 @@ public class FilterTest {
 		Set<State> states = new HashSet<State>();
 		states.add(this.intersectionState1);
 		assertNotNull(new Filter<Label, State, Transition<Label>>(
-				this.intersectionBA, states));
+				this.intersectionBA, states, new IntBAFactoryImpl<Label, State, Transition<Label>>()));
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Filter#filter()}.
+	 * {@link it.polimi.contraintcomputation.Filter#filter()}.
 	 */
 	@Test
 	public void testFilter1() {
@@ -155,12 +155,11 @@ public class FilterTest {
 		states.add(this.intersectionState1);
 		states.add(this.intersectionState3);
 		Filter<Label, State, Transition<Label>> filter = new Filter<Label, State, Transition<Label>>(
-				this.intersectionBA, states);
+				this.intersectionBA, states, new IntBAFactoryImpl<Label, State, Transition<Label>>());
 		IntersectionBA<Label, State, Transition<Label>> filteredBA = filter
 				.filter();
 		assertTrue(filteredBA.getStates().contains(this.intersectionState1));
 		assertTrue(filteredBA.getStates().contains(this.intersectionState3));
-		System.out.println(filteredBA.getInitialStates());
 		assertTrue(filteredBA.getInitialStates().contains(this.intersectionState1));
 		assertTrue(filteredBA.getInitialStates().contains(this.intersectionState3));
 		assertTrue(filteredBA.getAcceptStates().contains(this.intersectionState1));
@@ -168,7 +167,7 @@ public class FilterTest {
 	}
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.abstraction.Filter#filter()}.
+	 * {@link it.polimi.contraintcomputation.Filter#filter()}.
 	 */
 	@Test
 	public void testFilter2() {
@@ -178,7 +177,7 @@ public class FilterTest {
 		states.add(this.intersectionState1);
 		states.add(this.intersectionState2);
 		Filter<Label, State, Transition<Label>> filter = new Filter<Label, State, Transition<Label>>(
-				this.intersectionBA, states);
+				this.intersectionBA, states, new IntBAFactoryImpl<Label, State, Transition<Label>>());
 		IntersectionBA<Label, State, Transition<Label>> filteredBA = filter
 				.filter();
 		assertTrue(filteredBA.getStates().contains(this.intersectionState1));

@@ -35,7 +35,7 @@ public class ClaimTransitionFactoryImpl<L extends Label> implements
 	public Transition<L> create() {
 		Transition<L> t = new TransitionImpl<L>(new HashSet<L>(),
 				ClaimTransitionFactoryImpl.transitionCount);
-		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount++;
+		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount+1;
 
 		return t;
 	}
@@ -50,7 +50,7 @@ public class ClaimTransitionFactoryImpl<L extends Label> implements
 
 		Transition<L> t = new TransitionImpl<L>(labels,
 				ClaimTransitionFactoryImpl.transitionCount);
-		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount++;
+		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount+1;
 
 		return t;
 	}
