@@ -12,6 +12,9 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.contraintcomputation.brzozowski.Brzozowski;
+import it.polimi.contraintcomputation.brzozowski.ConcatenateTransformer;
+import it.polimi.contraintcomputation.brzozowski.StarTransformer;
+import it.polimi.contraintcomputation.brzozowski.UnionTransformer;
 
 import java.util.AbstractMap;
 import java.util.HashSet;
@@ -189,7 +192,7 @@ class Aggregator<L extends Label, S extends State, T extends Transition<L>> {
 				
 				//computes the regular expression
 				String regex = new Brzozowski<L, S, T>(filteredIntersection,
-						initState, finalState).getRegularExpression();
+						initState, finalState, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()).getRegularExpression();
 				// for each outcoming transition
 				for (T outcomingTransition : this.abstractedIntersection
 						.getOutTransitions(finalState)) {

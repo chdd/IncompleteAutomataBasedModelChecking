@@ -91,6 +91,16 @@ public class ComponentTest {
 	/**
 	 * Test method for {@link it.polimi.contraintcomputation.Component#addAll(java.util.Set)}.
 	 */
+	@Test(expected=NullPointerException.class)
+	public void testAddAllNull() {
+		Component<State> component=new Component<State>();
+		component.addAll(null);
+		
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.contraintcomputation.Component#addAll(java.util.Set)}.
+	 */
 	@Test
 	public void testAddAll() {
 		Set<State> set1=new HashSet<State>();
@@ -207,6 +217,10 @@ public class ComponentTest {
 		Component<State> component1=new Component<State>(set1);
 		
 		assertEquals("<1: state1, 2: state2>", component1.toString());
+		
+		Component<State> component2=new Component<State>();
+		
+		assertEquals("<>", component2.toString());
 	}
 
 }

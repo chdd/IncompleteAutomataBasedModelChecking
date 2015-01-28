@@ -82,6 +82,38 @@ public class BrzozowskiTest {
 		this.ba.addTransition(state2, state3, t2);
 		this.ba.addTransition(state3, state3, t3);
 	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.contraintcomputation.brzozowski.Brzozowski#Brzozowski(it.polimi.automata.BA, it.polimi.automata.state.State, it.polimi.automata.state.State)}
+	 * .
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testBrzozowskiNotNullStarTransformer() {
+		new Brzozowski<Label, State, Transition<Label>>(this.ba,
+				state1, state3, null, new UnionTransformer(), new ConcatenateTransformer());
+	}
+	
+	/**
+	 * Test method for
+	 * {@link it.polimi.contraintcomputation.brzozowski.Brzozowski#Brzozowski(it.polimi.automata.BA, it.polimi.automata.state.State, it.polimi.automata.state.State)}
+	 * .
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testBrzozowskiNotNullUnionTransformer() {
+		new Brzozowski<Label, State, Transition<Label>>(this.ba,
+				state1, state3, new StarTransformer(), null, new ConcatenateTransformer());
+	}
+	/**
+	 * Test method for
+	 * {@link it.polimi.contraintcomputation.brzozowski.Brzozowski#Brzozowski(it.polimi.automata.BA, it.polimi.automata.state.State, it.polimi.automata.state.State)}
+	 * .
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testBrzozowskiNotNullConcatenateTransformer() {
+		new Brzozowski<Label, State, Transition<Label>>(this.ba,
+				state1, state3, new StarTransformer(), new UnionTransformer(), null);
+	}
 
 	/**
 	 * Test method for
@@ -90,7 +122,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNullAutomaton() {
-		new Brzozowski<Label, State, Transition<Label>>(null, state1, state3);
+		new Brzozowski<Label, State, Transition<Label>>(null, state1, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
 	}
 
 	/**
@@ -100,7 +132,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNullInitialState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, null, state3);
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, null, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
 	}
 
 	/**
@@ -110,7 +142,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNullFinalState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, null);
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, null, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
 	}
 
 	/**
@@ -120,7 +152,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testBrzozowskiIllegalInitialState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, state4, state3);
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, state4, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
 	}
 
 	/**
@@ -130,7 +162,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testBrzozowskiIllegalFinalState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, state4);
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, state4, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
 	}
 
 	/**
@@ -141,7 +173,7 @@ public class BrzozowskiTest {
 	@Test
 	public void testBrzozowski() {
 		assertNotNull(new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3));
+				state1, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()));
 	}
 
 	/**
@@ -152,7 +184,7 @@ public class BrzozowskiTest {
 	@Test
 	public void testGetRegularExpression() {
 		String ret = new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3).getRegularExpression();
+				state1, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()).getRegularExpression();
 		assertEquals("[a].[b].([c])*", ret);
 
 		TransitionFactory<Label, Transition<Label>> transitionFactory = new ModelTransitionFactoryImpl<Label>();
@@ -165,7 +197,7 @@ public class BrzozowskiTest {
 		Transition<Label> t4 = transitionFactory.create(labelsT2);
 		this.ba.addTransition(state1, state3, t4);
 		ret = new Brzozowski<Label, State, Transition<Label>>(this.ba, state1,
-				state3).getRegularExpression();
+				state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()).getRegularExpression();
 
 		assertTrue(ret.equals("(([b])+([a].[b])).([c])*")
 				|| ret.equals("(([a].[b])+([b])).([c])*")

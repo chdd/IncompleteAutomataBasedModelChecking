@@ -66,12 +66,18 @@ public class Component<S extends State> {
 	 *             if the set of the states to be added is null
 	 */
 	public void addAll(Set<S> states) {
-		if(states==null){
-			throw new NullPointerException("The set of the states to be added into the component cannot be null");
+		if (states == null) {
+			throw new NullPointerException(
+					"The set of the states to be added into the component cannot be null");
 		}
 		this.states.addAll(states);
 	}
 
+	/**
+	 * returns the set of the states of the component
+	 * 
+	 * @return the set of the states of the component
+	 */
 	public Set<S> getStates() {
 		return states;
 	}
@@ -100,10 +106,7 @@ public class Component<S extends State> {
 			return false;
 		@SuppressWarnings("unchecked")
 		Component<S> other = (Component<S>) obj;
-		if (states == null) {
-			if (other.states != null)
-				return false;
-		} else if (!states.equals(other.states))
+		if (!states.equals(other.states))
 			return false;
 		return true;
 	}
@@ -111,6 +114,7 @@ public class Component<S extends State> {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String toString() {
 		String ret = "<";
 

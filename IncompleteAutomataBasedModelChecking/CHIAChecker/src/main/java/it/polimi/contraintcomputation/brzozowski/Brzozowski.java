@@ -6,8 +6,12 @@ import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+
+import org.apache.commons.collections15.Transformer;
 
 /**
  * Contains the algorithm that given an automaton, an initial and a final state
@@ -51,6 +55,23 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 	private final S finalState;
 
 	/**
+	 * is the transformer that given an input string applies the star operator
+	 */
+	private Transformer<String, String> starTransformer;
+
+	/**
+	 * is the transformer that given two strings as an input entry returns their
+	 * union
+	 */
+	private Transformer<Entry<String, String>, String> unionTransformer;
+
+	/**
+	 * is the transformer that given two strings as an input entry returns their
+	 * concatenation
+	 */
+	private Transformer<Entry<String, String>, String> concatenateTransformer;
+
+	/**
 	 * creates a new Brzozowski solver
 	 * 
 	 * @param automaton
@@ -65,8 +86,10 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 	 *             if the initState or the finalState are not contained in the
 	 *             automaton
 	 */
-	public Brzozowski(BA<L, S, T> automaton, S initState,
-			S finalState) {
+	public Brzozowski(BA<L, S, T> automaton, S initState, S finalState,
+			Transformer<String, String> starTransformer,
+			Transformer<Entry<String, String>, String> unionTransformer,
+			Transformer<Entry<String, String>, String> concatenateTransformer) {
 		if (automaton == null) {
 			throw new NullPointerException(
 					"The automaton to be analyzed cannot be null");
@@ -87,10 +110,26 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 			throw new IllegalArgumentException(
 					"The final state must be contained into the set of the states of the automaton");
 		}
+		if (starTransformer == null) {
+			throw new NullPointerException(
+					"The star transformer cannot be null");
+		}
+		if (unionTransformer == null) {
+			throw new NullPointerException(
+					"The union transformer cannot be null");
+		}
+		if (concatenateTransformer == null) {
+			throw new NullPointerException(
+					"The union transformer cannot be null");
+		}
+
 		this.automaton = automaton;
 		this.orderedStates = new ArrayList<S>(automaton.getStates());
 		this.initState = initState;
 		this.finalState = finalState;
+		this.starTransformer = starTransformer;
+		this.unionTransformer = unionTransformer;
+		this.concatenateTransformer = concatenateTransformer;
 	}
 
 	/**
@@ -130,14 +169,29 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 
 		int m = automaton.getStates().size();
 		for (int n = m - 1; n >= 0; n--) {
-			s[n] = this.concatenate(this.star(t[n][n]), s[n]);
+			s[n] = this.concatenateTransformer
+					.transform(new AbstractMap.SimpleEntry<String, String>(
+							this.starTransformer.transform(t[n][n]), s[n]));
 			for (int j = 0; j < n; j++) {
-				t[n][j] = this.concatenate(this.star(t[n][n]), t[n][j]);
+				t[n][j] = this.concatenateTransformer
+						.transform(new AbstractMap.SimpleEntry<String, String>(
+								this.starTransformer.transform(t[n][n]),
+								t[n][j]));
 			}
 			for (int i = 0; i < n; i++) {
-				s[i] = this.union(s[i], this.concatenate(t[i][n], s[n]));
+				s[i] = this.unionTransformer
+						.transform(new AbstractMap.SimpleEntry<String, String>(
+								s[i],
+								this.concatenateTransformer
+										.transform(new AbstractMap.SimpleEntry<String, String>(
+												t[i][n], s[n]))));
 				for (int j = 0; j < n; j++) {
-					t[i][j] = this.union(t[i][j], this.concatenate(t[i][n], t[n][j]));
+					t[i][j] = this.unionTransformer
+							.transform(new AbstractMap.SimpleEntry<String, String>(
+									t[i][j],
+									this.concatenateTransformer
+											.transform(new AbstractMap.SimpleEntry<String, String>(
+													t[i][n], t[n][j]))));
 				}
 			}
 			for (int i = 0; i < n; i++) {
@@ -145,38 +199,5 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 			}
 		}
 	}
-	
-	private String star(String a){
-		if(a.equals(Constants.EMPTYSET)){
-			return Constants.LAMBDA;
-		}
-		if(a.equals(Constants.LAMBDA)){
-			return Constants.LAMBDA;
-		}
-		return "("+a+")*";
-	}
-	
-	private String union(String a, String b){
-		if(a.equals(Constants.EMPTYSET)){
-			return b;
-		}
-		if(b.equals(Constants.EMPTYSET)){
-			return a;
-		}
-		return "(("+a+")+("+b+"))";
-	}
-	
-	private String concatenate(String a, String b){
-		if(a.equals(Constants.EMPTYSET) || b.equals(Constants.EMPTYSET)){
-			return Constants.EMPTYSET;
-		}
-		if(a.equals(Constants.LAMBDA)){
-			return b;
-		}
-		if(b.equals(Constants.LAMBDA)){
-			return a;
-		}
-		return a+"."+b;
-		
-	}
+
 }
