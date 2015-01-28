@@ -1,6 +1,6 @@
 package it.polimi.automata.labeling.impl;
 
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 import it.polimi.automata.labeling.Label;
 
 import java.util.Collections;

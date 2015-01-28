@@ -4,6 +4,7 @@
 package it.polimi;
 
 import static org.junit.Assert.*;
+import it.polimi.automata.Constants;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

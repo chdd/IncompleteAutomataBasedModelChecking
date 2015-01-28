@@ -5,7 +5,7 @@ package it.polimi.automata.transition.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 import it.polimi.automata.labeling.Label;
 
 import java.util.HashSet;

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.impl.IBAFactoryImpl;
 import it.polimi.automata.labeling.Label;

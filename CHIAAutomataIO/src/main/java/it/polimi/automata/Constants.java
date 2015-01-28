@@ -1,4 +1,4 @@
-package it.polimi;
+package it.polimi.automata;
 
 public final class Constants {
 	
@@ -21,6 +21,7 @@ public final class Constants {
 	public static final String OR = "|";
 	public static final String NOT = "!";
 	
+	public static final String SIGMA="SIGMA";
 	public static final String APREGEX="^[a-zA-Z]+$";
 	public static final String NOTAPREGEX="^![a-zA-Z]+$";
 	public static final String LPAR="(";

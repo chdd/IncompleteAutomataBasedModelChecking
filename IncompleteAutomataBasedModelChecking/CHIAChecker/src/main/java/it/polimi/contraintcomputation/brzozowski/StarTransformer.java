@@ -3,7 +3,7 @@
  */
 package it.polimi.contraintcomputation.brzozowski;
 
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 
 import org.apache.commons.collections15.Transformer;
 

@@ -5,8 +5,8 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import it.polimi.Constants;
 import it.polimi.automata.BA;
+import it.polimi.automata.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;

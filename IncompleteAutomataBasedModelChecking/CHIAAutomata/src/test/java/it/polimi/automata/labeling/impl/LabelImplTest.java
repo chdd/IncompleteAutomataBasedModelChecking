@@ -4,7 +4,7 @@
 package it.polimi.automata.labeling.impl;
 
 import static org.junit.Assert.*;
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 
 import java.util.HashSet;
 import java.util.Set;

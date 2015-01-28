@@ -33,7 +33,7 @@ import edu.uci.ics.jung.io.GraphIOException;
  * @author claudiomenghi
  * 
  */
-public class SendingMessageTest {
+public class SendingMessageModelTest {
 
 	private StateFactory<State> stateFactory;
 	private TransitionFactory<Label, Transition<Label>> transitionFactory;
@@ -95,15 +95,14 @@ public class SendingMessageTest {
 		Set<Label> labels7=new HashSet<Label>();
 		labels7.add(this.labelFactory.create(propositions7));
 		t7=this.transitionFactory.create(7, labels7);
-		
-	
 	}
+	
 	@Test
 	public void test() throws FileNotFoundException, GraphIOException {
 		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> reader=new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
 				this.labelFactory, this.transitionFactory, this.stateFactory, new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessage.xml").getFile())));
+						.getResource("SendingMessageModel.xml").getFile())));
 		
 		IBA<Label, State, Transition<Label>> sendingMessage=reader.read();
 		

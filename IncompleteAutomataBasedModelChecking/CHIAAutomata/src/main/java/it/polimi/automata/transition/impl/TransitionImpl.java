@@ -1,6 +1,6 @@
 package it.polimi.automata.transition.impl;
 
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.transition.Transition;
 

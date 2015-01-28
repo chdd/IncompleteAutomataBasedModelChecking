@@ -5,7 +5,7 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.IBAStateTransparentToStringTransformer;
 import it.polimi.automata.labeling.Label;

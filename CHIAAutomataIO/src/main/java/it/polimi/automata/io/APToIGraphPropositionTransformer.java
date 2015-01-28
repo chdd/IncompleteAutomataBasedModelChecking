@@ -1,11 +1,12 @@
 package it.polimi.automata.io;
 
-import it.polimi.Constants;
+import it.polimi.automata.Constants;
 
 import org.apache.commons.collections15.Transformer;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 /**
  * Starting from the string computes the corresponding proposition. The string
@@ -44,8 +45,14 @@ class APToIGraphPropositionTransformer implements
 					"The input "+input+" must match the regular expression: "
 							+ Constants.APREGEX + " or " + Constants.NOTAPREGEX);
 		}
+		
 		if (input.matches(Constants.APREGEX)) {
-			return new GraphProposition(input, false);
+			if(input.equals(Constants.SIGMA)){
+				return new SigmaProposition();
+			}
+			else{
+				return new GraphProposition(input, false);
+			}
 		} else {
 			return new GraphProposition(input.substring(1), true);
 		}

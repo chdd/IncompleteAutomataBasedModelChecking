@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import it.polimi.Constants;
 import it.polimi.automata.state.*;
 import it.polimi.automata.BA;
+import it.polimi.automata.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.transition.Transition;
