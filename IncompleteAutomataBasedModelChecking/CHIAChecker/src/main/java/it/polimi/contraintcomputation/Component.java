@@ -89,7 +89,7 @@ public class Component<S extends State> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((states == null) ? 0 : states.hashCode());
+		result = prime * result + states.hashCode();
 		return result;
 	}
 

@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+extraProperties=sonar.core.codeCoveragePlugin\=jacoco\r\nsonar.jdbc.username\=sonar\r\nsonar.jdbc.driverClassName\=com.mysql.jdbc.Driver\r\nsonar.host.url\=http\://localhost\:9000/\r\nsonar.jdbc.password\=sonar\r\nsonar.jdbc.url\=jdbc\:mysql\://localhost\:3306/sonar?useUnicode\=true&characterEncoding\=utf8\r\nsonar.dynamicAnalysis\=reuseReports
+projectKey=it.polimi\:CHIAAutomataIO
+serverUrl=http\://localhost\:9000
+version=2
