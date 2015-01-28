@@ -45,7 +45,7 @@ class Aggregator<L extends Label, S extends State, T extends Transition<L>> {
 	 * contains the map from the original transparent state of the model to the
 	 * corresponding clusters
 	 */
-	private Map<S, Set<Set<S>>> modelStateClusterMap;
+	private Map<S, Set<Component<S>>> modelStateClusterMap;
 
 	/**
 	 * is the factory which is used to create transitions
@@ -92,7 +92,7 @@ class Aggregator<L extends Label, S extends State, T extends Transition<L>> {
 	 */
 	public Aggregator(IntersectionBA<L, S, T> abstractedIntersection,
 			Map<S, Set<S>> intersectionStateClusterMap,
-			Map<S, Set<Set<S>>> modelStateClusterMap,
+			Map<S, Set<Component<S>>> modelStateClusterMap,
 			IntersectionBAFactory<L, S, T> intersectionBAFactory,
 			TransitionFactory<L, T> transitionFactory,
 			StateFactory<S> stateFactory, LabelFactory<L> labelFactory) {
@@ -247,14 +247,14 @@ class Aggregator<L extends Label, S extends State, T extends Transition<L>> {
 		// for each state of the model
 		for (S s : modelStateClusterMap.keySet()) {
 			// for each component associated to the state
-			for (Set<S> component : modelStateClusterMap.get(s)) {
+			for (Component<S> component : modelStateClusterMap.get(s)) {
 			
 				// filter the state space to analyze a specific component
 				IntersectionBA<L, S, T> filteredIntersection = new Filter<L, S, T>(
-						abstractedIntersection, component, intersectionBAFactory).filter();
+						abstractedIntersection, component.getStates(), intersectionBAFactory).filter();
 
-				this.checkAccept(s, filteredIntersection, component);
-				this.checkInitial(s, filteredIntersection, component);
+				this.checkAccept(s, filteredIntersection, component.getStates());
+				this.checkInitial(s, filteredIntersection, component.getStates());
 				
 				// for each initial and final state creates a new state
 				for (S initState : filteredIntersection.getInitialStates()) {
@@ -269,7 +269,7 @@ class Aggregator<L extends Label, S extends State, T extends Transition<L>> {
 									+ incomingTransition.getId());
 							mapComponentState.put(
 									new AbstractMap.SimpleEntry<T, Set<S>>(
-											incomingTransition, component),
+											incomingTransition, component.getStates()),
 									newState);
 							newAbstractedIntersection.addState(newState);
 						}

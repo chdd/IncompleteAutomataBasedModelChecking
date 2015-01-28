@@ -28,7 +28,7 @@ import org.junit.Test;
  * @author claudiomenghi
  *
  */
-class SubAutomataIdentifierTest {
+public class SubAutomataIdentifierTest {
 
 	/*
 	 * Claim 1
@@ -158,11 +158,11 @@ class SubAutomataIdentifierTest {
 		map.put(modelState, set);
 		
 		SubAutomataIdentifier<Label, State, Transition<Label>> subAutomataIdentifier=new SubAutomataIdentifier<Label, State, Transition<Label>>(this.intersectionBA, map);
-		Map<State, Set<Set<State>>> returnedMap=subAutomataIdentifier.getSubAutomata();
+		Map<State, Set<Component<State>>> returnedMap=subAutomataIdentifier.getSubAutomata();
 		assertTrue(returnedMap.containsKey(modelState));
 		
-		assertTrue(returnedMap.get(modelState).contains(set1));
-		assertTrue(returnedMap.get(modelState).contains(set2));
+		assertTrue(returnedMap.get(modelState).contains(new Component<State>(set1)));
+		assertTrue(returnedMap.get(modelState).contains(new Component<State>(set2)));
 	}
 	
 	/**
@@ -189,12 +189,12 @@ class SubAutomataIdentifierTest {
 		map.put(modelState2, set2);
 		
 		SubAutomataIdentifier<Label, State, Transition<Label>> subAutomataIdentifier=new SubAutomataIdentifier<Label, State, Transition<Label>>(this.intersectionBA, map);
-		Map<State, Set<Set<State>>> returnedMap=subAutomataIdentifier.getSubAutomata();
+		Map<State, Set<Component<State>>> returnedMap=subAutomataIdentifier.getSubAutomata();
 		assertTrue(returnedMap.containsKey(modelState1));
 		assertTrue(returnedMap.containsKey(modelState2));
 		
-		assertTrue(returnedMap.get(modelState1).contains(set1));
-		assertTrue(returnedMap.get(modelState2).contains(set2));
+		assertTrue(returnedMap.get(modelState1).contains(new Component<State>(set1)));
+		assertTrue(returnedMap.get(modelState2).contains(new Component<State>(set2)));
 		
 		assertTrue(returnedMap.get(modelState1).size()==1);
 		assertTrue(returnedMap.get(modelState2).size()==1);
@@ -274,7 +274,7 @@ class SubAutomataIdentifierTest {
 		 */
 		SubAutomataIdentifier<Label, State, Transition<Label>> subautomataIdentifier=new SubAutomataIdentifier<Label, State, Transition<Label>>(
 				this.intersectionBA, modelIntersectionStatesMap);
-		Map<State, Set<Set<State>>> modelStateSubAutomataMap =subautomataIdentifier.getSubAutomata();
+		Map<State, Set<Component<State>>> modelStateSubAutomataMap =subautomataIdentifier.getSubAutomata();
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which
@@ -283,8 +283,8 @@ class SubAutomataIdentifierTest {
 		
 		assertTrue(modelStateSubAutomataMap.containsKey(modelState1));
 		assertTrue(modelStateSubAutomataMap.containsKey(modelState2));
-		assertTrue(modelStateSubAutomataMap.get(modelState1).contains(set1));
-		assertTrue(modelStateSubAutomataMap.get(modelState2).contains(set2));
+		assertTrue(modelStateSubAutomataMap.get(modelState1).contains(new Component<State>(set1)));
+		assertTrue(modelStateSubAutomataMap.get(modelState2).contains(new Component<State>(set2)));
 		assertTrue(modelStateSubAutomataMap.get(modelState1).size()==1);
 		assertTrue(modelStateSubAutomataMap.get(modelState2).size()==1);
 		

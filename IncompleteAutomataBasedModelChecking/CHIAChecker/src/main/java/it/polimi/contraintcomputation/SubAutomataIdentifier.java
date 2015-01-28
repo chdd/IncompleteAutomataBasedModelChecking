@@ -5,8 +5,10 @@ import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -50,7 +52,7 @@ class SubAutomataIdentifier<L extends Label, S extends State, T extends Transiti
 	 * contains the map that connect each state of the model with the
 	 * corresponding clusters
 	 */
-	private Map<S, Set<Set<S>>> returnSubAutomata;
+	private Map<S, List<Component<S>>> returnSubAutomata;
 
 	/**
 	 * creates an identifier for the sub automata of the intersection automata
@@ -77,7 +79,7 @@ class SubAutomataIdentifier<L extends Label, S extends State, T extends Transiti
 		this.modelIntersectionStatesMap = map;
 		this.intersectionBA = intersectionBA;
 		this.intersectionStateClusterMap = new HashMap<S, Set<S>>();
-		this.returnSubAutomata = new HashMap<S, Set<Set<S>>>();
+		this.returnSubAutomata = new HashMap<S, List<Component<S>>>();
 		this.hashedStates = new HashSet<S>();
 	}
 
@@ -88,19 +90,27 @@ class SubAutomataIdentifier<L extends Label, S extends State, T extends Transiti
 	 * @return the sub-automata of the automaton that refer to the transparent
 	 *         states of M.
 	 */
-	public Map<S, Set<Set<S>>> getSubAutomata() {
-
+	public Map<S, Set<Component<S>>> getSubAutomata() {
+		this.intersectionStateClusterMap = new HashMap<S, Set<S>>();
+		this.returnSubAutomata = new HashMap<S, List<Component<S>>>();
+		this.hashedStates = new HashSet<S>();
+		
 		DirectedSparseGraph<S, T> graph = this.intersectionBA.getGraph();
 		// considering a specific transparent state
 		for (Entry<S, Set<S>> entry : this.modelIntersectionStatesMap
 				.entrySet()) {
 			this.hashedStates=new HashSet<S>();
-			this.returnSubAutomata.put(entry.getKey(), new HashSet<Set<S>>());
+			this.returnSubAutomata.put(entry.getKey(), new ArrayList<Component<S>>());
 			for (S init : this.intersectionBA.getInitialStates()) {
 				firstDFS(init, graph, entry.getValue(), null, entry.getKey());
 			}
 		}
-		return returnSubAutomata;
+		
+		Map<S, Set<Component<S>>> retMap=new HashMap<S, Set<Component<S>>>();
+		for(S s: this.returnSubAutomata.keySet()){
+			retMap.put(s, new HashSet<Component<S>>(returnSubAutomata.get(s)));
+		}
+		return retMap;
 	}
 
 	/**
@@ -111,14 +121,14 @@ class SubAutomataIdentifier<L extends Label, S extends State, T extends Transiti
 	 * @return true if an accepting path is found, false otherwise
 	 */
 	private void firstDFS(S currState, DirectedSparseGraph<S, T> graph,
-			Set<S> currentStates, Set<S> currentCluster, S modelState) {
+			Set<S> currentStates, Component<S> currentCluster, S modelState) {
 
 		this.hashedStates.add(currState);
 		if (currentCluster != null && currentStates.contains(currState)) {
 			currentCluster.add(currState);
 		} else {
 			if (currentStates.contains(currState)) {
-				currentCluster = new HashSet<S>();
+				currentCluster = new Component<S>();
 				currentCluster.add(currState);
 			} else {
 				currentCluster = null;
@@ -133,15 +143,20 @@ class SubAutomataIdentifier<L extends Label, S extends State, T extends Transiti
 			else{
 				if(currentStates.contains(nextState) && currentCluster!=null){
 					currentCluster.addAll(this.intersectionStateClusterMap.get(nextState));
-					this.returnSubAutomata.get(modelState).remove(this.intersectionStateClusterMap.get(nextState));
-					this.intersectionStateClusterMap.put(nextState, currentCluster);
+					this.returnSubAutomata.get(modelState).remove(new Component<>(this.intersectionStateClusterMap.get(nextState)));
+					if(!this.returnSubAutomata.get(modelState).contains(currentCluster)){
+						this.returnSubAutomata.get(modelState).add(currentCluster);
+					}
+					this.intersectionStateClusterMap.put(nextState, currentCluster.getStates());
 				}
 				
 			}
 		}
 		if(currentCluster!=null){
-			this.returnSubAutomata.get(modelState).add(currentCluster);
-			this.intersectionStateClusterMap.put(currState, currentCluster);
+			if(!this.returnSubAutomata.get(modelState).contains(currentCluster)){
+				this.returnSubAutomata.get(modelState).add(currentCluster);
+			}
+			this.intersectionStateClusterMap.put(currState, currentCluster.getStates());
 		}
 		return;
 	}

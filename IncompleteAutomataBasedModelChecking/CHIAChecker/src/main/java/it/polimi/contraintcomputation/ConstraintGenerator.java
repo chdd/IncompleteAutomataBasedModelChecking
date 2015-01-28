@@ -70,7 +70,7 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 		 */
 		SubAutomataIdentifier<L, S, T> subautomataIdentifier=new SubAutomataIdentifier<L, S, T>(
 				this.intBA, modelIntersectionStatesMap);
-		Map<S, Set<Set<S>>> modelStateSubAutomataMap =subautomataIdentifier.getSubAutomata();
+		Map<S, Set<Component<S>>> modelStateSubAutomataMap =subautomataIdentifier.getSubAutomata();
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which

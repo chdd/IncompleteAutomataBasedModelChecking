@@ -34,9 +34,6 @@ public class AggregatorTest {
 	/*
 	 * Claim 1
 	 */
-	/*
-	 * Claim 1
-	 */
 	private IntersectionBA<Label, State, Transition<Label>> intersectionBA;
 	private State intersectionState1;
 	private State intersectionState2;
@@ -142,7 +139,7 @@ public class AggregatorTest {
 	public void testAggregatorNullIntersectionBA() {
 		new Aggregator<Label, State, Transition<Label>>(null, 
 				new HashMap<State, Set<State>>(),
-				new HashMap<State, Set<Set<State>>>(),
+				new HashMap<State, Set<Component<State>>>(),
 				intBaFactory, 
 				transitionFactory,
 				stateFactory, 
@@ -156,7 +153,7 @@ public class AggregatorTest {
 	public void testAggregatorNullIntersectionClusterMap() {
 		new Aggregator<Label, State, Transition<Label>>(this.intersectionBA, 
 				null,
-				new HashMap<State, Set<Set<State>>>(),
+				new HashMap<State, Set<Component<State>>>(),
 				intBaFactory, 
 				transitionFactory,
 				stateFactory, 
@@ -184,7 +181,7 @@ public class AggregatorTest {
 	public void testAggregatorNullIntersectionBAFactory() {
 		new Aggregator<Label, State, Transition<Label>>(this.intersectionBA, 
 				new HashMap<State, Set<State>>(),
-				new HashMap<State, Set<Set<State>>>(),
+				new HashMap<State, Set<Component<State>>>(),
 				null, 
 				transitionFactory,
 				stateFactory, 
@@ -198,7 +195,7 @@ public class AggregatorTest {
 	public void testAggregatorNullIntersectionTransitionFactory() {
 		new Aggregator<Label, State, Transition<Label>>(this.intersectionBA, 
 				new HashMap<State, Set<State>>(),
-				new HashMap<State, Set<Set<State>>>(),
+				new HashMap<State, Set<Component<State>>>(),
 				intBaFactory, 
 				null,
 				stateFactory, 
@@ -212,7 +209,7 @@ public class AggregatorTest {
 	public void testAggregatorNullIntersectionStateFactory() {
 		new Aggregator<Label, State, Transition<Label>>(this.intersectionBA, 
 				new HashMap<State, Set<State>>(),
-				new HashMap<State, Set<Set<State>>>(),
+				new HashMap<State, Set<Component<State>>>(),
 				intBaFactory, 
 				transitionFactory,
 				null, 
@@ -226,7 +223,7 @@ public class AggregatorTest {
 	public void testAggregatorNullIntersectionLabelFactory() {
 		new Aggregator<Label, State, Transition<Label>>(this.intersectionBA, 
 				new HashMap<State, Set<State>>(),
-				new HashMap<State, Set<Set<State>>>(),
+				new HashMap<State, Set<Component<State>>>(),
 				intBaFactory, 
 				transitionFactory,
 				stateFactory, 
@@ -240,7 +237,7 @@ public class AggregatorTest {
 	public void testAggregator() {
 		assertNotNull(new Aggregator<Label, State, Transition<Label>>(this.intersectionBA, 
 			new HashMap<State, Set<State>>(),
-			new HashMap<State, Set<Set<State>>>(),
+			new HashMap<State, Set<Component<State>>>(),
 			intBaFactory, 
 			transitionFactory,
 			stateFactory, 
@@ -278,34 +275,40 @@ public class AggregatorTest {
 		State modelState2=this.factory.create("modelState2");
 		map.put(modelState2, set2);
 		
+		
 		SubAutomataIdentifier<Label, State, Transition<Label>> subAutomataIdentifier=new SubAutomataIdentifier<Label, State, Transition<Label>>(this.intersectionBA, map);
 		Map<State, Set<State>> modelIntersectionStatesMap=subAutomataIdentifier.getModelStateClusterMap();
+		
 		
 		/*
 		 * returns the set of the components (set of states) that correspond to
 		 * the parts of the automaton that refer to different states of the
 		 * model
 		 */
+		
 		SubAutomataIdentifier<Label, State, Transition<Label>> subautomataIdentifier=new SubAutomataIdentifier<Label, State, Transition<Label>>(
 				this.intersectionBA, modelIntersectionStatesMap);
-		Map<State, Set<Set<State>>> modelStateSubAutomataMap =subautomataIdentifier.getSubAutomata();
+		Map<State, Set<Component<State>>> modelStateSubAutomataMap =subautomataIdentifier.getSubAutomata();
+		
+		
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which
 		 * do not correspond to transparent states are removed
 		 */
 		
-		
 		Abstractor<Label, State, Transition<Label>> abstractor=new Abstractor<Label, State, Transition<Label>>(
 				this.intersectionBA, transitionFactory);
 		IntersectionBA<Label, State, Transition<Label>> abstractedIntersection =abstractor.abstractIntersection();
-
+		
 		
 		assertTrue(modelStateSubAutomataMap.containsKey(modelState1));
 		assertTrue(modelStateSubAutomataMap.containsKey(modelState2));
-		assertTrue(modelStateSubAutomataMap.get(modelState1).contains(set1));
-		assertTrue(modelStateSubAutomataMap.get(modelState2).contains(set2));
+		assertTrue(modelStateSubAutomataMap.get(modelState1).contains(new Component<State>(set1)));
+		assertTrue(modelStateSubAutomataMap.get(modelState2).contains(new Component<State>(set2)));
+		
 		assertTrue(modelStateSubAutomataMap.get(modelState1).size()==1);
+		
 		assertTrue(modelStateSubAutomataMap.get(modelState2).size()==1);
 		
 		Map<State, Set<State>> intersectionStateClusterMap=subautomataIdentifier.getIntersectionStateClusterMap();
