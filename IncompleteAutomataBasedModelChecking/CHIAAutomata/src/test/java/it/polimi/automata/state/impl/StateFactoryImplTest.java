@@ -51,7 +51,7 @@ public class StateFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create(null)} .
+	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#createFromLabel(null)} .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testCreateString_Null() {

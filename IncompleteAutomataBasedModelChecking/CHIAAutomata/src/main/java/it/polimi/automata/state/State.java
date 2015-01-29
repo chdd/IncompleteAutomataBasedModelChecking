@@ -27,13 +27,5 @@ public interface State {
 	 */
 	public String getName();
 	
-	/**
-	 * sets the name of the state
-	 * 
-	 * @param name
-	 *            the name of the {@link StateImpl}
-	 * @throws NullPointerException
-	 *             if the name of the {@link StateImpl} is null
-	 */
-	public void setName(String name);
+	
 }

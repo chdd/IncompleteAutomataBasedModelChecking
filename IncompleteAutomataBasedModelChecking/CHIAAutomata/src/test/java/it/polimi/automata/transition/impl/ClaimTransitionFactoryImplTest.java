@@ -57,7 +57,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#create(null)}
+	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#createFromLabel(null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)

@@ -6,7 +6,7 @@ package it.polimi.contraintcomputation.brzozowski;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 import it.polimi.automata.impl.IBAFactoryImpl;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.impl.LabelImplFactory;

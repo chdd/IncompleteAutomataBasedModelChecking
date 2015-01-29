@@ -4,7 +4,7 @@
 package it.polimi.contraintcomputation.brzozowski;
 
 import static org.junit.Assert.*;
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 
 import org.junit.Test;
 

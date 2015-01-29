@@ -43,10 +43,10 @@
 			</plugins>
 		</pluginManagement>
 		<resources>
-            <resource>
-                <directory>src/test/resources</directory>
-            </resource>
-        </resources>
+			<resource>
+				<directory>src/test/resources</directory>
+			</resource>
+		</resources>
 	</build>
 	<profiles>
 		<profile>
@@ -137,5 +137,16 @@
 			<artifactId>CHIAAutomata</artifactId>
 			<version>0.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>it.polimi</groupId>
+			<artifactId>CHIAAutomataIO</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
 	</dependencies>
 </project>

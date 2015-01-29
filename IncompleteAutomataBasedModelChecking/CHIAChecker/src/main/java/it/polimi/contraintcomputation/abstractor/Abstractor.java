@@ -1,10 +1,10 @@
-package it.polimi.contraintcomputation;
+package it.polimi.contraintcomputation.abstractor;
 
-import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.contraintcomputation.abstractedBA.AbstractedBA;
+import it.polimi.contraintcomputation.component.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,22 +40,14 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
+public class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the intersection automaton to be simplified
 	 */
-	private IntersectionBA<L, S, T> intBA;
+	private AbstractedBA<L, S, T, Component<L, S, T>> intBA;
 
-	/**
-	 * contains the set of already visited states
-	 */
-	private Set<S> abstractedStates;
-
-	/**
-	 * contains the transition factory
-	 */
-	private TransitionFactory<L, T> transitionFactory;
+	private Set<Component<L, S, T>> hashedStates;
 
 	/**
 	 * creates a new Abstractor
@@ -65,19 +57,13 @@ class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
 	 * @throws NullPointerException
 	 *             if the intersection automaton or the factory is null
 	 */
-	public Abstractor(IntersectionBA<L, S, T> intBA,
-			TransitionFactory<L, T> transitionFactory) {
+	public Abstractor(AbstractedBA<L, S, T, Component<L, S, T>> intBA) {
 		if (intBA == null) {
 			throw new NullPointerException(
 					"The intersection automaton cannot be null");
 		}
-		if (transitionFactory == null) {
-			throw new NullPointerException(
-					"The transition factory cannot be null");
-		}
-		this.transitionFactory = transitionFactory;
-		this.intBA = intBA.clone();
-		this.abstractedStates = new HashSet<S>();
+		this.intBA = intBA;
+		hashedStates = new HashSet<Component<L, S, T>>();
 	}
 
 	/**
@@ -99,9 +85,9 @@ class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
 	 * 
 	 * @return the abstracted version of the state space
 	 */
-	public IntersectionBA<L, S, T> abstractIntersection() {
+	public AbstractedBA<L, S, T, Component<L, S, T>> abstractIntersection() {
 
-		for (S s : this.intBA.getInitialStates()) {
+		for (Component<L, S, T> s : this.intBA.getInitialStates()) {
 			this.abstractStateSpace(s);
 		}
 		return this.intBA;
@@ -114,63 +100,73 @@ class Abstractor<L extends Label, S extends State, T extends Transition<L>> {
 	 * @param currState
 	 *            is the current state to be analyzed
 	 */
-	private void abstractStateSpace(S currState) {
-		// if the currState has already been abstracted
-		if (this.abstractedStates.contains(currState)) {
+	private void abstractStateSpace(Component<L, S, T> currState) {
+		if (this.hashedStates.contains(currState)) {
 			return;
 		}
-		this.abstractedStates.add(currState);
-		
-		Set<S> toBeAnalyzed=new HashSet<S>();
-		if (this.intBA.getMixedStates().contains(currState)
-				|| this.intBA.getInitialStates().contains(currState)
-				|| this.intBA.getAcceptStates().contains(currState)) {
-			for (T successorTransition : this.intBA
-					.getOutTransitions(currState)) {
-				toBeAnalyzed.add(this.intBA
-						.getTransitionDestination(successorTransition));
-			}
-		} else {
-			for (T incomingTransition : this.intBA.getInTransitions(currState)) {
-				for (T outcomingTransition : this.intBA
-						.getOutTransitions(currState)) {
-					if(!incomingTransition.equals(outcomingTransition)){
-						this.mergeTransitions(incomingTransition,
-								outcomingTransition, currState);
-						toBeAnalyzed.add(this.intBA.getTransitionDestination(outcomingTransition));
+		this.hashedStates.add(currState);
+
+		Set<Component<L, S, T>> toBeAnalyzed = new HashSet<Component<L, S, T>>();
+		/*
+		 * if the state is transparent no action is performed, all the
+		 * successors are added to the set of the states to be analyzed next
+		 */
+		if (currState.isTransparent()) {
+			toBeAnalyzed.addAll(this.intBA.getSuccessors(currState));
+		}
+		/*
+		 * otherwise the next state are analyzed to check if there is a
+		 * successor that may be joined with this state
+		 */
+		else {
+			Set<T> transitionsToBeAnalyzed = new HashSet<>(
+					this.intBA.getOutTransitions(currState));
+			while (!transitionsToBeAnalyzed.isEmpty()) {
+				T outcomingTransition = transitionsToBeAnalyzed.iterator()
+						.next();
+				// get the successor of the state
+				Component<L, S, T> successorState = this.intBA
+						.getTransitionDestination(outcomingTransition);
+				if (!this.hashedStates.contains(successorState)) {
+					System.out.println("successor: " + successorState.getName()
+							+ "transparent" + successorState.isTransparent());
+					if (successorState.isTransparent()
+							|| this.intBA.getInitialStates().contains(
+									successorState)
+							|| this.intBA.getAcceptStates().contains(
+									successorState)) {
+						toBeAnalyzed.add(successorState);
+					} else {
+						for (T t : this.intBA.getInTransitions(successorState)) {
+							Component<L, S, T> sourceComponent = this.intBA
+									.getTransitionSource(t);
+							this.intBA.removeTransition(t);
+							if (!this.intBA.isPredecessor(sourceComponent,
+									currState)) {
+								this.intBA.addTransition(sourceComponent,
+										currState, t);
+							}
+						}
+						for (T t : this.intBA.getOutTransitions(successorState)) {
+							Component<L, S, T> destinationComponent = this.intBA
+									.getTransitionDestination(t);
+							this.intBA.removeTransition(t);
+							if (!this.intBA.isPredecessor(currState,
+									destinationComponent)) {
+								this.intBA.addTransition(currState,
+										destinationComponent, t);
+								transitionsToBeAnalyzed.add(t);
+							}
+						}
+						this.intBA.removeState(successorState);
 					}
 				}
+				transitionsToBeAnalyzed.remove(outcomingTransition);
 			}
-			this.intBA.removeState(currState);
 		}
-		for(S next: toBeAnalyzed){
+
+		for (Component<L, S, T> next : toBeAnalyzed) {
 			this.abstractStateSpace(next);
 		}
-
 	}
-
-	
-	private void mergeTransitions(T incoming, T outcoming, State currState) {
-		
-		Set<L> labels = new HashSet<L>(incoming.getLabels());
-		S source=this.intBA.getTransitionSource(incoming);
-		boolean alreadyPresent=false;
-		if(!source.equals(currState)){
-			S destination=this.intBA.getTransitionDestination(outcoming);
-			if(!destination.equals(currState)){
-				labels.addAll(outcoming.getLabels());
-				for (T t : this.intBA.getOutTransitions(source)) {
-					if (this.intBA.getTransitionDestination(t).equals(destination)) {
-						alreadyPresent=true;
-					}
-				}
-				if(!alreadyPresent){
-					T newTransition = this.transitionFactory.create(labels);
-					this.intBA.addTransition(source, destination, newTransition);
-				}
-			}
-		}
-		
-	}
-
 }

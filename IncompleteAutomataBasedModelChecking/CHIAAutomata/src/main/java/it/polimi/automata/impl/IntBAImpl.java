@@ -83,7 +83,7 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 	 * @return a copy of the intersection automaton
 	 */
 	@Override
-	public IntersectionBA<L, S, T> clone() {
+	public Object clone() {
 		IntersectionBA<L, S, T> retBA = new IntBAFactoryImpl<L, S, T>()
 				.create();
 		for(L l: this.getAlphabet()){

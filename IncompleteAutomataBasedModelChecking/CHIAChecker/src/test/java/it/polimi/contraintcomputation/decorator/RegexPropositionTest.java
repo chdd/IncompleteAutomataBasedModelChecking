@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.contraintcomputation;
+package it.polimi.contraintcomputation.decorator;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.labeling.Label;
@@ -9,6 +9,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
+import it.polimi.contraintcomputation.decorator.RegexProposition;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class RegexPropositionTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.RegexProposition#Proposition(null, java.lang.String, it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.contraintcomputation.decorator.RegexProposition#Proposition(null, java.lang.String, it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -48,7 +49,7 @@ public class RegexPropositionTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.RegexProposition#Proposition(it.polimi.automata.state.State, null, it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.contraintcomputation.decorator.RegexProposition#Proposition(it.polimi.automata.state.State, null, it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -59,7 +60,7 @@ public class RegexPropositionTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.RegexProposition#Proposition(it.polimi.automata.state.State, java.lang.String, null, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.contraintcomputation.decorator.RegexProposition#Proposition(it.polimi.automata.state.State, java.lang.String, null, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -70,7 +71,7 @@ public class RegexPropositionTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.RegexProposition#Proposition(it.polimi.automata.state.State, java.lang.String, it.polimi.automata.transition.Transition, null)}
+	 * {@link it.polimi.contraintcomputation.decorator.RegexProposition#Proposition(it.polimi.automata.state.State, java.lang.String, it.polimi.automata.transition.Transition, null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -81,7 +82,7 @@ public class RegexPropositionTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.contraintcomputation.RegexProposition#Proposition(it.polimi.automata.state.State, java.lang.String, it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.contraintcomputation.decorator.RegexProposition#Proposition(it.polimi.automata.state.State, java.lang.String, it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test
@@ -91,7 +92,7 @@ public class RegexPropositionTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.contraintcomputation.RegexProposition#getLabel()}.
+	 * Test method for {@link it.polimi.contraintcomputation.decorator.RegexProposition#getLabel()}.
 	 */
 	@Test
 	public void testGetLabel() {
@@ -101,7 +102,7 @@ public class RegexPropositionTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.contraintcomputation.RegexProposition#getState()}.
+	 * Test method for {@link it.polimi.contraintcomputation.decorator.RegexProposition#getState()}.
 	 */
 	@Test
 	public void testGetState() {
@@ -111,7 +112,7 @@ public class RegexPropositionTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.contraintcomputation.RegexProposition#getIncoming()}.
+	 * Test method for {@link it.polimi.contraintcomputation.decorator.RegexProposition#getIncoming()}.
 	 */
 	@Test
 	public void testGetIncoming() {
@@ -121,7 +122,7 @@ public class RegexPropositionTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.contraintcomputation.RegexProposition#getOutcoming()}.
+	 * Test method for {@link it.polimi.contraintcomputation.decorator.RegexProposition#getOutcoming()}.
 	 */
 	@Test
 	public void testGetOutcoming() {

@@ -1,20 +1,26 @@
 package it.polimi.contraintcomputation;
 
+import it.polimi.Constants;
+import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.impl.IntBAFactoryImpl;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.contraintcomputation.abstractedBA.AbstractedBA;
+import it.polimi.contraintcomputation.abstractedBA.AbstractedBAFactory;
+import it.polimi.contraintcomputation.abstractor.Abstractor;
 import it.polimi.contraintcomputation.brzozowski.Brzozowski;
 import it.polimi.contraintcomputation.brzozowski.ConcatenateTransformer;
 import it.polimi.contraintcomputation.brzozowski.IneffectiveStarTransformer;
 import it.polimi.contraintcomputation.brzozowski.UnionTransformer;
+import it.polimi.contraintcomputation.component.Component;
+import it.polimi.contraintcomputation.decorator.TransitionDecorator;
+import it.polimi.contraintcomputation.splitter.Splitter;
+import it.polimi.contraintcomputation.subautomatafinder.SubAutomataIdentifier;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * The constraint generator computes a constraint. A constraint is a (set of)
@@ -29,7 +35,7 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 	 * contains a map that maps each state of the model with a set of states of
 	 * the intersection automaton
 	 */
-	private Map<S, Set<S>> modelIntersectionStatesMap;
+	private Map<S, S> modelIntersectionStatesMap;
 	
 	/**
 	 * contains the intersection automaton
@@ -41,11 +47,8 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 	 */
 	private TransitionFactory<L, T> transitionFactory;
 
-	/**
-	 * is the factory to be used to creating the states
-	 */
-	private StateFactory<S> stateFactory;
 
+	private IBA<L, S, T> model;
 	/**
 	 * is the factory to be used to create labels
 	 */
@@ -73,8 +76,9 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 	 *             map or the label, state or transition factory is null
 	 */
 	public ConstraintGenerator(IntersectionBA<L, S, T> intBA,
-			Map<S, Set<S>> modelIntersectionStatesMap,
-			LabelFactory<L> labelFactory, StateFactory<S> stateFactory,
+			IBA<L, S, T> model,
+			Map<S, S> modelIntersectionStatesMap,
+			LabelFactory<L> labelFactory, 
 			TransitionFactory<L, T> transitionFactory) {
 		if (intBA == null) {
 			throw new NullPointerException(
@@ -87,15 +91,15 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 		if (labelFactory == null) {
 			throw new NullPointerException("The label factory cannot be null");
 		}
-		if (stateFactory == null) {
-			throw new NullPointerException("The state factory cannot be null");
-		}
 		if (transitionFactory == null) {
 			throw new NullPointerException(
 					"The transition factory cannot be null");
 		}
 		this.modelIntersectionStatesMap = modelIntersectionStatesMap;
+		this.transitionFactory=transitionFactory;
+		this.labelFactory=labelFactory;
 		this.intBA = intBA;
+		this.model=model;
 	}
 
 	/**
@@ -109,41 +113,53 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 		 * model
 		 */
 		SubAutomataIdentifier<L, S, T> subautomataIdentifier = new SubAutomataIdentifier<L, S, T>(
-				this.intBA, modelIntersectionStatesMap);
-		Map<S, Set<Component<S>>> modelStateSubAutomataMap = subautomataIdentifier
+				this.intBA, model, modelIntersectionStatesMap, new AbstractedBAFactory<L, S, T, Component<L, S, T>> ());
+		AbstractedBA<L, S, T, Component<L, S, T>> abstractedAutomaton = subautomataIdentifier
 				.getSubAutomata();
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which
 		 * do not correspond to transparent states are removed
 		 */
-
-		Abstractor<L, S, T> abstractor = new Abstractor<L, S, T>(this.intBA,
-				transitionFactory);
-		IntersectionBA<L, S, T> abstractedIntersection = abstractor
+		Abstractor<L, S, T> abstractor = new Abstractor<L, S, T>(abstractedAutomaton);
+		AbstractedBA<L, S, T, Component<L, S, T>> abstractedIntersection = abstractor
 				.abstractIntersection();
 
-		Aggregator<L, S, T> aggregator = new Aggregator<L, S, T>(
+		Splitter<L, S, T> splitter = new Splitter<L, S, T>(
 				abstractedIntersection,
-				subautomataIdentifier.getIntersectionStateClusterMap(),
-				modelStateSubAutomataMap, new IntBAFactoryImpl<L, S, T>(),
-				transitionFactory, stateFactory, labelFactory);
+				transitionFactory);
 
-		IntersectionBA<L, S, T> abstractedIntersectionAggrageted = aggregator
-				.aggregate();
-
+		AbstractedBA<L, S, T, Component<L, S, T>> splittedBA = splitter.split();
+		
+		
+		TransitionDecorator<L, S, T> decorator=new TransitionDecorator<L, S, T>(splittedBA, labelFactory);
+		decorator.decorates();
+		
 		String ret = "";
-		for (S init : abstractedIntersectionAggrageted.getInitialStates()) {
-			for (S accept : abstractedIntersectionAggrageted.getAcceptStates()) {
-				ret = ret
-						+ "+"
-						+ new Brzozowski<L, S, T>(
-								abstractedIntersectionAggrageted, init, accept,
-								new IneffectiveStarTransformer(), new UnionTransformer(),
-								new ConcatenateTransformer())
-								.getRegularExpression();
+		boolean first=true;
+		for (Component<L, S, T> init : splittedBA.getInitialStates()) {
+			for (Component<L, S, T> accept : splittedBA.getAcceptStates()) {
+				if(first){
+					ret =  new Brzozowski<L, Component<L, S, T>, T>(
+									splittedBA, init, accept,
+									new IneffectiveStarTransformer(), new UnionTransformer(Constants.OR),
+									new ConcatenateTransformer(Constants.AND))
+									.getRegularExpression();
+					first=false;
+				}
+				else{
+					ret = ret
+							+ Constants.OR
+							+ new Brzozowski<L, Component<L, S, T>, T>(
+									splittedBA, init, accept,
+									new IneffectiveStarTransformer(), new UnionTransformer(Constants.OR),
+									new ConcatenateTransformer(Constants.AND))
+									.getRegularExpression();
+				}
+				
+				
 			}
 		}
-		return ret;
+		return Constants.NOT+"("+ret+")";
 	}
 }

@@ -39,41 +39,41 @@ public class LabelImplFactoryTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create()}.
-	 */
-	@Test
-	public void testCreate() {
-		assertNotNull(this.factory.create());
-		assertNotNull(this.factory.create().getLabels());
-		assertTrue(this.factory.create().getLabels().isEmpty());
-	}
+		 * Test method for
+		 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create()}.
+		 */
+		@Test
+		public void testCreateFromLabel() {
+			assertNotNull(this.factory.create());
+			assertNotNull(this.factory.create().getLabels());
+			assertTrue(this.factory.create().getLabels().isEmpty());
+		}
 
 	
 	
 	/**
-	 * Test method for
-	 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create(java.util.Set)}
-	 * .
-	 */
-	@Test
-	public void testCreateSetOfPropositions() {
-		assertNotNull(this.factory.create(labels));
-		assertNotNull(this.factory.create(labels).getLabels());
-		
-		assertFalse(this.factory.create(labels).getLabels().isEmpty());
-		assertTrue(this.factory.create(labels).getLabels()!=labels);
-		assertEquals(this.factory.create(labels).getLabels(), labels);
-	}
+		 * Test method for
+		 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create(java.util.Set)}
+		 * .
+		 */
+		@Test
+		public void testCreateFromLabelSetOfPropositions() {
+			assertNotNull(this.factory.create(labels));
+			assertNotNull(this.factory.create(labels).getLabels());
+			
+			assertFalse(this.factory.create(labels).getLabels().isEmpty());
+			assertTrue(this.factory.create(labels).getLabels()!=labels);
+			assertEquals(this.factory.create(labels).getLabels(), labels);
+		}
 	
 	/**
-	 * Test method for
-	 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create(null)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testCreateSetOfPropositionsNUll() {
-		this.factory.create(null);
-	}
+		 * Test method for
+		 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#createFromLabel(null)}
+		 * .
+		 */
+		@Test(expected=NullPointerException.class)
+		public void testCreateFromLabelSetOfPropositionsNUll() {
+			this.factory.createFromLabel(null);
+		}
 
 }

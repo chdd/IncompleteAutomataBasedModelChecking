@@ -77,22 +77,6 @@ public class StateImpl implements State {
 		return name;
 	}
 
-	
-	/**
-	 * sets the name of the state
-	 * 
-	 * @param name
-	 *            the name of the {@link StateImpl}
-	 * @throws NullPointerException
-	 *             if the name of the {@link StateImpl} is null
-	 */
-	@Override
-	public void setName(String name) {
-		if(name == null)
-			throw new NullPointerException("It is not possible to create a state with a null name");
-		this.name = name;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */

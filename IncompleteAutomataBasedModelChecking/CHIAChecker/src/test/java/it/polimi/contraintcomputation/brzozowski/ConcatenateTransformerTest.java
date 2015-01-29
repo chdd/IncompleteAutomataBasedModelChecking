@@ -4,7 +4,7 @@
 package it.polimi.contraintcomputation.brzozowski;
 
 import static org.junit.Assert.*;
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 
 import java.util.AbstractMap;
 
@@ -22,7 +22,7 @@ public class ConcatenateTransformerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testTransformNull() {
-		new ConcatenateTransformer().transform(null);
+		new ConcatenateTransformer(Constants.CONCATENATIONDOT).transform(null);
 	}
 
 	
@@ -31,7 +31,7 @@ public class ConcatenateTransformerTest {
 	 */
 	@Test
 	public void testTransform() {
-		ConcatenateTransformer transformer=new ConcatenateTransformer();
+		ConcatenateTransformer transformer=new ConcatenateTransformer(Constants.CONCATENATIONDOT);
 		assertEquals(Constants.EMPTYSET,transformer.transform(new AbstractMap.SimpleEntry<String, String>(Constants.EMPTYSET, "a")));
 		assertEquals(Constants.EMPTYSET,transformer.transform(new AbstractMap.SimpleEntry<String, String>("a", Constants.EMPTYSET)));
 		assertEquals("a",transformer.transform(new AbstractMap.SimpleEntry<String, String>(Constants.LAMBDA, "a")));

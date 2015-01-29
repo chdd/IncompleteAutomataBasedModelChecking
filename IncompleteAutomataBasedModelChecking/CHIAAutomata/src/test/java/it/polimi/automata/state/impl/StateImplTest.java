@@ -113,27 +113,6 @@ public class StateImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#setName(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public void testSetName() {
-		this.state4.setName("prova");
-		assertEquals("prova", this.state4.getName());
-	}
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#setName(null)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testSetName_null() {
-		this.state4.setName(null);
-	}
-
-
-	/**
-	 * Test method for
 	 * {@link it.polimi.automata.state.impl.StateImpl#toString()}.
 	 */
 	@Test

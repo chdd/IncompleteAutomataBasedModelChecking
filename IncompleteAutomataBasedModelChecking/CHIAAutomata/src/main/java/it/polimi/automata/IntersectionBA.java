@@ -61,5 +61,5 @@ public interface IntersectionBA<L extends Label, S extends State, T extends Tran
 	 * 
 	 * @return a copy of the Intersection Buchi Automaton
 	 */
-	public IntersectionBA<L, S, T> clone();
+	public Object clone();
 }

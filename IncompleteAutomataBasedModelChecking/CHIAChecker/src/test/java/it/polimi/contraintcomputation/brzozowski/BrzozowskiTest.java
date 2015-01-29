@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.automata.BA;
+import it.polimi.Constants;
 import it.polimi.automata.impl.IBAFactoryImpl;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.impl.LabelImplFactory;
@@ -91,7 +92,7 @@ public class BrzozowskiTest {
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNotNullStarTransformer() {
 		new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3, null, new UnionTransformer(), new ConcatenateTransformer());
+				state1, state3, null, new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 	
 	/**
@@ -102,7 +103,7 @@ public class BrzozowskiTest {
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNotNullUnionTransformer() {
 		new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3, new StarTransformer(), null, new ConcatenateTransformer());
+				state1, state3, new StarTransformer(), null, new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 	/**
 	 * Test method for
@@ -112,7 +113,7 @@ public class BrzozowskiTest {
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNotNullConcatenateTransformer() {
 		new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3, new StarTransformer(), new UnionTransformer(), null);
+				state1, state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), null);
 	}
 
 	/**
@@ -122,7 +123,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNullAutomaton() {
-		new Brzozowski<Label, State, Transition<Label>>(null, state1, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
+		new Brzozowski<Label, State, Transition<Label>>(null, state1, state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNullInitialState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, null, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, null, state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testBrzozowskiNullFinalState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, null, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, null, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testBrzozowskiIllegalInitialState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, state4, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, state4, state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 
 	/**
@@ -162,7 +163,7 @@ public class BrzozowskiTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testBrzozowskiIllegalFinalState() {
-		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, state4, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer());
+		new Brzozowski<Label, State, Transition<Label>>(this.ba, state3, state4, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT));
 	}
 
 	/**
@@ -173,7 +174,7 @@ public class BrzozowskiTest {
 	@Test
 	public void testBrzozowski() {
 		assertNotNull(new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()));
+				state1, state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT)));
 	}
 
 	/**
@@ -184,7 +185,7 @@ public class BrzozowskiTest {
 	@Test
 	public void testGetRegularExpression() {
 		String ret = new Brzozowski<Label, State, Transition<Label>>(this.ba,
-				state1, state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()).getRegularExpression();
+				state1, state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT)).getRegularExpression();
 		assertEquals("[a].[b].([c])*", ret);
 
 		TransitionFactory<Label, Transition<Label>> transitionFactory = new ModelTransitionFactoryImpl<Label>();
@@ -197,7 +198,7 @@ public class BrzozowskiTest {
 		Transition<Label> t4 = transitionFactory.create(labelsT2);
 		this.ba.addTransition(state1, state3, t4);
 		ret = new Brzozowski<Label, State, Transition<Label>>(this.ba, state1,
-				state3, new StarTransformer(), new UnionTransformer(), new ConcatenateTransformer()).getRegularExpression();
+				state3, new StarTransformer(), new UnionTransformer(Constants.UNIONPLUS), new ConcatenateTransformer(Constants.CONCATENATIONDOT)).getRegularExpression();
 
 		assertTrue(ret.equals("(([b])+([a].[b])).([c])*")
 				|| ret.equals("(([a].[b])+([b])).([c])*")

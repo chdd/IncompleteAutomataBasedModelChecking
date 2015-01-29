@@ -129,7 +129,8 @@ public class IntBAImplTest {
 	 */
 	@Test
 	public void testClone() {
-		IntersectionBA<Label, State, Transition<Label>> clone = this.ba.clone();
+		@SuppressWarnings("unchecked")
+		IntersectionBA<Label, State, Transition<Label>> clone = (IntersectionBA<Label, State, Transition<Label>>) this.ba.clone();
 		assertEquals(clone.getAlphabet(), this.ba.getAlphabet());
 		assertEquals(clone.getTransitions(), this.ba.getTransitions());
 		assertEquals(clone.getStates(), this.ba.getStates());

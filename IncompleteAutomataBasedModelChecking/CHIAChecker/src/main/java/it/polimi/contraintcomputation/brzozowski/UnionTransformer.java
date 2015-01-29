@@ -3,7 +3,7 @@
  */
 package it.polimi.contraintcomputation.brzozowski;
 
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 
 import java.util.Map.Entry;
 
@@ -16,6 +16,11 @@ import org.apache.commons.collections15.Transformer;
 public class UnionTransformer implements
 		Transformer<Entry<String, String>, String> {
 
+	private String orCharacter;
+	public UnionTransformer(String orCharacter){
+		this.orCharacter=orCharacter;
+	}
+	
 	/**
 	 * computes the union of the two strings passed as parameter into the input
 	 * entry
@@ -36,7 +41,7 @@ public class UnionTransformer implements
 		if (input.getValue().equals(Constants.EMPTYSET)) {
 			return input.getKey();
 		}
-		return "((" + input.getKey() + ")+(" + input.getValue() + "))";
+		return "((" + input.getKey() + ")"+orCharacter+"(" + input.getValue() + "))";
 	}
 
 }

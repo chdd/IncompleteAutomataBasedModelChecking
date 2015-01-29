@@ -143,6 +143,30 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the state is null
 	 */
 	public void addInitialState(S state);
+	
+	/**
+	 * adds the initial states to the Buchi automaton. If a state is not
+	 * contained into the states of the automaton it is also added to the states
+	 * of the automaton
+	 * 
+	 * @param states
+	 * 			is the set of the states to be added to the automaton
+	 * @throws NullPointerException
+	 *             if the set of the states or a specific state is null
+	 */
+	public void addInitialStates(Set<S> state);
+	
+	/**
+	 * adds the accepting states to the Buchi automaton. If a state is not
+	 * contained into the state of the automaton it is also added to the states
+	 * of the automaton
+	 * 
+	 * @param states
+	 *            the set of the states to be added as accepting states
+	 * @throws NullPointerException
+	 *             if the states is null or if an element into the set is null
+	 */
+	public void addAcceptStates(Set<S> states);
 
 	/**
 	 * adds the accepting state to the Buchi automaton. If the state is not
@@ -167,7 +191,31 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the state to be added is null
 	 */
 	public void addState(S state);
+	
+	/**
+	 * adds the states to the set of the states of the Buchi automaton. If the
+	 * a state is already present into the set of the states of the automaton no
+	 * actions are performed
+	 * 
+	 * @param states
+	 *            the set of the states to be added to the states of the Buchi automaton
+	 * @throws NullPointerException
+	 *             if a state to be added is null or if the set of the states is null
+	 */
+	public void addStates(Set<S> states);
 
+	/**
+	 * adds the characters to the characters of the Buchi automaton. If a
+	 * character is already contained in the set of characters of the Buchi
+	 * automaton no actions are performed
+	 * 
+	 * @param characters
+	 *            the set of the characters to be added to the Buchi automaton
+	 * @throws NullPointerException
+	 *             if the set of the characters or any character inside the set is null
+	 */
+	public void addCharacters(Set<L> characters);
+	
 	/**
 	 * adds the character to the characters of the Buchi automaton. If a
 	 * character is already contained in the set of characters of the Buchi
@@ -207,6 +255,8 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	public void addTransition(S source, S destination,
 			T transition);
 
+	public boolean isPredecessor(S source, S destination);
+	
 	/**
 	 * removes the specified state from the set of the states of the Buchi
 	 * automaton
@@ -280,6 +330,9 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	public DirectedSparseGraph<S, T> getGraph();
 	
+	public Set<S> getSuccessors(S s);
+	
+	public Set<S> getPredecessors(S s);
 	
 
 }

@@ -53,7 +53,7 @@ public class ModelTransitionFactoryImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.ModelTransitionFactoryImpl#create(IllegalSet)}.
+	 * Test method for {@link it.polimi.automata.transition.impl.ModelTransitionFactoryImpl#createFromLabel(IllegalSet)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testCreateSetOfLABELIllegal() {
@@ -61,7 +61,7 @@ public class ModelTransitionFactoryImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.ModelTransitionFactoryImpl#create(null)}.
+	 * Test method for {@link it.polimi.automata.transition.impl.ModelTransitionFactoryImpl#createFromLabel(null)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testCreateSetOfLABELNull() {

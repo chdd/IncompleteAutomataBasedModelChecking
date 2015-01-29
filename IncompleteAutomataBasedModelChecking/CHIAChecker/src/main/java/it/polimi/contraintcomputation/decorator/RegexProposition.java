@@ -1,4 +1,4 @@
-package it.polimi.contraintcomputation;
+package it.polimi.contraintcomputation.decorator;
 
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import it.polimi.automata.labeling.Label;
@@ -110,5 +110,9 @@ class RegexProposition<L extends Label, S extends State, T extends Transition<L>
 	 */
 	public T getOutcoming() {
 		return outcoming;
+	}
+	
+	public String toString(){
+		return this.label;
 	}
 }

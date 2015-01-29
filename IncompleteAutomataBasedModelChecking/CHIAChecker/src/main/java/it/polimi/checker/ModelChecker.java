@@ -15,13 +15,13 @@ import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
+import java.util.Map;
+
 /**
  * @author claudiomenghi
  * 
  */
-public class ModelChecker<L extends Label, S extends State, T extends Transition<L>>
-
-{
+public class ModelChecker<L extends Label, S extends State, T extends Transition<L>> {
 
 	/**
 	 * contains the specification to be checked
@@ -37,13 +37,28 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 * contains the intersection automaton of the model and its specification
 	 * after the model checking procedure is performed
 	 */
-	private IntersectionBA<L, S, T> ris;
+	private IntersectionBA<L, S, T> intersectionAutomaton;
 
+	/**
+	 * is the intersection rule to be used in computing the intersection
+	 */
 	private IntersectionRule<L, T> intersectionRule;
 
+	/**
+	 * is the factory in charge of creating intersection automata
+	 */
 	private IntersectionBAFactory<L, S, T> intersectionBAFactory;
+
+	/**
+	 * is the intersection factory to be used in computing the states of the
+	 * intersection
+	 */
 	private StateFactory<S> intersectionStateFactory;
 
+	/**
+	 * is the intersection factory to be used in computing the transitions of
+	 * the intersection automaton
+	 */
 	private TransitionFactory<L, T> intersectionTransitionFactory;
 
 	/**
@@ -51,6 +66,8 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 * satisfied or not, the time required by the model checking procedure etc)
 	 */
 	private ModelCheckingResults verificationResults;
+
+	private IntersectionBuilder<L, S, T> intersectionBuilder;
 
 	/**
 	 * creates a new {@link ModelChecker}
@@ -114,11 +131,15 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 
 		this.claim = claim;
 		this.model = model;
-		this.intersectionBAFactory=intersectionBAFactory;
+		this.intersectionBAFactory = intersectionBAFactory;
 		this.verificationResults = mp;
 		this.intersectionRule = new IntersectionRuleImpl<L, T>();
 		this.intersectionStateFactory = intersectionStateFactory;
 		this.intersectionTransitionFactory = intersectionTransitionFactory;
+		this.intersectionBuilder = new IntersectionBuilder<L, S, T>(
+				this.intersectionRule, intersectionStateFactory,
+				intersectionBAFactory, intersectionTransitionFactory, model,
+				claim);
 	}
 
 	/**
@@ -178,18 +199,22 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 				.setPossibleViolationTime((stopCheckingPossible - startCheckingPossible) / 1000000000.0);
 		// INTERSECTION
 		// sets the number of the states in the intersection
-		this.verificationResults.setNumStatesIntersection(this.ris.getStates()
-				.size());
+		this.verificationResults
+				.setNumStatesIntersection(this.intersectionAutomaton
+						.getStates().size());
 
 		// sets the number of accepting states of the intersection
-		this.verificationResults.setNumAcceptingStatesIntersection(this.ris
-				.getAcceptStates().size());
+		this.verificationResults
+				.setNumAcceptingStatesIntersection(this.intersectionAutomaton
+						.getAcceptStates().size());
 		// sets the number of initial states in the intersection
-		this.verificationResults.setNumInitialStatesIntersection(this.ris
-				.getInitialStates().size());
+		this.verificationResults
+				.setNumInitialStatesIntersection(this.intersectionAutomaton
+						.getInitialStates().size());
 		// sets the number of mixed states in the intersection
-		this.verificationResults.setNumMixedStatesIntersection(this.ris
-				.getMixedStates().size());
+		this.verificationResults
+				.setNumMixedStatesIntersection(this.intersectionAutomaton
+						.getMixedStates().size());
 		if (!emptyIntersection) {
 			return -1;
 		}
@@ -230,11 +255,10 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	private boolean checkEmptyIntersection() {
 
 		// computing the intersection
-		this.ris = new IntersectionBuilder<L, S, T>(this.intersectionRule,
-				intersectionStateFactory, intersectionBAFactory,
-				intersectionTransitionFactory, model, claim)
+		this.intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
-		return new EmptinessChecker<L, S, T>(this.ris).isEmpty();
+		return new EmptinessChecker<L, S, T>(this.intersectionAutomaton)
+				.isEmpty();
 	}
 
 	/**
@@ -247,6 +271,26 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 */
 	public ModelCheckingResults getVerificationTimes() {
 		return verificationResults;
+	}
+
+	/**
+	 * returns a map that relates each state of the intersection the
+	 * corresponding state of the model
+	 * 
+	 * @return a map that relates each state of the intersection the
+	 *         corresponding state of the model
+	 */
+	public Map<S, S> getIntersectionStateModelStateMap() {
+		return this.intersectionBuilder.getIntersectionStateModelStateMap();
+	}
+
+	/**
+	 * returns the intersection automaton
+	 * 
+	 * @return the intersection automaton
+	 */
+	public IntersectionBA<L, S, T> getIntersectionAutomaton() {
+		return intersectionAutomaton;
 	}
 
 }

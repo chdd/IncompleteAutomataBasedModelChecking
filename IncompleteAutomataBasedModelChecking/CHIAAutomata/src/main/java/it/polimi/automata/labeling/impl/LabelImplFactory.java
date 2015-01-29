@@ -32,5 +32,13 @@ public class LabelImplFactory implements LabelFactory<Label>{
 			throw new NullPointerException("The set of labels cannot be null");
 		return new LabelImpl(labels);
 	}
+	
+	public Label createFromLabel(IGraphProposition label) {
+		if(label==null)
+			throw new NullPointerException("The label cannot be null");
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		labels.add(label);
+		return new LabelImpl(labels);
+	}
 
 }

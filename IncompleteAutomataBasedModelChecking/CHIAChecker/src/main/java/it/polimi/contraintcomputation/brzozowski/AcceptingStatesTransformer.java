@@ -1,7 +1,7 @@
 package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;

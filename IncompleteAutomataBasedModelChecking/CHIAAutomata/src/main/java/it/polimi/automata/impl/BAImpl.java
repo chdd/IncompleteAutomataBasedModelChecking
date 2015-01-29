@@ -59,6 +59,7 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 * contains the graph on which the Buchi automaton is based
 	 */
 	private DirectedSparseGraph<S, T> automataGraph;
+	
 
 	/**
 	 * creates a new empty Buchi automaton
@@ -112,6 +113,9 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 		if(state==null){
 			throw new NullPointerException("The state s cannot be null");
 		}
+		if(this.automataGraph.getOutEdges(state)==null){
+			return Collections.unmodifiableSet(new HashSet<T>());
+		}
 		return Collections.unmodifiableSet(new HashSet<T>(
 				this.automataGraph.getOutEdges(state)));
 	}
@@ -151,11 +155,31 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 			throw new NullPointerException("The transition t cannot be null");
 		}
 		if(!this.getTransitions().contains(transition)){
-			throw new IllegalArgumentException("The transition is not contained into the set of the transition of the BA");
+			throw new IllegalArgumentException("The transition is already contained into the set of the transition of the BA");
 		}
 		return this.automataGraph.getSource(transition);
 	}
 
+	public Set<S> getSuccessors(S s){
+		if(s==null){
+			throw new NullPointerException("The state s cannot be null");
+		}
+		if(!this.getStates().contains(s)){
+			throw new IllegalArgumentException("The state is not contained into the states of the automaton");
+		}
+		return new HashSet<>(this.automataGraph.getSuccessors(s));
+	}
+	
+	public Set<S> getPredecessors(S s){
+		if(s==null){
+			throw new NullPointerException("The state s cannot be null");
+		}
+		if(!this.getStates().contains(s)){
+			throw new IllegalArgumentException("The state is not contained into the states of the automaton");
+		}
+		return new HashSet<>(this.automataGraph.getPredecessors(s));
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -175,6 +199,18 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 		this.initialStates.add(s);
 		this.addState(s);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addInitialStates(Set<S> states) {
+		if( states == null)
+			throw new NullPointerException("The state to be added cannot be null");
+		for(S s: states){
+			this.addInitialState(s);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -186,7 +222,20 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 		this.acceptStates.add(s);
 		this.addState(s);
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addAcceptStates(Set<S> states) {
+		if( states == null)
+			throw new NullPointerException("The state to be added cannot be null");
+		for(S s: states){
+			this.addAcceptState(s);
+		}
+		
+	}
 
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -196,6 +245,20 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 			throw new NullPointerException("The state to be added cannot be null");
 		this.automataGraph.addVertex(state);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addStates(Set<S> states) {
+		if( states == null)
+			throw new NullPointerException("The state to be added cannot be null");
+		for(S s: states){
+			this.addState(s);
+		}
+		
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -207,6 +270,18 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 		this.alphabet.add(character);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addCharacters(Set<L> characters) {
+		if(characters == null)
+			throw new NullPointerException("The set of the characters cannot be null");
+		for(L l: characters){
+			this.addCharacter(l);
+		}
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -226,11 +301,18 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 			throw new IllegalArgumentException("The source state is not contained into the set of the states of the automaton");
 		if(!this.getStates().contains(destination))
 			throw new IllegalArgumentException("The destination state is not contained into the set of the states of the automaton");
-		if(this.automataGraph.getSuccessors(source).contains(destination))
-			throw new IllegalArgumentException("A transition that connect the source and the destination is already present");
-
+		if(this.automataGraph.isPredecessor(source, destination)){
+			throw new IllegalArgumentException("The source state is already connected to the destination state");
+		}
+		if(this.getTransitions().contains(transition)){
+			throw new IllegalArgumentException("The transition is already contained into the set of transitions of the grap");
+		}
 		this.automataGraph.addEdge(transition, source, destination,
-				EdgeType.DIRECTED);
+					EdgeType.DIRECTED);
+	}
+	
+	public boolean isPredecessor(S source, S destination){
+		return this.automataGraph.isPredecessor(source, destination);
 	}
 
 	/**
@@ -328,5 +410,25 @@ public class BAImpl<L extends Label, S extends State, T extends Transition<L>>
 		}
 		return ret;
 	}
+	
+	/**
+	 * returns a copy of the automaton
+	 * @return a copy of the automaton
+	 */
+	public Object clone(){
+		BAImpl<L,S,T> ret=new BAImpl<L,S,T>();
+		// coping the states
+		ret.addStates(this.getStates());
+		// coping the initial states
+		ret.addInitialStates(this.getInitialStates());
+		// coping the accepting states
+		ret.addAcceptStates(this.getAcceptStates());
+		// coping the accepting states
+		for(T t: this.getTransitions()){
+			ret.addTransition(ret.getTransitionSource(t), ret.getTransitionDestination(t), t);
+		}
+		return ret;
+	}
+
 	
 }

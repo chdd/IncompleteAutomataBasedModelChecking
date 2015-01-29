@@ -1,7 +1,7 @@
 package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -94,8 +94,12 @@ class TransitionMatrixTranformer<L extends Label, S extends State, T extends Tra
 				boolean setted = false;
 				for (T t : automaton.getGraph().getOutEdges(s1)) {
 					if (automaton.getGraph().getDest(t).equals(s2)) {
-
-						ret[i][j] = t.getLabels().toString();
+						if(t.getLabels().isEmpty()){
+							ret[i][j]=Constants.LAMBDA;
+						}
+						else{
+							ret[i][j] = t.getLabels().toString();
+						}
 						setted = true;
 					}
 				}

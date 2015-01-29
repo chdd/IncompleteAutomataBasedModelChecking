@@ -266,26 +266,26 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BAImpl#addCharacter(null)}
-	 * .
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testAddCharacterNull() {
-		this.ba.addCharacter(null);
-	}
+		 * Test method for {@link it.polimi.automata.impl.BAImpl#addCharacters(null)}
+		 * .
+		 */
+		@Test(expected = NullPointerException.class)
+		public void testAddCharactersNull() {
+			this.ba.addCharacters(null);
+		}
 
 	/**
-	 * Test method for
-	 * {@link it.polimi.automata.impl.BAImpl#addCharacter(it.polimi.automata.labeling.Label)}
-	 * .
-	 */
-	@Test
-	public void testAddCharacter() {
-		this.ba.addCharacter(l3);
-		assertTrue(this.ba.getAlphabet().contains(l1));
-		assertTrue(this.ba.getAlphabet().contains(l2));
-		assertTrue(this.ba.getAlphabet().contains(l3));
-	}
+		 * Test method for
+		 * {@link it.polimi.automata.impl.BAImpl#addCharacter(it.polimi.automata.labeling.Label)}
+		 * .
+		 */
+		@Test
+		public void testAddCharacters() {
+			this.ba.addCharacter(l3);
+			assertTrue(this.ba.getAlphabet().contains(l1));
+			assertTrue(this.ba.getAlphabet().contains(l2));
+			assertTrue(this.ba.getAlphabet().contains(l3));
+		}
 
 	/**
 	 * Test method for

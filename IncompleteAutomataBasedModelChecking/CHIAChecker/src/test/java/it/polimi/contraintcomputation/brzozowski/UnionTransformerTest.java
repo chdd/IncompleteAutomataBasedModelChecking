@@ -4,7 +4,7 @@
 package it.polimi.contraintcomputation.brzozowski;
 
 import static org.junit.Assert.assertEquals;
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 
 import java.util.AbstractMap;
 
@@ -21,7 +21,7 @@ public class UnionTransformerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testTransformNull() {
-		new UnionTransformer().transform(null);
+		new UnionTransformer(Constants.UNIONPLUS).transform(null);
 	}
 
 	
@@ -30,7 +30,7 @@ public class UnionTransformerTest {
 	 */
 	@Test
 	public void testTransform() {
-		UnionTransformer transformer=new UnionTransformer();
+		UnionTransformer transformer=new UnionTransformer(Constants.UNIONPLUS);
 		assertEquals("a",transformer.transform(new AbstractMap.SimpleEntry<String, String>(Constants.EMPTYSET, "a")));
 		assertEquals("a",transformer.transform(new AbstractMap.SimpleEntry<String, String>("a", Constants.EMPTYSET)));
 		assertEquals("((a)+(b))",transformer.transform(new AbstractMap.SimpleEntry<String, String>("a", "b")));

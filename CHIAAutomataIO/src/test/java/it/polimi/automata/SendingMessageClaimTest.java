@@ -15,7 +15,6 @@ import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
-import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -43,4 +43,6 @@ public interface Transition<L extends Label> {
 	 */
 	public Set<L> getLabels();
 	
+	public void setLabels(Set<L> labels);
+	
 }

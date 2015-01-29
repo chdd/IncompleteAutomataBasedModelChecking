@@ -10,6 +10,7 @@ import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 /**
  * Defines an {@link IntersectionRule} that specifies how the transitions of the
@@ -72,16 +73,29 @@ public class IntersectionRuleImpl<L extends Label, T extends Transition<L>>
 	 * @return true if the label of the model satisfies the label of the claim
 	 */
 	private boolean satisfies(L modelLabel, L claimLabel){
+		// checking the correctness of the propositions of the model
 		for(IGraphProposition modelProposition: modelLabel.getLabels()){
 			if(modelProposition.isNegated()){
 				throw new IllegalArgumentException("The proposition of the model cannot be negated");
 			}
 		}
+		// for each proposition of the claim
 		for(IGraphProposition claimProposition: claimLabel.getLabels()){
-			if(claimProposition.isNegated() && modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
+			// if the proposition is sigma it is satisfied by the proposition of the model 
+			if(claimProposition instanceof SigmaProposition){
+				return true;
+			}
+			// if the claim proposition is negated it must not be contained into the set of the proposition of the model
+			// e.g. if the proposition is !a a must not be contained into the propositions of the model
+			// if the claim contains !a and the model a the condition is not satisfied
+			if(claimProposition.isNegated()){
+				if(modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
 				return false;
+				}
 			}
 			else{
+				// if the claim is not negated it MUST be contained into the propositions of the model
+				// if the claim is labeled with a and the model does not contain the proposition a the transition is not satisfied
 				if(!modelLabel.getLabels().contains(new GraphProposition(claimProposition.getLabel(), false))){
 					return false;
 				}

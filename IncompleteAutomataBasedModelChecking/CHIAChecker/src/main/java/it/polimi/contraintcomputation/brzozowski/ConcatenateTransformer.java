@@ -3,7 +3,7 @@
  */
 package it.polimi.contraintcomputation.brzozowski;
 
-import it.polimi.automata.Constants;
+import it.polimi.Constants;
 
 import java.util.Map.Entry;
 
@@ -16,6 +16,12 @@ import org.apache.commons.collections15.Transformer;
 public class ConcatenateTransformer implements
 		Transformer<Entry<String, String>, String> {
 
+	private String concatenationCharacter;
+	
+	public ConcatenateTransformer(String concatenationCharacter){
+		this.concatenationCharacter=concatenationCharacter;
+	}
+	
 	/**
 	 * computes the concatenation of the two strings passed as parameter into
 	 * the input entry
@@ -40,7 +46,7 @@ public class ConcatenateTransformer implements
 		if (input.getValue().equals(Constants.LAMBDA)) {
 			return input.getKey();
 		}
-		return input.getKey() + "." + input.getValue();
+		return input.getKey() + concatenationCharacter + input.getValue();
 	}
 
 }

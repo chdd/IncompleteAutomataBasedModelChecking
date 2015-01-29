@@ -43,6 +43,9 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 		this.labels = Collections.unmodifiableSet(label);
 	}
 
+	public void setLabels(Set<L> labels){
+		this.labels=labels;
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -85,7 +88,6 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + labels.hashCode();
 		return result;
 	}
 
