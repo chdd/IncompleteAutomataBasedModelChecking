@@ -95,8 +95,8 @@ public class TransitionDecorator<L extends Label, S extends State, T extends Tra
 						Set<S> nextStates=currComponent.getOutcomingTransition().get(accept).keySet();
 						if(!Collections.disjoint(incomingStates, nextStates)){
 							Component<L, S, T> predecessor=this.getPredecessorComponent(currComponent, init, incomingTransition);
-							String label="@{"+predecessor.getModelState().getId()+"}:"+predecessor.getModelState().getName()+"- {"+incomingTransition.getId()+"}:"+incomingTransition.getLabels()+"@"+
-						regexString+"@{"+destinationComponent.getModelState().getId()+"}:"+destinationComponent.getModelState().getName()+"- {"+outComingTransition.getId()+"}:"+outComingTransition.getLabels()+"@";
+							String label="@"+predecessor.getModelState().getName()+"- "+incomingTransition.getLabels()+"@"+
+						regexString+"@"+destinationComponent.getModelState().getName()+"- "+outComingTransition.getLabels()+"@";
 							this.decorateTransition(outComingTransition, label, incomingTransition, currComponent.getModelState());
 						}
 					}
@@ -104,7 +104,9 @@ public class TransitionDecorator<L extends Label, S extends State, T extends Tra
 					
 				}
 			}
-			else{
+		}
+		for (Component<L,S,T> currComponent : this.intersection.getStates()) {
+			if(!currComponent.isTransparent()){
 				for(T t: this.intersection.getOutTransitions(currComponent)){
 					Set<L> labels=new HashSet<L>();
 					t.setLabels(labels);
@@ -115,7 +117,7 @@ public class TransitionDecorator<L extends Label, S extends State, T extends Tra
 	
 	public void decorateTransition(T outComingTransition, String regexString, T incomingTransition, S modelState){
 		
-		Set<L> labels=new HashSet<L>(outComingTransition.getLabels());
+		Set<L> labels=new HashSet<L>();
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		propositions.add(new RegexProposition<L, S, T>(modelState, regexString, incomingTransition, outComingTransition));
 		labels.add(labelFactory.create(propositions));

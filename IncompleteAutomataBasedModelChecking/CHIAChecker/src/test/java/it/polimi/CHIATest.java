@@ -33,39 +33,49 @@ import edu.uci.ics.jung.io.GraphIOException;
 
 /**
  * @author claudiomenghi
- *
+ * 
  */
 public class CHIATest {
 
-	
-	
-	
 	/**
-	 * Test method for {@link it.polimi.CHIA#CHIA(it.polimi.automata.BA, it.polimi.automata.IBA)}.
-	 * @throws FileNotFoundException 
-	 * @throws GraphIOException 
+	 * Test method for
+	 * {@link it.polimi.CHIA#CHIA(it.polimi.automata.BA, it.polimi.automata.IBA)}
+	 * .
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws GraphIOException
 	 */
 	@Test
 	public void testCHIA() throws FileNotFoundException, GraphIOException {
 		BAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, BAFactory<Label, State, Transition<Label>>> claimReader = new BAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, BAFactory<Label, State, Transition<Label>>>(
-				new LabelFactoryImpl(), new ClaimTransitionFactoryImpl<Label>(), new StateFactoryImpl(),
+				new LabelFactoryImpl(),
+				new ClaimTransitionFactoryImpl<Label>(),
+				new StateFactoryImpl(),
 				new BAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
 						.getResource("SendingMessageClaim.xml").getFile())));
 
 		BA<Label, State, Transition<Label>> claim = claimReader.read();
 
-		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> modelReader=new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				new LabelFactoryImpl(), new ModelTransitionFactoryImpl<>(), new StateFactoryImpl(), new IBAFactoryImpl<Label, State, Transition<Label>>(),
+		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> modelReader = new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
+				new LabelFactoryImpl(), new ModelTransitionFactoryImpl<>(),
+				new StateFactoryImpl(),
+				new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
 						.getResource("SendingMessageModel.xml").getFile())));
+
+		IBA<Label, State, Transition<Label>> model = modelReader.read();
+		CHIA chia = new CHIA(claim, model);
+		int result = chia.check();
+		assertTrue(result == -1);
+
+		String constraint = chia.getConstraint();
+		System.out.println(constraint);
 		
-		IBA<Label, State, Transition<Label>> model=modelReader.read();
-		CHIA chia=new CHIA(claim, model);
-		int result=chia.check();
-		assertTrue(result==-1);
-		System.out.println(chia.getConstraint());
-		
+		assertTrue(("¬((([@q1- [start]@([<SIGMA>])*@send2- [fail]@]∧[@send1- [fail]@([<SIGMA>])*.[send^!success].([!success])*@q2- [fail]@])∨([@q1- [start]@([<SIGMA>])*.[send^!success].([!success])*@send2- [fail]@]∧[@send1- [fail]@([!success])*@q2- [fail]@])))")
+				.equals(constraint)
+				|| ("¬((([@q1- [start]@([<SIGMA>])*.[send^!success].([!success])*@send2- [fail]@]∧[@send1- [fail]@([!success])*@q2- [fail]@])∨([@q1- [start]@([<SIGMA>])*@send2- [fail]@]∧[@send1- [fail]@([<SIGMA>])*.[send^!success].([!success])*@q2- [fail]@])))")
+				.equals(constraint));
 	}
 
 	/**
@@ -73,7 +83,7 @@ public class CHIATest {
 	 */
 	@Test
 	public void testCheck() {
-		//TODO
+		// TODO
 	}
 
 	/**
@@ -81,7 +91,7 @@ public class CHIATest {
 	 */
 	@Test
 	public void testGetConstraint() {
-		//TODO
+		// TODO
 	}
 
 }

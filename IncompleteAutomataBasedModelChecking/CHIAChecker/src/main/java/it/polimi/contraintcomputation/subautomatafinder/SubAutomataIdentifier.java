@@ -310,6 +310,7 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 		}
 		this.returnSubAutomata.addState(destinationComponent);
 
+		this.returnSubAutomata.addCharacters(t.getLabels());
 		this.returnSubAutomata.addTransition(currComponent,
 				destinationComponent, t);
 		destinationComponent.addInitialState(destinationState);

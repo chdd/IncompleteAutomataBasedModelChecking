@@ -3,6 +3,7 @@
  */
 package it.polimi.contraintcomputation;
 
+import static org.junit.Assert.*;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IBAFactory;
 import it.polimi.automata.IntersectionBA;
@@ -143,6 +144,7 @@ public class ConstraintGeneratorTest {
 	public void testGenerateConstraint() {
 		ConstraintGenerator<Label, State, Transition<Label>> cg=new ConstraintGenerator<Label, State, Transition<Label>>(
 				this.intersection, this.model, this.intersectionStateModelStateMap, this.labelFactory, this.transitionFactory);
+		assertNotNull(cg.generateConstraint());
 	}
 	
 
