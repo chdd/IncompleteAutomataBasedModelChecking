@@ -21,16 +21,16 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author claudiomenghi
  * 
  */
-public class LabelImplFactoryTest {
+public class LabelFactoryImplTest {
 
-	private LabelImplFactory factory;
+	private LabelFactoryImpl factory;
 	private Set<IGraphProposition> labels;
 	private Set<IGraphProposition> labelsSet2;
 
 	
 	@Before
 	public void setUp() {
-		this.factory = new LabelImplFactory();
+		this.factory = new LabelFactoryImpl();
 		this.labels=new HashSet<IGraphProposition>();
 		this.labels.add(new GraphProposition("p", false));
 		this.labelsSet2=new HashSet<IGraphProposition>();
@@ -40,7 +40,7 @@ public class LabelImplFactoryTest {
 
 	/**
 		 * Test method for
-		 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create()}.
+		 * {@link it.polimi.automata.labeling.impl.LabelFactoryImpl#create()}.
 		 */
 		@Test
 		public void testCreateFromLabel() {
@@ -53,7 +53,7 @@ public class LabelImplFactoryTest {
 	
 	/**
 		 * Test method for
-		 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#create(java.util.Set)}
+		 * {@link it.polimi.automata.labeling.impl.LabelFactoryImpl#create(java.util.Set)}
 		 * .
 		 */
 		@Test
@@ -68,7 +68,7 @@ public class LabelImplFactoryTest {
 	
 	/**
 		 * Test method for
-		 * {@link it.polimi.automata.labeling.impl.LabelImplFactory#createFromLabel(null)}
+		 * {@link it.polimi.automata.labeling.impl.LabelFactoryImpl#createFromLabel(null)}
 		 * .
 		 */
 		@Test(expected=NullPointerException.class)

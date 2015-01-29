@@ -12,7 +12,7 @@ import it.polimi.automata.impl.IntBAFactoryImpl;
 import it.polimi.automata.io.IBAReader;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -103,7 +103,7 @@ public class SubAutomataIdentifierTest {
 		
 		this.stateFactory = new StateFactoryImpl();
 		this.transitionFactory=new ModelTransitionFactoryImpl<Label>();
-		this.labelFactory=new LabelImplFactory();
+		this.labelFactory=new LabelFactoryImpl();
 		this.intersectionStateModelStateMap=new HashMap<State, State>();
 		/*
 		 * creating the model
@@ -151,7 +151,6 @@ public class SubAutomataIdentifierTest {
 	
 		AbstractedBA<Label, State, Transition<Label>, Component<Label,State,Transition<Label>>> simplifiedAutomata=identifier.getSubAutomata();
 	
-		System.out.println(simplifiedAutomata);
 		assertTrue(simplifiedAutomata.getStates().size()==7);
 		assertTrue(simplifiedAutomata.getInitialStates().size()==1);
 		assertTrue(simplifiedAutomata.getAcceptStates().size()==1);

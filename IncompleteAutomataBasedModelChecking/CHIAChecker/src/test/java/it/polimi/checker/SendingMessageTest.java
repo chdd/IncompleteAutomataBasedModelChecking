@@ -16,7 +16,7 @@ import it.polimi.automata.io.BAReader;
 import it.polimi.automata.io.IBAReader;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -54,7 +54,7 @@ public class SendingMessageTest {
 	
 		this.stateFactory = new StateFactoryImpl();
 		this.transitionFactory=new ModelTransitionFactoryImpl<Label>();
-		this.labelFactory=new LabelImplFactory();
+		this.labelFactory=new LabelFactoryImpl();
 		
 		
 	}

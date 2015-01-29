@@ -12,7 +12,7 @@ import it.polimi.automata.BA;
 import it.polimi.Constants;
 import it.polimi.automata.impl.IBAFactoryImpl;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -58,21 +58,21 @@ public class BrzozowskiTest {
 		Set<Label> labelsT1 = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT1 = new HashSet<IGraphProposition>();
 		propositionsT1.add(new GraphProposition("a", false));
-		Label label1 = new LabelImplFactory().create(propositionsT1);
+		Label label1 = new LabelFactoryImpl().create(propositionsT1);
 		labelsT1.add(label1);
 		t1 = transitionFactory.create(labelsT1);
 
 		Set<Label> labelsT2 = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT2 = new HashSet<IGraphProposition>();
 		propositionsT2.add(new GraphProposition("b", false));
-		Label label2 = new LabelImplFactory().create(propositionsT2);
+		Label label2 = new LabelFactoryImpl().create(propositionsT2);
 		labelsT2.add(label2);
 		t2 = transitionFactory.create(labelsT2);
 
 		Set<Label> labelsT3 = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT3 = new HashSet<IGraphProposition>();
 		propositionsT3.add(new GraphProposition("c", false));
-		Label label3 = new LabelImplFactory().create(propositionsT3);
+		Label label3 = new LabelFactoryImpl().create(propositionsT3);
 		labelsT3.add(label3);
 		t3 = transitionFactory.create(labelsT3);
 
@@ -193,7 +193,7 @@ public class BrzozowskiTest {
 		Set<Label> labelsT2 = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT2 = new HashSet<IGraphProposition>();
 		propositionsT2.add(new GraphProposition("b", false));
-		Label label2 = new LabelImplFactory().create(propositionsT2);
+		Label label2 = new LabelFactoryImpl().create(propositionsT2);
 		labelsT2.add(label2);
 		Transition<Label> t4 = transitionFactory.create(labelsT2);
 		this.ba.addTransition(state1, state3, t4);

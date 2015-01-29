@@ -13,7 +13,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  *
  */
-public class LabelImplFactory implements LabelFactory<Label>{
+public class LabelFactoryImpl implements LabelFactory<Label>{
 
 	/**
 	 * {@inheritDoc}

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.automata.Constants;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class StringToLabelTransformerTest {
 		propositions.add(new GraphProposition("a", false));
 		propositions.add(new GraphProposition("b", true));
 		
-		this.factory=new LabelImplFactory();
+		this.factory=new LabelFactoryImpl();
 		label=factory.create(propositions);
 		
 	}

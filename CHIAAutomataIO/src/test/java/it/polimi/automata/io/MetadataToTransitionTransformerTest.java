@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
@@ -54,7 +54,7 @@ public class MetadataToTransitionTransformerTest {
 				Constants.LPAR + "a" + Constants.RPAR + Constants.OR
 						+ Constants.LPAR + "!b" + Constants.RPAR);
 
-		labelFactory = new LabelImplFactory();
+		labelFactory = new LabelFactoryImpl();
 		transitionFactory = new ClaimTransitionFactoryImpl<Label>();
 
 		Set<IGraphProposition> labels1 = new HashSet<IGraphProposition>();

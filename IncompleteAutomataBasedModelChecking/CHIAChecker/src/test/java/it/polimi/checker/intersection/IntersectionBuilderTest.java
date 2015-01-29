@@ -10,7 +10,7 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.impl.IBAFactoryImpl;
 import it.polimi.automata.impl.IntBAFactoryImpl;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -108,21 +108,21 @@ public class IntersectionBuilderTest {
 		this.model1T1Labels = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT1 = new HashSet<IGraphProposition>();
 		propositionsT1.add(new GraphProposition("a", false));
-		Label label1 = new LabelImplFactory().create(propositionsT1);
+		Label label1 = new LabelFactoryImpl().create(propositionsT1);
 		model1T1Labels.add(label1);
 		claim1Transition1 = transitionFactory.create(model1T1Labels);
 
 		this.model1T2Labels = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT2 = new HashSet<IGraphProposition>();
 		propositionsT2.add(new GraphProposition("b", false));
-		Label label2 = new LabelImplFactory().create(propositionsT2);
+		Label label2 = new LabelFactoryImpl().create(propositionsT2);
 		model1T2Labels.add(label2);
 		claim1Transition2 = transitionFactory.create(model1T2Labels);
 
 		this.model1T3Labels = new HashSet<Label>();
 		Set<IGraphProposition> propositionsT3 = new HashSet<IGraphProposition>();
 		propositionsT3.add(new GraphProposition("c", false));
-		Label label3 = new LabelImplFactory().create(propositionsT3);
+		Label label3 = new LabelFactoryImpl().create(propositionsT3);
 		model1T3Labels.add(label3);
 		claim1Transition3 = transitionFactory.create(model1T3Labels);
 
@@ -152,7 +152,7 @@ public class IntersectionBuilderTest {
 		this.claim2Transition1Labels = new HashSet<Label>();
 		Set<IGraphProposition> claim2PropositionsT1 = new HashSet<IGraphProposition>();
 		claim2PropositionsT1.add(new GraphProposition("a", false));
-		Label labelClaim2T1 = new LabelImplFactory()
+		Label labelClaim2T1 = new LabelFactoryImpl()
 				.create(claim2PropositionsT1);
 		claim2Transition1Labels.add(labelClaim2T1);
 		claim2Transition1 = transitionFactory.create(claim2Transition1Labels);
@@ -160,7 +160,7 @@ public class IntersectionBuilderTest {
 		this.claim2Transition2Labels = new HashSet<Label>();
 		Set<IGraphProposition> claim2PropositionsT2 = new HashSet<IGraphProposition>();
 		claim2PropositionsT2.add(new GraphProposition("b", true));
-		Label labelClaim2T2 = new LabelImplFactory()
+		Label labelClaim2T2 = new LabelFactoryImpl()
 				.create(claim2PropositionsT2);
 		claim2Transition2Labels.add(labelClaim2T2);
 		claim2Transition2 = transitionFactory.create(claim2Transition2Labels);
@@ -168,7 +168,7 @@ public class IntersectionBuilderTest {
 		this.claim2Transition3Labels = new HashSet<Label>();
 		Set<IGraphProposition> claim2PropositionsT3 = new HashSet<IGraphProposition>();
 		claim2PropositionsT3.add(new GraphProposition("c", false));
-		Label labelClaim2T3 = new LabelImplFactory()
+		Label labelClaim2T3 = new LabelFactoryImpl()
 				.create(claim2PropositionsT3);
 		claim2Transition3Labels.add(labelClaim2T3);
 		claim2Transition3 = transitionFactory.create(claim2Transition3Labels);
@@ -201,21 +201,21 @@ public class IntersectionBuilderTest {
 		Set<Label> labelsT1Model = new HashSet<Label>();
 		Set<IGraphProposition> propositionsModelT1 = new HashSet<IGraphProposition>();
 		propositionsModelT1.add(new GraphProposition("a", false));
-		Label labelModel1 = new LabelImplFactory().create(propositionsModelT1);
+		Label labelModel1 = new LabelFactoryImpl().create(propositionsModelT1);
 		labelsT1Model.add(labelModel1);
 		this.model1Transition1 = modelTransitionFactory.create(labelsT1Model);
 
 		Set<Label> labelsT2Model = new HashSet<Label>();
 		Set<IGraphProposition> propositionsModelT2 = new HashSet<IGraphProposition>();
 		propositionsModelT2.add(new GraphProposition("b", false));
-		Label labelModel2 = new LabelImplFactory().create(propositionsModelT2);
+		Label labelModel2 = new LabelFactoryImpl().create(propositionsModelT2);
 		labelsT2Model.add(labelModel2);
 		this.model1Transition2 = modelTransitionFactory.create(labelsT2Model);
 
 		Set<Label> labelsT3Model = new HashSet<Label>();
 		Set<IGraphProposition> propositionsModelT3 = new HashSet<IGraphProposition>();
 		propositionsModelT3.add(new GraphProposition("c", false));
-		Label labelModel3 = new LabelImplFactory().create(propositionsModelT3);
+		Label labelModel3 = new LabelFactoryImpl().create(propositionsModelT3);
 		labelsT3Model.add(labelModel3);
 		this.model1Transition3 = modelTransitionFactory.create(labelsT3Model);
 
@@ -246,7 +246,7 @@ public class IntersectionBuilderTest {
 		model2T1Labels = new HashSet<Label>();
 		Set<IGraphProposition> propositionsModel2T1 = new HashSet<IGraphProposition>();
 		propositionsModel2T1.add(new GraphProposition("a", false));
-		Label model2T1Label = new LabelImplFactory()
+		Label model2T1Label = new LabelFactoryImpl()
 				.create(propositionsModel2T1);
 		model2T1Labels.add(model2T1Label);
 		this.model2Transition1 = modelTransitionFactory.create(model2T1Labels);
@@ -254,7 +254,7 @@ public class IntersectionBuilderTest {
 		model2T2Labels = new HashSet<Label>();
 		Set<IGraphProposition> propositionsModel2T2 = new HashSet<IGraphProposition>();
 		propositionsModel2T2.add(new GraphProposition("b", false));
-		Label model2T2Label = new LabelImplFactory()
+		Label model2T2Label = new LabelFactoryImpl()
 				.create(propositionsModel2T2);
 		model2T2Labels.add(model2T2Label);
 		this.model2Transition2 = modelTransitionFactory.create(model2T2Labels);
@@ -262,7 +262,7 @@ public class IntersectionBuilderTest {
 		model2T3Labels = new HashSet<Label>();
 		Set<IGraphProposition> propositionsModel2T3 = new HashSet<IGraphProposition>();
 		propositionsModel2T3.add(new GraphProposition("c", false));
-		Label model2T3Label = new LabelImplFactory()
+		Label model2T3Label = new LabelFactoryImpl()
 				.create(propositionsModel2T3);
 		model2T3Labels.add(model2T3Label);
 		this.model2Transition3 = modelTransitionFactory.create(model2T3Labels);

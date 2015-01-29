@@ -1,14 +1,11 @@
 package it.polimi.automata.transition.impl;
 
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * is the factory that allows to create transitions of the type

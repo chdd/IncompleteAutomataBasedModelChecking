@@ -5,7 +5,7 @@ package it.polimi.checker.intersection.impl;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
@@ -37,14 +37,14 @@ public class IntersectionRuleImplTest {
 		Set<Label> modelLabels = new HashSet<Label>();
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("a", false));
-		Label modelLabel = new LabelImplFactory().create(modelPropositions);
+		Label modelLabel = new LabelFactoryImpl().create(modelPropositions);
 		modelLabels.add(modelLabel);
 		modelTransition = transitionFactory.create(modelLabels);
 
 		Set<Label> claimlabelT2 = new HashSet<Label>();
 		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
 		claimPropositions.add(new GraphProposition("b", true));
-		Label claimLabel = new LabelImplFactory().create(claimPropositions);
+		Label claimLabel = new LabelFactoryImpl().create(claimPropositions);
 		claimlabelT2.add(claimLabel);
 		claimTransition = transitionFactory.create(claimlabelT2);
 
@@ -121,21 +121,21 @@ public class IntersectionRuleImplTest {
 		Set<Label> modelLabels = new HashSet<Label>();
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("b", false));
-		Label modelLabel = new LabelImplFactory().create(modelPropositions);
+		Label modelLabel = new LabelFactoryImpl().create(modelPropositions);
 		modelLabels.add(modelLabel);
 		modelTransition = transitionFactory.create(modelLabels);
 
 		Set<Label> claimlabelT2 = new HashSet<Label>();
 		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
 		claimPropositions.add(new GraphProposition("b", false));
-		Label claimLabel = new LabelImplFactory().create(claimPropositions);
+		Label claimLabel = new LabelFactoryImpl().create(claimPropositions);
 		claimlabelT2.add(claimLabel);
 		claimTransition = transitionFactory.create(claimlabelT2);
 
 		Set<Label> intersectionLabels = new HashSet<Label>();
 		Set<IGraphProposition> intersectionPropositions = new HashSet<IGraphProposition>();
 		intersectionPropositions.add(new GraphProposition("b", false));
-		Label intersectionLabel = new LabelImplFactory()
+		Label intersectionLabel = new LabelFactoryImpl()
 				.create(modelPropositions);
 		intersectionLabels.add(intersectionLabel);
 		Transition<Label> intersectionTransition = transitionFactory
@@ -161,14 +161,14 @@ public class IntersectionRuleImplTest {
 		Set<Label> modelLabels = new HashSet<Label>();
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("b", false));
-		Label modelLabel = new LabelImplFactory().create(modelPropositions);
+		Label modelLabel = new LabelFactoryImpl().create(modelPropositions);
 		modelLabels.add(modelLabel);
 		modelTransition = transitionFactory.create(modelLabels);
 
 		Set<Label> claimlabelT2 = new HashSet<Label>();
 		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
 		claimPropositions.add(new GraphProposition("b", true));
-		Label claimLabel = new LabelImplFactory().create(claimPropositions);
+		Label claimLabel = new LabelFactoryImpl().create(claimPropositions);
 		claimlabelT2.add(claimLabel);
 		claimTransition = transitionFactory.create(claimlabelT2);
 
@@ -189,14 +189,14 @@ public class IntersectionRuleImplTest {
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("a", false));
 		modelPropositions.add(new GraphProposition("b", false));
-		Label modelLabel = new LabelImplFactory().create(modelPropositions);
+		Label modelLabel = new LabelFactoryImpl().create(modelPropositions);
 		modelLabels.add(modelLabel);
 		modelTransition = transitionFactory.create(modelLabels);
 
 		Set<Label> claimlabelT2 = new HashSet<Label>();
 		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
 		claimPropositions.add(new GraphProposition("b", false));
-		Label claimLabel = new LabelImplFactory().create(claimPropositions);
+		Label claimLabel = new LabelFactoryImpl().create(claimPropositions);
 		claimlabelT2.add(claimLabel);
 		claimTransition = transitionFactory.create(claimlabelT2);
 
@@ -204,7 +204,7 @@ public class IntersectionRuleImplTest {
 		Set<IGraphProposition> intersectionPropositions = new HashSet<IGraphProposition>();
 		intersectionPropositions.add(new GraphProposition("a", false));
 		intersectionPropositions.add(new GraphProposition("b", false));
-		Label intersectionLabel = new LabelImplFactory()
+		Label intersectionLabel = new LabelFactoryImpl()
 				.create(modelPropositions);
 		intersectionLabels.add(intersectionLabel);
 		Transition<Label> intersectionTransition = transitionFactory
@@ -224,21 +224,21 @@ public class IntersectionRuleImplTest {
 		Set<Label> modelLabels = new HashSet<Label>();
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("b", false));
-		Label modelLabel = new LabelImplFactory().create(modelPropositions);
+		Label modelLabel = new LabelFactoryImpl().create(modelPropositions);
 		modelLabels.add(modelLabel);
 		modelTransition = transitionFactory.create(modelLabels);
 
 		Set<Label> claimlabelT2 = new HashSet<Label>();
 		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
 		claimPropositions.add(new GraphProposition("a", true));
-		Label claimLabel = new LabelImplFactory().create(claimPropositions);
+		Label claimLabel = new LabelFactoryImpl().create(claimPropositions);
 		claimlabelT2.add(claimLabel);
 		claimTransition = transitionFactory.create(claimlabelT2);
 
 		Set<Label> intersectionLabels = new HashSet<Label>();
 		Set<IGraphProposition> intersectionPropositions = new HashSet<IGraphProposition>();
 		intersectionPropositions.add(new GraphProposition("b", false));
-		Label intersectionLabel = new LabelImplFactory()
+		Label intersectionLabel = new LabelFactoryImpl()
 				.create(modelPropositions);
 		intersectionLabels.add(intersectionLabel);
 		Transition<Label> intersectionTransition = transitionFactory
@@ -260,14 +260,14 @@ public class IntersectionRuleImplTest {
 		modelPropositions.add(new GraphProposition("b", false));
 		modelPropositions.add(new GraphProposition("c", false));
 		
-		Label modelLabel = new LabelImplFactory().create(modelPropositions);
+		Label modelLabel = new LabelFactoryImpl().create(modelPropositions);
 		modelLabels.add(modelLabel);
 		modelTransition = transitionFactory.create(modelLabels);
 
 		Set<Label> claimlabelT2 = new HashSet<Label>();
 		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
 		claimPropositions.add(new GraphProposition("a", true));
-		Label claimLabel = new LabelImplFactory().create(claimPropositions);
+		Label claimLabel = new LabelFactoryImpl().create(claimPropositions);
 		claimlabelT2.add(claimLabel);
 		claimTransition = transitionFactory.create(claimlabelT2);
 
@@ -276,7 +276,7 @@ public class IntersectionRuleImplTest {
 		intersectionPropositions.add(new GraphProposition("b", false));
 		intersectionPropositions.add(new GraphProposition("c", false));
 		
-		Label intersectionLabel = new LabelImplFactory()
+		Label intersectionLabel = new LabelFactoryImpl()
 				.create(modelPropositions);
 		intersectionLabels.add(intersectionLabel);
 		Transition<Label> intersectionTransition = transitionFactory

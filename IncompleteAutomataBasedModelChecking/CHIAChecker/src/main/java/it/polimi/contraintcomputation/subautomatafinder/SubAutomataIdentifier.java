@@ -113,9 +113,10 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 		this.copyAlphabet();
 		// considering a specific transparent state
 		for (S init : this.intersectionBA.getInitialStates()) {
+			S modelState=this.intersectionStateModelStateMap.get(init);
 			Component<L, S, T> c = componentFactory.create(init.getName(),
-					this.intersectionStateModelStateMap.get(init),
-					model.isTransparent(init));
+					modelState,
+					model.isTransparent(modelState));
 			this.returnSubAutomata.addState(c);
 			this.returnSubAutomata.addInitialState(c);
 			if (this.intersectionBA.getAcceptStates().contains(init)) {

@@ -5,7 +5,7 @@ package it.polimi.automata.transition.impl;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
@@ -33,12 +33,12 @@ public class ModelTransitionFactoryImplTest {
 		this.labels1=new HashSet<Label>();
 		Set<IGraphProposition> propositions1=new HashSet<IGraphProposition>();
 		propositions1.add(new GraphProposition("p", true));
-		this.labels1.add(new LabelImplFactory().create(propositions1));
+		this.labels1.add(new LabelFactoryImpl().create(propositions1));
 		
 		this.labels2=new HashSet<Label>();
 		Set<IGraphProposition> propositions2=new HashSet<IGraphProposition>();
 		propositions2.add(new GraphProposition("p", false));
-		this.labels2.add(new LabelImplFactory().create(propositions2));
+		this.labels2.add(new LabelFactoryImpl().create(propositions2));
 	}
 	
 	/**

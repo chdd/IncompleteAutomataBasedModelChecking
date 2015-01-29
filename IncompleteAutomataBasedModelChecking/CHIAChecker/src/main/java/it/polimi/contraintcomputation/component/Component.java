@@ -252,7 +252,6 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	 */
 	public Component<L,S,T> duplicate(){
 		Component<L,S,T> ret=new ComponentFactory<L,S,T>().create(this.name, this.modelState, this.transparent);
-		System.out.println(ret.toString());
 		ret.modelState=this.modelState;
 		// coping the states
 		ret.addStates(this.getStates());

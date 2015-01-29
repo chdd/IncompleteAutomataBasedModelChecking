@@ -128,8 +128,6 @@ public class Abstractor<L extends Label, S extends State, T extends Transition<L
 				Component<L, S, T> successorState = this.intBA
 						.getTransitionDestination(outcomingTransition);
 				if (!this.hashedStates.contains(successorState)) {
-					System.out.println("successor: " + successorState.getName()
-							+ "transparent" + successorState.isTransparent());
 					if (successorState.isTransparent()
 							|| this.intBA.getInitialStates().contains(
 									successorState)

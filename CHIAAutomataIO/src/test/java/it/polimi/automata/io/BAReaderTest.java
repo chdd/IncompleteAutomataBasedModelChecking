@@ -10,7 +10,7 @@ import it.polimi.automata.BAFactory;
 import it.polimi.automata.impl.BAFactoryImpl;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -67,7 +67,7 @@ public class BAReaderTest {
 				new DirectedSparseGraph<StateImpl, TransitionImpl<Label>>());
 		this.stateFactory = new StateFactoryImpl();
 		this.transitionFactory = new ModelTransitionFactoryImpl<Label>();
-		this.labelFactory = new LabelImplFactory();
+		this.labelFactory = new LabelFactoryImpl();
 
 	}
 
@@ -199,7 +199,7 @@ public class BAReaderTest {
 		assertTrue(ba.getAcceptStates().contains(state3));
 
 		this.transitionFactory = new ModelTransitionFactoryImpl<Label>();
-		this.labelFactory = new LabelImplFactory();
+		this.labelFactory = new LabelFactoryImpl();
 		Set<Label> labels = new HashSet<Label>();
 		Set<IGraphProposition> propositions1 = new HashSet<IGraphProposition>();
 		propositions1.add(new GraphProposition("a", false));

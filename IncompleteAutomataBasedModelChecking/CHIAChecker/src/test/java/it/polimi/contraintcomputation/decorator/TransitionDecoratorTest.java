@@ -12,7 +12,7 @@ import it.polimi.automata.impl.IntBAFactoryImpl;
 import it.polimi.automata.io.IBAReader;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelImplFactory;
+import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -105,7 +105,7 @@ public class TransitionDecoratorTest {
 
 		this.stateFactory = new StateFactoryImpl();
 		this.transitionFactory = new IntersectionTransitionFactoryImpl<Label>();
-		this.labelFactory = new LabelImplFactory();
+		this.labelFactory = new LabelFactoryImpl();
 		this.intersectionStateModelStateMap = new HashMap<State, State>();
 		/*
 		 * creating the model
@@ -166,9 +166,8 @@ public class TransitionDecoratorTest {
 		
 		AbstractedBA<Label, State, Transition<Label>, Component<Label, State, Transition<Label>>> splittedAutomata=splitter.split();
 		
-		TransitionDecorator<Label, State, Transition<Label>> transitionDecorator=new TransitionDecorator<>(splittedAutomata, new LabelImplFactory());
+		TransitionDecorator<Label, State, Transition<Label>> transitionDecorator=new TransitionDecorator<>(splittedAutomata, new LabelFactoryImpl());
 		transitionDecorator.decorates();
-		System.out.println(splittedAutomata);
 		assertTrue(splittedAutomata.getStates().size() == 8);
 		assertTrue(splittedAutomata.getInitialStates().size() == 1);
 		assertTrue(splittedAutomata.getAcceptStates().size() == 1);
@@ -231,105 +230,105 @@ public class TransitionDecoratorTest {
 		
 		
 		Set<Label> label1=new HashSet<Label>();
-		label1.add(new LabelImplFactory().createFromLabel(new GraphProposition("start", false)));
+		label1.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("start", false)));
 		this.intt1 = new IntersectionTransitionFactoryImpl<Label>().create(1,label1);
 		Set<Label> label2=new HashSet<Label>();
-		label2.add(new LabelImplFactory().createFromLabel(new SigmaProposition()));
+		label2.add(new LabelFactoryImpl().createFromLabel(new SigmaProposition()));
 		this.intt2 = new IntersectionTransitionFactoryImpl<Label>().create(2,
 				label2);
 		Set<Label> label3=new HashSet<Label>();
-		label3.add(new LabelImplFactory().createFromLabel(new GraphProposition("fail", false)));
+		label3.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("fail", false)));
 		this.intt3 = new IntersectionTransitionFactoryImpl<Label>().create(3,
 				label3);
 		Set<Label> label4=new HashSet<Label>();
-		label4.add(new LabelImplFactory().createFromLabel(new GraphProposition("ok", false)));
+		label4.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("ok", false)));
 		this.intt4 = new IntersectionTransitionFactoryImpl<Label>().create(4,
 				label4);
 		Set<Label> label5=new HashSet<Label>();
 		Set<IGraphProposition> propositions=new HashSet<>();
 		propositions.add(new GraphProposition("send", false));
 		propositions.add(new GraphProposition("success", true));
-		label5.add(new LabelImplFactory().create(propositions));
+		label5.add(new LabelFactoryImpl().create(propositions));
 		this.intt5 = new IntersectionTransitionFactoryImpl<Label>().create(5,
 				label5);
 		
 		Set<Label> label6=new HashSet<Label>();
-		label6.add(new LabelImplFactory().createFromLabel(new GraphProposition("success", true)));
+		label6.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("success", true)));
 		this.intt6 = new IntersectionTransitionFactoryImpl<Label>().create(6,
 				label6);
 		Set<Label> label7=new HashSet<Label>();
-		label7.add(new LabelImplFactory().createFromLabel(new GraphProposition("fail", false)));
+		label7.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("fail", false)));
 		this.intt7 = new IntersectionTransitionFactoryImpl<Label>().create(7,
 				label7);
 		Set<Label> label8=new HashSet<Label>();
-		label8.add(new LabelImplFactory().createFromLabel(new GraphProposition("abort", false)));
+		label8.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("abort", false)));
 		this.intt8 = new IntersectionTransitionFactoryImpl<Label>().create(8,
 				label8);
 		Set<Label> label9=new HashSet<Label>();
-		label9.add(new LabelImplFactory().createFromLabel(new GraphProposition("success", false)));
+		label9.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("success", false)));
 		this.intt9 = new IntersectionTransitionFactoryImpl<Label>().create(9,
 				label9);
 		Set<Label> label10=new HashSet<Label>();
-		label10.add(new LabelImplFactory().createFromLabel(new GraphProposition("ok", false)));
+		label10.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("ok", false)));
 		this.intt10 = new IntersectionTransitionFactoryImpl<Label>().create(10,
 				label10);
 		Set<Label> label11=new HashSet<Label>();
-		label11.add(new LabelImplFactory().createFromLabel(new SigmaProposition()));
+		label11.add(new LabelFactoryImpl().createFromLabel(new SigmaProposition()));
 		this.intt11 = new IntersectionTransitionFactoryImpl<Label>().create(11,
 				label11);
 		Set<Label> label12=new HashSet<Label>();
 		propositions=new HashSet<>();
 		propositions.add(new GraphProposition("send", false));
 		propositions.add(new GraphProposition("success", true));
-		label12.add(new LabelImplFactory().create(propositions));
+		label12.add(new LabelFactoryImpl().create(propositions));
 		this.intt12 = new IntersectionTransitionFactoryImpl<Label>().create(12,
 				label12);
 		Set<Label> label13=new HashSet<Label>();
-		label13.add(new LabelImplFactory().createFromLabel(new GraphProposition("fail", false)));
+		label13.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("fail", false)));
 		this.intt13 = new IntersectionTransitionFactoryImpl<Label>().create(13,
 				label13);
 		Set<Label> label14=new HashSet<Label>();
-		label14.add(new LabelImplFactory().createFromLabel(new GraphProposition("success", false)));
+		label14.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("success", false)));
 		this.intt14 = new IntersectionTransitionFactoryImpl<Label>().create(14,
 				label14);
 		Set<Label> label15=new HashSet<Label>();
-		label15.add(new LabelImplFactory().createFromLabel(new GraphProposition("ok", false)));
+		label15.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("ok", false)));
 		this.intt15 = new IntersectionTransitionFactoryImpl<Label>().create(15,
 				label15);
 		Set<Label> label16=new HashSet<Label>();
-		label16.add(new LabelImplFactory().createFromLabel(new GraphProposition("ok", false)));
+		label16.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("ok", false)));
 		this.intt16 = new IntersectionTransitionFactoryImpl<Label>().create(16,
 				label16);
 		Set<Label> label17=new HashSet<Label>();
-		label17.add(new LabelImplFactory().createFromLabel(new GraphProposition("fail", false)));
+		label17.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("fail", false)));
 		this.intt17 = new IntersectionTransitionFactoryImpl<Label>().create(17,
 				label17);
 		Set<Label> label18=new HashSet<Label>();
-		label18.add(new LabelImplFactory().createFromLabel(new GraphProposition("abort", false)));
+		label18.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("abort", false)));
 		this.intt18 = new IntersectionTransitionFactoryImpl<Label>().create(18,
 				label18);
 		Set<Label> label19=new HashSet<Label>();
-		label19.add(new LabelImplFactory().createFromLabel(new GraphProposition("abort", false)));
+		label19.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("abort", false)));
 		this.intt19 = new IntersectionTransitionFactoryImpl<Label>().create(19,
 				label19);
 		Set<Label> label20=new HashSet<Label>();
-		label20.add(new LabelImplFactory().createFromLabel(new GraphProposition("abort", false)));
+		label20.add(new LabelFactoryImpl().createFromLabel(new GraphProposition("abort", false)));
 		this.intt20 = new IntersectionTransitionFactoryImpl<Label>().create(20,
 				label20);
 
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("fail", false)));
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("abort", false)));
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("ok", false)));
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("success", false)));
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("success", true)));
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("send", false)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("fail", false)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("abort", false)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("ok", false)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("success", false)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("success", true)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("send", false)));
 		propositions=new HashSet<>();
 		propositions.add(new GraphProposition("send", false));
 		propositions.add(new GraphProposition("success", true));
-		this.intersection.addCharacter(new LabelImplFactory().create(propositions));
+		this.intersection.addCharacter(new LabelFactoryImpl().create(propositions));
 		
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new GraphProposition("start", false)));
-		this.intersection.addCharacter(new LabelImplFactory().createFromLabel(new SigmaProposition()));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new GraphProposition("start", false)));
+		this.intersection.addCharacter(new LabelFactoryImpl().createFromLabel(new SigmaProposition()));
 		this.intersection.addTransition(this.ints1, this.ints2, this.intt1);
 		this.intersection.addTransition(this.ints2, this.ints2, this.intt2);
 		this.intersection.addTransition(this.ints2, this.ints3, this.intt3);
