@@ -43,6 +43,7 @@ class StringToLabelTransformer<L extends Label> implements Transformer<String, L
 		if (input == null) {
 			throw new NullPointerException("The input must be not null");
 		}
+		
 		String[] aps=input.split(Pattern.quote(Constants.AND));
 		
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();

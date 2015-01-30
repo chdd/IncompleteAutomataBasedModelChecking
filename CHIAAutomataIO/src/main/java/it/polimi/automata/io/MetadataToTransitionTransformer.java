@@ -106,6 +106,13 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 		
 		Set<L> propositions=new HashSet<L>();
 		for(String label: new HashSet<String>(Arrays.asList(labels))){
+			
+			//Pattern pattern= Pattern.compile(Constants.LABELPATTERN);
+			//Matcher matcher=pattern.matcher(label);
+			//if(!matcher.matches()){
+			//	throw new IllegalArgumentException("The label: "+label+" does not match the regular expression "+Constants.LABELPATTERN);
+			//}
+			
 			L l=new StringToLabelTransformer<L>(labelFactory).transform(label.substring(Constants.LPAR.length(), label.length()-Constants.RPAR.length()));
 			propositions.add(l);
 			this.a.addCharacter(l);

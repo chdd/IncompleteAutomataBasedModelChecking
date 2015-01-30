@@ -27,6 +27,14 @@ public final class Constants {
 	public static final String LPAR="(";
 	public static final String RPAR=")";
 	
+	public static final String REGEXAND="\\"+Constants.AND+"";
+	public static final String REGEXNOT="\\"+Constants.NOT+"";
+	public static final String REGEXSIGMA="\\("+Constants.SIGMA+"\\)";
+	public static final String WORD="[a-zA-Z]+";
+	// PATTERN
+	// (SIGMA)|((?!)WORD (^(?!)WORD)*)||
+	public static final String LABELPATTERN="^("+Constants.REGEXSIGMA+")|(\\((?"+Constants.REGEXNOT+")"+WORD+"("+Constants.REGEXAND+"(?"+Constants.REGEXNOT+")"+WORD+")*\\))";
+
 	private Constants() {
 		// Utility classes should always be final and have an private constructor
 	}
