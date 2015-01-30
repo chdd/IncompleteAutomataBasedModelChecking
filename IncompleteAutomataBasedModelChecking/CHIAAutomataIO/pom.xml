@@ -1,11 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.polimi</groupId>
+	<groupId>it.polimi.automata.io</groupId>
 	<artifactId>CHIAAutomataIO</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>CHIAAutomataIO</name>
 	<url>http://maven.apache.org</url>
+	
+	<parent>
+        <groupId>it.polimi</groupId>
+        <artifactId>CHIA</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 	<properties>
 		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -127,7 +132,7 @@
 		<dependency>
 			<groupId>it.polimi.automata</groupId>
 			<artifactId>CHIAAutomata</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

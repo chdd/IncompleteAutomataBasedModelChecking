@@ -7,13 +7,18 @@
 
 	<groupId>it.polimi.automata</groupId>
 	<artifactId>CHIAAutomata</artifactId>
-	<version>0.0.2</version>
 	<name>CHIAAutomata</name>
 	<url>http://maven.apache.org</url>
+
+	<parent>
+		<groupId>it.polimi</groupId>
+		<artifactId>CHIA</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 	<properties>
-        <java.version>1.7</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+		<java.version>1.7</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
@@ -29,7 +34,7 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<configuration>
 						<runOrder>random</runOrder>
-					 <skipTests>true</skipTests>
+						<skipTests>true</skipTests>
 					</configuration>
 				</plugin>
 				<plugin>

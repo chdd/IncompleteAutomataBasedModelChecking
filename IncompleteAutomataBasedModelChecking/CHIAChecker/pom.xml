@@ -7,9 +7,13 @@
 
 	<groupId>it.polimi.automata.checker</groupId>
 	<artifactId>CHIAChecker</artifactId>
-	<version>0.0.2</version>
 	<name>CHIAChecker</name>
 	<url>http://maven.apache.org</url>
+	<parent>
+        <groupId>it.polimi</groupId>
+        <artifactId>CHIA</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 	<properties>
 		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -135,10 +139,10 @@
 		<dependency>
 			<groupId>it.polimi.automata</groupId>
 			<artifactId>CHIAAutomata</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>it.polimi</groupId>
+			<groupId>it.polimi.automata.io</groupId>
 			<artifactId>CHIAAutomataIO</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
