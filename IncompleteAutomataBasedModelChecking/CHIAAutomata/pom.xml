@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>it.polimi.automata</groupId>
+	<groupId>it.polimi.chia.automata</groupId>
 	<artifactId>CHIAAutomata</artifactId>
 	<name>CHIAAutomata</name>
 	<url>http://maven.apache.org</url>
