@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+	<key id="initial" for="node">
+		<desc>initial</desc>
+		<default>false</default>
+	</key>
+	<key id="name" for="node">
+		<desc>name</desc>
+		<default></default>
+	</key>
+	<key id="accepting" for="node">
+		<desc>accepting</desc>
+		<default>false</default>
+	</key>
+	<key id="transparent" for="node">
+		<desc>transparent</desc>
+		<default>false</default>
+	</key>
+	<key id="labels" for="edge">
+		<desc>labels</desc>
+		<default></default>
+	</key>
+	<graph edgedefault="directed">
+		<node id="1">
+			<data key="name">p1</data>
+			<data key="initial">true</data>
+			<data key="accepting">false</data>
+		</node>
+		<node id="2">
+			<data key="name">p2</data>
+			<data key="initial">false</data>
+			<data key="accepting">true</data>
+		</node>
+		<edge id="1" source="1" target="1">
+			<data key="labels">(SIGMA)</data>
+		</edge>
+		<edge id="2" source="1" target="2">
+			<data key="labels">(send^!success)</data>
+		</edge>
+		<edge id="3" source="2" target="2">
+			<data key="labels">(!success)</data>
+		</edge>
+	</graph>
+</graphml>
+
