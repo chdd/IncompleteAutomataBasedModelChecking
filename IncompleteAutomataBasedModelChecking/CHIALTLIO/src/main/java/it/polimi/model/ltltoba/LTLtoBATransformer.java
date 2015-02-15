@@ -232,7 +232,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 * @param ba
 	 *            is the Buchi Automaton to be populated
 	 * @throws NullPointerException
-	 *             if the transition or the map or the Buchi Automaton is null
+	 *             if the transition, the map or the Buchi Automaton is null
 	 */
 	private void analyzeTransition(ITransition transition, Map<IState, S> map,
 			BA<L, S, T> ba) {
