@@ -116,6 +116,8 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 				this.intBA, model, modelIntersectionStatesMap, new AbstractedBAFactory<L, S, T, Component<L, S, T>> ());
 		AbstractedBA<L, S, T, Component<L, S, T>> abstractedAutomaton = subautomataIdentifier
 				.getSubAutomata();
+		
+		System.out.println(abstractedAutomaton);
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which

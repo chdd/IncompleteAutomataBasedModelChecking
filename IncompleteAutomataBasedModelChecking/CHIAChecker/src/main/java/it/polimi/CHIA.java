@@ -44,7 +44,7 @@ public class CHIA {
 	
 	public String getConstraint(){
 		if(result!=-1){
-			return null;
+			throw new IllegalStateException("It is not possible to get the constraint if the property is not possibly satisfied");
 		}
 		cg=new ConstraintGenerator<Label, State, Transition<Label>>(
 				this.mc.getIntersectionAutomaton(), this.model, this.mc.getIntersectionStateModelStateMap(),

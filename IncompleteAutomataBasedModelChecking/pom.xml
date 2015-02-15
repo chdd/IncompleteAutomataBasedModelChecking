@@ -7,6 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>CHIA</name>
 	<packaging>pom</packaging>
+
 	<properties>
 		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,6 +42,14 @@
 						<target>1.7</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.1</version>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -49,9 +58,11 @@
 				<artifactId>site-maven-plugin</artifactId>
 				<version>0.10</version>
 				<configuration>
+					<!-- <merge>true</merge> -->
 					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
 					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+					<outputDirectory>${user.dir}/target/mvn-repo</outputDirectory>
+					<!-- <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> --> <!-- matches distribution management repository url above -->
 					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
 					<includes>
 						<include>**/*</include>
@@ -203,20 +214,22 @@
 		</repository>
 	</distributionManagement>
 
-	<modules>
-		<module>CHIAAutomata</module>
-		<module>CHIAAutomataIO</module>
-		<module>CHIAChecker</module>
-	</modules>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.4</version>
-				<scope>provided</scope>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>1.10.19</version>
 			</dependency>
+			<dependency>
+				<groupId>tl2ba4josgi</groupId>
+				<artifactId>tl2ba4josgi</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
+	<modules>
+	</modules>
 </project>

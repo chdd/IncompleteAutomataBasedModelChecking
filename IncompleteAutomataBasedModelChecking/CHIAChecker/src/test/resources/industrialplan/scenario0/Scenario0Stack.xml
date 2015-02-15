@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+	<key id="initial" for="node">
+		<desc>initial</desc>
+		<default>false</default>
+	</key>
+	<key id="name" for="node">
+		<desc>name</desc>
+		<default></default>
+	</key>
+	<key id="accepting" for="node">
+		<desc>accepting</desc>
+		<default>false</default>
+	</key>
+	<key id="transparent" for="node">
+		<desc>transparent</desc>
+		<default>false</default>
+	</key>
+	<key id="labels" for="edge">
+		<desc>labels</desc>
+		<default></default>
+	</key>
+	<graph edgedefault="directed">
+		<node id="1">
+			<data key="name">waitingForStart</data>
+			<data key="initial">true</data>
+			<data key="accepting">false</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="2">
+			<data key="name">extendingCilinder</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="3">
+			<data key="name">waitingExtendingCilinder</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="4">
+			<data key="name">retractingCilinder</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="5">
+			<data key="name">waitingRetractingCilinder</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="6">
+			<data key="name">waitingSecond</data>
+			<data key="initial">false</data>
+			<data key="accepting">true</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="7">
+			<data key="name">end</data>
+			<data key="initial">false</data>
+			<data key="accepting">true</data>
+			<data key="transparent">false</data>
+		</node>
+		<edge id="1" source="1" target="2">
+			<data key="labels">(start)</data>
+		</edge>
+		<edge id="2" source="2" target="3">
+			<data key="labels">(extend)</data>
+		</edge>
+		<edge id="3" source="3" target="4">
+			<data key="labels">(extended)</data>
+		</edge>
+		<edge id="4" source="4" target="5">
+			<data key="labels">(retract)</data>
+		</edge>
+		<edge id="5" source="5" target="6">
+			<data key="labels">(retracted)</data>
+		</edge>
+		<edge id="6" source="6" target="7">
+			<data key="labels">(timeout)</data>
+		</edge>
+		<edge id="7" source="7" target="7">
+			<data key="labels">(initialized)</data>
+		</edge>
+	</graph>
+</graphml>
+

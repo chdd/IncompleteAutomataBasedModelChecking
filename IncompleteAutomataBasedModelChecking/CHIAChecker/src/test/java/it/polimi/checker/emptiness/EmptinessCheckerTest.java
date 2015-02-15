@@ -31,7 +31,6 @@ public class EmptinessCheckerTest {
 	private Transition<Label> transition2;
 	private Transition<Label> transition3;
 	
-	
 	@Before
 	public void setUp() {
 		this.ba=new IBAFactoryImpl<Label, State, Transition<Label>>().create();
@@ -88,11 +87,9 @@ public class EmptinessCheckerTest {
 	 */
 	@Test
 	public void testIsEmpty2() {
-		
 		this.ba.addTransition(state1, state2, transition1);
 		this.ba.addTransition(state2, state3, transition2);
 		this.ba.addTransition(state3, state2, transition3);
-		
 		
 		assertTrue(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
 		this.ba.addInitialState(state1);

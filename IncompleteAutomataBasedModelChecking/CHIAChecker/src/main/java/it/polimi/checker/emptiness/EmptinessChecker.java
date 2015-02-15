@@ -14,10 +14,10 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
 /**
  * Checks the emptiness of an automaton. The automaton must extend the Buchi
  * Automaton Interface. An automaton is empty when it does not exists an
- * infinite path that enters an accepting state of the automaton infinitely
+ * infinite path that contains an accepting state of the automaton infinitely
  * often.<br>
- * For an informal description of the algorithm see the book Model checking,
- * of Clark, Grumberg and Peled pag 130
+ * For more information about the emptiness checker the reader can consult the
+ * book Model checking, of Clark, Grumberg and Peled pag 130
  * 
  * @see {@link BA}
  * 
@@ -41,18 +41,19 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * contains the automaton to be considered by the {@link EmptinessChecker}
 	 */
 	private BA<L, S, T> automaton;
-	
 
 	/**
-	 * contains the set of the states that has been encountered by <i>some<i> invocation of the first DFS
+	 * contains the set of the states that has been encountered by <i>some<i>
+	 * invocation of the first DFS
 	 */
 	private Set<S> hashedStates;
 
 	/**
-	 * contains the set of the states that has been encountered by <i>some<i> invocation of the second DFS
+	 * contains the set of the states that has been encountered by <i>some<i>
+	 * invocation of the second DFS
 	 */
 	private Set<S> flaggedStates;
-	
+
 	/**
 	 * creates a new Emptiness checker
 	 * 
@@ -67,8 +68,8 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 					"The automaton to be considered cannot be null");
 		}
 		this.automaton = automaton;
-		this.hashedStates=new HashSet<S>();
-		this.flaggedStates=new HashSet<S>();
+		this.hashedStates = new HashSet<S>();
+		this.flaggedStates = new HashSet<S>();
 	}
 
 	/**
@@ -79,10 +80,10 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * @return true if the automaton is empty, false otherwise
 	 */
 	public boolean isEmpty() {
-		
-		DirectedSparseGraph<S, T> graph=this.automaton.getGraph();
+
+		DirectedSparseGraph<S, T> graph = this.automaton.getGraph();
 		for (S init : this.automaton.getInitialStates()) {
-			if (firstDFS(init,graph, new Stack<S>())) {
+			if (firstDFS(init, graph, new Stack<S>())) {
 				return false;
 			}
 		}
@@ -95,24 +96,35 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * @param currState
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
+	 * @throws NullPointerException
+	 *             if the current state, the graph or the stack is null
 	 */
-	private boolean firstDFS(S currState, DirectedSparseGraph<S, T> graph, Stack<S> firstDFSStack) {
-		
-			this.hashedStates.add(currState);
-			firstDFSStack.push(currState);
-			for (S t : graph.getSuccessors(currState)) {
-				if(!this.hashedStates.contains(t)){
-					if(this.firstDFS(t, graph, firstDFSStack))
-						return true;
-				}
-			}
-			if(this.automaton.getAcceptStates().contains(currState)){
-				if(this.secondDFS(currState, graph, firstDFSStack)){
+	private boolean firstDFS(S currState, DirectedSparseGraph<S, T> graph,
+			Stack<S> firstDFSStack) {
+		if (currState == null) {
+			throw new NullPointerException("The current state cannot be null");
+		}
+		if (graph == null) {
+			throw new NullPointerException("The graph cannot be null");
+		}
+		if (firstDFSStack == null) {
+			throw new NullPointerException("The stack cannot be null");
+		}
+		this.hashedStates.add(currState);
+		firstDFSStack.push(currState);
+		for (S t : graph.getSuccessors(currState)) {
+			if (!this.hashedStates.contains(t)) {
+				if (this.firstDFS(t, graph, firstDFSStack))
 					return true;
-				}
 			}
-			firstDFSStack.pop();
-			return false;
+		}
+		if (this.automaton.getAcceptStates().contains(currState)) {
+			if (this.secondDFS(currState, graph, firstDFSStack)) {
+				return true;
+			}
+		}
+		firstDFSStack.pop();
+		return false;
 	}
 
 	/**
@@ -121,16 +133,27 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * @param currState
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
+	 * @throws NullPointerException
+	 *             if the current state, the graph or the stack is null
 	 */
-	private boolean secondDFS(S currState, DirectedSparseGraph<S, T> graph,  Stack<S> firstDFSStack) {
+	private boolean secondDFS(S currState, DirectedSparseGraph<S, T> graph,
+			Stack<S> firstDFSStack) {
+		if (currState == null) {
+			throw new NullPointerException("The current state cannot be null");
+		}
+		if (graph == null) {
+			throw new NullPointerException("The graph cannot be null");
+		}
+		if (firstDFSStack == null) {
+			throw new NullPointerException("The first stack cannot be null");
+		}
 		this.flaggedStates.add(currState);
 		for (S t : graph.getSuccessors(currState)) {
-			if(firstDFSStack.contains(t)){
+			if (firstDFSStack.contains(t)) {
 				return true;
-			}
-			else{
-				if(!this.flaggedStates.contains(t)){
-					if(this.secondDFS(t, graph, firstDFSStack))
+			} else {
+				if (!this.flaggedStates.contains(t)) {
+					if (this.secondDFS(t, graph, firstDFSStack))
 						return true;
 				}
 			}

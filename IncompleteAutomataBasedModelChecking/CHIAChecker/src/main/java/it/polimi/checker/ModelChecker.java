@@ -236,11 +236,11 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 		IBA<L, S, T> mc = new IBATransparentStateRemoval<L, S, T>()
 				.transparentStateRemoval(model);
 		// computing the intersection
-		BA<L, S, T> intersection = new IntersectionBuilder<L, S, T>(
+		this.intersectionAutomaton = new IntersectionBuilder<L, S, T>(
 				this.intersectionRule, intersectionStateFactory,
 				intersectionBAFactory, intersectionTransitionFactory, mc, claim)
 				.computeIntersection();
-		return new EmptinessChecker<L, S, T>(intersection).isEmpty();
+		return new EmptinessChecker<L, S, T>(intersectionAutomaton).isEmpty();
 	}
 
 	/**

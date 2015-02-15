@@ -24,23 +24,31 @@
 	</key>
 	<graph edgedefault="directed">
 		<node id="1">
-			<data key="name">p1</data>
+			<data key="name">waitingForStart</data>
 			<data key="initial">true</data>
 			<data key="accepting">false</data>
+			<data key="transparent">false</data>
 		</node>
 		<node id="2">
-			<data key="name">p2</data>
+			<data key="name">initialize</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="7">
+			<data key="name">end</data>
 			<data key="initial">false</data>
 			<data key="accepting">true</data>
+			<data key="transparent">false</data>
 		</node>
-		<edge id="1" source="1" target="1">
-			<data key="labels">(SIGMA)</data>
+		<edge id="1" source="1" target="2">
+			<data key="labels">(start)</data>
 		</edge>
-		<edge id="2" source="1" target="2">
-			<data key="labels">(start^!success)</data>
+		<edge id="2" source="2" target="7">
+			<data key="labels">(timeout)</data>
 		</edge>
-		<edge id="3" source="2" target="2">
-			<data key="labels">(!initialized)</data>
+		<edge id="7" source="7" target="7">
+			<data key="labels">(initialized)</data>
 		</edge>
 	</graph>
 </graphml>

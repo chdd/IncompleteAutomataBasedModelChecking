@@ -1,22 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.polimi.chia.automata.io</groupId>
+	<groupId>it.polimi.chia</groupId>
 	<artifactId>CHIAAutomataIO</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>CHIAAutomataIO</name>
 	<url>http://maven.apache.org</url>
-	
-	<parent>
-        <groupId>it.polimi</groupId>
-        <artifactId>CHIA</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+
 	<properties>
+		<!-- contains the version of java used in the development -->
 		<java.version>1.7</java.version>
+		<!-- contains the encoding of the source code -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
+		<!-- is the directory where the source code is located -->
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<!-- is the directory where the tests are located -->
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
@@ -105,32 +106,33 @@
 			</dependencies>
 		</profile>
 	</profiles>
-
 	<repositories>
 		<repository>
-			<id>deib-polimi-releases</id>
-			<url>https://github.com/deib-polimi/deib-polimi-mvn-repo/raw/master/releases</url>
+			<id>CHIAAutomata-mvn-repo</id>
+			<url>https://github.com/claudiomenghi/IncompleteAutomataBasedModelChecking/tree/mvn-repo</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
 		</repository>
 	</repositories>
 	<dependencies>
+		<!-- is the version of junit using in the software test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>tl2ba4josgi</groupId>
-			<artifactId>tl2ba4josgi</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+		<!-- is the mocking library used in the testing activity -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>1.10.19</version>
 		</dependency>
+		<!-- contains the dependency to the Buchi Automaton -->
 		<dependency>
-			<groupId>it.polimi.automata</groupId>
+			<groupId>it.polimi.chia</groupId>
 			<artifactId>CHIAAutomata</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

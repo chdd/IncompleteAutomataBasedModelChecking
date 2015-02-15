@@ -37,10 +37,10 @@
 			<data key="labels">(SIGMA)</data>
 		</edge>
 		<edge id="2" source="1" target="2">
-			<data key="labels">(start^!success)</data>
+			<data key="labels">(start)</data>
 		</edge>
 		<edge id="3" source="2" target="2">
-			<data key="labels">(!initialized)</data>
+			<data key="labels">(!extend)</data>
 		</edge>
 	</graph>
 </graphml>

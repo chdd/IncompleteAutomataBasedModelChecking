@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Air force technical orders user documents are called Technical Orders 
+	(TOs). This incomplete BA represents an high level view of the technical 
+	Order Modification Process.
+	For more detail about the case study see
+	http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=47991&tag=1
+	 -->
+
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+	<key id="initial" for="node">
+		<desc>initial</desc>
+		<default>false</default>
+	</key>
+	<key id="name" for="node">
+		<desc>name</desc>
+		<default></default>
+	</key>
+	<key id="accepting" for="node">
+		<desc>accepting</desc>
+		<default>false</default>
+	</key>
+	<key id="transparent" for="node">
+		<desc>transparent</desc>
+		<default>false</default>
+	</key>
+	<key id="labels" for="edge">
+		<desc>labels</desc>
+		<default></default>
+	</key>
+	<graph edgedefault="directed">
+		<node id="1">
+			<data key="name">idle</data>
+			<data key="initial">true</data>
+			<data key="accepting">false</data>
+			<data key="transparent">false</data>
+		</node>
+		<node id="2">
+			<data key="name">draftMode</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="3">
+			<data key="name">reviewMode</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="4">
+			<data key="name">issueInterism</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="5">
+			<data key="name">preparePrint</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="6">
+			<data key="name">distribute</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="7">
+			<data key="name">contractorChange</data>
+			<data key="initial">false</data>
+			<data key="accepting">false</data>
+			<data key="transparent">true</data>
+		</node>
+		<node id="8">
+			<data key="name">terminal</data>
+			<data key="initial">false</data>
+			<data key="accepting">true</data>
+			<data key="transparent">false</data>
+		</node>
+
+		<edge id="1" source="1" target="2">
+			<data key="labels">(start)</data>
+		</edge>
+		<edge id="2" source="2" target="3">
+			<data key="labels">(fail)</data>
+		</edge>
+		<edge id="3" source="2" target="5">
+			<data key="labels">(ok)</data>
+		</edge>
+		<edge id="4" source="3" target="4">
+			<data key="labels">(fail)</data>
+		</edge>
+		<edge id="5" source="3" target="5">
+			<data key="labels">(ok)</data>
+		</edge>
+		<edge id="6" source="4" target="4">
+			<data key="labels">(abort)</data>
+		</edge>
+		<edge id="7" source="5" target="5">
+			<data key="labels">(success)</data>
+		</edge>
+	</graph>
+</graphml>
+

@@ -143,19 +143,19 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the state is null
 	 */
 	public void addInitialState(S state);
-	
+
 	/**
 	 * adds the initial states to the Buchi automaton. If a state is not
 	 * contained into the states of the automaton it is also added to the states
 	 * of the automaton
 	 * 
 	 * @param states
-	 * 			is the set of the states to be added to the automaton
+	 *            is the set of the states to be added to the automaton
 	 * @throws NullPointerException
 	 *             if the set of the states or a specific state is null
 	 */
 	public void addInitialStates(Set<S> state);
-	
+
 	/**
 	 * adds the accepting states to the Buchi automaton. If a state is not
 	 * contained into the state of the automaton it is also added to the states
@@ -191,16 +191,18 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the state to be added is null
 	 */
 	public void addState(S state);
-	
+
 	/**
-	 * adds the states to the set of the states of the Buchi automaton. If the
-	 * a state is already present into the set of the states of the automaton no
+	 * adds the states to the set of the states of the Buchi automaton. If the a
+	 * state is already present into the set of the states of the automaton no
 	 * actions are performed
 	 * 
 	 * @param states
-	 *            the set of the states to be added to the states of the Buchi automaton
+	 *            the set of the states to be added to the states of the Buchi
+	 *            automaton
 	 * @throws NullPointerException
-	 *             if a state to be added is null or if the set of the states is null
+	 *             if a state to be added is null or if the set of the states is
+	 *             null
 	 */
 	public void addStates(Set<S> states);
 
@@ -212,10 +214,11 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * @param characters
 	 *            the set of the characters to be added to the Buchi automaton
 	 * @throws NullPointerException
-	 *             if the set of the characters or any character inside the set is null
+	 *             if the set of the characters or any character inside the set
+	 *             is null
 	 */
 	public void addCharacters(Set<L> characters);
-	
+
 	/**
 	 * adds the character to the characters of the Buchi automaton. If a
 	 * character is already contained in the set of characters of the Buchi
@@ -252,11 +255,10 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             a transition that connect source to the destination is
 	 *             already present
 	 */
-	public void addTransition(S source, S destination,
-			T transition);
+	public void addTransition(S source, S destination, T transition);
 
 	public boolean isPredecessor(S source, S destination);
-	
+
 	/**
 	 * removes the specified state from the set of the states of the Buchi
 	 * automaton
@@ -270,7 +272,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the state to be removed is not contained into the set of
 	 *             the states of the Buchi automaton
 	 * 
-	 * <pre>
+	 *             <pre>
 	 * state != null
 	 * </pre>
 	 */
@@ -329,10 +331,46 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * @return the graph associated with the Buchi automaton
 	 */
 	public DirectedSparseGraph<S, T> getGraph();
-	
+
 	public Set<S> getSuccessors(S s);
-	
+
 	public Set<S> getPredecessors(S s);
-	
+
+	/**
+	 * returns true if the destination is a direct successor of of the source,
+	 * i.e., there exists A transition that connect the source and the
+	 * destination. Otherwise a false value is returned
+	 * 
+	 * @param source
+	 *            is the source of the transition
+	 * @param destination
+	 *            is the destination of the transition
+	 * @return true if there exists a transition between the source and the
+	 *         destination, false otherwise
+	 * @throws NullPointerException
+	 *             if the source and the destination are null
+	 * @throws IllegalArgumentException
+	 *             if the source or the destination are not contained into the
+	 *             set of the states of the automaton
+	 */
+	public boolean isSuccessor(S source, S destination);
+
+	/**
+	 * returns the transition between the source and the destination state. if
+	 * no transition is present an Illegal argument exception is thrown
+	 * 
+	 * @param source
+	 *            is the source state of the transition
+	 * @param destination
+	 *            is the destination state of the transition
+	 * @return the transition between the source and the destination state
+	 * @throws NullPointerException
+	 *             if the source state or the destination state is null
+	 * @throws IllegalArgumentException
+	 *             if the source or the destination state is not a state of the
+	 *             Buchi automaton or if it does not exists a transition that
+	 *             connect the source and the destination state
+	 */
+	public T getTransition(S source, S destination);
 
 }
