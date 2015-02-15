@@ -224,7 +224,8 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 * Automaton
 	 * 
 	 * @param transition
-	 *            is the transition to be converted
+	 *            is the transition to be converted and added to the Buchi
+	 *            Automaton
 	 * @param map
 	 *            is the map which maps each end point state to the
 	 *            corresponding state of the Buchi automaton
@@ -261,21 +262,21 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 		 */
 		if (ba.isSuccessor(map.get(transition.getSourceState()),
 				map.get(transition.getTargetState()))) {
-			
+
 			// returns the Transition from the source to the destination state
 			T oldTransition = ba.getTransition(source, destination);
-			
+
 			// creates the set of labels to be added to the transition
 			Set<L> labels = new HashSet<L>();
 			labels.add(label);
 			labels.addAll(oldTransition.getLabels());
-			
+
 			// creates the new transition
 			T newTransition = this.transitionFactory.create(labels);
 
 			// removes the oldTransition
 			ba.removeTransition(oldTransition);
-			
+
 			// add the transition from the source to the destination state
 			ba.addTransition(source, destination, newTransition);
 
@@ -283,13 +284,13 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 			// creates the set of labels to be added to the transition
 			Set<L> labels = new HashSet<L>();
 			labels.add(label);
-			
-			// creates a new transition 
+
+			// creates a new transition
 			T t = this.transitionFactory.create(labels);
-			
+
 			// adds the label to the current buchi automaton
 			ba.addCharacters(t.getLabels());
-			
+
 			// add the transition from the source state to the destination state
 			ba.addTransition(source, destination, t);
 		}
