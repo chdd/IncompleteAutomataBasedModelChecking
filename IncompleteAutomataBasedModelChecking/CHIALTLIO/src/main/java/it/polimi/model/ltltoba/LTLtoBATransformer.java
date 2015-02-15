@@ -22,8 +22,8 @@ import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
 /**
- * contains the transformer which transforms an LTL formula into a Buchi
- * automaton
+ * contains the transformer which transforms an LTL formula into the
+ * corresponding Buchi automaton
  * 
  * @author claudiomenghi
  *
