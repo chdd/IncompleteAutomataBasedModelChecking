@@ -1,19 +1,33 @@
 package it.polimi.automata.io;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.BAFactory;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.LabelFactory;
+import it.polimi.automata.Constants;
+import it.polimi.automata.impl.IBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import edu.uci.ics.jung.io.GraphIOException;
-import edu.uci.ics.jung.io.graphml.GraphMLReader2;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 /**
  * contains the reader which is used to read a Buchi automaton
@@ -43,17 +57,20 @@ import edu.uci.ics.jung.io.graphml.GraphMLReader2;
  *            is the factory which is able to create a new empty Buchi
  *            Automaton. It must implement the interface {@link BAFactory}
  */
-public class BAReader<L extends Label, F extends LabelFactory<L>, S extends State, G extends StateFactory<S>, T extends Transition<L>, H extends TransitionFactory<L, T>, I extends BAFactory<L, S, T>> {
+public class BAReader<S extends State, G extends StateFactory<S>, T extends Transition, H extends TransitionFactory<S, T>> {
 
-	/**
-	 * is the reader which is used to parse the Buchi Automaton
-	 */
-	protected GraphMLReader2<DirectedSparseGraph<S, T>, S, T> graphReader = null;
 	/**
 	 * contains the Buchi Automaton loaded from the file
 	 */
-	protected BA<L, S, T> ba;
+	protected BA<S, T> ba;
 
+	private File file;
+	
+	private Map<Integer, S> mapIdState;
+	
+	private G stateFactory;
+
+	private H transitionFactory;
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
@@ -77,13 +94,7 @@ public class BAReader<L extends Label, F extends LabelFactory<L>, S extends Stat
 	 *             if the labelFactory, transitionFactory, stateFactory,
 	 *             automatonFactory or the fileReader is null
 	 */
-	public BAReader(F labelFactory,
-			H transitionFactory, G stateFactory,
-			I automatonFactory, BufferedReader fileReader) {
-		if (labelFactory == null) {
-			throw new NullPointerException(
-					"The labeling factory cannot be null");
-		}
+	public BAReader(H transitionFactory, G stateFactory, File file) {
 		if (transitionFactory == null) {
 			throw new NullPointerException(
 					"The transition factory cannot be null");
@@ -91,34 +102,142 @@ public class BAReader<L extends Label, F extends LabelFactory<L>, S extends Stat
 		if (stateFactory == null) {
 			throw new NullPointerException("The state factory cannot be null");
 		}
-		if (automatonFactory == null) {
-			throw new NullPointerException(
-					"The automaton factory cannot be null");
-		}
-		if (fileReader == null) {
+		if (file == null) {
 			throw new NullPointerException("The fileReader cannot be null");
 		}
-		
-		this.ba = automatonFactory.create();
-		this.graphReader = new GraphMLReader2<DirectedSparseGraph<S, T>, S, T>(
-				fileReader, new MetadataToBATransformer<L, S, T>(ba),
-				new MetadataToBAStateTransformer<L, S, T>(stateFactory, ba),
-				new MetadataToTransitionTransformer<L, F, S, T, H>(transitionFactory, labelFactory, ba),
-				new HyperMetadataToTransitionTransformer<L, T, H>(transitionFactory));
+
+		this.ba = new IBAImpl<S, T>(transitionFactory);
+
+		this.mapIdState=new HashMap<Integer, S>();
+		this.file = file;
+		this.stateFactory=stateFactory;
+		this.transitionFactory=transitionFactory;
 	}
 
-	
-	
 	/**
 	 * read the Buchi Automaton from the reader
 	 * 
 	 * @return a new Buchi automaton which is parsed from the reader
+	 * @throws JAXBException
 	 * @throws GraphIOException
-	 *             is generated if a problem occurs in the loading of the
-	 *             Buchi Automaton
+	 *             is generated if a problem occurs in the loading of the Buchi
+	 *             Automaton
 	 */
-	public BA<L, S, T> read() throws GraphIOException {
-		this.graphReader.readGraph();
+	public BA<S, T> read(){
+
+		Document dom;
+		// Make an instance of the DocumentBuilderFactory
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			// use the factory to take an instance of the document builder
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			// parse using the builder to get the DOM mapping of the
+			// XML file
+			dom = db.parse(file);
+
+			Element doc = dom.getDocumentElement();
+
+			this.loadStates(doc);
+			this.loadTransitions(doc);
+			
+			
+		} catch (ParserConfigurationException pce) {
+			System.out.println(pce.getMessage());
+		} catch (SAXException se) {
+			System.out.println(se.getMessage());
+		} catch (IOException ioe) {
+			System.err.println(ioe.getMessage());
+		}
+
 		return this.ba;
-	}	
+	}
+
+	private void loadStates(Element doc) {
+		NodeList xmlstates=doc.getElementsByTagName(Constants.XML_TAG_STATE);
+		
+		for(int stateid=0; stateid<xmlstates.getLength(); stateid++){
+			Node xmlstate=xmlstates.item(stateid);
+			Element eElement = (Element) xmlstate;
+			
+			int id= Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_ID));
+			
+			S s=stateFactory.create(eElement.getAttribute(Constants.XML_ATTRIBUTE_NAME), id);
+			this.ba.addState(s);
+			this.mapIdState.put(id, s);
+			
+			if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_INITIAL).isEmpty()){
+				this.ba.addInitialState(s);
+			}
+			if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_ACCEPTING).isEmpty()){
+				this.ba.addAcceptState(s);
+			}
+			
+		}
+	}
+	
+	private void loadTransitions(Element doc) {
+		NodeList xmltransitions=doc.getElementsByTagName(Constants.XML_TAG_TRANSITION);
+		
+		for(int transitionid=0; transitionid<xmltransitions.getLength(); transitionid++){
+			Node xmltransition=xmltransitions.item(transitionid);
+			Element eElement = (Element) xmltransition;
+			
+			int id= Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID));
+			
+			Set<IGraphProposition> propositions=this.computePropositions(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
+			
+			T t=transitionFactory.create(id, propositions);
+			
+			int sourceId=Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_SOURCE));
+			int destinationId=Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_DESTINATION));
+			this.ba.addTransition(this.mapIdState.get(sourceId), this.mapIdState.get(destinationId), t);
+		}
+	}
+	
+	/**
+	 * Starting from the string computes the corresponding proposition. The
+	 * string must satisfy the regular expression {@link Constants#APREGEX} or
+	 * the regular expression {@link Constants#NOTAPREGEX}
+	 * 
+	 * @param input
+	 *            is the input to be computed
+	 * @throws NullPointerException
+	 *             if the input is null
+	 * @throws IllegalArgumentException
+	 *             if the input does not match the regular expression
+	 *             {@link Constants#APREGEX} or the regular expression
+	 *             {@link Constants#NOTAPREGEX}
+	 */
+	public Set<IGraphProposition> computePropositions(String input) {
+
+		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
+		if (input == null) {
+			throw new NullPointerException("The input must be not null");
+		}
+		if (!input.matches(Constants.CLAIM_PROPOSITIONAL_FORMULA)) {
+			throw new IllegalArgumentException(
+					"The input "+input+" must match the regular expression: "
+							+ Constants.CLAIM_PROPOSITIONAL_FORMULA);
+		}
+		
+		if(input.equals(Constants.SIGMA)){
+			propositions.add(new SigmaProposition());
+		}
+		else{
+			String[] apsStrings=input.split(Constants.AND);
+			
+			for(String ap: apsStrings){
+				if(ap.startsWith(Constants.NOT)){
+					propositions.add(new GraphProposition(ap.substring(Constants.NOT.length()), true));
+				}
+				else{
+					propositions.add(new GraphProposition(ap, false));
+				}
+				
+			}
+		}
+		
+		this.ba.addCharacters(propositions);
+		return propositions;
+	}
 }

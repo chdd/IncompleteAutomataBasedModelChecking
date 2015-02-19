@@ -105,7 +105,7 @@ public class IntersectionRuleImplTest {
 	 */
 	@Test
 	public void testGetIntersectionTransition() {
-		assertNull(new IntersectionRuleImpl<Label, Transition<Label>>()
+		assertNotNull(new IntersectionRuleImpl<Label, Transition<Label>>()
 				.getIntersectionTransition(modelTransition, claimTransition,
 						new IntersectionTransitionFactoryImpl<Label>()));
 	}

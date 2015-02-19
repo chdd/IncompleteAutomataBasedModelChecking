@@ -1,79 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
-	<key id="initial" for="node">
-		<desc>initial</desc>
-		<default>false</default>
-	</key>
-	<key id="name" for="node">
-		<desc>name</desc>
-		<default></default>
-	</key>
-	<key id="accepting" for="node">
-		<desc>accepting</desc>
-		<default>false</default>
-	</key>
-	<key id="transparent" for="node">
-		<desc>transparent</desc>
-		<default>false</default>
-	</key>
-	<key id="labels" for="edge">
-		<desc>labels</desc>
-		<default></default>
-	</key>
-	<graph edgedefault="directed">
-		<node id="1">
-			<data key="name">q1</data>
-			<data key="initial">true</data>
-			<data key="accepting">false</data>
-			<data key="transparent">false</data>
-		</node>
-		<node id="2">
-			<data key="name">send1</data>
-			<data key="initial">false</data>
-			<data key="accepting">false</data>
-			<data key="transparent">true</data>
-		</node>
-		<node id="3">
-			<data key="name">send2</data>
-			<data key="initial">false</data>
-			<data key="accepting">false</data>
-			<data key="transparent">true</data>
-		</node>
-		<node id="4">
-			<data key="name">q2</data>
-			<data key="initial">false</data>
-			<data key="accepting">true</data>
-			<data key="transparent">false</data>
-		</node>
-		<node id="5">
-			<data key="name">q3</data>
-			<data key="initial">false</data>
-			<data key="accepting">true</data>
-			<data key="transparent">false</data>
-		</node>
-		<edge id="1" source="1" target="2">
-			<data key="labels">(start)</data>
-		</edge>
-		<edge id="2" source="2" target="3">
-			<data key="labels">(fail)</data>
-		</edge>
-		<edge id="3" source="2" target="5">
-			<data key="labels">(ok)</data>
-		</edge>
-		<edge id="4" source="3" target="4">
-			<data key="labels">(fail)</data>
-		</edge>
-		<edge id="5" source="3" target="5">
-			<data key="labels">(ok)</data>
-		</edge>
-		<edge id="6" source="4" target="4">
-			<data key="labels">(abort)</data>
-		</edge>
-		<edge id="7" source="5" target="5">
-			<data key="labels">(success)</data>
-		</edge>
-	</graph>
-</graphml>
+<iba>
+	<state id="1" name="q1" initial="true" />
+	<state id="2" name="send1" transparent="true" />
+	<state id="3" name="send2" transparent="true" />
+	<state id="4" name="q2" accepting="true" />
+	<state id="5" name="q3" accepting="true" />
+
+
+	<transition id="1" source="1" destination="2" propositions="start" />
+	<transition id="2" source="2" destination="3" propositions="fail" />
+	<transition id="3" source="2" destination="5" propositions="ok" />
+	<transition id="4" source="3" destination="4" propositions="fail" />
+	<transition id="5" source="3" destination="5" propositions="ok" />
+	<transition id="6" source="4" destination="4" propositions="abort" />
+	<transition id="7" source="5" destination="5" propositions="success" />
+</iba>
 

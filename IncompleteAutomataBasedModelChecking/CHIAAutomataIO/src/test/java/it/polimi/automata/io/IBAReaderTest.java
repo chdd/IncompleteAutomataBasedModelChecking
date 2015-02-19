@@ -3,15 +3,8 @@
  */
 package it.polimi.automata.io;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 import it.polimi.automata.IBA;
-import it.polimi.automata.IBAFactory;
-import it.polimi.automata.impl.IBAFactoryImpl;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.LabelFactory;
-import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -19,23 +12,17 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import edu.uci.ics.jung.io.GraphIOException;
-import edu.uci.ics.jung.io.graphml.GraphMLReader2;
+
 
 /**
  * @author claudiomenghi
@@ -43,184 +30,86 @@ import edu.uci.ics.jung.io.graphml.GraphMLReader2;
  */
 public class IBAReaderTest {
 
-	private LabelFactory<Label> labelFactory;
-
-	private TransitionFactory<Label, Transition<Label>> transitionFactory;
-
 	private StateFactory<State> stateFactory;
-
-	@Mock
-	private GraphMLReader2<DirectedSparseGraph<State, Transition<Label>>, State, Transition<Label>> graphReader;
+	private TransitionFactory<State, Transition> transitionFactory;
 	
-	private IBAFactory<Label, State, Transition<Label>> automatonFactory=new IBAFactoryImpl<Label, State, Transition<Label>>();
-
+	private Transition t1;
+	private Transition t2;
+	private Transition t3;
+	private Transition t4;
+	private Transition t5;
+	private Transition t6;
+	private Transition t7;
 	
-	@Mock
-	private BufferedReader fileReader;
-
-	private IBA<Label, State, Transition<Label>> ba;
-
 	@Before
-	public void setUp() throws GraphIOException {
-		MockitoAnnotations.initMocks(this);
-		when(graphReader.readGraph()).thenReturn(new DirectedSparseGraph<State, Transition<Label>>());
+	public void setUp() {
+	
 		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory = new ModelTransitionFactoryImpl<Label>();
-		this.labelFactory = new LabelFactoryImpl();
-
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.io.IBAReader#IBAReader(null, it.polimi.automata.transition.TransitionFactory, it.polimi.automata.state.StateFactory, it.polimi.automata.IBAFactory, java.io.BufferedReader)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testBAReaderNullLabelFactory() {
-		new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				null, transitionFactory, stateFactory, automatonFactory,
-				fileReader);
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.io.IBAReader#IBAReader(it.polimi.automata.labeling.LabelFactory, null, it.polimi.automata.state.StateFactory, it.polimi.automata.IBAFactory, java.io.BufferedReader)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testBAReaderNullTransitionFactory() {
-		new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, null, stateFactory, automatonFactory,
-				fileReader);
-	}
-	
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.io.IBAReader#IBAReader(it.polimi.automata.labeling.LabelFactory, it.polimi.automata.transition.TransitionFactory, null, it.polimi.automata.IBAFactory, java.io.BufferedReader)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testBAReaderNullStateFactory() {
-		new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, transitionFactory, null, automatonFactory,
-				fileReader);
-	}
-	
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.io.IBAReader#IBAReader(it.polimi.automata.labeling.LabelFactory, it.polimi.automata.transition.TransitionFactory, it.polimi.automata.state.IBAFactory, null, java.io.BufferedReader)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testBAReaderNullBAFactory() {
-		new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, transitionFactory, stateFactory, null,
-				fileReader);
-	}
-	
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.io.IBAReader#IBAReader(it.polimi.automata.labeling.LabelFactory, it.polimi.automata.transition.TransitionFactory, it.polimi.automata.state.StateFactory, it.polimi.automata.IBAFactory, null)}
-	 * .
-	 */
-	@Test(expected=NullPointerException.class)
-	public void testBAReaderNullFileReader() {
-		new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, transitionFactory, stateFactory, automatonFactory,
-				null);
-	}
-	
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.io.IBAReader#IBAReader(it.polimi.automata.labeling.LabelFactory, it.polimi.automata.transition.TransitionFactory, it.polimi.automata.state.StateFactory, it.polimi.automata.IBAFactory, java.io.BufferedReader)}
-	 * .
-	 */
-	@Test
-	public void testBAReader() {
-		assertNotNull(new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, transitionFactory, stateFactory, automatonFactory,
-				fileReader));
-	}
-
-	/**
-	 * Test method for {@link it.polimi.automata.io.IBAReader#read()}.
-	 * @throws GraphIOException 
-	 * @throws SecurityException 
-	 * @throws NoSuchFieldException 
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
-	 */
-	@Test
-	public void testRead() throws GraphIOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = IBAReader.class
-				.getDeclaredField("graphReader");
-		field.setAccessible(true);
+		this.transitionFactory=new ModelTransitionFactoryImpl<State>(Transition.class);
 		
-		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> readed=new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, transitionFactory, stateFactory, automatonFactory,
-				fileReader);
-		field.set(readed, graphReader);
+		Set<IGraphProposition> propositions1=new HashSet<IGraphProposition>();
+		propositions1.add(new GraphProposition("start", false));
+		t1=this.transitionFactory.create(1, propositions1);
 		
-		assertNotNull(readed.read());
+		Set<IGraphProposition> propositions2=new HashSet<IGraphProposition>();
+		propositions2.add(new GraphProposition("fail", false));
+		t2=this.transitionFactory.create(2, propositions2);
+		
+		Set<IGraphProposition> propositions3=new HashSet<IGraphProposition>();
+		propositions3.add(new GraphProposition("ok", false));
+		t3=this.transitionFactory.create(3, propositions3);
+		
+		Set<IGraphProposition> propositions4=new HashSet<IGraphProposition>();
+		propositions4.add(new GraphProposition("fail", false));
+		t4=this.transitionFactory.create(4, propositions4);
+		
+		Set<IGraphProposition> propositions5=new HashSet<IGraphProposition>();
+		propositions5.add(new GraphProposition("ok", false));
+		t5=this.transitionFactory.create(5, propositions5);
+		
+		Set<IGraphProposition> propositions6=new HashSet<IGraphProposition>();
+		propositions6.add(new GraphProposition("abort", false));
+		t6=this.transitionFactory.create(6, propositions6);
+		
+		Set<IGraphProposition> propositions7=new HashSet<IGraphProposition>();
+		propositions7.add(new GraphProposition("success", false));
+		t7=this.transitionFactory.create(7, propositions7);
 	}
 	
-	/**
-	 * Test method for {@link it.polimi.automata.io.IBAReader#read()}.
-	 * 
-	 * @throws GraphIOException
-	 * @throws SecurityException
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws FileNotFoundException
-	 */
 	@Test
-	public void testRead2() throws GraphIOException, NoSuchFieldException,
-			SecurityException, IllegalArgumentException,
-			IllegalAccessException, FileNotFoundException {
-
-		ClassLoader classLoader = getClass().getClassLoader();
-		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> readed = new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				labelFactory, transitionFactory, stateFactory,
-				automatonFactory, new BufferedReader(new FileReader(classLoader
-						.getResource("loadingIBA.xml").getFile())));
-
-		this.ba = readed.read();
-		assertNotNull(ba);
-		this.stateFactory = new StateFactoryImpl();
-		State state1 = stateFactory.create("state1", 1);
-		State state2 = stateFactory.create("state2", 2);
-		State state3 = stateFactory.create("state3", 3);
-		assertTrue(ba.getStates().contains(state1));
-		assertTrue(ba.getStates().contains(state2));
-		assertTrue(ba.getStates().contains(state3));
-
-		assertTrue(ba.getInitialStates().contains(state1));
-		assertTrue(ba.getAcceptStates().contains(state3));
-		assertTrue(ba.getTransparentStates().contains(state2));
+	public void test() throws FileNotFoundException {
+		IBAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>> reader=new IBAReader< State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
+				this.transitionFactory, this.stateFactory, new File(getClass().getClassLoader()
+						.getResource("SendingMessageModel.xml").getFile()));
 		
-
-		this.transitionFactory = new ModelTransitionFactoryImpl<Label>();
-		this.labelFactory = new LabelFactoryImpl();
-		Set<Label> labels = new HashSet<Label>();
-		Set<IGraphProposition> propositions1 = new HashSet<IGraphProposition>();
-		propositions1.add(new GraphProposition("a", false));
-		propositions1.add(new GraphProposition("b", false));
-
-		Label label1 = labelFactory.create(propositions1);
-		labels.add(label1);
-		Set<IGraphProposition> propositions2 = new HashSet<IGraphProposition>();
-		propositions2.add(new GraphProposition("c", false));
-		Label label2 = labelFactory.create(propositions2);
-
-		labels.add(label2);
-
-		Transition<Label> t = this.transitionFactory.create(1, labels);
-
-		assertTrue(ba.getTransitions().contains(t));
-
-		assertTrue(ba.getAlphabet().contains(label1));
-		assertTrue(ba.getAlphabet().contains(label2));
+		IBA< State, Transition> sendingMessage=reader.read();
+		
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q1", 1)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("send1", 2)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("send2", 3)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q2", 4)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q3", 5)));
+		assertTrue(sendingMessage.getStates().size()==5);
+		
+		assertTrue(sendingMessage.getInitialStates().contains(stateFactory.create("q1", 1)));
+		assertTrue(sendingMessage.getInitialStates().size()==1);
+		
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q2", 4)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q3", 5)));
+		assertTrue(sendingMessage.getAcceptStates().size()==2);
+		
+		assertTrue(sendingMessage.getTransparentStates().contains(stateFactory.create("send1", 2)));
+		assertTrue(sendingMessage.getTransparentStates().contains(stateFactory.create("send2", 3)));
+		assertTrue(sendingMessage.getTransparentStates().size()==2);
+		
+		assertTrue(sendingMessage.getTransitions().contains(t1));
+		assertTrue(sendingMessage.getTransitions().contains(t2));
+		assertTrue(sendingMessage.getTransitions().contains(t3));
+		assertTrue(sendingMessage.getTransitions().contains(t4));
+		assertTrue(sendingMessage.getTransitions().contains(t5));
+		assertTrue(sendingMessage.getTransitions().contains(t6));
+		assertTrue(sendingMessage.getTransitions().contains(t7));
+		
+		
 	}
-
 }

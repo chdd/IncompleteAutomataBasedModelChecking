@@ -1,20 +1,19 @@
 package it.polimi.contraintcomputation.subautomatafinder;
 
+import java.util.Map;
+
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.contraintcomputation.abstractedBA.AbstractedBA;
 import it.polimi.contraintcomputation.component.Component;
-
-import java.util.Map.Entry;
-import java.util.Set;
 
 public class Merger<L extends Label, S extends State, T extends Transition<L>> {
 
 	private AbstractedBA<L, S, T, Component<L, S, T>> automata;
-	private Component<L, S, T> componentA;
-	private Component<L, S, T> componentB;
-	private Set<Entry<Entry<S, S>, T>> transitions;
+	private MergingElement<L, S, T> mergingElement;
+	private TransitionFactory<L, T> transitionFactory;
 
 	/**
 	 * creates a new merger.The merger merges the components a and b into a
@@ -35,45 +34,53 @@ public class Merger<L extends Label, S extends State, T extends Transition<L>> {
 	 *             states of the automaton
 	 */
 	public Merger(AbstractedBA<L, S, T, Component<L, S, T>> automata,
-			Component<L, S, T> componentA, Component<L, S, T> componentB,
-			Set<Entry<Entry<S, S>, T>> transitions) {
+			MergingElement<L,S,T> mergingElement, TransitionFactory<L, T> transitionFactory) {
 		if (automata == null) {
 			throw new NullPointerException(
 					"The subautomata to be returned cannot be null");
 		}
-		if (componentA == null) {
-			throw new NullPointerException(
-					"The first component of to be merged cannot be null");
-		}
-		if (componentB == null) {
-			throw new NullPointerException(
-					"The second component of to be merged cannot be null");
-		}
 		
-		
+
 		this.automata = automata;
-		this.componentA = componentA;
-		this.componentB = componentB;
-		this.transitions=transitions;
+		this.mergingElement=mergingElement;
+		this.transitionFactory=transitionFactory;
 	}
 
-	public void merge() {
-		
-		this.componentA.merge(componentB, transitions);
-		
-		for(T t: this.automata.getInTransitions(componentB)){
-			Component<L, S, T> source=this.automata.getTransitionSource(t);
-			this.automata.removeTransition(t);
-			this.automata.addTransition(source, componentA, t);
+	public void merge(Map<T, T> oldNewTransitionMap) {
+		T transition;
+		if(oldNewTransitionMap.containsKey(mergingElement.getComponentTransition())){
+			transition=oldNewTransitionMap.get(mergingElement.getComponentTransition());
 		}
-		for(T t: this.automata.getOutTransitions(componentB)){
-			Component<L, S, T> destination=this.automata.getTransitionDestination(t);
-			this.automata.removeTransition(t);
-			this.automata.addTransition(componentA, destination, t);
+		else{
+			transition=mergingElement.getComponentTransition();
 		}
+		Component<L, S, T> componentA = automata.getTransitionSource(transition);
+		Component<L, S, T> componentB = automata.getTransitionDestination(transition);
+		componentA.merge(componentB, mergingElement.getMergingEntries(),
+				transitionFactory);
+		for(T componentBIncomingTransition: automata.getInTransitions(componentB)){
+			Component<L, S, T> source=automata.getTransitionSource(componentBIncomingTransition);
+			this.automata.removeTransition(componentBIncomingTransition);
+			if(!this.automata.isPredecessor(source, componentA)){
+				this.automata.addTransition(source, componentA, componentBIncomingTransition);
+			}
+			else{
+				oldNewTransitionMap.put(componentBIncomingTransition, this.automata.getTransition(source, componentA));
+			}
+		}
+		for(T componentBOutcomingTransition: automata.getInTransitions(componentB)){
+			Component<L, S, T> destination=automata.getTransitionSource(componentBOutcomingTransition);
+			this.automata.removeTransition(componentBOutcomingTransition);
+			if(!this.automata.isPredecessor(componentA, destination)){
+				this.automata.addTransition(componentA, destination, componentBOutcomingTransition);
+			}
+			else{
+				oldNewTransitionMap.put(componentBOutcomingTransition, this.automata.getTransition(componentA, destination));
+			}
+		}
+		
+		
 		this.automata.removeState(componentB);
-		
 	}
 
-	
 }

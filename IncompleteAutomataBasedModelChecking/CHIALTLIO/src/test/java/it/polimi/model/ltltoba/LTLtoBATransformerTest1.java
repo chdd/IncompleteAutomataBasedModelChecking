@@ -2,18 +2,15 @@ package it.polimi.model.ltltoba;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import it.polimi.automata.BA;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import edu.uci.ics.jung.io.GraphIOException;
 
 public class LTLtoBATransformerTest1 {
 
@@ -30,38 +26,32 @@ public class LTLtoBATransformerTest1 {
 	private StateFactoryImpl stateFactory;
 	
 	@Mock
-	private ClaimTransitionFactoryImpl<Label> transitionFactory;
+	private ClaimTransitionFactoryImpl<State> transitionFactory;
 
 	@Mock
 	private StateImpl state;
 	
 	@Mock
-	private Transition<Label> transition;
+	private Transition transition;
 	
-	@Mock
-	private LabelFactoryImpl labelFactory;
 	
 	@Before
-	public void setUp() throws GraphIOException {
+	public void setUp()  {
 		MockitoAnnotations.initMocks(this);
 		when(stateFactory.create()).thenReturn(state);
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		propositions.add(new GraphProposition("a", false));
-		Label label=new LabelFactoryImpl().create(propositions);
-		Set<Label> labels=new HashSet<Label>();
-		labels.add(label);
-		when(transitionFactory.create(labels)).thenReturn(transition);
-		when(labelFactory.create(propositions)).thenReturn(label);
-		when(transition.getLabels()).thenReturn(labels);
+		when(transitionFactory.create(propositions)).thenReturn(transition);
+		when(transition.getLabels()).thenReturn(propositions);
 	}
 	
 	@Test
 	public void test() {
-		LTLtoBATransformer<Label, State, Transition<Label>> ltlToBATransformer;
-		ltlToBATransformer=new LTLtoBATransformer<Label, State, Transition<Label>>(
-				stateFactory, transitionFactory, labelFactory);
+		LTLtoBATransformer<State, Transition> ltlToBATransformer;
+		ltlToBATransformer=new LTLtoBATransformer<State, Transition>(
+				stateFactory, transitionFactory);
 		
-		BA<Label, State, Transition<Label>> ba=ltlToBATransformer.transform("[]a");
+		BA<State, Transition> ba=ltlToBATransformer.transform("[]a");
 		
 		assertTrue(ba.getInitialStates().size()==1);
 		assertTrue(ba.getAcceptStates().size()==1);
@@ -73,4 +63,5 @@ public class LTLtoBATransformerTest1 {
 		assertTrue(ba.getTransitions().size()==1);
 		assertTrue(ba.getTransitions().contains(transition));
 	}
+	
 }

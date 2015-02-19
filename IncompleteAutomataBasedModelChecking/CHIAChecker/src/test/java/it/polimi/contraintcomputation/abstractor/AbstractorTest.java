@@ -18,6 +18,7 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
 import it.polimi.automata.transition.impl.IntersectionTransitionFactoryImpl;
 import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
 import it.polimi.contraintcomputation.abstractedBA.AbstractedBA;
@@ -105,11 +106,12 @@ public class AbstractorTest {
 		/*
 		 * creating the model
 		 */
-		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> modelReader = new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
+		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> modelReader =
+				new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
 				this.labelFactory, this.transitionFactory, this.stateFactory,
 				new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessageModel.xml").getFile())));
+						.getResource("sendingmessage/SendingMessageModel.xml").getFile())));
 
 		this.model = modelReader.read();
 
@@ -151,7 +153,8 @@ public class AbstractorTest {
 				intersection,
 				model,
 				intersectionStateModelStateMap,
-				new AbstractedBAFactory<Label, State, Transition<Label>, Component<Label, State, Transition<Label>>>());
+				new AbstractedBAFactory<Label, State, Transition<Label>, Component<Label, State, Transition<Label>>>(),
+				new ClaimTransitionFactoryImpl<Label>());
 
 		AbstractedBA<Label, State, Transition<Label>, Component<Label, State, Transition<Label>>> simplifiedAutomata = identifier
 				.getSubAutomata();

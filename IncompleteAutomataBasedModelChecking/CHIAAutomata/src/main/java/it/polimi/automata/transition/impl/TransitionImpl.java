@@ -18,6 +18,8 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  */
 public class TransitionImpl implements Transition {
 
+	
+
 	/**
 	 * contains the id of the transition
 	 */
@@ -109,7 +111,7 @@ public class TransitionImpl implements Transition {
 		return "{" + Integer.toString(this.id) + "} " + ret + "";
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -120,7 +122,7 @@ public class TransitionImpl implements Transition {
 		return result;
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -134,8 +136,9 @@ public class TransitionImpl implements Transition {
 		TransitionImpl other = (TransitionImpl) obj;
 		if (id != other.id)
 			return false;
-		if (!labels.equals(other.labels))
-			return false;
 		return true;
 	}
+
+	
+	
 }

@@ -53,7 +53,7 @@ public class CHIATest {
 				new StateFactoryImpl(),
 				new BAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessageClaim.xml").getFile())));
+						.getResource("sendingmessage/SendingMessageClaim.xml").getFile())));
 
 		BA<Label, State, Transition<Label>> claim = claimReader.read();
 
@@ -62,7 +62,7 @@ public class CHIATest {
 				new StateFactoryImpl(),
 				new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessageModel.xml").getFile())));
+						.getResource("sendingmessage/SendingMessageModel.xml").getFile())));
 
 		IBA<Label, State, Transition<Label>> model = modelReader.read();
 		CHIA chia = new CHIA(claim, model);
@@ -70,7 +70,6 @@ public class CHIATest {
 		assertTrue(result == -1);
 
 		String constraint = chia.getConstraint();
-		System.out.println(constraint);
 		
 		assertTrue(("¬((([@q1- [start]@([<SIGMA>])*@send2- [fail]@]∧[@send1- [fail]@([<SIGMA>])*.[send^!success].([!success])*@q2- [fail]@])∨([@q1- [start]@([<SIGMA>])*.[send^!success].([!success])*@send2- [fail]@]∧[@send1- [fail]@([!success])*@q2- [fail]@])))")
 				.equals(constraint)

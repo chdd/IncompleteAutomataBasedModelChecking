@@ -17,11 +17,22 @@ import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * @author claudiomenghi
+ * Contains the model checker used by the CHIA checker which checks whether the
+ * property is satisfied, possibly satisfied or not satisfied
  * 
+ * @author claudiomenghi
  */
 public class ModelChecker<L extends Label, S extends State, T extends Transition<L>> {
+
+	/**
+	 * is the logger of the ModelChecker class
+	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(ModelChecker.class);
 
 	/**
 	 * contains the specification to be checked
@@ -152,13 +163,18 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 	 *         satisfied, -1 if the property is satisfied with constraints.
 	 */
 	public int check() {
+		logger.info("Checking procedure started");
 		// resets the value of the verification parameters
 		this.verificationResults.reset();
+		logger.info("Verification results resetted");
 
 		// SPECIFICATION
 		// updates the set of the number of the states in the claim
 		this.verificationResults.setNumStatesSpecification(this.claim
 				.getStates().size());
+
+		logger.info("The claims has: " + this.claim.getStates().size()
+				+ " states");
 		// updates the number of accepting states of the claim
 		this.verificationResults.setNumAcceptStatesSpecification(this.claim
 				.getAcceptStates().size());
@@ -174,29 +190,38 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 		this.verificationResults.setNumTransparentStatesModel(this.model
 				.getTransparentStates().size());
 
+		logger.info("The model has: " + this.model.getStates().size()
+				+ " states");
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL WITHOUT TRANSPARENT
 		// STATES AND THE CLAIM
 		long startIntersectionTime = System.nanoTime();
 		boolean empty = this.checkEmptyIntersectionMc();
 		long stopTime = System.nanoTime();
 
+		double checkingTime = ((stopTime - startIntersectionTime) / 1000000000.0);
+		logger.info("The emptiness checker returned: " + empty + " in: "
+				+ checkingTime + "ms");
+
 		// updates the time required to compute the intersection between the
 		// model without transparent states and the claim
-		this.verificationResults
-				.setViolationTime((stopTime - startIntersectionTime) / 1000000000.0);
+		this.verificationResults.setViolationTime(checkingTime);
 		if (!empty) {
+			logger.info("The claim is not satisfied");
 			return 0;
 		}
 
+		logger.info("Checking the intersection between the claim and the original model");
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE CLAIM
 		long startCheckingPossible = System.nanoTime();
 		boolean emptyIntersection = this.checkEmptyIntersection();
 		long stopCheckingPossible = System.nanoTime();
+		checkingTime = (stopCheckingPossible - startCheckingPossible) / 1000000000.0;
+		logger.info("The emptiness checker returns: " + emptyIntersection
+				+ " in: " + checkingTime + " ms");
 
 		// updates the time required to compute the intersection between the
 		// model without transparent states and the claim
-		this.verificationResults
-				.setPossibleViolationTime((stopCheckingPossible - startCheckingPossible) / 1000000000.0);
+		this.verificationResults.setPossibleViolationTime(checkingTime);
 		// INTERSECTION
 		// sets the number of the states in the intersection
 		this.verificationResults
@@ -216,10 +241,12 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 				.setNumMixedStatesIntersection(this.intersectionAutomaton
 						.getMixedStates().size());
 		if (!emptyIntersection) {
+			logger.info("The claim is possibly satisfied");
 			return -1;
+		} else {
+			logger.info("The claim is satisfied");
+			return 1;
 		}
-
-		return 1;
 	}
 
 	/**
@@ -235,11 +262,14 @@ public class ModelChecker<L extends Label, S extends State, T extends Transition
 		// removes the transparent states from the model
 		IBA<L, S, T> mc = new IBATransparentStateRemoval<L, S, T>()
 				.transparentStateRemoval(model);
+		logger.debug("Transparent states removed from the model");
+
 		// computing the intersection
 		this.intersectionAutomaton = new IntersectionBuilder<L, S, T>(
 				this.intersectionRule, intersectionStateFactory,
 				intersectionBAFactory, intersectionTransitionFactory, mc, claim)
 				.computeIntersection();
+		logger.debug("Intersection automaton computed");
 		return new EmptinessChecker<L, S, T>(intersectionAutomaton).isEmpty();
 	}
 

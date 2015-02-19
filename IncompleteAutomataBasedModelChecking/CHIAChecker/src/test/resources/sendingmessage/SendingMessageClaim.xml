@@ -14,28 +14,33 @@
 		<desc>accepting</desc>
 		<default>false</default>
 	</key>
+	<key id="transparent" for="node">
+		<desc>transparent</desc>
+		<default>false</default>
+	</key>
 	<key id="labels" for="edge">
 		<desc>labels</desc>
 		<default></default>
 	</key>
 	<graph edgedefault="directed">
-		<node id="3">
-			<data key="initial">false</data>
-			<data key="name">state3</data>
-			<data key="accepting">true</data>
-		</node>
 		<node id="1">
+			<data key="name">p1</data>
 			<data key="initial">true</data>
-			<data key="name">state1</data>
 			<data key="accepting">false</data>
 		</node>
 		<node id="2">
+			<data key="name">p2</data>
 			<data key="initial">false</data>
-			<data key="name">state2</data>
-			<data key="accepting">false</data>
+			<data key="accepting">true</data>
 		</node>
-		<edge id="1" source="1" target="2">
-			<data key="labels">(b^a)|(c)</data>
+		<edge id="1" source="1" target="1">
+			<data key="labels">(SIGMA)</data>
+		</edge>
+		<edge id="2" source="1" target="2">
+			<data key="labels">(send^!success)</data>
+		</edge>
+		<edge id="3" source="2" target="2">
+			<data key="labels">(!success)</data>
 		</edge>
 	</graph>
 </graphml>

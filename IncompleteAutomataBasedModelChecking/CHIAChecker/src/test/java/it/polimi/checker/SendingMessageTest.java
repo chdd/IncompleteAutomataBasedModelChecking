@@ -60,18 +60,19 @@ public class SendingMessageTest {
 	}
 	@Test
 	public void checkerTest() throws FileNotFoundException, GraphIOException {
-		BAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, BAFactory<Label, State, Transition<Label>>> claimReader = new BAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, BAFactory<Label, State, Transition<Label>>>(
+		BAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, BAFactory<Label, State, Transition<Label>>> claimReader = 
+				new BAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, BAFactory<Label, State, Transition<Label>>>(
 				this.labelFactory, new ClaimTransitionFactoryImpl<Label>(), this.stateFactory,
 				new BAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessageClaim.xml").getFile())));
+						.getResource("sendingmessage/SendingMessageClaim.xml").getFile())));
 
 		BA<Label, State, Transition<Label>> claim = claimReader.read();
 
 		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> modelReader=new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
 				this.labelFactory, this.transitionFactory, this.stateFactory, new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessageModel.xml").getFile())));
+						.getResource("sendingmessage/SendingMessageModel.xml").getFile())));
 		
 		IBA<Label, State, Transition<Label>> model=modelReader.read();
 		
@@ -81,6 +82,7 @@ public class SendingMessageTest {
 		
 		int res=modelChecker.check();
 		IntersectionBA<Label, State, Transition<Label>> intersectionBA=modelChecker.getIntersectionAutomaton();
+		
 		assertEquals(-1, res);
 		assertEquals(11, intersectionBA.getStates().size());
 		assertEquals(1, intersectionBA.getInitialStates().size());

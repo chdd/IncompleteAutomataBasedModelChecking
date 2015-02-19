@@ -53,31 +53,41 @@ public class StackScenario0Claim1IncompleteTest {
 				new ClaimTransitionFactoryImpl<Label>(),
 				new StateFactoryImpl(),
 				new BAFactoryImpl<Label, State, Transition<Label>>(),
-				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("industrialplan/Scenario0StackClaim1.xml")
-						.getFile())));
+				new BufferedReader(
+						new FileReader(
+								getClass()
+										.getClassLoader()
+										.getResource(
+												"industrialplan/scenario0/Scenario0StackClaim1.xml")
+										.getFile())));
 
 		BA<Label, State, Transition<Label>> claim = claimReader.read();
 
 		IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>> modelReader = new IBAReader<Label, LabelFactory<Label>, State, StateFactory<State>, Transition<Label>, TransitionFactory<Label, Transition<Label>>, IBAFactory<Label, State, Transition<Label>>>(
-				new LabelFactoryImpl(), new ModelTransitionFactoryImpl<>(),
+				new LabelFactoryImpl(),
+				new ModelTransitionFactoryImpl<>(),
 				new StateFactoryImpl(),
 				new IBAFactoryImpl<Label, State, Transition<Label>>(),
-				new BufferedReader(new FileReader(getClass()
-						.getClassLoader()
-						.getResource(
-								"industrialplan/Scenario0IncompleteStack.xml")
-						.getFile())));
+				new BufferedReader(
+						new FileReader(
+								getClass()
+										.getClassLoader()
+										.getResource(
+												"industrialplan/scenario0/Scenario0IncompleteStack.xml")
+										.getFile())));
 
 		IBA<Label, State, Transition<Label>> model = modelReader.read();
 		CHIA chia = new CHIA(claim, model);
 
+		
 		int result = chia.check();
+		
+		String constraint=chia.getConstraint();
+		
 		assertTrue(result == -1);
-		assertTrue(
-				"¬((([@waitingForStart- [start]@([!extend])*@end- [timeout]@])∨([@waitingForStart- [start]@([<SIGMA>])*.[start].([!extend])*@end- [timeout]@])))".equals(
-				chia.getConstraint()) ||
-				"¬((([@waitingForStart- [start]@([<SIGMA>])*.[start].([!extend])*@end- [timeout]@])∨([@waitingForStart- [start]@([!extend])*@end- [timeout]@])))".equals(
-						chia.getConstraint()));
+		assertTrue("¬((([@waitingForStart- [start]@([!extend])*@end- [timeout]@])∨([@waitingForStart- [start]@([<SIGMA>])*.[start].([!extend])*@end- [timeout]@])))"
+				.equals(constraint.toString())
+				|| "¬((([@waitingForStart- [start]@([<SIGMA>])*.[start].([!extend])*@end- [timeout]@])∨([@waitingForStart- [start]@([!extend])*@end- [timeout]@])))"
+						.equals(constraint.toString()));
 	}
 }

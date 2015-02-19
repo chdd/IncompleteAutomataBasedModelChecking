@@ -168,12 +168,6 @@
 	</repositories>
 	<dependencies>
 		
-		<dependency>
-            <groupId>net.sf.jung</groupId>
-            <artifactId>jung-io</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        
 		<!-- contains the dependency to the Buchi Automaton -->
 		<dependency>
 			<groupId>it.polimi.chia</groupId>

@@ -22,6 +22,9 @@ import it.polimi.contraintcomputation.subautomatafinder.SubAutomataIdentifier;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The constraint generator computes a constraint. A constraint is a (set of)
  * sub-model(s) for the unspecified components is produce
@@ -31,6 +34,12 @@ import java.util.Map;
  */
 public class ConstraintGenerator<L extends Label, S extends State, T extends Transition<L>> {
 
+	/**
+	 * is the logger of the ConstraintGenerator class
+	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(ConstraintGenerator.class);
+	
 	/**
 	 * contains a map that maps each state of the model with a set of states of
 	 * the intersection automaton
@@ -107,17 +116,20 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 	 * @return the constraint of the automaton
 	 */
 	public String generateConstraint() {
+		
 		/*
 		 * returns the set of the components (set of states) that correspond to
 		 * the parts of the automaton that refer to different states of the
 		 * model
 		 */
 		SubAutomataIdentifier<L, S, T> subautomataIdentifier = new SubAutomataIdentifier<L, S, T>(
-				this.intBA, model, modelIntersectionStatesMap, new AbstractedBAFactory<L, S, T, Component<L, S, T>> ());
+				this.intBA, model, modelIntersectionStatesMap, new AbstractedBAFactory<L, S, T, Component<L, S, T>> (), this.transitionFactory);
+		
 		AbstractedBA<L, S, T, Component<L, S, T>> abstractedAutomaton = subautomataIdentifier
 				.getSubAutomata();
+		logger.info("Identification of the sub-automata performed");
+		logger.info("The abstract automata contains "+abstractedAutomaton.getStates().size()+" states");
 		
-		System.out.println(abstractedAutomaton);
 		/*
 		 * The abstraction of the state space is a more concise version of the
 		 * intersection automaton I where the portions of the state space which
@@ -126,17 +138,22 @@ public class ConstraintGenerator<L extends Label, S extends State, T extends Tra
 		Abstractor<L, S, T> abstractor = new Abstractor<L, S, T>(abstractedAutomaton);
 		AbstractedBA<L, S, T, Component<L, S, T>> abstractedIntersection = abstractor
 				.abstractIntersection();
+		logger.info("Abstraction performed");
+		logger.info("The automaton after the abstraction contains "+abstractedAutomaton.getStates().size()+" states");
 
 		Splitter<L, S, T> splitter = new Splitter<L, S, T>(
 				abstractedIntersection,
 				transitionFactory);
+		logger.info("Splitting performed");
+		logger.info("The automaton after the splitting contains "+abstractedAutomaton.getStates().size()+" states");
 
+		
 		AbstractedBA<L, S, T, Component<L, S, T>> splittedBA = splitter.split();
-		
-		
 		TransitionDecorator<L, S, T> decorator=new TransitionDecorator<L, S, T>(splittedBA, labelFactory);
 		decorator.decorates();
+		logger.info("Transition decoration executed");
 		
+		System.out.println(splittedBA.getAcceptStates());
 		String ret = "";
 		boolean first=true;
 		for (Component<L, S, T> init : splittedBA.getInitialStates()) {

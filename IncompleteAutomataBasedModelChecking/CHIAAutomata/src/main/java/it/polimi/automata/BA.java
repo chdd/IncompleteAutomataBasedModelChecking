@@ -5,9 +5,6 @@ import it.polimi.automata.transition.Transition;
 
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
@@ -34,7 +31,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-@XmlRootElement(name="BA")
 public interface BA<S extends State, T extends Transition>
 		extends Cloneable {
 
@@ -43,7 +39,6 @@ public interface BA<S extends State, T extends Transition>
 	 * 
 	 * @return the set of initial states of the Buchi automaton
 	 */
-	@XmlAttribute
 	public Set<S> getInitialStates();
 
 	/**
@@ -51,7 +46,6 @@ public interface BA<S extends State, T extends Transition>
 	 * 
 	 * @return the set of the states of the Buchi automaton
 	 */
-	@XmlAttribute
 	public Set<S> getStates();
 
 	/**
@@ -59,7 +53,6 @@ public interface BA<S extends State, T extends Transition>
 	 * 
 	 * @return set of the accepting states of the Buchi automaton
 	 */
-	@XmlAttribute
 	public Set<S> getAcceptStates();
 
 	/**
@@ -67,7 +60,6 @@ public interface BA<S extends State, T extends Transition>
 	 * 
 	 * @return the alphabet of the Buchi automaton
 	 */
-	@XmlAttribute
 	public Set<IGraphProposition> getAlphabet();
 
 	/**
@@ -137,7 +129,6 @@ public interface BA<S extends State, T extends Transition>
 	 * 
 	 * @return the set of the transitions of the Buchi automaton
 	 */
-	@XmlAttribute
 	public Set<T> getTransitions();
 
 	/**

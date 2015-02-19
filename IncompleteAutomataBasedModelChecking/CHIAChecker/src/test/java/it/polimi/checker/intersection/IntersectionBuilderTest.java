@@ -560,29 +560,6 @@ public class IntersectionBuilderTest {
 		assertFalse(intersection.getInitialStates().isEmpty());
 	}
 
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#getIntersectionStateModelStateMap()}
-	 * .
-	 */
-	@Test
-	public void testGetIntersectionStateModelStateMap() {
-		this.model1.addInitialState(model1State1);
-		this.model1.addAcceptState(model1State3);
-		this.claim1.addInitialState(claim1State1);
-		this.claim1.addAcceptState(claim1State3);
-		IntersectionBuilder<Label, State, Transition<Label>> intersectionBuilder = new IntersectionBuilder<Label, State, Transition<Label>>(
-				new IntersectionRuleImpl<Label, Transition<Label>>(),
-				new StateFactoryImpl(),
-				new IntBAFactoryImpl<Label, State, Transition<Label>>(),
-				new IntersectionTransitionFactoryImpl<Label>(), model1, claim1);
-		intersectionBuilder.computeIntersection();
-		assertTrue(intersectionBuilder.getIntersectionStateModelStateMap()
-				.containsKey(model1State1));
-		assertTrue(intersectionBuilder.getIntersectionStateModelStateMap()
-				.containsKey(model1State2));
-		assertTrue(intersectionBuilder.getIntersectionStateModelStateMap()
-				.containsKey(model1State3));
-	}
+	
 
 }

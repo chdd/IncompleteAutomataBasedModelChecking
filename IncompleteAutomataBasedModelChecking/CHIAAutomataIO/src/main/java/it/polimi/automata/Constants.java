@@ -4,6 +4,18 @@ public final class Constants {
 	
 	
 	public final static String XML_TAG_STATE="state";
+	public final static String XML_ATTRIBUTE_ID="id";
+	public final static String XML_ATTRIBUTE_NAME="name";
+	public final static String XML_ATTRIBUTE_INITIAL="initial";
+	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
+	public final static String XML_ATTRIBUTE_TRANSPARENT="transparent";
+	
+	public final static String XML_TAG_TRANSITION="transition";
+	public final static String XML_ATTRIBUTE_TRANSITION_ID="id";
+	public final static String XML_ATTRIBUTE_TRANSITION_SOURCE="source";
+	public final static String XML_ATTRIBUTE_TRANSITION_DESTINATION="destination";
+	public final static String XML_ATTRIBUTE_TRANSITION_PROPOSITIONS="propositions";
+
 	
 	/**
 	 * IO Tags
@@ -20,15 +32,17 @@ public final class Constants {
 	public static final String FALSEVALUE = "false";
 	public static final String TRUEVALUE = "true";
 	public static final String DEFAULTNAME = "";
-	public static final String AND = "^";
-	public static final String OR = "|";
+	public static final String AND = "\\^";
 	public static final String NOT = "!";
 	
 	public static final String SIGMA="SIGMA";
-	public static final String APREGEX="^[a-zA-Z]+$";
-	public static final String NOTAPREGEX="^![a-zA-Z]+$";
-	public static final String LPAR="(";
-	public static final String RPAR=")";
+	public static final String APREGEX="[a-z]+";
+	public static final String NOTAPREGEX=NOT+"[a-z]+";
+	public static final String AP="("+APREGEX+")|("+NOTAPREGEX+")";
+	public static final String CLAIM_PROPOSITIONAL_FORMULA="("+Constants.SIGMA +")|(("+AP+")("+Constants.AND+"("+AP+"))*)";
+	public static final String MODELAP=APREGEX;
+	public static final String MODEL_PROPOSITIONS="("+Constants.SIGMA +")|(("+MODELAP+")("+Constants.AND+"("+MODELAP+"))*)";
+	
 	
 	public static final String REGEXAND="\\"+Constants.AND+"";
 	public static final String REGEXNOT="\\"+Constants.NOT+"";

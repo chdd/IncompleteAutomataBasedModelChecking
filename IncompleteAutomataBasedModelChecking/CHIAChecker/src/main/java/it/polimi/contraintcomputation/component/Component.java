@@ -8,10 +8,12 @@ import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.contraintcomputation.subautomatafinder.MergingEntry;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -34,9 +36,10 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	 * contains the name of the state
 	 */
 	private String name;
-	
+
 	/**
-	 * is true if the model of the state represented by the component is a transparent state
+	 * is true if the model of the state represented by the component is a
+	 * transparent state
 	 */
 	private boolean transparent;
 
@@ -86,7 +89,7 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 		this.id = id;
 		this.name = "";
 		this.setModelState(modelState);
-		this.transparent=transparent;
+		this.transparent = transparent;
 		incomingTransition = new HashMap<S, Map<S, T>>();
 		outcomingTransition = new HashMap<S, Map<S, T>>();
 	}
@@ -134,7 +137,6 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 		return name;
 	}
 
-	
 	/**
 	 * @return the modelState
 	 */
@@ -195,28 +197,17 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	 *             if the componentB or the statesConnection map is null
 	 */
 	public void merge(Component<L, S, T> componentB,
-			Set<Entry<Entry<S, S>, T>> transitions) {
+			Set<MergingEntry<L, S, T>> mergingEntries,
+			TransitionFactory<L, T> transitionFactory) {
 
 		if (componentB == null) {
 			throw new NullPointerException(
 					"The second component of to be merged cannot be null");
 		}
-		if (transitions == null) {
-			throw new NullPointerException(
-					"The map of the states to be connected cannot be null");
-		}
 		/*
 		 * copies the states of the componentB into the componentA
 		 */
 		this.addStates(componentB.getStates());
-		/*
-		 * copies the transitions of the componentB into the component A
-		 */
-		for (T t : componentB.getTransitions()) {
-			this.addCharacters(t.getLabels());
-			this.addTransition(componentB.getTransitionSource(t),
-					componentB.getTransitionDestination(t), t);
-		}
 		/*
 		 * adds the accepting states of B to the component A
 		 */
@@ -225,16 +216,40 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 		 * adds the initial states of B to the component A
 		 */
 		this.addInitialStates(componentB.getInitialStates());
-		/*
-		 * connects the final state of the component A to the states of the
-		 * component B
-		 */
-		for (Entry<Entry<S, S>, T> e : transitions) {
-			this.addCharacters(e.getValue().getLabels());
-			this.addTransition(e.getKey().getKey(), e.getKey().getValue(), e.getValue());
+		for (T t : componentB.getTransitions()) {
+			this.addCharacters(t.getLabels());
+			this.addTransition(componentB.getTransitionSource(t),
+					componentB.getTransitionDestination(t), t);
+		}
+
+		for(MergingEntry<L, S, T> e: mergingEntries){
+			S sourceState=e.getSourceState();
+			S destinationState=e.getDestinationState();
+			T transition=e.getRefinedTransition();
+			this.addCharacters(transition.getLabels());
+			if (this.isPredecessor(sourceState, destinationState)) {
+				T oldTrans = this.getTransition(sourceState, destinationState);
+				Set<L> labels = new HashSet<L>();
+				labels.addAll(oldTrans.getLabels());
+				labels.addAll(transition.getLabels());
+				this.removeTransition(oldTrans);
+				T newTransition = transitionFactory.create(labels);
+				this.addTransition(sourceState, destinationState, newTransition);
+
+			} else {
+				if(this.getTransitions().contains(transition)){
+					System.out.println(this.getTransitionSource(transition));
+					System.out.println(this.getTransitionDestination(transition));
+					
+				}
+				System.out.println(sourceState);
+				System.out.println(destinationState);
+				System.out.println(transition);
+				this.addTransition(sourceState, destinationState, transition);
+			}
 		}
 		
-		
+
 		/*
 		 * adds the incoming transitions of B
 		 */
@@ -245,14 +260,16 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 		this.outcomingTransition.putAll(componentB.outcomingTransition);
 
 	}
-	
+
 	/**
 	 * returns a copy of the component
+	 * 
 	 * @return a copy of the component
 	 */
-	public Component<L,S,T> duplicate(){
-		Component<L,S,T> ret=new ComponentFactory<L,S,T>().create(this.name, this.modelState, this.transparent);
-		ret.modelState=this.modelState;
+	public Component<L, S, T> duplicate() {
+		Component<L, S, T> ret = new ComponentFactory<L, S, T>().create(
+				this.name, this.modelState, this.transparent);
+		ret.modelState = this.modelState;
 		// coping the states
 		ret.addStates(this.getStates());
 		// coping the initial states
@@ -260,22 +277,25 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 		// coping the accepting states
 		ret.addAcceptStates(this.getAcceptStates());
 		// coping the accepting states
-		for(T t: this.getTransitions()){
+		for (T t : this.getTransitions()) {
 			ret.addCharacters(t.getLabels());
-			ret.addTransition(this.getTransitionSource(t), this.getTransitionDestination(t), t);
+			ret.addTransition(this.getTransitionSource(t),
+					this.getTransitionDestination(t), t);
 		}
-		ret.incomingTransition=new HashMap<S, Map<S, T>>(this.incomingTransition);
-		ret.outcomingTransition=new HashMap<S, Map<S, T>>(this.outcomingTransition);
+		ret.incomingTransition = new HashMap<S, Map<S, T>>(
+				this.incomingTransition);
+		ret.outcomingTransition = new HashMap<S, Map<S, T>>(
+				this.outcomingTransition);
 		return ret;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void removeInitialState(S state) {
 		super.removeInitialState(state);
 		this.incomingTransition.remove(state);
-		
+
 	}
 
 	/**
@@ -283,5 +303,37 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	 */
 	public boolean isTransparent() {
 		return transparent;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Component other = (Component) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 }

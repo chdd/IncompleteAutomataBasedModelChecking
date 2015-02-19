@@ -108,7 +108,7 @@ public class ConstraintGeneratorTest {
 				this.labelFactory, this.transitionFactory, this.stateFactory,
 				new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("SendingMessageModel.xml").getFile())));
+						.getResource("sendingmessage/SendingMessageModel.xml").getFile())));
 
 		this.model = modelReader.read();
 
@@ -323,6 +323,4 @@ public class ConstraintGeneratorTest {
 		this.intersection.addTransition(this.ints10, this.ints11, this.intt19);
 		this.intersection.addTransition(this.ints11, this.ints9, this.intt20);
 	}
-
-
 }

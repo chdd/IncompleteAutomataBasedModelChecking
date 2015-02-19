@@ -162,48 +162,56 @@
 	</repositories>
 
 	<dependencies>
+
+		<!-- is the version of junit using in the software test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- is the mocking library used in the testing activity -->
 		<dependency>
-			<groupId>org.freedesktop.tango</groupId>
-			<artifactId>tango-icon-theme</artifactId>
-			<version>0.8.90</version>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.10.19</version>
 		</dependency>
 
+		<!-- is the library used for logging -->
 		<dependency>
-			<groupId>net.sf.jung</groupId>
-			<artifactId>jung-visualization</artifactId>
-			<version>2.0.1</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.10</version>
 		</dependency>
+
+		<!-- JGraph the library upon which CHIA is based -->
 		<dependency>
-			<groupId>net.sf.jung</groupId>
-			<artifactId>jung-graph-impl</artifactId>
-			<version>2.0.1</version>
+			<groupId>jgrapht</groupId>
+			<artifactId>jgrapht</artifactId>
+			<version>0.7.3</version>
 		</dependency>
-		<dependency>
-			<groupId>net.sf.jung</groupId>
-			<artifactId>jung-io</artifactId>
-			<version>2.0.1</version>
-		</dependency>
+
+		<!-- Is the library which is used to load the BA from the LTL formula -->
 		<dependency>
 			<groupId>tl2ba4josgi</groupId>
 			<artifactId>tl2ba4josgi</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
+		<!-- logback -->
 		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swing-layout</artifactId>
-			<version>1.0.3</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.2</version>
 		</dependency>
+
 		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4</artifactId>
-			<version>4.3</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.1.2</version>
 		</dependency>
+
 
 	</dependencies>
 	<distributionManagement>
@@ -215,21 +223,12 @@
 	</distributionManagement>
 
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>1.10.19</version>
-			</dependency>
-			<dependency>
-				<groupId>tl2ba4josgi</groupId>
-				<artifactId>tl2ba4josgi</artifactId>
-				<version>1.0.0</version>
-			</dependency>
 
-		</dependencies>
-	</dependencyManagement>
 	<modules>
+		<module>CHIAAutomata</module>
+		<module>CHIAAutomataIO</module>
+		<module>CHIAChecker</module>
+		<module>CHIALTLIO</module>
+		<module>CHIAIndustrialPlant</module>
 	</modules>
 </project>

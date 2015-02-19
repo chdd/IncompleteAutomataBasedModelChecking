@@ -5,16 +5,17 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.contraintcomputation.abstractedBA.AbstractedBA;
 import it.polimi.contraintcomputation.abstractedBA.AbstractedBAFactory;
 import it.polimi.contraintcomputation.component.Component;
 import it.polimi.contraintcomputation.component.ComponentFactory;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -54,7 +55,7 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 	 * contains the transitions that connect the component to be merged and the
 	 * corresponding states of the automata to be connected
 	 */
-	private Map<T, Set<Entry<Entry<S, S>, T>>> toBeMerged;
+	private List<MergingElement<L, S, T>> toBeMerged;
 
 	/**
 	 * associated each state of the intersection automaton to the component
@@ -65,6 +66,8 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 	private IBA<L, S, T> model;
 
 	private ComponentFactory<L, S, T> componentFactory;
+
+	private TransitionFactory<L, T> transitionFactory;
 
 	/**
 	 * creates an identifier for the sub automata of the intersection automata
@@ -79,7 +82,8 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 	 */
 	public SubAutomataIdentifier(IntersectionBA<L, S, T> intersectionBA,
 			IBA<L, S, T> model, Map<S, S> intersectionStateModelStateMap,
-			AbstractedBAFactory<L, S, T, Component<L, S, T>> factory) {
+			AbstractedBAFactory<L, S, T, Component<L, S, T>> factory,
+			TransitionFactory<L, T> transitionFactory) {
 
 		if (intersectionBA == null) {
 			throw new NullPointerException(
@@ -93,10 +97,11 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 		this.intersectionStateModelStateMap = intersectionStateModelStateMap;
 		this.intersectionBA = intersectionBA;
 		this.hashedStates = new HashSet<S>();
-		this.toBeMerged = new HashMap<T, Set<Entry<Entry<S, S>, T>>>();
+		this.toBeMerged = new ArrayList<MergingElement<L,S,T>>();
 
 		this.model = model;
 		componentFactory = new ComponentFactory<L, S, T>();
+		this.transitionFactory = transitionFactory;
 	}
 
 	/**
@@ -113,10 +118,9 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 		this.copyAlphabet();
 		// considering a specific transparent state
 		for (S init : this.intersectionBA.getInitialStates()) {
-			S modelState=this.intersectionStateModelStateMap.get(init);
+			S modelState = this.intersectionStateModelStateMap.get(init);
 			Component<L, S, T> c = componentFactory.create(init.getName(),
-					modelState,
-					model.isTransparent(modelState));
+					modelState, model.isTransparent(modelState));
 			this.returnSubAutomata.addState(c);
 			this.returnSubAutomata.addInitialState(c);
 			if (this.intersectionBA.getAcceptStates().contains(init)) {
@@ -129,26 +133,21 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 		this.merge();
 		return returnSubAutomata;
 	}
-	
+
 	/**
-	 * copies the alphabet of the intersection automaton into the automaton to be returned
+	 * copies the alphabet of the intersection automaton into the automaton to
+	 * be returned
 	 */
-	private void copyAlphabet(){
+	private void copyAlphabet() {
 		this.returnSubAutomata.addCharacters(this.intersectionBA.getAlphabet());
 	}
 
 	private void merge() {
 
-		for (T transition : this.toBeMerged.keySet()) {
-			Component<L, S, T> sourceComponent = this.returnSubAutomata
-					.getTransitionSource(transition);
-			Component<L, S, T> destinationComponent = this.returnSubAutomata
-					.getTransitionDestination(transition);
-
-			new Merger<>(this.returnSubAutomata, sourceComponent,
-					destinationComponent, this.toBeMerged.get(transition))
-					.merge();
-			;
+		Map<T, T> oldTransitionNewTransitionMap=new HashMap<T, T>();
+		for (MergingElement<L,S,T> mergingElement : this.toBeMerged) {
+			new Merger<L,S,T>(this.returnSubAutomata,  mergingElement,
+					transitionFactory).merge(oldTransitionNewTransitionMap);
 		}
 	}
 
@@ -219,9 +218,14 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 							currComponent, t);
 				} else {
 
+					/*
+					 * If the current component contains the destination state
+					 * the transition is injected into the current component
+					 */
 					if (currComponent.getStates().contains(destinationState)) {
 						currComponent.addCharacters(t.getLabels());
-						currComponent.addTransition(currState, currState, t);
+						currComponent.addTransition(currState,
+								destinationState, t);
 					} else {
 						/*
 						 * adds the transition from the current component to the
@@ -234,8 +238,29 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 						 * destinationState connected by the transition t must
 						 * be merged
 						 */
-						this.updateMerging(currState, destinationState,
-								currComponent, t);
+						returnSubAutomata.addCharacters(t.getLabels());
+
+						// gets the component associated with the destination state
+						Component<L, S, T> destinationComponent = mapStateComponent
+								.get(destinationState);
+						
+						
+						// if no transition connect the current component with the destination component 
+						if (!this.returnSubAutomata.isPredecessor(
+								currComponent, destinationComponent)) {
+							
+							// a transition from the current to the destination component is added
+							returnSubAutomata.addTransition(currComponent,
+									destinationComponent, t);
+							// the current state and the destination state are 
+							this.updateMerging(currState, destinationState, t,
+									currComponent, destinationComponent, t);
+						} else {
+							this.updateMerging(currState, destinationState, t,
+									currComponent, destinationComponent,  returnSubAutomata
+									.getTransition(currComponent,
+											destinationComponent));
+						}
 					}
 				}
 			}
@@ -296,13 +321,12 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 		 * creates a new component
 		 */
 		Component<L, S, T> destinationComponent;
-		if(model.isTransparent(modelState)){
+		if (model.isTransparent(modelState)) {
 			destinationComponent = this.componentFactory.create(
 					modelState.getName(),
 					this.intersectionStateModelStateMap.get(destinationState),
 					model.isTransparent(modelState));
-		}
-		else{
+		} else {
 			destinationComponent = this.componentFactory.create(
 					destinationState.getName(),
 					this.intersectionStateModelStateMap.get(destinationState),
@@ -393,35 +417,30 @@ public class SubAutomataIdentifier<L extends Label, S extends State, T extends T
 	 *            is the destination state of the transition
 	 * @param currComponent
 	 *            is the current component under analysis
-	 * @param t
+	 * @param refinedTransition
 	 *            is the transition that connect the current state and the
 	 *            destination state
 	 */
-	private void updateMerging(S currState, S destinationState,
-			Component<L, S, T> currComponent, T t) {
+	private void updateMerging(S currState, S destinationState,  T refinedTransition,
+			Component<L, S, T> currComponent, Component<L, S, T> destinationComponent, T abstractedTransition) {
 		if (!this.returnSubAutomata.isPredecessor(currComponent,
 				this.mapStateComponent.get(destinationState))) {
 
 			this.returnSubAutomata.addTransition(currComponent,
-					this.mapStateComponent.get(destinationState), t);
+					this.mapStateComponent.get(destinationState), refinedTransition);
 		}
 
-		Component<L, S, T> destinationComponent = this.mapStateComponent
-				.get(destinationState);
 
-		T transition = this.returnSubAutomata.getGraph().findEdge(
-				currComponent, destinationComponent);
-		if (toBeMerged.containsKey(transition)) {
-			toBeMerged.get(transition).add(
-					new AbstractMap.SimpleEntry<Entry<S, S>, T>(
-							new AbstractMap.SimpleEntry<S, S>(currState,
-									destinationState), t));
-		} else {
-			Set<Entry<Entry<S, S>, T>> entrySet = new HashSet<Entry<Entry<S, S>, T>>();
-			entrySet.add(new AbstractMap.SimpleEntry<Entry<S, S>, T>(
-					new AbstractMap.SimpleEntry<S, S>(currState,
-							destinationState), t));
-			toBeMerged.put(transition, entrySet);
+		if(!toBeMerged.contains(new MergingElement<L, S, T>(abstractedTransition))){
+			MergingElement<L, S, T> element=new MergingElement<L, S, T>(abstractedTransition);
+			element.addMergingEntry(new MergingEntry<L, S, T>(currState, destinationState, refinedTransition));
+			toBeMerged.add(element);
 		}
+		else{
+			MergingElement<L, S, T> element=toBeMerged.get(toBeMerged.indexOf(new MergingElement<L, S, T>(abstractedTransition)));
+			element.addMergingEntry(new MergingEntry<L, S, T>(currState, destinationState, refinedTransition));
+		}
+		
+		
 	}
 }

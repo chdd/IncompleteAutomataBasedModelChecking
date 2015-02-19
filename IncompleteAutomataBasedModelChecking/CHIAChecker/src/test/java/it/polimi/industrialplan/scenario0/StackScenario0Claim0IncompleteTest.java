@@ -54,7 +54,7 @@ public class StackScenario0Claim0IncompleteTest {
 				new StateFactoryImpl(),
 				new BAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("industrialplan/Scenario0StackClaim.xml").getFile())));
+						.getResource("industrialplan/scenario0/Scenario0StackClaim.xml").getFile())));
 
 		BA<Label, State, Transition<Label>> claim = claimReader.read();
 
@@ -63,7 +63,7 @@ public class StackScenario0Claim0IncompleteTest {
 				new StateFactoryImpl(),
 				new IBAFactoryImpl<Label, State, Transition<Label>>(),
 				new BufferedReader(new FileReader(getClass().getClassLoader()
-						.getResource("industrialplan/Scenario0IncompleteStack.xml").getFile())));
+						.getResource("industrialplan/scenario0/Scenario0IncompleteStack.xml").getFile())));
 
 		IBA<Label, State, Transition<Label>> model = modelReader.read();
 		CHIA chia = new CHIA(claim, model);

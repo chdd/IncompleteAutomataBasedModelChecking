@@ -51,9 +51,7 @@ public class IBATransparentStateRemovalTest {
 		this.ba.addTransition(state1, state2, transition1);
 		this.ba.addTransition(state2, state3, transition2);
 		this.ba.addTransition(state3, state2, transition3);
-		
 	}
-	
 	
 	/**
 	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#transparentStateRemoval(null)}.

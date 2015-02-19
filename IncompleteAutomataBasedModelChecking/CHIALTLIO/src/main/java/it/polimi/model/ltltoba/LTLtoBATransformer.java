@@ -2,8 +2,6 @@ package it.polimi.model.ltltoba;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.impl.BAImpl;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.LabelFactory;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
@@ -11,13 +9,11 @@ import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections15.Transformer;
-
 import rwth.i2.ltl2ba4j.LTL2BA4J;
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 
@@ -34,8 +30,7 @@ import rwth.i2.ltl2ba4j.model.ITransition;
  * @param <T>
  *            is the type of the transitions of the Buchi automaton
  */
-public class LTLtoBATransformer<L extends Label, S extends State, T extends Transition<L>>
-		implements Transformer<String, BA<L, S, T>> {
+public class LTLtoBATransformer<S extends State, T extends Transition> {
 
 	/**
 	 * contains the state factory which is used to create the states of the
@@ -47,12 +42,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 * contains the transition factory which is used to create the transitions
 	 * of the automaton
 	 */
-	private TransitionFactory<L, T> transitionFactory;
-
-	/**
-	 * is the factory which is used to create the labels of the transitions
-	 */
-	private LabelFactory<L> labelFactory;
+	private TransitionFactory<S, T> transitionFactory;
 
 	/**
 	 * creates the LTL to Buchi automaton transformer
@@ -69,8 +59,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 *             if the stateFactory or the transition factory is null
 	 */
 	public LTLtoBATransformer(StateFactory<S> stateFactory,
-			TransitionFactory<L, T> transitionFactory,
-			LabelFactory<L> labelFactory) {
+			TransitionFactory<S, T> transitionFactory) {
 		if (stateFactory == null) {
 			throw new NullPointerException("The state factory cannot be null");
 		}
@@ -78,13 +67,8 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 			throw new NullPointerException(
 					"The transition factory cannot be null");
 		}
-		if (labelFactory == null) {
-			throw new NullPointerException(
-					"The factory which creates the transitions cannot be null");
-		}
 		this.transitionFactory = transitionFactory;
 		this.stateFactory = stateFactory;
-		this.labelFactory = labelFactory;
 	}
 
 	/**
@@ -95,7 +79,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 * @throws NullPointerException
 	 *             if the LTL formula to be transformed is null
 	 */
-	public BA<L, S, T> transform(String ltlFormula) {
+	public BA<S, T> transform(String ltlFormula) {
 		if (ltlFormula == null) {
 			throw new NullPointerException(
 					"The LTL formula to be converted cannot be null");
@@ -104,7 +88,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 		/*
 		 * creates a new Buchi automaton
 		 */
-		BA<L, S, T> ba = new BAImpl<L, S, T>();
+		BA<S, T> ba = new BAImpl<S, T>(transitionFactory);
 
 		/*
 		 * calls the LTL2BA4J that transforms the LTL formula into the
@@ -134,7 +118,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 * @throws NullPointerException
 	 *             if the Buchi automaton or the set of transitions is null
 	 */
-	private void addTransitionsToTheBA(BA<L, S, T> ba,
+	private void addTransitionsToTheBA(BA<S, T> ba,
 			Collection<ITransition> transitions) {
 		if (ba == null) {
 			throw new NullPointerException(
@@ -184,7 +168,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 *             if the endPoint, the map or the buchi automaton is null
 	 */
 	private void analyzeState(IState endPoint, Map<IState, S> map,
-			BA<L, S, T> ba) {
+			BA<S, T> ba) {
 		if (endPoint == null) {
 			throw new NullPointerException("The end point state cannot be null");
 		}
@@ -235,7 +219,7 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 	 *             if the transition, the map or the Buchi Automaton is null
 	 */
 	private void analyzeTransition(ITransition transition, Map<IState, S> map,
-			BA<L, S, T> ba) {
+			BA<S, T> ba) {
 		if (transition == null) {
 			throw new NullPointerException(
 					"The transition to be added cannot be null");
@@ -254,45 +238,16 @@ public class LTLtoBATransformer<L extends Label, S extends State, T extends Tran
 		S destination = map.get(transition.getTargetState());
 
 		// returns the label of the transition
-		L label = this.labelFactory.create(transition.getLabels());
+		Set<IGraphProposition> label = transition.getLabels();
 
-		/*
-		 * returns true if there is a transition from the source state to the
-		 * destination state
-		 */
-		if (ba.isSuccessor(map.get(transition.getSourceState()),
-				map.get(transition.getTargetState()))) {
+		// creates a new transition
+		T t = this.transitionFactory.create(label);
 
-			// returns the Transition from the source to the destination state
-			T oldTransition = ba.getTransition(source, destination);
+		// adds the label to the current buchi automaton
+		ba.addCharacters(t.getLabels());
 
-			// creates the set of labels to be added to the transition
-			Set<L> labels = new HashSet<L>();
-			labels.add(label);
-			labels.addAll(oldTransition.getLabels());
+		// add the transition from the source state to the destination state
+		ba.addTransition(source, destination, t);
 
-			// creates the new transition
-			T newTransition = this.transitionFactory.create(labels);
-
-			// removes the oldTransition
-			ba.removeTransition(oldTransition);
-
-			// add the transition from the source to the destination state
-			ba.addTransition(source, destination, newTransition);
-
-		} else {
-			// creates the set of labels to be added to the transition
-			Set<L> labels = new HashSet<L>();
-			labels.add(label);
-
-			// creates a new transition
-			T t = this.transitionFactory.create(labels);
-
-			// adds the label to the current buchi automaton
-			ba.addCharacters(t.getLabels());
-
-			// add the transition from the source state to the destination state
-			ba.addTransition(source, destination, t);
-		}
 	}
 }

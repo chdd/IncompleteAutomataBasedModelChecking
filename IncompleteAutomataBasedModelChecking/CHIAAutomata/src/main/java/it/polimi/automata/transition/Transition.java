@@ -2,9 +2,6 @@ package it.polimi.automata.transition;
 
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import it.polimi.automata.transition.impl.TransitionImpl;
@@ -23,7 +20,6 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  *            with the model or a property it is associated with a set of atomic
  *            propositions or a propositional logic formula, respectively.
  */
-@XmlRootElement(name="Transition")
 public interface Transition{
 
 	/**
@@ -33,7 +29,6 @@ public interface Transition{
 	 * 
 	 * @return the <b>id</b> of the transition
 	 */
-	@XmlID
 	public int getId();
 
 	/**
@@ -47,7 +42,6 @@ public interface Transition{
 	 * 
 	 * @return the <b>label</b> associated with the transition
 	 */
-	@XmlAttribute
 	public Set<IGraphProposition> getLabels();
 
 	/**

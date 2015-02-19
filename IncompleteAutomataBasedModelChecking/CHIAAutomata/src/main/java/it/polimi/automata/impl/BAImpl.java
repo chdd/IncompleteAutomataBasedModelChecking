@@ -8,7 +8,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+
 import org.jgrapht.EdgeFactory;
+import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
@@ -61,6 +63,22 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	protected DirectedPseudograph<S, T> automataGraph;
 
+	
+	/**
+	 * creates a new empty Buchi automaton
+	 */
+	@SuppressWarnings("unchecked")
+	protected BAImpl() {
+
+		this.alphabet = new HashSet<IGraphProposition>();
+		this.acceptStates = new HashSet<S>();
+		this.initialStates = new HashSet<S>();
+		Class<T> typeOfT;
+		typeOfT=(Class<T>) Transition.class;
+		EdgeFactory<S, T> factory=new ClassBasedEdgeFactory<S, T>(typeOfT);
+		this.automataGraph = new DirectedPseudograph<S, T>(factory);
+	}
+	
 	/**
 	 * creates a new empty Buchi automaton
 	 */
@@ -105,6 +123,14 @@ public class BAImpl<S extends State, T extends Transition>
 	@Override
 	public Set<IGraphProposition> getAlphabet() {
 		return Collections.unmodifiableSet(alphabet);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<T> getTransitions() {
+		return Collections.unmodifiableSet(new HashSet<T>(this.automataGraph.edgeSet()));
 	}
 
 	/**
@@ -177,7 +203,7 @@ public class BAImpl<S extends State, T extends Transition>
 		}
 		if (!this.getTransitions().contains(transition)) {
 			throw new IllegalArgumentException(
-					"The transition "+transition.getId()+" is not contained into the set of the transition of the BA");
+					"The transition "+transition+" is not contained into the set of the transition of the BA");
 		}
 		return this.automataGraph.getEdgeSource(transition);
 	}
@@ -220,13 +246,7 @@ public class BAImpl<S extends State, T extends Transition>
 		return predecessors;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<T> getTransitions() {
-		return Collections.unmodifiableSet(new HashSet<T>(this.automataGraph.edgeSet()));
-	}
+	
 
 	/**
 	 * {@inheritDoc}
