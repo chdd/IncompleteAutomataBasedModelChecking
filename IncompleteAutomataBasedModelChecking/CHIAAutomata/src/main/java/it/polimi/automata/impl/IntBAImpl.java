@@ -2,13 +2,16 @@ package it.polimi.automata.impl;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jgrapht.EdgeFactory;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * <p>
@@ -39,9 +42,9 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>>
-		extends BAImpl<L, S, T> implements
-		IntersectionBA<L, S, T> {
+public class IntBAImpl< S extends State, T extends Transition>
+		extends BAImpl<S, T> implements
+		IntersectionBA<S, T> {
 
 	/**
 	 * contains the set of the mixed states
@@ -51,8 +54,8 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 	/**
 	 * creates a new intersection automaton
 	 */
-	protected IntBAImpl() {
-		super();
+	protected IntBAImpl(EdgeFactory<S, T> transitionFactory) {
+		super(transitionFactory);
 		this.mixedStates = new HashSet<S>();
 	}
 
@@ -66,7 +69,9 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 					"The state to be added cannot be null");
 		}
 		this.mixedStates.add(s);
-		this.addState(s);
+		if(!this.getStates().contains(s)){
+			this.addState(s);
+		}
 	}
 
 	/**
@@ -84,9 +89,8 @@ public class IntBAImpl<L extends Label, S extends State, T extends Transition<L>
 	 */
 	@Override
 	public Object clone() {
-		IntersectionBA<L, S, T> retBA = new IntBAFactoryImpl<L, S, T>()
-				.create();
-		for(L l: this.getAlphabet()){
+		IntersectionBA<S, T> retBA = new IntBAImpl<S, T>(this.automataGraph.getEdgeFactory());
+		for(IGraphProposition l: this.getAlphabet()){
 			retBA.addCharacter(l);
 		}
 		

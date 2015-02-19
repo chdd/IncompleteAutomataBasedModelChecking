@@ -1,6 +1,5 @@
 package it.polimi.automata;
 
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -35,8 +34,8 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IBA<L extends Label, S extends State, T extends Transition<L>>
-		extends BA<L, S, T> {
+public interface IBA<S extends State, T extends Transition>
+		extends BA<S, T> {
 
 	/**
 	 * check if the state is transparent
@@ -118,7 +117,7 @@ public interface IBA<L extends Label, S extends State, T extends Transition<L>>
 	 *             state of the ibaToInject
 	 * 
 	 */
-	public IBA<L, S, T> replace(S transparentState, IBA<L, S, T> ibaToInject,
+	public IBA<S, T> replace(S transparentState, IBA<S, T> ibaToInject,
 			Map<S, Set<Entry<T, S>>> inComing,
 			Map<S, Set<Entry<T, S>>> outComing);
 
@@ -127,5 +126,5 @@ public interface IBA<L extends Label, S extends State, T extends Transition<L>>
 	 * 
 	 * @return a copy of the Incomplete Buchi Automaton
 	 */
-	public IBA<L, S, T> clone();
+	public IBA<S, T> clone();
 }

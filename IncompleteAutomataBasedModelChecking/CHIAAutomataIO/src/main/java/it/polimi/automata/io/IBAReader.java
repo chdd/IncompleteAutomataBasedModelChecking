@@ -11,7 +11,7 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
-import java.io.BufferedReader;
+import java.io.Reader;
 
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.io.GraphIOException;
@@ -91,7 +91,7 @@ public class IBAReader<L extends Label,
 	 */
 	public IBAReader(F labelFactory,
 			H transitionFactory, G stateFactory,
-			I automatonFactory, BufferedReader fileReader) {
+			I automatonFactory, Reader fileReader) {
 		if (labelFactory == null) {
 			throw new NullPointerException(
 					"The labeling factory cannot be null");

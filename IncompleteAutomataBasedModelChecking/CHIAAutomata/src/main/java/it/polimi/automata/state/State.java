@@ -1,5 +1,9 @@
 package it.polimi.automata.state;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import it.polimi.automata.state.impl.StateImpl;
 
 /**
@@ -9,6 +13,7 @@ import it.polimi.automata.state.impl.StateImpl;
  * @author claudiomenghi
  * @see StateImpl
  */
+@XmlRootElement(name="State")
 public interface State {
 	
 	/**
@@ -18,6 +23,7 @@ public interface State {
 	 * 
 	 * @return the <br>id</br> of the state
 	 */
+	@XmlID
 	public int getId();
 
 	/**
@@ -25,6 +31,7 @@ public interface State {
 	 * 
 	 * @return the <br>name</br> of the state
 	 */
+	@XmlAttribute
 	public String getName();
 	
 	

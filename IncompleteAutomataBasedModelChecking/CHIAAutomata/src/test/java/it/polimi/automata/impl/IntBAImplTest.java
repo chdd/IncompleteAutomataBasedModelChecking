@@ -10,14 +10,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * @author claudiomenghi
@@ -38,29 +41,29 @@ public class IntBAImplTest {
 	private State state4;
 
 	@Mock
-	private Label l1;
+	private IGraphProposition l1;
 
 	@Mock
-	private Label l2;
+	private IGraphProposition l2;
 
 	@Mock
-	private Label l3;
+	private IGraphProposition l3;
 
 	@Mock
-	private Transition<Label> t1;
+	private Transition t1;
 
 	@Mock
-	private Transition<Label> t2;
+	private Transition t2;
 
 	@Mock
-	private Transition<Label> t3;
+	private Transition t3;
 
-	private IntBAImpl<Label, State, Transition<Label>> ba;
+	private IntBAImpl<State, Transition> ba;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IntBAImpl<Label, State, Transition<Label>>();
+		this.ba = new IntBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class));
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -69,7 +72,7 @@ public class IntBAImplTest {
 		this.ba.addCharacter(l2);
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
-		Set<Label> returnSet = new HashSet<Label>();
+		Set<IGraphProposition> returnSet = new HashSet<IGraphProposition>();
 		returnSet.add(l3);
 		when(t3.getLabels()).thenReturn(returnSet);
 	}
@@ -79,7 +82,7 @@ public class IntBAImplTest {
 	 */
 	@Test
 	public void testIntBAImpl() {
-		assertNotNull(new IntBAImpl<Label, State, Transition<Label>>());
+		assertNotNull(new IntBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class)));
 	}
 
 	/**
@@ -130,7 +133,7 @@ public class IntBAImplTest {
 	@Test
 	public void testClone() {
 		@SuppressWarnings("unchecked")
-		IntersectionBA<Label, State, Transition<Label>> clone = (IntersectionBA<Label, State, Transition<Label>>) this.ba.clone();
+		IntersectionBA<State, Transition> clone = (IntersectionBA< State, Transition>) this.ba.clone();
 		assertEquals(clone.getAlphabet(), this.ba.getAlphabet());
 		assertEquals(clone.getTransitions(), this.ba.getTransitions());
 		assertEquals(clone.getStates(), this.ba.getStates());

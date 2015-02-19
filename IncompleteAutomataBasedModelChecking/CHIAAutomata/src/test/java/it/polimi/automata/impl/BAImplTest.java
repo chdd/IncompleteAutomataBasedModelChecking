@@ -9,16 +9,19 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Set;
 
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
+import org.jgrapht.EdgeFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import edu.uci.ics.jung.graph.util.EdgeType;
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
+
 
 /**
  * @author claudiomenghi
@@ -39,29 +42,30 @@ public class BAImplTest {
 	private State state4;
 
 	@Mock
-	private Label l1;
+	private IGraphProposition l1;
 
 	@Mock
-	private Label l2;
+	private IGraphProposition l2;
 
 	@Mock
-	private Label l3;
+	private IGraphProposition l3;
 
 	@Mock
-	private Transition<Label> t1;
+	private Transition t1;
 
 	@Mock
-	private Transition<Label> t2;
+	private Transition t2;
 
 	@Mock
-	private Transition<Label> t3;
+	private Transition t3;
 
-	private BAImpl<Label, State, Transition<Label>> ba;
+	private BAImpl<State, Transition> ba;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new BAImpl<Label, State, Transition<Label>>();
+		EdgeFactory<State, Transition> edgeFactory=new ClaimTransitionFactoryImpl<State>(TransitionImpl.class);
+		this.ba = new BAImpl<State, Transition>(edgeFactory);
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -69,7 +73,7 @@ public class BAImplTest {
 		this.ba.addCharacter(l2);
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
-		Set<Label> returnSet=new HashSet<Label>();
+		Set<IGraphProposition> returnSet=new HashSet<IGraphProposition>();
 		returnSet.add(l3);
 		when(t3.getLabels()).thenReturn(returnSet);
 	}
@@ -79,7 +83,7 @@ public class BAImplTest {
 	 */
 	@Test
 	public void testBAImpl() {
-		BAImpl<Label, State, Transition<Label>> ba = new BAImpl<Label, State, Transition<Label>>();
+		BAImpl<State, Transition> ba = new BAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class));
 		assertNotNull(ba);
 		assertNotNull(ba.getInitialStates());
 		assertNotNull(ba.getAcceptStates());
@@ -351,17 +355,6 @@ public class BAImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BAImpl#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, AlreadyPresentTransitionFromSourceToDestination)}
-	 * .
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testAddTransitionSourceDestinationTransitionAlreadyPresent() {
-		this.ba.addCharacter(l3);
-		this.ba.addTransition(state1, state2, t3);
-	}
-	
-	/**
-	 * Test method for
 	 * {@link it.polimi.automata.impl.BAImpl#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
@@ -511,22 +504,4 @@ public class BAImplTest {
 		assertTrue(this.ba.getStates().contains(state2));
 		assertTrue(this.ba.getStates().contains(state3));
 	}
-
-	/**
-	 * Test method for {@link it.polimi.automata.impl.BAImpl#getGraph()}.
-	 */
-	@Test
-	public void testGetGraph() {
-		assertNotNull(this.ba.getGraph());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.automata.impl.BAImpl#getDefaultEdgeType()}.
-	 */
-	@Test
-	public void testGetDefaultEdgeType() {
-		assertTrue(this.ba.getDefaultEdgeType().equals(EdgeType.DIRECTED));
-	}
-
 }

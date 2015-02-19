@@ -1,6 +1,5 @@
 package it.polimi.automata.state;
 
-import org.apache.commons.collections15.Factory;
 
 /**
  * is the factory interface which allows to create the state of the Buchi
@@ -12,7 +11,7 @@ import org.apache.commons.collections15.Factory;
  *            is the type of the state of the automaton which must extend the
  *            interface {@link State}
  */
-public interface StateFactory<S extends State> extends Factory<S> {
+public interface StateFactory<S extends State>{
 
 	/**
 	 * crates a new state with an empty name the id is auto-assigned to the
@@ -20,7 +19,6 @@ public interface StateFactory<S extends State> extends Factory<S> {
 	 * 
 	 * @return a new state with an empty name
 	 */
-	@Override
 	public S create();
 
 	/**

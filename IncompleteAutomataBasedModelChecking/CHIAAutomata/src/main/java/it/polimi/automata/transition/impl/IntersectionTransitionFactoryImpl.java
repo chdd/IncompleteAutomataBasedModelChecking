@@ -1,6 +1,6 @@
 package it.polimi.automata.transition.impl;
 
-import it.polimi.automata.labeling.Label;
+import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
@@ -18,7 +18,13 @@ import it.polimi.automata.transition.TransitionFactory;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionTransitionFactoryImpl<L extends Label> extends
-		ClaimTransitionFactoryImpl<L> {
+@SuppressWarnings("serial")
+public class IntersectionTransitionFactoryImpl<S extends State> extends
+		ClaimTransitionFactoryImpl<S> {
+
+	public IntersectionTransitionFactoryImpl(
+			Class<? extends Transition> edgeClass) {
+		super(edgeClass);
+	}
 
 }

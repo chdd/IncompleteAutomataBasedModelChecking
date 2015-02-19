@@ -52,7 +52,7 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 	 * contains the factory which is used to parse the label
 	 */
 	protected F labelFactory;
-	
+
 	/**
 	 * the automaton to which the transition must be added;
 	 */
@@ -69,8 +69,8 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 	 * @throws NullPointerException
 	 *             if the transitionFactory or the labelFactory is null
 	 */
-	public MetadataToTransitionTransformer(G transitionFactory,
-			F labelFactory, BA<L, S, T> a) {
+	public MetadataToTransitionTransformer(G transitionFactory, F labelFactory,
+			BA<L, S, T> a) {
 		if (transitionFactory == null) {
 			throw new NullPointerException(
 					"The transition factory cannot be null");
@@ -79,10 +79,10 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 			throw new NullPointerException(
 					"The transition factory cannot be null");
 		}
-		if(a==null){
+		if (a == null) {
 			throw new NullPointerException("The automaton cannot be null");
 		}
-		this.a=a;
+		this.a = a;
 		this.transitionFactory = transitionFactory;
 		this.labelFactory = labelFactory;
 	}
@@ -95,6 +95,8 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 	 *            contains the {@link EdgeMetadata} to be converted
 	 * @throws NullPointerException
 	 *             if the {@link EdgeMetadata} to be converted is null
+	 * @throws IllegalArgumentException
+	 *             if no propositions label the transition
 	 */
 	@Override
 	public T transform(EdgeMetadata input) {
@@ -102,18 +104,26 @@ class MetadataToTransitionTransformer<L extends Label, F extends LabelFactory<L>
 			throw new NullPointerException(
 					"The EdgeMetadata to be converted cannot be null");
 		}
-		String[] labels=input.getProperty(Constants.LABELSTAG).split(Pattern.quote(Constants.OR));
-		
-		Set<L> propositions=new HashSet<L>();
-		for(String label: new HashSet<String>(Arrays.asList(labels))){
-			
-			//Pattern pattern= Pattern.compile(Constants.LABELPATTERN);
-			//Matcher matcher=pattern.matcher(label);
-			//if(!matcher.matches()){
-			//	throw new IllegalArgumentException("The label: "+label+" does not match the regular expression "+Constants.LABELPATTERN);
-			//}
-			
-			L l=new StringToLabelTransformer<L>(labelFactory).transform(label.substring(Constants.LPAR.length(), label.length()-Constants.RPAR.length()));
+		if (input.getProperty(Constants.LABELSTAG) == null) {
+			throw new IllegalArgumentException(
+					"The transition must be labeled with at least a proposition");
+		}
+		String[] labels = input.getProperty(Constants.LABELSTAG).split(
+				Pattern.quote(Constants.OR));
+
+		Set<L> propositions = new HashSet<L>();
+		for (String label : new HashSet<String>(Arrays.asList(labels))) {
+
+			// Pattern pattern= Pattern.compile(Constants.LABELPATTERN);
+			// Matcher matcher=pattern.matcher(label);
+			// if(!matcher.matches()){
+			// throw new
+			// IllegalArgumentException("The label: "+label+" does not match the regular expression "+Constants.LABELPATTERN);
+			// }
+
+			L l = new StringToLabelTransformer<L>(labelFactory).transform(label
+					.substring(Constants.LPAR.length(), label.length()
+							- Constants.RPAR.length()));
 			propositions.add(l);
 			this.a.addCharacter(l);
 		}

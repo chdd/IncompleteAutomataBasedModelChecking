@@ -2,6 +2,9 @@ package it.polimi.automata;
 
 public final class Constants {
 	
+	
+	public final static String XML_TAG_STATE="state";
+	
 	/**
 	 * IO Tags
 	 */

@@ -1,6 +1,5 @@
 package it.polimi.automata;
 
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -32,8 +31,8 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IntersectionBA<L extends Label, S extends State, T extends Transition<L>>
-		extends BA<L, S, T> {
+public interface IntersectionBA<S extends State, T extends Transition>
+		extends BA<S, T> {
 
 	/**
 	 * returns the set of the mixed states of the Intersection Buchi automaton

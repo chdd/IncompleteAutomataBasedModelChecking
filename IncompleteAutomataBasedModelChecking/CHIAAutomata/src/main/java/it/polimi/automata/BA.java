@@ -1,12 +1,14 @@
 package it.polimi.automata;
 
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.Set;
 
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * <p>
@@ -32,7 +34,8 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface BA<L extends Label, S extends State, T extends Transition<L>>
+@XmlRootElement(name="BA")
+public interface BA<S extends State, T extends Transition>
 		extends Cloneable {
 
 	/**
@@ -40,6 +43,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * 
 	 * @return the set of initial states of the Buchi automaton
 	 */
+	@XmlAttribute
 	public Set<S> getInitialStates();
 
 	/**
@@ -47,6 +51,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * 
 	 * @return the set of the states of the Buchi automaton
 	 */
+	@XmlAttribute
 	public Set<S> getStates();
 
 	/**
@@ -54,6 +59,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * 
 	 * @return set of the accepting states of the Buchi automaton
 	 */
+	@XmlAttribute
 	public Set<S> getAcceptStates();
 
 	/**
@@ -61,7 +67,8 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * 
 	 * @return the alphabet of the Buchi automaton
 	 */
-	public Set<L> getAlphabet();
+	@XmlAttribute
+	public Set<IGraphProposition> getAlphabet();
 
 	/**
 	 * return the set of transitions that exits the state
@@ -130,6 +137,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * 
 	 * @return the set of the transitions of the Buchi automaton
 	 */
+	@XmlAttribute
 	public Set<T> getTransitions();
 
 	/**
@@ -217,7 +225,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             if the set of the characters or any character inside the set
 	 *             is null
 	 */
-	public void addCharacters(Set<L> characters);
+	public void addCharacters(Set<IGraphProposition> characters);
 
 	/**
 	 * adds the character to the characters of the Buchi automaton. If a
@@ -229,7 +237,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 * @throws NullPointerException
 	 *             is generated if the character to be added is null
 	 */
-	public void addCharacter(L character);
+	public void addCharacter(IGraphProposition character);
 
 	/**
 	 * add the transition t which connects the source and the destination state
@@ -325,13 +333,7 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 */
 	public void removeInitialState(S state);
 
-	/**
-	 * returns the graph associated with the Buchi automaton
-	 * 
-	 * @return the graph associated with the Buchi automaton
-	 */
-	public DirectedSparseGraph<S, T> getGraph();
-
+	
 	public Set<S> getSuccessors(S s);
 
 	public Set<S> getPredecessors(S s);
@@ -371,6 +373,5 @@ public interface BA<L extends Label, S extends State, T extends Transition<L>>
 	 *             Buchi automaton or if it does not exists a transition that
 	 *             connect the source and the destination state
 	 */
-	public T getTransition(S source, S destination);
-
+	public Set<T> getTransitions(S source, S destination);
 }

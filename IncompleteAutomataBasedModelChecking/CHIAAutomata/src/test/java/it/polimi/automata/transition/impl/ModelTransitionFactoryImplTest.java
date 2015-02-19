@@ -4,8 +4,7 @@
 package it.polimi.automata.transition.impl;
 
 import static org.junit.Assert.*;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelFactoryImpl;
+import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
@@ -23,22 +22,18 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  */
 public class ModelTransitionFactoryImplTest {
 
-	private ModelTransitionFactoryImpl<Label> modelFactory;
-	private Set<Label> labels1;
-	private Set<Label> labels2;
+	private ModelTransitionFactoryImpl<State> modelFactory;
+	private Set<IGraphProposition> labels1;
+	private Set<IGraphProposition> labels2;
 	@Before
 	public void setUp(){
-		this.modelFactory=new ModelTransitionFactoryImpl<Label>();
+		this.modelFactory=new ModelTransitionFactoryImpl<State>(Transition.class);
 		
-		this.labels1=new HashSet<Label>();
-		Set<IGraphProposition> propositions1=new HashSet<IGraphProposition>();
-		propositions1.add(new GraphProposition("p", true));
-		this.labels1.add(new LabelFactoryImpl().create(propositions1));
+		this.labels1=new HashSet<IGraphProposition>();
+		labels1.add(new GraphProposition("p", true));
 		
-		this.labels2=new HashSet<Label>();
-		Set<IGraphProposition> propositions2=new HashSet<IGraphProposition>();
-		propositions2.add(new GraphProposition("p", false));
-		this.labels2.add(new LabelFactoryImpl().create(propositions2));
+		this.labels2=new HashSet<IGraphProposition>();
+		labels2.add(new GraphProposition("p", false));
 	}
 	
 	/**
@@ -46,7 +41,7 @@ public class ModelTransitionFactoryImplTest {
 	 */
 	@Test
 	public void testCreateSetOfLABEL() {
-		Transition<Label> t=this.modelFactory.create(labels2);
+		Transition t=this.modelFactory.create(labels2);
 		assertNotNull(t);
 		assertTrue(t.getLabels()!=labels2);
 		assertTrue(t.getLabels().equals(labels2));
@@ -73,7 +68,7 @@ public class ModelTransitionFactoryImplTest {
 	 */
 	@Test
 	public void testCreateIntSetOfLABEL() {
-		Transition<Label> t=this.modelFactory.create(1, labels2);
+		Transition t=this.modelFactory.create(1, labels2);
 		assertNotNull(t);
 		assertTrue(t.getLabels()!=labels2);
 		assertTrue(t.getLabels().equals(labels2));

@@ -3,10 +3,11 @@
  */
 package it.polimi.automata.transition.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import it.polimi.automata.Constants;
-import it.polimi.automata.labeling.Label;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
+
 /**
  * @author claudiomenghi
  *
@@ -23,10 +26,10 @@ import org.mockito.MockitoAnnotations;
 public class TransitionImplTest {
 
 	@Mock
-	private Label label1;
+	private IGraphProposition label1;
 	
 	@Mock
-	private Label label2;
+	private IGraphProposition label2;
 	
 	@Before
 	public void setUp(){
@@ -40,8 +43,8 @@ public class TransitionImplTest {
 	 */
 	@Test
 	public void testTransitionImpl() {
-		Set<Label> labels=new HashSet<Label>();
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		TransitionImpl t=new TransitionImpl(labels, 1);
 		assertEquals(labels, t.getLabels());
 		assertEquals(1, t.getId());
 	}
@@ -51,15 +54,15 @@ public class TransitionImplTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testTransitionImpl_Null() {
-		new TransitionImpl<Label>(null, 1);
+		new TransitionImpl(null, 1);
 	}
 	/**
 	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#TransitionImpl(java.util.Set, int)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testTransitionImpl_Neg() {
-		Set<Label> labels=new HashSet<Label>();
-		new TransitionImpl<Label>(labels, -1);
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		new TransitionImpl(labels, -1);
 		
 	}
 	
@@ -69,8 +72,8 @@ public class TransitionImplTest {
 	@Test
 	public void testGetLabels() {
 
-		Set<Label> labels=new HashSet<Label>();
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		TransitionImpl t=new TransitionImpl(labels, 1);
 		assertEquals(labels, t.getLabels());
 	}
 
@@ -79,8 +82,8 @@ public class TransitionImplTest {
 	 */
 	@Test
 	public void testGetId() {
-		Set<Label> labels=new HashSet<Label>();
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		TransitionImpl t=new TransitionImpl(labels, 1);
 		assertEquals(1, t.getId());
 	}
 
@@ -91,8 +94,8 @@ public class TransitionImplTest {
 	 */
 	@Test
 	public void testToStringEmpty() {
-		Set<Label> labels=new HashSet<Label>();
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		TransitionImpl t=new TransitionImpl(labels, 1);
 		assertTrue(t.toString().equals("{1} "));
 	}
 	/**
@@ -100,12 +103,12 @@ public class TransitionImplTest {
 	 */
 	@Test
 	public void testToString() {
-		Set<Label> labels=new HashSet<Label>();
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
 		labels.add(label1);
 		labels.add(label2);
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
-		assertTrue(t.toString().equals("{1} "+Constants.LPAR+"a"+Constants.RPAR+Constants.OR+ Constants.LPAR+"b"+Constants.RPAR) 
-				|| t.toString().equals("{1} "+Constants.LPAR+"b"+Constants.RPAR+Constants.OR+ Constants.LPAR+"a"+Constants.RPAR));
+		TransitionImpl t=new TransitionImpl(labels, 1);
+		assertTrue(t.toString().equals("{1} "+Constants.LPAR+"a"+Constants.RPAR+Constants.AND+ Constants.LPAR+"b"+Constants.RPAR) 
+				|| t.toString().equals("{1} "+Constants.LPAR+"b"+Constants.RPAR+Constants.AND+ Constants.LPAR+"a"+Constants.RPAR));
 	}
 
 	/**
@@ -113,13 +116,13 @@ public class TransitionImplTest {
 	 */
 	@Test
 	public void testEquals()  {
-		Set<Label> labels=new HashSet<Label>();
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
-		TransitionImpl<Label> t2=new TransitionImpl<Label>(labels, 2);
-		TransitionImpl<Label> t3=new TransitionImpl<Label>(labels, 1);
-		Set<Label> labels2=new HashSet<Label>();
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		TransitionImpl t=new TransitionImpl(labels, 1);
+		TransitionImpl t2=new TransitionImpl(labels, 2);
+		TransitionImpl t3=new TransitionImpl(labels, 1);
+		Set<IGraphProposition> labels2=new HashSet<IGraphProposition>();
 		labels2.add(label1);
-		TransitionImpl<Label> t4=new TransitionImpl<Label>(labels2, 1);
+		TransitionImpl t4=new TransitionImpl(labels2, 1);
 		assertFalse(t.equals(labels));
 		assertFalse(t.equals(null));
 		assertTrue(t.equals(t));
@@ -133,18 +136,18 @@ public class TransitionImplTest {
 	 */
 	@Test
 	public void testHashCode(){
-		Set<Label> labels=new HashSet<Label>();
-		TransitionImpl<Label> t=new TransitionImpl<Label>(labels, 1);
-		TransitionImpl<Label> t2=new TransitionImpl<Label>(labels, 2);
-		TransitionImpl<Label> t3=new TransitionImpl<Label>(labels, 1);
-		Set<Label> labels2=new HashSet<Label>();
+		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+		TransitionImpl t=new TransitionImpl(labels, 1);
+		TransitionImpl t2=new TransitionImpl(labels, 2);
+		TransitionImpl t3=new TransitionImpl(labels, 1);
+		Set<IGraphProposition> labels2=new HashSet<IGraphProposition>();
 		labels2.add(label1);
-		TransitionImpl<Label> t4=new TransitionImpl<Label>(labels2, 1);
+		TransitionImpl t4=new TransitionImpl(labels2, 1);
 		assertFalse(t.hashCode()==labels.hashCode());
 		assertTrue(t.hashCode()==t.hashCode());
 		assertFalse(t.hashCode()==t2.hashCode());
 		assertTrue(t.hashCode()==t3.hashCode());
-		assertFalse(t.hashCode()==t4.hashCode());
+		assertFalse(t.hashCode()!=t4.hashCode());
 	}
 	
 }

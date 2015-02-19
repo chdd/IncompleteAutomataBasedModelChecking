@@ -1,11 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.polimi.chia</groupId>
 	<artifactId>CHIAAutomataIO</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>CHIAAutomataIO</name>
+	
+	<parent>
+        <groupId>it.polimi.chia</groupId>
+        <artifactId>CHIA</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+	
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -13,6 +18,8 @@
 		<java.version>1.7</java.version>
 		<!-- contains the encoding of the source code -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
+		<github.global.server>github</github.global.server>
 	</properties>
 	<build>
 		<!-- is the directory where the source code is located -->
@@ -21,6 +28,13 @@
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.1</version>
+					<configuration>
+						<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
@@ -45,6 +59,14 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<!-- The testResources element block contains testResource elements. Their 
+			definitions are similar to resource elements, but are naturally used during 
+			test phases. -->
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+			</testResource>
+		</testResources>
 	</build>
 	<profiles>
 		<profile>
@@ -94,6 +116,34 @@
 							</properties>
 						</configuration>
 					</plugin>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<version>0.10</version>
+						<configuration>
+							<merge>true</merge>
+							<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+							<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+							<outputDirectory>${user.dir}/target/mvn-repo</outputDirectory>
+							<!-- <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> --> <!-- matches distribution management repository url above -->
+							<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<repositoryName>IncompleteAutomataBasedModelChecking</repositoryName>      <!-- github repo name -->
+							<repositoryOwner>claudiomenghi</repositoryOwner>    <!-- github username -->
+						</configuration>
+						<executions>
+							<!-- run site-maven-plugin's 'site' target as part of the build's 
+								normal 'deploy' phase -->
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>deploy</phase>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 			<dependencies>
@@ -117,19 +167,13 @@
 		</repository>
 	</repositories>
 	<dependencies>
-		<!-- is the version of junit using in the software test -->
+		
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- is the mocking library used in the testing activity -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>1.10.19</version>
-		</dependency>
+            <groupId>net.sf.jung</groupId>
+            <artifactId>jung-io</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        
 		<!-- contains the dependency to the Buchi Automaton -->
 		<dependency>
 			<groupId>it.polimi.chia</groupId>
@@ -137,4 +181,11 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
 </project>

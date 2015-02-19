@@ -3,8 +3,9 @@
  */
 package it.polimi.automata.transition.impl;
 
-import static org.junit.Assert.*;
-import it.polimi.automata.labeling.Label;
+import static org.junit.Assert.assertNotNull;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class IntersectionTransitionFactoryImplTest {
 
 	@Test
 	public void test() {
-		assertNotNull(new IntersectionTransitionFactoryImpl<Label>());
+		assertNotNull(new IntersectionTransitionFactoryImpl<State>(Transition.class));
 	}
 
 }

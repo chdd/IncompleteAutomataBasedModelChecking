@@ -2,7 +2,11 @@ package it.polimi.automata.transition;
 
 import java.util.Set;
 
-import it.polimi.automata.labeling.Label;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import it.polimi.automata.transition.impl.TransitionImpl;
 
 /**
@@ -19,7 +23,8 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  *            with the model or a property it is associated with a set of atomic
  *            propositions or a propositional logic formula, respectively.
  */
-public interface Transition<L extends Label> {
+@XmlRootElement(name="Transition")
+public interface Transition{
 
 	/**
 	 * <p>
@@ -28,6 +33,7 @@ public interface Transition<L extends Label> {
 	 * 
 	 * @return the <b>id</b> of the transition
 	 */
+	@XmlID
 	public int getId();
 
 	/**
@@ -41,8 +47,18 @@ public interface Transition<L extends Label> {
 	 * 
 	 * @return the <b>label</b> associated with the transition
 	 */
-	public Set<L> getLabels();
-	
-	public void setLabels(Set<L> labels);
-	
+	@XmlAttribute
+	public Set<IGraphProposition> getLabels();
+
+	/**
+	 * sets the label to the set of labels specified as parameter
+	 * 
+	 * @param labels
+	 *            the labels to be set to the transition
+	 * @throws NullPointerException
+	 *             if the set of the labels is <code>null</code> or if a label
+	 *             in the set is <code>null</code>
+	 */
+	public void setLabels(Set<IGraphProposition> labels);
+
 }

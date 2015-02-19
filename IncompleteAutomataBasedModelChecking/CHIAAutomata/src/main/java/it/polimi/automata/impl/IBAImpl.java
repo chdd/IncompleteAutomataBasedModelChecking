@@ -2,7 +2,6 @@ package it.polimi.automata.impl;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -11,6 +10,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.jgrapht.EdgeFactory;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * <p>
@@ -40,9 +43,9 @@ import java.util.Set;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
-		extends BAImpl<L, S, T> implements
-		IBA<L, S, T> {
+public class IBAImpl<S extends State, T extends Transition>
+		extends BAImpl<S, T> implements
+		IBA<S, T> {
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -52,8 +55,8 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 	/**
 	 * creates a new incomplete Buchi automaton
 	 */
-	protected IBAImpl() {
-		super();
+	public IBAImpl(EdgeFactory<S, T> transitionFactory) {
+		super(transitionFactory);
 		this.transparentStates = new HashSet<S>();
 	}
 
@@ -65,7 +68,7 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 			throw new NullPointerException(
 					"The state to be added cannot be null");
 		}
-		if (!this.getGraph().containsVertex(s)) {
+		if (!this.getStates().contains(s)) {
 			throw new IllegalArgumentException(
 					"The state is not contained into the set of the states of the IBA");
 		}
@@ -89,16 +92,18 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 					"The state to be added cannot be null");
 		}
 		this.transparentStates.add(s);
-		this.addState(s);
+		if(!this.getStates().contains(s)){
+			this.addState(s);
+		}
 	}
 
 		/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBAImpl<L, S, T> clone() {
-		IBAImpl<L, S, T> clone = new IBAImpl<L, S, T>();
-		for(L l: this.getAlphabet()){
+	public IBAImpl<S, T> clone() {
+		IBAImpl<S, T> clone = new IBAImpl<S, T>(this.automataGraph.getEdgeFactory());
+		for(IGraphProposition l: this.getAlphabet()){
 			clone.addCharacter(l);
 		}
 		for (S s : this.getStates()) {
@@ -110,9 +115,9 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 		for(S s: this.getInitialStates()){
 			clone.addInitialState(s);
 		}
-		for (T t : this.getGraph().getEdges()) {
-			clone.addTransition(this.getGraph().getSource(t),
-					this.getGraph().getDest(t), t);
+		for (T t : this.getTransitions()) {
+			clone.addTransition(this.getTransitionSource(t),
+					this.getTransitionDestination(t), t);
 		}
 		
 		clone.transparentStates = new HashSet<S>(
@@ -125,8 +130,8 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBA<L, S, T> replace(S transparentState,
-			IBA<L, S, T> ibaToInject,
+	public IBA<S, T> replace(S transparentState,
+			IBA<S, T> ibaToInject,
 			Map<S, Set<Entry<T, S>>> inComing,
 			Map<S, Set<Entry<T, S>>> outComing) {
 		if (transparentState == null) {
@@ -146,7 +151,7 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 					"The state t must be transparent");
 		}
 		for (S s : inComing.keySet()) {
-			if (!this.getGraph().getPredecessors(transparentState).contains(
+			if (!this.getPredecessors(transparentState).contains(
 					s)) {
 				throw new IllegalArgumentException(
 						"The source of an incoming transition to be injected was not connected to the transparent state");
@@ -162,7 +167,7 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 		}
 		for (Set<Entry<T, S>> e : outComing.values()) {
 			for (Entry<T, S> entry : e) {
-				if (!this.getGraph().getSuccessors(transparentState)
+				if (!this.getSuccessors(transparentState)
 						.contains(entry.getValue())) {
 					throw new IllegalArgumentException(
 							"the destination of an out-coming transition was not connected to the transparent state");
@@ -176,7 +181,7 @@ public class IBAImpl<L extends Label, S extends State, T extends Transition<L>>
 			}
 		}
 
-		IBAImpl<L, S, T> newIba = (IBAImpl<L, S, T>) this
+		IBAImpl<S, T> newIba = (IBAImpl<S, T>) this
 				.clone();
 
 		for (S s : ibaToInject.getStates()) {

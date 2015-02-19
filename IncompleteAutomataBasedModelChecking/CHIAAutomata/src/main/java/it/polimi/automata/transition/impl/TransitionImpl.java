@@ -1,11 +1,13 @@
 package it.polimi.automata.transition.impl;
 
 import it.polimi.automata.Constants;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.transition.Transition;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * contains the implementation of a transition an Incomplete or a complete Buchi
@@ -14,7 +16,7 @@ import java.util.Set;
  * @author claudiomenghi
  * @see {@link Transition}
  */
-public class TransitionImpl<L extends Label> implements Transition<L> {
+public class TransitionImpl implements Transition {
 
 	/**
 	 * contains the id of the transition
@@ -25,33 +27,61 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 	 * contains the labels of the transition the transition can be fired if one
 	 * of the label is satisfied
 	 */
-	private Set<L> labels;
+	private Set<IGraphProposition> labels;
 
-	
 	/**
-	 * {@inheritDoc}
+	 * Creates a new transition
+	 * 
+	 * @param labels
+	 *            the <code>Set</code> of labels to be added to the transition
+	 * @param id
+	 *            : the identifier of the transition
+	 * @throws IllegalArgumentException
+	 *             if the id is less than zero
+	 * @throws NullPointerException
+	 *             if the set of labels or one of the label to be added is null
 	 */
-	protected TransitionImpl(Set<L> label, int id) {
+	protected TransitionImpl(Set<IGraphProposition> labels, int id) {
 		if (id < 0)
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");
-		if (label == null)
+		if (labels == null)
 			throw new NullPointerException(
 					"The character that labels the transition cannot be null");
-
 		this.id = id;
-		this.labels = Collections.unmodifiableSet(label);
+		this.labels = new HashSet<IGraphProposition>();
+		for (IGraphProposition l : labels) {
+			if (l == null) {
+				throw new NullPointerException(
+						"No null labels can be added to the transition");
+			}
+			this.labels.add(l);
+		}
 	}
 
-	public void setLabels(Set<L> labels){
-		this.labels=labels;
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setLabels(Set<IGraphProposition> labels) {
+		if (labels == null) {
+			throw new NullPointerException(
+					"It is not possible to set a null set of labels");
+		}
+		this.labels = new HashSet<IGraphProposition>();
+		for (IGraphProposition l : labels) {
+			if (l == null) {
+				throw new NullPointerException(
+						"The set of the labels cannot contain null labels");
+			}
+			this.labels.add(l);
+		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<L> getLabels() {
+	public Set<IGraphProposition> getLabels() {
 		return Collections.unmodifiableSet(this.labels);
 	}
 
@@ -63,18 +93,17 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 		return id;
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		String ret = "";
-		for (L label : labels) {
-			ret = ret + "("+label.toString() + ")"+Constants.OR;
+		for (IGraphProposition label : labels) {
+			ret = ret + "(" + label.toString() + ")" + Constants.AND;
 		}
-		if (ret.endsWith(Constants.OR)) {
-			ret = ret.substring(0, ret.length() - Constants.OR.length());
+		if (ret.endsWith(Constants.AND)) {
+			ret = ret.substring(0, ret.length() - Constants.AND.length());
 		}
 
 		return "{" + Integer.toString(this.id) + "} " + ret + "";
@@ -91,7 +120,7 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 		return result;
 	}
 
-	/** 
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -102,12 +131,11 @@ public class TransitionImpl<L extends Label> implements Transition<L> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		TransitionImpl<L> other = (TransitionImpl<L>) obj;
+		TransitionImpl other = (TransitionImpl) obj;
 		if (id != other.id)
 			return false;
 		if (!labels.equals(other.labels))
 			return false;
 		return true;
-	}	
+	}
 }

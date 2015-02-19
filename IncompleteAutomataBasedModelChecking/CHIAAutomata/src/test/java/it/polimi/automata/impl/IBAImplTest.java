@@ -14,14 +14,17 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import it.polimi.automata.IBA;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionImpl;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * @author claudiomenghi
@@ -52,54 +55,54 @@ public class IBAImplTest {
 	private State state4;
 
 	@Mock
-	private Label l1;
+	private IGraphProposition l1;
 
 	@Mock
-	private Label l2;
+	private IGraphProposition l2;
 
 	@Mock
-	private Label l3;
+	private IGraphProposition l3;
 
 	@Mock
-	private Transition<Label> t1;
+	private Transition t1;
 
 	@Mock
-	private Transition<Label> t2;
+	private Transition t2;
 
 	@Mock
-	private Transition<Label> t3;
+	private Transition t3;
 	
 	@Mock
-	private Transition<Label> t1Inject;
+	private Transition t1Inject;
 
 	@Mock
-	private Transition<Label> t2Inject;
+	private Transition t2Inject;
 
 	@Mock
-	private Transition<Label> t3Inject;
+	private Transition t3Inject;
 
 	@Mock
-	private Transition<Label> inConnection1;
+	private Transition inConnection1;
 	
 	@Mock
-	private Transition<Label> inConnection2;
+	private Transition inConnection2;
 	
 	@Mock
-	private Transition<Label> outConnection1;
+	private Transition outConnection1;
 	
 	@Mock
-	private Transition<Label> outConnection2;
+	private Transition outConnection2;
 	
-	private IBAImpl<Label, State, Transition<Label>> ba;
-	private IBAImpl<Label, State, Transition<Label>> baInject;
+	private IBAImpl<State, Transition> ba;
+	private IBAImpl<State, Transition> baInject;
 
-	private Map<State, Set<Entry<Transition<Label>, State >>> inEntry;
-	private Map<State, Set<Entry<Transition<Label>, State >>> outEntry;
+	private Map<State, Set<Entry<Transition, State >>> inEntry;
+	private Map<State, Set<Entry<Transition, State >>> outEntry;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IBAImpl<Label, State, Transition<Label>>();
+		this.ba = new IBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class));
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -109,11 +112,11 @@ public class IBAImplTest {
 		this.ba.addTransition(state2, state3, t2);
 		this.ba.addTransparentState(state2);
 		
-		Set<Label> returnSet=new HashSet<Label>();
+		Set<IGraphProposition> returnSet=new HashSet<IGraphProposition>();
 		returnSet.add(l3);
 		when(t3.getLabels()).thenReturn(returnSet);
 		
-		this.baInject = new IBAImpl<Label, State, Transition<Label>>();
+		this.baInject = new IBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class));
 		baInject.addInitialState(state1Inject);
 		baInject.addState(state2Inject);
 		baInject.addAcceptState(state3Inject);
@@ -123,14 +126,14 @@ public class IBAImplTest {
 		this.baInject.addTransition(state2Inject, state3Inject, t2Inject);
 		this.baInject.addTransparentState(state2Inject);
 		
-		Set<Entry<Transition<Label>, State>> incomingTransition=new HashSet<Entry<Transition<Label>, State>>();
-		incomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(inConnection1, state1Inject));
-		inEntry=new HashMap<State, Set<Entry<Transition<Label>,State>>>();
+		Set<Entry<Transition, State>> incomingTransition=new HashSet<Entry<Transition, State>>();
+		incomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(inConnection1, state1Inject));
+		inEntry=new HashMap<State, Set<Entry<Transition,State>>>();
 		inEntry.put(state1, incomingTransition);
 		
-		Set<Entry<Transition<Label>, State>> outcomingTransition=new HashSet<Entry<Transition<Label>, State>>();
-		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(outConnection2, state3));
-		outEntry=new HashMap<State, Set<Entry<Transition<Label>,State>>>();
+		Set<Entry<Transition, State>> outcomingTransition=new HashSet<Entry<Transition, State>>();
+		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(outConnection2, state3));
+		outEntry=new HashMap<State, Set<Entry<Transition,State>>>();
 		outEntry.put(state3Inject, outcomingTransition);
 		
 		
@@ -141,7 +144,7 @@ public class IBAImplTest {
 	 */
 	@Test
 	public void testIBAImpl() {
-		assertNotNull(new IBAImpl<Label, State, Transition<Label>>());
+		assertNotNull(new IBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class)));
 	}
 
 	/**
@@ -210,7 +213,7 @@ public class IBAImplTest {
 	 */
 	@Test
 	public void testClone() {
-		IBAImpl<Label, State, Transition<Label>> clone=this.ba.clone();
+		IBAImpl<State, Transition> clone=this.ba.clone();
 		assertEquals(clone.getAlphabet(), this.ba.getAlphabet());
 		assertEquals(clone.getTransitions(), this.ba.getTransitions());
 		assertEquals(clone.getStates(), this.ba.getStates());
@@ -267,8 +270,8 @@ public class IBAImplTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testReplaceInvalidIncoming() {
-		Set<Entry<Transition<Label>, State>> incomingTransition=new HashSet<Entry<Transition<Label>, State>>();
-		incomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(inConnection1, state1Inject));
+		Set<Entry<Transition, State>> incomingTransition=new HashSet<Entry<Transition, State>>();
+		incomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(inConnection1, state1Inject));
 		inEntry.put(state3, incomingTransition);
 		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 	}
@@ -280,8 +283,8 @@ public class IBAImplTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testReplaceInvalidIcomingFinal() {
-		Set<Entry<Transition<Label>, State>> incomingTransition=new HashSet<Entry<Transition<Label>, State>>();
-		incomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(inConnection1, state2Inject));
+		Set<Entry<Transition, State>> incomingTransition=new HashSet<Entry<Transition, State>>();
+		incomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(inConnection1, state2Inject));
 		inEntry.put(state1, incomingTransition);
 		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 	}
@@ -292,8 +295,8 @@ public class IBAImplTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testReplaceInvalidOutcoming() {
-		Set<Entry<Transition<Label>, State>> outcomingTransition=new HashSet<Entry<Transition<Label>, State>>();
-		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(outConnection2, state1));
+		Set<Entry<Transition, State>> outcomingTransition=new HashSet<Entry<Transition, State>>();
+		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(outConnection2, state1));
 		outEntry.put(state3Inject, outcomingTransition);
 		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 	}
@@ -304,8 +307,8 @@ public class IBAImplTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testReplaceOutcomingInitial() {
-		Set<Entry<Transition<Label>, State>> outcomingTransition=new HashSet<Entry<Transition<Label>, State>>();
-		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition<Label>, State>(outConnection2, state3));
+		Set<Entry<Transition, State>> outcomingTransition=new HashSet<Entry<Transition, State>>();
+		outcomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(outConnection2, state3));
 		outEntry.put(state2Inject, outcomingTransition);
 		this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 	}
@@ -317,7 +320,7 @@ public class IBAImplTest {
 	@Test
 	public void testReplace() {
 		
-		IBA<Label, State, Transition<Label>> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		IBA<State, Transition> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 		assertTrue(refinement.getStates().contains(state1));
 		assertFalse(refinement.getStates().contains(state2));
 		assertTrue(refinement.getStates().contains(state3));
@@ -372,7 +375,7 @@ public class IBAImplTest {
 	public void testReplace2() {
 		
 		this.ba.addAcceptState(state2);
-		IBA<Label, State, Transition<Label>> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		IBA<State, Transition> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 		assertTrue(refinement.getStates().contains(state1));
 		assertFalse(refinement.getStates().contains(state2));
 		assertTrue(refinement.getStates().contains(state3));
@@ -427,7 +430,7 @@ public class IBAImplTest {
 		
 		this.ba.addAcceptState(state2);
 		this.ba.addInitialState(state2);
-		IBA<Label, State, Transition<Label>> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		IBA<State, Transition> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 		assertTrue(refinement.getStates().contains(state1));
 		assertFalse(refinement.getStates().contains(state2));
 		assertTrue(refinement.getStates().contains(state3));
