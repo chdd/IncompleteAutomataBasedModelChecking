@@ -6,14 +6,13 @@ package it.polimi.checker.ibatransparentstateremoval;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
-import it.polimi.automata.impl.IBAFactoryImpl;
-import it.polimi.automata.labeling.Label;
+import it.polimi.automata.impl.IBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,18 +23,21 @@ import org.junit.Test;
  */
 public class IBATransparentStateRemovalTest {
 
-	private IBA<Label, State, Transition<Label>> ba;
+	private IBA<State, Transition> ba;
 	private State state1;
 	private State state2;
 	private State state3;
-	private Transition<Label> transition1;
-	private Transition<Label> transition2;
-	private Transition<Label> transition3;
+	private Transition transition1;
+	private Transition transition2;
+	private Transition transition3;
 	
 	
 	@Before
 	public void setUp() {
-		this.ba=new IBAFactoryImpl<Label, State, Transition<Label>>().create();
+		
+		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryModelImpl<State>(Transition.class);
+		
+		this.ba=new IBAImpl<State, Transition>(transitionFactory);
 		StateFactory<State> factory=new StateFactoryImpl();
 		state1=factory.create();
 		state2=factory.create();
@@ -44,7 +46,6 @@ public class IBATransparentStateRemovalTest {
 		this.ba.addState(state2);
 		this.ba.addState(state3);
 		
-		TransitionFactory<Label, Transition<Label>> transitionFactory=new ModelTransitionFactoryImpl<Label>();
 		transition1=transitionFactory.create();
 		transition2=transitionFactory.create();
 		transition3=transitionFactory.create();
@@ -58,7 +59,7 @@ public class IBATransparentStateRemovalTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testTransparentStateRemovalNull() {
-		new IBATransparentStateRemoval<Label, State, Transition<Label>>().transparentStateRemoval(null);
+		new IBATransparentStateRemoval<State, Transition>().transparentStateRemoval(null);
 	}
 
 	
@@ -68,7 +69,7 @@ public class IBATransparentStateRemovalTest {
 	@Test
 	public void testTransparentStateRemoval() {
 
-		IBA<Label, State, Transition<Label>> ret=new IBATransparentStateRemoval<Label, State, Transition<Label>>().transparentStateRemoval(this.ba);
+		IBA<State, Transition> ret=new IBATransparentStateRemoval<State, Transition>().transparentStateRemoval(this.ba);
 		assertTrue(ret.getStates().contains(state1));
 		assertTrue(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));
@@ -82,7 +83,7 @@ public class IBATransparentStateRemovalTest {
 	public void testTransparentStateRemoval2() {
 
 		this.ba.addTransparentState(state2);
-		IBA<Label, State, Transition<Label>> ret=new IBATransparentStateRemoval<Label, State, Transition<Label>>().transparentStateRemoval(this.ba);
+		IBA<State, Transition> ret=new IBATransparentStateRemoval<State, Transition>().transparentStateRemoval(this.ba);
 		assertTrue(ret.getStates().contains(state1));
 		assertFalse(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));

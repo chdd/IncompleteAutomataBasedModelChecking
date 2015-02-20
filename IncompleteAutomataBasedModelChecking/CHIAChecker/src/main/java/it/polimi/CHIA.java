@@ -1,18 +1,19 @@
 package it.polimi;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.impl.IntBAFactoryImpl;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelFactoryImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.IntersectionTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 import it.polimi.contraintcomputation.ConstraintGenerator;
+import it.polimi.contraintcomputation.component.Component;
 
 /**
  * contains the implementation of the CHIA checker
@@ -23,27 +24,33 @@ import it.polimi.contraintcomputation.ConstraintGenerator;
 public class CHIA {
 
 	/**
+	 * is the logger of the ModelChecker class
+	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(CHIA.class);
+	
+	/**
 	 * is the Buchi Automaton that contains the claim to be verified
 	 */
-	private BA<Label, State, Transition<Label>> claim;
+	private BA<State, Transition> claim;
 
 	/**
 	 * is the Incomplete Buchi Automaton which contains the model that must be
 	 * considered in the verification procedure
 	 */
-	private IBA<Label, State, Transition<Label>> model;
+	private IBA<State, Transition> model;
 
 	/**
 	 * Is the model checker in charge of verifying whether the property is
 	 * satisfied, not satisfied or possibly satisfied
 	 */
-	private ModelChecker<Label, State, Transition<Label>> mc;
+	private ModelChecker<State, Transition> mc;
 
 	/**
 	 * Is the constraint generator which is in charge of computing the
 	 * constraints in the case the property is possibly satisfied
 	 */
-	private ConstraintGenerator<Label, State, Transition<Label>> cg;
+	private ConstraintGenerator<State, Transition> cg;
 
 	/**
 	 * Contains the model checking results, the verification times the
@@ -62,8 +69,8 @@ public class CHIA {
 	 * @throws NullPointerException
 	 *             is the claim or the model of the system is null
 	 */
-	public CHIA(BA<Label, State, Transition<Label>> claim,
-			IBA<Label, State, Transition<Label>> model) {
+	public CHIA(BA<State, Transition> claim,
+			IBA<State, Transition> model) {
 		if (claim == null) {
 			throw new NullPointerException("The claim cannot be null");
 		}
@@ -85,11 +92,10 @@ public class CHIA {
 	 */
 	public int check() {
 		mcResults = new ModelCheckingResults();
-		mc = new ModelChecker<Label, State, Transition<Label>>(model, claim,
-				new IntersectionRuleImpl<Label, Transition<Label>>(),
-				new IntBAFactoryImpl<Label, State, Transition<Label>>(),
+		mc = new ModelChecker<State, Transition>(model, claim,
+				new IntersectionRuleImpl<State, Transition>(),
 				new StateFactoryImpl(),
-				new IntersectionTransitionFactoryImpl<Label>(), mcResults);
+				new TransitionFactoryIntersectionImpl<State>(Transition.class), mcResults);
 		mcResults.setResult(mc.check());
 
 		return mcResults.getResult();
@@ -105,15 +111,21 @@ public class CHIA {
 	 *             if the property is not possibly satisfied
 	 */
 	public String getConstraint() {
+		
+		logger.info("Computing the constraint");
+		
 		if (mcResults.getResult() != -1) {
 			throw new IllegalStateException(
 					"It is not possible to get the constraint if the property is not possibly satisfied");
 		}
-		cg = new ConstraintGenerator<Label, State, Transition<Label>>(
+
+		cg = new ConstraintGenerator< State, Transition>(
 				this.mc.getIntersectionAutomaton(), this.model,
 				this.mc.getIntersectionStateModelStateMap(),
-				new LabelFactoryImpl(),
-				new IntersectionTransitionFactoryImpl<Label>());
+				new TransitionFactoryIntersectionImpl<Component<State, Transition>>(Transition.class), 
+				new TransitionFactoryIntersectionImpl<State>(Transition.class));
+		
+		logger.info("Returning the constraint: "+cg.generateConstraint());
 		return cg.generateConstraint();
 
 	}

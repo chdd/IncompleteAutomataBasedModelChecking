@@ -7,15 +7,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import it.polimi.automata.BA;
 import it.polimi.Constants;
-import it.polimi.automata.impl.IBAFactoryImpl;
-import it.polimi.automata.labeling.Label;
-import it.polimi.automata.labeling.impl.LabelFactoryImpl;
+import it.polimi.automata.impl.IBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,19 +33,22 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 public class TransitionMatrixTranformerTest {
 
 	
-	private BA<Label, State, Transition<Label>> ba;
+	private BA<State, Transition> ba;
 	private State state1;
 	private State state2;
 	private State state3;
 	private State state4;
-	private Transition<Label> t1;
-	private Transition<Label> t2;
-	private Transition<Label> t3;
+	private Transition t1;
+	private Transition t2;
+	private Transition t3;
 	
 	
 	@Before
 	public void setUp() {
-		this.ba=new IBAFactoryImpl<Label, State, Transition<Label>>().create();
+		
+		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryModelImpl<State>(Transition.class);
+		
+		this.ba=new IBAImpl<State, Transition>(transitionFactory);
 		StateFactory<State> factory=new StateFactoryImpl();
 		state1=factory.create();
 		state2=factory.create();
@@ -57,33 +58,23 @@ public class TransitionMatrixTranformerTest {
 		this.ba.addState(state2);
 		this.ba.addState(state3);
 		
-		TransitionFactory<Label, Transition<Label>> transitionFactory=new ModelTransitionFactoryImpl<Label>();
 		
 
-		Set<Label> labelsT1=new HashSet<Label>();
-		Set<IGraphProposition> propositionsT1=new HashSet<IGraphProposition>();
-		propositionsT1.add(new GraphProposition("a", false));
-		Label label1=new LabelFactoryImpl().create(propositionsT1);
-		labelsT1.add(label1);
+		Set<IGraphProposition> labelsT1=new HashSet<IGraphProposition>();
+		labelsT1.add(new GraphProposition("a", false));
 		t1=transitionFactory.create(labelsT1);
 		
-		Set<Label> labelsT2=new HashSet<Label>();
-		Set<IGraphProposition> propositionsT2=new HashSet<IGraphProposition>();
-		propositionsT2.add(new GraphProposition("b", false));
-		Label label2=new LabelFactoryImpl().create(propositionsT1);
-		labelsT2.add(label2);
+		Set<IGraphProposition> labelsT2=new HashSet<IGraphProposition>();
+		labelsT2.add(new GraphProposition("b", false));
 		t2=transitionFactory.create(labelsT2);
 		
-		Set<Label> labelsT3=new HashSet<Label>();
-		Set<IGraphProposition> propositionsT3=new HashSet<IGraphProposition>();
-		propositionsT3.add(new GraphProposition("c", false));
-		Label label3=new LabelFactoryImpl().create(propositionsT1);
-		labelsT3.add(label3);
+		Set<IGraphProposition> labelsT3=new HashSet<IGraphProposition>();
+		labelsT3.add(new GraphProposition("c", false));
 		t3=transitionFactory.create(labelsT3);
 		
-		this.ba.addCharacter(label1);
-		this.ba.addCharacter(label2);
-		this.ba.addCharacter(label3);
+		this.ba.addCharacters(labelsT1);
+		this.ba.addCharacters(labelsT2);
+		this.ba.addCharacters(labelsT3);
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
 		this.ba.addTransition(state3, state3, t3);
@@ -94,7 +85,7 @@ public class TransitionMatrixTranformerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testTransitionMatrixTranformerNull() {
-		new TransitionMatrixTranformer<Label, State, Transition<Label>>(null);
+		new TransitionMatrixTranformer<State, Transition>(null);
 	}
 	
 	/**
@@ -102,7 +93,7 @@ public class TransitionMatrixTranformerTest {
 	 */
 	@Test
 	public void testTransitionMatrixTranformer() {
-		assertNotNull(new TransitionMatrixTranformer<Label, State, Transition<Label>>(new ArrayList<State>()));
+		assertNotNull(new TransitionMatrixTranformer<State, Transition>(new ArrayList<State>()));
 	}
 
 	/**
@@ -110,7 +101,7 @@ public class TransitionMatrixTranformerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testTransformNull() {
-		new TransitionMatrixTranformer<Label, State, Transition<Label>>(new ArrayList<State>()).transform(null);
+		new TransitionMatrixTranformer<State, Transition>(new ArrayList<State>()).transform(null);
 	}
 	
 	/**
@@ -121,7 +112,7 @@ public class TransitionMatrixTranformerTest {
 		List<State> states=new ArrayList<State>();
 		states.add(state1);
 		states.add(state2);
-		new TransitionMatrixTranformer<Label, State, Transition<Label>>(states).transform(this.ba);
+		new TransitionMatrixTranformer<State, Transition>(states).transform(this.ba);
 	}
 	
 	/**
@@ -134,7 +125,7 @@ public class TransitionMatrixTranformerTest {
 		states.add(state2);
 		states.add(state3);
 		states.add(state4);
-		new TransitionMatrixTranformer<Label, State, Transition<Label>>(states).transform(this.ba);
+		new TransitionMatrixTranformer<State, Transition>(states).transform(this.ba);
 	}
 	
 	/**
@@ -146,7 +137,7 @@ public class TransitionMatrixTranformerTest {
 		states.add(state1);
 		states.add(state2);
 		states.add(state3);
-		String[][] matrix=new TransitionMatrixTranformer<Label, State, Transition<Label>>(states).transform(this.ba);
+		String[][] matrix=new TransitionMatrixTranformer<State, Transition>(states).transform(this.ba);
 		assertEquals(Constants.EMPTYSET, matrix[0][0]);
 		assertEquals(t1.getLabels().toString(), matrix[0][1]);
 		assertEquals(Constants.EMPTYSET, matrix[0][2]);

@@ -12,7 +12,7 @@ import java.util.Set;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 import it.polimi.automata.transition.impl.TransitionImpl;
 
 import org.junit.Before;
@@ -63,7 +63,7 @@ public class IntBAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IntBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class));
+		this.ba = new IntBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(TransitionImpl.class));
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -82,7 +82,7 @@ public class IntBAImplTest {
 	 */
 	@Test
 	public void testIntBAImpl() {
-		assertNotNull(new IntBAImpl<State, Transition>(new ClaimTransitionFactoryImpl<State>(TransitionImpl.class)));
+		assertNotNull(new IntBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(TransitionImpl.class)));
 	}
 
 	/**

@@ -5,14 +5,13 @@ package it.polimi.checker.emptiness;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.BA;
-import it.polimi.automata.impl.IBAFactoryImpl;
-import it.polimi.automata.labeling.Label;
+import it.polimi.automata.impl.IBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,17 +22,19 @@ import org.junit.Test;
  */
 public class EmptinessCheckerTest {
 
-	private BA<Label, State, Transition<Label>> ba;
+	private BA< State, Transition> ba;
 	private State state1;
 	private State state2;
 	private State state3;
-	private Transition<Label> transition1;
-	private Transition<Label> transition2;
-	private Transition<Label> transition3;
+	private Transition transition1;
+	private Transition transition2;
+	private Transition transition3;
 	
 	@Before
 	public void setUp() {
-		this.ba=new IBAFactoryImpl<Label, State, Transition<Label>>().create();
+		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryModelImpl<State>(Transition.class);
+		
+		this.ba=new IBAImpl<State, Transition>(transitionFactory);
 		StateFactory<State> factory=new StateFactoryImpl();
 		state1=factory.create();
 		state2=factory.create();
@@ -41,7 +42,6 @@ public class EmptinessCheckerTest {
 		this.ba.addState(state1);
 		this.ba.addState(state2);
 		this.ba.addState(state3);
-		TransitionFactory<Label, Transition<Label>> transitionFactory=new ModelTransitionFactoryImpl<Label>();
 		transition1=transitionFactory.create();
 		transition2=transitionFactory.create();
 		transition3=transitionFactory.create();
@@ -52,7 +52,7 @@ public class EmptinessCheckerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testEmptinessCheckerNull() {
-		new EmptinessChecker<Label, State, Transition<Label>>(null);
+		new EmptinessChecker<State, Transition>(null);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class EmptinessCheckerTest {
 	 */
 	@Test
 	public void testEmptinessChecker() {
-		assertNotNull(new EmptinessChecker<Label, State, Transition<Label>>(this.ba));
+		assertNotNull(new EmptinessChecker<State, Transition>(this.ba));
 	}
 
 	/**
@@ -73,13 +73,13 @@ public class EmptinessCheckerTest {
 		this.ba.addTransition(state2, state3, transition2);
 		this.ba.addTransition(state3, state3, transition3);
 		
-		assertTrue(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertTrue(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 		this.ba.addInitialState(state1);
-		assertTrue(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertTrue(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 		this.ba.addAcceptState(state2);
-		assertTrue(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertTrue(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 		this.ba.addAcceptState(state3);
-		assertFalse(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertFalse(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 	}
 	
 	/**
@@ -91,13 +91,13 @@ public class EmptinessCheckerTest {
 		this.ba.addTransition(state2, state3, transition2);
 		this.ba.addTransition(state3, state2, transition3);
 		
-		assertTrue(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertTrue(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 		this.ba.addInitialState(state1);
-		assertTrue(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertTrue(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 		this.ba.addAcceptState(state2);
-		assertFalse(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertFalse(new EmptinessChecker< State, Transition>(this.ba).isEmpty());
 		this.ba.addAcceptState(state3);
-		assertFalse(new EmptinessChecker<Label, State, Transition<Label>>(this.ba).isEmpty());
+		assertFalse(new EmptinessChecker<State, Transition>(this.ba).isEmpty());
 	}
 
 }

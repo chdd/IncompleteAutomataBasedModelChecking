@@ -1,7 +1,6 @@
 package it.polimi.checker.ibatransparentstateremoval;
 
 import it.polimi.automata.IBA;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -23,7 +22,7 @@ import it.polimi.automata.transition.Transition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IBATransparentStateRemoval<L extends Label, S extends State, T extends Transition<L>> {
+public class IBATransparentStateRemoval<S extends State, T extends Transition> {
 
 	/**
 	 * removes from the Incomplete Buchi Automaton all the transparent states
@@ -37,14 +36,14 @@ public class IBATransparentStateRemoval<L extends Label, S extends State, T exte
 	 * @throws NullPointerException
 	 *             if the Incomplete Buchi Automaton is null
 	 */
-	public IBA<L, S, T> transparentStateRemoval(
-			IBA<L, S, T> iba) {
+	public IBA<S, T> transparentStateRemoval(
+			IBA<S, T> iba) {
 		if (iba == null) {
 			throw new NullPointerException(
 					"The Incomplete Buchi Automaton cannot be null");
 		}
 
-		IBA<L, S, T> retIba = iba.clone();
+		IBA<S, T> retIba = iba.clone();
 		for (S s : retIba.getTransparentStates()) {
 			retIba.removeState(s);
 		}

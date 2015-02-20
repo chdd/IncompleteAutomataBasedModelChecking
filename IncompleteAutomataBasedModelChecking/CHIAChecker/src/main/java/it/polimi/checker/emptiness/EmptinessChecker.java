@@ -1,7 +1,6 @@
 package it.polimi.checker.emptiness;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -9,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 
 /**
  * Checks the emptiness of an automaton. The automaton must extend the Buchi
@@ -35,12 +33,12 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class EmptinessChecker<L extends Label, S extends State, T extends Transition<L>> {
+public class EmptinessChecker<S extends State, T extends Transition> {
 
 	/**
 	 * contains the automaton to be considered by the {@link EmptinessChecker}
 	 */
-	private BA<L, S, T> automaton;
+	private BA<S, T> automaton;
 
 	/**
 	 * contains the set of the states that has been encountered by <i>some<i>
@@ -62,7 +60,7 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * @throws NullPointerException
 	 *             if the automaton to be considered is null
 	 */
-	public EmptinessChecker(BA<L, S, T> automaton) {
+	public EmptinessChecker(BA<S, T> automaton) {
 		if (automaton == null) {
 			throw new NullPointerException(
 					"The automaton to be considered cannot be null");
@@ -81,9 +79,8 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 */
 	public boolean isEmpty() {
 
-		DirectedSparseGraph<S, T> graph = this.automaton.getGraph();
 		for (S init : this.automaton.getInitialStates()) {
-			if (firstDFS(init, graph, new Stack<S>())) {
+			if (firstDFS(init,  new Stack<S>())) {
 				return false;
 			}
 		}
@@ -99,27 +96,24 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * @throws NullPointerException
 	 *             if the current state, the graph or the stack is null
 	 */
-	private boolean firstDFS(S currState, DirectedSparseGraph<S, T> graph,
+	private boolean firstDFS(S currState, 
 			Stack<S> firstDFSStack) {
 		if (currState == null) {
 			throw new NullPointerException("The current state cannot be null");
-		}
-		if (graph == null) {
-			throw new NullPointerException("The graph cannot be null");
 		}
 		if (firstDFSStack == null) {
 			throw new NullPointerException("The stack cannot be null");
 		}
 		this.hashedStates.add(currState);
 		firstDFSStack.push(currState);
-		for (S t : graph.getSuccessors(currState)) {
+		for (S t : automaton.getSuccessors(currState)) {
 			if (!this.hashedStates.contains(t)) {
-				if (this.firstDFS(t, graph, firstDFSStack))
+				if (this.firstDFS(t, firstDFSStack))
 					return true;
 			}
 		}
 		if (this.automaton.getAcceptStates().contains(currState)) {
-			if (this.secondDFS(currState, graph, firstDFSStack)) {
+			if (this.secondDFS(currState, firstDFSStack)) {
 				return true;
 			}
 		}
@@ -136,24 +130,21 @@ public class EmptinessChecker<L extends Label, S extends State, T extends Transi
 	 * @throws NullPointerException
 	 *             if the current state, the graph or the stack is null
 	 */
-	private boolean secondDFS(S currState, DirectedSparseGraph<S, T> graph,
+	private boolean secondDFS(S currState, 
 			Stack<S> firstDFSStack) {
 		if (currState == null) {
 			throw new NullPointerException("The current state cannot be null");
-		}
-		if (graph == null) {
-			throw new NullPointerException("The graph cannot be null");
 		}
 		if (firstDFSStack == null) {
 			throw new NullPointerException("The first stack cannot be null");
 		}
 		this.flaggedStates.add(currState);
-		for (S t : graph.getSuccessors(currState)) {
+		for (S t : this.automaton.getSuccessors(currState)) {
 			if (firstDFSStack.contains(t)) {
 				return true;
 			} else {
 				if (!this.flaggedStates.contains(t)) {
-					if (this.secondDFS(t, graph, firstDFSStack))
+					if (this.secondDFS(t, firstDFSStack))
 						return true;
 				}
 			}

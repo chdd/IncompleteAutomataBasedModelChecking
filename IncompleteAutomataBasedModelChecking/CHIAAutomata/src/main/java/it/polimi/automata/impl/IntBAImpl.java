@@ -54,7 +54,7 @@ public class IntBAImpl< S extends State, T extends Transition>
 	/**
 	 * creates a new intersection automaton
 	 */
-	protected IntBAImpl(EdgeFactory<S, T> transitionFactory) {
+	public IntBAImpl(EdgeFactory<S, T> transitionFactory) {
 		super(transitionFactory);
 		this.mixedStates = new HashSet<S>();
 	}

@@ -3,8 +3,7 @@ package it.polimi.checker.intersection;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.IntersectionBAFactory;
-import it.polimi.automata.labeling.Label;
+import it.polimi.automata.impl.IntBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
@@ -12,6 +11,8 @@ import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * Is responsible of the creation of the {@link IntersectionBA}, i.e., the
@@ -30,18 +31,18 @@ import java.util.Map;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionBuilder<L extends Label, S extends State, T extends Transition<L>> {
+public class IntersectionBuilder<S extends State, T extends Transition> {
 
 	/**
 	 * contains the intersection automaton generated
 	 */
-	private IntersectionBA<L, S, T> intersection;
+	private IntersectionBA<S, T> intersection;
 
 	/**
 	 * contains the intersection rule which is used to build the intersection
 	 * transitions
 	 */
-	private IntersectionRule<L, T> intersectionrule;
+	private IntersectionRule<S, T> intersectionrule;
 
 	/**
 	 * contains the state factory rule which is used to build the intersection
@@ -53,7 +54,7 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	 * is the factory which allows to create a new transition of the
 	 * intersection automaton
 	 */
-	private TransitionFactory<L, T> transitionFactory;
+	private TransitionFactory<S, T> transitionFactory;
 
 	/**
 	 * Keeps track of the created states. For each couple of state of the model
@@ -65,12 +66,12 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	/**
 	 * contains the model to be considered in the intersection procedure
 	 */
-	private IBA<L, S, T> model;
+	private IBA<S, T> model;
 
 	/**
 	 * contains the claim to be considered in the intersection procedure
 	 */
-	private BA<L, S, T> claim;
+	private BA<S, T> claim;
 
 	/**
 	 * crates a new {@link IntersectionBuilder} which is in charge of computing
@@ -93,21 +94,16 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	 *             if the intersection rule or the stateFactory or the
 	 *             intersectionBAFactory or the model or the claim is null
 	 */
-	public IntersectionBuilder(IntersectionRule<L, T> intersectionrule,
+	public IntersectionBuilder(IntersectionRule<S, T> intersectionrule,
 			StateFactory<S> stateFactory,
-			IntersectionBAFactory<L, S, T> intersectionBAFactory,
-			TransitionFactory<L, T> transitionFactory, IBA<L, S, T> model,
-			BA<L, S, T> claim) {
+			TransitionFactory<S, T> transitionFactory, IBA< S, T> model,
+			BA<S, T> claim) {
 		if (intersectionrule == null) {
 			throw new NullPointerException(
 					"The intersection rule cannot be null");
 		}
 		if (stateFactory == null) {
 			throw new NullPointerException("The state factory cannot be null");
-		}
-		if (intersectionBAFactory == null) {
-			throw new NullPointerException(
-					"The factory of the intersection automaton cannot be null");
 		}
 		if (transitionFactory == null) {
 			throw new NullPointerException(
@@ -122,7 +118,7 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 		}
 		this.intersectionrule = intersectionrule;
 		this.stateFactory = stateFactory;
-		this.intersection = intersectionBAFactory.create();
+		this.intersection = new IntBAImpl<S, T>(transitionFactory);
 		this.model = model;
 		this.claim = claim;
 		this.transitionFactory = transitionFactory;
@@ -134,7 +130,7 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	 * 
 	 * @return the intersection of this automaton and the automaton a2
 	 */
-	public IntersectionBA<L, S, T> computeIntersection() {
+	public IntersectionBA<S, T> computeIntersection() {
 
 		this.updateAlphabet();
 		this.createdStates = new HashMap<S, Map<S, Map<Integer, S>>>();
@@ -151,10 +147,10 @@ public class IntersectionBuilder<L extends Label, S extends State, T extends Tra
 	 * of the model and the claim
 	 */
 	private void updateAlphabet() {
-		for (L l : this.model.getAlphabet()) {
+		for (IGraphProposition l : this.model.getAlphabet()) {
 			this.intersection.addCharacter(l);
 		}
-		for (L l : this.claim.getAlphabet()) {
+		for (IGraphProposition l : this.claim.getAlphabet()) {
 			this.intersection.addCharacter(l);
 		}
 	}

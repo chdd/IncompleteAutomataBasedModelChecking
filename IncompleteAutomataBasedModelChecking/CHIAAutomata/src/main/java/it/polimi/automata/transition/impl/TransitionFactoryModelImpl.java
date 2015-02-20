@@ -22,10 +22,10 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            proposition or a propositional logic formula {@link Label}
  */
 @SuppressWarnings("serial")
-public class ModelTransitionFactoryImpl<S extends State> extends
-		ClaimTransitionFactoryImpl<S> {
+public class TransitionFactoryModelImpl<S extends State> extends
+		TransitionFactoryClaimImpl<S> {
 
-	public ModelTransitionFactoryImpl(Class<? extends Transition> edgeClass) {
+	public TransitionFactoryModelImpl(Class<? extends Transition> edgeClass) {
 		super(edgeClass);
 	}
 

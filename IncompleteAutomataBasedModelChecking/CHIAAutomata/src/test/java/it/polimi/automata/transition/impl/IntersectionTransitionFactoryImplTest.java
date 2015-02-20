@@ -17,7 +17,7 @@ public class IntersectionTransitionFactoryImplTest {
 
 	@Test
 	public void test() {
-		assertNotNull(new IntersectionTransitionFactoryImpl<State>(Transition.class));
+		assertNotNull(new TransitionFactoryIntersectionImpl<State>(Transition.class));
 	}
 
 }

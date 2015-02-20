@@ -7,14 +7,12 @@ import it.polimi.Constants;
 
 import java.util.Map.Entry;
 
-import org.apache.commons.collections15.Transformer;
 
 /**
  * @author claudiomenghi
  * 
  */
-public class ConcatenateTransformer implements
-		Transformer<Entry<String, String>, String> {
+public class ConcatenateTransformer  {
 
 	private String concatenationCharacter;
 	
@@ -31,7 +29,6 @@ public class ConcatenateTransformer implements
 	 * @throws NullPointerException
 	 *             if the input is null
 	 */
-	@Override
 	public String transform(Entry<String, String> input) {
 		if (input == null) {
 			throw new NullPointerException("The input cannot be null");

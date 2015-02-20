@@ -7,7 +7,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class LTLtoBATransformerTest1 {
 	private StateFactoryImpl stateFactory;
 	
 	@Mock
-	private ClaimTransitionFactoryImpl<State> transitionFactory;
+	private TransitionFactoryClaimImpl<State> transitionFactory;
 
 	@Mock
 	private StateImpl state;

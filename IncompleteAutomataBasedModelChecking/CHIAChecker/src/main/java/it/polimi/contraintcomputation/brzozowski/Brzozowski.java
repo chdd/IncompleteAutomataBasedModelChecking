@@ -2,16 +2,13 @@ package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
 import it.polimi.Constants;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
-import org.apache.commons.collections15.Transformer;
 
 /**
  * Contains the algorithm that given an automaton, an initial and a final state
@@ -32,12 +29,12 @@ import org.apache.commons.collections15.Transformer;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class Brzozowski<L extends Label, S extends State, T extends Transition<L>> {
+public class Brzozowski< S extends State, T extends Transition> {
 
 	/**
 	 * contains the automaton to be analyzed
 	 */
-	private final BA<L, S, T> automaton;
+	private final BA<S, T> automaton;
 
 	/**
 	 * contains the list of the states of the automaton
@@ -57,19 +54,19 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 	/**
 	 * is the transformer that given an input string applies the star operator
 	 */
-	private Transformer<String, String> starTransformer;
+	private StarTransformer starTransformer;
 
 	/**
 	 * is the transformer that given two strings as an input entry returns their
 	 * union
 	 */
-	private Transformer<Entry<String, String>, String> unionTransformer;
+	private UnionTransformer unionTransformer;
 
 	/**
 	 * is the transformer that given two strings as an input entry returns their
 	 * concatenation
 	 */
-	private Transformer<Entry<String, String>, String> concatenateTransformer;
+	private ConcatenateTransformer concatenateTransformer;
 
 	/**
 	 * creates a new Brzozowski solver
@@ -86,10 +83,10 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 	 *             if the initState or the finalState are not contained in the
 	 *             automaton
 	 */
-	public Brzozowski(BA<L, S, T> automaton, S initState, S finalState,
-			Transformer<String, String> starTransformer,
-			Transformer<Entry<String, String>, String> unionTransformer,
-			Transformer<Entry<String, String>, String> concatenateTransformer) {
+	public Brzozowski(BA<S, T> automaton, S initState, S finalState,
+			StarTransformer starTransformer,
+			UnionTransformer unionTransformer,
+			ConcatenateTransformer concatenateTransformer) {
 		if (automaton == null) {
 			throw new NullPointerException(
 					"The automaton to be analyzed cannot be null");
@@ -145,9 +142,9 @@ public class Brzozowski<L extends Label, S extends State, T extends Transition<L
 		this.orderedStates.remove(this.initState);
 		this.orderedStates.add(0, initState);
 
-		String[][] t = new TransitionMatrixTranformer<L, S, T>(
+		String[][] t = new TransitionMatrixTranformer<S, T>(
 				this.orderedStates).transform(this.automaton);
-		String[] constr1 = new AcceptingStatesTransformer<L, S, T>(
+		String[] constr1 = new AcceptingStatesTransformer<S, T>(
 				orderedStates, this.finalState).transform(automaton);
 		this.solveSystem(t, constr1);
 

@@ -1,8 +1,8 @@
 package it.polimi.checker.intersection;
 
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.automata.state.State;
 
 /**
  * Defines an {@link IntersectionRule} that specifies how the
@@ -16,7 +16,7 @@ import it.polimi.automata.transition.TransitionFactory;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface IntersectionRule<L extends Label, T extends Transition<L>> {
+public interface IntersectionRule<S extends State, T extends Transition> {
 
 	/**
 	 * specifies how the intersection transition between a transition of the
@@ -40,6 +40,6 @@ public interface IntersectionRule<L extends Label, T extends Transition<L>> {
 	 */
 	public abstract T getIntersectionTransition(
 			T modelTransition, T claimTransition,
-			TransitionFactory<L, T> intersectionTransitionFactory);
+			TransitionFactory<S, T> intersectionTransitionFactory);
 
 }

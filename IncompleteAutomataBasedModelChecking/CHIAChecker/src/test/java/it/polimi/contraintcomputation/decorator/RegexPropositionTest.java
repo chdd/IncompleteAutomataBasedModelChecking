@@ -4,11 +4,10 @@
 package it.polimi.contraintcomputation.decorator;
 
 import static org.junit.Assert.*;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.ModelTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 import it.polimi.contraintcomputation.decorator.RegexProposition;
 
 import org.junit.Before;
@@ -22,17 +21,17 @@ public class RegexPropositionTest {
 
 	private State state;
 
-	private Transition<Label> incoming;
+	private Transition incoming;
 
-	private Transition<Label> outcoming;
+	private Transition outcoming;
 
 	private String regex;
 
 	@Before
 	public void setUp() {
 		state = new StateFactoryImpl().create();
-		incoming = new ModelTransitionFactoryImpl<Label>().create();
-		outcoming = new ModelTransitionFactoryImpl<Label>().create();
+		incoming = new TransitionFactoryModelImpl<State>(Transition.class).create();
+		outcoming = new TransitionFactoryModelImpl<State>(Transition.class).create();
 		regex="";
 	}
 
@@ -43,7 +42,7 @@ public class RegexPropositionTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPropositionNullState() {
-		new RegexProposition<Label, State, Transition<Label>>(null, regex, incoming,
+		new RegexProposition<State, Transition>(null, regex, incoming,
 				outcoming);
 	}
 
@@ -54,7 +53,7 @@ public class RegexPropositionTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPropositionNullRegex() {
-		new RegexProposition<Label, State, Transition<Label>>(state, null, incoming,
+		new RegexProposition<State, Transition>(state, null, incoming,
 				outcoming);
 	}
 
@@ -65,7 +64,7 @@ public class RegexPropositionTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPropositionNullIncoming() {
-		new RegexProposition<Label, State, Transition<Label>>(state, regex, null,
+		new RegexProposition<State, Transition>(state, regex, null,
 				outcoming);
 	}
 
@@ -76,7 +75,7 @@ public class RegexPropositionTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testPropositionNullOutcoming() {
-		new RegexProposition<Label, State, Transition<Label>>(state, regex, incoming,
+		new RegexProposition<State, Transition>(state, regex, incoming,
 				null);
 	}
 
@@ -87,7 +86,7 @@ public class RegexPropositionTest {
 	 */
 	@Test
 	public void testProposition() {
-		assertNotNull(new RegexProposition<Label, State, Transition<Label>>(state, regex, incoming,
+		assertNotNull(new RegexProposition<State, Transition>(state, regex, incoming,
 				outcoming));
 	}
 
@@ -96,7 +95,7 @@ public class RegexPropositionTest {
 	 */
 	@Test
 	public void testGetLabel() {
-		RegexProposition<Label, State, Transition<Label>> p=new RegexProposition<Label, State, Transition<Label>>(state, regex, incoming,
+		RegexProposition<State, Transition> p=new RegexProposition<State, Transition>(state, regex, incoming,
 				outcoming);
 		assertEquals(regex, p.getLabel());
 	}
@@ -106,7 +105,7 @@ public class RegexPropositionTest {
 	 */
 	@Test
 	public void testGetState() {
-		RegexProposition<Label, State, Transition<Label>> p=new RegexProposition<Label, State, Transition<Label>>(state, regex, incoming,
+		RegexProposition<State, Transition> p=new RegexProposition<State, Transition>(state, regex, incoming,
 				outcoming);
 		assertEquals(state, p.getState());
 	}
@@ -116,7 +115,7 @@ public class RegexPropositionTest {
 	 */
 	@Test
 	public void testGetIncoming() {
-		RegexProposition<Label, State, Transition<Label>> p=new RegexProposition<Label, State, Transition<Label>>(state, regex, incoming,
+		RegexProposition<State, Transition> p=new RegexProposition< State, Transition>(state, regex, incoming,
 				outcoming);
 		assertEquals(incoming, p.getIncoming());
 	}
@@ -126,7 +125,7 @@ public class RegexPropositionTest {
 	 */
 	@Test
 	public void testGetOutcoming() {
-		RegexProposition<Label, State, Transition<Label>> p=new RegexProposition<Label, State, Transition<Label>>(state, regex, incoming,
+		RegexProposition<State, Transition> p=new RegexProposition<State, Transition>(state, regex, incoming,
 				outcoming);
 		assertEquals(outcoming, p.getOutcoming());
 	}

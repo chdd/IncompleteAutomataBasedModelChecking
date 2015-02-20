@@ -2,14 +2,12 @@ package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
 import it.polimi.Constants;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections15.Transformer;
 
 /**
  * Given an ordering between the states (a list) and a final state and an
@@ -31,8 +29,7 @@ import org.apache.commons.collections15.Transformer;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-class TransitionMatrixTranformer<L extends Label, S extends State, T extends Transition<L>>
-		implements Transformer<BA<L, S, T>, String[][]> {
+class TransitionMatrixTranformer<S extends State, T extends Transition> {
 
 	/**
 	 * contains the array of the ordered states
@@ -70,8 +67,7 @@ class TransitionMatrixTranformer<L extends Label, S extends State, T extends Tra
 	 *             if the list of states does not contain all the states of the
 	 *             automaton and vice-versa
 	 */
-	@Override
-	public String[][] transform(BA<L, S, T> automaton) {
+	public String[][] transform(BA<S, T> automaton) {
 		if (automaton == null) {
 			throw new NullPointerException("The automaton cannot be null");
 		}
@@ -92,8 +88,8 @@ class TransitionMatrixTranformer<L extends Label, S extends State, T extends Tra
 			for (int j = 0; j < this.orderedStates.size(); j++) {
 				S s2 = this.orderedStates.get(j);
 				boolean setted = false;
-				for (T t : automaton.getGraph().getOutEdges(s1)) {
-					if (automaton.getGraph().getDest(t).equals(s2)) {
+				for (T t : automaton.getOutTransitions(s1)) {
+					if (automaton.getTransitionDestination(t).equals(s2)) {
 						if(t.getLabels().isEmpty()){
 							ret[i][j]=Constants.LAMBDA;
 						}

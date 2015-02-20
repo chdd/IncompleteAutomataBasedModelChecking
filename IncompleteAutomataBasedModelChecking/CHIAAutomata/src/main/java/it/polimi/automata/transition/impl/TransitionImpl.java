@@ -19,7 +19,8 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 public class TransitionImpl implements Transition {
 
 	
-
+	
+	
 	/**
 	 * contains the id of the transition
 	 */

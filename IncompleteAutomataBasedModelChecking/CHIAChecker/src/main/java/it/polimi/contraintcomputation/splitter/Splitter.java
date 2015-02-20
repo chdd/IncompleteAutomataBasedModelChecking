@@ -3,7 +3,6 @@
  */
 package it.polimi.contraintcomputation.splitter;
 
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
@@ -21,18 +20,18 @@ import java.util.Set;
  * @author claudiomenghi
  * 
  */
-public class Splitter<L extends Label, S extends State, T extends Transition<L>> {
+public class Splitter<S extends State, T extends Transition> {
 
 	
 	/**
 	 * contains the abstracted Buchi Automaton
 	 */
-	private AbstractedBA<L, S, T, Component<L, S, T>> abstractedIntersection;
+	private AbstractedBA<S, T, Component<S, T>> abstractedIntersection;
 
 	/**
 	 * is the factory which is used to create transitions
 	 */
-	private TransitionFactory<L, T> transitionFactory;
+	private TransitionFactory<S, T> transitionFactory;
 
 	
 	/**
@@ -51,8 +50,8 @@ public class Splitter<L extends Label, S extends State, T extends Transition<L>>
 	 * @param labelFactory
 	 */
 	public Splitter(
-			AbstractedBA<L, S, T, Component<L, S, T>> abstractedIntersection,
-			TransitionFactory<L, T> transitionFactory) {
+			AbstractedBA<S, T, Component<S, T>> abstractedIntersection,
+			TransitionFactory<S, T> transitionFactory) {
 
 		if (abstractedIntersection == null) {
 			throw new NullPointerException(
@@ -75,11 +74,11 @@ public class Splitter<L extends Label, S extends State, T extends Transition<L>>
 	 * @return a version of the automaton where the states are aggregated
 	 *         according with the corresponding clusters.
 	 */
-	public AbstractedBA<L, S, T, Component<L, S, T>> split() {
+	public AbstractedBA<S, T, Component<S, T>> split() {
 
-		Set<Component<L, S, T>> states = this.abstractedIntersection
+		Set<Component<S, T>> states = this.abstractedIntersection
 				.getStates();
-		for (Component<L, S, T> s : states) {
+		for (Component<S, T> s : states) {
 			
 			if (s.isTransparent() && s.getInitialStates().size() > 1) {
 				splitState(s);
@@ -88,13 +87,13 @@ public class Splitter<L extends Label, S extends State, T extends Transition<L>>
 		return abstractedIntersection;
 	}
 
-	private void splitState(Component<L, S, T> stateToBeSplitted) {
+	private void splitState(Component<S, T> stateToBeSplitted) {
 		
 		/*
 		 * creates a new state for each initial state
 		 */
 		for (S initialState : stateToBeSplitted.getInitialStates()) {
-			Component<L, S, T> copyOfTheState = stateToBeSplitted
+			Component<S, T> copyOfTheState = stateToBeSplitted
 					.duplicate();
 			this.abstractedIntersection.addState(copyOfTheState);
 			/*
@@ -103,7 +102,7 @@ public class Splitter<L extends Label, S extends State, T extends Transition<L>>
 			for (T t : this.abstractedIntersection
 					.getOutTransitions(stateToBeSplitted)) {
 				T newTransition = this.transitionFactory.create(t.getLabels());
-				Component<L, S, T> destinationState=this.abstractedIntersection
+				Component<S, T> destinationState=this.abstractedIntersection
 						.getTransitionDestination(t);
 				
 				this.abstractedIntersection
@@ -116,7 +115,7 @@ public class Splitter<L extends Label, S extends State, T extends Transition<L>>
 			 */
 			for(T t: this.abstractedIntersection.getInTransitions(stateToBeSplitted)){
 				
-				Component<L, S, T> prec=this.abstractedIntersection.getTransitionSource(t);
+				Component<S, T> prec=this.abstractedIntersection.getTransitionSource(t);
 				Set<S> outcomingStates=new HashSet<S>(prec.getOutcomingTransition().keySet());
 				Set<S> sourceStates=copyOfTheState.getIncomingTransition().get(initialState).keySet();
 				if(!Collections.disjoint(outcomingStates, sourceStates)){

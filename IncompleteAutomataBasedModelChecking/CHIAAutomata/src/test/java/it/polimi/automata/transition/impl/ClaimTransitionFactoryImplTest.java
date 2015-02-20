@@ -23,18 +23,18 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  */
 public class ClaimTransitionFactoryImplTest {
 
-	private ClaimTransitionFactoryImpl<State> claim;
+	private TransitionFactoryClaimImpl<State> claim;
 	private Set<IGraphProposition> labels;
 
 	@Before
 	public void setUp() {
-		this.claim = new ClaimTransitionFactoryImpl<State>(TransitionImpl.class);
+		this.claim = new TransitionFactoryClaimImpl<State>(TransitionImpl.class);
 		this.labels = new HashSet<IGraphProposition>();
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#create()}
+	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create()}
 	 * .
 	 */
 	@Test
@@ -45,7 +45,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#create(java.util.Set)}
+	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create(java.util.Set)}
 	 * .
 	 */
 	@Test
@@ -59,7 +59,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#createFromLabel(null)}
+	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#createFromLabel(null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -69,7 +69,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#create(int, java.util.Set)}
+	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create(int, java.util.Set)}
 	 * .
 	 * 
 	 * @throws SecurityException
@@ -80,7 +80,7 @@ public class ClaimTransitionFactoryImplTest {
 	@Test
 	public void testCreateIntSetOfLABEL() throws NoSuchFieldException,
 			SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = ClaimTransitionFactoryImpl.class
+		Field field = TransitionFactoryClaimImpl.class
 				.getDeclaredField("transitionCount");
 		field.setAccessible(true);
 		field.set(claim, 0);
@@ -93,7 +93,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl#create(int, null)}
+	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create(int, null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)

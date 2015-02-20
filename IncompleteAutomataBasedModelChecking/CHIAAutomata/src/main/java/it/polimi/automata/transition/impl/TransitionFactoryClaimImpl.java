@@ -25,10 +25,10 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            proposition or a propositional logic formula {@link Label}
  */
 @SuppressWarnings("serial")
-public class ClaimTransitionFactoryImpl<S extends State>  extends ClassBasedEdgeFactory<S, Transition> implements
+public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdgeFactory<S, Transition> implements
 		TransitionFactory<S, Transition> {
 
-	public ClaimTransitionFactoryImpl(Class<? extends Transition> edgeClass) {
+	public TransitionFactoryClaimImpl(Class<? extends Transition> edgeClass) {
 		super(edgeClass);
 	}
 
@@ -41,9 +41,10 @@ public class ClaimTransitionFactoryImpl<S extends State>  extends ClassBasedEdge
 	 * {@inheritDoc}
 	 */
 	public Transition create() {
+		
 		Transition t = new TransitionImpl(new HashSet<IGraphProposition>(),
-				ClaimTransitionFactoryImpl.transitionCount);
-		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount+1;
+				TransitionFactoryClaimImpl.transitionCount);
+		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount+1;
 
 		return t;
 	}
@@ -57,8 +58,8 @@ public class ClaimTransitionFactoryImpl<S extends State>  extends ClassBasedEdge
 			throw new NullPointerException("The labels to be added at the Transition cannot be null");
 
 		Transition t = new TransitionImpl(labels,
-				ClaimTransitionFactoryImpl.transitionCount);
-		ClaimTransitionFactoryImpl.transitionCount = ClaimTransitionFactoryImpl.transitionCount+1;
+				TransitionFactoryClaimImpl.transitionCount);
+		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount+1;
 
 		return t;
 	}
@@ -74,8 +75,8 @@ public class ClaimTransitionFactoryImpl<S extends State>  extends ClassBasedEdge
 			throw new NullPointerException("The labels to be added at the Transition cannot be null");
 
 		Transition t = new TransitionImpl(labels, id);
-		ClaimTransitionFactoryImpl.transitionCount = Math.max(
-				ClaimTransitionFactoryImpl.transitionCount++, id++);
+		TransitionFactoryClaimImpl.transitionCount = Math.max(
+				TransitionFactoryClaimImpl.transitionCount++, id++);
 
 		return t;
 	}

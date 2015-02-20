@@ -1,7 +1,6 @@
 package it.polimi.contraintcomputation.decorator;
 
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -24,7 +23,7 @@ import it.polimi.automata.transition.Transition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-class RegexProposition<L extends Label, S extends State, T extends Transition<L>> extends GraphProposition {
+class RegexProposition<S extends State, T extends Transition> extends GraphProposition {
 
 	/**
 	 * contains the state that is constrained

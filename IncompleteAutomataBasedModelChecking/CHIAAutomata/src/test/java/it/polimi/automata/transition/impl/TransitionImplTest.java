@@ -128,7 +128,7 @@ public class TransitionImplTest {
 		assertTrue(t.equals(t));
 		assertFalse(t.equals(t2));
 		assertTrue(t.equals(t3));
-		assertFalse(t.equals(t4));
+		assertTrue(t.equals(t4));
 	}
 
 	/**

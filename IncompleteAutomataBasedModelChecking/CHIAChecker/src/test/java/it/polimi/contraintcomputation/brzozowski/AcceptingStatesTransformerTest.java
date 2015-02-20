@@ -6,12 +6,12 @@ package it.polimi.contraintcomputation.brzozowski;
 import static org.junit.Assert.*;
 import it.polimi.automata.BA;
 import it.polimi.Constants;
-import it.polimi.automata.impl.IBAFactoryImpl;
-import it.polimi.automata.labeling.Label;
+import it.polimi.automata.impl.IBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.junit.Test;
  */
 public class AcceptingStatesTransformerTest {
 
-	private BA<Label, State, Transition<Label>> ba;
+	private BA<State, Transition> ba;
 	private State state1;
 	private State state2;
 	private State state3;
@@ -34,7 +34,7 @@ public class AcceptingStatesTransformerTest {
 	
 	@Before
 	public void setUp() {
-		this.ba=new IBAFactoryImpl<Label, State, Transition<Label>>().create();
+		this.ba=new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(Transition.class));
 		StateFactory<State> factory=new StateFactoryImpl();
 		state1=factory.create();
 		state2=factory.create();
@@ -50,7 +50,7 @@ public class AcceptingStatesTransformerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testAcceptingStatesTransformerNullOrderedStates() {
-		new AcceptingStatesTransformer<Label, State, Transition<Label>>(null, new StateFactoryImpl().create());
+		new AcceptingStatesTransformer<State, Transition>(null, new StateFactoryImpl().create());
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class AcceptingStatesTransformerTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testAcceptingStatesTransformerNullState() {
-		new AcceptingStatesTransformer<Label, State, Transition<Label>>(new ArrayList<State>(), null);
+		new AcceptingStatesTransformer<State, Transition>(new ArrayList<State>(), null);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class AcceptingStatesTransformerTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testAcceptingStatesTransformerStateNotInTheOrderedStates() {
-		new AcceptingStatesTransformer<Label, State, Transition<Label>>(new ArrayList<State>(), new StateFactoryImpl().create());
+		new AcceptingStatesTransformer<State, Transition>(new ArrayList<State>(), new StateFactoryImpl().create());
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class AcceptingStatesTransformerTest {
 		states.add(state2);
 		states.add(state3);
 		
-		assertNotNull(new AcceptingStatesTransformer<Label, State, Transition<Label>>(states, state1));
+		assertNotNull(new AcceptingStatesTransformer<State, Transition>(states, state1));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class AcceptingStatesTransformerTest {
 		states.add(state2);
 		states.add(state3);
 		states.add(state4);
-		new AcceptingStatesTransformer<Label, State, Transition<Label>>(states, state4).transform(this.ba);
+		new AcceptingStatesTransformer<State, Transition>(states, state4).transform(this.ba);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class AcceptingStatesTransformerTest {
 		states.add(state2);
 		states.add(state3);
 		states.add(state4);
-		new AcceptingStatesTransformer<Label, State, Transition<Label>>(states, state3).transform(this.ba);
+		new AcceptingStatesTransformer<State, Transition>(states, state3).transform(this.ba);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class AcceptingStatesTransformerTest {
 		List<State> states=new ArrayList<State>();
 		states.add(state1);
 		states.add(state2);
-		new AcceptingStatesTransformer<Label, State, Transition<Label>>(states, state2).transform(this.ba);
+		new AcceptingStatesTransformer<State, Transition>(states, state2).transform(this.ba);
 	}
 	
 	/**
@@ -131,7 +131,7 @@ public class AcceptingStatesTransformerTest {
 		states.add(state3);
 		
 		
-		 String[] ret=new AcceptingStatesTransformer<Label, State, Transition<Label>>(states, state2).transform(this.ba);
+		 String[] ret=new AcceptingStatesTransformer<State, Transition>(states, state2).transform(this.ba);
 		 assertEquals(Constants.EMPTYSET, ret[0]);
 		 assertEquals(Constants.LAMBDA, ret[1]);
 		 assertEquals(Constants.EMPTYSET, ret[2]);
@@ -149,7 +149,7 @@ public class AcceptingStatesTransformerTest {
 		
 		this.ba.addAcceptState(state2);
 		
-		 String[] ret=new AcceptingStatesTransformer<Label, State, Transition<Label>>(states, state3).transform(this.ba);
+		 String[] ret=new AcceptingStatesTransformer<State, Transition>(states, state3).transform(this.ba);
 		 assertEquals(Constants.EMPTYSET, ret[0]);
 		 assertEquals(Constants.EMPTYSET, ret[1]);
 		 assertEquals(Constants.LAMBDA, ret[2]);

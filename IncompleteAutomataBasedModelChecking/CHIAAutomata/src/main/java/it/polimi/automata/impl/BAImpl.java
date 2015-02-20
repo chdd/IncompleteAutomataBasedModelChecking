@@ -8,10 +8,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DirectedPseudograph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
@@ -43,6 +44,12 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 public class BAImpl<S extends State, T extends Transition>
 		implements BA<S, T> {
 
+	/**
+	 * is the logger of the SubAutomataIdentifier class
+	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(BAImpl.class);
+	
 	/**
 	 * contains the initial states of the Buchi automaton
 	 */
@@ -374,7 +381,7 @@ public class BAImpl<S extends State, T extends Transition>
 			throw new NullPointerException("The transition cannot be null");
 		if (!this.alphabet.containsAll(transition.getLabels()))
 			throw new IllegalArgumentException(
-					"The label of the transition is not contained into the alphabet of the automaton");
+					"Some of the propositions "+transition.getLabels()+" of the transition are not contained into the alphabet of the automaton");
 		if (!this.getStates().contains(source))
 			throw new IllegalArgumentException(
 					"The source state is not contained into the set of the states of the automaton");
@@ -384,8 +391,11 @@ public class BAImpl<S extends State, T extends Transition>
 		
 		if (this.getTransitions().contains(transition)) {
 			throw new IllegalArgumentException(
-					"The transition is already contained into the set of transitions of the grap");
+					"The transition is already contained into the set of transitions of the graph");
 		}
+		logger.debug("Transitions: "+transition.toString());
+		logger.debug("Adding the transition: "+transition.getId()+" from "+source.toString()+" to "+destination.toString());
+		
 		this.automataGraph.addEdge(source, destination, transition);
 	}
 

@@ -6,7 +6,7 @@ import it.polimi.automata.transition.TransitionFactory;
 
 /**
  * is the factory that allows to create transitions of the type Transition of
- * the intersection automaton It extends the {@link ClaimTransitionFactoryImpl}
+ * the intersection automaton It extends the {@link TransitionFactoryClaimImpl}
  * 
  * @see {@link Transition}. It implements the {@link TransitionFactory}
  *      interface
@@ -19,10 +19,10 @@ import it.polimi.automata.transition.TransitionFactory;
  *            proposition or a propositional logic formula {@link Label}
  */
 @SuppressWarnings("serial")
-public class IntersectionTransitionFactoryImpl<S extends State> extends
-		ClaimTransitionFactoryImpl<S> {
+public class TransitionFactoryIntersectionImpl<S extends State> extends
+		TransitionFactoryClaimImpl<S> {
 
-	public IntersectionTransitionFactoryImpl(
+	public TransitionFactoryIntersectionImpl(
 			Class<? extends Transition> edgeClass) {
 		super(edgeClass);
 	}

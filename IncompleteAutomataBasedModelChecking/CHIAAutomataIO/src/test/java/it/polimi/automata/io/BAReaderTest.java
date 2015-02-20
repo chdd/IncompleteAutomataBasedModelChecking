@@ -10,7 +10,7 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.ClaimTransitionFactoryImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,7 +43,7 @@ public class BAReaderTest {
 	public void setUp() {
 
 		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory = new ClaimTransitionFactoryImpl<State>(Transition.class);
+		this.transitionFactory = new TransitionFactoryClaimImpl<State>(Transition.class);
 	
 		Set<IGraphProposition> propositions1 = new HashSet<IGraphProposition>();
 		propositions1.add(new SigmaProposition());

@@ -5,13 +5,12 @@ package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.Constants;
 
-import org.apache.commons.collections15.Transformer;
 
 /**
  * @author claudiomenghi is the transformer that given the input string applies
  *         the star operator
  */
-public class StarTransformer implements Transformer<String, String> {
+public class StarTransformer  {
 
 	/**
 	 * applies the star operator to the input String
@@ -22,7 +21,6 @@ public class StarTransformer implements Transformer<String, String> {
 	 * @throws NullPointerException
 	 *             if the input string is null
 	 */
-	@Override
 	public String transform(String input) {
 		if (input == null) {
 			throw new NullPointerException("The input string cannot be null");

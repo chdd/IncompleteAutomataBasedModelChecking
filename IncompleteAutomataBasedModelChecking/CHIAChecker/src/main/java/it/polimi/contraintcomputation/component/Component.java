@@ -4,7 +4,6 @@
 package it.polimi.contraintcomputation.component;
 
 import it.polimi.automata.impl.BAImpl;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
@@ -12,7 +11,6 @@ import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.contraintcomputation.subautomatafinder.MergingEntry;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,8 +22,8 @@ import java.util.Set;
  * @author claudiomenghi
  * 
  */
-public class Component<L extends Label, S extends State, T extends Transition<L>>
-		extends BAImpl<L, S, T> implements State {
+public class Component<S extends State, T extends Transition>
+		extends BAImpl<S, T> implements State {
 
 	/**
 	 * contains the id of the state
@@ -185,6 +183,18 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return this.getId() + ": " + this.getName();
+	}
+	
+	public String toStringAutomata(){
+		return super.toString();
+	}
+	
+	/**
 	 * injects the componentB into the component a
 	 * 
 	 * @param componentB
@@ -196,9 +206,9 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	 * @throws NullPointerException
 	 *             if the componentB or the statesConnection map is null
 	 */
-	public void merge(Component<L, S, T> componentB,
-			Set<MergingEntry<L, S, T>> mergingEntries,
-			TransitionFactory<L, T> transitionFactory) {
+	public void merge(Component<S, T> componentB,
+			Set<MergingEntry<S, T>> mergingEntries,
+			TransitionFactory<S, T> transitionFactory) {
 
 		if (componentB == null) {
 			throw new NullPointerException(
@@ -222,31 +232,12 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 					componentB.getTransitionDestination(t), t);
 		}
 
-		for(MergingEntry<L, S, T> e: mergingEntries){
+		for(MergingEntry<S, T> e: mergingEntries){
 			S sourceState=e.getSourceState();
 			S destinationState=e.getDestinationState();
 			T transition=e.getRefinedTransition();
 			this.addCharacters(transition.getLabels());
-			if (this.isPredecessor(sourceState, destinationState)) {
-				T oldTrans = this.getTransition(sourceState, destinationState);
-				Set<L> labels = new HashSet<L>();
-				labels.addAll(oldTrans.getLabels());
-				labels.addAll(transition.getLabels());
-				this.removeTransition(oldTrans);
-				T newTransition = transitionFactory.create(labels);
-				this.addTransition(sourceState, destinationState, newTransition);
-
-			} else {
-				if(this.getTransitions().contains(transition)){
-					System.out.println(this.getTransitionSource(transition));
-					System.out.println(this.getTransitionDestination(transition));
-					
-				}
-				System.out.println(sourceState);
-				System.out.println(destinationState);
-				System.out.println(transition);
-				this.addTransition(sourceState, destinationState, transition);
-			}
+			this.addTransition(sourceState, destinationState, transition);
 		}
 		
 
@@ -266,8 +257,9 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 	 * 
 	 * @return a copy of the component
 	 */
-	public Component<L, S, T> duplicate() {
-		Component<L, S, T> ret = new ComponentFactory<L, S, T>().create(
+	public Component<S, T> duplicate() {
+		Component<S, T> ret = 
+				new ComponentFactory<S, T>().create(
 				this.name, this.modelState, this.transparent);
 		ret.modelState = this.modelState;
 		// coping the states
@@ -331,7 +323,8 @@ public class Component<L extends Label, S extends State, T extends Transition<L>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Component other = (Component) obj;
+		@SuppressWarnings("unchecked")
+		Component<S,T> other = (Component<S,T>) obj;
 		if (id != other.id)
 			return false;
 		return true;

@@ -21,6 +21,8 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 public interface TransitionFactory<S extends State, T extends Transition>
 		extends EdgeFactory<S, T> {
 
+	
+	public T create();
 	/**
 	 * creates a new transition labeled with the specified condition
 	 * 

@@ -1,17 +1,18 @@
 package it.polimi.contraintcomputation.abstractedBA;
 
 import it.polimi.automata.impl.IntBAImpl;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.contraintcomputation.component.Component;
 
-public class AbstractedBA<L extends Label, S extends State, T extends Transition<L>, C extends Component<L, S, T>>  extends IntBAImpl<L, C, T> {
+public class AbstractedBA<S extends State, T extends Transition, C extends Component<S, T>>  extends IntBAImpl<C, T> {
 
 	
-	
-	
-	
+	public AbstractedBA(TransitionFactory<C, T> transitionFactory) {
+		super(transitionFactory);
+	}
+
 	public String toString(){
 		String ret="";
 		ret=ret+"ALPHABET: "+this.getAlphabet()+"\n";

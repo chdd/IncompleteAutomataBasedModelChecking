@@ -2,13 +2,11 @@ package it.polimi.contraintcomputation.brzozowski;
 
 import it.polimi.automata.BA;
 import it.polimi.Constants;
-import it.polimi.automata.labeling.Label;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.List;
 
-import org.apache.commons.collections15.Transformer;
 
 /**
  * Given an ordering between the states (a list) and a final state and an
@@ -29,8 +27,7 @@ import org.apache.commons.collections15.Transformer;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-class AcceptingStatesTransformer<L extends Label, S extends State, T extends Transition<L>>
-		implements Transformer<BA<L, S, T>, String[]> {
+class AcceptingStatesTransformer<S extends State, T extends Transition> {
 
 	/**
 	 * contains the state to be considered as final in the automaton
@@ -88,8 +85,7 @@ class AcceptingStatesTransformer<L extends Label, S extends State, T extends Tra
 	 *             if the final state is not contained into the automaton
 	 * 
 	 */
-	@Override
-	public String[] transform(BA<L, S, T> automaton) {
+	public String[] transform(BA<S, T> automaton) {
 
 		if (!automaton.getStates().contains(finalState)) {
 			throw new IllegalArgumentException(
