@@ -45,7 +45,7 @@ public class TransitionImplTest {
 	public void testTransitionImpl() {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
 		TransitionImpl t=new TransitionImpl(labels, 1);
-		assertEquals(labels, t.getLabels());
+		assertEquals(labels, t.getPropositions());
 		assertEquals(1, t.getId());
 	}
 	
@@ -67,14 +67,14 @@ public class TransitionImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#getLabels()}.
+	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#getPropositions()}.
 	 */
 	@Test
 	public void testGetLabels() {
 
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
 		TransitionImpl t=new TransitionImpl(labels, 1);
-		assertEquals(labels, t.getLabels());
+		assertEquals(labels, t.getPropositions());
 	}
 
 	/**

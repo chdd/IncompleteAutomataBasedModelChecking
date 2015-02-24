@@ -53,8 +53,8 @@ public class ClaimTransitionFactoryImplTest {
 		Transition t = this.claim.create(labels);
 		assertNotNull(t);
 		assertTrue(t.getId() >= 0);
-		assertTrue(t.getLabels() != labels);
-		assertTrue(t.getLabels().equals(labels));
+		assertTrue(t.getPropositions() != labels);
+		assertTrue(t.getPropositions().equals(labels));
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class ClaimTransitionFactoryImplTest {
 		Transition t = this.claim.create(5, labels);
 		assertNotNull(t);
 		assertTrue(t.getId() == 5);
-		assertTrue(t.getLabels() != labels);
-		assertTrue(t.getLabels().equals(labels));
+		assertTrue(t.getPropositions() != labels);
+		assertTrue(t.getPropositions().equals(labels));
 	}
 
 	/**

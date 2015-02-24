@@ -75,7 +75,7 @@ public class BAImplTest {
 		this.ba.addTransition(state2, state3, t2);
 		Set<IGraphProposition> returnSet=new HashSet<IGraphProposition>();
 		returnSet.add(l3);
-		when(t3.getLabels()).thenReturn(returnSet);
+		when(t3.getPropositions()).thenReturn(returnSet);
 	}
 
 	/**

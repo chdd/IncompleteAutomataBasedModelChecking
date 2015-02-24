@@ -51,8 +51,8 @@ public class IntersectionRuleImpl<S extends State, T extends Transition>
 		}
 
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		if(this.satisfies(modelTransition.getLabels(), claimTransition.getLabels())){
-				labels.addAll(modelTransition.getLabels());
+		if(this.satisfies(modelTransition.getPropositions(), claimTransition.getPropositions())){
+				labels.addAll(modelTransition.getPropositions());
 		}
 		if(labels.isEmpty()){
 			return null;

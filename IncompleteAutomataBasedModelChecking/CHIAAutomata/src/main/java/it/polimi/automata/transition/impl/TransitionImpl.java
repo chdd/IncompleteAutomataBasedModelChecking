@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultEdge;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
@@ -16,11 +18,9 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  * @see {@link Transition}
  */
-public class TransitionImpl implements Transition {
+@SuppressWarnings("serial")
+public class TransitionImpl extends DefaultEdge implements Transition {
 
-	
-	
-	
 	/**
 	 * contains the id of the transition
 	 */
@@ -84,7 +84,7 @@ public class TransitionImpl implements Transition {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<IGraphProposition> getLabels() {
+	public Set<IGraphProposition> getPropositions() {
 		return Collections.unmodifiableSet(this.labels);
 	}
 
@@ -139,7 +139,4 @@ public class TransitionImpl implements Transition {
 			return false;
 		return true;
 	}
-
-	
-	
 }

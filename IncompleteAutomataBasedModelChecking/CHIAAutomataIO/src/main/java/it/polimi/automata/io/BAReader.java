@@ -153,7 +153,7 @@ public class BAReader<S extends State, G extends StateFactory<S>, T extends Tran
 	}
 
 	private void loadStates(Element doc) {
-		NodeList xmlstates=doc.getElementsByTagName(Constants.XML_TAG_STATE);
+		NodeList xmlstates=doc.getElementsByTagName(Constants.XML_ELEMENT_STATE);
 		
 		for(int stateid=0; stateid<xmlstates.getLength(); stateid++){
 			Node xmlstate=xmlstates.item(stateid);

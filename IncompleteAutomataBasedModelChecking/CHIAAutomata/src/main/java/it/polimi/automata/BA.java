@@ -5,6 +5,8 @@ import it.polimi.automata.transition.Transition;
 
 import java.util.Set;
 
+import org.jgrapht.graph.DirectedPseudograph;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
@@ -31,8 +33,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public interface BA<S extends State, T extends Transition>
-		extends Cloneable {
+public interface BA<S extends State, T extends Transition>{
 
 	/**
 	 * returns the set of initial states of the Buchi automaton
@@ -365,4 +366,6 @@ public interface BA<S extends State, T extends Transition>
 	 *             connect the source and the destination state
 	 */
 	public Set<T> getTransitions(S source, S destination);
+	
+	public DirectedPseudograph<S, T> getGraph();
 }

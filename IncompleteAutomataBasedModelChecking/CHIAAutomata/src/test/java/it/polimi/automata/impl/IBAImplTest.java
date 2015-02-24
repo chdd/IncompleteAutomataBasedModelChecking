@@ -114,7 +114,7 @@ public class IBAImplTest {
 		
 		Set<IGraphProposition> returnSet=new HashSet<IGraphProposition>();
 		returnSet.add(l3);
-		when(t3.getLabels()).thenReturn(returnSet);
+		when(t3.getPropositions()).thenReturn(returnSet);
 		
 		this.baInject = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(TransitionImpl.class));
 		baInject.addInitialState(state1Inject);

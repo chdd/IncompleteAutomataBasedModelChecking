@@ -14,6 +14,7 @@ import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -298,8 +299,8 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * @return a map that relates each state of the intersection the
 	 *         corresponding state of the model
 	 */
-	public Map<S, S> getIntersectionStateModelStateMap() {
-		return this.intersectionBuilder.getIntersectionStateModelStateMap();
+	public Map<S, Set<S>> getIntersectionStateModelStateMap() {
+		return this.intersectionBuilder.getModelIntersectionStateMap();
 	}
 
 	/**

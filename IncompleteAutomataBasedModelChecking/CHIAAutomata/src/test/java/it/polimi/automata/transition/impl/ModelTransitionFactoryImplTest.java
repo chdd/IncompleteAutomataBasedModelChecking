@@ -43,8 +43,8 @@ public class ModelTransitionFactoryImplTest {
 	public void testCreateSetOfLABEL() {
 		Transition t=this.modelFactory.create(labels2);
 		assertNotNull(t);
-		assertTrue(t.getLabels()!=labels2);
-		assertTrue(t.getLabels().equals(labels2));
+		assertTrue(t.getPropositions()!=labels2);
+		assertTrue(t.getPropositions().equals(labels2));
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class ModelTransitionFactoryImplTest {
 	public void testCreateIntSetOfLABEL() {
 		Transition t=this.modelFactory.create(1, labels2);
 		assertNotNull(t);
-		assertTrue(t.getLabels()!=labels2);
-		assertTrue(t.getLabels().equals(labels2));
+		assertTrue(t.getPropositions()!=labels2);
+		assertTrue(t.getPropositions().equals(labels2));
 	}
 	
 	/**

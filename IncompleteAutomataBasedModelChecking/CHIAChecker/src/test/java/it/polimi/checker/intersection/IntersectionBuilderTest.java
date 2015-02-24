@@ -411,24 +411,24 @@ public class IntersectionBuilderTest {
 				this.model1.getOutTransitions(new ArrayList<State>(this.model1
 						.getInitialStates()).get(0))).get(0);
 
-		assertEquals(this.propositionsT1, int1.getLabels());
+		assertEquals(this.propositionsT1, int1.getPropositions());
 		Transition int2 = new ArrayList<Transition>(
 				this.model1.getOutTransitions(this.model1
 						.getTransitionDestination(int1))).get(0);
-		assertEquals(this.propositionsT2, int2.getLabels());
+		assertEquals(this.propositionsT2, int2.getPropositions());
 		Transition int3 = new ArrayList<Transition>(
 				this.model1.getOutTransitions(this.model1
 						.getTransitionDestination(int2))).get(0);
-		assertEquals(this.propositionsT3, int3.getLabels());
+		assertEquals(this.propositionsT3, int3.getPropositions());
 
 		Transition int4 = new ArrayList<Transition>(
 				this.model1.getOutTransitions(this.model1
 						.getTransitionDestination(int3))).get(0);
-		assertEquals(this.propositionsT3, int4.getLabels());
+		assertEquals(this.propositionsT3, int4.getPropositions());
 		Transition int5 = new ArrayList<Transition>(
 				this.model1.getOutTransitions(this.model1
 						.getTransitionDestination(int4))).get(0);
-		assertEquals(this.propositionsT3, int5.getLabels());
+		assertEquals(this.propositionsT3, int5.getPropositions());
 
 	}
 

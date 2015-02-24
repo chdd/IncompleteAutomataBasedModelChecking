@@ -20,7 +20,7 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  *            with the model or a property it is associated with a set of atomic
  *            propositions or a propositional logic formula, respectively.
  */
-public interface Transition{
+public interface Transition {
 
 	/**
 	 * <p>
@@ -42,7 +42,7 @@ public interface Transition{
 	 * 
 	 * @return the <b>label</b> associated with the transition
 	 */
-	public Set<IGraphProposition> getLabels();
+	public Set<IGraphProposition> getPropositions();
 
 	/**
 	 * sets the label to the set of labels specified as parameter

@@ -165,7 +165,7 @@ public class IBAReader<
 	}
 
 	private void loadStates(Element doc) {
-		NodeList xmlstates=doc.getElementsByTagName(Constants.XML_TAG_STATE);
+		NodeList xmlstates=doc.getElementsByTagName(Constants.XML_ELEMENT_STATE);
 		
 		for(int stateid=0; stateid<xmlstates.getLength(); stateid++){
 			Node xmlstate=xmlstates.item(stateid);

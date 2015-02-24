@@ -17,7 +17,7 @@ public class StateFactoryImpl implements StateFactory<State> {
 	 * contains the counter whose value is associated to the next id of the
 	 * state to be created
 	 */
-	private static int stateCount = 0;
+	public static int stateCount = 0;
 
 	/**
 	 * {@inheritDoc}

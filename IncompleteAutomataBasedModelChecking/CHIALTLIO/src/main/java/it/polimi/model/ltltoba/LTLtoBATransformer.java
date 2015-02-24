@@ -244,7 +244,7 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 		T t = this.transitionFactory.create(label);
 
 		// adds the label to the current buchi automaton
-		ba.addCharacters(t.getLabels());
+		ba.addCharacters(t.getPropositions());
 
 		// add the transition from the source state to the destination state
 		ba.addTransition(source, destination, t);

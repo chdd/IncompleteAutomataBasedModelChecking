@@ -4,13 +4,13 @@
 	<artifactId>CHIAAutomataIO</artifactId>
 	<packaging>jar</packaging>
 	<name>CHIAAutomataIO</name>
-	
+
 	<parent>
-        <groupId>it.polimi.chia</groupId>
-        <artifactId>CHIA</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
-	
+		<groupId>it.polimi.chia</groupId>
+		<artifactId>CHIA</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -167,7 +167,9 @@
 		</repository>
 	</repositories>
 	<dependencies>
+
 		
+
 		<!-- contains the dependency to the Buchi Automaton -->
 		<dependency>
 			<groupId>it.polimi.chia</groupId>

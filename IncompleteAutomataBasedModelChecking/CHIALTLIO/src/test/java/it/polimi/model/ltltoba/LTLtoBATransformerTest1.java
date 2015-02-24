@@ -42,7 +42,7 @@ public class LTLtoBATransformerTest1 {
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		propositions.add(new GraphProposition("a", false));
 		when(transitionFactory.create(propositions)).thenReturn(transition);
-		when(transition.getLabels()).thenReturn(propositions);
+		when(transition.getPropositions()).thenReturn(propositions);
 	}
 	
 	@Test

@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jgrapht.EdgeFactory;
-import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,27 +69,11 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	protected DirectedPseudograph<S, T> automataGraph;
 
-	
-	/**
-	 * creates a new empty Buchi automaton
-	 */
-	@SuppressWarnings("unchecked")
-	protected BAImpl() {
-
-		this.alphabet = new HashSet<IGraphProposition>();
-		this.acceptStates = new HashSet<S>();
-		this.initialStates = new HashSet<S>();
-		Class<T> typeOfT;
-		typeOfT=(Class<T>) Transition.class;
-		EdgeFactory<S, T> factory=new ClassBasedEdgeFactory<S, T>(typeOfT);
-		this.automataGraph = new DirectedPseudograph<S, T>(factory);
-	}
-	
+		
 	/**
 	 * creates a new empty Buchi automaton
 	 */
 	public BAImpl(EdgeFactory<S, T> transitionFactory) {
-
 		if(transitionFactory==null){
 			throw new NullPointerException("The transition factory cannot be null");
 		}
@@ -379,9 +362,9 @@ public class BAImpl<S extends State, T extends Transition>
 					"The destination state cannot be null");
 		if (transition == null)
 			throw new NullPointerException("The transition cannot be null");
-		if (!this.alphabet.containsAll(transition.getLabels()))
+		if (!this.alphabet.containsAll(transition.getPropositions()))
 			throw new IllegalArgumentException(
-					"Some of the propositions "+transition.getLabels()+" of the transition are not contained into the alphabet of the automaton");
+					"Some of the propositions "+transition.getPropositions()+" of the transition are not contained into the alphabet of the automaton");
 		if (!this.getStates().contains(source))
 			throw new IllegalArgumentException(
 					"The source state is not contained into the set of the states of the automaton");
@@ -560,5 +543,9 @@ public class BAImpl<S extends State, T extends Transition>
 					"The destination state must be contained into the set of the states of the BA");
 		}
 		return this.automataGraph.containsEdge(source, destination);
+	}
+	
+	public DirectedPseudograph<S, T> getGraph(){
+		return this.automataGraph;
 	}
 }

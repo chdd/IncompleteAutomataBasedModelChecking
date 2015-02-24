@@ -125,12 +125,12 @@ public class IntersectionRuleImplTest {
 				.create(intersectionPropositions);
 
 		assertEquals(
-				intersectionTransition.getLabels(),
+				intersectionTransition.getPropositions(),
 				new IntersectionRuleImpl<State, Transition>()
 						.getIntersectionTransition(modelTransition,
 								claimTransition,
 								new TransitionFactoryIntersectionImpl<State>(Transition.class))
-						.getLabels());
+						.getPropositions());
 	}
 
 	/**
@@ -178,12 +178,12 @@ public class IntersectionRuleImplTest {
 				.create(intersectionPropositions);
 
 		assertEquals(
-				intersectionTransition.getLabels(),
+				intersectionTransition.getPropositions(),
 				new IntersectionRuleImpl<State, Transition>()
 						.getIntersectionTransition(modelTransition,
 								claimTransition,
 								new TransitionFactoryIntersectionImpl<State>(Transition.class))
-						.getLabels());
+						.getPropositions());
 	}
 
 	public void testGetIntersectionTransition5() {
@@ -202,12 +202,12 @@ public class IntersectionRuleImplTest {
 				.create(intersectionPropositions);
 
 		assertEquals(
-				intersectionTransition.getLabels(),
+				intersectionTransition.getPropositions(),
 				new IntersectionRuleImpl<State, Transition>()
 						.getIntersectionTransition(modelTransition,
 								claimTransition,
 								new TransitionFactoryIntersectionImpl<State>(Transition.class))
-						.getLabels());
+						.getPropositions());
 	}
 	
 	public void testGetIntersectionTransition6() {
@@ -230,11 +230,11 @@ public class IntersectionRuleImplTest {
 				.create(intersectionPropositions);
 
 		assertEquals(
-				intersectionTransition.getLabels(),
+				intersectionTransition.getPropositions(),
 				new IntersectionRuleImpl<State, Transition>()
 						.getIntersectionTransition(modelTransition,
 								claimTransition,
 								new TransitionFactoryIntersectionImpl<State>(Transition.class))
-						.getLabels());
+						.getPropositions());
 	}
 }

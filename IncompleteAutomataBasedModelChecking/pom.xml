@@ -211,8 +211,17 @@
 			<artifactId>logback-core</artifactId>
 			<version>1.1.2</version>
 		</dependency>
+		<dependency>
+			<groupId>jgraph</groupId>
+			<artifactId>jgraph</artifactId>
+			<version>5.13.0.0</version>
+		</dependency>
 
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
 	</dependencies>
 	<distributionManagement>
 		<repository>
@@ -230,5 +239,8 @@
 		<module>CHIAChecker</module>
 		<module>CHIALTLIO</module>
 		<module>CHIAIndustrialPlant</module>
+		<module>CHIAConstraints</module>
+		<module>CHIAVisualization</module>
+		<module>CHIAContraintComputation</module>
 	</modules>
 </project>

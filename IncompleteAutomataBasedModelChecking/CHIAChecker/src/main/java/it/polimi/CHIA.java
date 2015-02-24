@@ -1,8 +1,5 @@
 package it.polimi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
@@ -12,8 +9,9 @@ import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
-import it.polimi.contraintcomputation.ConstraintGenerator;
-import it.polimi.contraintcomputation.component.Component;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * contains the implementation of the CHIA checker
@@ -46,12 +44,7 @@ public class CHIA {
 	 */
 	private ModelChecker<State, Transition> mc;
 
-	/**
-	 * Is the constraint generator which is in charge of computing the
-	 * constraints in the case the property is possibly satisfied
-	 */
-	private ConstraintGenerator<State, Transition> cg;
-
+	
 	/**
 	 * Contains the model checking results, the verification times the
 	 * constraint computes etc
@@ -101,6 +94,7 @@ public class CHIA {
 		return mcResults.getResult();
 	}
 
+	/*
 	/**
 	 * returns the constraint associated with the satisfaction of the claim in
 	 * the current model
@@ -110,7 +104,7 @@ public class CHIA {
 	 * @throws IllegalStateException
 	 *             if the property is not possibly satisfied
 	 */
-	public String getConstraint() {
+/*	public String getConstraint() {
 		
 		logger.info("Computing the constraint");
 		
@@ -119,14 +113,7 @@ public class CHIA {
 					"It is not possible to get the constraint if the property is not possibly satisfied");
 		}
 
-		cg = new ConstraintGenerator< State, Transition>(
-				this.mc.getIntersectionAutomaton(), this.model,
-				this.mc.getIntersectionStateModelStateMap(),
-				new TransitionFactoryIntersectionImpl<Component<State, Transition>>(Transition.class), 
-				new TransitionFactoryIntersectionImpl<State>(Transition.class));
 		
-		logger.info("Returning the constraint: "+cg.generateConstraint());
-		return cg.generateConstraint();
 
-	}
+	}*/
 }

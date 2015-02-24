@@ -1,10 +1,9 @@
 package it.polimi.automata.state.impl;
 
+import it.polimi.automata.state.State;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import it.polimi.automata.state.State;
 
 /**
  * contains the implementation of a state of the automaton. It implements the
@@ -14,8 +13,6 @@ import it.polimi.automata.state.State;
  * 
  * @author claudiomenghi
  */
-
-@XmlRootElement(name="state")
 public class StateImpl implements State {
 
 	/**

@@ -2,10 +2,17 @@ package it.polimi.automata;
 
 public final class Constants {
 	
-	
-	public final static String XML_TAG_STATE="state";
+
+	public final static String XML_ELEMENT_CONSTRAINTS="constraints";
+	public final static String XML_ELEMENT_PORTS_OUT="outports";
+	public final static String XML_ELEMENT_PORTS_IN="inports";
+	public final static String XML_ELEMENT_PORT="port";
+	public final static String XML_ELEMENT_CONSTRAINT="constraint";
+	public final static String XML_ELEMENT_STATE="state";
+	public final static String XML_ELEMENT_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_ID="id";
 	public final static String XML_ATTRIBUTE_NAME="name";
+	public final static String XML_ATTRIBUTE_MODEL_STATE_ID="modelstateId";
 	public final static String XML_ATTRIBUTE_INITIAL="initial";
 	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
 	public final static String XML_ATTRIBUTE_TRANSPARENT="transparent";
@@ -15,6 +22,7 @@ public final class Constants {
 	public final static String XML_ATTRIBUTE_TRANSITION_SOURCE="source";
 	public final static String XML_ATTRIBUTE_TRANSITION_DESTINATION="destination";
 	public final static String XML_ATTRIBUTE_TRANSITION_PROPOSITIONS="propositions";
+	public final static String XML_ELEMENT_BA="ba";
 
 	
 	/**
@@ -33,6 +41,7 @@ public final class Constants {
 	public static final String TRUEVALUE = "true";
 	public static final String DEFAULTNAME = "";
 	public static final String AND = "\\^";
+	public static final String AND_NOT_ESCAPED = "^";
 	public static final String NOT = "!";
 	
 	public static final String SIGMA="SIGMA";
