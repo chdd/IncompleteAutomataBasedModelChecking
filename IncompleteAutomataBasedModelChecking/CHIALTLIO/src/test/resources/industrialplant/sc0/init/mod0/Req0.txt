@@ -1,0 +1,1 @@
+[](distart->(<>((actextend)&&(<>((actretract)&&((!actextend)U(stackinitialized)))))))
