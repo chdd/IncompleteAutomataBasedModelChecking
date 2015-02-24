@@ -11,6 +11,7 @@ import org.apache.commons.lang3.Validate;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.constraints.impl.ComponentImpl;
 
 /**
  * contains a constraint, i.e., the set of automata to be considered in the
@@ -80,7 +81,7 @@ public class Constraint<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the component is null
 	 */
-	public void addComponent(Component<S, T> component) {
+	public void addComponent(ComponentImpl<S, T> component) {
 		Validate.notNull(component, "The component cannot be null");
 
 		this.components.add(component);

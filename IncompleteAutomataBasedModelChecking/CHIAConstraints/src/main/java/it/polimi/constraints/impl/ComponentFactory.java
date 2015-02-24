@@ -1,4 +1,4 @@
-package it.polimi.constraints;
+package it.polimi.constraints.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class ComponentFactory<S extends State, T extends Transition> {
 	 * @param transitionFactory
 	 * @return
 	 */
-	public Component<S, T> create(String name, S modelState,
+	public ComponentImpl<S, T> create(String name, S modelState,
 			boolean transparent, TransitionFactory<S, T> transitionFactory) {
 
 		if (transitionFactory == null) {
@@ -35,7 +35,7 @@ public class ComponentFactory<S extends State, T extends Transition> {
 			throw new NullPointerException(
 					"The transition Factory cannot be null");
 		}
-		Component<S, T> s = new Component<S, T>(name,
+		ComponentImpl<S, T> s = new ComponentImpl<S, T>(name,
 				StateFactoryImpl.stateCount, modelState, transparent,
 				transitionFactory);
 		StateFactoryImpl.stateCount = StateFactoryImpl.stateCount + 1;

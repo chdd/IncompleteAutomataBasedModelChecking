@@ -1,6 +1,5 @@
 package it.polimi.constraints;
 
-import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -15,74 +14,33 @@ import it.polimi.automata.transition.Transition;
  * @param <T>
  *            is the type of the transition that connects the states
  */
-public class Port<S extends State, T extends Transition> {
-
-	private final S source;
-	private final S destination;
-	private final T transition;
+public interface Port<S extends State, T extends Transition> extends State {
 
 	/**
-	 * creates a new port
+	 * the source can be a state of a sub0-properties or a state of the model
+	 * depending on whether the port is an out-coming or incoming port of the
+	 * sub-properties. If the port is out-coming the source is a state of the
+	 * sub-property, otherwise it is a state of the model
 	 * 
-	 * @param source
-	 *            is the source of the transition of the port it can be a state
-	 *            of the refinement of the model or an already specified state
-	 *            of the model
-	 * @param destination
-	 *            is the destination of the transition of the port it can be a
-	 *            state of the refinement of the model or an already specified
-	 *            state of the model
-	 * @param transition
-	 *            is the transition that connect the source with the destination
-	 * @throws NullPointerException
-	 *             if the source, the destination or the transition is null
+	 * @return the source of the port
 	 */
-	public Port(S source, S destination, T transition, IBA<S, T> model) {
-		if (source == null) {
-			throw new NullPointerException(
-					"The source of the port cannot be null");
-		}
-		if (destination == null) {
-			throw new NullPointerException(
-					"The destination of the port cannot be null");
-		}
-		if (transition == null) {
-			throw new NullPointerException(
-					"The transition that connect the source and the destination cannot be null");
-		}
-		if (model == null) {
-			throw new NullPointerException(
-					"The model to be considered cannot be null");
-		}
-		if (!(model.getStates().contains(source) || model.getStates().contains(
-				destination))) {
-			throw new IllegalArgumentException(
-					"At least one between the source and the destination must be contained into the states of the model");
-		}
-		this.source = source;
-		this.destination = destination;
-		this.transition = transition;
-	}
-
+	public S getSource();
+	
 	/**
-	 * @return the source
+	 * the destination can be a state of a sub0-properties or a state of the
+	 * model depending on whether the port is an incoming or out-coming port of
+	 * the sub-properties. If the port is out-coming the destination is a state
+	 * of the model, otherwise it is a state of the sub-property
+	 * 
+	 * @return the destination of the port
 	 */
-	public S getSource() {
-		return source;
-	}
-
+	public S getDestination();
+	
 	/**
-	 * @return the destination
+	 * returns the transition between the source and the destination state
+	 * 
+	 * @return the transition between the source and the destination state
 	 */
-	public S getDestination() {
-		return destination;
-	}
-
-	/**
-	 * @return the transition
-	 */
-	public T getTransition() {
-		return transition;
-	}
-
+	public T getTransition();
+	
 }

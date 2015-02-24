@@ -99,44 +99,39 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 
 			for (Component<S, T> component : constraint.getComponents()) {
 
-				if (component.isTransparent()) {
-					// root elements
-					Element constraintElement = doc
-							.createElement(Constants.XML_ELEMENT_CONSTRAINT);
-					rootElement.appendChild(constraintElement);
+				// root elements
+				Element constraintElement = doc
+						.createElement(Constants.XML_ELEMENT_CONSTRAINT);
+				rootElement.appendChild(constraintElement);
 
-					// adding the id
-					Attr modelTransparentStateIDd = doc
-							.createAttribute(Constants.XML_ATTRIBUTE_MODEL_STATE_ID);
-					modelTransparentStateIDd.setValue(Integer
-							.toString(component.getModelState().getId()));
-					constraintElement
-							.setAttributeNode(modelTransparentStateIDd);
+				// adding the id
+				Attr modelTransparentStateIDd = doc
+						.createAttribute(Constants.XML_ATTRIBUTE_MODEL_STATE_ID);
+				modelTransparentStateIDd.setValue(Integer.toString(component
+						.getModelState().getId()));
+				constraintElement.setAttributeNode(modelTransparentStateIDd);
 
-					Element baElement = doc
-							.createElement(Constants.XML_ELEMENT_BA);
-					constraintElement.appendChild(baElement);
+				Element baElement = doc.createElement(Constants.XML_ELEMENT_BA);
+				constraintElement.appendChild(baElement);
 
-					// computing the states
-					this.computingStateElements(doc, baElement, component);
+				// computing the states
+				this.computingStateElements(doc, baElement, component);
 
-					// computing the transitions
-					this.computingTransitionElements(doc, baElement, component);
+				// computing the transitions
+				this.computingTransitionElements(doc, baElement, component);
 
-					// adding the outComing Ports
-					Element outComingPorts = doc
-							.createElement(Constants.XML_ELEMENT_PORTS_OUT);
-					constraintElement.appendChild(outComingPorts);
-					this.addPorts(doc, outComingPorts,
-							component.getOutcomingPorts());
+				// adding the outComing Ports
+				Element outComingPorts = doc
+						.createElement(Constants.XML_ELEMENT_PORTS_OUT);
+				constraintElement.appendChild(outComingPorts);
+				this.addPorts(doc, outComingPorts,
+						component.getOutcomingPorts());
 
-					// adding the incoming Ports
-					Element inComingPorts = doc
-							.createElement(Constants.XML_ELEMENT_PORTS_IN);
-					constraintElement.appendChild(inComingPorts);
-					this.addPorts(doc, inComingPorts,
-							component.getIncomingPorts());
-				}
+				// adding the incoming Ports
+				Element inComingPorts = doc
+						.createElement(Constants.XML_ELEMENT_PORTS_IN);
+				constraintElement.appendChild(inComingPorts);
+				this.addPorts(doc, inComingPorts, component.getIncomingPorts());
 
 				TransformerFactory transformerFactory = TransformerFactory
 						.newInstance();
