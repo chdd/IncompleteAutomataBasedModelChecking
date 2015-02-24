@@ -76,7 +76,6 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 	 */
 	private TransitionFactory<S, T> refinementTransitionFactory;
 
-	private TransitionFactory<Component<S, T>, T> componentsTransitionFactory;
 
 	/**
 	 * creates an identifier for the sub automata of the intersection automata
@@ -91,13 +90,11 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 	 */
 	public SubPropertiesIdentifier(IntersectionBA<S, T> intersectionBA,
 			IBA<S, T> model, Map<S, Set<S>> modelStateIntersectionStateMap,
-			TransitionFactory<Component<S, T>, T> componentsTransitionFactory,
 			TransitionFactory<S, T> refinementTransitionFactory) {
 
 		Validate.notNull(intersectionBA, "The intersection automaton cannot be null");
 		Validate.notNull(model, "The model of the automaton cannot be null");
 		Validate.notNull(modelStateIntersectionStateMap, "The map between the states of the intersection automaton and the states of the model cannot be null");
-		Validate.notNull(componentsTransitionFactory, "The factory used to create the transitions between the components cannot be null");
 		Validate.notNull(refinementTransitionFactory, "The factory used to create the transitions of the refinement of a component cannot be null");
 		Validate.isTrue(model.getStates().containsAll(
 				modelStateIntersectionStateMap.keySet()), "some of the states of the modelStateIntersectionStateMap is not contained into the set of the states of the model");
@@ -117,7 +114,6 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 		this.mapIntersectionStateComponent = new HashMap<S, Component<S, T>>();
 
 		this.refinementTransitionFactory = refinementTransitionFactory;
-		this.componentsTransitionFactory = componentsTransitionFactory;
 		logger.info("SubAutomataIdentifier created");
 	}
 
@@ -166,16 +162,18 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 					intersectionSourceComponent.addTransition(
 							intersectionState, sourceIntersectionState,
 							transition);
-				} else {
-					T transition = this.componentsTransitionFactory
+				}
+				
+				else {
+					T port = this.refinementTransitionFactory
 							.create(incomingTransition.getPropositions());
 					
 					intersectionSourceComponent.addOutComingPort(
-							sourceIntersectionState, transition,
+							sourceIntersectionState, port,
 							intersectionStateComponent.getModelState(), model);
 					
 					intersectionStateComponent.addIncomingPort(
-							intersectionSourceComponent.getModelState(), transition,
+							intersectionSourceComponent.getModelState(), port,
 							intersectionState, model);
 				}
 			}

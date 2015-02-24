@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.casestudies.sendingmessage;
+package it.polimi.casestudies.sendingmessage.checker;
 
 import static org.junit.Assert.assertEquals;
 import it.polimi.automata.BA;
@@ -55,7 +55,7 @@ public class SendingMessageTest2 {
 				new BAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
 				claimTransitionFactory,this.stateFactory,  
 				new File(getClass().getClassLoader()
-						.getResource("sendingmessage/SendingMessageClaim.xml").getFile()));
+						.getResource("it/polimi/casestudies/sendingmessage/SendingMessageClaim.xml").getFile()));
 
 		BA<State, Transition> claim = claimReader.read();
 
@@ -63,7 +63,7 @@ public class SendingMessageTest2 {
 				new IBAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
 				this.transitionFactory, this.stateFactory, 
 				new File(getClass().getClassLoader()
-						.getResource("sendingmessage/SendingMessageModel.xml").getFile()));
+						.getResource("it/polimi/casestudies/sendingmessage/SendingMessageModel.xml").getFile()));
 		
 		IBA< State, Transition> model=modelReader.read();
 		

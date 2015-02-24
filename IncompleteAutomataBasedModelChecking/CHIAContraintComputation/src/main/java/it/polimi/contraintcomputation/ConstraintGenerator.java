@@ -5,7 +5,6 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
 import it.polimi.contraintcomputation.subautomatafinder.SubPropertiesIdentifier;
@@ -54,12 +53,6 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	private IBA<S, T> model;
 
 	/**
-	 * is the factory which is used to create the transitions of the
-	 * sub-properties
-	 */
-	private TransitionFactory<Component<S, T>, T> refinementTransitionFactory;
-
-	/**
 	 * creates a new ConstraintGenerator object which starting from the
 	 * intersection automaton and the map between the states of the model and
 	 * the corresponding states of the intersection automaton computes the
@@ -67,22 +60,18 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	 * 
 	 * @param intBA
 	 *            is the intersection automaton
+	 * @param model
+	 *            is the model to be verified
 	 * @param modelIntersectionStatesMap
 	 *            is the map between the states of the model and the
 	 *            corresponding states in the intersection automaton
-	 * @param labelFactory
-	 *            is the factory to be used to create labels
-	 * @param stateFactory
-	 *            is the factory to be used to creating the states
 	 * @param subpropertiestransitionFactory
 	 *            is the factory to be used to create transitions
 	 * @throws NullPointerException
-	 *             if the intersection automaton or the model intersection state
-	 *             map or the label, state or transition factory is null
+	 *             if one of the parameters is null
 	 */
 	public ConstraintGenerator(IntersectionBA<S, T> intBA, IBA<S, T> model,
 			Map<S, Set<S>> modelIntersectionStatesMap,
-			TransitionFactory<Component<S, T>, T> componentTransitionFactory,
 			TransitionFactory<S, T> subpropertiestransitionFactory) {
 
 		Validate.notNull(intBA, "The intersection model cannot be null");
@@ -90,8 +79,6 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 		Validate.notNull(
 				modelIntersectionStatesMap,
 				"The map between the states of the model and the intersection states cannot be null");
-		Validate.notNull(componentTransitionFactory,
-				"Factory of the transitions of the sub-properties cannot be null");
 		Validate.notNull(subpropertiestransitionFactory,
 				"The transition factory cannot be null");
 
@@ -99,7 +86,6 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 		this.subPropertiesTransitionFactory = subpropertiestransitionFactory;
 		this.intBA = intBA;
 		this.model = model;
-		this.refinementTransitionFactory = componentTransitionFactory;
 	}
 
 	/**
@@ -119,10 +105,11 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 				intBA);
 		intersectionCleaner.clean();
 
-		SubPropertiesIdentifier<S, T> subPropertiesIdentifier=new SubPropertiesIdentifier<S, T>
-		(intBA, model, this.modelIntersectionStatesMap, this.refinementTransitionFactory, this.subPropertiesTransitionFactory);
-		Constraint<S,T> constraint=subPropertiesIdentifier.getSubAutomata();
-		
+		SubPropertiesIdentifier<S, T> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T>(
+				intBA, model, this.modelIntersectionStatesMap,
+				this.subPropertiesTransitionFactory);
+		Constraint<S, T> constraint = subPropertiesIdentifier.getSubAutomata();
+
 		logger.info("Constraint computed");
 		return constraint;
 	}

@@ -35,7 +35,9 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * @author claudiomenghi
  *
  * @param <S>
+ *            is the type of the state to be written
  * @param <T>
+ *            is the type of the transitions to be written
  */
 public class ConstraintWriter<S extends State, T extends Transition> {
 
@@ -102,13 +104,15 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 					Element constraintElement = doc
 							.createElement(Constants.XML_ELEMENT_CONSTRAINT);
 					rootElement.appendChild(constraintElement);
-					
+
 					// adding the id
-					Attr modelTransparentStateIDd = doc.createAttribute(Constants.XML_ATTRIBUTE_MODEL_STATE_ID);
-					modelTransparentStateIDd.setValue(Integer.toString(component.getModelState().getId()));
-					constraintElement.setAttributeNode(modelTransparentStateIDd);
-					
-					
+					Attr modelTransparentStateIDd = doc
+							.createAttribute(Constants.XML_ATTRIBUTE_MODEL_STATE_ID);
+					modelTransparentStateIDd.setValue(Integer
+							.toString(component.getModelState().getId()));
+					constraintElement
+							.setAttributeNode(modelTransparentStateIDd);
+
 					Element baElement = doc
 							.createElement(Constants.XML_ELEMENT_BA);
 					constraintElement.appendChild(baElement);
@@ -123,13 +127,15 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 					Element outComingPorts = doc
 							.createElement(Constants.XML_ELEMENT_PORTS_OUT);
 					constraintElement.appendChild(outComingPorts);
-					this.addPorts(doc, outComingPorts, component.getOutcomingPorts());
+					this.addPorts(doc, outComingPorts,
+							component.getOutcomingPorts());
 
 					// adding the incoming Ports
 					Element inComingPorts = doc
 							.createElement(Constants.XML_ELEMENT_PORTS_IN);
 					constraintElement.appendChild(inComingPorts);
-					this.addPorts(doc, inComingPorts, component.getIncomingPorts());
+					this.addPorts(doc, inComingPorts,
+							component.getIncomingPorts());
 				}
 
 				TransformerFactory transformerFactory = TransformerFactory
@@ -208,7 +214,8 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 			// transition id
 			Attr transitionId = doc
 					.createAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID);
-			transitionId.setValue(Integer.toString(port.getTransition().getId()));
+			transitionId.setValue(Integer
+					.toString(port.getTransition().getId()));
 			state.setAttributeNode(transitionId);
 
 			// transition label

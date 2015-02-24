@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.casestudies.sendingmessage;
+package it.polimi.casestudies.sendingmessage.checker;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.CHIA;
@@ -15,6 +15,7 @@ import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 
 import java.io.File;
@@ -54,7 +55,7 @@ public class SendingMessageTest {
 				new TransitionFactoryClaimImpl<State>(Transition.class),
 				new StateFactoryImpl(),
 				new File(getClass().getClassLoader()
-						.getResource("sendingmessage/SendingMessageClaim.xml").getFile()));
+						.getResource("it/polimi/casestudies/sendingmessage/SendingMessageClaim.xml").getFile()));
 
 		BA<State, Transition> claim = claimReader.read();
 
@@ -62,10 +63,10 @@ public class SendingMessageTest {
 				 new TransitionFactoryModelImpl<State>(Transition.class),
 				new StateFactoryImpl(),
 				new File(getClass().getClassLoader()
-						.getResource("sendingmessage/SendingMessageModel.xml").getFile()));
+						.getResource("it/polimi/casestudies/sendingmessage/SendingMessageModel.xml").getFile()));
 
 		IBA<State, Transition> model = modelReader.read();
-		CHIA chia = new CHIA(claim, model);
+		CHIA<State, Transition> chia = new CHIA<State, Transition>(claim, model, new StateFactoryImpl(), new TransitionFactoryIntersectionImpl<State>(Transition.class));
 		int result = chia.check();
 		assertTrue(result == -1);
 

@@ -15,10 +15,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,13 +38,6 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * 
  * @author claudiomenghi
  * 
- * @param <L>
- *            is the type of the Label which is applied to the transitions of
- *            the Buchi Automaton which must implement the interface
- *            {@link Label}
- * @param <F>
- *            is the factory which allows to create the labels of the
- *            transitions. It must implement the interface {@link LabelFactory}
  * @param <S>
  *            is the type of the State of the Buchi Automaton. It must extend
  *            the interface {@link State}
@@ -53,58 +50,62 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * @param <H>
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
- * @param <I>
- *            is the factory which is able to create a new empty Buchi
- *            Automaton. It must implement the interface {@link BAFactory}
  */
 public class BAReader<S extends State, G extends StateFactory<S>, T extends Transition, H extends TransitionFactory<S, T>> {
 
 	/**
+	 * is the logger of the BAReader class
+	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(BAReader.class);
+	
+	/**
 	 * contains the Buchi Automaton loaded from the file
 	 */
-	protected BA<S, T> ba;
+	protected final BA<S, T> ba;
 
-	private File file;
+	/**
+	 * contains the file from which the Buchi automaton must be reader
+	 */
+	private final File file;
 	
-	private Map<Integer, S> mapIdState;
+	/**
+	 * contains a map that connects the id with the corresponding state
+	 */
+	private final Map<Integer, S> mapIdState;
 	
-	private G stateFactory;
+	/**
+	 * is the factory which is used to create the states of the Buchi automaton
+	 */
+	private final G stateFactory;
 
-	private H transitionFactory;
+	/**
+	 * is the factory which is used to create the transitions of the Buchi automaotn
+	 */
+	private final H transitionFactory;
+	
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
 	 * 
 	 * @see BAReader#read()
 	 * 
-	 * @param labelFactory
-	 *            is the factory which allows to create the labels of the
-	 *            transitions
 	 * @param transitionFactory
 	 *            is the factory which allows to create the transitions of the
 	 *            Buchi automaton
 	 * @param stateFactory
 	 *            is the factory which allows to create the states of the Buchi
 	 *            automaton
-	 * @param automatonFactory
-	 *            is the factory which is used to create the Buchi automaton
-	 * @param fileReader
-	 *            is the reader from which the Buchi automaton must be loaded
+	 * @param file
+	 *            is the file from which the automaton must be read
 	 * @throws NullPointerException
 	 *             if the labelFactory, transitionFactory, stateFactory,
 	 *             automatonFactory or the fileReader is null
 	 */
 	public BAReader(H transitionFactory, G stateFactory, File file) {
-		if (transitionFactory == null) {
-			throw new NullPointerException(
-					"The transition factory cannot be null");
-		}
-		if (stateFactory == null) {
-			throw new NullPointerException("The state factory cannot be null");
-		}
-		if (file == null) {
-			throw new NullPointerException("The fileReader cannot be null");
-		}
+		Validate.notNull(transitionFactory, "The transition factory cannot be null");
+		Validate.notNull(stateFactory,"The state factory cannot be null");
+		Validate.notNull(file,"The fileReader cannot be null");
 
 		this.ba = new IBAImpl<S, T>(transitionFactory);
 
@@ -125,6 +126,7 @@ public class BAReader<S extends State, G extends StateFactory<S>, T extends Tran
 	 */
 	public BA<S, T> read(){
 
+		logger.info("Reding the Buchi automaton");
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -142,13 +144,14 @@ public class BAReader<S extends State, G extends StateFactory<S>, T extends Tran
 			
 			
 		} catch (ParserConfigurationException pce) {
-			System.out.println(pce.getMessage());
+			logger.error(pce.getMessage());
 		} catch (SAXException se) {
-			System.out.println(se.getMessage());
+			logger.error(se.getMessage());
 		} catch (IOException ioe) {
-			System.err.println(ioe.getMessage());
+			logger.error(ioe.getMessage());
 		}
 
+		logger.info("Buchi automaton readed");
 		return this.ba;
 	}
 
