@@ -10,7 +10,7 @@ import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
-import it.polimi.constraints.impl.ConstraintImpl;
+import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 
 import org.apache.commons.lang3.Validate;
@@ -127,21 +127,19 @@ public class CHIA<S extends State, T extends Transition> {
 	 * @throws IllegalStateException
 	 *             if the property is not possibly satisfied
 	 */
-	public ConstraintImpl<S, T> getConstraint() {
+	public Constraint<S, T> getConstraint() {
 
 		logger.info("Computing the constraint");
 
-		if (mcResults.getResult() != -1) {
-			throw new IllegalStateException(
-					"It is not possible to get the constraint if the property is not possibly satisfied");
-		}
+		Validate.isTrue(mcResults.getResult() == -1, "It is not possible to get the constraint if the property is not possibly satisfied");
+		
 
 		ConstraintGenerator<S, T> constraintGenerator = new ConstraintGenerator<S, T>(
 				mc.getIntersectionAutomaton(), model,
 				mc.getIntersectionStateModelStateMap(),
 				intersectionTransitionFactory);
 
-		ConstraintImpl<S, T> constraint = constraintGenerator.generateConstraint();
+		Constraint<S, T> constraint = constraintGenerator.generateConstraint();
 
 		logger.info("Constraint computed");
 

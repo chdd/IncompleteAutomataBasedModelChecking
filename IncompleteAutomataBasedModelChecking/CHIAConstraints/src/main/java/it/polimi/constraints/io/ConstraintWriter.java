@@ -6,8 +6,8 @@ import it.polimi.automata.io.WriterBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Component;
+import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
-import it.polimi.constraints.impl.ConstraintImpl;
 
 import java.io.File;
 import java.util.Set;
@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -50,7 +51,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	/**
 	 * contains the components to be written
 	 */
-	private ConstraintImpl<S, T> constraint;
+	private Constraint<S, T> constraint;
 	/**
 	 * contains the file where the intersection automaton must be written
 	 */
@@ -68,17 +69,11 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	 *             if the components or the file is null
 	 * 
 	 */
-	public ConstraintWriter(ConstraintImpl<S, T> constraint, File f) {
-		if (constraint == null) {
-			logger.error("The intersection automaton cannot be null");
-			throw new NullPointerException(
-					"The intersection automaton cannot be null");
-		}
-		if (f == null) {
-			logger.error("The file where the automaton must be written cannot be null");
-			throw new NullPointerException(
-					"The file where the automaton must be written cannot be null");
-		}
+	public ConstraintWriter(Constraint<S, T> constraint, File f) {
+		
+		Validate.notNull(constraint, "The intersection automaton cannot be null");
+		Validate.notNull("The file where the automaton must be written cannot be null");
+		
 		this.constraint = constraint;
 		this.f = f;
 	}
