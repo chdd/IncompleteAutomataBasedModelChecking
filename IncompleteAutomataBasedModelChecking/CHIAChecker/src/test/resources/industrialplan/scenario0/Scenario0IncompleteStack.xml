@@ -1,9 +1,0 @@
-<iba>
-	<state id="1" name="waitingForStart" initial="true" />
-	<state id="2" name="initialize" transparent="true" />
-	<state id="7" name="end" accepting="true" />
-	<transition id="1" source="1" destination="2" propositions="start" />
-	<transition id="2" source="2" destination="7" propositions="timeout" />
-	<transition id="7" source="7" destination="7" propositions="initialized" />
-</iba>    
-
