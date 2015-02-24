@@ -1,13 +1,6 @@
 package it.polimi.constraints;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-
-import org.apache.commons.lang3.Validate;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -32,45 +25,9 @@ import it.polimi.constraints.impl.ComponentImpl;
  *            is the type of the transitions of the automaton to be considered
  *            in the refinement of the transparent state
  */
-public class Constraint<S extends State, T extends Transition> {
-
-	/**
-	 * is the set of the components to be considered in the refinement of the
-	 * transparent states
-	 */
-	private Set<Component<S, T>> components;
-
-	/**
-	 * contains the map that specifies for each component, for each incoming
-	 * port, the reachable out-coming ports and the corresponding components
-	 */
-	private Map<Component<S, T>, Map<T, Set<Entry<T, Component<S, T>>>>> incomingReachableTransitionMap;
-
-	/**
-	 * contains the map that specifies for each component, for each out-coming
-	 * port, the reachable in-coming ports and the corresponding components
-	 */
-	private Map<Component<S, T>, Map<T, Set<Entry<T, Component<S, T>>>>> outcomingReachableTransitionMap;
-
-	/**
-	 * specifies for each port the corresponding color The red color means that
-	 * from this port it is possible to reach an accepting state The green color
-	 * means that the port is reachable from an initial state The yellow color
-	 * means that the port is possibly reachable from an initial state and from
-	 * the port it is possibly reachable an accepting state
-	 */
-	private Map<T, Color> portValue;
-
-	/**
-	 * creates a new empty constraint
-	 */
-	public Constraint() {
-		this.components = new HashSet<Component<S, T>>();
-		this.incomingReachableTransitionMap = new HashMap<Component<S, T>, Map<T, Set<Entry<T, Component<S, T>>>>>();
-		this.outcomingReachableTransitionMap = new HashMap<Component<S, T>, Map<T, Set<Entry<T, Component<S, T>>>>>();
-		this.portValue = new HashMap<T, Color>();
-	}
-
+public interface Constraint<S extends State, T extends Transition> {
+	
+	
 	/**
 	 * adds the component to the set of sub-properties to be considered in the
 	 * refinement of the transparent states
@@ -81,121 +38,29 @@ public class Constraint<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the component is null
 	 */
-	public void addComponent(ComponentImpl<S, T> component) {
-		Validate.notNull(component, "The component cannot be null");
-
-		this.components.add(component);
-		this.incomingReachableTransitionMap.put(component,
-				new HashMap<T, Set<Entry<T, Component<S, T>>>>());
-		this.outcomingReachableTransitionMap.put(component,
-				new HashMap<T, Set<Entry<T, Component<S, T>>>>());
-	}
-
+	public void addComponent(ComponentImpl<S, T> component);
+	
 	/**
 	 * returns the components involved in the constraint
 	 * 
 	 * @return the components involved in the constraint
 	 */
-	public Set<Component<S, T>> getComponents() {
-		return this.components;
-	}
-
+	public Set<Component<S, T>> getComponents();
+	
 	/**
 	 * add a reachability entity, i.e., id specifies that the in-coming port of
 	 * the destination component is reachable from the outComing port of the
 	 * source component
 	 * 
-	 * @param destinationComponent
-	 *            is the component which is reachable from the source Component
 	 * @param incomingPort
 	 *            is the in-coming reachable port of the destination Component
-	 * @param sourceComponent
-	 *            is the component from which the destination component can be
-	 *            reached
 	 * @param outComingPort
 	 *            is the out-coming port from which the incomingPort of the
 	 *            destination component can be reached.
 	 * @throws NullPointerException
-	 *             if the destinationComponent, the incomingPort, the
-	 *             sourceComponent and the outComingPort is null throws
-	 * @throws IllegalArgumentException
-	 *             if the incomingPort is not an incoming port if the
-	 *             destination component
-	 * @throws IllegalArgumentException
-	 *             if the outComingPort is not an out-coming port of the source
-	 *             component
-	 * @throws IllegalArgumentException
-	 *             if the source or the destination component is not contained
-	 *             into the set of components
+	 *             if one of the parameters is null
 	 */
-	public void addReachabilityRelation(Component<S, T> destinationComponent,
-			T incomingPort, Component<S, T> sourceComponent, T outComingPort) {
-		// validates the parameters
-		Validate.notNull(destinationComponent,
-				"The destination component cannot be null");
-		Validate.notNull(incomingPort, "The incomingPort port cannot be null");
-		Validate.notNull(sourceComponent,
-				"The sourceComponent component cannot be null");
-		Validate.notNull(outComingPort, "The outcomingPort port cannot be null");
-		Validate.isTrue(components.contains(destinationComponent));
-		Validate.isTrue(components.contains(sourceComponent));
-		Validate.isTrue(destinationComponent.getIncomingPorts().contains(
-				incomingPort));
-		Validate.isTrue(sourceComponent.getOutcomingPorts().contains(
-				outComingPort));
-		if (this.incomingReachableTransitionMap.get(destinationComponent).get(
-				incomingPort) == null) {
-			this.incomingReachableTransitionMap.get(destinationComponent).put(
-					incomingPort, new HashSet<Entry<T, Component<S, T>>>());
-		}
-		this.incomingReachableTransitionMap
-				.get(destinationComponent)
-				.get(incomingPort)
-				.add(new AbstractMap.SimpleEntry<T, Component<S, T>>(
-						outComingPort, sourceComponent));
-
-		if (this.outcomingReachableTransitionMap.get(sourceComponent).get(
-				outComingPort) == null) {
-			this.outcomingReachableTransitionMap.get(sourceComponent).put(
-					outComingPort, new HashSet<Entry<T, Component<S, T>>>());
-		}
-		this.outcomingReachableTransitionMap
-				.get(sourceComponent)
-				.get(outComingPort)
-				.add(new AbstractMap.SimpleEntry<T, Component<S, T>>(
-						incomingPort, destinationComponent));
-
-	}
-
-	/**
-	 * sets the port value to the specified color
-	 * 
-	 * @param port
-	 *            is the port to be updated
-	 * @param value
-	 *            is the new value of the port
-	 * @throws NullPointerException
-	 *             if the port or the value is null
-	 */
-	public void setPortValue(T port, Color value) {
-		Validate.notNull(port, "The port cannot be null");
-		Validate.notNull(value, "The value cannot be null");
-		this.portValue.put(port, value);
-	}
-
-	/**
-	 * returns the value associated with the specified port
-	 * 
-	 * @param port
-	 *            is the port of interest
-	 * @return the value associated with the specified port
-	 * @throws IllegalArgumentException
-	 *             if the port is not contained into the set of the colored ports
-	 */
-	public Color getPortValue(T port) {
-		Validate.isTrue(!this.portValue.keySet().contains(port),
-				"The port must be contained into the set of the ports: ", port);
-		return portValue.get(port);
-	}
+	public void addReachabilityRelation(
+			Port<S,T> incomingPort, Port<S,T> outComingPort);
 
 }

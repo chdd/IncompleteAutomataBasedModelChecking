@@ -17,7 +17,7 @@ import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
-import it.polimi.constraints.Constraint;
+import it.polimi.constraints.impl.ConstraintImpl;
 import it.polimi.constraints.io.ConstraintWriter;
 
 import java.io.File;
@@ -72,7 +72,7 @@ public class SendingMessageTest {
 		int result = chia.check();
 		assertTrue(result == -1);
 		
-		Constraint<State, Transition> constraint=chia.getConstraint();
+		ConstraintImpl<State, Transition> constraint=chia.getConstraint();
 		
 		new ConstraintWriter<State, Transition>(constraint, new File("/Users/Claudio1/Desktop/CHIAResults/Results.xml")).write();
 		System.out.println(constraint.toString());

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.Validate;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
+import it.polimi.constraints.Component;
 import it.polimi.constraints.Port;
 
 /**
@@ -18,7 +19,8 @@ import it.polimi.constraints.Port;
  * @param <T>
  *            is the type of the transition that connects the states
  */
-public class PortImpl<S extends State, T extends Transition> extends StateImpl implements Port<S,T>{
+public class PortImpl<S extends State, T extends Transition> extends StateImpl
+		implements Port<S, T> {
 
 	/**
 	 * the source can be a state of a sub0-properties or a state of the model
@@ -27,7 +29,7 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl i
 	 * sub-property, otherwise it is a state of the model
 	 */
 	private final S source;
-	
+
 	/**
 	 * the destination can be a state of a sub0-properties or a state of the
 	 * model depending on whether the port is an incoming or out-coming port of
@@ -35,11 +37,16 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl i
 	 * of the model, otherwise it is a state of the sub-property
 	 */
 	private final S destination;
-	
+
 	/**
 	 * returns the transition between the source and the destination state
 	 */
 	private final T transition;
+
+	/**
+	 * the component to which the port belongs
+	 */
+	private final Component<S, T> component;
 
 	/**
 	 * creates a new port
@@ -54,11 +61,13 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl i
 	 *            state of the model
 	 * @param transition
 	 *            is the transition that connect the source with the destination
-	 * 
+	 * @param component
+	 *            the component to which the port belongs
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public PortImpl(S source, S destination, T transition) {
+	public PortImpl(S source, S destination, T transition,
+			Component<S, T> component) {
 		super(transition.getId());
 		Validate.notNull(source, "The source of the port cannot be null");
 		Validate.notNull(destination,
@@ -69,10 +78,13 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl i
 		this.source = source;
 		this.destination = destination;
 		this.transition = transition;
+		this.component = component;
 	}
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public S getSource() {
 		return source;
 	}
@@ -80,6 +92,7 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl i
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public S getDestination() {
 		return destination;
 	}
@@ -87,7 +100,16 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl i
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public T getTransition() {
 		return transition;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Component<S, T> getComponent() {
+		return component;
 	}
 }

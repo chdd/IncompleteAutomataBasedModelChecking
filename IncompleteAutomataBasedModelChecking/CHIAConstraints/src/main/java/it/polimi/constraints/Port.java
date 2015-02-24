@@ -43,4 +43,9 @@ public interface Port<S extends State, T extends Transition> extends State {
 	 */
 	public T getTransition();
 	
+	/**
+	 * @return the component to which the port it belongs
+	 */
+	public Component<S, T> getComponent();
+	
 }

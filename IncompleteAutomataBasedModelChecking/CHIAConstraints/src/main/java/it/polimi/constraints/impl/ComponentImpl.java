@@ -136,7 +136,6 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 	public String getName() {
 		return name;
 	}
-
 	
 	/**
 	 * {@inheritDoc}
@@ -157,7 +156,7 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 		Validate.isTrue(this.getStates().contains(destination), "The destination state must be contained into the states of the component");
 		
 		this.incomingTransition.add(new PortImpl<S, T>(source, destination,
-				transition));
+				transition, this));
 	}
 
 	/**
@@ -171,7 +170,7 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 		Validate.isTrue(this.getStates().contains(source), "The source state must be contained into the states of the component");
 		
 		this.outcomingTransition.add(new PortImpl<S, T>(source, destination,
-				transition));
+				transition, this));
 	}
 
 	/**
@@ -238,8 +237,6 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 		this.incomingTransition.remove(state);
 
 	}
-
-	
 
 	/*
 	 * (non-Javadoc)

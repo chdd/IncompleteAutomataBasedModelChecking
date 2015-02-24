@@ -6,8 +6,8 @@ import it.polimi.automata.io.WriterBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Component;
-import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
+import it.polimi.constraints.impl.ConstraintImpl;
 
 import java.io.File;
 import java.util.Set;
@@ -50,7 +50,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	/**
 	 * contains the components to be written
 	 */
-	private Constraint<S, T> constraint;
+	private ConstraintImpl<S, T> constraint;
 	/**
 	 * contains the file where the intersection automaton must be written
 	 */
@@ -68,7 +68,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	 *             if the components or the file is null
 	 * 
 	 */
-	public ConstraintWriter(Constraint<S, T> constraint, File f) {
+	public ConstraintWriter(ConstraintImpl<S, T> constraint, File f) {
 		if (constraint == null) {
 			logger.error("The intersection automaton cannot be null");
 			throw new NullPointerException(

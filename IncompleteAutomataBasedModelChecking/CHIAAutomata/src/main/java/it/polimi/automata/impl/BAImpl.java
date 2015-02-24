@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.Validate;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.slf4j.Logger;
@@ -35,20 +36,14 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
-public class BAImpl<S extends State, T extends Transition>
-		implements BA<S, T> {
+public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
 	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(BAImpl.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(BAImpl.class);
+
 	/**
 	 * contains the initial states of the Buchi automaton
 	 */
@@ -69,14 +64,17 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	protected DirectedPseudograph<S, T> automataGraph;
 
-		
 	/**
 	 * creates a new empty Buchi automaton
+	 * 
+	 * @param transitionFactory
+	 *            is the factory which is used to create the transitions of the
+	 *            Buchi automaton
 	 */
 	public BAImpl(EdgeFactory<S, T> transitionFactory) {
-		if(transitionFactory==null){
-			throw new NullPointerException("The transition factory cannot be null");
-		}
+		Validate.notNull(transitionFactory,
+				"The transition factory cannot be null");
+
 		this.alphabet = new HashSet<IGraphProposition>();
 		this.acceptStates = new HashSet<S>();
 		this.initialStates = new HashSet<S>();
@@ -96,7 +94,8 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public Set<S> getStates() {
-		return Collections.unmodifiableSet(new HashSet<S>(this.automataGraph.vertexSet()));
+		return Collections.unmodifiableSet(new HashSet<S>(this.automataGraph
+				.vertexSet()));
 	}
 
 	/**
@@ -114,13 +113,14 @@ public class BAImpl<S extends State, T extends Transition>
 	public Set<IGraphProposition> getAlphabet() {
 		return Collections.unmodifiableSet(alphabet);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Set<T> getTransitions() {
-		return Collections.unmodifiableSet(new HashSet<T>(this.automataGraph.edgeSet()));
+		return Collections.unmodifiableSet(new HashSet<T>(this.automataGraph
+				.edgeSet()));
 	}
 
 	/**
@@ -128,9 +128,8 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public Set<T> getOutTransitions(S state) {
-		if (state == null) {
-			throw new NullPointerException("The state s cannot be null");
-		}
+		Validate.notNull(state, "The state s cannot be null");
+		
 		if (this.automataGraph.outgoingEdgesOf(state) == null) {
 			return Collections.unmodifiableSet(new HashSet<T>());
 		}
@@ -152,9 +151,8 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public Set<T> getInTransitions(S state) {
-		if (state == null) {
-			throw new NullPointerException("The state s cannot be null");
-		}
+		Validate.notNull(state, "The state s cannot be null");
+	
 		if (!this.getStates().contains(state)) {
 			throw new IllegalArgumentException(
 					"The state "
@@ -173,9 +171,8 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public S getTransitionDestination(T transition) {
-		if (transition == null) {
-			throw new NullPointerException("The transition t cannot be null");
-		}
+		Validate.notNull(transition ,"The transition t cannot be null");
+		
 		if (!this.getTransitions().contains(transition)) {
 			throw new IllegalArgumentException(
 					"The transition is not contained into the set of the transition of the BA");
@@ -188,12 +185,13 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public S getTransitionSource(T transition) {
-		if (transition == null) {
-			throw new NullPointerException("The transition t cannot be null");
-		}
+		Validate.notNull(transition , "The transition t cannot be null");
+		
 		if (!this.getTransitions().contains(transition)) {
 			throw new IllegalArgumentException(
-					"The transition "+transition+" is not contained into the set of the transition of the BA");
+					"The transition "
+							+ transition
+							+ " is not contained into the set of the transition of the BA");
 		}
 		return this.automataGraph.getEdgeSource(transition);
 	}
@@ -203,15 +201,14 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public Set<S> getSuccessors(S s) {
-		if (s == null) {
-			throw new NullPointerException("The state s cannot be null");
-		}
+		Validate.notNull(s , "The state s cannot be null");
+		
 		if (!this.getStates().contains(s)) {
 			throw new IllegalArgumentException(
 					"The state is not contained into the states of the automaton");
 		}
-		Set<S> successors=new HashSet<S>();
-		for(T t: this.getOutTransitions(s)){
+		Set<S> successors = new HashSet<S>();
+		for (T t : this.getOutTransitions(s)) {
 			successors.add(this.automataGraph.getEdgeTarget(t));
 		}
 		return successors;
@@ -222,32 +219,27 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public Set<S> getPredecessors(S s) {
-		if (s == null) {
-			throw new NullPointerException("The state s cannot be null");
-		}
+		Validate.notNull(s, "The state s cannot be null");
+		
 		if (!this.getStates().contains(s)) {
 			throw new IllegalArgumentException(
 					"The state is not contained into the states of the automaton");
 		}
-		Set<S> predecessors=new HashSet<S>();
-		for(T t: this.getInTransitions(s)){
+		Set<S> predecessors = new HashSet<S>();
+		for (T t : this.getInTransitions(s)) {
 			predecessors.add(this.automataGraph.getEdgeSource(t));
 		}
 		return predecessors;
 	}
-
-	
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void addInitialState(S s) {
-		if (s == null)
-			throw new NullPointerException(
-					"The state s to be added cannot be null");
+		Validate.notNull(s, "The state s to be added cannot be null");
 		this.initialStates.add(s);
-		if(!this.getStates().contains(s)){
+		if (!this.getStates().contains(s)) {
 			this.addState(s);
 		}
 	}
@@ -257,9 +249,7 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public void addInitialStates(Set<S> states) {
-		if (states == null)
-			throw new NullPointerException(
-					"The state to be added cannot be null");
+		Validate.notNull(states, "The state to be added cannot be null");
 		for (S s : states) {
 			this.addInitialState(s);
 		}
@@ -270,14 +260,12 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public void addAcceptState(S s) {
-		if (s == null)
-			throw new NullPointerException(
-					"The state s to be added cannot be null");
+		Validate.notNull(s, "The state s to be added cannot be null");
 		this.acceptStates.add(s);
-		if(!this.getStates().contains(s)){
+		if (!this.getStates().contains(s)) {
 			this.addState(s);
 		}
-		
+
 	}
 
 	/**
@@ -285,9 +273,7 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public void addAcceptStates(Set<S> states) {
-		if (states == null)
-			throw new NullPointerException(
-					"The state to be added cannot be null");
+		Validate.notNull(states, "The state to be added cannot be null");
 		for (S s : states) {
 			this.addAcceptState(s);
 		}
@@ -316,9 +302,7 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public void addStates(Set<S> states) {
-		if (states == null)
-			throw new NullPointerException(
-					"The state to be added cannot be null");
+		Validate.notNull(states, "The state to be added cannot be null");
 		for (S s : states) {
 			this.addState(s);
 		}
@@ -330,9 +314,7 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public void addCharacter(IGraphProposition character) {
-		if (character == null)
-			throw new NullPointerException(
-					"The set of the proposition cannot be null");
+		Validate.notNull(character, "The set of the proposition cannot be null");
 		this.alphabet.add(character);
 	}
 
@@ -341,9 +323,7 @@ public class BAImpl<S extends State, T extends Transition>
 	 */
 	@Override
 	public void addCharacters(Set<IGraphProposition> characters) {
-		if (characters == null)
-			throw new NullPointerException(
-					"The set of the characters cannot be null");
+		Validate.notNull(characters , "The set of the characters cannot be null");
 		for (IGraphProposition l : characters) {
 			this.addCharacter(l);
 		}
@@ -364,21 +344,24 @@ public class BAImpl<S extends State, T extends Transition>
 			throw new NullPointerException("The transition cannot be null");
 		if (!this.alphabet.containsAll(transition.getPropositions()))
 			throw new IllegalArgumentException(
-					"Some of the propositions "+transition.getPropositions()+" of the transition are not contained into the alphabet of the automaton");
+					"Some of the propositions "
+							+ transition.getPropositions()
+							+ " of the transition are not contained into the alphabet of the automaton");
 		if (!this.getStates().contains(source))
 			throw new IllegalArgumentException(
 					"The source state is not contained into the set of the states of the automaton");
 		if (!this.getStates().contains(destination))
 			throw new IllegalArgumentException(
 					"The destination state is not contained into the set of the states of the automaton");
-		
+
 		if (this.getTransitions().contains(transition)) {
 			throw new IllegalArgumentException(
 					"The transition is already contained into the set of transitions of the graph");
 		}
-		logger.debug("Transitions: "+transition.toString());
-		logger.debug("Adding the transition: "+transition.getId()+" from "+source.toString()+" to "+destination.toString());
-		
+		logger.debug("Transitions: " + transition.toString());
+		logger.debug("Adding the transition: " + transition.getId() + " from "
+				+ source.toString() + " to " + destination.toString());
+
 		this.automataGraph.addEdge(source, destination, transition);
 	}
 
@@ -399,7 +382,9 @@ public class BAImpl<S extends State, T extends Transition>
 			throw new NullPointerException("The state to removed is null");
 		if (!this.automataGraph.containsVertex(state))
 			throw new IllegalArgumentException(
-					"The state "+state.getId()+" to removed is not contained into the set of the states of the Buchi automaton");
+					"The state "
+							+ state.getId()
+							+ " to removed is not contained into the set of the states of the Buchi automaton");
 
 		if (this.initialStates.contains(state)) {
 			this.initialStates.remove(state);
@@ -452,7 +437,6 @@ public class BAImpl<S extends State, T extends Transition>
 
 		this.initialStates.remove(state);
 	}
-
 
 	public String toString() {
 		String ret = "";
@@ -544,8 +528,8 @@ public class BAImpl<S extends State, T extends Transition>
 		}
 		return this.automataGraph.containsEdge(source, destination);
 	}
-	
-	public DirectedPseudograph<S, T> getGraph(){
+
+	public DirectedPseudograph<S, T> getGraph() {
 		return this.automataGraph;
 	}
 }

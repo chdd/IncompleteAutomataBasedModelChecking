@@ -5,9 +5,9 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.constraints.Component;
-import it.polimi.constraints.ComponentFactory;
-import it.polimi.constraints.Constraint;
+import it.polimi.constraints.impl.ComponentFactory;
+import it.polimi.constraints.impl.ComponentImpl;
+import it.polimi.constraints.impl.ConstraintImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,13 +52,13 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 	 * contains the map that connect each state of the model with the
 	 * corresponding clusters
 	 */
-	private Constraint<S, T> constraint;
+	private ConstraintImpl<S, T> constraint;
 
 	/**
 	 * associated each state of the intersection automaton to the component
 	 * through which it is associated
 	 */
-	private Map<S, Component<S, T>> mapIntersectionStateComponent;
+	private Map<S, ComponentImpl<S, T>> mapIntersectionStateComponent;
 
 	/**
 	 * is the original model to be considered
@@ -101,7 +101,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 		
 
 		// creating the abstracted automaton
-		this.constraint = new Constraint<S, T>();
+		this.constraint = new ConstraintImpl<S, T>();
 		// setting the map between the intersection state and the model states
 		this.modelStateIntersectionStateMap = modelStateIntersectionStateMap;
 		// setting the intersection automaton
@@ -111,7 +111,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 		// creating the factory of the components
 		componentFactory = new ComponentFactory<S, T>();
 		// creating the map between a state and the corresponding component
-		this.mapIntersectionStateComponent = new HashMap<S, Component<S, T>>();
+		this.mapIntersectionStateComponent = new HashMap<S, ComponentImpl<S, T>>();
 
 		this.refinementTransitionFactory = refinementTransitionFactory;
 		logger.info("SubAutomataIdentifier created");
@@ -126,7 +126,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 	 * @return the sub-automata of the automaton that refer to the transparent
 	 *         states of M.
 	 */
-	public Constraint<S, T> getSubAutomata() {
+	public ConstraintImpl<S, T> getSubAutomata() {
 
 		logger.info("Computing the subproperties");
 
@@ -140,7 +140,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 	private void createTransitions() {
 		for (S intersectionState : this.mapIntersectionStateComponent.keySet()) {
 
-			Component<S, T> intersectionStateComponent = this.mapIntersectionStateComponent
+			ComponentImpl<S, T> intersectionStateComponent = this.mapIntersectionStateComponent
 					.get(intersectionState);
 
 			// analyzing the incoming transitions
@@ -149,7 +149,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 
 				S sourceIntersectionState = this.intersectionBA
 						.getTransitionSource(incomingTransition);
-				Component<S, T> intersectionSourceComponent = this.mapIntersectionStateComponent
+				ComponentImpl<S, T> intersectionSourceComponent = this.mapIntersectionStateComponent
 						.get(sourceIntersectionState);
 
 				if (intersectionSourceComponent
@@ -170,11 +170,11 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 					
 					intersectionSourceComponent.addOutComingPort(
 							sourceIntersectionState, port,
-							intersectionStateComponent.getModelState(), model);
+							intersectionStateComponent.getModelState());
 					
 					intersectionStateComponent.addIncomingPort(
 							intersectionSourceComponent.getModelState(), port,
-							intersectionState, model);
+							intersectionState);
 				}
 			}
 		}
@@ -191,7 +191,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition> {
 			/*
 			 * creates a component which correspond with the state modelState
 			 */
-			Component<S, T> c = componentFactory.create(modelState.getName(),
+			ComponentImpl<S, T> c = componentFactory.create(modelState.getName(),
 					modelState, model.isTransparent(modelState),
 					this.refinementTransitionFactory);
 			// adds the abstracted automaton
