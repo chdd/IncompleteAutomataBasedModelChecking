@@ -2,8 +2,7 @@ package it.polimi.automata.state.impl;
 
 import it.polimi.automata.state.State;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
+import com.google.common.base.Preconditions;
 
 /**
  * contains the implementation of a state of the automaton. It implements the
@@ -34,9 +33,8 @@ public class StateImpl implements State {
 	 *             if the value of the id is less than 0
 	 */
 	protected StateImpl(int id) {
-		if (id < 0) {
-			throw new IllegalArgumentException("The id cannot be < 0");
-		}
+		Preconditions.checkArgument(id >= 0, "The id cannot be < 0");
+
 		this.id = id;
 		this.name = "";
 	}
@@ -56,18 +54,15 @@ public class StateImpl implements State {
 	 */
 	protected StateImpl(String name, int id) {
 		this(id);
-		if (name == null) {
-			throw new NullPointerException(
-					"The name of the state cannot be null");
-		}
+		Preconditions
+				.checkNotNull(name, "The name of the state cannot be null");
+
 		this.name = name;
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
-	@XmlID
 	@Override
 	public int getId() {
 		return this.id;
@@ -76,7 +71,6 @@ public class StateImpl implements State {
 	/**
 	 * {@inheritDoc}
 	 */
-	@XmlAttribute
 	@Override
 	public String getName() {
 		return name;

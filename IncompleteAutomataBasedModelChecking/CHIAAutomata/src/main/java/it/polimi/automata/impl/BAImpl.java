@@ -131,15 +131,15 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	@Override
 	public Set<T> getOutTransitions(S state) {
 		Preconditions.checkNotNull(state, "The state s cannot be null");
-		
+		Preconditions
+				.checkArgument(
+						this.getStates().contains(state),
+						"The state "
+								+ state
+								+ " is not contained into the set of the states of the automaton");
+
 		if (this.automataGraph.outgoingEdgesOf(state) == null) {
 			return Collections.unmodifiableSet(new HashSet<T>());
-		}
-		if (!this.getStates().contains(state)) {
-			throw new IllegalArgumentException(
-					"The state "
-							+ state
-							+ " is not contained into the set of the states of the automaton");
 		}
 		if (this.automataGraph.outgoingEdgesOf(state) == null) {
 			return new HashSet<T>();
@@ -154,13 +154,13 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	@Override
 	public Set<T> getInTransitions(S state) {
 		Preconditions.checkNotNull(state, "The state s cannot be null");
-	
-		if (!this.getStates().contains(state)) {
-			throw new IllegalArgumentException(
-					"The state "
-							+ state
-							+ " is not contained into the set of the states of the automaton");
-		}
+		Preconditions
+				.checkArgument(
+						this.getStates().contains(state),
+						"The state "
+								+ state
+								+ " is not contained into the set of the states of the automaton");
+
 		if (this.automataGraph.incomingEdgesOf(state) == null) {
 			return new HashSet<T>();
 		}
@@ -173,12 +173,12 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public S getTransitionDestination(T transition) {
-		Preconditions.checkNotNull(transition ,"The transition t cannot be null");
-		
-		if (!this.getTransitions().contains(transition)) {
-			throw new IllegalArgumentException(
-					"The transition is not contained into the set of the transition of the BA");
-		}
+		Preconditions.checkNotNull(transition,
+				"The transition t cannot be null");
+		Preconditions
+				.checkArgument(this.getTransitions().contains(transition),
+						"The transition is not contained into the set of the transition of the BA");
+
 		return this.automataGraph.getEdgeTarget(transition);
 	}
 
@@ -187,11 +187,15 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public S getTransitionSource(T transition) {
-		Preconditions.checkNotNull(transition , "The transition t cannot be null");
-		Preconditions.checkArgument(this.getTransitions().contains(transition), "The transition "
-							+ transition
-							+ " is not contained into the set of the transition of the BA");
-		
+		Preconditions.checkNotNull(transition,
+				"The transition t cannot be null");
+		Preconditions
+				.checkArgument(
+						this.getTransitions().contains(transition),
+						"The transition "
+								+ transition
+								+ " is not contained into the set of the transition of the BA");
+
 		return this.automataGraph.getEdgeSource(transition);
 	}
 
@@ -200,9 +204,10 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public Set<S> getSuccessors(S s) {
-		Preconditions.checkNotNull(s , "The state s cannot be null");
-		Preconditions.checkArgument(this.getStates().contains(s), "The state is not contained into the states of the automaton");
-		
+		Preconditions.checkNotNull(s, "The state s cannot be null");
+		Preconditions.checkArgument(this.getStates().contains(s),
+				"The state is not contained into the states of the automaton");
+
 		Set<S> successors = new HashSet<S>();
 		for (T t : this.getOutTransitions(s)) {
 			successors.add(this.automataGraph.getEdgeTarget(t));
@@ -216,8 +221,9 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	@Override
 	public Set<S> getPredecessors(S s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
-		Preconditions.checkArgument(this.getStates().contains(s), "The state is not contained into the states of the automaton");
-		
+		Preconditions.checkArgument(this.getStates().contains(s),
+				"The state is not contained into the states of the automaton");
+
 		Set<S> predecessors = new HashSet<S>();
 		for (T t : this.getInTransitions(s)) {
 			predecessors.add(this.automataGraph.getEdgeSource(t));
@@ -242,7 +248,8 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void addInitialStates(Set<S> states) {
-		Preconditions.checkNotNull(states, "The state to be added cannot be null");
+		Preconditions.checkNotNull(states,
+				"The state to be added cannot be null");
 		for (S s : states) {
 			this.addInitialState(s);
 		}
@@ -266,7 +273,8 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void addAcceptStates(Set<S> states) {
-		Preconditions.checkNotNull(states, "The state to be added cannot be null");
+		Preconditions.checkNotNull(states,
+				"The state to be added cannot be null");
 		for (S s : states) {
 			this.addAcceptState(s);
 		}
@@ -278,13 +286,16 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void addState(S state) {
-		Preconditions.checkNotNull(state, "The state to be added cannot be null");
-		if (this.getStates().contains(state)) {
-			throw new IllegalArgumentException(
-					"The state "
-							+ state
-							+ " is already contained into the set of the states of the automaton");
-		}
+		Preconditions.checkNotNull(state,
+				"The state to be added cannot be null");
+
+		Preconditions
+				.checkArgument(
+						this.getStates().contains(state),
+						"The state "
+								+ state
+								+ " is already contained into the set of the states of the automaton");
+
 		this.automataGraph.addVertex(state);
 	}
 
@@ -293,7 +304,8 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void addStates(Set<S> states) {
-		Validate.notNull(states, "The state to be added cannot be null");
+		Preconditions.checkNotNull(states,
+				"The state to be added cannot be null");
 		for (S s : states) {
 			this.addState(s);
 		}
@@ -305,7 +317,8 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void addCharacter(IGraphProposition character) {
-		Validate.notNull(character, "The set of the proposition cannot be null");
+		Preconditions.checkNotNull(character,
+				"The set of the proposition cannot be null");
 		this.alphabet.add(character);
 	}
 
@@ -314,7 +327,8 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void addCharacters(Set<IGraphProposition> characters) {
-		Validate.notNull(characters , "The set of the characters cannot be null");
+		Preconditions.checkNotNull(characters,
+				"The set of the characters cannot be null");
 		for (IGraphProposition l : characters) {
 			this.addCharacter(l);
 		}
@@ -326,29 +340,28 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	@Override
 	public void addTransition(S source, S destination, T transition) {
 
-		if (source == null)
-			throw new NullPointerException("The source state cannot be null");
-		if (destination == null)
-			throw new NullPointerException(
-					"The destination state cannot be null");
-		if (transition == null)
-			throw new NullPointerException("The transition cannot be null");
-		if (!this.alphabet.containsAll(transition.getPropositions()))
-			throw new IllegalArgumentException(
-					"Some of the propositions "
-							+ transition.getPropositions()
-							+ " of the transition are not contained into the alphabet of the automaton");
-		if (!this.getStates().contains(source))
-			throw new IllegalArgumentException(
-					"The source state is not contained into the set of the states of the automaton");
-		if (!this.getStates().contains(destination))
-			throw new IllegalArgumentException(
-					"The destination state is not contained into the set of the states of the automaton");
+		Preconditions.checkNotNull(source, "The source state cannot be null");
+		Preconditions.checkNotNull(destination,
+				"The destination state cannot be null");
+		Preconditions.checkNotNull(transition, "The transition cannot be null");
+		Preconditions
+				.checkArgument(
+						this.alphabet.containsAll(transition.getPropositions()),
+						"Some of the propositions "
+								+ transition.getPropositions()
+								+ " of the transition are not contained into the alphabet of the automaton");
+		Preconditions
+				.checkArgument(this.getStates().contains(source),
+						"The source state is not contained into the set of the states of the automaton");
+		Preconditions
+				.checkArgument(
+						this.getStates().contains(destination),
+						"The destination state is not contained into the set of the states of the automaton");
 
-		if (this.getTransitions().contains(transition)) {
-			throw new IllegalArgumentException(
-					"The transition is already contained into the set of transitions of the graph");
-		}
+		Preconditions
+				.checkArgument(!this.getTransitions().contains(transition),
+						"The transition is already contained into the set of transitions of the graph");
+
 		logger.debug("Transitions: " + transition.toString());
 		logger.debug("Adding the transition: " + transition.getId() + " from "
 				+ source.toString() + " to " + destination.toString());
@@ -361,6 +374,9 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public boolean isPredecessor(S source, S destination) {
+		Preconditions.checkNotNull(source, "The source state cannot be null");
+		Preconditions.checkNotNull(destination,
+				"The destination state cannot be null");
 		return this.automataGraph.containsEdge(source, destination);
 	}
 
@@ -369,13 +385,13 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void removeState(S state) {
-		if (state == null)
-			throw new NullPointerException("The state to removed is null");
-		if (!this.automataGraph.containsVertex(state))
-			throw new IllegalArgumentException(
-					"The state "
-							+ state.getId()
-							+ " to removed is not contained into the set of the states of the Buchi automaton");
+		Preconditions.checkNotNull(state, "The state to removed is null");
+		Preconditions
+				.checkArgument(
+						this.automataGraph.containsVertex(state),
+						"The state "
+								+ state.getId()
+								+ " to removed is not contained into the set of the states of the Buchi automaton");
 
 		if (this.initialStates.contains(state)) {
 			this.initialStates.remove(state);
@@ -391,12 +407,12 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void removeTransition(T transition) {
-		if (transition == null)
-			throw new NullPointerException(
-					"The transition to be removed cannot be null");
-		if (!this.automataGraph.edgeSet().contains(transition))
-			throw new IllegalArgumentException(
-					"The transition to be removed must be contained into the set of the transitions of the Buchi automaton");
+		Preconditions.checkNotNull(transition,
+				"The transition to be removed cannot be null");
+		Preconditions
+				.checkArgument(
+						this.automataGraph.edgeSet().contains(transition),
+						"The transition to be removed must be contained into the set of the transitions of the Buchi automaton");
 
 		this.automataGraph.removeEdge(transition);
 	}
@@ -406,11 +422,13 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void removeAcceptingState(S state) {
-		if (state == null)
-			throw new NullPointerException("The state cannot be null");
-		if (!this.acceptStates.contains(state))
-			throw new IllegalArgumentException("The state: " + state.getId()
-					+ " must be contained in the set of the accepting states");
+		Preconditions.checkNotNull(state, "The state cannot be null");
+		Preconditions
+				.checkArgument(
+						this.acceptStates.contains(state),
+						"The state: "
+								+ state.getId()
+								+ " must be contained in the set of the accepting states");
 
 		this.acceptStates.remove(state);
 	}
@@ -420,11 +438,13 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public void removeInitialState(S state) {
-		if (state == null)
-			throw new NullPointerException("The state cannot be null");
-		if (!this.initialStates.contains(state))
-			throw new IllegalArgumentException("The state: " + state.getId()
-					+ " must be contained in the set of the initial states");
+		Preconditions.checkNotNull(state, "The state cannot be null");
+		Preconditions
+				.checkArgument(
+						this.initialStates.contains(state),
+						"The state: "
+								+ state.getId()
+								+ " must be contained in the set of the initial states");
 
 		this.initialStates.remove(state);
 	}
@@ -474,26 +494,19 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public Set<T> getTransitions(S source, S destination) {
-		if (source == null) {
-			throw new NullPointerException("The source state cannot be null");
-		}
-		if (destination == null) {
-			throw new NullPointerException(
-					"The destination state cannot be null");
-		}
-		if (!this.automataGraph.containsVertex(source)) {
-			throw new IllegalArgumentException(
-					"The source state must be contained into the set of the states of the BA");
-		}
-		if (!this.automataGraph.containsVertex(destination)) {
-			throw new IllegalArgumentException(
-					"The destination state must be contained into the set of the states of the BA");
-		}
+		Preconditions.checkNotNull(source, "The source state cannot be null");
+		Preconditions.checkNotNull(destination,
+				"The destination state cannot be null");
+		Preconditions
+				.checkArgument(this.automataGraph.containsVertex(source),
+						"The source state must be contained into the set of the states of the BA");
+		Preconditions
+				.checkArgument(this.automataGraph.containsVertex(destination),
+						"The destination state must be contained into the set of the states of the BA");
+		Preconditions
+				.checkArgument(this.isSuccessor(source, destination),
+						"There is no connection between the source and the destination state");
 		Set<T> t = this.automataGraph.getAllEdges(source, destination);
-		if (t == null) {
-			throw new IllegalArgumentException(
-					"There is no connection between the source and the destination state");
-		}
 		return t;
 	}
 
@@ -502,21 +515,16 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 */
 	@Override
 	public boolean isSuccessor(S source, S destination) {
-		if (source == null) {
-			throw new NullPointerException("The source state cannot be null");
-		}
-		if (destination == null) {
-			throw new NullPointerException(
-					"The destination state cannot be null");
-		}
-		if (!this.automataGraph.containsVertex(source)) {
-			throw new IllegalArgumentException(
-					"The source state must be contained into the set of the states of the BA");
-		}
-		if (!this.automataGraph.containsVertex(destination)) {
-			throw new IllegalArgumentException(
-					"The destination state must be contained into the set of the states of the BA");
-		}
+		Preconditions.checkNotNull(source, "The source state cannot be null");
+		Preconditions.checkNotNull(destination,
+				"The destination state cannot be null");
+		Preconditions
+				.checkArgument(this.automataGraph.containsVertex(source),
+						"The source state must be contained into the set of the states of the BA");
+		Preconditions
+				.checkArgument(this.automataGraph.containsVertex(destination),
+						"The destination state must be contained into the set of the states of the BA");
+
 		return this.automataGraph.containsEdge(source, destination);
 	}
 

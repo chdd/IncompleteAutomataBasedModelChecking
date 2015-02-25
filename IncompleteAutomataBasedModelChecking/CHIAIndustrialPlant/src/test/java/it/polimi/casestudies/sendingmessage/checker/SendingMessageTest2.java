@@ -77,6 +77,8 @@ public class SendingMessageTest2 {
 		int res=modelChecker.check();
 		IntersectionBA< State, IntersectionTransition<State>> intersectionBA=modelChecker.getIntersectionAutomaton();
 		
+		System.out.println(intersectionBA);
+		
 		assertEquals(-1, res);
 		assertEquals(11, intersectionBA.getStates().size());
 		assertEquals(1, intersectionBA.getInitialStates().size());

@@ -1,5 +1,7 @@
 package it.polimi.automata.state.impl;
 
+import com.google.common.base.Preconditions;
+
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 
@@ -36,11 +38,8 @@ public class StateFactoryImpl implements StateFactory<State> {
 	 */
 	@Override
 	public StateImpl create(String name) {
-
-		if (name == null) {
-			throw new NullPointerException(
-					"The name of the state cannot be null");
-		}
+		Preconditions.checkNotNull(name, "The name of the state cannot be null");
+		
 		StateImpl s = new StateImpl(name, StateFactoryImpl.stateCount);
 		StateFactoryImpl.stateCount=StateFactoryImpl.stateCount+1;
 		return s;
@@ -51,14 +50,9 @@ public class StateFactoryImpl implements StateFactory<State> {
 	 */
 	@Override
 	public StateImpl create(String name, int id) {
-		if (id < 0) {
-			throw new IllegalArgumentException(
-					"The id must be grater than or equal to 0");
-		}
-		if (name == null) {
-			throw new NullPointerException(
-					"The name of the state cannot be null");
-		}
+		Preconditions.checkNotNull(name, "The name of the state cannot be null");
+		Preconditions.checkArgument(id >= 0, "The id must be grater than or equal to 0");
+		
 		StateImpl s = new StateImpl(name, id);
 		StateFactoryImpl.stateCount = Math.max(StateFactoryImpl.stateCount+1,
 				id + 1);

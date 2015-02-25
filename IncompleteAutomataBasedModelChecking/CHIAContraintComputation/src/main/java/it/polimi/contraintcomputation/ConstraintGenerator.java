@@ -9,6 +9,7 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.impl.ConstraintImpl;
 import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
 import it.polimi.contraintcomputation.subautomatafinder.SubPropertiesIdentifier;
+import it.polimi.contraintcomputation.subautomatafinder.TransitionsTransitiveClosure;
 
 import java.util.Map;
 import java.util.Set;
@@ -111,6 +112,11 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 				this.subPropertiesTransitionFactory);
 		ConstraintImpl<S, I> constraint = subPropertiesIdentifier.getSubAutomata();
 
+		TransitionsTransitiveClosure closure=new TransitionsTransitiveClosure(intBA);
+		closure.computeTransitionsClosure();
+		
+		System.out.println(closure.getPortsRelations());
+		
 		logger.info("Constraint computed");
 		return constraint;
 	}

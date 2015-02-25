@@ -70,8 +70,7 @@ public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdge
 	 */
 	@Override
 	public Transition create(int id, Set<IGraphProposition> labels) {
-		if(id < 0) 
-			throw new IllegalArgumentException("The id must be grater than or equal to zero");
+		Preconditions.checkArgument(id >=0, "The id must be grater than or equal to zero");
 		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
 		Transition t = new TransitionImpl(labels, id);

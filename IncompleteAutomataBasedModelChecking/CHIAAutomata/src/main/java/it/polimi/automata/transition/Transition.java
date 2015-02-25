@@ -14,11 +14,6 @@ import it.polimi.automata.transition.impl.TransitionImpl;
  * 
  * @author claudiomenghi
  * @see TransitionImpl
- * @param <L>
- *            is the label of the transition which must extend the interface
- *            {@link Label}. Depending on whether the transition is associated
- *            with the model or a property it is associated with a set of atomic
- *            propositions or a propositional logic formula, respectively.
  */
 public interface Transition {
 

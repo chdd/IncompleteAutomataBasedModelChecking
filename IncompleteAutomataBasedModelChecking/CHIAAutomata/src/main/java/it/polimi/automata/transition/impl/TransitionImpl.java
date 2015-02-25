@@ -5,10 +5,11 @@ import it.polimi.automata.transition.Transition;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
+
+import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
@@ -46,19 +47,15 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 	 *             if the set of labels or one of the label to be added is null
 	 */
 	protected TransitionImpl(Set<IGraphProposition> labels, int id) {
-		
-		if (id < 0)
-			throw new IllegalArgumentException(
-					"The value of the id cannot be less than zero");
-		Objects.requireNonNull(labels, "The character that labels the transition cannot be null");
-		
+		Preconditions.checkNotNull(labels,
+				"The character that labels the transition cannot be null");
+		Preconditions.checkArgument(id >= 0,
+				"The value of the id cannot be less than zero");
 		this.id = id;
 		this.labels = new HashSet<IGraphProposition>();
 		for (IGraphProposition l : labels) {
-			if (l == null) {
-				throw new NullPointerException(
-						"No null labels can be added to the transition");
-			}
+			Preconditions.checkNotNull(l,
+					"No null labels can be added to the transition");
 			this.labels.add(l);
 		}
 	}
@@ -67,14 +64,14 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 	 * {@inheritDoc}
 	 */
 	public void setLabels(Set<IGraphProposition> labels) {
-		Objects.requireNonNull(labels, "It is not possible to set a null set of labels");
-		
+		Preconditions.checkNotNull(labels,
+				"It is not possible to set a null set of labels");
+
 		this.labels = new HashSet<IGraphProposition>();
 		for (IGraphProposition l : labels) {
-			if (l == null) {
-				throw new NullPointerException(
-						"The set of the labels cannot contain null labels");
-			}
+			Preconditions.checkNotNull(l == null,
+					"The set of the labels cannot contain null labels");
+
 			this.labels.add(l);
 		}
 	}
@@ -111,7 +108,9 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 		return "{" + Integer.toString(this.id) + "} " + ret + "";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -122,7 +121,9 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

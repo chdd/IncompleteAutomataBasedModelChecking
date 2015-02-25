@@ -6,20 +6,19 @@ import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
- * is the factory that allows to create transitions of the type
- * Transition<LABEL>
+ * is the factory that allows to create transitions of the type Transition
  * 
  * @see {@link Transition}. It implements the {@link TransitionFactory}
  *      interface
  * 
  * @author claudiomenghi
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
+ * @param <S>
+ *            is the type of the states of the automaton
  */
 @SuppressWarnings("serial")
 public class TransitionFactoryModelImpl<S extends State> extends
@@ -38,15 +37,9 @@ public class TransitionFactoryModelImpl<S extends State> extends
 	 */
 	@Override
 	public Transition create(Set<IGraphProposition> labels) {
-		if (labels == null)
-			throw new NullPointerException(
-					"The labels to be added at the Transition cannot be null");
-
+		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 		for (IGraphProposition p : labels) {
-			if (p.isNegated()) {
-				throw new IllegalArgumentException(
-						"The propositions of the model cannot be negated");
-			}
+			Preconditions.checkArgument(!p.isNegated(), "The propositions of the model cannot be negated");
 		}
 		return super.create(labels);
 	}
@@ -60,15 +53,10 @@ public class TransitionFactoryModelImpl<S extends State> extends
 	 */
 	@Override
 	public Transition create(int id, Set<IGraphProposition> labels) {
-		if (labels == null)
-			throw new NullPointerException(
-					"The labels to be added at the Transition cannot be null");
+		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
 		for (IGraphProposition p : labels) {
-			if (p.isNegated()) {
-				throw new IllegalArgumentException(
-						"The propositions of the model cannot be negated");
-			}
+			Preconditions.checkArgument(!p.isNegated(), "The propositions of the model cannot be negated");
 		}
 
 		return super.create(id, labels);

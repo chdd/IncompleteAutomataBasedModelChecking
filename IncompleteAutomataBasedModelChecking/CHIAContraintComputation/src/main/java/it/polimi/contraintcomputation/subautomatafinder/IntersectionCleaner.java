@@ -2,6 +2,7 @@ package it.polimi.contraintcomputation.subautomatafinder;
 
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
+import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
  */
-public class IntersectionCleaner<S extends State, T extends Transition> {
+public class IntersectionCleaner<S extends State, T extends IntersectionTransition<S>> {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -60,8 +61,9 @@ public class IntersectionCleaner<S extends State, T extends Transition> {
 	 *             if the automaton to be considered is null
 	 */
 	public IntersectionCleaner(IntersectionBA<S, T> automaton) {
-		Validate.notNull(automaton, "The intersection automaton to be considered cannot be null");
-		
+		Validate.notNull(automaton,
+				"The intersection automaton to be considered cannot be null");
+
 		this.intersectionAutomaton = automaton;
 		this.reachableStates = new HashSet<S>();
 		visitedStates = new HashSet<S>();
@@ -77,23 +79,20 @@ public class IntersectionCleaner<S extends State, T extends Transition> {
 	public void clean() {
 
 		logger.info("Sarting the cleaning phase");
-		for (S accepting : this.intersectionAutomaton.getAcceptStates()) {
+		Set<S> toBeVisited = new HashSet<S>();
+		toBeVisited.addAll(this.intersectionAutomaton.getAcceptStates());
+		while (!toBeVisited.isEmpty()) {
 
-			Set<S> toBeVisited = new HashSet<S>();
-			toBeVisited.add(accepting);
-			while (!toBeVisited.isEmpty()) {
+			S currentState = toBeVisited.iterator().next();
+			if (!visitedStates.contains(currentState)) {
+				toBeVisited.addAll(this.intersectionAutomaton
+						.getPredecessors(currentState));
+				reachableStates.addAll(this.intersectionAutomaton
+						.getPredecessors(currentState));
 
-				S currentState = toBeVisited.iterator().next();
-				if (!visitedStates.contains(currentState)) {
-					toBeVisited.addAll(this.intersectionAutomaton
-							.getPredecessors(currentState));
-					reachableStates.addAll(this.intersectionAutomaton
-							.getPredecessors(currentState));
-
-					visitedStates.add(currentState);
-				}
-				toBeVisited.remove(currentState);
+				visitedStates.add(currentState);
 			}
+			toBeVisited.remove(currentState);
 		}
 		Set<S> toBeRemoved = new HashSet<S>(
 				this.intersectionAutomaton.getStates());
@@ -101,8 +100,11 @@ public class IntersectionCleaner<S extends State, T extends Transition> {
 		for (S s : toBeRemoved) {
 			this.intersectionAutomaton.removeState(s);
 		}
+		
+		
 		logger.info("The cleaning phase has removed: " + toBeRemoved.size()
 				+ " states");
-
 	}
+
+
 }

@@ -7,5 +7,6 @@ import it.polimi.automata.state.State;
 
 public interface IntersectionTransitionFactory<S extends State, T extends Transition> extends TransitionFactory<S, T> {
 
-	public Transition create(int id, Set<IGraphProposition> labels, S state);
+	public T create(int id, Set<IGraphProposition> labels, S state);
+	public T create(Set<IGraphProposition> labels, S state);
 }

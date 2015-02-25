@@ -13,6 +13,8 @@ import java.util.Set;
 
 import org.jgrapht.EdgeFactory;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
@@ -25,9 +27,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *      interface <br>
  *      The transition of the automaton must must implement the
  *      {@link Transition} interface <br>
- *      The label of the transition must implement the label interface and
- *      depending on whether the automaton represents the model or the claim it
- *      is a set of proposition or a propositional logic formula
  *      </p>
  * 
  * @author claudiomenghi
@@ -38,14 +37,9 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
-public class IBAImpl<S extends State, T extends Transition>
-		extends BAImpl<S, T> implements
-		IBA<S, T> {
+public class IBAImpl<S extends State, T extends Transition> extends
+		BAImpl<S, T> implements IBA<S, T> {
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -64,14 +58,11 @@ public class IBAImpl<S extends State, T extends Transition>
 	 * {@inheritDoc}
 	 */
 	public boolean isTransparent(S s) {
-		if (s == null) {
-			throw new NullPointerException(
-					"The state to be added cannot be null");
-		}
-		if (!this.getStates().contains(s)) {
-			throw new IllegalArgumentException(
-					"The state is not contained into the set of the states of the IBA");
-		}
+		Preconditions.checkNotNull(s, "The state to be added cannot be null");
+		Preconditions
+				.checkArgument(this.getStates().contains(s),
+						"The state is not contained into the set of the states of the IBA");
+
 		return this.transparentStates.contains(s);
 	}
 
@@ -87,41 +78,39 @@ public class IBAImpl<S extends State, T extends Transition>
 	 * {@inheritDoc}
 	 */
 	public void addTransparentState(S s) {
-		if (s == null) {
-			throw new NullPointerException(
-					"The state to be added cannot be null");
-		}
+		Preconditions.checkNotNull(s, "The state to be added cannot be null");
+
 		this.transparentStates.add(s);
-		if(!this.getStates().contains(s)){
+		if (!this.getStates().contains(s)) {
 			this.addState(s);
 		}
 	}
 
-		/**
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public IBAImpl<S, T> clone() {
-		IBAImpl<S, T> clone = new IBAImpl<S, T>(this.automataGraph.getEdgeFactory());
-		for(IGraphProposition l: this.getAlphabet()){
+		IBAImpl<S, T> clone = new IBAImpl<S, T>(
+				this.automataGraph.getEdgeFactory());
+		for (IGraphProposition l : this.getAlphabet()) {
 			clone.addCharacter(l);
 		}
 		for (S s : this.getStates()) {
 			clone.addState(s);
 		}
-		for(S s: this.getAcceptStates()){
+		for (S s : this.getAcceptStates()) {
 			clone.addAcceptState(s);
 		}
-		for(S s: this.getInitialStates()){
+		for (S s : this.getInitialStates()) {
 			clone.addInitialState(s);
 		}
 		for (T t : this.getTransitions()) {
 			clone.addTransition(this.getTransitionSource(t),
 					this.getTransitionDestination(t), t);
 		}
-		
-		clone.transparentStates = new HashSet<S>(
-				this.getTransparentStates());
+
+		clone.transparentStates = new HashSet<S>(this.getTransparentStates());
 
 		return clone;
 	}
@@ -130,29 +119,19 @@ public class IBAImpl<S extends State, T extends Transition>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBA<S, T> replace(S transparentState,
-			IBA<S, T> ibaToInject,
+	public IBA<S, T> replace(S transparentState, IBA<S, T> ibaToInject,
 			Map<S, Set<Entry<T, S>>> inComing,
 			Map<S, Set<Entry<T, S>>> outComing) {
-		if (transparentState == null) {
-			throw new NullPointerException("The state to be replaced is null");
-		}
-		if (ibaToInject == null) {
-			throw new NullPointerException("The IBA to inject is null");
-		}
-		if (inComing == null) {
-			throw new NullPointerException("The inComing map is null");
-		}
-		if (outComing == null) {
-			throw new NullPointerException("The outComing map is null");
-		}
-		if (!this.isTransparent(transparentState)) {
-			throw new IllegalArgumentException(
-					"The state t must be transparent");
-		}
+		Preconditions.checkNotNull(transparentState,
+				"The state to be replaced is null");
+		Preconditions.checkNotNull(ibaToInject, "The IBA to inject is null");
+		Preconditions.checkNotNull(inComing, "The inComing map is null");
+		Preconditions.checkNotNull(outComing, "The outComing map is null");
+		Preconditions.checkArgument(this.isTransparent(transparentState),
+				"The state t must be transparent");
+
 		for (S s : inComing.keySet()) {
-			if (!this.getPredecessors(transparentState).contains(
-					s)) {
+			if (!this.getPredecessors(transparentState).contains(s)) {
 				throw new IllegalArgumentException(
 						"The source of an incoming transition to be injected was not connected to the transparent state");
 			}
@@ -167,8 +146,8 @@ public class IBAImpl<S extends State, T extends Transition>
 		}
 		for (Set<Entry<T, S>> e : outComing.values()) {
 			for (Entry<T, S> entry : e) {
-				if (!this.getSuccessors(transparentState)
-						.contains(entry.getValue())) {
+				if (!this.getSuccessors(transparentState).contains(
+						entry.getValue())) {
 					throw new IllegalArgumentException(
 							"the destination of an out-coming transition was not connected to the transparent state");
 				}
@@ -181,8 +160,7 @@ public class IBAImpl<S extends State, T extends Transition>
 			}
 		}
 
-		IBAImpl<S, T> newIba = (IBAImpl<S, T>) this
-				.clone();
+		IBAImpl<S, T> newIba = (IBAImpl<S, T>) this.clone();
 
 		for (S s : ibaToInject.getStates()) {
 			newIba.addState(s);
@@ -197,35 +175,39 @@ public class IBAImpl<S extends State, T extends Transition>
 		}
 		// if the transparent state is accepting
 		if (this.getAcceptStates().contains(transparentState)) {
-			// adding the accepting states of the IBA to inject to the accepting states of the refinement 
+			// adding the accepting states of the IBA to inject to the accepting
+			// states of the refinement
 			for (S s : ibaToInject.getAcceptStates()) {
 				newIba.addAcceptState(s);
 			}
 		}
 		// if the transparent state is initial
 		if (this.getInitialStates().contains(transparentState)) {
-			// add the initial state of the IBA to inject to the initial states of the refinement
+			// add the initial state of the IBA to inject to the initial states
+			// of the refinement
 			for (S s : ibaToInject.getInitialStates()) {
 				newIba.addInitialState(s);
 			}
 		}
 		// processing the incoming transitions
 		// for each entry
-		for(Entry<S, Set<Entry<T, S>>> entry: inComing.entrySet()){
+		for (Entry<S, Set<Entry<T, S>>> entry : inComing.entrySet()) {
 			// for each transition
-			for(Entry<T, S> transitionEntry: entry.getValue()){
-				newIba.addTransition(entry.getKey(), transitionEntry.getValue(), transitionEntry.getKey());
+			for (Entry<T, S> transitionEntry : entry.getValue()) {
+				newIba.addTransition(entry.getKey(),
+						transitionEntry.getValue(), transitionEntry.getKey());
 			}
 		}
-		
+
 		// processing the out-coming transitions
-		for(Entry<S, Set<Entry<T, S>>> entry: outComing.entrySet()){
+		for (Entry<S, Set<Entry<T, S>>> entry : outComing.entrySet()) {
 			// for each transition
-			for(Entry<T, S> transitionEntry: entry.getValue()){
-				newIba.addTransition(entry.getKey(), transitionEntry.getValue(), transitionEntry.getKey());
+			for (Entry<T, S> transitionEntry : entry.getValue()) {
+				newIba.addTransition(entry.getKey(),
+						transitionEntry.getValue(), transitionEntry.getKey());
 			}
 		}
-		
+
 		// removing the transparent state to the new IBA
 		newIba.removeState(transparentState);
 		return newIba;

@@ -97,7 +97,7 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 		Objects.requireNonNull(intersectionTransitionFactory, "The intersection factory cannot be null");
 		
 		return intersectionTransitionFactory.create(claimTransition
-				.getPropositions());
+				.getPropositions(), modelState);
 	
 	}
 }

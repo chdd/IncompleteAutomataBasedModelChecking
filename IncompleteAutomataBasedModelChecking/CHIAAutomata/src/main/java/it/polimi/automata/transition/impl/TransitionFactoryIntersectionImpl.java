@@ -3,8 +3,9 @@ package it.polimi.automata.transition.impl;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
+
+import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import it.polimi.automata.state.State;
@@ -28,29 +29,36 @@ import it.polimi.automata.transition.TransitionFactory;
  *            proposition or a propositional logic formula {@link Label}
  */
 @SuppressWarnings("serial")
-public class TransitionFactoryIntersectionImpl<S extends State> extends ClassBasedEdgeFactory<S, IntersectionTransition<S>> implements IntersectionTransitionFactory<S, IntersectionTransition<S>> {
+public class TransitionFactoryIntersectionImpl<S extends State> extends
+		ClassBasedEdgeFactory<S, IntersectionTransition<S>> implements
+		IntersectionTransitionFactory<S, IntersectionTransition<S>> {
 
 	@SuppressWarnings("unchecked")
 	public TransitionFactoryIntersectionImpl() {
-		super((Class<? extends IntersectionTransition<S>>) IntersectionTransition.class);
+		super(
+				(Class<? extends IntersectionTransition<S>>) IntersectionTransition.class);
 	}
 
-	
-	
-	
-	public IntersectionTransition<S> create(int id, Set<IGraphProposition> labels, S state){
+	public IntersectionTransition<S> create(int id,
+			Set<IGraphProposition> labels, S state) {
+		Preconditions.checkNotNull(labels,
+				"The set of the labels cannot be null");
+		Preconditions.checkNotNull(state,
+				"The set of the states cannot be null");
+		Preconditions.checkArgument(id >= 0, "The id must be grater than zero");
+
 		return new IntersectionTransitionImpl<S>(labels, id, state);
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public IntersectionTransition<S> create() {
-		
-		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(new HashSet<IGraphProposition>(),
+
+		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(
+				new HashSet<IGraphProposition>(),
 				TransitionFactoryClaimImpl.transitionCount, null);
-		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount+1;
+		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount + 1;
 
 		return t;
 	}
@@ -60,11 +68,12 @@ public class TransitionFactoryIntersectionImpl<S extends State> extends ClassBas
 	 */
 	@Override
 	public IntersectionTransition<S> create(Set<IGraphProposition> labels) {
-		Validate.notNull(labels, "The labels to be added at the Transition cannot be null");
+		Preconditions.checkNotNull(labels,
+				"The labels to be added at the Transition cannot be null");
 
-		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(labels,
-				TransitionFactoryClaimImpl.transitionCount,  null);
-		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount+1;
+		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(
+				labels, TransitionFactoryClaimImpl.transitionCount, null);
+		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount + 1;
 
 		return t;
 	}
@@ -73,15 +82,28 @@ public class TransitionFactoryIntersectionImpl<S extends State> extends ClassBas
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IntersectionTransition<S> create(int id, Set<IGraphProposition> labels) {
-		if(id < 0) 
-			throw new IllegalArgumentException("The id must be grater than or equal to zero");
-		Validate.notNull(labels == null, "The labels to be added at the Transition cannot be null");
+	public IntersectionTransition<S> create(int id,
+			Set<IGraphProposition> labels) {
+		Preconditions.checkNotNull(labels,
+				"The labels to be added at the Transition cannot be null");
+		Preconditions.checkArgument(id >= 0,
+				"The id must be grater than or equal to zero");
 
-		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(labels, id, null);
+		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(
+				labels, id, null);
 		TransitionFactoryClaimImpl.transitionCount = Math.max(
 				TransitionFactoryClaimImpl.transitionCount++, id++);
 
+		return t;
+	}
+
+	@Override
+	public IntersectionTransition<S> create(Set<IGraphProposition> labels,
+			S state) {
+		Preconditions.checkNotNull(labels, "The labels cannot be null");
+		IntersectionTransitionImpl<S> t = new IntersectionTransitionImpl<S>(
+				labels, TransitionFactoryClaimImpl.transitionCount, state);
+		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount + 1;
 		return t;
 	}
 }

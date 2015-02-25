@@ -11,6 +11,8 @@ import java.util.Set;
 
 import org.jgrapht.EdgeFactory;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
@@ -23,9 +25,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *      interface <br>
  *      The transition of the automaton must must implement the
  *      {@link Transition} interface <br>
- *      The label of the transition must implement the label interface and
- *      depending on whether the automaton represents the model or the claim it
- *      is a set of proposition or a propositional logic formula
  *      </p>
  * 
  * @author claudiomenghi
@@ -37,14 +36,9 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the transition of the Intersection Buchi Automaton.
  *            The type of the transitions of the automaton must implement the
  *            interface {@link Transition}
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
-public class IntBAImpl< S extends State, T extends Transition>
-		extends BAImpl<S, T> implements
-		IntersectionBA<S, T> {
+public class IntBAImpl<S extends State, T extends Transition> extends
+		BAImpl<S, T> implements IntersectionBA<S, T> {
 
 	/**
 	 * contains the set of the mixed states
@@ -64,12 +58,11 @@ public class IntBAImpl< S extends State, T extends Transition>
 	 */
 	@Override
 	public void addMixedState(S s) {
-		if (s == null) {
-			throw new NullPointerException(
-					"The state to be added cannot be null");
-		}
+		Preconditions.checkNotNull(s == null,
+				"The state to be added cannot be null");
+
 		this.mixedStates.add(s);
-		if(!this.getStates().contains(s)){
+		if (!this.getStates().contains(s)) {
 			this.addState(s);
 		}
 	}
@@ -89,11 +82,12 @@ public class IntBAImpl< S extends State, T extends Transition>
 	 */
 	@Override
 	public Object clone() {
-		IntersectionBA<S, T> retBA = new IntBAImpl<S, T>(this.automataGraph.getEdgeFactory());
-		for(IGraphProposition l: this.getAlphabet()){
+		IntersectionBA<S, T> retBA = new IntBAImpl<S, T>(
+				this.automataGraph.getEdgeFactory());
+		for (IGraphProposition l : this.getAlphabet()) {
 			retBA.addCharacter(l);
 		}
-		
+
 		for (S s : this.getStates()) {
 			retBA.addState(s);
 			if (this.getAcceptStates().contains(s)) {
@@ -110,14 +104,14 @@ public class IntBAImpl< S extends State, T extends Transition>
 			retBA.addTransition(this.getTransitionSource(t),
 					this.getTransitionDestination(t), t);
 		}
-		
+
 		return retBA;
 	}
-	
-	public String toString(){
-		String ret=super.toString();
-		ret=ret+"MIXED STATES: "+this.mixedStates+"\n";
-		
+
+	public String toString() {
+		String ret = super.toString();
+		ret = ret + "MIXED STATES: " + this.mixedStates + "\n";
+
 		return ret;
 	}
 }
