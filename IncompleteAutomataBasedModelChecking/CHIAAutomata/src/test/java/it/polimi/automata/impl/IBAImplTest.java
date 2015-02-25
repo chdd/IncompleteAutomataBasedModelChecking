@@ -17,7 +17,6 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
-import it.polimi.automata.transition.impl.TransitionImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -102,7 +101,7 @@ public class IBAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(TransitionImpl.class));
+		this.ba = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>());
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -116,7 +115,7 @@ public class IBAImplTest {
 		returnSet.add(l3);
 		when(t3.getPropositions()).thenReturn(returnSet);
 		
-		this.baInject = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(TransitionImpl.class));
+		this.baInject = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>());
 		baInject.addInitialState(state1Inject);
 		baInject.addState(state2Inject);
 		baInject.addAcceptState(state3Inject);
@@ -144,7 +143,7 @@ public class IBAImplTest {
 	 */
 	@Test
 	public void testIBAImpl() {
-		assertNotNull(new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(TransitionImpl.class)));
+		assertNotNull(new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>()));
 	}
 
 	/**

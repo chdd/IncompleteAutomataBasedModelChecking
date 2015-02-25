@@ -5,6 +5,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 
@@ -57,10 +58,8 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 *             if the automaton to be considered is null
 	 */
 	public EmptinessChecker(BA<S, T> automaton) {
-		if (automaton == null) {
-			throw new NullPointerException(
-					"The automaton to be considered cannot be null");
-		}
+		Objects.requireNonNull(automaton, "The automaton to be considered cannot be null");
+
 		this.automaton = automaton;
 		this.hashedStates = new HashSet<S>();
 		this.flaggedStates = new HashSet<S>();

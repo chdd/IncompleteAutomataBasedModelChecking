@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
@@ -28,14 +30,14 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdgeFactory<S, Transition> implements
 		TransitionFactory<S, Transition> {
 
-	public TransitionFactoryClaimImpl(Class<? extends Transition> edgeClass) {
-		super(edgeClass);
+	public TransitionFactoryClaimImpl() {
+		super(Transition.class);
 	}
 
 	/**
 	 * contains the next id of the {@link TransitionImpl}
 	 */
-	private static int transitionCount = 0;
+	protected static int transitionCount = 0;
 
 	/**
 	 * {@inheritDoc}
@@ -54,8 +56,7 @@ public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdge
 	 */
 	@Override
 	public Transition create(Set<IGraphProposition> labels) {
-		if(labels == null)
-			throw new NullPointerException("The labels to be added at the Transition cannot be null");
+		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
 		Transition t = new TransitionImpl(labels,
 				TransitionFactoryClaimImpl.transitionCount);
@@ -71,8 +72,7 @@ public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdge
 	public Transition create(int id, Set<IGraphProposition> labels) {
 		if(id < 0) 
 			throw new IllegalArgumentException("The id must be grater than or equal to zero");
-		if( labels == null)
-			throw new NullPointerException("The labels to be added at the Transition cannot be null");
+		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
 		Transition t = new TransitionImpl(labels, id);
 		TransitionFactoryClaimImpl.transitionCount = Math.max(

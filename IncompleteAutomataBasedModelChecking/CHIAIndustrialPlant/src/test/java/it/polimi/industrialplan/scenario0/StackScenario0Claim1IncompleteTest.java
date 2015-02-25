@@ -3,8 +3,7 @@
  */
 package it.polimi.industrialplan.scenario0;
 
-import static org.junit.Assert.assertTrue;
-import it.polimi.CHIA;
+
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.BAReader;
@@ -40,7 +39,7 @@ public class StackScenario0Claim1IncompleteTest {
 	@Test
 	public void testCHIA() throws FileNotFoundException {
 		BAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>> claimReader = new BAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
-				new TransitionFactoryClaimImpl<State>(Transition.class),
+				new TransitionFactoryClaimImpl<State>(),
 				new StateFactoryImpl(),
 				new File(
 								getClass()
@@ -53,7 +52,7 @@ public class StackScenario0Claim1IncompleteTest {
 
 		IBAReader< State, StateFactory<State>, Transition, TransitionFactory<State, Transition>> modelReader = new IBAReader
 				<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
-				new TransitionFactoryModelImpl<State>(Transition.class),
+				new TransitionFactoryModelImpl<State>(),
 				new StateFactoryImpl(),
 					new File(
 								getClass()

@@ -12,6 +12,7 @@ import it.polimi.automata.io.IBAReader;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
@@ -45,8 +46,8 @@ public class SendingMessageTest2 {
 	public void setUp() {
 	
 		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory=new TransitionFactoryModelImpl<State>(Transition.class);
-		this.claimTransitionFactory=new TransitionFactoryClaimImpl<State>(Transition.class);
+		this.transitionFactory=new TransitionFactoryModelImpl<State>();
+		this.claimTransitionFactory=new TransitionFactoryClaimImpl<State>();
 		
 	}
 	@Test
@@ -68,13 +69,13 @@ public class SendingMessageTest2 {
 		IBA< State, Transition> model=modelReader.read();
 		
 		ModelCheckingResults mp=new ModelCheckingResults();
-		ModelChecker<State, Transition> modelChecker=new ModelChecker< State, Transition>
+		ModelChecker<State, Transition, IntersectionTransition<State>> modelChecker=new ModelChecker< State, Transition, IntersectionTransition<State>>
 		(model, claim, 
-				new IntersectionRuleImpl<State, Transition>(), new StateFactoryImpl(), 
-				new TransitionFactoryIntersectionImpl<State>(Transition.class), mp);
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(), new StateFactoryImpl(), 
+				new TransitionFactoryIntersectionImpl<State>(), mp);
 		
 		int res=modelChecker.check();
-		IntersectionBA< State, Transition> intersectionBA=modelChecker.getIntersectionAutomaton();
+		IntersectionBA< State,  IntersectionTransition<State>> intersectionBA=modelChecker.getIntersectionAutomaton();
 		
 		assertEquals(-1, res);
 		assertEquals(11, intersectionBA.getStates().size());

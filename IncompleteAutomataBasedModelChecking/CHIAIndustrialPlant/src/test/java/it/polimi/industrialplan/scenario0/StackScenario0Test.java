@@ -12,9 +12,11 @@ import it.polimi.automata.io.IBAReader;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 
 import java.io.File;
@@ -41,7 +43,7 @@ public class StackScenario0Test {
 	public void testCHIA() throws FileNotFoundException {
 		BAReader< State, StateFactory<State>, Transition, TransitionFactory<State, Transition>> claimReader = new BAReader
 				< State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
-				new TransitionFactoryClaimImpl<State>(Transition.class),
+				new TransitionFactoryClaimImpl<State>(),
 				new StateFactoryImpl(),
 				new File(getClass().getClassLoader()
 						.getResource("industrialplan/scenario0/Scenario0StackClaim.xml").getFile()));
@@ -51,15 +53,16 @@ public class StackScenario0Test {
 		IBAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>> modelReader = 
 				new IBAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>
 				(
-				 new TransitionFactoryModelImpl<State>(Transition.class),
+				 new TransitionFactoryModelImpl<State>(),
 				new StateFactoryImpl(),
 				new File(getClass().getClassLoader()
 						.getResource("industrialplan/scenario0/Scenario0Stack.xml").getFile()));
 
 		IBA< State, Transition> model = modelReader.read();
-		/*CHIA chia = new CHIA(claim, model);
+		CHIA<State, Transition, IntersectionTransition<State>> chia = new CHIA<State, Transition, IntersectionTransition<State>>(claim, model
+				, new StateFactoryImpl(), new TransitionFactoryIntersectionImpl<State>());
 		int result = chia.check();
-		assertTrue(result == 1);*/
+		assertTrue(result == 1);
 		
 		
 	}

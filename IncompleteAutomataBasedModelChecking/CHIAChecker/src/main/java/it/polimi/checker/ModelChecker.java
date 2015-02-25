@@ -5,8 +5,9 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.IntersectionTransition;
+import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
@@ -14,6 +15,7 @@ import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author claudiomenghi
  */
-public class ModelChecker< S extends State, T extends Transition> {
+public class ModelChecker< S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
 	/**
 	 * is the logger of the ModelChecker class
@@ -47,12 +49,12 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * contains the intersection automaton of the model and its specification
 	 * after the model checking procedure is performed
 	 */
-	private IntersectionBA<S, T> intersectionAutomaton;
+	private IntersectionBA<S, I> intersectionAutomaton;
 
 	/**
 	 * is the intersection rule to be used in computing the intersection
 	 */
-	private IntersectionRule<S, T> intersectionRule;
+	private IntersectionRule<S, T, I> intersectionRule;
 
 	
 	/**
@@ -65,7 +67,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * is the intersection factory to be used in computing the transitions of
 	 * the intersection automaton
 	 */
-	private TransitionFactory<S, T> intersectionTransitionFactory;
+	private IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
 
 	/**
 	 * contains the results of the verification (if the specification is
@@ -73,7 +75,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 */
 	private ModelCheckingResults verificationResults;
 
-	private IntersectionBuilder<S, T> intersectionBuilder;
+	private IntersectionBuilder<S, T, I> intersectionBuilder;
 
 	/**
 	 * creates a new {@link ModelChecker}
@@ -101,42 +103,24 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 *             parameters are null
 	 */
 	public ModelChecker(IBA<S, T> model, BA<S, T> claim,
-			IntersectionRule<S, T> intersectionRule,
+			IntersectionRule<S, T, I> intersectionRule,
 			StateFactory<S> intersectionStateFactory,
-			TransitionFactory<S, T> intersectionTransitionFactory,
+			IntersectionTransitionFactory<S, I> intersectionTransitionFactory,
 			ModelCheckingResults mp) {
-		if (model == null) {
-			throw new NullPointerException(
-					"The model to be checked cannot be null");
-		}
-		if (claim == null) {
-			throw new NullPointerException(
-					"The specification to be checked cannot be null");
-		}
-		if (intersectionRule == null) {
-			throw new NullPointerException(
-					"The intersection rule cannot be null");
-		}
-		if (intersectionStateFactory == null) {
-			throw new NullPointerException(
-					"The intersection state factory cannot be null");
-		}
-		if (intersectionTransitionFactory == null) {
-			throw new NullPointerException(
-					"The intersection transition factory cannot be null");
-		}
-		if (mp == null) {
-			throw new NullPointerException(
-					"The model checking parameters cannot be null");
-		}
+		Objects.requireNonNull(model, "The model to be checked cannot be null");
+		Objects.requireNonNull(claim, "The specification to be checked cannot be null");
+		Objects.requireNonNull(intersectionRule, "The intersection rule cannot be null");
+		Objects.requireNonNull(intersectionStateFactory, "The intersection state factory cannot be null");
+		Objects.requireNonNull(intersectionTransitionFactory, "The intersection transition factory cannot be null");
+		Objects.requireNonNull(mp, "The model checking parameters cannot be null");
 
 		this.claim = claim;
 		this.model = model;
 		this.verificationResults = mp;
-		this.intersectionRule = new IntersectionRuleImpl<S, T>();
+		this.intersectionRule = new IntersectionRuleImpl<S, T, I>();
 		this.intersectionStateFactory = intersectionStateFactory;
 		this.intersectionTransitionFactory = intersectionTransitionFactory;
-		this.intersectionBuilder = new IntersectionBuilder<S, T>(
+		this.intersectionBuilder = new IntersectionBuilder<S, T, I>(
 				this.intersectionRule, intersectionStateFactory,
 				 intersectionTransitionFactory, model,
 				claim);
@@ -254,12 +238,12 @@ public class ModelChecker< S extends State, T extends Transition> {
 		logger.debug("Transparent states removed from the model");
 
 		// computing the intersection
-		this.intersectionAutomaton = new IntersectionBuilder<S, T>(
+		this.intersectionAutomaton = new IntersectionBuilder<S, T, I>(
 				this.intersectionRule, intersectionStateFactory,
 				 intersectionTransitionFactory, mc, claim)
 				.computeIntersection();
 		logger.debug("Intersection automaton computed");
-		return new EmptinessChecker<S, T>(intersectionAutomaton).isEmpty();
+		return new EmptinessChecker<S, I>(intersectionAutomaton).isEmpty();
 	}
 
 	/**
@@ -276,7 +260,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 		// computing the intersection
 		this.intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
-		return new EmptinessChecker<S, T>(this.intersectionAutomaton)
+		return new EmptinessChecker<S, I>(this.intersectionAutomaton)
 				.isEmpty();
 	}
 
@@ -308,7 +292,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * 
 	 * @return the intersection automaton
 	 */
-	public IntersectionBA<S, T> getIntersectionAutomaton() {
+	public IntersectionBA<S, I> getIntersectionAutomaton() {
 		if(this.intersectionAutomaton==null){
 			logger.error("You must run the model checking before returning the intersection automaton");
 			throw new Error("The intersection automaton can be returned only after the model checking procedure has been performed");

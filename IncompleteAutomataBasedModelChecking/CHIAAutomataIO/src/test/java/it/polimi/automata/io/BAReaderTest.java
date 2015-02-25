@@ -43,7 +43,7 @@ public class BAReaderTest {
 	public void setUp() {
 
 		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory = new TransitionFactoryClaimImpl<State>(Transition.class);
+		this.transitionFactory = new TransitionFactoryClaimImpl<State>();
 	
 		Set<IGraphProposition> propositions1 = new HashSet<IGraphProposition>();
 		propositions1.add(new SigmaProposition());

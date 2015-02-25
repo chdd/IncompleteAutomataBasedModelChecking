@@ -28,7 +28,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	@Before
 	public void setUp() {
-		this.claim = new TransitionFactoryClaimImpl<State>(TransitionImpl.class);
+		this.claim = new TransitionFactoryClaimImpl<State>();
 		this.labels = new HashSet<IGraphProposition>();
 	}
 

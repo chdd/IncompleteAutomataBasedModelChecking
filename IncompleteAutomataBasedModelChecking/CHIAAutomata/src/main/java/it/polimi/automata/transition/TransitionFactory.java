@@ -21,8 +21,13 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 public interface TransitionFactory<S extends State, T extends Transition>
 		extends EdgeFactory<S, T> {
 
-	
+	/**
+	 * creates a new transition with an auto-assigned id and an empty label set
+	 * 
+	 * @return a new transition with an auto-assigned id and an empty label set
+	 */
 	public T create();
+
 	/**
 	 * creates a new transition labeled with the specified condition
 	 * 

@@ -4,6 +4,7 @@ import it.polimi.automata.Constants;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.WriterBA;
 import it.polimi.automata.state.State;
+import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
@@ -40,7 +41,7 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * @param <T>
  *            is the type of the transitions to be written
  */
-public class ConstraintWriter<S extends State, T extends Transition> {
+public class ConstraintWriter<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -51,7 +52,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	/**
 	 * contains the components to be written
 	 */
-	private Constraint<S, T> constraint;
+	private Constraint<S, I> constraint;
 	/**
 	 * contains the file where the intersection automaton must be written
 	 */
@@ -69,7 +70,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	 *             if the components or the file is null
 	 * 
 	 */
-	public ConstraintWriter(Constraint<S, T> constraint, File f) {
+	public ConstraintWriter(Constraint<S, I> constraint, File f) {
 		
 		Validate.notNull(constraint, "The intersection automaton cannot be null");
 		Validate.notNull("The file where the automaton must be written cannot be null");
@@ -92,7 +93,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 					.createElement(Constants.XML_ELEMENT_CONSTRAINTS);
 			doc.appendChild(rootElement);
 
-			for (Component<S, T> component : constraint.getComponents()) {
+			for (Component<S, I> component : constraint.getComponents()) {
 
 				// root elements
 				Element constraintElement = doc
@@ -148,7 +149,7 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	}
 
 	private void computingStateElements(Document doc, Element rootElement,
-			IntersectionBA<S, T> intersectionAutomaton) {
+			IntersectionBA<S, I> intersectionAutomaton) {
 		for (S s : intersectionAutomaton.getStates()) {
 			Element state = doc.createElement(Constants.XML_ELEMENT_STATE);
 			rootElement.appendChild(state);
@@ -181,9 +182,9 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	}
 
 	private void addPorts(Document doc, Element portsElement,
-			Set<Port<S, T>> ports) {
+			Set<Port<S, I>> ports) {
 
-		for (Port<S, T> port : ports) {
+		for (Port<S, I> port : ports) {
 			Element state = doc.createElement(Constants.XML_ELEMENT_PORT);
 			portsElement.appendChild(state);
 
@@ -219,8 +220,8 @@ public class ConstraintWriter<S extends State, T extends Transition> {
 	}
 
 	private void computingTransitionElements(Document doc, Element rootElement,
-			IntersectionBA<S, T> intersectionAutomaton) {
-		for (T transition : intersectionAutomaton.getTransitions()) {
+			IntersectionBA<S, I> intersectionAutomaton) {
+		for (I transition : intersectionAutomaton.getTransitions()) {
 			Element transitionElement = doc
 					.createElement(Constants.XML_ELEMENT_TRANSITION);
 			rootElement.appendChild(transitionElement);

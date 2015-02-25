@@ -20,7 +20,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -28,6 +27,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -103,9 +104,9 @@ public class BAReader<S extends State, G extends StateFactory<S>, T extends Tran
 	 *             automatonFactory or the fileReader is null
 	 */
 	public BAReader(H transitionFactory, G stateFactory, File file) {
-		Validate.notNull(transitionFactory, "The transition factory cannot be null");
-		Validate.notNull(stateFactory,"The state factory cannot be null");
-		Validate.notNull(file,"The fileReader cannot be null");
+		Preconditions.checkNotNull(transitionFactory, "The transition factory cannot be null");
+		Preconditions.checkNotNull(stateFactory,"The state factory cannot be null");
+		Preconditions.checkNotNull(file,"The fileReader cannot be null");
 
 		this.ba = new IBAImpl<S, T>(transitionFactory);
 

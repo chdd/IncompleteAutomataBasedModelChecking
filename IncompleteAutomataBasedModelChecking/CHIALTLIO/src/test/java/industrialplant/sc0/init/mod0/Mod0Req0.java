@@ -5,7 +5,6 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
-import it.polimi.automata.transition.impl.TransitionImpl;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 
 import java.io.BufferedReader;
@@ -25,7 +24,7 @@ public class Mod0Req0 {
 		reader.close();
 		LTLtoBATransformer<State, Transition> ltlToBaTransformer;
 		ltlToBaTransformer=new LTLtoBATransformer<State, Transition>(new StateFactoryImpl(), 
-				new TransitionFactoryClaimImpl<State>(TransitionImpl.class));
+				new TransitionFactoryClaimImpl<State>());
 		ltlToBaTransformer.transform(ltlFormula);
 	}
 

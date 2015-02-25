@@ -32,7 +32,7 @@ public class EmptinessCheckerTest {
 	
 	@Before
 	public void setUp() {
-		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryModelImpl<State>(Transition.class);
+		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryModelImpl<State>();
 		
 		this.ba=new IBAImpl<State, Transition>(transitionFactory);
 		StateFactory<State> factory=new StateFactoryImpl();

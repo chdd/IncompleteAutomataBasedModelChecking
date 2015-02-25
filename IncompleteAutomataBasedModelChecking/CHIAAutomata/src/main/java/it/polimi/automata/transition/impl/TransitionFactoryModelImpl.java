@@ -25,8 +25,8 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 public class TransitionFactoryModelImpl<S extends State> extends
 		TransitionFactoryClaimImpl<S> {
 
-	public TransitionFactoryModelImpl(Class<? extends Transition> edgeClass) {
-		super(edgeClass);
+	public TransitionFactoryModelImpl() {
+		super();
 	}
 
 	/**

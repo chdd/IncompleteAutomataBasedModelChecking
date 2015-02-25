@@ -4,8 +4,9 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.IntersectionTransition;
+import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionRule;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author claudiomenghi
  *
  */
-public class CHIA<S extends State, T extends Transition> {
+public class CHIA<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
 	/**
 	 * is the logger of the ModelChecker class
@@ -45,7 +46,7 @@ public class CHIA<S extends State, T extends Transition> {
 	 * Is the model checker in charge of verifying whether the property is
 	 * satisfied, not satisfied or possibly satisfied
 	 */
-	private ModelChecker<S, T> mc;
+	private ModelChecker<S, T, I> mc;
 
 	/**
 	 * Contains the model checking results, the verification times the
@@ -62,7 +63,7 @@ public class CHIA<S extends State, T extends Transition> {
 	 * is the factory which is used to create the transitions of the
 	 * intersection automaton
 	 */
-	private TransitionFactory<S, T> intersectionTransitionFactory;
+	private IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
 
 	/**
 	 * creates a new CHIA checker
@@ -82,7 +83,7 @@ public class CHIA<S extends State, T extends Transition> {
 	 *             is the claim or the model of the system is null
 	 */
 	public CHIA(BA<S, T> claim, IBA<S, T> model, StateFactory<S> stateFactory,
-			TransitionFactory<S, T> intersectionTransitionFactory) {
+			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
 
 		Validate.notNull(claim, "The claim cannot  be null");
 		Validate.notNull(model, "The model cannot  be null");
@@ -109,8 +110,8 @@ public class CHIA<S extends State, T extends Transition> {
 		logger.info("Running CHIA");
 		mcResults = new ModelCheckingResults();
 
-		IntersectionRule<S, T> intersectionRule = new IntersectionRuleImpl<S, T>();
-		mc = new ModelChecker<S, T>(model, claim, intersectionRule,
+		IntersectionRule<S, T, I> intersectionRule = new IntersectionRuleImpl<S, T, I>();
+		mc = new ModelChecker<S, T, I>(model, claim, intersectionRule,
 				stateFactory, intersectionTransitionFactory, mcResults);
 		mcResults.setResult(mc.check());
 
@@ -127,19 +128,19 @@ public class CHIA<S extends State, T extends Transition> {
 	 * @throws IllegalStateException
 	 *             if the property is not possibly satisfied
 	 */
-	public Constraint<S, T> getConstraint() {
+	public Constraint<S, I> getConstraint() {
 
 		logger.info("Computing the constraint");
 
 		Validate.isTrue(mcResults.getResult() == -1, "It is not possible to get the constraint if the property is not possibly satisfied");
 		
 
-		ConstraintGenerator<S, T> constraintGenerator = new ConstraintGenerator<S, T>(
+		ConstraintGenerator<S, T, I> constraintGenerator = new ConstraintGenerator<S, T, I>(
 				mc.getIntersectionAutomaton(), model,
 				mc.getIntersectionStateModelStateMap(),
 				intersectionTransitionFactory);
 
-		Constraint<S, T> constraint = constraintGenerator.generateConstraint();
+		Constraint<S, I> constraint = constraintGenerator.generateConstraint();
 
 		logger.info("Constraint computed");
 

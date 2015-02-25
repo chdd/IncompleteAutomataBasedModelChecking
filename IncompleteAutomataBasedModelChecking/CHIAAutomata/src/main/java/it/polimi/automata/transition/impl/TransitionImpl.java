@@ -5,6 +5,7 @@ import it.polimi.automata.transition.Transition;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jgrapht.graph.DefaultEdge;
@@ -45,12 +46,12 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 	 *             if the set of labels or one of the label to be added is null
 	 */
 	protected TransitionImpl(Set<IGraphProposition> labels, int id) {
+		
 		if (id < 0)
 			throw new IllegalArgumentException(
 					"The value of the id cannot be less than zero");
-		if (labels == null)
-			throw new NullPointerException(
-					"The character that labels the transition cannot be null");
+		Objects.requireNonNull(labels, "The character that labels the transition cannot be null");
+		
 		this.id = id;
 		this.labels = new HashSet<IGraphProposition>();
 		for (IGraphProposition l : labels) {
@@ -66,10 +67,8 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 	 * {@inheritDoc}
 	 */
 	public void setLabels(Set<IGraphProposition> labels) {
-		if (labels == null) {
-			throw new NullPointerException(
-					"It is not possible to set a null set of labels");
-		}
+		Objects.requireNonNull(labels, "It is not possible to set a null set of labels");
+		
 		this.labels = new HashSet<IGraphProposition>();
 		for (IGraphProposition l : labels) {
 			if (l == null) {

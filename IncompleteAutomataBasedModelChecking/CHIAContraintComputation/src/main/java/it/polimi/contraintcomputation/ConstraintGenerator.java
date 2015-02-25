@@ -3,8 +3,9 @@ package it.polimi.contraintcomputation;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
+import it.polimi.automata.transition.IntersectionTransition;
+import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.constraints.impl.ConstraintImpl;
 import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
 import it.polimi.contraintcomputation.subautomatafinder.SubPropertiesIdentifier;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author claudiomenghi
  * 
  */
-public class ConstraintGenerator<S extends State, T extends Transition> {
+public class ConstraintGenerator<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
 	/**
 	 * is the logger of the ConstraintGenerator class
@@ -40,12 +41,12 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	/**
 	 * contains the intersection automaton
 	 */
-	private IntersectionBA<S, T> intBA;
+	private IntersectionBA<S, I> intBA;
 
 	/**
 	 * is the factory to be used to create transitions
 	 */
-	private TransitionFactory<S, T> subPropertiesTransitionFactory;
+	private IntersectionTransitionFactory<S, I> subPropertiesTransitionFactory;
 
 	/**
 	 * contains the model of the system
@@ -70,9 +71,9 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public ConstraintGenerator(IntersectionBA<S, T> intBA, IBA<S, T> model,
+	public ConstraintGenerator(IntersectionBA<S, I> intBA, IBA<S, T> model,
 			Map<S, Set<S>> modelIntersectionStatesMap,
-			TransitionFactory<S, T> subpropertiestransitionFactory) {
+			IntersectionTransitionFactory<S, I> subpropertiestransitionFactory) {
 
 		Validate.notNull(intBA, "The intersection model cannot be null");
 		Validate.notNull(model, "The model of the system cannot be null");
@@ -93,7 +94,7 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	 * 
 	 * @return the constraint of the automaton
 	 */
-	public ConstraintImpl<S, T> generateConstraint() {
+	public ConstraintImpl<S, I> generateConstraint() {
 
 		logger.info("Computing the constraint");
 		/*
@@ -101,14 +102,14 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 		 * not possible to reach an accepting state since these states are not
 		 * useful in the constraint computation
 		 */
-		IntersectionCleaner<S, T> intersectionCleaner = new IntersectionCleaner<S, T>(
+		IntersectionCleaner<S, I> intersectionCleaner = new IntersectionCleaner<S, I>(
 				intBA);
 		intersectionCleaner.clean();
 
-		SubPropertiesIdentifier<S, T> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T>(
+		SubPropertiesIdentifier<S, T, I> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, I>(
 				intBA, model, this.modelIntersectionStatesMap,
 				this.subPropertiesTransitionFactory);
-		ConstraintImpl<S, T> constraint = subPropertiesIdentifier.getSubAutomata();
+		ConstraintImpl<S, I> constraint = subPropertiesIdentifier.getSubAutomata();
 
 		logger.info("Constraint computed");
 		return constraint;

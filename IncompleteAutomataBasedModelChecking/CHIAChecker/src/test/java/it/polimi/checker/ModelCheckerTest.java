@@ -11,6 +11,7 @@ import it.polimi.automata.impl.IBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
@@ -88,7 +89,7 @@ public class ModelCheckerTest {
 
 	@Before
 	public void setUp() {
-		TransitionFactory<State, Transition> transitionFactory = new TransitionFactoryClaimImpl<State>(Transition.class);
+		TransitionFactory<State, Transition> transitionFactory = new TransitionFactoryClaimImpl<State>();
 
 		this.claim1 = new IBAImpl<State, Transition>(transitionFactory);
 
@@ -158,7 +159,7 @@ public class ModelCheckerTest {
 		/*
 		 * MODEL
 		 */
-		TransitionFactory<State, Transition> modelTransitionFactory = new TransitionFactoryModelImpl<State>(Transition.class);
+		TransitionFactory<State, Transition> modelTransitionFactory = new TransitionFactoryModelImpl<State>();
 
 		this.model1 = new IBAImpl<State, Transition>(modelTransitionFactory);
 
@@ -235,11 +236,11 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullModel() {
-		new ModelChecker<State, Transition>(
+		new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				null, claim1,
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 	}
 
@@ -250,11 +251,11 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullClaim() {
-			new ModelChecker<State, Transition>(
+			new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, null,
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 	}
 
@@ -265,11 +266,11 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullIntersectionRule() {
-		new ModelChecker<State, Transition>(
+		new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
 				null,
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 	}
 	
@@ -280,11 +281,11 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testCheckNullStateFactory() {
-		ModelChecker<State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker<State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				null,
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(1, mck.check());
 	}
@@ -293,9 +294,9 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testCheckNullIntersectionFactory() {
-		ModelChecker<State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker<State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
 				null,
 				new ModelCheckingResults());
@@ -307,11 +308,11 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testCheckNullIntersectionResults() {
-		ModelChecker<State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker<State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				null);
 		assertEquals(1, mck.check());
 	}
@@ -323,11 +324,11 @@ public class ModelCheckerTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullResutls() {
-		new ModelChecker<State, Transition>(
+		new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				null);
 	}
 
@@ -337,11 +338,11 @@ public class ModelCheckerTest {
 	@Test
 	public void testCheck() {
 
-		ModelChecker<State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker<State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(1, mck.check());
 	}
@@ -353,11 +354,11 @@ public class ModelCheckerTest {
 	public void testCheck1() {
 		model1.addInitialState(model1State1);
 		claim1.addInitialState(claim1State1);
-		ModelChecker< State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker< State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(1, mck.check());
 	}
@@ -371,11 +372,11 @@ public class ModelCheckerTest {
 		model1.addAcceptState(model1State3);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker< State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker< State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(0, mck.check());
 	}
@@ -385,11 +386,11 @@ public class ModelCheckerTest {
 	 */
 	@Test
 	public void testCheck3() {
-		ModelChecker< State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker< State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model2, claim2, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(1, mck.check());
 	}
@@ -402,11 +403,11 @@ public class ModelCheckerTest {
 		model2.addInitialState(model2State1);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker< State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker< State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model2, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(1, mck.check());
 	}
@@ -421,11 +422,11 @@ public class ModelCheckerTest {
 		model1.addTransparentState(model1State2);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker< State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker< State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertEquals(-1, mck.check());
 	}
@@ -442,11 +443,11 @@ public class ModelCheckerTest {
 		model1.addTransparentState(model1State2);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker< State, Transition> mck = new ModelChecker<State, Transition>(
+		ModelChecker< State, Transition, IntersectionTransition<State>> mck = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model1, claim1, 
-				new IntersectionRuleImpl<State, Transition>(),
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
 				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(Transition.class),
+				new TransitionFactoryIntersectionImpl<State>(),
 				new ModelCheckingResults());
 		assertNotNull(mck.getVerificationTimes());
 	}

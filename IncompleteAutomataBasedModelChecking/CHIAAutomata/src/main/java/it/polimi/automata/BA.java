@@ -28,10 +28,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
+
  */
 public interface BA<S extends State, T extends Transition>{
 

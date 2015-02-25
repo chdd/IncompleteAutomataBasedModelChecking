@@ -1,6 +1,5 @@
 package it.polimi.automata.io;
 
-import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.impl.IBAImpl;
@@ -16,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +25,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -36,13 +38,6 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * 
  * @author claudiomenghi
  * 
- * @param <L>
- *            is the type of the Label which is applied to the transitions of
- *            the Incomplete Buchi Automaton which must implement the interface
- *            {@link Label}
- * @param <F>
- *            is the factory which allows to create the labels of the
- *            transitions. It must implement the interface {@link LabelFactory}
  * @param <S>
  *            is the type of the State of the Incomplete Buchi Automaton. It must extend
  *            the interface {@link State}
@@ -55,12 +50,6 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * @param <H>
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
- * @param <AUTOMATON>
- *            is the type of the automaton. It must extend the interface
- *            {@link BA}
- * @param <I>
- *            is the factory which is able to create a new empty Incomplete Buchi
- *            Automaton. It must implement the interface {@link BAFactory}
  */
 public class IBAReader<
 	S extends State, 
@@ -88,36 +77,24 @@ public class IBAReader<
 	 * 
 	 * @see BAReader#read()
 	 * 
-	 * @param labelFactory
-	 *            is the factory which allows to create the labels of the
-	 *            transitions
 	 * @param transitionFactory
 	 *            is the factory which allows to create the transitions of the
 	 *            Buchi automaton
 	 * @param stateFactory
 	 *            is the factory which allows to create the states of the Buchi
 	 *            automaton
-	 * @param automatonFactory
-	 *            is the factory which is used to create the Buchi automaton
-	 * @param fileReader
+	 * @param file
 	 *            is the reader from which the Buchi automaton must be loaded
 	 * @throws NullPointerException
-	 *             if the labelFactory, transitionFactory, stateFactory,
-	 *             automatonFactory or the fileReader is null
+	 *             if one of the parameters is null
 	 */
 	public IBAReader(
 			H transitionFactory, G stateFactory,
 			 File file) {
-		if (transitionFactory == null) {
-			throw new NullPointerException(
-					"The transition factory cannot be null");
-		}
-		if (stateFactory == null) {
-			throw new NullPointerException("The state factory cannot be null");
-		}
-		if (file == null) {
-			throw new NullPointerException("The fileReader cannot be null");
-		}
+		Preconditions.checkNotNull(transitionFactory, "The transition factory cannot be null");
+		Preconditions.checkNotNull(stateFactory, "The state factory cannot be null");
+		Preconditions.checkNotNull(file, "The fileReader cannot be null");
+		
 		this.mapIdState=new HashMap<Integer, S>();
 		
 		this.iba = new IBAImpl<S, T>(transitionFactory);

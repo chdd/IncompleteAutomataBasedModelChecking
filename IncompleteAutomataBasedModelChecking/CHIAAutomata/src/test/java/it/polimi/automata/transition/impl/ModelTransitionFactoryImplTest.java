@@ -27,7 +27,7 @@ public class ModelTransitionFactoryImplTest {
 	private Set<IGraphProposition> labels2;
 	@Before
 	public void setUp(){
-		this.modelFactory=new TransitionFactoryModelImpl<State>(Transition.class);
+		this.modelFactory=new TransitionFactoryModelImpl<State>();
 		
 		this.labels1=new HashSet<IGraphProposition>();
 		labels1.add(new GraphProposition("p", true));

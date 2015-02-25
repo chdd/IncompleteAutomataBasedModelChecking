@@ -1,13 +1,14 @@
 package it.polimi.checker.intersection.impl;
 
+import it.polimi.automata.transition.IntersectionTransition;
+import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.intersection.IntersectionRule;
 
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-import it.polimi.automata.state.State;
 
+import it.polimi.automata.state.State;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
@@ -26,39 +27,27 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionRuleImpl<S extends State, T extends Transition>
-		implements IntersectionRule<S, T> {
+public class IntersectionRuleImpl<S extends State, T extends Transition, I extends IntersectionTransition<S>>
+		implements IntersectionRule<S, T, I> {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public T getIntersectionTransition(
+	public I getIntersectionTransition(
 			T modelTransition,
 			T claimTransition,
-			TransitionFactory<S, T> intersectionTransitionFactory) {
-		if (modelTransition == null) {
-			throw new NullPointerException(
-					"The model transition cannot be null");
-		}
-		if (claimTransition == null) {
-			throw new NullPointerException(
-					"The claim transition cannot be null");
-		}
-		if (intersectionTransitionFactory == null) {
-			throw new NullPointerException(
-					"The intersection factory cannot be null");
-		}
-
-		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
+			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
+		
+		Objects.requireNonNull(modelTransition, "The model transition cannot be null");
+		Objects.requireNonNull(claimTransition, "The claim transition cannot be null");
+		Objects.requireNonNull(intersectionTransitionFactory, "The intersection factory cannot be null");
+		
 		if(this.satisfies(modelTransition.getPropositions(), claimTransition.getPropositions())){
-				labels.addAll(modelTransition.getPropositions());
-		}
-		if(labels.isEmpty()){
-			return null;
+				return intersectionTransitionFactory.create(modelTransition.getPropositions());
 		}
 		else{
-			return intersectionTransitionFactory.create(labels);
+			return null;
 		}
 	}
 	
@@ -98,5 +87,17 @@ public class IntersectionRuleImpl<S extends State, T extends Transition>
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public I getIntersectionTransition(S modelState, T claimTransition,
+			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
+		Objects.requireNonNull(modelState, "The model state cannot be null");
+		Objects.requireNonNull(claimTransition, "The claim transition cannot be null");
+		Objects.requireNonNull(intersectionTransitionFactory, "The intersection factory cannot be null");
+		
+		return intersectionTransitionFactory.create(claimTransition
+				.getPropositions());
+	
 	}
 }

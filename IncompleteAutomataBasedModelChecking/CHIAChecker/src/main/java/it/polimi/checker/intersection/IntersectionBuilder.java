@@ -6,12 +6,14 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.impl.IntBAImpl;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.IntersectionTransition;
+import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
@@ -33,18 +35,18 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            the automaton represents the model or the claim it is a set of
  *            proposition or a propositional logic formula {@link Label}
  */
-public class IntersectionBuilder<S extends State, T extends Transition> {
+public class IntersectionBuilder<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
 	/**
 	 * contains the intersection automaton generated
 	 */
-	private IntersectionBA<S, T> intersection;
+	private IntersectionBA<S, I> intersection;
 
 	/**
 	 * contains the intersection rule which is used to build the intersection
 	 * transitions
 	 */
-	private IntersectionRule<S, T> intersectionrule;
+	private IntersectionRule<S, T, I> intersectionrule;
 
 	/**
 	 * contains the state factory rule which is used to build the intersection
@@ -56,7 +58,7 @@ public class IntersectionBuilder<S extends State, T extends Transition> {
 	 * is the factory which allows to create a new transition of the
 	 * intersection automaton
 	 */
-	private TransitionFactory<S, T> transitionFactory;
+	private IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
 
 	/**
 	 * Keeps track of the created states. For each couple of state of the model
@@ -96,34 +98,25 @@ public class IntersectionBuilder<S extends State, T extends Transition> {
 	 *             if the intersection rule or the stateFactory or the
 	 *             intersectionBAFactory or the model or the claim is null
 	 */
-	public IntersectionBuilder(IntersectionRule<S, T> intersectionrule,
+	public IntersectionBuilder(IntersectionRule<S, T, I> intersectionrule,
 			StateFactory<S> stateFactory,
-			TransitionFactory<S, T> transitionFactory, IBA<S, T> model,
+			IntersectionTransitionFactory<S, I> transitionFactory, 
+			IBA<S, T> model,
 			BA<S, T> claim) {
-		if (intersectionrule == null) {
-			throw new NullPointerException(
-					"The intersection rule cannot be null");
-		}
-		if (stateFactory == null) {
-			throw new NullPointerException("The state factory cannot be null");
-		}
-		if (transitionFactory == null) {
-			throw new NullPointerException(
-					"The transition factory cannot be null");
-		}
-		if (model == null) {
-			throw new NullPointerException(
-					"The model of the system cannot be null");
-		}
-		if (claim == null) {
-			throw new NullPointerException("The claim cannot be null");
-		}
+		Objects.requireNonNull(intersectionrule,
+				"The intersection rule cannot be null");
+		Objects.requireNonNull(stateFactory, "The state factory cannot be null");
+		Objects.requireNonNull(transitionFactory,
+				"The transition factory cannot be null");
+		Objects.requireNonNull(model, "The model of the system cannot be null");
+		Objects.requireNonNull(claim, "The claim cannot be null");
+
 		this.intersectionrule = intersectionrule;
 		this.stateFactory = stateFactory;
-		this.intersection = new IntBAImpl<S, T>(transitionFactory);
+		this.intersection = new IntBAImpl<S, I>(transitionFactory);
 		this.model = model;
 		this.claim = claim;
-		this.transitionFactory = transitionFactory;
+		this.intersectionTransitionFactory = transitionFactory;
 	}
 
 	/**
@@ -132,7 +125,7 @@ public class IntersectionBuilder<S extends State, T extends Transition> {
 	 * 
 	 * @return the intersection of this automaton and the automaton a2
 	 */
-	public IntersectionBA<S, T> computeIntersection() {
+	public IntersectionBA<S, I> computeIntersection() {
 
 		this.updateAlphabet();
 		this.createdStates = new HashMap<S, Map<S, Map<Integer, S>>>();
@@ -192,9 +185,9 @@ public class IntersectionBuilder<S extends State, T extends Transition> {
 			// state
 			for (T claimTransition : claim.getOutTransitions(claimState)) {
 
-				T t = this.intersectionrule.getIntersectionTransition(
-						modelTransition, claimTransition, transitionFactory);
-
+				I t = this.intersectionrule.getIntersectionTransition(
+						modelTransition, claimTransition, intersectionTransitionFactory);
+				// if the two transitions are compatible
 				if (t != null) {
 
 					// creates a new state made by the states s1next and s2
@@ -221,8 +214,9 @@ public class IntersectionBuilder<S extends State, T extends Transition> {
 			// for each transition in the automaton a2
 			for (T claimTransition : claim.getOutTransitions(claimState)) {
 
-				T t = this.transitionFactory
-						.create(claimTransition.getPropositions());
+				I t = this.intersectionrule.getIntersectionTransition(modelState, claimTransition, intersectionTransitionFactory);
+						
+					
 
 				S nextClaimState = claim
 						.getTransitionDestination(claimTransition);
@@ -283,13 +277,14 @@ public class IntersectionBuilder<S extends State, T extends Transition> {
 			Map<S, Map<Integer, S>> entry = this.createdStates.get(modelState);
 
 			intersectionStateMap.put(modelState, new HashSet<S>());
-			
+
 			for (S claimState : entry.keySet()) {
 
 				Map<Integer, S> indexMap = entry.get(claimState);
 
 				for (Integer index : indexMap.keySet()) {
-					intersectionStateMap.get(modelState).add(indexMap.get(index));
+					intersectionStateMap.get(modelState).add(
+							indexMap.get(index));
 				}
 			}
 		}

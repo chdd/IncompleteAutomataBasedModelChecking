@@ -45,7 +45,7 @@ public class IBAReaderTest {
 	public void setUp() {
 	
 		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory=new TransitionFactoryModelImpl<State>(Transition.class);
+		this.transitionFactory=new TransitionFactoryModelImpl<State>();
 		
 		Set<IGraphProposition> propositions1=new HashSet<IGraphProposition>();
 		propositions1.add(new GraphProposition("start", false));
