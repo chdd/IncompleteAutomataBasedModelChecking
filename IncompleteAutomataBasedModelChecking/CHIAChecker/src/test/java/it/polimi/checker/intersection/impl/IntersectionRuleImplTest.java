@@ -86,19 +86,7 @@ public class IntersectionRuleImplTest {
 						null);
 	}
 
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.impl.IntersectionRuleImpl#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
-	 * .
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetIntersectionTransitionIllegalModelTransition() {
-		new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
-				.getIntersectionTransition(claimTransition, claimTransition,
-						new TransitionFactoryIntersectionImpl<State>());
-	}
-
-	/**
+		/**
 	 * Test method for
 	 * {@link it.polimi.checker.intersection.impl.IntersectionRuleImpl#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
@@ -244,5 +232,24 @@ public class IntersectionRuleImplTest {
 								claimTransition,
 								new TransitionFactoryIntersectionImpl<State>())
 						.getPropositions());
+	}
+	
+	
+	public void testGetIntersectionTransition7() {
+
+		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
+		modelPropositions.add(new GraphProposition("initializaed", false));
+		modelTransition = transitionFactory.create(modelPropositions);
+
+		Set<IGraphProposition> claimPropositions = new HashSet<IGraphProposition>();
+		claimPropositions.add(new GraphProposition("initializaed", true));
+		claimTransition = transitionFactory.create(claimPropositions);
+
+		
+
+		assertNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
+		.getIntersectionTransition(modelTransition,
+				claimTransition,
+				new TransitionFactoryIntersectionImpl<State>()));
 	}
 }

@@ -6,9 +6,12 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
+import it.polimi.constraints.Constraint;
+import it.polimi.constraints.Port;
 import it.polimi.constraints.impl.ComponentFactory;
 import it.polimi.constraints.impl.ComponentImpl;
 import it.polimi.constraints.impl.ConstraintImpl;
+import it.polimi.constraints.impl.PortImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +65,9 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 	 */
 	private Map<S, ComponentImpl<S, I>> mapIntersectionStateComponent;
 
+	private Map<I, Port<S, I>> mapIntersectionTransitionIncomingPort;
+	private Map<I, Port<S, I>> mapIntersectionTransitionOutcomingPort;
+
 	/**
 	 * is the original model to be considered
 	 */
@@ -93,13 +99,23 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 			IBA<S, T> model, Map<S, Set<S>> modelStateIntersectionStateMap,
 			IntersectionTransitionFactory<S, I> refinementTransitionFactory) {
 
-		Preconditions.checkNotNull(intersectionBA, "The intersection automaton cannot be null");
-		Preconditions.checkNotNull(model, "The model of the automaton cannot be null");
-		Preconditions.checkNotNull(modelStateIntersectionStateMap, "The map between the states of the intersection automaton and the states of the model cannot be null");
-		Preconditions.checkNotNull(refinementTransitionFactory, "The factory used to create the transitions of the refinement of a component cannot be null");
-		Preconditions.checkArgument(model.getStates().containsAll(
-				modelStateIntersectionStateMap.keySet()), "some of the states of the modelStateIntersectionStateMap is not contained into the set of the states of the model");
-		
+		Preconditions.checkNotNull(intersectionBA,
+				"The intersection automaton cannot be null");
+		Preconditions.checkNotNull(model,
+				"The model of the automaton cannot be null");
+		Preconditions
+				.checkNotNull(
+						modelStateIntersectionStateMap,
+						"The map between the states of the intersection automaton and the states of the model cannot be null");
+		Preconditions
+				.checkNotNull(
+						refinementTransitionFactory,
+						"The factory used to create the transitions of the refinement of a component cannot be null");
+		Preconditions
+				.checkArgument(
+						model.getStates().containsAll(
+								modelStateIntersectionStateMap.keySet()),
+						"some of the states of the modelStateIntersectionStateMap is not contained into the set of the states of the model");
 
 		// creating the abstracted automaton
 		this.constraint = new ConstraintImpl<S, I>();
@@ -114,6 +130,8 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 		// creating the map between a state and the corresponding component
 		this.mapIntersectionStateComponent = new HashMap<S, ComponentImpl<S, I>>();
 
+		this.mapIntersectionTransitionIncomingPort = new HashMap<I, Port<S, I>>();
+		this.mapIntersectionTransitionOutcomingPort = new HashMap<I, Port<S,I>>();
 		this.refinementTransitionFactory = refinementTransitionFactory;
 		logger.info("SubAutomataIdentifier created");
 	}
@@ -127,18 +145,29 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 	 * @return the sub-automata of the automaton that refer to the transparent
 	 *         states of M.
 	 */
-	public ConstraintImpl<S, I> getSubAutomata() {
+	public Constraint<S, I> getSubAutomata() {
 
 		logger.info("Computing the subproperties");
 
 		this.createStates();
 		this.createTransitions();
 
+		System.out.println("----");
+		System.out.println(this.constraint.getReachabilityRelation());
+		System.out.println("----");
+		TransitionsTransitiveClosure<S, I> closure = new TransitionsTransitiveClosure<S, I>(
+				intersectionBA,
+				constraint,
+				mapIntersectionTransitionIncomingPort,
+				  mapIntersectionTransitionOutcomingPort);
+		closure.computeTransitionsClosure();
+
 		logger.info("Subproperties ");
 		return this.constraint;
 	}
 
 	private void createTransitions() {
+		System.out.println(this.mapIntersectionStateComponent.keySet());
 		for (S intersectionState : this.mapIntersectionStateComponent.keySet()) {
 
 			ComponentImpl<S, I> intersectionStateComponent = this.mapIntersectionStateComponent
@@ -153,28 +182,39 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 				ComponentImpl<S, I> intersectionSourceComponent = this.mapIntersectionStateComponent
 						.get(sourceIntersectionState);
 
-				if (incomingTransition.getTransparentState()!=null) {
+				if (incomingTransition.getTransparentState() != null) {
 
-					I transition = this.refinementTransitionFactory
-							.create(incomingTransition.getId(), incomingTransition.getPropositions());
+					I transition = this.refinementTransitionFactory.create(
+							incomingTransition.getId(),
+							incomingTransition.getPropositions());
 					intersectionSourceComponent.addCharacters(transition
 							.getPropositions());
-					intersectionSourceComponent.addTransition(
-							intersectionState, sourceIntersectionState,
+					intersectionSourceComponent.addTransition(sourceIntersectionState,
+							intersectionState,
 							transition);
 				}
-				
+
 				else {
-					I port = this.refinementTransitionFactory
-							.create(incomingTransition.getId(), incomingTransition.getPropositions());
-					
-					intersectionSourceComponent.addOutComingPort(
-							sourceIntersectionState, port,
-							intersectionStateComponent.getModelState());
-					
-					intersectionStateComponent.addIncomingPort(
-							intersectionSourceComponent.getModelState(), port,
-							intersectionState);
+
+					I transition = this.refinementTransitionFactory.create(
+							incomingTransition.getId(),
+							incomingTransition.getPropositions());
+					Port<S, I> incomingPort = new PortImpl<S, I>(
+							intersectionSourceComponent.getModelState(),
+							intersectionState,
+							transition, intersectionStateComponent);
+
+					this.mapIntersectionTransitionIncomingPort.put(incomingTransition,
+							incomingPort);
+					intersectionStateComponent.addIncomingPort(incomingPort);
+
+					Port<S, I> outComingPort = new PortImpl<S, I>(
+							sourceIntersectionState,
+							intersectionStateComponent.getModelState(),
+							transition, intersectionSourceComponent);
+
+					this.mapIntersectionTransitionOutcomingPort.put(incomingTransition, outComingPort);
+					intersectionSourceComponent.addOutComingPort(outComingPort);
 				}
 			}
 		}
@@ -191,16 +231,17 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 			/*
 			 * creates a component which correspond with the state modelState
 			 */
-			ComponentImpl<S, I> c = componentFactory.create(modelState.getName(),
-					modelState, model.isTransparent(modelState),
+			ComponentImpl<S, I> c = componentFactory.create(
+					modelState.getName(), modelState,
+					model.isTransparent(modelState),
 					this.refinementTransitionFactory);
 			// adds the abstracted automaton
 
-			if(this.model.getTransparentStates().contains(modelState)){
+			if (this.model.getTransparentStates().contains(modelState)) {
 				this.constraint.addComponent(c);
 
 			}
-		
+
 			for (S intersectionState : modelStateIntersectionStateMap
 					.get(modelState)) {
 
@@ -227,6 +268,5 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 			}
 		}
 	}
-	
-	
+
 }

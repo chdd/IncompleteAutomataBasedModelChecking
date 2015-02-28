@@ -27,7 +27,7 @@ public class StateFactoryImpl implements StateFactory<State> {
 	@Override
 	public StateImpl create() {
 
-		StateImpl s = new StateImpl("",
+		StateImpl s = new StateImpl(Integer.toString(StateFactoryImpl.stateCount),
 				StateFactoryImpl.stateCount);
 		StateFactoryImpl.stateCount=StateFactoryImpl.stateCount+1;
 		return s;

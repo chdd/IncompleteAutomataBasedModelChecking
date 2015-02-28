@@ -13,8 +13,9 @@ import it.polimi.automata.transition.Transition;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
+
+import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
@@ -30,10 +31,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
 public class IntersectionBuilder<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
@@ -103,13 +100,13 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 			IntersectionTransitionFactory<S, I> transitionFactory, 
 			IBA<S, T> model,
 			BA<S, T> claim) {
-		Objects.requireNonNull(intersectionrule,
+		Preconditions.checkNotNull(intersectionrule,
 				"The intersection rule cannot be null");
-		Objects.requireNonNull(stateFactory, "The state factory cannot be null");
-		Objects.requireNonNull(transitionFactory,
+		Preconditions.checkNotNull(stateFactory, "The state factory cannot be null");
+		Preconditions.checkNotNull(transitionFactory,
 				"The transition factory cannot be null");
-		Objects.requireNonNull(model, "The model of the system cannot be null");
-		Objects.requireNonNull(claim, "The claim cannot be null");
+		Preconditions.checkNotNull(model, "The model of the system cannot be null");
+		Preconditions.checkNotNull(claim, "The claim cannot be null");
 
 		this.intersectionrule = intersectionrule;
 		this.stateFactory = stateFactory;

@@ -99,7 +99,7 @@ public class TransitionImpl extends DefaultEdge implements Transition {
 	public String toString() {
 		String ret = "";
 		for (IGraphProposition label : labels) {
-			ret = ret + "(" + label.toString() + ")" + Constants.AND;
+			ret = ret + label.toString()  + Constants.AND;
 		}
 		if (ret.endsWith(Constants.AND)) {
 			ret = ret.substring(0, ret.length() - Constants.AND.length());

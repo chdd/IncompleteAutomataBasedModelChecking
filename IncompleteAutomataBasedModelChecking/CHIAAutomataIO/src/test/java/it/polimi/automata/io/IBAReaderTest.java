@@ -5,6 +5,10 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
+import it.polimi.automata.io.transformer.states.IBAStateElementParser;
+import it.polimi.automata.io.transformer.states.StateElementParser;
+import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
+import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.impl.StateFactoryImpl;
@@ -78,9 +82,15 @@ public class IBAReaderTest {
 	
 	@Test
 	public void test() throws FileNotFoundException {
-		IBAReader<State, StateFactory<State>, Transition, TransitionFactory<State, Transition>> reader=new IBAReader< State, StateFactory<State>, Transition, TransitionFactory<State, Transition>>(
-				this.transitionFactory, this.stateFactory, new File(getClass().getClassLoader()
-						.getResource("SendingMessageModel.xml").getFile()));
+		StateElementParser<State, Transition, IBA<State, Transition>> stateElementParser = new IBAStateElementParser(
+				new StateFactoryImpl());
+
+		ModelTransitionParser<State, Transition, IBA<State, Transition>> transitionParser = new IBATransitionParser(
+				this.transitionFactory);
+
+		IBAReader<State, Transition> reader=new IBAReader<State,Transition>(
+				 new File(getClass().getClassLoader()
+						.getResource("SendingMessageModel.xml").getFile()), stateElementParser, transitionParser);
 		
 		IBA< State, Transition> sendingMessage=reader.read();
 		

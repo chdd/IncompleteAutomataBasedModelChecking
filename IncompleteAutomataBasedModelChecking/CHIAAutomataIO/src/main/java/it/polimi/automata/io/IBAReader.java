@@ -3,6 +3,9 @@ package it.polimi.automata.io;
 import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.impl.IBAImpl;
+import it.polimi.automata.io.transformer.states.StateElementParser;
+import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
+import it.polimi.automata.io.transformer.transitions.TransitionElementParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
@@ -11,9 +14,8 @@ import it.polimi.automata.transition.TransitionFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,22 +30,19 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
-
-
 /**
- * contains the reader which is used to read an <b>Incomplete</b> Buchi automaton
+ * contains the reader which is used to read an <b>Incomplete</b> Buchi
+ * automaton
  * 
  * @author claudiomenghi
  * 
  * @param <S>
- *            is the type of the State of the Incomplete Buchi Automaton. It must extend
- *            the interface {@link State}
+ *            is the type of the State of the Incomplete Buchi Automaton. It
+ *            must extend the interface {@link State}
  * @param <G>
- *            is the factory which is used to create the states of the Incomplete Buchi
- *            Automaton. it must implement the interface {@link StateFactory}
+ *            is the factory which is used to create the states of the
+ *            Incomplete Buchi Automaton. it must implement the interface
+ *            {@link StateFactory}
  * @param <T>
  *            is the type of the transitions of the automaton. It must implement
  *            the interface {@link Transition}
@@ -51,26 +50,22 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  *            is the factory which allows to create the transitions. It must
  *            implement the interface {@link TransitionFactory}
  */
-public class IBAReader<
-	S extends State, 
-	G extends StateFactory<S>, 
-	T extends Transition, 
-	H extends TransitionFactory<S, T>>{
+public class IBAReader<S extends State, T extends Transition> {
 
 	/**
 	 * contains the Incomplete Buchi Automaton loaded from the file
 	 */
 	protected IBA<S, T> iba;
 
-
 	private File file;
-	
-	private Map<Integer, S> mapIdState;
-	
-	private G stateFactory;
 
-	private H transitionFactory;
-	
+	private Map<Integer, S> mapIdState;
+
+	private final StateElementParser<S, T, IBA<S, T>> stateElementParser;
+
+	private final TransitionElementParser<S, T, IBA<S, T>> transitionElementParser;
+
+
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
@@ -88,19 +83,23 @@ public class IBAReader<
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IBAReader(
-			H transitionFactory, G stateFactory,
-			 File file) {
-		Preconditions.checkNotNull(transitionFactory, "The transition factory cannot be null");
-		Preconditions.checkNotNull(stateFactory, "The state factory cannot be null");
+	public IBAReader(File file,
+			StateElementParser<S, T, IBA<S, T>> stateElementParser,
+			ModelTransitionParser<S, T, IBA<S, T>> transitionElementParser) {
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
-		
-		this.mapIdState=new HashMap<Integer, S>();
-		
-		this.iba = new IBAImpl<S, T>(transitionFactory);
-		this.file=file;
-		this.stateFactory=stateFactory;
-		this.transitionFactory=transitionFactory;
+		Preconditions.checkNotNull(stateElementParser,
+				"The state element parser cannot be null");
+
+		Preconditions.checkNotNull(transitionElementParser,
+				"The transition factory cannot be null");
+
+		this.mapIdState = new HashMap<Integer, S>();
+
+		this.iba = new IBAImpl<S, T>(
+				transitionElementParser.getTransitionFactory());
+		this.file = file;
+		this.stateElementParser = stateElementParser;
+		this.transitionElementParser = transitionElementParser;
 	}
 
 	/**
@@ -112,7 +111,7 @@ public class IBAReader<
 	 *             is generated if a problem occurs in the loading of the Buchi
 	 *             Automaton
 	 */
-	public IBA<S, T> read(){
+	public IBA<S, T> read() {
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
@@ -128,8 +127,7 @@ public class IBAReader<
 
 			this.loadStates(doc);
 			this.loadTransitions(doc);
-			
-			
+
 		} catch (ParserConfigurationException pce) {
 			System.out.println(pce.getMessage());
 		} catch (SAXException se) {
@@ -142,89 +140,30 @@ public class IBAReader<
 	}
 
 	private void loadStates(Element doc) {
-		NodeList xmlstates=doc.getElementsByTagName(Constants.XML_ELEMENT_STATE);
-		
-		for(int stateid=0; stateid<xmlstates.getLength(); stateid++){
-			Node xmlstate=xmlstates.item(stateid);
-			Element eElement = (Element) xmlstate;
-			
-			int id= Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_ID));
-			
-			S s=stateFactory.create(eElement.getAttribute(Constants.XML_ATTRIBUTE_NAME), id);
-			this.iba.addState(s);
-			this.mapIdState.put(id, s);
-			
-			if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_INITIAL).isEmpty()){
-				this.iba.addInitialState(s);
-			}
-			if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_ACCEPTING).isEmpty()){
-				this.iba.addAcceptState(s);
-			}
-			if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSPARENT).isEmpty()){
-				this.iba.addTransparentState(s);
-			}
-		}
-	}
-	
-	private void loadTransitions(Element doc) {
-		NodeList xmltransitions=doc.getElementsByTagName(Constants.XML_TAG_TRANSITION);
-		
-		for(int transitionid=0; transitionid<xmltransitions.getLength(); transitionid++){
-			Node xmltransition=xmltransitions.item(transitionid);
-			Element eElement = (Element) xmltransition;
-			
-			int id= Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID));
-			
-			Set<IGraphProposition> propositions=this.computePropositions(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
-			
-			T t=transitionFactory.create(id, propositions);
-			
-			int sourceId=Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_SOURCE));
-			int destinationId=Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_DESTINATION));
-			this.iba.addTransition(this.mapIdState.get(sourceId), this.mapIdState.get(destinationId), t);
-		}
-	}
-	
-	/**
-	 * Starting from the string computes the corresponding proposition. The
-	 * string must satisfy the regular expression {@link Constants#APREGEX} or
-	 * the regular expression {@link Constants#NOTAPREGEX}
-	 * 
-	 * @param input
-	 *            is the input to be computed
-	 * @throws NullPointerException
-	 *             if the input is null
-	 * @throws IllegalArgumentException
-	 *             if the input does not match the regular expression
-	 *             {@link Constants#APREGEX} or the regular expression
-	 *             {@link Constants#NOTAPREGEX}
-	 */
-	public Set<IGraphProposition> computePropositions(String input) {
+		NodeList xmlstates = doc
+				.getElementsByTagName(Constants.XML_ELEMENT_STATE);
 
-		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
-		if (input == null) {
-			throw new NullPointerException("The input must be not null");
+		for (int stateid = 0; stateid < xmlstates.getLength(); stateid++) {
+
+			Node xmlstate = xmlstates.item(stateid);
+			Element eElement = (Element) xmlstate;
+
+			Entry<Integer, S> entry = this.stateElementParser.transform(
+					eElement, this.iba);
+			this.mapIdState.put(entry.getKey(), entry.getValue());
 		}
-		if (!input.matches(Constants.MODEL_PROPOSITIONS)) {
-			throw new IllegalArgumentException(
-					"The input "+input+" must match the regular expression: "
-							+ Constants.MODEL_PROPOSITIONS);
-		}
-		
-		if(input.equals(Constants.SIGMA)){
-			propositions.add(new SigmaProposition());
-		}
-		else{
-			String[] apsStrings=input.split(Constants.AND);
-			
-			for(String ap: apsStrings){
-				propositions.add(new GraphProposition(ap, false));
-			}
-		}
-		
-		this.iba.addCharacters(propositions);
-		return propositions;
 	}
-	
-	
+
+	private void loadTransitions(Element doc) {
+		NodeList xmltransitions = doc
+				.getElementsByTagName(Constants.XML_TAG_TRANSITION);
+
+		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
+			Node xmltransition = xmltransitions.item(transitionid);
+			Element eElement = (Element) xmltransition;
+			this.transitionElementParser.transform(eElement, this.iba,
+					this.mapIdState);
+			
+		}
+	}
 }

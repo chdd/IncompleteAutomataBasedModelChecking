@@ -5,9 +5,10 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
+
+import com.google.common.base.Preconditions;
 
 
 /**
@@ -58,7 +59,7 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 *             if the automaton to be considered is null
 	 */
 	public EmptinessChecker(BA<S, T> automaton) {
-		Objects.requireNonNull(automaton, "The automaton to be considered cannot be null");
+		Preconditions.checkNotNull(automaton, "The automaton to be considered cannot be null");
 
 		this.automaton = automaton;
 		this.hashedStates = new HashSet<S>();
@@ -93,12 +94,9 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 */
 	private boolean firstDFS(S currState, 
 			Stack<S> firstDFSStack) {
-		if (currState == null) {
-			throw new NullPointerException("The current state cannot be null");
-		}
-		if (firstDFSStack == null) {
-			throw new NullPointerException("The stack cannot be null");
-		}
+		Preconditions.checkNotNull(currState, "The current state cannot be null");
+		Preconditions.checkNotNull(firstDFSStack, "The stack cannot be null");
+		
 		this.hashedStates.add(currState);
 		firstDFSStack.push(currState);
 		for (S t : automaton.getSuccessors(currState)) {
@@ -127,12 +125,9 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 */
 	private boolean secondDFS(S currState, 
 			Stack<S> firstDFSStack) {
-		if (currState == null) {
-			throw new NullPointerException("The current state cannot be null");
-		}
-		if (firstDFSStack == null) {
-			throw new NullPointerException("The first stack cannot be null");
-		}
+		Preconditions.checkNotNull(currState, "The current state cannot be null");
+		Preconditions.checkNotNull(firstDFSStack, "The first stack cannot be null");
+		
 		this.flaggedStates.add(currState);
 		for (S t : this.automaton.getSuccessors(currState)) {
 			if (firstDFSStack.contains(t)) {

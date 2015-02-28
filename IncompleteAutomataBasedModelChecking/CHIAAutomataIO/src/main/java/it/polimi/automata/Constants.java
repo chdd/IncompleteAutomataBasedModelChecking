@@ -4,6 +4,11 @@ public final class Constants {
 	
 
 	public final static String XML_ELEMENT_CONSTRAINTS="constraints";
+	public final static String XML_ELEMENT_PORTS_REACHABILITY="portsReachability";
+	public final static String XML_ELEMENT_PORTS_COLORT="portscolors";
+	
+	
+	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
 	public final static String XML_ELEMENT_PORTS_OUT="outports";
 	public final static String XML_ELEMENT_PORTS_IN="inports";
 	public final static String XML_ELEMENT_PORT="port";
@@ -12,6 +17,8 @@ public final class Constants {
 	public final static String XML_ELEMENT_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_ID="id";
 	public final static String XML_ATTRIBUTE_NAME="name";
+	public final static String XML_ATTRIBUTE_COLOR="color";
+	
 	public final static String XML_ATTRIBUTE_MODEL_STATE_ID="modelstateId";
 	public final static String XML_ATTRIBUTE_INITIAL="initial";
 	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
@@ -22,6 +29,8 @@ public final class Constants {
 	public final static String XML_ATTRIBUTE_TRANSITION_SOURCE="source";
 	public final static String XML_ATTRIBUTE_TRANSITION_DESTINATION="destination";
 	public final static String XML_ATTRIBUTE_TRANSITION_PROPOSITIONS="propositions";
+	public final static String XML_ATTRIBUTE_INVARIANT="invariant";
+	
 	public final static String XML_ELEMENT_BA="ba";
 
 	

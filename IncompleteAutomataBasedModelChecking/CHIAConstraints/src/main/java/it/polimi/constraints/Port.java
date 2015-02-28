@@ -48,4 +48,6 @@ public interface Port<S extends State, T extends Transition> extends State {
 	 */
 	public Component<S, T> getComponent();
 	
+	
+	public boolean equals(Object obj);
 }

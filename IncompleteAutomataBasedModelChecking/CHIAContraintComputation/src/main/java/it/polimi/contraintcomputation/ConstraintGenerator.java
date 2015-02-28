@@ -6,10 +6,9 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.impl.ConstraintImpl;
+import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
 import it.polimi.contraintcomputation.subautomatafinder.SubPropertiesIdentifier;
-import it.polimi.contraintcomputation.subautomatafinder.TransitionsTransitiveClosure;
 
 import java.util.Map;
 import java.util.Set;
@@ -76,6 +75,7 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 			Map<S, Set<S>> modelIntersectionStatesMap,
 			IntersectionTransitionFactory<S, I> subpropertiestransitionFactory) {
 
+		
 		Validate.notNull(intBA, "The intersection model cannot be null");
 		Validate.notNull(model, "The model of the system cannot be null");
 		Validate.notNull(
@@ -83,7 +83,7 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 				"The map between the states of the model and the intersection states cannot be null");
 		Validate.notNull(subpropertiestransitionFactory,
 				"The transition factory cannot be null");
-
+		System.out.println(intBA);
 		this.modelIntersectionStatesMap = modelIntersectionStatesMap;
 		this.subPropertiesTransitionFactory = subpropertiestransitionFactory;
 		this.intBA = intBA;
@@ -95,7 +95,7 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 	 * 
 	 * @return the constraint of the automaton
 	 */
-	public ConstraintImpl<S, I> generateConstraint() {
+	public Constraint<S, I> generateConstraint() {
 
 		logger.info("Computing the constraint");
 		/*
@@ -110,12 +110,9 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 		SubPropertiesIdentifier<S, T, I> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, I>(
 				intBA, model, this.modelIntersectionStatesMap,
 				this.subPropertiesTransitionFactory);
-		ConstraintImpl<S, I> constraint = subPropertiesIdentifier.getSubAutomata();
+		Constraint<S, I> constraint = subPropertiesIdentifier.getSubAutomata();
 
-		TransitionsTransitiveClosure closure=new TransitionsTransitiveClosure(intBA);
-		closure.computeTransitionsClosure();
 		
-		System.out.println(closure.getPortsRelations());
 		
 		logger.info("Constraint computed");
 		return constraint;

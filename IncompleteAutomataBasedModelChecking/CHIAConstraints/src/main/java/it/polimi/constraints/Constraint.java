@@ -1,6 +1,9 @@
 package it.polimi.constraints;
 
+import java.util.Map;
 import java.util.Set;
+
+import com.google.common.collect.BiMap;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -62,5 +65,37 @@ public interface Constraint<S extends State, T extends Transition> {
 	 */
 	public void addReachabilityRelation(
 			Port<S,T> incomingPort, Port<S,T> outComingPort);
+	
+	public BiMap<Port<S, T>, Set<Port<S, T>>> getReachabilityRelation();
 
+	
+	/**
+	 * sets the port value to the specified color
+	 * 
+	 * @param port
+	 *            is the port to be updated
+	 * @param value
+	 *            is the new value of the port
+	 * @throws NullPointerException
+	 *             if the port or the value is null
+	 */
+	public void setPortValue(Port<S, T> port, Color color);
+	
+	/**
+	 * returns the value associated with the specified port
+	 * 
+	 * @param port
+	 *            is the port of interest
+	 * @return the value associated with the specified port
+	 * @throws IllegalArgumentException
+	 *             if the port is not contained into the set of the colored
+	 *             ports
+	 */
+	public Color getPortValue(Port<S, T> port);
+	
+	public Map<Port<S, T>, Color> getPortValue();
+	
+	public int getTotalStates();
+	public int getTotalTransitions();
+	
 }

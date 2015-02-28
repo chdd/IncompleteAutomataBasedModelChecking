@@ -15,11 +15,12 @@ import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Contains the model checker used by the CHIA checker which checks whether the
@@ -107,12 +108,12 @@ public class ModelChecker< S extends State, T extends Transition, I extends Inte
 			StateFactory<S> intersectionStateFactory,
 			IntersectionTransitionFactory<S, I> intersectionTransitionFactory,
 			ModelCheckingResults mp) {
-		Objects.requireNonNull(model, "The model to be checked cannot be null");
-		Objects.requireNonNull(claim, "The specification to be checked cannot be null");
-		Objects.requireNonNull(intersectionRule, "The intersection rule cannot be null");
-		Objects.requireNonNull(intersectionStateFactory, "The intersection state factory cannot be null");
-		Objects.requireNonNull(intersectionTransitionFactory, "The intersection transition factory cannot be null");
-		Objects.requireNonNull(mp, "The model checking parameters cannot be null");
+		Preconditions.checkNotNull(model, "The model to be checked cannot be null");
+		Preconditions.checkNotNull(claim, "The specification to be checked cannot be null");
+		Preconditions.checkNotNull(intersectionRule, "The intersection rule cannot be null");
+		Preconditions.checkNotNull(intersectionStateFactory, "The intersection state factory cannot be null");
+		Preconditions.checkNotNull(intersectionTransitionFactory, "The intersection transition factory cannot be null");
+		Preconditions.checkNotNull(mp, "The model checking parameters cannot be null");
 
 		this.claim = claim;
 		this.model = model;

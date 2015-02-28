@@ -5,8 +5,9 @@ import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.checker.intersection.IntersectionRule;
 
-import java.util.Objects;
 import java.util.Set;
+
+import com.google.common.base.Preconditions;
 
 import it.polimi.automata.state.State;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
@@ -22,10 +23,6 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * 
  * @author claudiomenghi
  * 
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
 public class IntersectionRuleImpl<S extends State, T extends Transition, I extends IntersectionTransition<S>>
 		implements IntersectionRule<S, T, I> {
@@ -34,54 +31,64 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public I getIntersectionTransition(
-			T modelTransition,
-			T claimTransition,
+	public I getIntersectionTransition(T modelTransition, T claimTransition,
 			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
-		
-		Objects.requireNonNull(modelTransition, "The model transition cannot be null");
-		Objects.requireNonNull(claimTransition, "The claim transition cannot be null");
-		Objects.requireNonNull(intersectionTransitionFactory, "The intersection factory cannot be null");
-		
-		if(this.satisfies(modelTransition.getPropositions(), claimTransition.getPropositions())){
-				return intersectionTransitionFactory.create(modelTransition.getPropositions());
-		}
-		else{
+
+		Preconditions.checkNotNull(modelTransition,
+				"The model transition cannot be null");
+		Preconditions.checkNotNull(claimTransition,
+				"The claim transition cannot be null");
+		Preconditions.checkNotNull(intersectionTransitionFactory,
+				"The intersection factory cannot be null");
+
+		if (this.satisfies(modelTransition.getPropositions(),
+				claimTransition.getPropositions())) {
+			return intersectionTransitionFactory.create(modelTransition
+					.getPropositions());
+		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * returns true if the label of the model satisfies the label of the claim
-	 * @param modelLabel is the label of the model
-	 * @param claimLabel is the label of the claim
+	 * 
+	 * @param modelLabel
+	 *            is the label of the model
+	 * @param claimLabel
+	 *            is the label of the claim
 	 * @return true if the label of the model satisfies the label of the claim
 	 */
-	private boolean satisfies(Set<IGraphProposition> modelLabel, Set<IGraphProposition> claimLabel){
-		// checking the correctness of the propositions of the model
-		for(IGraphProposition modelProposition: modelLabel){
-			if(modelProposition.isNegated()){
-				throw new IllegalArgumentException("The proposition of the model cannot be negated");
-			}
-		}
+	private boolean satisfies(Set<IGraphProposition> modelLabel,
+			Set<IGraphProposition> claimLabel) {
+		Preconditions.checkNotNull(modelLabel, "The model cannot be null");
+		Preconditions.checkNotNull(claimLabel, "The claim cannot be null");
+
 		// for each proposition of the claim
-		for(IGraphProposition claimProposition: claimLabel){
-			// if the proposition is sigma it is satisfied by the proposition of the model 
-			if(claimProposition instanceof SigmaProposition){
+		for (IGraphProposition claimProposition : claimLabel) {
+			// if the proposition is sigma it is satisfied by the proposition of
+			// the model
+			if (claimProposition instanceof SigmaProposition) {
 				return true;
 			}
-			// if the claim proposition is negated it must not be contained into the set of the proposition of the model
-			// e.g. if the proposition is !a a must not be contained into the propositions of the model
-			// if the claim contains !a and the model a the condition is not satisfied
-			if(claimProposition.isNegated()){
-				if(modelLabel.contains(new GraphProposition(claimProposition.getLabel(), false))){
-				return false;
+			// if the claim proposition is negated it must not be contained into
+			// the set of the proposition of the model
+			// e.g. if the proposition is !a a must not be contained into the
+			// propositions of the model
+			// if the claim contains !a and the model a the condition is not
+			// satisfied
+			if (claimProposition.isNegated()) {
+				if (modelLabel.contains(new GraphProposition(claimProposition
+						.getLabel(), false))) {
+					return false;
 				}
-			}
-			else{
-				// if the claim is not negated it MUST be contained into the propositions of the model
-				// if the claim is labeled with a and the model does not contain the proposition a the transition is not satisfied
-				if(!modelLabel.contains(new GraphProposition(claimProposition.getLabel(), false))){
+			} else {
+				// if the claim is not negated it MUST be contained into the
+				// propositions of the model
+				// if the claim is labeled with a and the model does not contain
+				// the proposition a the transition is not satisfied
+				if (!modelLabel.contains(new GraphProposition(claimProposition
+						.getLabel(), false))) {
 					return false;
 				}
 			}
@@ -92,12 +99,15 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 	@Override
 	public I getIntersectionTransition(S modelState, T claimTransition,
 			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
-		Objects.requireNonNull(modelState, "The model state cannot be null");
-		Objects.requireNonNull(claimTransition, "The claim transition cannot be null");
-		Objects.requireNonNull(intersectionTransitionFactory, "The intersection factory cannot be null");
-		
-		return intersectionTransitionFactory.create(claimTransition
-				.getPropositions(), modelState);
-	
+		Preconditions
+				.checkNotNull(modelState, "The model state cannot be null");
+		Preconditions.checkNotNull(claimTransition,
+				"The claim transition cannot be null");
+		Preconditions.checkNotNull(intersectionTransitionFactory,
+				"The intersection factory cannot be null");
+
+		return intersectionTransitionFactory.create(
+				claimTransition.getPropositions(), modelState);
+
 	}
 }

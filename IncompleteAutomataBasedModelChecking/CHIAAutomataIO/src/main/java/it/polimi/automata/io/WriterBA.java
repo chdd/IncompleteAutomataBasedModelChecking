@@ -22,6 +22,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
@@ -65,16 +67,9 @@ public class WriterBA<S extends State, T extends Transition> {
 	 * 
 	 */
 	public WriterBA(IntersectionBA<S, T> intersectionAutomaton, File f) {
-		if (intersectionAutomaton == null) {
-			logger.error("The intersection automaton cannot be null");
-			throw new NullPointerException(
-					"The intersection automaton cannot be null");
-		}
-		if (f == null) {
-			logger.error("The file where the automaton must be written cannot be null");
-			throw new NullPointerException(
-					"The file where the automaton must be written cannot be null");
-		}
+		Preconditions.checkNotNull(intersectionAutomaton, "The intersection automaton cannot be null");
+		Preconditions.checkNotNull(f, "The file where the automaton must be written cannot be null");
+		
 		this.intersectionAutomaton = intersectionAutomaton;
 		this.f = f;
 	}

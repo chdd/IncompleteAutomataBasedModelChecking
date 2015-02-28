@@ -1,5 +1,7 @@
 package it.polimi.checker.ibatransparentstateremoval;
 
+import com.google.common.base.Preconditions;
+
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -17,10 +19,6 @@ import it.polimi.automata.transition.Transition;
  *            is the type of the transition of the Buchi Automaton. The typer of
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
 public class IBATransparentStateRemoval<S extends State, T extends Transition> {
 
@@ -38,10 +36,8 @@ public class IBATransparentStateRemoval<S extends State, T extends Transition> {
 	 */
 	public IBA<S, T> transparentStateRemoval(
 			IBA<S, T> iba) {
-		if (iba == null) {
-			throw new NullPointerException(
-					"The Incomplete Buchi Automaton cannot be null");
-		}
+		Preconditions.checkNotNull(iba , "The Incomplete Buchi Automaton cannot be null");
+		
 
 		IBA<S, T> retIba = iba.clone();
 		for (S s : retIba.getTransparentStates()) {

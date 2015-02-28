@@ -6,11 +6,13 @@ import it.polimi.automata.io.WriterBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
+import it.polimi.constraints.Color;
 import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
 
 import java.io.File;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,6 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.google.common.collect.BiMap;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
@@ -129,14 +133,28 @@ public class ConstraintWriter<S extends State, T extends Transition, I extends I
 				constraintElement.appendChild(inComingPorts);
 				this.addPorts(doc, inComingPorts, component.getIncomingPorts());
 
-				TransformerFactory transformerFactory = TransformerFactory
-						.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(f);
-				transformer.transform(source, result);
-			}
+				
+				
 
+			}
+			Element portsReachability = doc
+					.createElement(Constants.XML_ELEMENT_PORTS_REACHABILITY);
+			rootElement.appendChild(portsReachability);
+			
+			this.addPortsReachability(doc, portsReachability, this.constraint.getReachabilityRelation());
+
+			Element colors = doc
+					.createElement(Constants.XML_ELEMENT_PORTS_COLORT );
+			rootElement.appendChild(colors);
+			
+			this.addPortsColor(doc, colors, constraint);
+			
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(f);
+			transformer.transform(source, result);
 			logger.info("Intersection automaton written");
 
 		} catch (ParserConfigurationException pce) {
@@ -219,6 +237,78 @@ public class ConstraintWriter<S extends State, T extends Transition, I extends I
 		}
 	}
 
+	private void addPortsReachability(Document doc, Element portsElement,
+			BiMap<Port<S, I>, Set<Port<S, I>>>  portsReachability) {
+		
+		System.out.println(portsReachability);
+		Element portReachability = doc.createElement(Constants.XML_ELEMENT_PORTS_OUT_REACHABILITY);
+		portsElement.appendChild(portReachability);
+
+		for (Port<S, I> port : portsReachability.keySet()) {
+			
+			System.out.println(port);
+			
+			Element outcomingport = doc.createElement(Constants.XML_ELEMENT_PORT);
+			portReachability.appendChild(outcomingport);
+			// transition source
+			Attr portId = doc
+					.createAttribute(Constants.XML_ATTRIBUTE_ID);
+			portId.setValue(Integer
+					.toString(port.getTransition().getId()));
+			outcomingport.setAttributeNode(portId);
+			
+			Attr componentId = doc
+					.createAttribute(Constants.XML_ELEMENT_CONSTRAINT);
+			componentId.setValue(Integer
+					.toString(port.getComponent().getModelState().getId()));
+			outcomingport.setAttributeNode(componentId);
+			
+			for (Port<S, I> nextport : portsReachability.get(port)) {
+				
+				System.out.println(nextport);
+				
+				Element nextportElement = doc.createElement(Constants.XML_ELEMENT_PORT);
+				outcomingport.appendChild(nextportElement);
+				// transition source
+				Attr nextPortId = doc
+						.createAttribute(Constants.XML_ATTRIBUTE_ID);
+				nextPortId.setValue(Integer
+						.toString(nextport.getTransition().getId()));
+				nextportElement.setAttributeNode(nextPortId);
+				
+				Attr nextComponentId = doc
+						.createAttribute(Constants.XML_ELEMENT_CONSTRAINT);
+				nextComponentId.setValue(Integer
+						.toString(nextport.getComponent().getModelState().getId()));
+				nextportElement.setAttributeNode(nextComponentId);
+				
+			}
+		}
+	}
+	
+	private void addPortsColor(Document doc, Element colorElement,
+			Constraint<S,I>  constraint) {
+		
+		
+		
+		for(Entry<Port<S, I>, Color> e: constraint.getPortValue().entrySet()){
+			Element portElement = doc.createElement(Constants.XML_ELEMENT_PORT);
+			colorElement.appendChild(portElement);
+			
+			Attr portId = doc
+					.createAttribute(Constants.XML_ATTRIBUTE_ID);
+			portId.setValue(Integer.toString(e.getKey().getId()));
+			portElement.setAttributeNode(portId);
+			
+			// transition source
+			Attr nextPortColor = doc
+					.createAttribute(Constants.XML_ATTRIBUTE_COLOR);
+			nextPortColor.setValue(e.getValue().toString());
+			portElement.setAttributeNode(nextPortColor);
+		}
+	}
+
+	
 	private void computingTransitionElements(Document doc, Element rootElement,
 			IntersectionBA<S, I> intersectionAutomaton) {
 		for (I transition : intersectionAutomaton.getTransitions()) {

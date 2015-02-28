@@ -94,6 +94,9 @@ public class IntersectionCleaner<S extends State, T extends IntersectionTransiti
 			}
 			toBeVisited.remove(currentState);
 		}
+		
+		System.out.println(visitedStates);
+		
 		Set<S> toBeRemoved = new HashSet<S>(
 				this.intersectionAutomaton.getStates());
 		toBeRemoved.removeAll(reachableStates);

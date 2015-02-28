@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 /**
  * contains a constraint, i.e., the set of automata to be considered in the
@@ -36,7 +36,8 @@ import org.jgrapht.graph.DefaultEdge;
  *            is the type of the transitions of the automaton to be considered
  *            in the refinement of the transparent state
  */
-public class ConstraintImpl<S extends State, T extends Transition> implements Constraint<S, T> {
+public class ConstraintImpl<S extends State, T extends Transition> implements
+		Constraint<S, T> {
 
 	/**
 	 * is the set of the components to be considered in the refinement of the
@@ -45,10 +46,10 @@ public class ConstraintImpl<S extends State, T extends Transition> implements Co
 	private Set<Component<S, T>> components;
 
 	/**
-	 * describes how the incoming and outcoming ports of the component are related
+	 * describes how the incoming and outcoming ports of the component are
+	 * related
 	 */
-	private DirectedGraph<Port<S,T>, DefaultEdge> portsRelation;
-	
+	private BiMap<Port<S, T>, Set<Port<S, T>>> portsRelation;
 
 	/**
 	 * specifies for each port the corresponding color The red color means that
@@ -57,15 +58,18 @@ public class ConstraintImpl<S extends State, T extends Transition> implements Co
 	 * means that the port is possibly reachable from an initial state and from
 	 * the port it is possibly reachable an accepting state
 	 */
-	private Map<T, Color> portValue;
+	private Map<Port<S, T>, Color> portValue;
 
+	
+	
+	
 	/**
 	 * creates a new empty constraint
 	 */
 	public ConstraintImpl() {
 		this.components = new HashSet<Component<S, T>>();
-		this.portValue = new HashMap<T, Color>();
-		this.portsRelation=new DefaultDirectedGraph<Port<S,T>, DefaultEdge>(DefaultEdge.class);
+		this.portValue = new HashMap<Port<S, T>, Color>();
+		this.portsRelation = HashBiMap.create();
 	}
 
 	/**
@@ -90,44 +94,68 @@ public class ConstraintImpl<S extends State, T extends Transition> implements Co
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addReachabilityRelation(
-			Port<S,T> incomingPort, Port<S,T> outComingPort) {
+	public void addReachabilityRelation(Port<S, T> incomingPort,
+			Port<S, T> outComingPort) {
 		// validates the parameters
 		Validate.notNull(incomingPort, "The incomingPort port cannot be null");
 		Validate.notNull(outComingPort, "The outcomingPort port cannot be null");
 		
-		portsRelation.addEdge(incomingPort, outComingPort);
+		if(!this.portsRelation.containsKey(incomingPort)){
+			this.portsRelation.put(incomingPort, new HashSet<Port<S,T>>());
+		}
+		this.portsRelation.get(incomingPort).add(outComingPort);
+	}
+
+	public BiMap<Port<S, T>, Set<Port<S, T>>> getReachabilityRelation() {
+		return this.portsRelation;
 	}
 
 	/**
-	 * sets the port value to the specified color
-	 * 
-	 * @param port
-	 *            is the port to be updated
-	 * @param value
-	 *            is the new value of the port
-	 * @throws NullPointerException
-	 *             if the port or the value is null
+	 * {@inheritDoc}
 	 */
-	public void setPortValue(T port, Color value) {
+	@Override
+	public void setPortValue(Port<S, T> port, Color color){
 		Validate.notNull(port, "The port cannot be null");
-		Validate.notNull(value, "The value cannot be null");
-		this.portValue.put(port, value);
+		Validate.notNull(color, "The value cannot be null");
+		
+		this.portValue.put(port, color);
 	}
-
+	
+	public Map<Port<S, T>, Color> getPortValue(){
+		return this.portValue;
+	}
 	/**
-	 * returns the value associated with the specified port
-	 * 
-	 * @param port
-	 *            is the port of interest
-	 * @return the value associated with the specified port
-	 * @throws IllegalArgumentException
-	 *             if the port is not contained into the set of the colored ports
+	 * {@inheritDoc}
 	 */
-	public Color getPortValue(T port) {
+	@Override
+	public Color getPortValue(Port<S, T> port){
 		Validate.isTrue(!this.portValue.keySet().contains(port),
 				"The port must be contained into the set of the ports: ", port);
-		return portValue.get(port);
+		return this.portValue.get(port);
+	}
+
+	
+	
+	public String toString(){
+		return this.portValue.toString();
+	}
+
+	@Override
+	public int getTotalStates() {
+		int totalStates=0;
+		for(Component<S, T> c: components){
+			totalStates=totalStates+c.getStates().size();
+		}
+		return totalStates;
+	}
+
+	@Override
+	public int getTotalTransitions() {
+		int totalTransitions=0;
+		for(Component<S, T> c: components){
+			totalTransitions=totalTransitions+c.getTransitions().size();
+		}
+		return totalTransitions;
 	}
 
 }

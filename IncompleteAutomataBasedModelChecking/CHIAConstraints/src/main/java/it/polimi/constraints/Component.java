@@ -13,7 +13,7 @@ import it.polimi.automata.transition.Transition;
  * 
  * @author claudiomenghi
  */
-public interface Component<S extends State, T extends Transition> extends IntersectionBA<S, T> {
+public interface Component<S extends State, T extends Transition> extends IntersectionBA<S, T>, State {
 
 	/**
 	 * returns the model of the state
@@ -39,7 +39,7 @@ public interface Component<S extends State, T extends Transition> extends Inters
 	 * @throws IllegalArgumentException
 	 *             if the destination state is not a state of the component
 	 */
-	public void addIncomingPort(S source, T transition, S destination);
+	public void addIncomingPort(Port<S,T> port);
 
 	/**
 	 * adds an out-coming port to the component
@@ -58,7 +58,7 @@ public interface Component<S extends State, T extends Transition> extends Inters
 	 * @throws IllegalArgumentException
 	 *             if the source state is not a state of the component
 	 */
-	public void addOutComingPort(S source, T transition, S destination);
+	public void addOutComingPort(Port<S,T> port);
 
 	/**
 	 * return the set of the incoming ports of the component

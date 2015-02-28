@@ -22,6 +22,8 @@ import it.polimi.constraints.Port;
 public class PortImpl<S extends State, T extends Transition> extends StateImpl
 		implements Port<S, T> {
 
+	
+
 	/**
 	 * the source can be a state of a sub0-properties or a state of the model
 	 * depending on whether the port is an out-coming or incoming port of the
@@ -111,5 +113,38 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl
 	@Override
 	public Component<S, T> getComponent() {
 		return component;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((transition == null) ? 0 : transition.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		PortImpl<S,T> other = (PortImpl<S,T>) obj;
+		if (transition == null) {
+			if (other.transition != null)
+				return false;
+		} else if (!transition.equals(other.transition))
+			return false;
+		return true;
 	}
 }

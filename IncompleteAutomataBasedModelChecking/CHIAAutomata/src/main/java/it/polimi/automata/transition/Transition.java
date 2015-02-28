@@ -2,7 +2,6 @@ package it.polimi.automata.transition;
 
 import java.util.Set;
 
-
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import it.polimi.automata.transition.impl.TransitionImpl;
 
@@ -49,5 +48,7 @@ public interface Transition {
 	 *             in the set is <code>null</code>
 	 */
 	public void setLabels(Set<IGraphProposition> labels);
+	
+	public boolean equals(Object obj); 
 
 }

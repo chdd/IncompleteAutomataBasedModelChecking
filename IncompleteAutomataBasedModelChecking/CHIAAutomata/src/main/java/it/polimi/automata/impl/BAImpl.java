@@ -291,7 +291,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 
 		Preconditions
 				.checkArgument(
-						this.getStates().contains(state),
+						!this.getStates().contains(state),
 						"The state "
 								+ state
 								+ " is already contained into the set of the states of the automaton");
@@ -449,10 +449,15 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 		this.initialStates.remove(state);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString() {
 		String ret = "";
+		
 		ret = "ALPHABET: " + this.alphabet + "\n";
-		ret = "STATES: " + this.automataGraph.vertexSet() + "\n";
+		ret = ret + "STATES: " + this.automataGraph.vertexSet() + "\n";
 		ret = ret + "INITIAL STATES: " + this.initialStates + "\n";
 		ret = ret + "ACCEPTING STATES: " + this.acceptStates + "\n";
 		ret = ret + "TRANSITIONS\n";

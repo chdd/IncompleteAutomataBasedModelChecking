@@ -25,7 +25,7 @@ import org.apache.commons.lang3.Validate;
  * 
  */
 public class ComponentImpl<S extends State, T extends Transition> extends
-		IntBAImpl<S, T> implements State,  Component<S, T> {
+		IntBAImpl<S, T> implements  Component<S, T> {
 
 	/**
 	 * contains the id of the state
@@ -149,28 +149,21 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addIncomingPort(S source, T transition, S destination) {
-		Validate.notNull(source, "The source state cannot be null");
-		Validate.notNull(transition, "The transition cannot be null");
-		Validate.notNull(destination, "The destination state cannot be null");
-		Validate.isTrue(this.getStates().contains(destination), "The destination state must be contained into the states of the component");
+	public void addIncomingPort(Port<S,T> port){
+		Validate.isTrue(this.getStates().contains(port.getDestination()), "The destination state must be contained into the states of the component");
 		
-		this.incomingTransition.add(new PortImpl<S, T>(source, destination,
-				transition, this));
+		this.incomingTransition.add(port);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addOutComingPort(S source, T transition, S destination) {
-		Validate.notNull(source, "The source state cannot be null");
-		Validate.notNull(transition, "The transition cannot be null");
-		Validate.notNull(destination, "The destination state cannot be null");
-		Validate.isTrue(this.getStates().contains(source), "The source state must be contained into the states of the component");
+	public void addOutComingPort(Port<S,T> port) {
+		Validate.notNull(port, "The port state cannot be null");
+		Validate.isTrue(this.getStates().contains(port.getSource()), "The source state "+port.getSource()+" must be contained into the states of the component "+this.getName());
 		
-		this.outcomingTransition.add(new PortImpl<S, T>(source, destination,
-				transition, this));
+		this.outcomingTransition.add(port);
 	}
 
 	/**
