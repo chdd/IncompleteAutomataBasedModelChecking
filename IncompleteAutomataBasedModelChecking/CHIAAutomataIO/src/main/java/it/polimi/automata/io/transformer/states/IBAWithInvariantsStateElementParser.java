@@ -65,4 +65,10 @@ public class IBAWithInvariantsStateElementParser implements StateElementParser<S
 		return new AbstractMap.SimpleEntry<Integer, State>(id,s);
 	}
 
+
+	@Override
+	public StateFactory<State> getStateFactory() {
+		return this.stateFactory;
+	}
+
 }

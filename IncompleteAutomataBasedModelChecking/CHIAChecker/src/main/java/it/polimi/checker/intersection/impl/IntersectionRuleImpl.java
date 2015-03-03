@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 
 import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
@@ -25,22 +26,26 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * 
  */
 public class IntersectionRuleImpl<S extends State, T extends Transition, I extends IntersectionTransition<S>>
-		implements IntersectionRule<S, T, I> {
+		extends IntersectionRule<S, T, I> {
+
+	
+	public IntersectionRuleImpl(
+			IntersectionTransitionFactory<S, I> intersectionTransitionFactory,
+			StateFactory<S> stateFactory) {
+		super(intersectionTransitionFactory, stateFactory);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public I getIntersectionTransition(T modelTransition, T claimTransition,
-			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
+	public I getIntersectionTransition(T modelTransition, T claimTransition) {
 
 		Preconditions.checkNotNull(modelTransition,
 				"The model transition cannot be null");
 		Preconditions.checkNotNull(claimTransition,
 				"The claim transition cannot be null");
-		Preconditions.checkNotNull(intersectionTransitionFactory,
-				"The intersection factory cannot be null");
-
+	
 		if (this.satisfies(modelTransition.getPropositions(),
 				claimTransition.getPropositions())) {
 			return intersectionTransitionFactory.create(modelTransition
@@ -59,7 +64,7 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 	 *            is the label of the claim
 	 * @return true if the label of the model satisfies the label of the claim
 	 */
-	private boolean satisfies(Set<IGraphProposition> modelLabel,
+	protected boolean satisfies(Set<IGraphProposition> modelLabel,
 			Set<IGraphProposition> claimLabel) {
 		Preconditions.checkNotNull(modelLabel, "The model cannot be null");
 		Preconditions.checkNotNull(claimLabel, "The claim cannot be null");
@@ -97,8 +102,7 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 	}
 
 	@Override
-	public I getIntersectionTransition(S modelState, T claimTransition,
-			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
+	public I getIntersectionTransition(S modelState, T claimTransition) {
 		Preconditions
 				.checkNotNull(modelState, "The model state cannot be null");
 		Preconditions.checkNotNull(claimTransition,

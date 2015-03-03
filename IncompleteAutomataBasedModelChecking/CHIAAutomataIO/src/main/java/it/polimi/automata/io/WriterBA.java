@@ -2,6 +2,8 @@ package it.polimi.automata.io;
 
 import it.polimi.automata.Constants;
 import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.io.out.StateToElementTransformer;
+import it.polimi.automata.io.out.TransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -18,14 +20,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
-
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 /**
  * write the intersection automaton into an XML file
@@ -67,9 +65,11 @@ public class WriterBA<S extends State, T extends Transition> {
 	 * 
 	 */
 	public WriterBA(IntersectionBA<S, T> intersectionAutomaton, File f) {
-		Preconditions.checkNotNull(intersectionAutomaton, "The intersection automaton cannot be null");
-		Preconditions.checkNotNull(f, "The file where the automaton must be written cannot be null");
-		
+		Preconditions.checkNotNull(intersectionAutomaton,
+				"The intersection automaton cannot be null");
+		Preconditions.checkNotNull(f,
+				"The file where the automaton must be written cannot be null");
+
 		this.intersectionAutomaton = intersectionAutomaton;
 		this.f = f;
 	}
@@ -110,83 +110,21 @@ public class WriterBA<S extends State, T extends Transition> {
 	}
 
 	private void computingStateElements(Document doc, Element rootElement) {
+		StateToElementTransformer<S, T, IntersectionBA<S, T>> stateTransformer = new StateToElementTransformer<S, T, IntersectionBA<S, T>>(
+				this.intersectionAutomaton, doc);
 		for (S s : this.intersectionAutomaton.getStates()) {
-			Element state = doc.createElement(Constants.XML_ELEMENT_STATE);
-			rootElement.appendChild(state);
+			Element xmlStateElement = stateTransformer.transform(s);
+			rootElement.appendChild(xmlStateElement);
 
-			// adding the id
-			Attr id = doc.createAttribute(Constants.XML_ATTRIBUTE_ID);
-			id.setValue(Integer.toString(s.getId()));
-			state.setAttributeNode(id);
-
-			// adding the name
-			Attr name = doc.createAttribute(Constants.XML_ATTRIBUTE_NAME);
-			name.setValue(s.getName());
-			state.setAttributeNode(name);
-
-			if (this.intersectionAutomaton.getInitialStates().contains(s)) {
-				// adding the id
-				Attr initial = doc
-						.createAttribute(Constants.XML_ATTRIBUTE_INITIAL);
-				initial.setValue(Constants.TRUEVALUE);
-				state.setAttributeNode(initial);
-			}
-			if (this.intersectionAutomaton.getAcceptStates().contains(s)) {
-				// adding the id
-				Attr accepting = doc
-						.createAttribute(Constants.XML_ATTRIBUTE_ACCEPTING);
-				accepting.setValue(Constants.TRUEVALUE);
-				state.setAttributeNode(accepting);
-			}
 		}
 	}
 
 	private void computingTransitionElements(Document doc, Element rootElement) {
+		TransitionToElementTransformer<S, T, IntersectionBA<S, T>> transitionTransformer = new TransitionToElementTransformer<S, T, IntersectionBA<S, T>>(
+				this.intersectionAutomaton, doc);
 		for (T transition : this.intersectionAutomaton.getTransitions()) {
-			Element transitionElement = doc
-					.createElement(Constants.XML_ELEMENT_TRANSITION);
+			Element transitionElement =transitionTransformer.transform(transition);
 			rootElement.appendChild(transitionElement);
-
-			// adding the id
-			Attr id = doc.createAttribute(Constants.XML_ATTRIBUTE_ID);
-			id.setValue(Integer.toString(transition.getId()));
-			transitionElement.setAttributeNode(id);
-
-			// adding the source
-			Attr sourceId = doc
-					.createAttribute(Constants.XML_ATTRIBUTE_TRANSITION_SOURCE);
-			sourceId.setValue(Integer.toString(this.intersectionAutomaton
-					.getTransitionSource(transition).getId()));
-			transitionElement.setAttributeNode(sourceId);
-
-			// adding the destination
-			Attr destinationId = doc
-					.createAttribute(Constants.XML_ATTRIBUTE_TRANSITION_DESTINATION);
-			destinationId.setValue(Integer.toString(this.intersectionAutomaton
-					.getTransitionDestination(transition).getId()));
-			transitionElement.setAttributeNode(destinationId);
-			
-
-			// adding the propositions
-			Attr propositions = doc
-					.createAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS);
-			
-			String ret = "";
-			for (IGraphProposition label : transition.getPropositions()) {
-				if(label instanceof SigmaProposition){
-					ret = ret + Constants.SIGMA;
-				}
-				else{
-					ret = ret + "(" + label.toString() + ")" + Constants.AND_NOT_ESCAPED;
-				}
-			}
-			if (ret.endsWith(Constants.AND_NOT_ESCAPED)) {
-				ret = ret.substring(0, ret.length() - Constants.AND_NOT_ESCAPED.length());
-			}
-			
-			propositions.setValue(ret);
-			transitionElement.setAttributeNode(propositions);
-
 		}
 	}
 }

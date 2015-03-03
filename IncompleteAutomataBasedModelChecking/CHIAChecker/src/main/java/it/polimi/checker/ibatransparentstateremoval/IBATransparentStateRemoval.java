@@ -1,5 +1,8 @@
 package it.polimi.checker.ibatransparentstateremoval;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.base.Preconditions;
 
 import it.polimi.automata.IBA;
@@ -40,7 +43,8 @@ public class IBATransparentStateRemoval<S extends State, T extends Transition> {
 		
 
 		IBA<S, T> retIba = iba.clone();
-		for (S s : retIba.getTransparentStates()) {
+		Set<S> transparentStates=new HashSet<S>(retIba.getTransparentStates());
+		for (S s : transparentStates) {
 			retIba.removeState(s);
 		}
 		return retIba;

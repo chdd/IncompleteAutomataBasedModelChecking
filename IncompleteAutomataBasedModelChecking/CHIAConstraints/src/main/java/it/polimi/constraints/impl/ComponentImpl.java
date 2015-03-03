@@ -3,18 +3,15 @@
  */
 package it.polimi.constraints.impl;
 
-import it.polimi.automata.impl.IntBAImpl;
+import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.constraints.Component;
-import it.polimi.constraints.Port;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Contains a component. A component is a sub part of the intersection automaton
@@ -24,8 +21,8 @@ import org.apache.commons.lang3.Validate;
  * @author claudiomenghi
  * 
  */
-public class ComponentImpl<S extends State, T extends Transition> extends
-		IntBAImpl<S, T> implements  Component<S, T> {
+public class ComponentImpl<S extends State, T extends Transition, A extends BA<S, T>>
+		 implements  Component<S, T, A> {
 
 	/**
 	 * contains the id of the state
@@ -38,33 +35,15 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 	private String name;
 
 	/**
-	 * is true if the model of the state represented by the component is a
-	 * transparent state
-	 */
-	private boolean transparent;
-
-	/**
 	 * is the state of the original model to which this component is associated
 	 */
 	private S modelState;
 
-	/**
-	 * contains the incoming transitions of the component. The map contains the
-	 * destination state of the transition, i.e., the state of this component to
-	 * which the transition is connected, the source state of the transition and
-	 * the transition itself
-	 */
-	private Set<Port<S, T>> incomingTransition;
+	private A automaton;
+	
+	
 
-	/**
-	 * contains the out coming transitions of the component. The map contains
-	 * the source state of the transition, i.e., the state of this component
-	 * from which the transition starts, the destination state of the transition
-	 * and the transition it self
-	 */
-	private Set<Port<S, T>> outcomingTransition;
-
-	private TransitionFactory<S, T> transitionFactory;
+//	private TransitionFactory<S, T> transitionFactory;
 
 	/**
 	 * creates a state with the specified id. The model state represents the
@@ -80,19 +59,18 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 	 *             if the value of the id is less than 0
 	 */
 	protected ComponentImpl(int id, S modelState, boolean transparent,
-			TransitionFactory<S, T> transitionFactory) {
-		super(transitionFactory);
-
-		Validate.notNull(modelState, "The model state be null");
+			A automaton) {
+		
+		Preconditions
+		.checkNotNull(modelState, "The model state be null");
+		Preconditions
+		.checkNotNull(automaton, "The automaton of the component cannot be null");
 		Validate.isTrue(id >= 0, "The id cannot be < 0", id);
 
 		this.id = id;
 		this.name = "";
 		this.modelState = modelState;
-		this.transparent = transparent;
-		incomingTransition = new HashSet<Port<S, T>>();
-		outcomingTransition = new HashSet<Port<S, T>>();
-		this.transitionFactory = transitionFactory;
+		this.automaton = automaton;
 	}
 
 	/**
@@ -113,9 +91,10 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 	 *             if the value of the id is less than 0
 	 */
 	protected ComponentImpl(String name, int id, S modelState, boolean transparent,
-			TransitionFactory<S, T> transitionFactory) {
-		this(id, modelState, transparent, transitionFactory);
-		Validate.notNull(name, "The name of the state cannot be null");
+			A automaton) {
+		this(id, modelState, transparent, automaton);
+		Preconditions
+		.checkNotNull(name, "The name of the state cannot be null");
 
 		this.name = name;
 		this.modelState = modelState;
@@ -145,42 +124,7 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 		return modelState;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addIncomingPort(Port<S,T> port){
-		Validate.isTrue(this.getStates().contains(port.getDestination()), "The destination state must be contained into the states of the component");
-		
-		this.incomingTransition.add(port);
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addOutComingPort(Port<S,T> port) {
-		Validate.notNull(port, "The port state cannot be null");
-		Validate.isTrue(this.getStates().contains(port.getSource()), "The source state "+port.getSource()+" must be contained into the states of the component "+this.getName());
-		
-		this.outcomingTransition.add(port);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<Port<S, T>> getIncomingPorts() {
-		return incomingTransition;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<Port<S, T>> getOutcomingPorts() {
-		return outcomingTransition;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -195,45 +139,13 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 	}
 
 	/**
-	 * returns a copy of the component
-	 * 
-	 * @return a copy of the component
-	 */
-	public ComponentImpl<S, T> duplicate() {
-		ComponentImpl<S, T> ret = new ComponentFactory<S, T>().create(this.name,
-				this.modelState, this.transparent, this.transitionFactory);
-		ret.modelState = this.modelState;
-		// coping the states
-		ret.addStates(this.getStates());
-		// coping the initial states
-		ret.addInitialStates(this.getInitialStates());
-		// coping the accepting states
-		ret.addAcceptStates(this.getAcceptStates());
-		// coping the accepting states
-		for (T t : this.getTransitions()) {
-			ret.addCharacters(t.getPropositions());
-			ret.addTransition(this.getTransitionSource(t),
-					this.getTransitionDestination(t), t);
-		}
-		ret.incomingTransition = new HashSet<Port<S, T>>(
-				this.incomingTransition);
-		ret.outcomingTransition = new HashSet<Port<S, T>>(
-				this.outcomingTransition);
-		return ret;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public void removeInitialState(S state) {
-		super.removeInitialState(state);
-		this.incomingTransition.remove(state);
-
+		automaton.removeInitialState(state);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -244,9 +156,7 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -257,10 +167,17 @@ public class ComponentImpl<S extends State, T extends Transition> extends
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		ComponentImpl<S, T> other = (ComponentImpl<S, T>) obj;
+		ComponentImpl other = (ComponentImpl) obj;
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public A getAutomaton() {
+		return this.automaton;
 	}
 }

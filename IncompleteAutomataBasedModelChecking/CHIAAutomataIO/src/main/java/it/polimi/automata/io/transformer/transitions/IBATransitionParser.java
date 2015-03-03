@@ -41,10 +41,13 @@ public class IBATransitionParser<A extends IBA<State, Transition>>
 		int id = Integer.parseInt(eElement
 				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID));
 
-		Set<IGraphProposition> propositions = new ModelPropositionParser<State, Transition, IBA<State, Transition>>()
+		Set<IGraphProposition> propositions = new ModelPropositionParser<State, Transition>()
 				.computePropositions(eElement
-						.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS), automaton);
+						.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 
+		if(!automaton.getAlphabet().containsAll(propositions)){
+			automaton.addCharacters(propositions);
+		}
 		Transition t = transitionFactory.create(id, propositions);
 
 		int sourceId = Integer.parseInt(eElement

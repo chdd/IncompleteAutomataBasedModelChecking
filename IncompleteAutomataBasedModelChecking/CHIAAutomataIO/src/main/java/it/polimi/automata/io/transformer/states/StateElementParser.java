@@ -2,6 +2,7 @@ package it.polimi.automata.io.transformer.states;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 
 import java.util.Map.Entry;
@@ -16,5 +17,7 @@ public interface StateElementParser<S extends State, T extends Transition, A ext
 
 	
 	public Entry<Integer, S> transform(Element input, A automaton);
+	
+	public StateFactory<S> getStateFactory();
 
 }

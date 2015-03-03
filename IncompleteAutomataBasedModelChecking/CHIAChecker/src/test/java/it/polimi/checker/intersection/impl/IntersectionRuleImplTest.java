@@ -7,6 +7,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.state.impl.StateFactoryImpl;
 import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
@@ -30,13 +32,17 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 public class IntersectionRuleImplTest {
 	private Transition modelTransition;
 	private Transition claimTransition;
+	
+	private StateFactory<State> stateFactory;
 
 	private TransitionFactory<State, Transition> transitionFactory;
 
+	IntersectionTransitionFactory<State, IntersectionTransition<State>> intersectiontransitionFactory=new TransitionFactoryIntersectionImpl<State>();
+	
 	@Before
 	public void setUp() {
 		transitionFactory = new TransitionFactoryClaimImpl<State>();
-
+		stateFactory=new StateFactoryImpl();
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("a", false));
 		modelTransition = transitionFactory.create(modelPropositions);
@@ -57,9 +63,8 @@ public class IntersectionRuleImplTest {
 		State s=null;
 		
 		IntersectionTransitionFactory<State, IntersectionTransition<State>> transitionFactory=new TransitionFactoryIntersectionImpl<State>();
-		new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
-				.getIntersectionTransition(s, claimTransition,
-						transitionFactory);
+		new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(transitionFactory,this.stateFactory)
+				.getIntersectionTransition(s, claimTransition);
 	}
 
 	/**
@@ -69,33 +74,20 @@ public class IntersectionRuleImplTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testGetIntersectionNullClaimTransition() {
-		new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
-				.getIntersectionTransition(modelTransition, null,
-						new TransitionFactoryIntersectionImpl<State>());
+		new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
+				.getIntersectionTransition(modelTransition, null);
 	}
 
+	
 	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.impl.IntersectionRuleImpl#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, null)}
-	 * .
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testGetIntersectionNullTransitionFactory() {
-		new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
-				.getIntersectionTransition(modelTransition, claimTransition,
-						null);
-	}
-
-		/**
 	 * Test method for
 	 * {@link it.polimi.checker.intersection.impl.IntersectionRuleImpl#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test
 	public void testGetIntersectionTransition() {
-		assertNotNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
-				.getIntersectionTransition(modelTransition, claimTransition,
-						new TransitionFactoryIntersectionImpl<State>()));
+		assertNotNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
+				.getIntersectionTransition(modelTransition, claimTransition));
 	}
 
 	/**
@@ -121,10 +113,9 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
 						.getIntersectionTransition(modelTransition,
-								claimTransition,
-								new TransitionFactoryIntersectionImpl<State>())
+								claimTransition)
 						.getPropositions());
 	}
 
@@ -145,9 +136,8 @@ public class IntersectionRuleImplTest {
 		claimTransition = transitionFactory.create(claimPropositions);
 
 		IntersectionTransitionFactory<State, IntersectionTransition<State>> transitionFactory=new TransitionFactoryIntersectionImpl<State>();
-		assertNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
-				.getIntersectionTransition(modelTransition, claimTransition,transitionFactory
-						));
+		assertNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
+				.getIntersectionTransition(modelTransition, claimTransition));
 	}
 
 	/**
@@ -175,10 +165,9 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
 						.getIntersectionTransition(modelTransition,
-								claimTransition,
-								new TransitionFactoryIntersectionImpl<State>())
+								claimTransition)
 						.getPropositions());
 	}
 
@@ -199,10 +188,9 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
 						.getIntersectionTransition(modelTransition,
-								claimTransition,
-								new TransitionFactoryIntersectionImpl<State>())
+								claimTransition)
 						.getPropositions());
 	}
 	
@@ -227,10 +215,9 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
 						.getIntersectionTransition(modelTransition,
-								claimTransition,
-								new TransitionFactoryIntersectionImpl<State>())
+								claimTransition)
 						.getPropositions());
 	}
 	
@@ -247,9 +234,8 @@ public class IntersectionRuleImplTest {
 
 		
 
-		assertNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>()
+		assertNull(new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(intersectiontransitionFactory,this.stateFactory)
 		.getIntersectionTransition(modelTransition,
-				claimTransition,
-				new TransitionFactoryIntersectionImpl<State>()));
+				claimTransition));
 	}
 }

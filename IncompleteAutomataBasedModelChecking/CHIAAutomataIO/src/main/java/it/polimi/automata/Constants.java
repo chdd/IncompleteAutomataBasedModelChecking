@@ -5,7 +5,7 @@ public final class Constants {
 
 	public final static String XML_ELEMENT_CONSTRAINTS="constraints";
 	public final static String XML_ELEMENT_PORTS_REACHABILITY="portsReachability";
-	public final static String XML_ELEMENT_PORTS_COLORT="portscolors";
+	public final static String XML_ELEMENT_PORTS_COLORS="portscolors";
 	
 	
 	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
@@ -16,6 +16,7 @@ public final class Constants {
 	public final static String XML_ELEMENT_STATE="state";
 	public final static String XML_ELEMENT_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_ID="id";
+	public final static String XML_ATTRIBUTE_INCOMING="incoming";
 	public final static String XML_ATTRIBUTE_NAME="name";
 	public final static String XML_ATTRIBUTE_COLOR="color";
 	
@@ -32,7 +33,7 @@ public final class Constants {
 	public final static String XML_ATTRIBUTE_INVARIANT="invariant";
 	
 	public final static String XML_ELEMENT_BA="ba";
-
+	
 	
 	/**
 	 * IO Tags

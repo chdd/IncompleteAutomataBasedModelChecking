@@ -36,6 +36,9 @@ public class BAStateElementParser implements StateElementParser<State, Transitio
 	
 	@Override
 	public Entry<Integer, State> transform(Element eElement, BA<State, Transition> ba) {
+		Preconditions.checkNotNull(eElement,"The element cannot be null");
+		Preconditions.checkNotNull(ba, "The ba cannot be null");
+		
 		int id= Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_ID));
 		
 		State s=stateFactory.create(eElement.getAttribute(Constants.XML_ATTRIBUTE_NAME), id);
@@ -48,6 +51,11 @@ public class BAStateElementParser implements StateElementParser<State, Transitio
 			ba.addAcceptState(s);
 		}
 		return new AbstractMap.SimpleEntry<Integer, State>(id,s);
+	}
+
+	@Override
+	public StateFactory<State> getStateFactory() {
+		return this.stateFactory;
 	}
 
 	

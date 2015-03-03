@@ -7,9 +7,7 @@ import it.polimi.automata.io.transformer.states.StateElementParser;
 import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.io.transformer.transitions.TransitionElementParser;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,17 +36,10 @@ import com.google.common.base.Preconditions;
  * 
  * @param <S>
  *            is the type of the State of the Incomplete Buchi Automaton. It
- *            must extend the interface {@link State}
- * @param <G>
- *            is the factory which is used to create the states of the
- *            Incomplete Buchi Automaton. it must implement the interface
- *            {@link StateFactory}
+ *            must extend the interface State
  * @param <T>
  *            is the type of the transitions of the automaton. It must implement
- *            the interface {@link Transition}
- * @param <H>
- *            is the factory which allows to create the transitions. It must
- *            implement the interface {@link TransitionFactory}
+ *            the interface Transition
  */
 public class IBAReader<S extends State, T extends Transition> {
 
@@ -57,14 +48,17 @@ public class IBAReader<S extends State, T extends Transition> {
 	 */
 	protected IBA<S, T> iba;
 
+	/**
+	 * is the File from which the IBA must be read
+	 */
 	private File file;
 
+	
 	private Map<Integer, S> mapIdState;
 
 	private final StateElementParser<S, T, IBA<S, T>> stateElementParser;
 
 	private final TransitionElementParser<S, T, IBA<S, T>> transitionElementParser;
-
 
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
@@ -72,14 +66,15 @@ public class IBAReader<S extends State, T extends Transition> {
 	 * 
 	 * @see BAReader#read()
 	 * 
+	 * @param file
+	 *            is the reader from which the Buchi automaton must be loaded
 	 * @param transitionFactory
 	 *            is the factory which allows to create the transitions of the
 	 *            Buchi automaton
 	 * @param stateFactory
 	 *            is the factory which allows to create the states of the Buchi
 	 *            automaton
-	 * @param file
-	 *            is the reader from which the Buchi automaton must be loaded
+	 * 
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
@@ -163,7 +158,7 @@ public class IBAReader<S extends State, T extends Transition> {
 			Element eElement = (Element) xmltransition;
 			this.transitionElementParser.transform(eElement, this.iba,
 					this.mapIdState);
-			
+
 		}
 	}
 }

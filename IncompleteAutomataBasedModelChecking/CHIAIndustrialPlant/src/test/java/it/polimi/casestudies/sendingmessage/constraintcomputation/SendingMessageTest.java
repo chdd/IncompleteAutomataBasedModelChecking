@@ -23,8 +23,9 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
+import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.io.ConstraintWriter;
+import it.polimi.constraints.io.out.ConstraintWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,7 +73,7 @@ public class SendingMessageTest {
 		BA<State, Transition> claim = claimReader.read();
 
 		ModelTransitionParser<State, Transition, IBA<State,Transition>> modelRransitionElementParser=new 
-				IBATransitionParser(new TransitionFactoryModelImpl<State>());
+				IBATransitionParser<IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
 		
 		StateElementParser<State, Transition, IBA<State,Transition>> ibaStateElementParser=new IBAStateElementParser(new StateFactoryImpl());
 		
@@ -84,14 +85,14 @@ public class SendingMessageTest {
 						modelRransitionElementParser);
 		IBA<State, Transition> model = modelReader.read();
 		CHIA<State, Transition, IntersectionTransition<State>> chia = new CHIA<State, Transition, IntersectionTransition<State>>(
-				claim, model, new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>());
+				claim, model,
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(new TransitionFactoryIntersectionImpl<State>(),	new StateFactoryImpl()));
 		int result = chia.check();
 		assertTrue(result == -1);
 
-		Constraint<State, IntersectionTransition<State>> constraint = chia.getConstraint();
+		Constraint<State, IntersectionTransition<State>, BA<State, IntersectionTransition<State>>> constraint = chia.getConstraint();
 
-		new ConstraintWriter<State, Transition, IntersectionTransition<State>>(constraint, new File(
+		new ConstraintWriter<State, Transition, IntersectionTransition<State>, BA<State, IntersectionTransition<State>>>(constraint, new File(
 				"/Users/Claudio1/Desktop/CHIAResults/Results.xml")).write();
 		System.out.println(constraint.toString());
 

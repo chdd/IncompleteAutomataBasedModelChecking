@@ -1,5 +1,6 @@
 package it.polimi.contraintcomputation;
 
+import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
@@ -7,6 +8,7 @@ import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Constraint;
+import it.polimi.constraints.impl.BAComponentFactory;
 import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
 import it.polimi.contraintcomputation.subautomatafinder.SubPropertiesIdentifier;
 
@@ -95,7 +97,7 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 	 * 
 	 * @return the constraint of the automaton
 	 */
-	public Constraint<S, I> generateConstraint() {
+	public Constraint<S, I, BA<S,I>> generateConstraint() {
 
 		logger.info("Computing the constraint");
 		/*
@@ -107,10 +109,10 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 				intBA);
 		intersectionCleaner.clean();
 
-		SubPropertiesIdentifier<S, T, I> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, I>(
+		SubPropertiesIdentifier<S, T, I, BA<S,I>> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, I, BA<S,I>>(
 				intBA, model, this.modelIntersectionStatesMap,
-				this.subPropertiesTransitionFactory);
-		Constraint<S, I> constraint = subPropertiesIdentifier.getSubAutomata();
+				this.subPropertiesTransitionFactory, new BAComponentFactory<S, I>());
+		Constraint<S, I, BA<S,I>> constraint = subPropertiesIdentifier.getSubAutomata();
 
 		
 		

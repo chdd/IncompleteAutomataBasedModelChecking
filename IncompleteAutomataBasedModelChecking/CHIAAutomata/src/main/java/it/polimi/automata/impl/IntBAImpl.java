@@ -4,16 +4,15 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jgrapht.EdgeFactory;
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
-
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * <p>
@@ -48,7 +47,7 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 	/**
 	 * creates a new intersection automaton
 	 */
-	public IntBAImpl(EdgeFactory<S, T> transitionFactory) {
+	public IntBAImpl(TransitionFactory<S, T> transitionFactory) {
 		super(transitionFactory);
 		this.mixedStates = new HashSet<S>();
 	}
@@ -82,7 +81,7 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 	 */
 	@Override
 	public Object clone() {
-		IntersectionBA<S, T> retBA = new IntBAImpl<S, T>(
+		IntersectionBA<S, T> retBA = new IntBAImpl<S, T>((TransitionFactory<S,T>)
 				this.automataGraph.getEdgeFactory());
 		for (IGraphProposition l : this.getAlphabet()) {
 			retBA.addCharacter(l);
@@ -113,5 +112,11 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 		ret = ret + "MIXED STATES: " + this.mixedStates + "\n";
 
 		return ret;
+	}
+	public void removeState(S state){
+		super.removeState(state);
+		if(this.mixedStates.contains(state)){
+			this.mixedStates.remove(state);
+		}
 	}
 }

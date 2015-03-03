@@ -1,22 +1,24 @@
 package it.polimi.automata.impl;
 
 import it.polimi.automata.BA;
+import it.polimi.automata.Constants;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
-import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.DirectedPseudograph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
-
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+
+import com.google.common.base.Preconditions;
 
 /**
  * <p>
@@ -25,10 +27,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * The state of the automaton must must implement the {@link State} interface <br>
  * The transition of the automaton must must implement the {@link Transition}
  * interface <br>
- * The label of the transition must implement the label interface and depending
- * on whether the automaton represents the model or the claim it is a set of
- * proposition or a propositional logic formula
- * </p>
  * 
  * @author claudiomenghi
  * @param <S>
@@ -73,7 +71,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 *            is the factory which is used to create the transitions of the
 	 *            Buchi automaton
 	 */
-	public BAImpl(EdgeFactory<S, T> transitionFactory) {
+	public BAImpl(TransitionFactory<S, T> transitionFactory) {
 		Validate.notNull(transitionFactory,
 				"The transition factory cannot be null");
 
@@ -455,7 +453,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	@Override
 	public String toString() {
 		String ret = "";
-		
+
 		ret = "ALPHABET: " + this.alphabet + "\n";
 		ret = ret + "STATES: " + this.automataGraph.vertexSet() + "\n";
 		ret = ret + "INITIAL STATES: " + this.initialStates + "\n";
@@ -479,7 +477,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	 * @return a copy of the automaton
 	 */
 	public Object clone() {
-		BAImpl<S, T> ret = new BAImpl<S, T>(this.automataGraph.getEdgeFactory());
+		BAImpl<S, T> ret = new BAImpl<S, T>((TransitionFactory<S, T>) this.automataGraph.getEdgeFactory());
 		// coping the states
 		ret.addStates(this.getStates());
 		// coping the initial states
@@ -535,5 +533,18 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 
 	public DirectedPseudograph<S, T> getGraph() {
 		return this.automataGraph;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addStuttering() {
+		for(S acceptingState: this.getAcceptStates()){
+			Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
+			propositions.add(new GraphProposition(Constants.STUTTERING_CHARACTER, false));
+			T stutteringTransition=((TransitionFactory<S, T>) this.automataGraph.getEdgeFactory()).create(propositions);
+			this.automataGraph.addEdge(acceptingState, acceptingState, stutteringTransition);
+		}
 	}
 }

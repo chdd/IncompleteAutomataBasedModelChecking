@@ -4,6 +4,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,11 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jgrapht.EdgeFactory;
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
-
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 /**
  * <p>
@@ -49,7 +48,7 @@ public class IBAImpl<S extends State, T extends Transition> extends
 	/**
 	 * creates a new incomplete Buchi automaton
 	 */
-	public IBAImpl(EdgeFactory<S, T> transitionFactory) {
+	public IBAImpl(TransitionFactory<S, T> transitionFactory) {
 		super(transitionFactory);
 		this.transparentStates = new HashSet<S>();
 	}
@@ -92,7 +91,7 @@ public class IBAImpl<S extends State, T extends Transition> extends
 	@Override
 	public IBAImpl<S, T> clone() {
 		IBAImpl<S, T> clone = new IBAImpl<S, T>(
-				this.automataGraph.getEdgeFactory());
+				(TransitionFactory<S, T>) this.automataGraph.getEdgeFactory());
 		for (IGraphProposition l : this.getAlphabet()) {
 			clone.addCharacter(l);
 		}
@@ -211,5 +210,12 @@ public class IBAImpl<S extends State, T extends Transition> extends
 		// removing the transparent state to the new IBA
 		newIba.removeState(transparentState);
 		return newIba;
+	}
+	
+	public void removeState(S state){
+		super.removeState(state);
+		if(this.transparentStates.contains(state)){
+			this.transparentStates.remove(state);
+		}
 	}
 }

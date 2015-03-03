@@ -67,7 +67,7 @@ public class SendingMessageTest2 {
 		BA<State, Transition> claim = claimReader.read();
 
 		ModelTransitionParser<State, Transition, IBA<State,Transition>> modelRransitionElementParser=new 
-				IBATransitionParser(new TransitionFactoryModelImpl<State>());
+				IBATransitionParser<IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
 		
 		StateElementParser<State, Transition, IBA<State,Transition>> ibaStateElementParser=new IBAStateElementParser(new StateFactoryImpl());
 	
@@ -85,9 +85,8 @@ public class SendingMessageTest2 {
 		ModelChecker<State, Transition, IntersectionTransition<State>> modelChecker = new ModelChecker<State, Transition, IntersectionTransition<State>>(
 				model,
 				claim,
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(),
-				new StateFactoryImpl(),
-				new TransitionFactoryIntersectionImpl<State>(), mp);
+				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(new TransitionFactoryIntersectionImpl<State>(),	new StateFactoryImpl()),
+				 mp);
 
 		int res = modelChecker.check();
 		IntersectionBA<State, IntersectionTransition<State>> intersectionBA = modelChecker

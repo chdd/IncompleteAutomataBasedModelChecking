@@ -10,7 +10,6 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionRule;
-import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 
@@ -65,6 +64,8 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 	 */
 	private IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
 
+	private IntersectionRule<S, T, I> intersectionRule;
+
 	/**
 	 * creates a new CHIA checker
 	 * 
@@ -74,16 +75,16 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 	 *            is the model of the system to be considered in the
 	 *            verification procedure
 	 * @param stateFactory
-	 *            is the factory which is used in the creation of the
-	 *            states of the intersection automaton
+	 *            is the factory which is used in the creation of the states of
+	 *            the intersection automaton
 	 * @param intersectionTransitionFactory
 	 *            is the factory which is used in the creation of the transition
 	 *            of the intersection automaton
 	 * @throws NullPointerException
 	 *             is the claim or the model of the system is null
 	 */
-	public CHIA(BA<S, T> claim, IBA<S, T> model, StateFactory<S> stateFactory,
-			IntersectionTransitionFactory<S, I> intersectionTransitionFactory) {
+	public CHIA(BA<S, T> claim, IBA<S, T> model, 
+			IntersectionRule<S, T, I> intersectionRule) {
 
 		Validate.notNull(claim, "The claim cannot  be null");
 		Validate.notNull(model, "The model cannot  be null");
@@ -94,8 +95,9 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 
 		this.claim = claim;
 		this.model = model;
-		this.stateFactory = stateFactory;
-		this.intersectionTransitionFactory = intersectionTransitionFactory;
+		this.stateFactory = intersectionRule.getIntersectionStateFactory();
+		this.intersectionTransitionFactory = intersectionRule.getIntersectionTransitionFactory();
+		this.intersectionRule = intersectionRule;
 	}
 
 	/**
@@ -110,9 +112,7 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 		logger.info("Running CHIA");
 		mcResults = new ModelCheckingResults();
 
-		IntersectionRule<S, T, I> intersectionRule = new IntersectionRuleImpl<S, T, I>();
-		mc = new ModelChecker<S, T, I>(model, claim, intersectionRule,
-				stateFactory, intersectionTransitionFactory, mcResults);
+		mc = new ModelChecker<S, T, I>(model, claim, intersectionRule, mcResults);
 		mcResults.setResult(mc.check());
 
 		logger.info("CHIA model checking phase ended");
@@ -128,19 +128,20 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 	 * @throws IllegalStateException
 	 *             if the property is not possibly satisfied
 	 */
-	public Constraint<S, I> getConstraint() {
+	public Constraint<S, I, BA<S,I>> getConstraint() {
 
 		logger.info("Computing the constraint");
 
-		Validate.isTrue(mcResults.getResult() == -1, "It is not possible to get the constraint if the property is not possibly satisfied");
-		
+		Validate.isTrue(
+				mcResults.getResult() == -1,
+				"It is not possible to get the constraint if the property is not possibly satisfied");
 
 		ConstraintGenerator<S, T, I> constraintGenerator = new ConstraintGenerator<S, T, I>(
 				mc.getIntersectionAutomaton(), model,
-				mc.getIntersectionStateModelStateMap(),
+				mc.getModelIntersectionStateMap(),
 				intersectionTransitionFactory);
 
-		Constraint<S, I> constraint = constraintGenerator.generateConstraint();
+		Constraint<S, I, BA<S,I>> constraint = constraintGenerator.generateConstraint();
 
 		logger.info("Constraint computed");
 

@@ -11,9 +11,9 @@ import java.util.Set;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 
-import org.jgrapht.EdgeFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -63,7 +63,7 @@ public class BAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		EdgeFactory<State, Transition> edgeFactory=new TransitionFactoryClaimImpl<State>();
+		TransitionFactory<State, Transition> edgeFactory=new TransitionFactoryClaimImpl<State>();
 		this.ba = new BAImpl<State, Transition>(edgeFactory);
 		ba.addInitialState(state1);
 		ba.addState(state2);

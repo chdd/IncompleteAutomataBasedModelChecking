@@ -52,6 +52,11 @@ public class IBAStateElementParser implements StateElementParser<State, Transiti
 		return new AbstractMap.SimpleEntry<Integer, State>(id,s);
 	}
 
+	@Override
+	public StateFactory<State> getStateFactory() {
+		return this.stateFactory;
+	}
+
 }
 
 

@@ -32,7 +32,7 @@ public class StateFactoryImplTest {
 	public void testCreate() {
 		StateImpl state = this.stateFactory.create();
 		assertNotNull(state);
-		assertEquals(state.getName(), "");
+		assertEquals(state.getName(), ""+state.getId());
 		assertTrue(state.getId() >= 0);
 	}
 

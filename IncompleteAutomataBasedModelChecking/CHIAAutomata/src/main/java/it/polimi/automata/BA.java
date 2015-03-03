@@ -365,4 +365,11 @@ public interface BA<S extends State, T extends Transition>{
 	public Set<T> getTransitions(S source, S destination);
 	
 	public DirectedPseudograph<S, T> getGraph();
+	
+	/**
+	 * adds to each accepting states a transition labeled with the special
+	 * stuttering character, which is a character that does not belongs to the
+	 * alphabet
+	 */
+	public void addStuttering();
 }

@@ -1,6 +1,9 @@
 package it.polimi.checker.intersection;
 
+import com.google.common.base.Preconditions;
+
 import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
@@ -18,8 +21,29 @@ import it.polimi.automata.transition.Transition;
  * @param <T>
  *            is the type of the transitions under analysis
  */
-public interface IntersectionRule<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
+public abstract class IntersectionRule<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
 
+	protected final IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
+	protected final StateFactory<S> stateFactory;
+	
+	public IntersectionRule(IntersectionTransitionFactory<S, I> intersectionTransitionFactory, 
+			StateFactory<S> stateFactory){
+		Preconditions.checkNotNull(intersectionTransitionFactory,
+				"The intersection factory cannot be null");
+		Preconditions.checkNotNull(stateFactory,
+				"The state factory cannot be null");
+		
+		this.intersectionTransitionFactory=intersectionTransitionFactory;
+		this.stateFactory=stateFactory;
+	}
+	
+	public IntersectionTransitionFactory<S, I> getIntersectionTransitionFactory(){
+		return this.intersectionTransitionFactory;
+	}
+	
+	public StateFactory<S>  getIntersectionStateFactory(){
+		return this.stateFactory;
+	}
 	/**
 	 * specifies how the intersection transition between a transition of the
 	 * model and the transition of the claim is computed. Returns null when the
@@ -42,8 +66,7 @@ public interface IntersectionRule<S extends State, T extends Transition, I exten
 	 * 
 	 */
 	public abstract I getIntersectionTransition(T modelTransition,
-			T claimTransition,
-			IntersectionTransitionFactory<S, I> intersectionTransitionFactory);
+			T claimTransition);
 
 	/**
 	 * specifies how the intersection transition must be created when the model
@@ -60,7 +83,6 @@ public interface IntersectionRule<S extends State, T extends Transition, I exten
 	 *             if one of the parameters is null
 	 */
 	public abstract I getIntersectionTransition(S modelState,
-			T claimTransition,
-			IntersectionTransitionFactory<S, I> intersectionTransitionFactory);
+			T claimTransition);
 
 }

@@ -10,6 +10,7 @@ public final class Constants {
 	public static final String LPAR="(";
 	public static final String RPAR=")";
 	
+	public static final String STUTTERING_CHARACTER="stuttering";
 	
 	private Constants() {
 		// Utility classes should always be final and have an private constructor

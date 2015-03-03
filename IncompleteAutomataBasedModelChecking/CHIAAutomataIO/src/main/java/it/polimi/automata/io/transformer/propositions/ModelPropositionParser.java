@@ -1,7 +1,6 @@
 package it.polimi.automata.io.transformer.propositions;
 
 import it.polimi.automata.Constants;
-import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -13,7 +12,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 
-public class ModelPropositionParser<S extends State, T extends Transition, A extends IBA<S, T>> {
+public class ModelPropositionParser<S extends State, T extends Transition> {
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
@@ -29,7 +28,7 @@ public class ModelPropositionParser<S extends State, T extends Transition, A ext
 	 *             {@link Constants#APREGEX} or the regular expression
 	 *             {@link Constants#NOTAPREGEX}
 	 */
-	public Set<IGraphProposition> computePropositions(String input, A ba) {
+	public Set<IGraphProposition> computePropositions(String input) {
 
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 		if (input == null) {
@@ -51,8 +50,6 @@ public class ModelPropositionParser<S extends State, T extends Transition, A ext
 				propositions.add(new GraphProposition(ap, false));
 			}
 		}
-		
-		ba.addCharacters(propositions);
 		return propositions;
 	}
 }

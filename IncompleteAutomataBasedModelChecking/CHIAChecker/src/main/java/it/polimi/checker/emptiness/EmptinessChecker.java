@@ -90,7 +90,7 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 *            is the current states under analysis
 	 * @return true if an accepting path is found, false otherwise
 	 * @throws NullPointerException
-	 *             if the current state, the graph or the stack is null
+	 *             if one of the parameters is null
 	 */
 	private boolean firstDFS(S currState, 
 			Stack<S> firstDFSStack) {

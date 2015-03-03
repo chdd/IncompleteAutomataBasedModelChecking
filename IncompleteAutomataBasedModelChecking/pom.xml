@@ -186,6 +186,13 @@
 			<version>1.7.10</version>
 		</dependency>
 
+		<!-- slf4j 4j no operations -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>1.7.10</version>
+		</dependency>
+		
 		<!-- JGraph the library upon which CHIA is based -->
 		<dependency>
 			<groupId>jgrapht</groupId>
@@ -199,6 +206,7 @@
 			<artifactId>tl2ba4josgi</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
 
 		<!-- logback -->
 		<dependency>
@@ -233,6 +241,7 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
+
 	</dependencies>
 	<distributionManagement>
 		<repository>
@@ -253,5 +262,7 @@
 		<module>CHIAContraintComputation</module>
 		<!-- <module>CHIARegexConstraintTransformer</module> -->
 		<module>CHIAFramework</module>
+		<module>RefinementChecker</module>
+		<module>CHIARefinementChecker</module>
 	</modules>
 </project>

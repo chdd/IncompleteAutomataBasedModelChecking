@@ -107,8 +107,8 @@ public class TransitionImplTest {
 		labels.add(label1);
 		labels.add(label2);
 		TransitionImpl t=new TransitionImpl(labels, 1);
-		assertTrue(t.toString().equals("{1} "+Constants.LPAR+"a"+Constants.RPAR+Constants.AND+ Constants.LPAR+"b"+Constants.RPAR) 
-				|| t.toString().equals("{1} "+Constants.LPAR+"b"+Constants.RPAR+Constants.AND+ Constants.LPAR+"a"+Constants.RPAR));
+		assertTrue(t.toString().equals("{1} "+"a"+Constants.AND+"b") 
+				|| t.toString().equals("{1} "+"b"+Constants.AND+"a"));
 	}
 
 	/**
