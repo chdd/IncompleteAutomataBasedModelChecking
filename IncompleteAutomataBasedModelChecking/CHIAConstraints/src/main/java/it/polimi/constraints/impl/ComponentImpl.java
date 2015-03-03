@@ -167,7 +167,8 @@ public class ComponentImpl<S extends State, T extends Transition, A extends BA<S
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ComponentImpl other = (ComponentImpl) obj;
+		@SuppressWarnings("unchecked")
+		ComponentImpl<S,T,A> other = (ComponentImpl<S,T,A>) obj;
 		if (id != other.id)
 			return false;
 		return true;
@@ -179,5 +180,13 @@ public class ComponentImpl<S extends State, T extends Transition, A extends BA<S
 	@Override
 	public A getAutomaton() {
 		return this.automaton;
+	}
+
+	@Override
+	public void setAutomaton(A automaton) {
+		Preconditions.checkNotNull(automaton, "The automaton cannot be null");
+
+		this.automaton=automaton;
+		
 	}
 }

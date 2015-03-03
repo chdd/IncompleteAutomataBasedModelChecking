@@ -17,6 +17,8 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+
 /**
  * contains the implementation of the CHIA checker
  * 
@@ -56,15 +58,15 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 	/**
 	 * contains the factory which is used to create the states of the automaton
 	 */
-	private StateFactory<S> stateFactory;
+	private final StateFactory<S> stateFactory;
 
 	/**
 	 * is the factory which is used to create the transitions of the
 	 * intersection automaton
 	 */
-	private IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
+	private final IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
 
-	private IntersectionRule<S, T, I> intersectionRule;
+	private final IntersectionRule<S, T, I> intersectionRule;
 
 	/**
 	 * creates a new CHIA checker
@@ -86,13 +88,9 @@ public class CHIA<S extends State, T extends Transition, I extends IntersectionT
 	public CHIA(BA<S, T> claim, IBA<S, T> model, 
 			IntersectionRule<S, T, I> intersectionRule) {
 
-		Validate.notNull(claim, "The claim cannot  be null");
-		Validate.notNull(model, "The model cannot  be null");
-		Validate.notNull(stateFactory,
-				"The factory of the states cannot  be null");
-		Validate.notNull(intersectionTransitionFactory,
-				"The factory of the cannot  be null");
-
+		Preconditions.checkNotNull(claim, "The claim cannot  be null");
+		Preconditions.checkNotNull(model, "The model cannot  be null");
+		
 		this.claim = claim;
 		this.model = model;
 		this.stateFactory = intersectionRule.getIntersectionStateFactory();

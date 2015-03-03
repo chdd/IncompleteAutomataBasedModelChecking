@@ -11,6 +11,12 @@ public final class Constants {
 	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
 	public final static String XML_ELEMENT_PORTS_OUT="outports";
 	public final static String XML_ELEMENT_PORTS_IN="inports";
+	
+	public final static String XML_ATTRIBUTE_PORT_TYPE="type";
+	
+	public final static String XML_ATTRIBUTE_VALUE_IN="inport";
+	public final static String XML_ATTRIBUTE_VALUE_OUT="outport";
+	
 	public final static String XML_ELEMENT_PORT="port";
 	public final static String XML_ELEMENT_CONSTRAINT="constraint";
 	public final static String XML_ELEMENT_STATE="state";

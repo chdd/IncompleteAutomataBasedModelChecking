@@ -218,4 +218,29 @@ public class IBAImpl<S extends State, T extends Transition> extends
 			this.transparentStates.remove(state);
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		String ret = "";
+
+		ret = "ALPHABET: " + this.getAlphabet() + "\n";
+		ret = ret + "STATES: " + this.automataGraph.vertexSet() + "\n";
+		ret = ret + "INITIAL STATES: " + this.getInitialStates() + "\n";
+		ret = ret + "ACCEPTING STATES: " + this.getAcceptStates() + "\n";
+		ret = ret + "TRANSPARENT STATES: " + this.getTransparentStates() + "\n";
+		ret = ret + "TRANSITIONS\n";
+		for (S s : this.automataGraph.vertexSet()) {
+			ret = ret + "state " + s + " ->\n";
+			for (T outEdge : this.automataGraph.outgoingEdgesOf(s)) {
+				ret = ret + "\t \t" + outEdge + "\t"
+						+ this.getTransitionDestination(outEdge);
+			}
+			ret = ret + "\n";
+
+		}
+		return ret;
+	}
 }

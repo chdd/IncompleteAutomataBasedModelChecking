@@ -15,6 +15,7 @@ import it.polimi.constraints.impl.ConstraintImpl;
 import it.polimi.constraints.impl.PortImpl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -160,8 +161,21 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 				mapIntersectionTransitionOutcomingPort);
 		closure.computeTransitionsClosure();
 
+		this.removeNotTransparentComponents();
+
 		logger.info("Subproperties ");
 		return this.constraint;
+	}
+	
+	private void removeNotTransparentComponents(){
+		
+		Set<Component<S, I, A>> components=new HashSet<Component<S,I,A>>(this.constraint.getComponents());
+		for(Component<S, I, A> s: components){
+			
+			if(!this.model.isTransparent(s.getModelState())){
+				this.constraint.getComponents().remove(s);
+			}
+		}
 	}
 
 	private void createTransitions() {
@@ -203,20 +217,19 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 
 					this.mapIntersectionTransitionIncomingPort.put(
 							incomingTransition, incomingPort);
-					this.constraint.addIncomingPort(
-					intersectionStateComponent, incomingPort);
+					this.constraint.addIncomingPort(intersectionStateComponent,
+							incomingPort);
 
 					Port<S, I> outComingPort = new PortImpl<S, I>(
 							sourceIntersectionState,
 							intersectionStateComponent.getModelState(),
 							transition, false);
 
-					
 					this.mapIntersectionTransitionOutcomingPort.put(
 							incomingTransition, outComingPort);
-					
+
 					this.constraint.addOutComingPort(
-					intersectionSourceComponent, outComingPort);
+							intersectionSourceComponent, outComingPort);
 				}
 			}
 		}
@@ -230,17 +243,20 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 
 			logger.debug("Analizing the intersection state corresponding to the model state: "
 					+ modelState.getName());
+
 			/*
 			 * creates a component which correspond with the state modelState
 			 */
-			Component<S, I, A> c = componentFactory.create(
+			Component<S, I, A> component = componentFactory.create(
 					modelState.getName(), modelState,
 					model.isTransparent(modelState),
 					this.refinementTransitionFactory);
+
+			this.constraint.addComponent(component);
 			// adds the abstracted automaton
 
 			if (this.model.getTransparentStates().contains(modelState)) {
-				this.constraint.addComponent(c);
+				this.constraint.addComponent(component);
 
 			}
 
@@ -248,23 +264,25 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 					.get(modelState)) {
 
 				if (this.intersectionBA.getStates().contains(intersectionState)) {
-					this.mapIntersectionStateComponent
-							.put(intersectionState, c);
+					this.mapIntersectionStateComponent.put(intersectionState,
+							component);
 
-					c.getAutomaton().addState(intersectionState);
+					component.getAutomaton().addState(intersectionState);
 					if (this.intersectionBA.getInitialStates().contains(
 							intersectionState)) {
 						// add the component to the initial states of the
 						// abstracted
 						// automaton
-						c.getAutomaton().addInitialState(intersectionState);
+						component.getAutomaton().addInitialState(
+								intersectionState);
 					}
 					if (this.intersectionBA.getAcceptStates().contains(
 							intersectionState)) {
 						// add the component to the accepting states of the
 						// abstracted
 						// automaton
-						c.getAutomaton().addAcceptState(intersectionState);
+						component.getAutomaton().addAcceptState(
+								intersectionState);
 					}
 				}
 			}

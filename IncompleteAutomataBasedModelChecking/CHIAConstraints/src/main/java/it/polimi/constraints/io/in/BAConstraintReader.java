@@ -142,47 +142,21 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 			Node xmlConstraint = xmlSetOfConstraints.item(stateid);
 			Element xmlConstraintElement = (Element) xmlConstraint;
 
-			Component<S, T, BA<S,T>> c = this.loadComponent(xmlConstraintElement, constraint);
-			constraint.addComponent(c);
+			Component<S, T, BA<S,T>> component=new ElementToComponentTransformer<S, T>(this.stateElementParser, this.transitionElementParser, this.componentFactory).transform(xmlConstraintElement);
+			
+			constraint.addComponent(component);
 		}
-		Element portReachability=(Element) doc.getElementsByTagName(
+		
+		/*Element portReachability=(Element) doc.getElementsByTagName(
 				Constants.XML_ELEMENT_PORTS_REACHABILITY).item(0);
 		this.loadPortsRelation(portReachability, constraint);
 		
 		Element portSColor=(Element) doc.getElementsByTagName(
 				Constants.XML_ELEMENT_PORTS_COLORS).item(0);
-		this.loadPortsColor(portSColor, constraint);
+		this.loadPortsColor(portSColor, constraint);*/
 	}
 
-	private Component<S, T, BA<S,T>> loadComponent(Element doc, Constraint<S, T, BA<S,T>> constraint) {
-		Preconditions.checkNotNull(doc, "The document element cannot be null");
-
-		int componentId = Integer.parseInt(doc
-				.getAttribute(Constants.XML_ATTRIBUTE_MODEL_STATE_ID));
-
-		String stateName = doc.getAttribute(Constants.XML_ATTRIBUTE_NAME);
-		S s = this.stateElementParser.getStateFactory().create(stateName,
-				componentId);
-		Component<S, T, BA<S,T>> component = this.componentFactory.create(componentId,
-				Integer.toString(componentId), s, true,
-				this.transitionElementParser.getTransitionFactory());
-
-		Element baElement = (Element) doc.getElementsByTagName(
-				Constants.XML_ELEMENT_BA).item(0);
-		this.loadStates(baElement, component);
-		this.loadTransitions(baElement, component);
-
-		Element outcomingPortsElement = (Element) doc.getElementsByTagName(
-				Constants.XML_ELEMENT_PORTS_OUT).item(0);
-		this.loadOutputPorts(outcomingPortsElement, component, constraint);
-		Element incomingPortsElement = (Element) doc.getElementsByTagName(
-				Constants.XML_ELEMENT_PORTS_IN).item(0);
-
-		this.loadIncomingPorts(incomingPortsElement, component, constraint);
-		
-
-		return component;
-	}
+	
 	private void loadPortsColor(Element portsElement,
 			Constraint<S, T, BA<S,T>> constraint) {
 		Preconditions.checkNotNull(portsElement,
@@ -249,7 +223,7 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 			Element portElement = (Element) xmlport;
 
 			Port<S, T> port = elementToPort.transform(portElement, component);
-			constraint.addIncomingPort(component, port);
+			constraint.addOutComingPort(component, port);
 			this.mapIdPort.put(port.getId(), port);
 		}
 	}

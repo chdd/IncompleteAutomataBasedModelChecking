@@ -42,6 +42,19 @@ public class PortToElementTransformer<S extends State, T extends Transition>
 	public Element transform(Port<S, T> port) {
 		Preconditions.checkNotNull(port, "The port element cannot be null");
 		Element portElement = doc.createElement(Constants.XML_ELEMENT_PORT);
+		
+		Attr type = doc
+				.createAttribute(Constants.XML_ATTRIBUTE_PORT_TYPE);
+		
+		if(port.isIncoming()){
+			type.setValue(Constants.XML_ATTRIBUTE_VALUE_IN);
+		}
+		else{
+			type.setValue(Constants.XML_ATTRIBUTE_VALUE_OUT);	
+		}
+		
+		portElement.setAttributeNode(type);
+
 
 		// transition source
 		Attr transitionSource = doc

@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
 
@@ -88,6 +87,8 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 		this.portValue = new HashMap<Port<S, T>, Color>();
 		this.portsGraph=new DirectedPseudograph<Port<S,T>, DefaultEdge>(DefaultEdge.class);
 		this.mapPortComponent=new HashMap<Port<S, T>, Component<S, T, A>>();
+		this.incomingPorts=new HashMap< Component<S, T, A>, Set<Port<S, T>>>();
+		this.outcomingPorts=new HashMap< Component<S, T, A>, Set<Port<S, T>>>();
 	}
 
 	/**
@@ -98,6 +99,8 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 		Preconditions.checkNotNull(component, "The component cannot be null");
 
 		this.components.add(component);
+		this.incomingPorts.put(component, new HashSet<Port<S,T>>());
+		this.outcomingPorts.put(component, new HashSet<Port<S,T>>());
 	}
 
 	/**
@@ -195,6 +198,12 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 				"The incomingPort port cannot be null");
 		Preconditions.checkNotNull(destinationPort,
 				"The outcomingPort port cannot be null");
+		if(!this.portsGraph.containsVertex(sourcePort)){
+			this.portsGraph.addVertex(sourcePort);
+		}
+		if(!this.portsGraph.containsVertex(destinationPort)){
+			this.portsGraph.addVertex(destinationPort);
+		}
 		this.portsGraph.addEdge(sourcePort, destinationPort);
 
 	}
@@ -221,7 +230,7 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 	 */
 	@Override
 	public Color getPortValue(Port<S, T> port) {
-		Validate.isTrue(!this.portValue.keySet().contains(port),
+		Preconditions.checkArgument(this.portValue.keySet().contains(port),
 				"The port must be contained into the set of the ports: ", port);
 		return this.portValue.get(port);
 	}
@@ -302,6 +311,7 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 	public void addOutComingPort(Component<S, T, A> component, Port<S,T> port) {
 		Preconditions
 		.checkNotNull(port, "The port state cannot be null");
+		Preconditions.checkArgument(this.components.contains(component), "The component must be contained into the set of components");
 		Preconditions.checkArgument(component.getAutomaton().getStates().contains(port.getSource()), "The source state "+port.getSource()+" must be contained into the states of the component "+component.getName());
 		
 		this.outcomingPorts.get(component).add(port);

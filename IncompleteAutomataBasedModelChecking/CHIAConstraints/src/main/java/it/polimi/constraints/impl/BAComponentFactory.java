@@ -8,20 +8,12 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.constraints.Component;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
 
 public class BAComponentFactory<S extends State, T extends Transition>
 		implements ComponentFactory<S, T, BA<S, T>> {
 
-	/**
-	 * is the logger of the SubAutomataIdentifier class
-	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(BAComponentFactory.class);
-
+	
 	/**
 	 * creates a new component with the specified name, model state, transparent
 	 * attribute and transition factory

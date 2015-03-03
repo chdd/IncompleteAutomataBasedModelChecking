@@ -68,7 +68,7 @@ public class BAReader<S extends State, T extends Transition> {
 	private final StateElementParser<S, T, BA<S, T>> stateElementParser;
 
 	private final TransitionElementParser<S, T, BA<S, T>> transitionElementParser;
-	
+
 	private Element elementBa;
 
 	/**
@@ -109,43 +109,6 @@ public class BAReader<S extends State, T extends Transition> {
 	}
 
 	/**
-	 * creates a new Buchi automaton reader which can be used to read a Buchi
-	 * automaton through the method
-	 * 
-	 * @see BAReader#read()
-	 * 
-	 * @param ba
-	 *            is the Element from which the Buchi Automaton must be read
-	 * @param stateElementParser
-	 *            is the parser which is used to transform an element state into
-	 *            a state object
-	 * @param transitionElementParser
-	 *            is the which is used to create the transitions of the Buchi
-	 *            automaton
-	 * @throws NullPointerException
-	 *             if the labelFactory, transitionFactory, stateFactory,
-	 *             automatonFactory or the fileReader is null
-	 */
-	public BAReader(Element elementBa,
-			StateElementParser<S, T, BA<S, T>> stateElementParser,
-			ClaimTransitionParser<S, T, BA<S, T>> transitionElementParser) {
-
-		Preconditions.checkNotNull(file, "The fileReader cannot be null");
-		Preconditions.checkNotNull(stateElementParser,
-				"The state element parser cannot be null");
-		Preconditions.checkNotNull(transitionElementParser,
-				"The transition factory cannot be null");
-
-		this.ba = new IBAImpl<S, T>(
-				transitionElementParser.getTransitionFactory());
-
-		this.elementBa = elementBa;
-		this.transitionElementParser = transitionElementParser;
-		this.stateElementParser = stateElementParser;
-		this.mapIdState = new HashMap<Integer, S>();
-	}
-
-	/**
 	 * read the Buchi Automaton from the reader
 	 * 
 	 * @return a new Buchi automaton which is parsed from the reader
@@ -157,35 +120,30 @@ public class BAReader<S extends State, T extends Transition> {
 	public BA<S, T> read() {
 
 		logger.info("Reding the Buchi automaton");
-		if(elementBa!=null){
-			this.loadStates(elementBa);
-			this.loadTransitions(elementBa);
+
+		Document dom;
+		// Make an instance of the DocumentBuilderFactory
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			// use the factory to take an instance of the document builder
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			// parse using the builder to get the DOM mapping of the
+			// XML file
+			dom = db.parse(file);
+
+			Element doc = dom.getDocumentElement();
+
+			this.loadStates(doc);
+			this.loadTransitions(doc);
+
+		} catch (ParserConfigurationException pce) {
+			logger.error(pce.getMessage());
+		} catch (SAXException se) {
+			logger.error(se.getMessage());
+		} catch (IOException ioe) {
+			logger.error(ioe.getMessage());
 		}
-		else{
-			Document dom;
-			// Make an instance of the DocumentBuilderFactory
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			try {
-				// use the factory to take an instance of the document builder
-				DocumentBuilder db = dbf.newDocumentBuilder();
-				// parse using the builder to get the DOM mapping of the
-				// XML file
-				dom = db.parse(file);
 
-				Element doc = dom.getDocumentElement();
-
-				this.loadStates(doc);
-				this.loadTransitions(doc);
-
-			} catch (ParserConfigurationException pce) {
-				logger.error(pce.getMessage());
-			} catch (SAXException se) {
-				logger.error(se.getMessage());
-			} catch (IOException ioe) {
-				logger.error(ioe.getMessage());
-			}
-		}
-		
 		logger.info("Buchi automaton readed");
 		return this.ba;
 	}
