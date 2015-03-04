@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
 
 import com.google.common.base.Preconditions;
 
@@ -50,7 +50,7 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 	private Set<Component<S, T, A>> components;
 
 	
-	private DirectedPseudograph<Port<S, T>, DefaultEdge> portsGraph;
+	private DefaultDirectedGraph<Port<S, T>, DefaultEdge> portsGraph;
 
 	/**
 	 * specifies for each port the corresponding color The red color means that
@@ -85,7 +85,7 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 	public ConstraintImpl() {
 		this.components = new HashSet<Component<S, T, A>>();
 		this.portValue = new HashMap<Port<S, T>, Color>();
-		this.portsGraph=new DirectedPseudograph<Port<S,T>, DefaultEdge>(DefaultEdge.class);
+		this.portsGraph=new DefaultDirectedGraph<Port<S,T>, DefaultEdge>(DefaultEdge.class);
 		this.mapPortComponent=new HashMap<Port<S, T>, Component<S, T, A>>();
 		this.incomingPorts=new HashMap< Component<S, T, A>, Set<Port<S, T>>>();
 		this.outcomingPorts=new HashMap< Component<S, T, A>, Set<Port<S, T>>>();
@@ -351,7 +351,13 @@ public class ConstraintImpl<S extends State, T extends Transition, A extends BA<
 	}
 
 	@Override
-	public DirectedPseudograph<Port<S, T>, DefaultEdge> getPortsGraph() {
+	public DefaultDirectedGraph<Port<S, T>, DefaultEdge> getPortsGraph() {
 		return this.portsGraph;
+	}
+	
+	@Override
+	public void setPortGraph(DefaultDirectedGraph<Port<S, T>, DefaultEdge> portsGraph){
+		this.portsGraph=portsGraph;
+		
 	}
 }

@@ -17,6 +17,7 @@ import it.polimi.constraints.impl.PortImpl;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -155,12 +156,33 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, I ex
 		this.createStates();
 		this.createTransitions();
 
+		IntersectionBA<S, I> intersectionCopy=(IntersectionBA<S, I>) this.intersectionBA.clone();
+		
+		/*
+		 * removes the transitions assocaited with the transparent state 
+		 */
+		intersectionCopy=new TransparentStateRelatedTransitionsRemover<S,I>().removeTransparentStatesRelatedTransitions(intersectionCopy);
 		TransitionsTransitiveClosure<S, I, A> closure = new TransitionsTransitiveClosure<S, I, A>(
-				intersectionBA, constraint,
+				intersectionCopy, constraint,
 				mapIntersectionTransitionIncomingPort,
 				mapIntersectionTransitionOutcomingPort);
 		closure.computeTransitionsClosure();
+		
+		for(Component<S,I, A> c: constraint.getComponents()){
+			Map<S,Set<S>> reachabilityMap=new ReachabilityChecker<S, I, A>(c.getAutomaton()).check();
+			
+			for(Port<S, I> incomingPort: this.constraint.getIncomingPorts(c)){
+				for(Port<S, I> outComintPort: this.constraint.getOutcomingPorts(c)){
+					if(reachabilityMap.get(incomingPort.getDestination()).contains(outComintPort.getSource())){
+						this.constraint.addReachabilityRelation(incomingPort, outComintPort);
+					}
+				}
+			}
+		}
 
+		/*
+		 * removes the components associated to the states that are not transparent
+		 */ 
 		this.removeNotTransparentComponents();
 
 		logger.info("Subproperties ");

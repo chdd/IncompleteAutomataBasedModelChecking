@@ -14,6 +14,7 @@ import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.impl.PortImpl;
+import it.polimi.contraintcomputation.subautomatafinder.ReachabilityChecker;
 import it.polimi.refinementchecker.decorator.AutomatonDecorator;
 
 import java.util.HashMap;

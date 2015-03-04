@@ -23,6 +23,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -143,17 +145,39 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 			Element xmlConstraintElement = (Element) xmlConstraint;
 
 			Component<S, T, BA<S,T>> component=new ElementToComponentTransformer<S, T>(this.stateElementParser, this.transitionElementParser, this.componentFactory).transform(xmlConstraintElement);
-			
 			constraint.addComponent(component);
+			
+			
+			Element xmlOutComingPorts=(Element) xmlConstraintElement.getElementsByTagName(
+					Constants.XML_ELEMENT_PORTS_OUT).item(0);
+			NodeList xmlOutComingPortsList=xmlOutComingPorts.getElementsByTagName(Constants.XML_ELEMENT_PORT);
+			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
+				Element  xmlOutComingPort=(Element) xmlOutComingPortsList.item(portId);
+				Port<S,T> port=new ElementToPortTransformer<S,T,BA<S,T>>(this.transitionElementParser.getTransitionFactory(), this.stateElementParser.getStateFactory()).transform(xmlOutComingPort, component);
+				this.mapIdPort.put(port.getId(), port);
+				constraint.addOutComingPort(component, port);
+			}
+			
+			Element xmlInComingPorts=(Element) xmlConstraintElement.getElementsByTagName(
+					Constants.XML_ELEMENT_PORTS_IN).item(0);
+			NodeList xmlInComingPortsList=xmlInComingPorts.getElementsByTagName(Constants.XML_ELEMENT_PORT);
+			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
+				Element  xmlInComingPort=(Element) xmlInComingPortsList.item(portId);
+				Port<S,T> port=new ElementToPortTransformer<S,T,BA<S,T>>(this.transitionElementParser.getTransitionFactory(), this.stateElementParser.getStateFactory()).transform(xmlInComingPort, component);
+				this.mapIdPort.put(port.getId(), port);
+				constraint.addIncomingPort(component, port);
+			}
+				
 		}
 		
-		/*Element portReachability=(Element) doc.getElementsByTagName(
+		Element portReachability=(Element) doc.getElementsByTagName(
 				Constants.XML_ELEMENT_PORTS_REACHABILITY).item(0);
-		this.loadPortsRelation(portReachability, constraint);
+		DefaultDirectedGraph<Port<S, T>, DefaultEdge> graph=new ElementToPortGraphTransformer<S, T>(this.mapIdPort).transform(portReachability);
+		constraint.setPortGraph(graph);
 		
 		Element portSColor=(Element) doc.getElementsByTagName(
 				Constants.XML_ELEMENT_PORTS_COLORS).item(0);
-		this.loadPortsColor(portSColor, constraint);*/
+		this.loadPortsColor(portSColor, constraint);
 	}
 
 	
@@ -175,111 +199,7 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 		}
 	}
 
-	private void loadPortsRelation(Element portsElement,
-			Constraint<S, T, BA<S,T>> constraint) {
-		Preconditions.checkNotNull(portsElement,
-				"The ports element cannot be null");
-		Preconditions.checkNotNull(constraint, "The constraint cannot be null");
-		NodeList outReachability = portsElement
-				.getElementsByTagName(Constants.XML_ELEMENT_PORTS_OUT_REACHABILITY);
-		NodeList outPortRelation = ((Element) outReachability.item(0))
-				.getElementsByTagName(Constants.XML_ELEMENT_PORT);
+	
 
-		for (int stateid = 0; stateid < outPortRelation.getLength(); stateid++) {
-			Node xmlport = outPortRelation.item(stateid);
-			Element portElement = (Element) xmlport;
-			int sourcePortId = Integer.parseInt(portElement
-					.getAttribute(Constants.XML_ATTRIBUTE_ID));
-			NodeList destinationPortRelation = portElement
-					.getElementsByTagName(Constants.XML_ELEMENT_PORT);
-
-			for (int portId = 0; portId < destinationPortRelation.getLength(); portId++) {
-				Node nodeDestinationPort = destinationPortRelation.item(portId);
-				Element elementDestinationPort = (Element) nodeDestinationPort;
-				int destinationPortId = Integer.parseInt(elementDestinationPort
-						.getAttribute(Constants.XML_ATTRIBUTE_ID));
-				System.out.println(destinationPortId);
-				constraint.addReachabilityRelation(
-						this.mapIdPort.get(sourcePortId),
-						this.mapIdPort.get(destinationPortId));
-			}
-		}
-
-	}
-
-	private void loadOutputPorts(Element portsElement, Component<S, T, BA<S,T>> component, Constraint<S, T, BA<S,T>> constraint) {
-		Preconditions.checkNotNull(portsElement,
-				"The ports element cannot be null");
-		Preconditions.checkNotNull(component, "The component cannot be null");
-
-		NodeList xmlstates = portsElement
-				.getElementsByTagName(Constants.XML_ELEMENT_PORT);
-
-		ElementToPortTransformer<S, T, BA<S,T>> elementToPort = new ElementToPortTransformer<S, T, BA<S,T>>(
-				this.transitionElementParser.getTransitionFactory(),
-				this.stateElementParser.getStateFactory());
-		for (int stateid = 0; stateid < xmlstates.getLength(); stateid++) {
-			Node xmlport = xmlstates.item(stateid);
-			Element portElement = (Element) xmlport;
-
-			Port<S, T> port = elementToPort.transform(portElement, component);
-			constraint.addOutComingPort(component, port);
-			this.mapIdPort.put(port.getId(), port);
-		}
-	}
-
-	private void loadIncomingPorts(Element portsElement,
-			Component<S, T, BA<S,T>> component,  Constraint<S, T, BA<S,T>> constraint) {
-		Preconditions.checkNotNull(portsElement,
-				"The ports element cannot be null");
-		Preconditions.checkNotNull(component, "The component cannot be null");
-
-		NodeList xmlstates = portsElement
-				.getElementsByTagName(Constants.XML_ELEMENT_PORT);
-
-		ElementToPortTransformer<S, T, BA<S,T>> elementToPort = new ElementToPortTransformer<S, T, BA<S,T>>(
-				this.transitionElementParser.getTransitionFactory(),
-				this.stateElementParser.getStateFactory());
-		for (int stateid = 0; stateid < xmlstates.getLength(); stateid++) {
-			Node xmlport = xmlstates.item(stateid);
-			Element portElement = (Element) xmlport;
-
-			Port<S, T> port = elementToPort.transform(portElement, component);
-			constraint.addIncomingPort(component, port);
-			this.mapIdPort.put(port.getId(), port);
-		}
-	}
-
-	private void loadStates(Element baElement, Component<S, T, BA<S,T>> component) {
-		Preconditions.checkNotNull(baElement,
-				"The document element cannot be null");
-		Preconditions.checkNotNull(component, "The component cannot be null");
-		NodeList xmlstates = baElement
-				.getElementsByTagName(Constants.XML_ELEMENT_STATE);
-
-		for (int stateid = 0; stateid < xmlstates.getLength(); stateid++) {
-			Node xmlstate = xmlstates.item(stateid);
-			Element eElement = (Element) xmlstate;
-
-			Entry<Integer, S> entry = this.stateElementParser.transform(
-					eElement, component.getAutomaton());
-			this.mapIdState.put(entry.getKey(), entry.getValue());
-		}
-	}
-
-	private void loadTransitions(Element baElement, Component<S, T, BA<S,T>> component) {
-		Preconditions.checkNotNull(baElement,
-				"The document element cannot be null");
-		Preconditions.checkNotNull(component, "The component cannot be null");
-		NodeList xmltransitions = baElement
-				.getElementsByTagName(Constants.XML_TAG_TRANSITION);
-
-		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
-			Node xmltransition = xmltransitions.item(transitionid);
-			Element eElement = (Element) xmltransition;
-
-			this.transitionElementParser.transform(eElement, component.getAutomaton(),
-					this.mapIdState);
-		}
-	}
+	
 }

@@ -7,8 +7,8 @@ import it.polimi.automata.transition.Transition;
 import java.util.Map;
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedPseudograph;
 
 /**
  * contains a constraint, i.e., the set of automata to be considered in the
@@ -180,5 +180,7 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 	 */
 	public Set<Port<S, T>> getOutcomingPorts(Component<S, T, A> component);
 	
-	public DirectedPseudograph<Port<S, T>, DefaultEdge> getPortsGraph();
+	public DefaultDirectedGraph<Port<S, T>, DefaultEdge> getPortsGraph();
+	
+	public void setPortGraph(DefaultDirectedGraph<Port<S, T>, DefaultEdge> portsGraph);
 }

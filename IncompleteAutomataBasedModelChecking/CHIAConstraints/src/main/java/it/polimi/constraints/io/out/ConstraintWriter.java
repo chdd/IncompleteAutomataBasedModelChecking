@@ -100,13 +100,10 @@ public class ConstraintWriter<S extends State, T extends Transition, I extends I
 
 			}
 
-			Element portsReachability = doc
-					.createElement(Constants.XML_ELEMENT_PORTS_REACHABILITY);
-			rootElement.appendChild(portsReachability);
-
+			
 			Element graphPortXMLElement = new PortsGraphToElementTransformer<S, I>(
 					doc).transform(this.constraint.getPortsGraph());
-			portsReachability.appendChild(graphPortXMLElement);
+			rootElement.appendChild(graphPortXMLElement);
 
 			Element colors = doc
 					.createElement(Constants.XML_ELEMENT_PORTS_COLORS);

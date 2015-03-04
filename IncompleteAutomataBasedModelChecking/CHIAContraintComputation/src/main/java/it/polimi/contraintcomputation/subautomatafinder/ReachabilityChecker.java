@@ -1,4 +1,4 @@
-package it.polimi.refinementchecker;
+package it.polimi.contraintcomputation.subautomatafinder;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
