@@ -2,6 +2,7 @@ package it.polimi.automata;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Set;
 
@@ -363,6 +364,8 @@ public interface BA<S extends State, T extends Transition>{
 	 *             connect the source and the destination state
 	 */
 	public Set<T> getTransitions(S source, S destination);
+	
+	public TransitionFactory<S, T> getTransitionFactory();
 	
 	public DirectedPseudograph<S, T> getGraph();
 	

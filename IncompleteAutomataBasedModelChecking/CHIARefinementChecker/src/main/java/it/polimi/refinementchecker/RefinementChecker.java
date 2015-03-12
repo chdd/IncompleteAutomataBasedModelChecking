@@ -4,7 +4,6 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
@@ -13,15 +12,20 @@ import it.polimi.constraints.Color;
 import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
-import it.polimi.constraints.impl.PortImpl;
-import it.polimi.contraintcomputation.subautomatafinder.ReachabilityChecker;
+import it.polimi.constraints.Refinement;
+import it.polimi.constraints.impl.BAComponentFactory;
+import it.polimi.constraints.impl.ConstraintImpl;
+import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
+import it.polimi.contraintcomputation.subautomatafinder.PortSubPropertiesReachabilityChecking;
+import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
 import it.polimi.refinementchecker.decorator.AutomatonDecorator;
+import it.polimi.refinementchecker.portscomputation.UpdateSubPropertiesInternalReachability;
+import it.polimi.refinementchecker.portsreachability.RemoveUnreachablePorts;
+import it.polimi.refinementchecker.refinementChecker.RefinementIncomingPortsIdentifier;
+import it.polimi.refinementchecker.refinementChecker.RefinementOutComingPortsIdentifier;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +51,7 @@ import com.google.common.base.Preconditions;
  * @param I
  *            is the type of the intersection transition to be generated
  */
-public class RefinementChecker<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
+public class RefinementChecker<S extends State, T extends Transition> {
 
 	/**
 	 * is the logger of the ModelChecker class
@@ -63,18 +67,14 @@ public class RefinementChecker<S extends State, T extends Transition, I extends 
 	/**
 	 * contains the refinement to be verified
 	 */
-	private final Component<S, T, IBA<S, T>> refinement;
+	private final Refinement<S, T, IBA<S, T>> refinement;
 
 	/**
 	 * contains the intersection rule to be used in the refinement checking
 	 */
-	private final IntersectionRule<S, T, I> intersectionRule;
+	private final IntersectionRule<S, T> intersectionRule;
 
-	
-	private Map<Port<S, I>, Entry<Port<S, T>, Port<S, T>>> intersectionPortMap;
-
-	private Set<Port<S, T>> refinementIncomingPorts;
-	private Set<Port<S, T>> refinementOutcomingPorts;
+	private Constraint<S, T, BA<S, T>> newConstraint;
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -91,10 +91,8 @@ public class RefinementChecker<S extends State, T extends Transition, I extends 
 	 *             if one of the parameters is null
 	 */
 	public RefinementChecker(Constraint<S, T, BA<S, T>> constraint,
-			Component<S, T, IBA<S, T>> refinement,
-			Set<Port<S, T>> refinementIncomingPorts,
-			Set<Port<S, T>> refinementOutcomingPorts,
-			IntersectionRule<S, T, I> intersectionRule) {
+			Refinement<S, T, IBA<S, T>> refinement,
+			IntersectionRule<S, T> intersectionRule) {
 		Preconditions.checkNotNull(constraint,
 				"The constraint to be checked cannot be null");
 		Preconditions.checkNotNull(refinement,
@@ -109,287 +107,217 @@ public class RefinementChecker<S extends State, T extends Transition, I extends 
 		this.constraint = constraint;
 		this.refinement = refinement;
 		this.intersectionRule = intersectionRule;
-		this.refinementIncomingPorts=refinementIncomingPorts;
-		this.refinementOutcomingPorts=refinementOutcomingPorts;
-		this.intersectionPortMap = new HashMap<Port<S, I>, Entry<Port<S, T>, Port<S, T>>>();
 	}
 
-	public void check() {
+	public Constraint<S, T, BA<S, T>> newConstraint() {
+		return this.newConstraint;
+	}
+
+	/**
+	 * returns the updated constraint
+	 * 
+	 * @return the updated constraint
+	 */
+	public int check() {
 
 		logger.debug("Starting the refinement checking phase");
 
 		logger.debug("Updating the paths with no transparent states");
-		
+
+		/*
+		 * COMPUTING THE INTERSECTION BETWEEN THE CLAIM: the automaton
+		 * associated with the SUBPROPERTY and the model: the automaton which
+		 * corresponds with the REFINEMENT
+		 */
+
+		// GETTING THE CLAIM
+		// gets the sub-property associated with the model state, i.e., the
+		// claim automaton
+		Component<S, T, BA<S, T>> subproperty = this.constraint
+				.getSubproperties(this.refinement.getModelState());
+		// sets the initial and accepting states depending on the incoming and
+		// out-coming transitions
+		BA<S, T> claim = subproperty.getAutomaton();
+
+		new AutomatonDecorator<S, T, BA<S, T>>(claim).decorate(
+				this.constraint.getIncomingPorts(subproperty),
+				this.constraint.getOutcomingPorts(subproperty));
+		claim.addStuttering();
+
+		// GETTING THE MODEL
+		// gets the model to be considered, i.e., the model of the refinement
+		// where the transparent states have been removed
+		IBA<S, T> model = this.refinement.getAutomaton();
+
+		// sets the initial and accepting states of the refinement automaton in
+		// correspondance with the incoming and out=coming transitions
+		new AutomatonDecorator<S, T, IBA<S, T>>(refinement.getAutomaton())
+				.decorate(refinement.getIncomingPorts(),
+						this.refinement.getOutcomingPorts());
+		model.addStuttering();
+
 		/*
 		 * updates the paths which do not involve any transparent state of the
 		 * refinement. Indeed, when the refinement contains transparent states
 		 * the paths that do not include any transparent state are analyzed.
 		 * These paths do not generate any constraint
 		 */
-		this.updatedPathsWithNoTransparentStates();
-		
-		
-		this.updatedPathsWithTransparentStates();
+		int res = this.updatedPathsWithNoTransparentStates(subproperty, claim,
+				model);
 
+		if (res == 0) {
+			return res;
+		}
+		logger.debug("Updating the paths with transparent states");
+		newConstraint = this.updatedPathsWithTransparentStates(subproperty,
+				claim, model);
+
+		
 		logger.debug("Refinement checking phase ended");
+		if (this.constraint.getPortsGraph().vertexSet().isEmpty()) {
+			return 1;
+		}
+		return -1;
+
 	}
 
-	/**
-	 * updates the paths which the transparent states of the
-	 * refinement. Indeed, when the refinement contains transparent states the
-	 * paths that do not include any transparent state are analyzed. These paths
-	 * do not generate any constraint
-	 */
-	private void updatedPathsWithTransparentStates() {
-		
-		/*
-		 * COMPUTING THE INTERSECTION BETWEEN THE CLAIM (SUBPROPERTY) AND THE REFINEMENT
-		 */
-		// gets the sub-property associated with the model state, i.e., the claim automaton
-		Component<S, T, BA<S, T>> subproperty = this.constraint
-				.getSubproperties(this.refinement.getModelState());
-		new AutomatonDecorator<S, T, BA<S,T>>(subproperty.getAutomaton()).decorate(this.constraint.getIncomingPorts(subproperty), this.constraint.getOutcomingPorts(subproperty));
-		BA<S, T> claim = subproperty.getAutomaton();
-		claim.addStuttering();
-
-		// gets the model to be considered, i.e., the model of the refinement
-		// where the transparent states have been removed
-		IBA<S, T> tmpmodelWithTransparentStates = this.refinement
-				.getAutomaton();
-		new AutomatonDecorator<S, T, IBA<S,T>>(refinement.getAutomaton()).decorate(this.refinementIncomingPorts, this.refinementOutcomingPorts);
-		tmpmodelWithTransparentStates.addStuttering();
-		IBA<S, T> modelWithoutTransparentStates = tmpmodelWithTransparentStates;
-
-		// computes the intersection between the claim and the model
-		IntersectionBuilder<S, T, I> intersectionBuilder = new IntersectionBuilder<S, T, I>(
-				this.intersectionRule, modelWithoutTransparentStates, claim);
-		IntersectionBA<S, I> intersection = intersectionBuilder
-				.computeIntersection();
-
-		/*
-		 * COMPUTING THE INCOMING AND OUTCOMING PORTS OF THE INTERSECTION AUTOMATON
-		 */
-		Set<Port<S, T>> incomingPorts = this.computeIncomingPorts( subproperty,
-				intersectionBuilder);
-		Set<Port<S, T>> outcomingPorts = this.computeOutComingPorts( subproperty,
-				intersectionBuilder);
-		/*
-		 * UPDATES THE COLOR OF THE INCOMING AND OUTCOMING PORTS
-		 */
-		this.updateComponentPorts(intersection,
-				incomingPorts, outcomingPorts);
-
-		/*
-		 * UPDATES THE PORT RELATION GRAPH WITH RESPECT TO THE VALUES OF THE INCOMING AND OUTCOMING PORTS
-		 */
-		this.constraint.updatePortRelation(incomingPorts, outcomingPorts);
-	}
 	
+
 	/**
 	 * updates the paths which do not involve any transparent state of the
 	 * refinement. Indeed, when the refinement contains transparent states the
 	 * paths that do not include any transparent state are analyzed. These paths
 	 * do not generate any constraint
 	 */
-	private void updatedPathsWithNoTransparentStates() {
+	private int updatedPathsWithNoTransparentStates(
+			Component<S, T, BA<S, T>> subproperty, BA<S, T> claim,
+			IBA<S, T> model) {
+		Preconditions.checkNotNull(subproperty, "The sub-property to be checked cannot be null");
+		Preconditions.checkNotNull(claim, "The claim to be checked cannot be null");
+		Preconditions.checkNotNull(model, "The model to be checked cannot be null");
 		
-		/*
-		 * COMPUTING THE INTERSECTION BETWEEN THE CLAIM (SUBPROPERTY) AND THE REFINEMENT
-		 */
-		// gets the sub-property associated with the model state, i.e., the claim automaton
-		Component<S, T, BA<S, T>> subproperty = this.constraint
-				.getSubproperties(this.refinement.getModelState());
-		new AutomatonDecorator<S, T, BA<S,T>>(subproperty.getAutomaton()).decorate(this.constraint.getIncomingPorts(subproperty), this.constraint.getOutcomingPorts(subproperty));
-		BA<S, T> claim = subproperty.getAutomaton();
-		claim.addStuttering();
-
-		// gets the model to be considered, i.e., the model of the refinement
-		// where the transparent states have been removed
-		IBA<S, T> tmpmodelWithoutTransparentStates = this.refinement
-				.getAutomaton();
-		new AutomatonDecorator<S, T, IBA<S,T>>(refinement.getAutomaton()).decorate(this.refinementIncomingPorts, this.refinementOutcomingPorts);
-		tmpmodelWithoutTransparentStates.addStuttering();
 		IBA<S, T> modelWithoutTransparentStates = new IBATransparentStateRemoval<S, T>()
-				.transparentStateRemoval(tmpmodelWithoutTransparentStates
-						.clone());
+				.transparentStateRemoval(model.clone());
 
 		// computes the intersection between the claim and the model
-		IntersectionBuilder<S, T, I> intersectionBuilder = new IntersectionBuilder<S, T, I>(
+		IntersectionBuilder<S, T> intersectionBuilder = new IntersectionBuilder<S, T>(
 				this.intersectionRule, modelWithoutTransparentStates, claim);
-		IntersectionBA<S, I> intersection = intersectionBuilder
+		IntersectionBA<S, T> intersectionBA=intersectionBuilder.computeIntersection();
+
+
+		// gets the incoming ports of the intersection automaton
+		RefinementIncomingPortsIdentifier<S, T> incomingPortIdentifier = new RefinementIncomingPortsIdentifier<S, T>(
+				constraint, refinement, subproperty, intersectionBuilder);
+		incomingPortIdentifier
+				.computeIntersectionIncomingPorts();
+		RefinementOutComingPortsIdentifier<S, T> outcomingPortIdentifier = new RefinementOutComingPortsIdentifier<S, T>(
+				constraint, refinement, subproperty, intersectionBuilder);
+		outcomingPortIdentifier
+				.computeIntersectionOutcomingPorts();
+
+		IntersectionPortColorUpdater<S, T> intersectionUpdated = new IntersectionPortColorUpdater<S, T>();
+		// updates the color of the ports of the intersection automaton
+		int res = intersectionUpdated.updateComponentPorts(
+				intersectionBA, incomingPortIdentifier,
+				outcomingPortIdentifier, this.constraint);
+
+		// if the result is 0 it means that a red port has touched a green port,
+		// which means that the property is not satisfied
+		if (res == 0) {
+			return res;
+		}
+
+		PortSubPropertiesReachabilityChecking<S, T> portReachability = new PortSubPropertiesReachabilityChecking<S, T>(
+				intersectionBA, incomingPortIdentifier.getIntersectionIncomingPorts().keySet(), outcomingPortIdentifier.getIntersectionOutcomingPorts().keySet(), new HashSet<Port<S,T>>(),new HashSet<Port<S,T>>());
+		portReachability.computeTransitionsClosure(intersectionBA.getStates());
+		
+		
+		// updates the component that surrounds the sub-property with respect
+		// with the new reachability relation and the new colors.
+		new ComponentPortRelationProcessor<S, T, BA<S,T>>().updateNoTransparentPortRelation(
+				subproperty, constraint);
+		return 1;
+	}
+	
+	/**
+	 * updates the paths which the transparent states of the refinement. Indeed,
+	 * when the refinement contains transparent states the paths that do not
+	 * include any transparent state are analyzed. These paths do not generate
+	 * any constraint
+	 */
+	private Constraint<S, T, BA<S, T>> updatedPathsWithTransparentStates(
+			Component<S, T, BA<S, T>> subproperty, BA<S, T> claim,
+			IBA<S, T> model) {
+		Preconditions.checkNotNull(subproperty, "The sub-property to be considered cannot be null");
+		Preconditions.checkNotNull(claim, "The ba which represents the claim to be considered cannot be null");
+		Preconditions.checkNotNull(model, "The iba which represents the model to be considered cannot be null");
+
+		// computes the intersection between the automaton that corresponds with
+		// the sub-property and the one that corresponds with the refinement
+		IntersectionBuilder<S, T> intersectionBuilder = new IntersectionBuilder<S, T>(
+				this.intersectionRule, model, claim);
+		IntersectionBA<S, T> intersection = intersectionBuilder
 				.computeIntersection();
 
 		/*
-		 * COMPUTING THE INCOMING AND OUTCOMING PORTS OF THE INTERSECTION AUTOMATON
+		 * removes from the intersection automaton the states from which it is
+		 * not possible to reach an accepting state since these states are not
+		 * useful in the constraint computation
 		 */
-		Set<Port<S, T>> incomingPorts = this.computeIncomingPorts( subproperty,
-				intersectionBuilder);
-		Set<Port<S, T>> outcomingPorts = this.computeOutComingPorts( subproperty,
-				intersectionBuilder);
-		/*
-		 * UPDATES THE COLOR OF THE INCOMING AND OUTCOMING PORTS
-		 */
-		this.updateComponentPorts(intersection,
-				incomingPorts, outcomingPorts);
+		IntersectionCleaner<S, T> intersectionCleaner = new IntersectionCleaner<S, T>(
+				intersection);
+		intersectionCleaner.clean();
 
 		/*
-		 * UPDATES THE PORT RELATION GRAPH WITH RESPECT TO THE VALUES OF THE INCOMING AND OUTCOMING PORTS
+		 * computes the incoming and out-coming port with respect to the the
+		 * intersection automaton (i.e., it does consider only the incoming and
+		 * out-coming ports of the refinement)
 		 */
-		this.constraint.updatePortRelation(incomingPorts, outcomingPorts);
+		RefinementIncomingPortsIdentifier<S, T> intersectionIncomingPortIdentifier = new RefinementIncomingPortsIdentifier<S, T>(
+				constraint, refinement, subproperty, intersectionBuilder);
+		Map<Port<S, T>, Color> intersectionIncomingPorts = intersectionIncomingPortIdentifier
+				.computeIntersectionIncomingPorts();
+		RefinementOutComingPortsIdentifier<S, T> intersectionOutcomingPortIdentifier = new RefinementOutComingPortsIdentifier<S, T>(
+				constraint, refinement, subproperty, intersectionBuilder);
+		Map<Port<S, T>, Color> intersectionOutcomingPorts = intersectionOutcomingPortIdentifier
+				.computeIntersectionOutcomingPorts();
+
+		/*
+		 * Given the specific set of incoming transitions identifies the new
+		 * sub-properties
+		 */
+		SubPropertiesIdentifier<S, T, BA<S, T>> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, BA<S, T>>(
+				intersectionBuilder, new BAComponentFactory<S, T>());
+		Constraint<S, T, BA<S, T>> newSubProperties = subPropertiesIdentifier
+				.getSubAutomata(intersectionIncomingPorts, intersectionOutcomingPorts);
+
+		/*
+		 * COMPUTES THE INTERNAL REACHABILITY
+		 * computes the relation between the incoming port of the sub-property
+		 * to be verified and the in-coming transitions of the sub-properties
+		 * generated by the sub-properties identifier
+		 */
+		UpdateSubPropertiesInternalReachability<S, T> oldSubPropertyNewSubPropertyPortRelation=new UpdateSubPropertiesInternalReachability<S, T> ();
+		oldSubPropertyNewSubPropertyPortRelation.computeRelations(
+				intersection, newSubProperties, intersectionIncomingPorts, intersectionIncomingPortIdentifier, intersectionOutcomingPorts,intersectionOutcomingPortIdentifier);
+
+		constraint.replace(subproperty,
+				(ConstraintImpl<S, T, BA<S, T>>) newSubProperties,
+				oldSubPropertyNewSubPropertyPortRelation.getMapOldPropertyNewConstraintIncomingPorts(),
+				oldSubPropertyNewSubPropertyPortRelation.getMapOldPropertyNewConstraintOutcomingPorts(),
+				intersectionIncomingPortIdentifier.getIntersectionPortClaimPortMap(),
+				intersectionOutcomingPortIdentifier.getIntersectionPortClaimMap());
+		 
+		
+		/*
+		 * removes the transitions associated with the transparent state, i.e.,
+		 * the internal transition of each component
+		 */
+		RemoveUnreachablePorts<S, T> unreachablePortsRemover=new RemoveUnreachablePorts<S, T>(constraint);
+		unreachablePortsRemover.removeNotUsefulPorts();
+
+		return constraint;
+
 	}
 
-	private Set<Port<S, T>> computeIncomingPorts(
-			Component<S, T, BA<S, T>> subproperty,
-			IntersectionBuilder<S, T, I> intersectionBuilder) {
-
-		Set<Port<S, T>> claimIncomingPorts = this.constraint
-				.getIncomingPorts(subproperty);
-
-		Set<Port<S, T>> newInComingPorts = new HashSet<Port<S, T>>();
-
-		for (Port<S, T> claimIncomingPort : claimIncomingPorts) {
-			for (Port<S, T> modelIncomingPort : refinementIncomingPorts) {
-
-				if (claimIncomingPort
-						.getTransition()
-						.getPropositions()
-						.equals(modelIncomingPort.getTransition()
-								.getPropositions())
-						&& claimIncomingPort.getSource().equals(
-								modelIncomingPort.getSource())) {
-
-					S claimInitState = claimIncomingPort.getDestination();
-					S modelInitState = modelIncomingPort.getDestination();
-
-					Set<S> initStates = new HashSet<S>(intersectionBuilder
-							.getClaimIntersectionStateMap().get(claimInitState));
-					Set<S> statesAssociatedWithTheInitModelState = intersectionBuilder
-							.getClaimIntersectionStateMap().get(modelInitState);
-
-					initStates.retainAll(statesAssociatedWithTheInitModelState);
-
-					for (S initState : initStates) {
-						newInComingPorts.add(new PortImpl<S, T>(
-								claimIncomingPort.getSource(), initState,
-								claimIncomingPort.getTransition(), true));
-					}
-				}
-			}
-		}
-		return newInComingPorts;
-	}
-
-	public Set<Port<S, T>> computeOutComingPorts(
-			Component<S, T, BA<S, T>> subproperties,
-			IntersectionBuilder<S, T, I> intersectionBuilder) {
-
-		Set<Port<S, T>> claimOutcomingPorts = this.constraint
-				.getOutcomingPorts(subproperties);
-		Set<Port<S, T>> newOutComingPorts = new HashSet<Port<S, T>>();
-
-		for (Port<S, T> claimOutcomingPort : claimOutcomingPorts) {
-			for (Port<S, T> modelOutcomingPort : refinementOutcomingPorts) {
-
-				if (claimOutcomingPort
-						.getTransition()
-						.getPropositions()
-						.equals(claimOutcomingPort.getTransition()
-								.getPropositions())
-						&& claimOutcomingPort.getSource().equals(
-								claimOutcomingPort.getSource())) {
-
-					S claimOutState = claimOutcomingPort.getDestination();
-					S modelOutState = modelOutcomingPort.getDestination();
-
-					Set<S> outStates = new HashSet<S>(intersectionBuilder
-							.getClaimIntersectionStateMap().get(claimOutState));
-					Set<S> statesAssociatedWithTheOutModelState = intersectionBuilder
-							.getClaimIntersectionStateMap().get(modelOutState);
-
-					outStates.retainAll(statesAssociatedWithTheOutModelState);
-
-					for (S outState : outStates) {
-						newOutComingPorts.add(new PortImpl<S, T>(
-								outState, claimOutcomingPort.getDestination(),
-								claimOutcomingPort.getTransition(), false));
-					}
-				}
-			}
-		}
-		return newOutComingPorts;
-	}
-
-	/**
-	 * checks the component and computes which out-coming ports are reachable
-	 * from which out-coming ports
-	 * 
-	 * @param subproperty
-	 *            is the component under analysis
-	 * @throws NullPointerException
-	 *             if the sub-property is null
-	 */
-	private void updateComponentPorts(IntersectionBA<S, I> intersectionAutomaton,
-			Set<Port<S, T>> incomingPorts,
-			Set<Port<S, T>> outcomingports) {
-
-		// computes a map that contains the set of the reachable states
-		// reachable from each state of the automaton
-		Map<S, Set<S>> reachabilityMap = new ReachabilityChecker<S, I, BA<S, I>>(
-				intersectionAutomaton).check();
-
-		Map<Port<S, T>, Color> incomingColorMap = new HashMap<Port<S, T>, Color>();
-		for (Entry<Port<S, T>, Color> incomingPort : this.constraint
-				.getPortValue().entrySet()) {
-			incomingColorMap
-					.put(incomingPort.getKey(), incomingPort.getValue());
-		}
-
-		// back propagating: back propagates the color of the ports
-		for (Port<S, T> incomingPort : incomingPorts) {
-			for (Port<S, T> outcomingPort : outcomingports) {
-				// back-propagating the colors
-				if (reachabilityMap.get(incomingPort.getDestination())
-						.contains(outcomingPort.getSource())) {
-
-					Port<S, T> modelIncomingPort = this.intersectionPortMap
-							.get(incomingPort).getValue();
-					Port<S, T> modelOutcomingPort = this.intersectionPortMap
-							.get(incomingPort).getValue();
-
-					Color incomingColor = this.constraint
-							.getPortValue(modelIncomingPort);
-					Color outcomingColor = this.constraint
-							.getPortValue(modelOutcomingPort);
-
-					this.constraint.setPortValue(modelIncomingPort,
-							ColorPropagator.backPropagateColor(incomingColor,
-									outcomingColor));
-				}
-
-			}
-		}
-		// forward propagating: propagates forward the color of the ports
-		for (Port<S, T> incomingPort : incomingPorts) {
-			for (Port<S, T> outcomingPort : outcomingports) {
-				// back-propagating the colors
-				if (reachabilityMap.get(incomingPort.getDestination())
-						.contains(outcomingPort.getSource())) {
-
-					Port<S, T> modelIncomingPort = this.intersectionPortMap
-							.get(incomingPort).getValue();
-					Port<S, T> modelOutcomingPort = this.intersectionPortMap
-							.get(incomingPort).getValue();
-
-					Color incomingColor = incomingColorMap
-							.get(modelIncomingPort);
-					Color outcomingColor = this.constraint
-							.getPortValue(modelOutcomingPort);
-
-					this.constraint.setPortValue(modelOutcomingPort,
-							ColorPropagator.forwardColorPropagation(
-									incomingColor, outcomingColor));
-				}
-			}
-		}
-	}
 }

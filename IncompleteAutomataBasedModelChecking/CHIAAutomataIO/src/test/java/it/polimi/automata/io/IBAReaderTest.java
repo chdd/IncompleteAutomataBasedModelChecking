@@ -85,7 +85,7 @@ public class IBAReaderTest {
 		StateElementParser<State, Transition, IBA<State, Transition>> stateElementParser = new IBAStateElementParser(
 				new StateFactoryImpl());
 
-		ModelTransitionParser<State, Transition, IBA<State, Transition>> transitionParser = new IBATransitionParser<IBA<State, Transition>>(
+		ModelTransitionParser<State, Transition, IBA<State, Transition>> transitionParser = new IBATransitionParser<State, Transition, IBA<State, Transition>>(
 				this.transitionFactory);
 
 		IBAReader<State, Transition> reader=new IBAReader<State,Transition>(

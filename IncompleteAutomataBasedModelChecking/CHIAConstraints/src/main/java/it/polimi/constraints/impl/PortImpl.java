@@ -5,7 +5,7 @@ import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Port;
 
-import org.apache.commons.lang3.Validate;
+import com.google.common.base.Preconditions;
 
 /**
  * Is a transition that connect the refinement of a transparent state with a
@@ -23,7 +23,7 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl
 
 	
 
-	/**
+		/**
 	 * the source can be a state of a sub0-properties or a state of the model
 	 * depending on whether the port is an out-coming or incoming port of the
 	 * sub-properties. If the port is out-coming the source is a state of the
@@ -46,6 +46,7 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl
 	 */
 	private final T transition;
 
+	public static int ID_COUNTER=1;
 
 	/**
 	 * creates a new port
@@ -66,11 +67,16 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl
 	 *             if one of the parameters is null
 	 */
 	public PortImpl(S source, S destination, T transition, boolean incoming) {
-		super(transition.getId());
-		Validate.notNull(source, "The source of the port cannot be null");
-		Validate.notNull(destination,
+		this(ID_COUNTER, source, destination, transition, incoming);
+		
+	}
+	public PortImpl(int id, S source, S destination, T transition, boolean incoming) {
+		super(id);
+		PortImpl.ID_COUNTER=PortImpl.ID_COUNTER+1;
+		Preconditions.checkNotNull(source, "The source of the port cannot be null");
+		Preconditions.checkNotNull(destination,
 				"The destination of the port cannot be null");
-		Validate.notNull(transition,
+		Preconditions.checkNotNull(transition,
 				"The transition that connect the source and the destination cannot be null");
 
 		this.source = source;
@@ -103,12 +109,68 @@ public class PortImpl<S extends State, T extends Transition> extends StateImpl
 		return transition;
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((destination == null) ? 0 : destination.hashCode());
+		result = prime * result + (incoming ? 1231 : 1237);
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		result = prime * result
+				+ ((transition == null) ? 0 : transition.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("unchecked")
+		PortImpl<S,T> other = (PortImpl<S,T>) obj;
+		if (destination == null) {
+			if (other.destination != null)
+				return false;
+		} else if (!destination.equals(other.destination))
+			return false;
+		if (incoming != other.incoming)
+			return false;
+		if (source == null) {
+			if (other.source != null)
+				return false;
+		} else if (!source.equals(other.source))
+			return false;
+		if (transition == null) {
+			if (other.transition != null)
+				return false;
+		} else if (!transition.equals(other.transition))
+			return false;
+		return true;
+	}
 
 	@Override
 	public boolean isIncoming() {
-		
 		return incoming;
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PortImpl [source=" + source + ", incoming=" + incoming
+				+ ", destination=" + destination + ", transition=" + transition
+				+ "]";
 	}
 	
 	

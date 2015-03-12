@@ -27,5 +27,8 @@ public interface State {
 	 */
 	public String getName();
 	
+	public boolean equals(Object obj) ;
+	public int hashCode() ;
+	
 	
 }

@@ -1,12 +1,11 @@
 package it.polimi.checker.intersection;
 
-import com.google.common.base.Preconditions;
-
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.IntersectionTransition;
-import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Defines an {@link IntersectionRule} that specifies how the transitions of the
@@ -21,12 +20,12 @@ import it.polimi.automata.transition.Transition;
  * @param <T>
  *            is the type of the transitions under analysis
  */
-public abstract class IntersectionRule<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
+public abstract class IntersectionRule<S extends State, T extends Transition> {
 
-	protected final IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
 	protected final StateFactory<S> stateFactory;
+	protected final TransitionFactory<S, T> intersectionTransitionFactory;
 	
-	public IntersectionRule(IntersectionTransitionFactory<S, I> intersectionTransitionFactory, 
+	public IntersectionRule(TransitionFactory<S, T> intersectionTransitionFactory, 
 			StateFactory<S> stateFactory){
 		Preconditions.checkNotNull(intersectionTransitionFactory,
 				"The intersection factory cannot be null");
@@ -37,7 +36,7 @@ public abstract class IntersectionRule<S extends State, T extends Transition, I 
 		this.stateFactory=stateFactory;
 	}
 	
-	public IntersectionTransitionFactory<S, I> getIntersectionTransitionFactory(){
+	public TransitionFactory<S, T> getIntersectionTransitionFactory(){
 		return this.intersectionTransitionFactory;
 	}
 	
@@ -65,24 +64,9 @@ public abstract class IntersectionRule<S extends State, T extends Transition, I 
 	 *             intersectionTransitionFactory is null
 	 * 
 	 */
-	public abstract I getIntersectionTransition(T modelTransition,
+	public abstract T getIntersectionTransition(T modelTransition,
 			T claimTransition);
 
-	/**
-	 * specifies how the intersection transition must be created when the model
-	 * is in a transparent state
-	 * 
-	 * @param modelState
-	 *            is the transparent state to be considered
-	 * @param claimTransition
-	 *            is the transition performed by the claim
-	 * @param intersectionTransitionFactory
-	 *            is the transition factory used to create the transition
-	 * @return a new intersection transition
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
-	 */
-	public abstract I getIntersectionTransition(S modelState,
-			T claimTransition);
+	
 
 }

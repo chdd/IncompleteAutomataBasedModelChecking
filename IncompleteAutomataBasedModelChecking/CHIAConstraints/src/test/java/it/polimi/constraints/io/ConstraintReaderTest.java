@@ -34,7 +34,7 @@ public class ConstraintReaderTest {
 		BAConstraintReader<State, Transition> constraintReader = new BAConstraintReader<State, Transition>(
 				f,  stateElementParser, transitionParser);
 		
-		Constraint<State,Transition, BA<State,Transition>> constraint=constraintReader.read();
+		Constraint<State, Transition, BA<State,Transition>> constraint=constraintReader.read();
 
 		assertTrue(constraint.getComponents().size()==2);
 		

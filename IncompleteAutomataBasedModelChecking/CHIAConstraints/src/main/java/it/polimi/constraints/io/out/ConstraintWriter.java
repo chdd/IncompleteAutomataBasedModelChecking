@@ -3,7 +3,6 @@ package it.polimi.constraints.io.out;
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Color;
 import it.polimi.constraints.Component;
@@ -35,10 +34,10 @@ import com.google.common.base.Preconditions;
  *
  * @param <S>
  *            is the type of the state to be written
- * @param <T>
+ * @param <I>
  *            is the type of the transitions to be written
  */
-public class ConstraintWriter<S extends State, T extends Transition, I extends IntersectionTransition<S>, A extends BA<S, I>> {
+public class ConstraintWriter<S extends State, I extends Transition,  A extends BA<S, I>> {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class

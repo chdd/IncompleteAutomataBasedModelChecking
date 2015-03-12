@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<industrialPlantExperiments>
+	<experiment claim="scenario1/Req1.txt" model="scenario1/Mod1.xml"
+		result="scenario1/ConstraintM1R1.xml" refinement="false" />
+	<experiment claim="scenario2/ConstraintM1R1.xml"
+		model="scenario2/RefinementStackInitialization.xml" result="scenario2/Result.xml"
+		refinement="true" />
+
+	<experiment claim="scenario3/Constraint.xml" model="scenario3/RefinementAfterRetracting.xml"
+		result="scenario3/Result.xml" refinement="true" />
+</industrialPlantExperiments>

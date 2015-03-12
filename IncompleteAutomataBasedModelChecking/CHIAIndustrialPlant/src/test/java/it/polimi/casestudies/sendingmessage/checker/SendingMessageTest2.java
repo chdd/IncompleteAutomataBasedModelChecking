@@ -18,10 +18,8 @@ import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
-import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
-import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
@@ -67,7 +65,7 @@ public class SendingMessageTest2 {
 		BA<State, Transition> claim = claimReader.read();
 
 		ModelTransitionParser<State, Transition, IBA<State,Transition>> modelRransitionElementParser=new 
-				IBATransitionParser<IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
+				IBATransitionParser<State, Transition, IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
 		
 		StateElementParser<State, Transition, IBA<State,Transition>> ibaStateElementParser=new IBAStateElementParser(new StateFactoryImpl());
 	
@@ -82,14 +80,14 @@ public class SendingMessageTest2 {
 		IBA<State, Transition> model = modelReader.read();
 
 		ModelCheckingResults mp = new ModelCheckingResults();
-		ModelChecker<State, Transition, IntersectionTransition<State>> modelChecker = new ModelChecker<State, Transition, IntersectionTransition<State>>(
+		ModelChecker<State, Transition> modelChecker = new ModelChecker<State, Transition>(
 				model,
 				claim,
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(new TransitionFactoryIntersectionImpl<State>(),	new StateFactoryImpl()),
+				new IntersectionRuleImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(),	new StateFactoryImpl()),
 				 mp);
 
 		int res = modelChecker.check();
-		IntersectionBA<State, IntersectionTransition<State>> intersectionBA = modelChecker
+		IntersectionBA<State, Transition> intersectionBA = modelChecker
 				.getIntersectionAutomaton();
 
 		System.out.println(intersectionBA);

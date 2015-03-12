@@ -16,18 +16,18 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
-public class IBATransitionParser<A extends IBA<State, Transition>>
-		implements ModelTransitionParser<State, Transition, A> {
+public class IBATransitionParser<S extends State, T extends Transition, A extends IBA<S, T>>
+		implements ModelTransitionParser<S, T, A> {
 
 	
 	/**
 	 * is the factory which is used to create the transitions of the Buchi
 	 * automaotn
 	 */
-	private final TransitionFactory<State, Transition> transitionFactory;
+	private final TransitionFactory<S, T> transitionFactory;
 	
 	
-	public IBATransitionParser(TransitionFactory<State, Transition> transitionFactory){
+	public IBATransitionParser(TransitionFactory<S, T> transitionFactory){
 		Preconditions.checkNotNull(transitionFactory,"The transition factory cannot be null");
 		this.transitionFactory=transitionFactory;
 		
@@ -36,7 +36,7 @@ public class IBATransitionParser<A extends IBA<State, Transition>>
 	
 	@Override
 	public void transform(Element eElement, A automaton,
-			Map<Integer, State> idStateMap) {
+			Map<Integer, S> idStateMap) {
 		
 		int id = Integer.parseInt(eElement
 				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID));
@@ -48,7 +48,7 @@ public class IBATransitionParser<A extends IBA<State, Transition>>
 		if(!automaton.getAlphabet().containsAll(propositions)){
 			automaton.addCharacters(propositions);
 		}
-		Transition t = transitionFactory.create(id, propositions);
+		T t = transitionFactory.create(id, propositions);
 
 		int sourceId = Integer.parseInt(eElement
 				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_SOURCE));
@@ -62,7 +62,7 @@ public class IBATransitionParser<A extends IBA<State, Transition>>
 	}
 
 	@Override
-	public TransitionFactory<State, Transition> getTransitionFactory() {
+	public TransitionFactory<S, T> getTransitionFactory() {
 		return this.transitionFactory;
 	}
 }

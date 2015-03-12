@@ -12,5 +12,9 @@ public enum Color {
 		/**
 		 * indicates a port from which an initial/final state can be reached by passing some transparent state
 		 */
-		YELLOW, 		
+		YELLOW, 	
+		/**
+		 * indicates a port from which an initial/final state can be reached by passing some transparent state
+		 */
+		BLACK, 
 }

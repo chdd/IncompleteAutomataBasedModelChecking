@@ -41,12 +41,14 @@ public class IBATransparentStateRemoval<S extends State, T extends Transition> {
 			IBA<S, T> iba) {
 		Preconditions.checkNotNull(iba , "The Incomplete Buchi Automaton cannot be null");
 		
-
+		// clones the incomplete Buchi Automaton
 		IBA<S, T> retIba = iba.clone();
+		// removes the transparent states from the Buchi Automaton
 		Set<S> transparentStates=new HashSet<S>(retIba.getTransparentStates());
 		for (S s : transparentStates) {
 			retIba.removeState(s);
 		}
+		// returns the new Buchi Automaton
 		return retIba;
 	}
 

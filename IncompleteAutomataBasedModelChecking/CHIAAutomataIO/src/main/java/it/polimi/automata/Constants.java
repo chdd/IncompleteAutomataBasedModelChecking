@@ -19,9 +19,12 @@ public final class Constants {
 	
 	public final static String XML_ELEMENT_PORT="port";
 	public final static String XML_ELEMENT_CONSTRAINT="constraint";
+	public final static String XML_ELEMENT_REFINEMENT="refinement";
 	public final static String XML_ELEMENT_STATE="state";
 	public final static String XML_ELEMENT_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_ID="id";
+	public final static String XML_ATTRIBUTE_PORT_SOURCE="source";
+	public final static String XML_ATTRIBUTE_PORT_DESTINATION="destination";
 	public final static String XML_ATTRIBUTE_INCOMING="incoming";
 	public final static String XML_ATTRIBUTE_NAME="name";
 	public final static String XML_ATTRIBUTE_COLOR="color";
@@ -39,6 +42,7 @@ public final class Constants {
 	public final static String XML_ATTRIBUTE_INVARIANT="invariant";
 	
 	public final static String XML_ELEMENT_BA="ba";
+	public final static String XML_ELEMENT_IBA="iba";
 	
 	
 	/**

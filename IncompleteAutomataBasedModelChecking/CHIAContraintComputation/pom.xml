@@ -27,6 +27,11 @@
 		</dependency>
 		<dependency>
             <groupId>it.polimi.chia</groupId>
+            <artifactId>CHIAAutomataIO</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>it.polimi.chia</groupId>
             <artifactId>CHIAConstraints</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

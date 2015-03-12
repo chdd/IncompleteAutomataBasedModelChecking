@@ -18,10 +18,8 @@ import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.impl.StateFactoryImpl;
-import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
-import it.polimi.automata.transition.impl.TransitionFactoryIntersectionImpl;
 import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 import it.polimi.constraints.Constraint;
@@ -73,7 +71,7 @@ public class SendingMessageTest {
 		BA<State, Transition> claim = claimReader.read();
 
 		ModelTransitionParser<State, Transition, IBA<State,Transition>> modelRransitionElementParser=new 
-				IBATransitionParser<IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
+				IBATransitionParser<State, Transition, IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
 		
 		StateElementParser<State, Transition, IBA<State,Transition>> ibaStateElementParser=new IBAStateElementParser(new StateFactoryImpl());
 		
@@ -84,15 +82,15 @@ public class SendingMessageTest {
 						ibaStateElementParser,
 						modelRransitionElementParser);
 		IBA<State, Transition> model = modelReader.read();
-		CHIA<State, Transition, IntersectionTransition<State>> chia = new CHIA<State, Transition, IntersectionTransition<State>>(
+		CHIA<State, Transition> chia = new CHIA<State, Transition>(
 				claim, model,
-				new IntersectionRuleImpl<State, Transition, IntersectionTransition<State>>(new TransitionFactoryIntersectionImpl<State>(),	new StateFactoryImpl()));
+				new IntersectionRuleImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(),	new StateFactoryImpl()), new TransitionFactoryClaimImpl<State>());
 		int result = chia.check();
 		assertTrue(result == -1);
 
-		Constraint<State, IntersectionTransition<State>, BA<State, IntersectionTransition<State>>> constraint = chia.getConstraint();
+		Constraint<State, Transition, BA<State, Transition>> constraint = chia.getConstraint();
 
-		new ConstraintWriter<State, Transition, IntersectionTransition<State>, BA<State, IntersectionTransition<State>>>(constraint, new File(
+		new ConstraintWriter<State, Transition, BA<State, Transition>>(constraint, new File(
 				"/Users/Claudio1/Desktop/CHIAResults/Results.xml")).write();
 		System.out.println(constraint.toString());
 

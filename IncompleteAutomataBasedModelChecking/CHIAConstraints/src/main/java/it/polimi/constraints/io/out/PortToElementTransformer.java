@@ -72,7 +72,7 @@ public class PortToElementTransformer<S extends State, T extends Transition>
 		// transition id
 		Attr transitionId = doc
 				.createAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID);
-		transitionId.setValue(Integer.toString(port.getTransition().getId()));
+		transitionId.setValue(Integer.toString(port.getId()));
 		portElement.setAttributeNode(transitionId);
 
 		// transition label

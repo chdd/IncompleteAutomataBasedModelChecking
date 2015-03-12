@@ -5,9 +5,6 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.impl.IntBAImpl;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.IntersectionTransition;
-import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashMap;
@@ -32,30 +29,22 @@ import com.google.common.base.Preconditions;
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
  */
-public class IntersectionBuilder<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
+public class IntersectionBuilder<S extends State, T extends Transition> {
 
 	/**
 	 * contains the intersection automaton generated
 	 */
-	private IntersectionBA<S, I> intersection;
+	private IntersectionBA<S, T> intersection;
 
 	/**
 	 * contains the intersection rule which is used to build the intersection
 	 * transitions
 	 */
-	private IntersectionRule<S, T, I> intersectionrule;
+	private final IntersectionRule<S, T> intersectionrule;
 
-	/**
-	 * contains the state factory rule which is used to build the intersection
-	 * states
-	 */
-	private StateFactory<S> stateFactory;
+	
 
-	/**
-	 * is the factory which allows to create a new transition of the
-	 * intersection automaton
-	 */
-	private IntersectionTransitionFactory<S, I> intersectionTransitionFactory;
+	private Map<T, S> mapModelStateIntersectionTransitions;
 
 	/**
 	 * Keeps track of the created states. For each couple of state of the model
@@ -68,25 +57,26 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 	 * for each state of the model contains the corresponding states of the
 	 * intersection automaton
 	 */
-	private Map<S, Set<S>> modelStatesMap;
+	private Map<S, Set<S>> modelStatesIntersectionStateMap;
+	private final Map<S, S> intersectionStateModelStateMap;
 
 	/**
 	 * for each state of the claim contains the corresponding states of the
 	 * intersection automaton
 	 */
-	private Map<S, Set<S>> claimStatesMap;
+	private Map<S, Set<S>> claimIntersectionStatesMap;
 
 	/**
 	 * contains the model to be considered in the intersection procedure
 	 */
-	private IBA<S, T> model;
+	private final IBA<S, T> model;
 
 	/**
 	 * contains the claim to be considered in the intersection procedure
 	 */
-	private BA<S, T> claim;
+	private final BA<S, T> claim;
+	private boolean intersectionComputed=false;
 
-	
 	/**
 	 * crates a new {@link IntersectionBuilder} which is in charge of computing
 	 * the intersection automaton
@@ -107,7 +97,7 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IntersectionBuilder(IntersectionRule<S, T, I> intersectionrule,
+	public IntersectionBuilder(IntersectionRule<S, T> intersectionrule,
 			IBA<S, T> model, BA<S, T> claim) {
 		Preconditions.checkNotNull(intersectionrule,
 				"The intersection rule cannot be null");
@@ -116,11 +106,16 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 		Preconditions.checkNotNull(claim, "The claim cannot be null");
 
 		this.intersectionrule = intersectionrule;
-		this.stateFactory = intersectionrule.getIntersectionStateFactory();
-		this.intersection = new IntBAImpl<S, I>(intersectionrule.getIntersectionTransitionFactory());
+		this.intersection = new IntBAImpl<S, T>(
+				intersectionrule.getIntersectionTransitionFactory());
 		this.model = model;
 		this.claim = claim;
-		this.intersectionTransitionFactory = intersectionrule.getIntersectionTransitionFactory();
+		this.intersectionStateModelStateMap = new HashMap<S, S>();
+		this.mapModelStateIntersectionTransitions = new HashMap<T, S>();
+	}
+
+	public Map<S, S> getIntersectionStateModelStateMap() {
+		return this.intersectionStateModelStateMap;
 	}
 
 	/**
@@ -129,25 +124,30 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 	 * 
 	 * @return the intersection of this automaton and the automaton a2
 	 */
-	public IntersectionBA<S, I> computeIntersection() {
+	public IntersectionBA<S, T> computeIntersection() {
 
 		this.updateAlphabet();
-		this.claimStatesMap = new HashMap<S, Set<S>>();
-		this.modelStatesMap = new HashMap<S, Set<S>>();
+		this.claimIntersectionStatesMap = new HashMap<S, Set<S>>();
+		this.modelStatesIntersectionStateMap = new HashMap<S, Set<S>>();
 		this.createdStates = new HashMap<S, Map<S, Map<Integer, S>>>();
 		for (S modelInit : model.getInitialStates()) {
 			for (S claimInit : claim.getInitialStates()) {
 				this.computeIntersection(modelInit, claimInit, 0);
 			}
 		}
+		this.intersectionComputed=true;
 		return this.intersection;
 	}
-	
-	public IntersectionBA<S, I> computeIntersection(S modelInitialState, S claimInitialState) {
-		
-		this.intersection = new IntBAImpl<S, I>(this.intersectionTransitionFactory);
+
+	public IntersectionBA<S, T> computeIntersection(S modelInitialState,
+			S claimInitialState) {
+
+		this.intersection = new IntBAImpl<S, T>(
+				intersectionrule.getIntersectionTransitionFactory());
 		this.computeIntersection(modelInitialState, claimInitialState, 0);
-		
+
+
+		this.intersectionComputed=true;
 		return this.intersection;
 	}
 
@@ -185,8 +185,9 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 					.get(number);
 		}
 
-		intersectionState = this.stateFactory.create(modelState.getName()
-				+ " - " + claimState.getName() + " - " + number);
+		intersectionState = this.intersectionrule.getIntersectionStateFactory()
+				.create(modelState.getId() + " - " + claimState.getId() + " - "
+						+ number);
 
 		this.addStateIntoTheIntersectionAutomaton(intersectionState,
 				modelState, claimState, number);
@@ -199,7 +200,7 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 			// state
 			for (T claimTransition : claim.getOutTransitions(claimState)) {
 
-				I t = this.intersectionrule.getIntersectionTransition(
+				T t = this.intersectionrule.getIntersectionTransition(
 						modelTransition, claimTransition);
 				// if the two transitions are compatible
 				if (t != null) {
@@ -225,29 +226,39 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 
 		// if the current state of the extended automaton is transparent
 		if (model.isTransparent(modelState)) {
+			if (!this.modelStatesIntersectionStateMap.containsKey(modelState)) {
+				this.modelStatesIntersectionStateMap.put(modelState,
+						new HashSet<S>());
+			}
 			// for each transition in the automaton a2
 			for (T claimTransition : claim.getOutTransitions(claimState)) {
 
-				I t = this.intersectionrule.getIntersectionTransition(
-						modelState, claimTransition);
+				S nextClaimState = claim
+						.getTransitionDestination(claimTransition);
 
-				if (t != null) {
-					S nextClaimState = claim
-							.getTransitionDestination(claimTransition);
+				int nextNumber = this.comuteNumber(modelState, nextClaimState,
+						number);
 
-					int nextNumber = this.comuteNumber(modelState,
-							nextClaimState, number);
+				S nextState = this.computeIntersection(modelState,
+						nextClaimState, nextNumber);
 
-					S nextState = this.computeIntersection(modelState,
-							nextClaimState, nextNumber);
-
-					this.intersection.addTransition(intersectionState,
-							nextState, t);
-				}
+				T intersectionTransition=this.intersectionrule.intersectionTransitionFactory.create(claimTransition.getPropositions());
+				
+				this.intersection.addTransition(intersectionState, nextState,
+						intersectionTransition);
+				
+				this.mapModelStateIntersectionTransitions.put(intersectionTransition, modelState);
 
 			}
 		}
 		return intersectionState;
+	}
+
+	/**
+	 * @return the mapModelStateIntersectionTransitions
+	 */
+	public Map<T, S> getIntersectionTransitionsTransparentStatesMap() {
+		return mapModelStateIntersectionTransitions;
 	}
 
 	/**
@@ -286,11 +297,55 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 	 *         corresponding state of the model
 	 */
 	public Map<S, Set<S>> getModelIntersectionStateMap() {
-		return this.modelStatesMap;
+		Preconditions.checkState(intersectionComputed, "The intersection has still not be computed");
+		return this.modelStatesIntersectionStateMap;
 	}
 
 	public Map<S, Set<S>> getClaimIntersectionStateMap() {
-		return this.claimStatesMap;
+		Preconditions.checkState(intersectionComputed, "The intersection has still not be computed");
+		return this.claimIntersectionStatesMap;
+	}
+
+	public Set<S> getClaimReleatedIntersectionStates(S claimState) {
+		Preconditions.checkState(intersectionComputed, "The intersection has still not be computed");
+		Preconditions
+				.checkNotNull(claimState, "The claim state cannot be null");
+
+		if (!this.claimIntersectionStatesMap.containsKey(claimState)) {
+			return new HashSet<S>();
+		}
+		return this.claimIntersectionStatesMap.get(claimState);
+	}
+
+	public Set<S> getModelReleatedIntersectionStates(S modelState) {
+		Preconditions.checkState(intersectionComputed, "The intersection has still not be computed");
+		Preconditions
+				.checkNotNull(modelState, "The claim state cannot be null");
+		if (!this.modelStatesIntersectionStateMap.containsKey(modelState)) {
+			return new HashSet<S>();
+		}
+		return this.modelStatesIntersectionStateMap.get(modelState);
+	}
+
+	/**
+	 * returns the set of the states of the intersection which are associated
+	 * with a specific state of the claim
+	 * 
+	 * @param claimState
+	 *            is the state of the claim under interest
+	 * @return the set of the states of the intersection automaton associated
+	 *         with the claim state
+	 * @throws NullPointerException
+	 *             if the claim state is null
+	 */
+	public Set<S> getClaimIntersectionStates(S claimState) {
+		Preconditions.checkState(intersectionComputed, "The intersection has still not be computed");
+		Preconditions.checkNotNull(claimState,
+				"The state of the claim cannot be null");
+		if (!this.claimIntersectionStatesMap.containsKey(claimState)) {
+			return new HashSet<S>();
+		}
+		return this.claimIntersectionStatesMap.get(claimState);
 	}
 
 	private boolean checkVisitedStates(S modelState, S claimState, int number) {
@@ -322,20 +377,19 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 				}
 			}
 		}
-		if (!this.modelStatesMap.containsKey(modelState)) {
-			Set<S> relatedStates = new HashSet<S>();
-			relatedStates.add(intersectionState);
-			this.modelStatesMap.put(modelState, relatedStates);
-		} else {
-			this.modelStatesMap.get(modelState).add(intersectionState);
+		if (!this.modelStatesIntersectionStateMap.containsKey(modelState)) {
+			this.modelStatesIntersectionStateMap.put(modelState,
+					new HashSet<S>());
 		}
-		if (!this.claimStatesMap.containsKey(modelState)) {
-			Set<S> relatedStates = new HashSet<S>();
-			relatedStates.add(intersectionState);
-			this.claimStatesMap.put(claimState, relatedStates);
-		} else {
-			this.claimStatesMap.get(claimState).add(intersectionState);
+		if (!this.claimIntersectionStatesMap.containsKey(claimState)) {
+			this.claimIntersectionStatesMap.put(claimState, new HashSet<S>());
 		}
+		this.modelStatesIntersectionStateMap.get(modelState).add(
+				intersectionState);
+
+		this.claimIntersectionStatesMap.get(claimState).add(intersectionState);
+		this.intersectionStateModelStateMap.put(intersectionState, modelState);
+
 	}
 
 	private void addStateIntoTheIntersectionAutomaton(S intersectionState,
@@ -352,16 +406,35 @@ public class IntersectionBuilder<S extends State, T extends Transition, I extend
 			this.intersection.addMixedState(intersectionState);
 		}
 	}
-	
-	public boolean getIntersectionStates(S modelState, S claimState){
-		if(this.createdStates.get(modelState)!=null && this.createdStates.get(modelState).get(claimState)!=null){
+
+	public boolean getIntersectionStates(S modelState, S claimState) {
+		if (this.createdStates.get(modelState) != null
+				&& this.createdStates.get(modelState).get(claimState) != null) {
 			return true;
 		}
 		return false;
 	}
-	
-	public IntersectionBA<S, I> getPrecomputedIntersectionAutomaton(){
+
+	public IntersectionBA<S, T> getPrecomputedIntersectionAutomaton() {
+		Preconditions.checkState(intersectionComputed, "The intersection has still not be computed");
 		return this.intersection;
 	}
-}
 
+	public IBA<S, T> getModel() {
+		return this.model;
+	}
+
+	/**
+	 * contains the claim to be considered in the intersection procedure
+	 */
+	public BA<S, T> getClaim() {
+		return this.claim;
+	}
+	
+	/**
+	 * @return the intersectionrule
+	 */
+	public IntersectionRule<S, T> getIntersectionrule() {
+		return intersectionrule;
+	}
+}

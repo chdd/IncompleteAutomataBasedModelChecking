@@ -3,6 +3,7 @@ package it.polimi.constraints;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.constraints.impl.ConstraintImpl;
 
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +43,9 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 	 *             if the component is null
 	 */
 	public void addComponent(Component<S, T, A> component);
+	
+	public void removeComponent(Component<S, T, A> component);
+	
 
 	/**
 	 * returns the components involved in the constraint
@@ -49,6 +53,8 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 	 * @return the components involved in the constraint
 	 */
 	public Set<Component<S, T, A>> getComponents();
+	
+	public void union(ConstraintImpl<S,T,A> other);
 
 	/**
 	 * returns the component associated with the transparent state
@@ -77,8 +83,8 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public void addReachabilityRelation(Port<S, T> destinationIncomingPort,
-			Port<S, T> sourceOutComingPort);
+	public void addReachabilityRelation(Port<S, T> sourcePort,
+			Port<S, T> destinationPort);
 
 
 	/**
@@ -113,8 +119,6 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 
 	public int getTotalTransitions();
 
-	public void updatePortRelation(Set<Port<S, T>> incomingPorts,
-			Set<Port<S, T>> outcomingPorts);
 	
 	/**
 	 * returns the set of the states of the model constrained by the constraint
@@ -172,6 +176,11 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 	 * @return the set of the incoming ports of the component
 	 */
 	public Set<Port<S, T>> getIncomingPorts(Component<S, T, A> component);
+	public Set<Port<S, T>> getIncomingPorts();
+	
+	public Component<S, T, A>  getComponent(Port<S, T> port);
+	
+	public Set<Port<S, T>> getPorts();
 
 	/**
 	 * return the set of the out-coming ports of the component
@@ -179,8 +188,20 @@ public interface Constraint<S extends State, T extends Transition, A extends BA<
 	 * @return the set of the out-coming ports of the component
 	 */
 	public Set<Port<S, T>> getOutcomingPorts(Component<S, T, A> component);
+	public Set<Port<S, T>> getOutcomingPorts();
+
 	
 	public DefaultDirectedGraph<Port<S, T>, DefaultEdge> getPortsGraph();
 	
+	
 	public void setPortGraph(DefaultDirectedGraph<Port<S, T>, DefaultEdge> portsGraph);
+	
+	public void removePort(Port<S, T> port);
+	
+	public void replace(Component<S, T, A> oldComponent,
+			ConstraintImpl<S, T, A> newConstraint, 
+			Map<Port<S, T>, Set<Port<S, T>>> mapOldPropertyNewConstraintIncomingPorts, 
+			Map<Port<S, T>, Set<Port<S, T>>> mapOldPropertyNewConstraintOutcomingPorts,
+			Map<Port<S, T>, Port<S, T>> intersectionIncomingPortClaimPortMap,
+			Map<Port<S, T>, Port<S, T>> intersectionOutcomingPortClaimPortMap);
 }

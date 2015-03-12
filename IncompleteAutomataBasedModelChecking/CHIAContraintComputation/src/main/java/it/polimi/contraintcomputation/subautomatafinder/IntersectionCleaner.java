@@ -2,15 +2,16 @@ package it.polimi.contraintcomputation.subautomatafinder;
 
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.IntersectionTransition;
 import it.polimi.automata.transition.Transition;
+import it.polimi.checker.emptiness.EmptinessChecker;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
 
 /**
  * The intersection cleaner removes from the intersection automaton the states
@@ -28,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *            the transitions of the automaton must implement the interface
  *            {@link Transition}
  */
-public class IntersectionCleaner<S extends State, T extends IntersectionTransition<S>> {
+public class IntersectionCleaner<S extends State, T extends Transition> {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -61,7 +62,7 @@ public class IntersectionCleaner<S extends State, T extends IntersectionTransiti
 	 *             if the automaton to be considered is null
 	 */
 	public IntersectionCleaner(IntersectionBA<S, T> automaton) {
-		Validate.notNull(automaton,
+		Preconditions.checkNotNull(automaton,
 				"The intersection automaton to be considered cannot be null");
 
 		this.intersectionAutomaton = automaton;
@@ -95,7 +96,6 @@ public class IntersectionCleaner<S extends State, T extends IntersectionTransiti
 			toBeVisited.remove(currentState);
 		}
 		
-		System.out.println(visitedStates);
 		
 		Set<S> toBeRemoved = new HashSet<S>(
 				this.intersectionAutomaton.getStates());

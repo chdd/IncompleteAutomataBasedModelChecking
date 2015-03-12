@@ -49,6 +49,7 @@ public interface Transition {
 	 */
 	public void setLabels(Set<IGraphProposition> labels);
 	
-	public boolean equals(Object obj); 
+	public boolean equals(Object obj) ;
+	public int hashCode();
 
 }

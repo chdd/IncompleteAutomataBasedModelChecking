@@ -175,7 +175,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 				"The transition t cannot be null");
 		Preconditions
 				.checkArgument(this.getTransitions().contains(transition),
-						"The transition is not contained into the set of the transition of the BA");
+						"The transition "+transition+" is not contained into the set of the transition of the BA");
 
 		return this.automataGraph.getEdgeTarget(transition);
 	}
@@ -204,7 +204,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 	public Set<S> getSuccessors(S s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
 		Preconditions.checkArgument(this.getStates().contains(s),
-				"The state is not contained into the states of the automaton");
+				"The state "+s+" is not contained into the states of the automaton");
 
 		Set<S> successors = new HashSet<S>();
 		for (T t : this.getOutTransitions(s)) {
@@ -356,10 +356,7 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 						this.getStates().contains(destination),
 						"The destination state is not contained into the set of the states of the automaton");
 
-		Preconditions
-				.checkArgument(!this.getTransitions().contains(transition),
-						"The transition is already contained into the set of transitions of the graph");
-
+	
 		logger.debug("Transitions: " + transition.toString());
 		logger.debug("Adding the transition: " + transition.getId() + " from "
 				+ source.toString() + " to " + destination.toString());
@@ -543,8 +540,14 @@ public class BAImpl<S extends State, T extends Transition> implements BA<S, T> {
 		for(S acceptingState: this.getAcceptStates()){
 			Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
 			propositions.add(new GraphProposition(Constants.STUTTERING_CHARACTER, false));
+			this.addCharacters(propositions);
 			T stutteringTransition=((TransitionFactory<S, T>) this.automataGraph.getEdgeFactory()).create(propositions);
-			this.automataGraph.addEdge(acceptingState, acceptingState, stutteringTransition);
+			this.addTransition(acceptingState, acceptingState, stutteringTransition);
 		}
+	}
+
+	@Override
+	public TransitionFactory<S, T> getTransitionFactory() {
+		return (TransitionFactory<S, T>) this.getGraph().getEdgeFactory();
 	}
 }

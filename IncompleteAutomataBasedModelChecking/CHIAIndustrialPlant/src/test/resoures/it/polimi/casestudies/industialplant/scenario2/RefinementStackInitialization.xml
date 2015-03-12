@@ -1,0 +1,32 @@
+<!-- This component contains the refinement of the transparent state of the 
+	model BeforeRetracting. The developer specifies that the system may be in 
+	two transparent states: BeforeReleasing and AfterReleasing the system moves 
+	from the state BeforeRetracting to the state AfterReleasing when the actretract 
+	action arrives. The state BeforeReleasing is the initial state of the refinement 
+	which is reached by the incoming ports 9 which arrives from the source state 
+	1 and is labeled with the proposition distart. The state AfterReleasing is 
+	the final state of the system which is left by the port 26 which goes to 
+	the state of the model 2 and is labeled with the proposition actreleased -->
+<refinement modelstateId="2" name="BeforeRetracting">
+	<iba>
+		<state id="4" name="BeforeRetracting" transparent="true" />
+		<state id="5" name="Retracting" />
+		<state id="6" name="AfterRetracting" transparent="true" />
+
+		<transition destination="5" id="4" propositions="actretract"
+			source="4" />
+		<transition destination="5" id="5" propositions="actretract"
+			source="5" />
+		<transition destination="6" id="6" propositions="diretracted"
+			source="5" />
+	</iba>
+	<outports>
+		<port destination="3" id="2" propositions="stackinitialized" source="6"
+			type="outport" />
+	</outports>
+	<inports>
+		<port destination="4" id="1" propositions="distart" source="1"
+			type="inport" />
+	</inports>
+</refinement>
+

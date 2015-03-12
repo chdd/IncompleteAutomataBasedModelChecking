@@ -32,10 +32,13 @@ public class ReachabilityChecker<S extends State, T extends Transition, A extend
 	 */
 	private final A ba;
 
+
+	private Map<S, Set<S>> reachableStates;
+
 	/**
 	 * contains the set of the reachable states
 	 */
-	private Map<S, Set<S>> reachableStates;
+	private final Set<S> statesUnderAnalysis;
 
 	/**
 	 * creates a new reachability checker
@@ -43,11 +46,15 @@ public class ReachabilityChecker<S extends State, T extends Transition, A extend
 	 * @param ba
 	 *            is the automaton to be considered
 	 */
-	public ReachabilityChecker(A ba) {
+	public ReachabilityChecker(A ba, Set<S> statesUnderAnalysis) {
 		Preconditions.checkNotNull(ba,
 				"The automaton to be considered cannot be null");
+		Preconditions.checkNotNull(statesUnderAnalysis,
+				"The automaton to be considered cannot be null");
+		
 		this.ba = ba;
 		this.reachableStates = new HashMap<S, Set<S>>();
+		this.statesUnderAnalysis=statesUnderAnalysis;
 
 	}
 
@@ -56,18 +63,38 @@ public class ReachabilityChecker<S extends State, T extends Transition, A extend
 	 * 
 	 * @return for each state the set of the reachable states
 	 */
-	public Map<S, Set<S>> check() {
+	public Map<S, Set<S>> forwardReachabilitycheck() {
 		this.reachableStates = new HashMap<S, Set<S>>();
-		for (S s : ba.getStates()) {
+		for (S s : statesUnderAnalysis) {
 			this.reachableStates.put(s, ba.getSuccessors(s));
+			this.reachableStates.get(s).add(s);
 		}
 
-		for (S k : this.ba.getStates()) {
-			for (S i : this.ba.getStates()) {
-				for (S j : this.ba.getStates()) {
+		for (S k : statesUnderAnalysis) {
+			for (S i : statesUnderAnalysis) {
+				for (S j : statesUnderAnalysis) {
 					if (this.reachableStates.get(i).contains(k)
 							&& this.reachableStates.get(k).contains(j)) {
 						this.reachableStates.get(i).add(j);
+					}
+				}
+			}
+		}
+		return this.reachableStates;
+	}
+	public Map<S, Set<S>> backWardReachabilitycheck() {
+		this.reachableStates = new HashMap<S, Set<S>>();
+		for (S s : ba.getStates()) {
+			this.reachableStates.put(s, ba.getPredecessors(s));
+			this.reachableStates.get(s).add(s);
+		}
+
+		for (S k : statesUnderAnalysis) {
+			for (S i : statesUnderAnalysis) {
+				for (S j : statesUnderAnalysis) {
+					if (this.reachableStates.get(i).contains(k)
+							&& this.reachableStates.get(k).contains(j)) {
+						this.reachableStates.get(j).add(i);
 					}
 				}
 			}

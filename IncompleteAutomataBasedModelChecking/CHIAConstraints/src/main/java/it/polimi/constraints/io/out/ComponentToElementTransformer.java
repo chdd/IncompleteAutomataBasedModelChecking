@@ -1,13 +1,5 @@
 package it.polimi.constraints.io.out;
 
-import java.util.Set;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.google.common.base.Preconditions;
-
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
 import it.polimi.automata.io.Transformer;
@@ -18,6 +10,14 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
+
+import java.util.Set;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.base.Preconditions;
 
 /**
  * transforms the component to an XML element.

@@ -40,6 +40,8 @@ public interface IntersectionBA<S extends State, T extends Transition>
 	 * @return the set of the mixed states of the Intersection Buchi automaton
 	 */
 	public Set<S> getMixedStates();
+	
+	public Set<S> getRegularStates();
 
 	/**
 	 * adds the mixed state s to the states of the {@link IBA} and to the set of

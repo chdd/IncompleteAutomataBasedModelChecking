@@ -4,20 +4,25 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.IntersectionTransition;
-import it.polimi.automata.transition.IntersectionTransitionFactory;
 import it.polimi.automata.transition.Transition;
+import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.constraints.Color;
 import it.polimi.constraints.Constraint;
+import it.polimi.constraints.Port;
 import it.polimi.constraints.impl.BAComponentFactory;
 import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
-import it.polimi.contraintcomputation.subautomatafinder.SubPropertiesIdentifier;
+import it.polimi.contraintcomputation.subautomatafinder.ReachabilityChecker;
+import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
 
 /**
  * The constraint generator computes a constraint. A constraint is a (set of)
@@ -26,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author claudiomenghi
  * 
  */
-public class ConstraintGenerator<S extends State, T extends Transition, I extends IntersectionTransition<S>> {
+public class ConstraintGenerator<S extends State, T extends Transition> {
 
 	/**
 	 * is the logger of the ConstraintGenerator class
@@ -34,26 +39,15 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 	private static final Logger logger = LoggerFactory
 			.getLogger(ConstraintGenerator.class);
 
-	/**
-	 * contains a map that maps each state of the model with a set of states of
-	 * the intersection automaton
-	 */
-	private Map<S, Set<S>> modelIntersectionStatesMap;
-
+	
 	/**
 	 * contains the intersection automaton
 	 */
-	private IntersectionBA<S, I> intBA;
+	private IntersectionBA<S, T> intersectionAutomaton;
 
-	/**
-	 * is the factory to be used to create transitions
-	 */
-	private IntersectionTransitionFactory<S, I> subPropertiesTransitionFactory;
-
-	/**
-	 * contains the model of the system
-	 */
-	private IBA<S, T> model;
+	
+	
+	private IntersectionBuilder<S, T> intersectionBuilder;
 
 	/**
 	 * creates a new ConstraintGenerator object which starting from the
@@ -61,7 +55,7 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 	 * the corresponding states of the intersection automaton computes the
 	 * constraints
 	 * 
-	 * @param intBA
+	 * @param intersectionAutomaton
 	 *            is the intersection automaton
 	 * @param model
 	 *            is the model to be verified
@@ -73,23 +67,16 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public ConstraintGenerator(IntersectionBA<S, I> intBA, IBA<S, T> model,
-			Map<S, Set<S>> modelIntersectionStatesMap,
-			IntersectionTransitionFactory<S, I> subpropertiestransitionFactory) {
+	public ConstraintGenerator(IntersectionBuilder<S, T> intersectionBuilder) {
 
-		
-		Validate.notNull(intBA, "The intersection model cannot be null");
-		Validate.notNull(model, "The model of the system cannot be null");
-		Validate.notNull(
-				modelIntersectionStatesMap,
-				"The map between the states of the model and the intersection states cannot be null");
-		Validate.notNull(subpropertiestransitionFactory,
-				"The transition factory cannot be null");
-		System.out.println(intBA);
-		this.modelIntersectionStatesMap = modelIntersectionStatesMap;
-		this.subPropertiesTransitionFactory = subpropertiestransitionFactory;
-		this.intBA = intBA;
-		this.model = model;
+		Preconditions.checkNotNull(intersectionBuilder,
+				"The intersection builder cannot be null");
+		this.intersectionAutomaton = intersectionBuilder.getPrecomputedIntersectionAutomaton();
+		this.intersectionBuilder=intersectionBuilder;
+	}
+	
+	public IntersectionBA<S, T> getIntersectionAutomaton(){
+		return this.intersectionAutomaton;
 	}
 
 	/**
@@ -97,24 +84,60 @@ public class ConstraintGenerator<S extends State, T extends Transition, I extend
 	 * 
 	 * @return the constraint of the automaton
 	 */
-	public Constraint<S, I, BA<S,I>> generateConstraint() {
+	public Constraint<S, T, BA<S, T>> generateConstraint() {
 
+		
 		logger.info("Computing the constraint");
 		/*
 		 * removes from the intersection automaton the states from which it is
 		 * not possible to reach an accepting state since these states are not
 		 * useful in the constraint computation
 		 */
-		IntersectionCleaner<S, I> intersectionCleaner = new IntersectionCleaner<S, I>(
-				intBA);
+		IntersectionCleaner<S, T> intersectionCleaner = new IntersectionCleaner<S, T>(
+				intersectionAutomaton);
 		intersectionCleaner.clean();
 
-		SubPropertiesIdentifier<S, T, I, BA<S,I>> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, I, BA<S,I>>(
-				intBA, model, this.modelIntersectionStatesMap,
-				this.subPropertiesTransitionFactory, new BAComponentFactory<S, I>());
-		Constraint<S, I, BA<S,I>> constraint = subPropertiesIdentifier.getSubAutomata();
-
 		
+		SubPropertiesIdentifier<S, T, BA<S, T>> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, BA<S, T>>(
+				intersectionBuilder,
+				new BAComponentFactory<S, T>());
+		Constraint<S, T, BA<S, T>> constraint = subPropertiesIdentifier
+				.getSubAutomata(new HashMap<Port<S,T>, Color>(), new HashMap<Port<S,T>, Color>());
+		
+		Set<Port<S, T>> visitedPorts=new HashSet<Port<S,T>>();
+		
+		/*
+		 * removes the transitions associated with the transparent state, i.e.,
+		 * the internal transition of each component
+		 */
+		
+		IBA<S, T> model = this.intersectionBuilder.getModel().clone();
+		
+		Map<S, Set<S>> forwardReachability=new ReachabilityChecker<S, T, IBA<S, T>>(model, model.getRegularStates()).forwardReachabilitycheck();
+		for(S init: model.getInitialStates()){
+			Set<S> reachableStates=forwardReachability.get(init);
+			for(Port<S, T> port: constraint.getIncomingPorts()){
+				if(reachableStates.contains(port.getSource())){
+					constraint.setPortValue(port, Color.GREEN);
+					visitedPorts.add(port);
+				}	
+			}
+		}
+		Map<S, Set<S>> backReachability=new ReachabilityChecker<S, T, IBA<S, T>>(model, model.getRegularStates()).backWardReachabilitycheck();
+		for(S accepting: model.getAcceptStates()){
+			Set<S> reachableStates=backReachability.get(accepting);
+			for(Port<S, T> port: constraint.getOutcomingPorts()){
+				if(reachableStates.contains(port.getDestination())){
+					constraint.setPortValue(port, Color.RED);
+					visitedPorts.add(port);
+				}	
+			}
+		}
+		for(Port<S, T> port: constraint.getPorts()){
+			if(!visitedPorts.contains(port) && constraint.getPortValue(port)!=Color.RED && constraint.getPortValue(port)!=Color.GREEN){
+				constraint.setPortValue(port, Color.YELLOW);
+			}
+		}
 		
 		logger.info("Constraint computed");
 		return constraint;

@@ -64,10 +64,10 @@ public class PortsGraphToElementTransformer<S extends State, T extends Transitio
 			portReachability.appendChild(edge);
 			
 			Port<S, T> sourceport=input.getEdgeSource(port);
-			edge.setAttribute(Constants.XML_ELEMENT_PORTS_IN, Integer.toString(sourceport.getId()));
+			edge.setAttribute(Constants.XML_ATTRIBUTE_PORT_SOURCE, Integer.toString(sourceport.getId()));
 			
 			Port<S, T> destinationport=input.getEdgeTarget(port);
-			edge.setAttribute(Constants.XML_ELEMENT_PORTS_OUT, Integer.toString(destinationport.getId()));
+			edge.setAttribute(Constants.XML_ATTRIBUTE_PORT_DESTINATION, Integer.toString(destinationport.getId()));
 			
 			portReachability.appendChild(edge);
 		}

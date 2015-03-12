@@ -7,7 +7,6 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.constraints.Component;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.impl.PortImpl;
 
@@ -44,18 +43,14 @@ public class ElementToPortTransformer<S extends State, T extends Transition, A e
 	 * 
 	 * @param e
 	 *            is the element to be converted
-	 * @param c
-	 *            is the component to which the port refers to
 	 * @return the corresponding port
 	 * @throws NullPointerException
 	 *             if the one of the parameters is null
 	 */
-	public Port<S, T> transform(Element e, Component<S, T, A> c) {
+	public Port<S, T> transform(Element e) {
 		Preconditions.checkNotNull(e,
 				"The element to be converted cannot be null");
-		Preconditions.checkNotNull(c,
-				"The component to analyzed cannot be null");
-
+		
 		String labels = e
 				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS);
 		ModelPropositionParser<S, T> propositionsParser = new ModelPropositionParser<S, T>();
@@ -63,6 +58,7 @@ public class ElementToPortTransformer<S extends State, T extends Transition, A e
 		int transitionId = Integer.parseInt(e
 				.getAttribute(Constants.XML_ATTRIBUTE_ID));
 
+		PortImpl.ID_COUNTER=Math.max(PortImpl.ID_COUNTER, transitionId+1);
 		T transition = this.transitionFactory.create(transitionId,
 				propositionsParser.computePropositions(labels));
 		
@@ -78,6 +74,6 @@ public class ElementToPortTransformer<S extends State, T extends Transition, A e
 
 		S destinationState = this.stateFactory.create(Integer.toString(destinationStateId), destinationStateId);
 		
-		return new PortImpl<S, T>(sourceState, destinationState, transition, incoming);
+		return new PortImpl<S, T>(transitionId, sourceState, destinationState, transition, incoming);
 	}
 }

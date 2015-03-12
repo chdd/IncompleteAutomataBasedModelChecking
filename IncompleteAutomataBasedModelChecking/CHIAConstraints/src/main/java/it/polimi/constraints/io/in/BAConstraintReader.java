@@ -17,14 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -60,11 +57,6 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 	private final ClaimTransitionParser<S, T, BA<S, T>> transitionElementParser;
 
 	/**
-	 * contains a map that connects the id with the corresponding state
-	 */
-	private final Map<Integer, S> mapIdState;
-
-	/**
 	 * contains a map that given an id returns the corresponding port
 	 */
 	private final Map<Integer, Port<S, T>> mapIdPort;
@@ -97,7 +89,6 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 		this.file = file;
 		this.stateElementParser = stateElementParser;
 		this.transitionElementParser = transitionElementParser;
-		this.mapIdState = new HashMap<Integer, S>();
 		this.componentFactory = new BAComponentFactory<S, T>();
 		this.mapIdPort = new HashMap<Integer, Port<S, T>>();
 	}
@@ -153,7 +144,7 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 			NodeList xmlOutComingPortsList=xmlOutComingPorts.getElementsByTagName(Constants.XML_ELEMENT_PORT);
 			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 				Element  xmlOutComingPort=(Element) xmlOutComingPortsList.item(portId);
-				Port<S,T> port=new ElementToPortTransformer<S,T,BA<S,T>>(this.transitionElementParser.getTransitionFactory(), this.stateElementParser.getStateFactory()).transform(xmlOutComingPort, component);
+				Port<S,T> port=new ElementToPortTransformer<S,T,BA<S,T>>(this.transitionElementParser.getTransitionFactory(), this.stateElementParser.getStateFactory()).transform(xmlOutComingPort);
 				this.mapIdPort.put(port.getId(), port);
 				constraint.addOutComingPort(component, port);
 			}
@@ -163,17 +154,17 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 			NodeList xmlInComingPortsList=xmlInComingPorts.getElementsByTagName(Constants.XML_ELEMENT_PORT);
 			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 				Element  xmlInComingPort=(Element) xmlInComingPortsList.item(portId);
-				Port<S,T> port=new ElementToPortTransformer<S,T,BA<S,T>>(this.transitionElementParser.getTransitionFactory(), this.stateElementParser.getStateFactory()).transform(xmlInComingPort, component);
+				Port<S,T> port=new ElementToPortTransformer<S,T,BA<S,T>>(this.transitionElementParser.getTransitionFactory(), this.stateElementParser.getStateFactory()).transform(xmlInComingPort);
 				this.mapIdPort.put(port.getId(), port);
 				constraint.addIncomingPort(component, port);
 			}
 				
 		}
-		
+		Preconditions.checkArgument(doc.getElementsByTagName(
+				Constants.XML_ELEMENT_PORTS_REACHABILITY).getLength()>=1, "Port reachability element not present");
 		Element portReachability=(Element) doc.getElementsByTagName(
 				Constants.XML_ELEMENT_PORTS_REACHABILITY).item(0);
-		DefaultDirectedGraph<Port<S, T>, DefaultEdge> graph=new ElementToPortGraphTransformer<S, T>(this.mapIdPort).transform(portReachability);
-		constraint.setPortGraph(graph);
+		new ElementToPortGraphTransformer<S, T>(this.mapIdPort, constraint.getPortsGraph()).transform(portReachability);
 		
 		Element portSColor=(Element) doc.getElementsByTagName(
 				Constants.XML_ELEMENT_PORTS_COLORS).item(0);
@@ -197,9 +188,5 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 					.getAttribute(Constants.XML_ATTRIBUTE_COLOR));
 			constraint.setPortValue(this.mapIdPort.get(currentPortId), c);
 		}
-	}
-
-	
-
-	
+	}	
 }

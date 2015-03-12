@@ -1,19 +1,18 @@
 package it.polimi.checker.intersection.impl;
 
-import it.polimi.automata.transition.IntersectionTransition;
-import it.polimi.automata.transition.IntersectionTransitionFactory;
+import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.intersection.IntersectionRule;
 
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-
-import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Defines an {@link IntersectionRule} that specifies how the transitions of the
@@ -25,12 +24,12 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  * @author claudiomenghi
  * 
  */
-public class IntersectionRuleImpl<S extends State, T extends Transition, I extends IntersectionTransition<S>>
-		extends IntersectionRule<S, T, I> {
+public class IntersectionRuleImpl<S extends State, T extends Transition>
+		extends IntersectionRule<S, T> {
 
 	
 	public IntersectionRuleImpl(
-			IntersectionTransitionFactory<S, I> intersectionTransitionFactory,
+			TransitionFactory<S, T> intersectionTransitionFactory,
 			StateFactory<S> stateFactory) {
 		super(intersectionTransitionFactory, stateFactory);
 	}
@@ -39,7 +38,7 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public I getIntersectionTransition(T modelTransition, T claimTransition) {
+	public T getIntersectionTransition(T modelTransition, T claimTransition) {
 
 		Preconditions.checkNotNull(modelTransition,
 				"The model transition cannot be null");
@@ -99,19 +98,5 @@ public class IntersectionRuleImpl<S extends State, T extends Transition, I exten
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public I getIntersectionTransition(S modelState, T claimTransition) {
-		Preconditions
-				.checkNotNull(modelState, "The model state cannot be null");
-		Preconditions.checkNotNull(claimTransition,
-				"The claim transition cannot be null");
-		Preconditions.checkNotNull(intersectionTransitionFactory,
-				"The intersection factory cannot be null");
-
-		return intersectionTransitionFactory.create(
-				claimTransition.getPropositions(), modelState);
-
 	}
 }

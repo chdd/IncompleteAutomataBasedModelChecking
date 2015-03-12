@@ -56,6 +56,9 @@ public interface IBA<S extends State, T extends Transition>
 	 *         returned)
 	 */
 	public Set<S> getTransparentStates();
+	
+	public Set<S> getRegularStates();
+
 
 	/**
 	 * adds the transparent state s to the states of the {@link IBA} and to the

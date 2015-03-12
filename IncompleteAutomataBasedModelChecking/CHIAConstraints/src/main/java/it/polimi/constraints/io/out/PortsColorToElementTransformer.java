@@ -1,11 +1,5 @@
 package it.polimi.constraints.io.out;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.google.common.base.Preconditions;
-
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
 import it.polimi.automata.io.Transformer;
@@ -13,6 +7,12 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.base.Preconditions;
 
 public class PortsColorToElementTransformer<S extends State, T extends Transition, A extends BA<S, T>> implements Transformer<Port<S,T>,Element> {
 

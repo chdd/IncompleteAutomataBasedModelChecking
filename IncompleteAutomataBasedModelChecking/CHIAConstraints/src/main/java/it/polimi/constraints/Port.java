@@ -57,4 +57,6 @@ public interface Port<S extends State, T extends Transition>
 	 * @return true if the two ports are equals
 	 */
 	public boolean equals(Object obj);
+	
+	public String toString();
 }

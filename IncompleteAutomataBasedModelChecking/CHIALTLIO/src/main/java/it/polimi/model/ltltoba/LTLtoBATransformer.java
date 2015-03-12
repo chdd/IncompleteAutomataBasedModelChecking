@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.LTL2BA4J;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
@@ -167,8 +169,7 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the endPoint, the map or the buchi automaton is null
 	 */
-	private void analyzeState(IState endPoint, Map<IState, S> map,
-			BA<S, T> ba) {
+	private void analyzeState(IState endPoint, Map<IState, S> map, BA<S, T> ba) {
 		if (endPoint == null) {
 			throw new NullPointerException("The end point state cannot be null");
 		}
@@ -220,16 +221,10 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 */
 	private void analyzeTransition(ITransition transition, Map<IState, S> map,
 			BA<S, T> ba) {
-		if (transition == null) {
-			throw new NullPointerException(
-					"The transition to be added cannot be null");
-		}
-		if (map == null) {
-			throw new NullPointerException("The map cannot be null");
-		}
-		if (ba == null) {
-			throw new NullPointerException("The Buchi automaton cannot be null");
-		}
+		Preconditions.checkNotNull(transition,
+				"The transition to be added cannot be null");
+		Preconditions.checkNotNull(map, "The map cannot be null");
+		Preconditions.checkNotNull(ba, "The Buchi automaton cannot be null");
 
 		// returns the source state of the transition
 		S source = map.get(transition.getSourceState());

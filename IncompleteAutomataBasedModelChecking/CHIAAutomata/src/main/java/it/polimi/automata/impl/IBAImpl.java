@@ -104,13 +104,14 @@ public class IBAImpl<S extends State, T extends Transition> extends
 		for (S s : this.getInitialStates()) {
 			clone.addInitialState(s);
 		}
+		for (S s : this.getTransparentStates()) {
+			clone.addTransparentState(s);
+		}
 		for (T t : this.getTransitions()) {
 			clone.addTransition(this.getTransitionSource(t),
 					this.getTransitionDestination(t), t);
 		}
-
-		clone.transparentStates = new HashSet<S>(this.getTransparentStates());
-
+		
 		return clone;
 	}
 
@@ -242,5 +243,13 @@ public class IBAImpl<S extends State, T extends Transition> extends
 
 		}
 		return ret;
+	}
+
+	@Override
+	public Set<S> getRegularStates() {
+		Set<S> states=new HashSet<S>();
+		states.addAll(this.getStates());
+		states.removeAll(this.getTransparentStates());
+		return states;
 	}
 }

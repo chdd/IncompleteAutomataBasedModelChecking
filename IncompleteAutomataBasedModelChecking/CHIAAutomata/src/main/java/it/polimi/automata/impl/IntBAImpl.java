@@ -43,7 +43,8 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 	 * contains the set of the mixed states
 	 */
 	private Set<S> mixedStates;
-
+	
+	
 	/**
 	 * creates a new intersection automaton
 	 */
@@ -118,5 +119,13 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 		if(this.mixedStates.contains(state)){
 			this.mixedStates.remove(state);
 		}
+	}
+
+	@Override
+	public Set<S> getRegularStates() {
+		Set<S> regularStates=new HashSet<S>();
+		regularStates.addAll(this.getStates());
+		regularStates.removeAll(this.getMixedStates());
+		return regularStates;
 	}
 }

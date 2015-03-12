@@ -37,6 +37,7 @@ public interface Component<S extends State, T extends Transition, A extends BA<S
 	 */
 	public A getAutomaton();
 	
+	
 	public void setAutomaton(A automaton);
 
 }
