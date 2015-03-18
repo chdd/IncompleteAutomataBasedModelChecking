@@ -5,8 +5,6 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
-import it.polimi.automata.io.transformer.states.IBAStateElementParser;
-import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
@@ -31,7 +29,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  */
 public class IBAReaderTest {
 
-	private StateFactorystateFactory;
+	private StateFactory stateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 	
 	private Transition t1;
@@ -79,11 +77,6 @@ public class IBAReaderTest {
 	
 	@Test
 	public void test() throws FileNotFoundException {
-		StateElementParser<State, Transition, IBA<State, Transition>> stateElementParser = new IBAStateElementParser(
-				new StateFactory());
-
-		ModelTransitionParser<State, Transition, IBA<State, Transition>> transitionParser = new IBATransitionParser<State, Transition, IBA<State, Transition>>(
-				this.transitionFactory);
 
 		IBAReader reader=new IBAReader(
 				 new File(getClass().getClassLoader()
