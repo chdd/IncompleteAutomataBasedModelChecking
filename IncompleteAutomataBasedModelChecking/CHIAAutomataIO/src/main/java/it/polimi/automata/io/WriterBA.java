@@ -35,7 +35,7 @@ import com.google.common.base.Preconditions;
  * @param T
  *            is the type of the transitions of the intersection automaton
  */
-public class WriterBA<S extends State, T extends Transition> {
+public class WriterBA {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -46,7 +46,7 @@ public class WriterBA<S extends State, T extends Transition> {
 	/**
 	 * contains the intersection automaton to be written
 	 */
-	private IntersectionBA<S, T> intersectionAutomaton;
+	private IntersectionBA intersectionAutomaton;
 	/**
 	 * contains the file where the intersection automaton must be written
 	 */
@@ -64,7 +64,7 @@ public class WriterBA<S extends State, T extends Transition> {
 	 *             if the intersection automaton or the file is null
 	 * 
 	 */
-	public WriterBA(IntersectionBA<S, T> intersectionAutomaton, File f) {
+	public WriterBA(IntersectionBA intersectionAutomaton, File f) {
 		Preconditions.checkNotNull(intersectionAutomaton,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(f,
@@ -110,9 +110,9 @@ public class WriterBA<S extends State, T extends Transition> {
 	}
 
 	private void computingStateElements(Document doc, Element rootElement) {
-		StateToElementTransformer<S, T, IntersectionBA<S, T>> stateTransformer = new StateToElementTransformer<S, T, IntersectionBA<S, T>>(
+		StateToElementTransformer stateTransformer = new StateToElementTransformer(
 				this.intersectionAutomaton, doc);
-		for (S s : this.intersectionAutomaton.getStates()) {
+		for (State s : this.intersectionAutomaton.getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
 			rootElement.appendChild(xmlStateElement);
 
@@ -120,9 +120,9 @@ public class WriterBA<S extends State, T extends Transition> {
 	}
 
 	private void computingTransitionElements(Document doc, Element rootElement) {
-		TransitionToElementTransformer<S, T, IntersectionBA<S, T>> transitionTransformer = new TransitionToElementTransformer<S, T, IntersectionBA<S, T>>(
+		TransitionToElementTransformer transitionTransformer = new TransitionToElementTransformer(
 				this.intersectionAutomaton, doc);
-		for (T transition : this.intersectionAutomaton.getTransitions()) {
+		for (Transition transition : this.intersectionAutomaton.getTransitions()) {
 			Element transitionElement =transitionTransformer.transform(transition);
 			rootElement.appendChild(transitionElement);
 		}

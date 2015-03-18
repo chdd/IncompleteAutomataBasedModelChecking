@@ -3,10 +3,8 @@
  */
 package it.polimi.automata.transition;
 
-import static org.junit.Assert.*;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.ModelTransitionFactory;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,12 +21,12 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  */
 public class ModelTransitionFactoryImplTest {
 
-	private ModelTransitionFactory<State> modelFactory;
+	private ModelTransitionFactory modelFactory;
 	private Set<IGraphProposition> labels1;
 	private Set<IGraphProposition> labels2;
 	@Before
 	public void setUp(){
-		this.modelFactory=new ModelTransitionFactory<State>();
+		this.modelFactory=new ModelTransitionFactory();
 		
 		this.labels1=new HashSet<IGraphProposition>();
 		labels1.add(new GraphProposition("p", true));

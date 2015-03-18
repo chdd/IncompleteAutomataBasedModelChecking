@@ -1,4 +1,4 @@
-package it.polimi.automata.impl;
+package it.polimi.automata;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
@@ -324,14 +324,14 @@ public class IBA extends
 			double transitionDensity, double acceptanceDensity, int nStates,
 			double transparentDensity) {
 
-		ClaimTransitionFactory<State> transitionFactory = new ClaimTransitionFactory<State>();
+		ClaimTransitionFactory transitionFactory = new ClaimTransitionFactory();
 
 		List<IGraphProposition> proposition1 = new ArrayList<IGraphProposition>();
 		proposition1.add(new GraphProposition("a", false));
 		proposition1.add(new GraphProposition("b", false));
 
 		IBA ba = new IBA(
-				new ClaimTransitionFactory<State>());
+				new ClaimTransitionFactory());
 		ba.addProposition(new GraphProposition("a", false));
 		ba.addProposition(new GraphProposition("b", false));
 

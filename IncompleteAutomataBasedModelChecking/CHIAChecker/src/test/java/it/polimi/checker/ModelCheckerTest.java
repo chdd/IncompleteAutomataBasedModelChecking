@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.impl.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.StateFactory;

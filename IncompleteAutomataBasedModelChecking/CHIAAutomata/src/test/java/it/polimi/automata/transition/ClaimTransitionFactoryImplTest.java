@@ -5,9 +5,6 @@ package it.polimi.automata.transition;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -24,12 +21,12 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  */
 public class ClaimTransitionFactoryImplTest {
 
-	private ClaimTransitionFactory<State> claim;
+	private ClaimTransitionFactory claim;
 	private Set<IGraphProposition> labels;
 
 	@Before
 	public void setUp() {
-		this.claim = new ClaimTransitionFactory<State>();
+		this.claim = new ClaimTransitionFactory();
 		this.labels = new HashSet<IGraphProposition>();
 	}
 

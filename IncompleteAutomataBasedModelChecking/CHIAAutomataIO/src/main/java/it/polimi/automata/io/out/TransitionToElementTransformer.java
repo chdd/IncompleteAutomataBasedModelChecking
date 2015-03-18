@@ -3,7 +3,6 @@ package it.polimi.automata.io.out;
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
 import org.w3c.dom.Attr;
@@ -12,14 +11,14 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class TransitionToElementTransformer<S extends State, T extends Transition, A extends BA<S, T>>
-		implements Transformer<T, Element> {
+public class TransitionToElementTransformer
+		implements Transformer<Transition, Element> {
 
-	private final A automaton;
+	private final BA automaton;
 
 	private final Document doc;
 
-	public TransitionToElementTransformer(A automaton, Document doc) {
+	public TransitionToElementTransformer(BA automaton, Document doc) {
 		Preconditions.checkNotNull(automaton, "The automaton cannot be null");
 		Preconditions.checkNotNull(doc, "The document cannot be null");
 
@@ -28,7 +27,7 @@ public class TransitionToElementTransformer<S extends State, T extends Transitio
 	}
 
 	@Override
-	public Element transform(T transition) {
+	public Element transform(Transition transition) {
 		Preconditions.checkNotNull(transition, "The transition element to be converted cannot be null");
 		
 		Element transitionElement = doc

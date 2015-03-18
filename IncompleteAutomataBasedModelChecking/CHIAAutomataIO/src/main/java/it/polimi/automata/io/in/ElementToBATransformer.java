@@ -2,16 +2,14 @@ package it.polimi.automata.io.in;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
-import it.polimi.automata.impl.BA;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.transformer.states.StateElementParser;
-import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
+import it.polimi.automata.io.transformer.states.BAStateElementParser;
+import it.polimi.automata.io.transformer.transitions.BATransitionParser;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,20 +17,20 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Preconditions;
 
-public class ElementToBATransformer<S extends State, T extends Transition> implements Transformer<Element, BA<S,T>>  {
+public class ElementToBATransformer implements Transformer<Element, BA>  {
 
-	private final StateElementParser<S, T, BA<S, T>> stateElementParser;
-	private final ClaimTransitionParser<S, T, BA<S, T>> transitionElementParser;
+	private final BAStateElementParser stateElementParser;
+	private final BATransitionParser transitionElementParser;
 	
 	/**
 	 * contains a map that connects the id with the corresponding state
 	 */
-	private  Map<Integer, S> mapIdState;
+	private  Map<Integer, State> mapIdState;
 
 	
 	public ElementToBATransformer(
-			StateElementParser<S, T, BA<S, T>> stateElementParser,
-			ClaimTransitionParser<S, T, BA<S, T>> transitionElementParser){
+			BAStateElementParser stateElementParser,
+			BATransitionParser transitionElementParser){
 		Preconditions.checkNotNull(stateElementParser,
 				"The state element parser cannot be null");
 		Preconditions.checkNotNull(transitionElementParser,
@@ -40,22 +38,22 @@ public class ElementToBATransformer<S extends State, T extends Transition> imple
 
 		this.stateElementParser=stateElementParser;
 		this.transitionElementParser=transitionElementParser;
-		this.mapIdState=new HashMap<Integer, S>();
+		this.mapIdState=new HashMap<Integer, State>();
 		
 	}
 	@Override
-	public BA<S, T> transform(Element input) {
+	public BA transform(Element input) {
 		Preconditions.checkNotNull(input,
 				"The input elemento to be converted into a BA cannot be null");
 		
-		this.mapIdState=new HashMap<Integer, S>();
-		BA<S,T> ba=new BA<S, T>(transitionElementParser.getTransitionFactory());
+		this.mapIdState=new HashMap<Integer, State>();
+		BA ba=new BA(new ClaimTransitionFactory());
 		
 		this.loadStates(input, ba);
 		this.loadTransitions(input, ba);
 		return ba;
 	} 
-	private void loadStates(Element doc, BA<S,T> ba) {
+	private void loadStates(Element doc, BA ba) {
 		NodeList xmlstates = doc
 				.getElementsByTagName(Constants.XML_ELEMENT_STATE);
 
@@ -63,23 +61,21 @@ public class ElementToBATransformer<S extends State, T extends Transition> imple
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			Entry<Integer, S> entry = this.stateElementParser.transform(
-					eElement, ba);
-			this.mapIdState.put(entry.getKey(), entry.getValue());
+			State s= this.stateElementParser.transform(
+					eElement);
+			this.mapIdState.put(s.getId(), s);
 
 		}
 	}
 
-	private void loadTransitions(Element doc, BA<S,T> ba) {
+	private void loadTransitions(Element doc, BA ba) {
 		NodeList xmltransitions = doc
 				.getElementsByTagName(Constants.XML_TAG_TRANSITION);
 
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-
-			this.transitionElementParser.transform(eElement, ba,
-					this.mapIdState);
+			this.transitionElementParser.transform(eElement);
 
 		}
 	}

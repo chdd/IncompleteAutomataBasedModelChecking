@@ -5,7 +5,7 @@ package it.polimi.checker.emptiness;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.BA;
-import it.polimi.automata.impl.IBA;
+import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.state.StateFactory;

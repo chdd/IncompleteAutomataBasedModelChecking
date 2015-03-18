@@ -4,7 +4,6 @@ import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -13,13 +12,13 @@ import org.w3c.dom.Element;
 import com.google.common.base.Preconditions;
 
 
-public class StateToElementTransformer<S extends State, T extends Transition, A extends BA<S, T>> implements Transformer<S, Element> {
+public class StateToElementTransformer implements Transformer<State, Element> {
 
-	private final A automaton;
+	private final BA automaton;
 	
 	private final Document doc;
 	
-	public StateToElementTransformer(A automaton, Document doc){
+	public StateToElementTransformer(BA automaton, Document doc){
 		Preconditions.checkNotNull(automaton, "The automaton cannot be null");
 		Preconditions.checkNotNull(doc, "The document cannot be null");
 		
@@ -28,7 +27,7 @@ public class StateToElementTransformer<S extends State, T extends Transition, A 
 	}
 	
 	@Override
-	public Element transform(S input) {
+	public Element transform(State input) {
 		Preconditions.checkNotNull(input, "The input state cannot be null");
 
 		Element stateXMLElement = doc.createElement(Constants.XML_ELEMENT_STATE);

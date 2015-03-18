@@ -1,20 +1,17 @@
 package it.polimi.automata.io.transformer.propositions;
 
+import it.polimi.automata.Constants;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
-import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 
-public class ClaimPropositionParser<S extends State, T extends Transition, A extends BA<S, T>> {
+import com.google.common.base.Preconditions;
 
-	
-	
+public class ClaimPropositionParser {
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
@@ -30,18 +27,14 @@ public class ClaimPropositionParser<S extends State, T extends Transition, A ext
 	 *             {@link Constants#APREGEX} or the regular expression
 	 *             {@link Constants#NOTAPREGEX}
 	 */
-	public Set<IGraphProposition> computePropositions(String input, A ba) {
+	public Set<IGraphProposition> computePropositions(String input) {
 
+		Preconditions.checkNotNull("The input must be not null");
+		Preconditions.checkArgument(!input.matches(Constants.CLAIM_PROPOSITIONAL_FORMULA), "The input " + input
+				+ " must match the regular expression: "
+				+ Constants.CLAIM_PROPOSITIONAL_FORMULA);
 		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
-		if (input == null) {
-			throw new NullPointerException("The input must be not null");
-		}
-		if (!input.matches(Constants.CLAIM_PROPOSITIONAL_FORMULA)) {
-			throw new IllegalArgumentException("The input " + input
-					+ " must match the regular expression: "
-					+ Constants.CLAIM_PROPOSITIONAL_FORMULA);
-		}
-
+		
 		if (input.equals(Constants.SIGMA)) {
 			propositions.add(new SigmaProposition());
 		} else {
@@ -54,11 +47,9 @@ public class ClaimPropositionParser<S extends State, T extends Transition, A ext
 				} else {
 					propositions.add(new GraphProposition(ap, false));
 				}
-
 			}
 		}
 
-		ba.addPropositions(propositions);
 		return propositions;
 	}
 }

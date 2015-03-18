@@ -2,34 +2,35 @@ package it.polimi.automata.io.transformer.states;
 
 import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
+import it.polimi.automata.io.Transformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.Transition;
-
-import java.util.AbstractMap;
-import java.util.Map.Entry;
 
 import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class IBAStateElementParser implements StateElementParser<State, Transition, IBA<State, Transition>> {
+public class IBAStateElementParser implements Transformer<Element, State> {
 
 	
 
 	/**
 	 * is the factory which is used to create the states of the Buchi automaton
 	 */
-	protected final StateFactory<State> stateFactory;
+	protected final StateFactory stateFactory;
+	private final IBA iba;
 	
 	
-	public IBAStateElementParser(StateFactory<State> stateFactory){
+	public IBAStateElementParser(StateFactory stateFactory, IBA iba){
 		Preconditions.checkNotNull(stateFactory,"The state factory cannot be null");
+		Preconditions.checkNotNull(iba,"The incomplete Buchi automaton cannot be null");
+		
 		this.stateFactory=stateFactory;
+		this.iba=iba;
 	}
 	
 	@Override
-	public Entry<Integer, State> transform(Element eElement, IBA<State, Transition> iba) {
+	public State transform(Element eElement) {
 		int id = Integer.parseInt(eElement
 				.getAttribute(Constants.XML_ATTRIBUTE_ID));
 
@@ -49,14 +50,8 @@ public class IBAStateElementParser implements StateElementParser<State, Transiti
 				.isEmpty()) {
 			iba.addTransparentState(s);
 		}
-		return new AbstractMap.SimpleEntry<Integer, State>(id,s);
+		return s;
 	}
-
-	@Override
-	public StateFactory<State> getStateFactory() {
-		return this.stateFactory;
-	}
-
 }
 
 

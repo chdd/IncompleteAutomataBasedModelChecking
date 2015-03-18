@@ -6,15 +6,12 @@ package it.polimi.automata.io;
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.transformer.states.IBAStateElementParser;
-import it.polimi.automata.io.transformer.states.StateElementParser;
 import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
-import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +31,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  */
 public class IBAReaderTest {
 
-	private StateFactory<State> stateFactory;
+	private StateFactorystateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 	
 	private Transition t1;
@@ -49,7 +46,7 @@ public class IBAReaderTest {
 	public void setUp() {
 	
 		this.stateFactory = new StateFactory();
-		this.transitionFactory=new ModelTransitionFactory<State>();
+		this.transitionFactory=new ModelTransitionFactory();
 		
 		Set<IGraphProposition> propositions1=new HashSet<IGraphProposition>();
 		propositions1.add(new GraphProposition("start", false));
@@ -88,11 +85,11 @@ public class IBAReaderTest {
 		ModelTransitionParser<State, Transition, IBA<State, Transition>> transitionParser = new IBATransitionParser<State, Transition, IBA<State, Transition>>(
 				this.transitionFactory);
 
-		IBAReader<State, Transition> reader=new IBAReader<State,Transition>(
+		IBAReader reader=new IBAReader(
 				 new File(getClass().getClassLoader()
-						.getResource("SendingMessageModel.xml").getFile()), stateElementParser, transitionParser);
+						.getResource("SendingMessageModel.xml").getFile()));
 		
-		IBA< State, Transition> sendingMessage=reader.read();
+		IBA sendingMessage=reader.read();
 		
 		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q1", 1)));
 		assertTrue(sendingMessage.getStates().contains(stateFactory.create("send1", 2)));

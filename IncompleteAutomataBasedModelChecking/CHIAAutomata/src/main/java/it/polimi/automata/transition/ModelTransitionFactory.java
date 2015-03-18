@@ -1,12 +1,10 @@
 package it.polimi.automata.transition;
 
-import it.polimi.automata.state.State;
-
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
+
+import com.google.common.base.Preconditions;
 
 /**
  * is the factory that allows to create transitions of the type Transition
@@ -19,8 +17,8 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the states of the automaton
  */
 @SuppressWarnings("serial")
-public class ModelTransitionFactory<S extends State> extends
-		ClaimTransitionFactory<S> {
+public class ModelTransitionFactory extends
+		ClaimTransitionFactory {
 
 	public ModelTransitionFactory() {
 		super();

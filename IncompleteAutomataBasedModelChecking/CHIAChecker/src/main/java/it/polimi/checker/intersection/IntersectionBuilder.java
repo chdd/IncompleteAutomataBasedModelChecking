@@ -3,7 +3,6 @@ package it.polimi.checker.intersection;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.impl.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 

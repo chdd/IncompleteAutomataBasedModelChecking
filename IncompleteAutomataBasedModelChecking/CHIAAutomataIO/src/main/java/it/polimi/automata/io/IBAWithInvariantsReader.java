@@ -2,18 +2,16 @@ package it.polimi.automata.io;
 
 import it.polimi.automata.Constants;
 import it.polimi.automata.IBAWithInvariants;
-import it.polimi.automata.impl.IBAWithInvariantsImpl;
-import it.polimi.automata.io.transformer.states.StateElementParser;
-import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
-import it.polimi.automata.io.transformer.transitions.TransitionElementParser;
+import it.polimi.automata.io.transformer.states.IBAStateElementParser;
+import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
+import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -28,20 +26,16 @@ import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
-public class IBAWithInvariantsReader <S extends State, T extends Transition> {
+public class IBAWithInvariantsReader {
 
 	/**
 	 * contains the Incomplete Buchi Automaton loaded from the file
 	 */
-	protected IBAWithInvariants<S, T> iba;
+	protected IBAWithInvariants iba;
 
 	private File file;
 
-	private Map<Integer, S> mapIdState;
-
-	private final StateElementParser<S, T, IBAWithInvariants<S, T>> stateElementParser;
-
-	private final TransitionElementParser<S, T, IBAWithInvariants<S, T>> transitionElementParser;
+	private Map<Integer, State> mapIdState;
 
 
 	/**
@@ -61,23 +55,13 @@ public class IBAWithInvariantsReader <S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IBAWithInvariantsReader(File file,
-			StateElementParser<S, T, IBAWithInvariants<S, T>> stateElementParser,
-			ModelTransitionParser<S, T, IBAWithInvariants<S, T>> transitionElementParser) {
+	public IBAWithInvariantsReader(File file) {
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
-		Preconditions.checkNotNull(stateElementParser,
-				"The state element parser cannot be null");
+	
+		this.mapIdState = new HashMap<Integer, State>();
 
-		Preconditions.checkNotNull(transitionElementParser,
-				"The transition factory cannot be null");
-
-		this.mapIdState = new HashMap<Integer, S>();
-
-		this.iba = new IBAWithInvariantsImpl<S, T>(
-				transitionElementParser.getTransitionFactory());
+		this.iba = new IBAWithInvariants(new ModelTransitionFactory());
 		this.file = file;
-		this.stateElementParser = stateElementParser;
-		this.transitionElementParser = transitionElementParser;
 	}
 
 	/**
@@ -89,7 +73,7 @@ public class IBAWithInvariantsReader <S extends State, T extends Transition> {
 	 *             is generated if a problem occurs in the loading of the Buchi
 	 *             Automaton
 	 */
-	public IBAWithInvariants<S, T> read() {
+	public IBAWithInvariants read() {
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
@@ -126,9 +110,9 @@ public class IBAWithInvariantsReader <S extends State, T extends Transition> {
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			Entry<Integer, S> entry = this.stateElementParser.transform(
-					eElement, this.iba);
-			this.mapIdState.put(entry.getKey(), entry.getValue());
+			State state = new IBAStateElementParser(new StateFactory(), iba).transform(
+					eElement);
+			this.mapIdState.put(state.getId(), state);
 		}
 	}
 
@@ -139,9 +123,7 @@ public class IBAWithInvariantsReader <S extends State, T extends Transition> {
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-			this.transitionElementParser.transform(eElement, this.iba,
-					this.mapIdState);
-			
+			new IBATransitionParser(new ModelTransitionFactory(), iba, this.mapIdState).transform(eElement);
 		}
 	}
 }

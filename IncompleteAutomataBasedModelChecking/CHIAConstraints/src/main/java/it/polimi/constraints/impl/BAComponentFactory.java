@@ -1,7 +1,6 @@
 package it.polimi.constraints.impl;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.impl.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;

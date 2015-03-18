@@ -1,4 +1,4 @@
-package it.polimi.automata.impl;
+package it.polimi.automata;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;

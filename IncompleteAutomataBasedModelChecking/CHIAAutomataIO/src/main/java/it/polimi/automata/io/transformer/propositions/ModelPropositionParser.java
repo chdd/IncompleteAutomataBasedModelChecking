@@ -7,6 +7,8 @@ import it.polimi.automata.transition.Transition;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
@@ -30,15 +32,11 @@ public class ModelPropositionParser<S extends State, T extends Transition> {
 	 */
 	public Set<IGraphProposition> computePropositions(String input) {
 
+		Preconditions.checkNotNull("The input must be not null");
+		Preconditions.checkArgument(!input.matches(Constants.MODEL_PROPOSITIONS), "The input "+input+" must match the regular expression: "
+				+ Constants.MODEL_PROPOSITIONS);
+		
 		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
-		if (input == null) {
-			throw new NullPointerException("The input must be not null");
-		}
-		if (!input.matches(Constants.MODEL_PROPOSITIONS)) {
-			throw new IllegalArgumentException(
-					"The input "+input+" must match the regular expression: "
-							+ Constants.MODEL_PROPOSITIONS);
-		}
 		
 		if(input.equals(Constants.SIGMA)){
 			propositions.add(new SigmaProposition());

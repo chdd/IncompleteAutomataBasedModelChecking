@@ -2,18 +2,17 @@ package it.polimi.automata.io;
 
 import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
-import it.polimi.automata.impl.IBA;
-import it.polimi.automata.io.transformer.states.StateElementParser;
-import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
-import it.polimi.automata.io.transformer.transitions.TransitionElementParser;
+import it.polimi.automata.io.transformer.states.IBAStateElementParser;
+import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
+import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,12 +40,12 @@ import com.google.common.base.Preconditions;
  *            is the type of the transitions of the automaton. It must implement
  *            the interface Transition
  */
-public class IBAReader<S extends State, T extends Transition> {
+public class IBAReader {
 
 	/**
 	 * contains the Incomplete Buchi Automaton loaded from the file
 	 */
-	protected IBA<S, T> iba;
+	protected IBA iba;
 
 	/**
 	 * is the File from which the IBA must be read
@@ -54,11 +53,9 @@ public class IBAReader<S extends State, T extends Transition> {
 	private File file;
 
 	
-	private Map<Integer, S> mapIdState;
+	private Map<Integer, State> mapIdState;
 
-	private final StateElementParser<S, T, IBA<S, T>> stateElementParser;
 
-	private final TransitionElementParser<S, T, IBA<S, T>> transitionElementParser;
 
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
@@ -78,23 +75,13 @@ public class IBAReader<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IBAReader(File file,
-			StateElementParser<S, T, IBA<S, T>> stateElementParser,
-			ModelTransitionParser<S, T, IBA<S, T>> transitionElementParser) {
+	public IBAReader(File file) {
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
-		Preconditions.checkNotNull(stateElementParser,
-				"The state element parser cannot be null");
+		
+		this.mapIdState = new HashMap<Integer, State>();
 
-		Preconditions.checkNotNull(transitionElementParser,
-				"The transition factory cannot be null");
-
-		this.mapIdState = new HashMap<Integer, S>();
-
-		this.iba = new IBA<S, T>(
-				transitionElementParser.getTransitionFactory());
+		this.iba = new IBA(new ModelTransitionFactory());
 		this.file = file;
-		this.stateElementParser = stateElementParser;
-		this.transitionElementParser = transitionElementParser;
 	}
 
 	/**
@@ -106,7 +93,7 @@ public class IBAReader<S extends State, T extends Transition> {
 	 *             is generated if a problem occurs in the loading of the Buchi
 	 *             Automaton
 	 */
-	public IBA<S, T> read() {
+	public IBA read() {
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
@@ -143,9 +130,9 @@ public class IBAReader<S extends State, T extends Transition> {
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			Entry<Integer, S> entry = this.stateElementParser.transform(
-					eElement, this.iba);
-			this.mapIdState.put(entry.getKey(), entry.getValue());
+			State state = new IBAStateElementParser(new StateFactory(), iba).transform(
+					eElement);
+			this.mapIdState.put(state.getId(), state);
 		}
 	}
 
@@ -156,9 +143,7 @@ public class IBAReader<S extends State, T extends Transition> {
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-			this.transitionElementParser.transform(eElement, this.iba,
-					this.mapIdState);
-
+			new IBATransitionParser(new ClaimTransitionFactory(), iba, this.mapIdState).transform(eElement);
 		}
 	}
 }

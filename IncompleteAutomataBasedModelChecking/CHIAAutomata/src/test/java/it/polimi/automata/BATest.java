@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.automata.impl;
+package it.polimi.automata;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Set;
 
+import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
@@ -26,7 +27,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  * 
  */
-public class BAImplTest {
+public class BATest {
 
 	@Mock
 	private State state1;
@@ -63,7 +64,7 @@ public class BAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		TransitionFactory<State, Transition> edgeFactory=new ClaimTransitionFactory<State>();
+		TransitionFactory<State, Transition> edgeFactory=new ClaimTransitionFactory();
 		this.ba = new BA(edgeFactory);
 		ba.addInitialState(state1);
 		ba.addState(state2);
@@ -78,11 +79,11 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#BAImpl()}.
+	 * Test method for {@link it.polimi.automata.BA#BAImpl()}.
 	 */
 	@Test
 	public void testBAImpl() {
-		BA ba = new BA(new ClaimTransitionFactory<State>());
+		BA ba = new BA(new ClaimTransitionFactory());
 		assertNotNull(ba);
 		assertNotNull(ba.getInitialStates());
 		assertNotNull(ba.getAcceptStates());
@@ -93,7 +94,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#getInitialStates()}
+	 * Test method for {@link it.polimi.automata.BA#getInitialStates()}
 	 * .
 	 */
 	@Test
@@ -104,7 +105,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#getStates()}.
+	 * Test method for {@link it.polimi.automata.BA#getStates()}.
 	 */
 	@Test
 	public void testGetStates() {
@@ -114,7 +115,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#getAcceptStates()}.
+	 * Test method for {@link it.polimi.automata.BA#getAcceptStates()}.
 	 */
 	@Test
 	public void testGetAcceptStates() {
@@ -124,7 +125,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#getPropositions()}.
+	 * Test method for {@link it.polimi.automata.BA#getPropositions()}.
 	 */
 	@Test
 	public void testGetAlphabet() {
@@ -135,7 +136,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#getOutTransitions(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#getOutTransitions(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -147,7 +148,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#getInTransitions(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#getInTransitions(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -160,7 +161,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#getTransitionDestination(it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#getTransitionDestination(it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test
@@ -170,7 +171,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#getTransitionSource(it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#getTransitionSource(it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test
@@ -179,7 +180,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#getTransitions()}.
+	 * Test method for {@link it.polimi.automata.BA#getTransitions()}.
 	 */
 	@Test
 	public void testGetTransitions() {
@@ -192,7 +193,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addInitialState(Null)}.
+	 * {@link it.polimi.automata.BA#addInitialState(Null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testAddInitialStateNull() {
@@ -201,7 +202,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addInitialState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#addInitialState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -216,7 +217,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addAcceptState(null)}.
+	 * {@link it.polimi.automata.BA#addAcceptState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testAddAcceptStateNull() {
@@ -225,7 +226,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addAcceptState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#addAcceptState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -239,7 +240,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#addState(null)}.
+	 * Test method for {@link it.polimi.automata.BA#addState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testAddStateNull() {
@@ -248,7 +249,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#addState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -269,7 +270,7 @@ public class BAImplTest {
 	}
 
 	/**
-		 * Test method for {@link it.polimi.automata.impl.BA#addPropositions(null)}
+		 * Test method for {@link it.polimi.automata.BA#addPropositions(null)}
 		 * .
 		 */
 		@Test(expected = NullPointerException.class)
@@ -279,7 +280,7 @@ public class BAImplTest {
 
 	/**
 		 * Test method for
-		 * {@link it.polimi.automata.impl.BA#addProposition(it.polimi.automata.labeling.Label)}
+		 * {@link it.polimi.automata.BA#addProposition(it.polimi.automata.labeling.Label)}
 		 * .
 		 */
 		@Test
@@ -292,7 +293,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(null, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#addTransition(null, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -302,7 +303,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(it.polimi.automata.state.State, null, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#addTransition(it.polimi.automata.state.State, null, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -312,7 +313,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, null)}
+	 * {@link it.polimi.automata.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -322,7 +323,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -333,7 +334,7 @@ public class BAImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -344,7 +345,7 @@ public class BAImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -354,7 +355,7 @@ public class BAImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#addTransition(it.polimi.automata.state.State, it.polimi.automata.state.State, it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test
@@ -368,7 +369,7 @@ public class BAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.BA#removeState(null)}.
+	 * Test method for {@link it.polimi.automata.BA#removeState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testRemoveStateNull() {
@@ -377,7 +378,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeState(IllegalArgument)}.
+	 * {@link it.polimi.automata.BA#removeState(IllegalArgument)}.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveStateIllegal() {
@@ -386,7 +387,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#removeState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -409,7 +410,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeTransition(null)}.
+	 * {@link it.polimi.automata.BA#removeTransition(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testRemoveTransitionNull() {
@@ -418,7 +419,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeTransition(IllegalTransition)}
+	 * {@link it.polimi.automata.BA#removeTransition(IllegalTransition)}
 	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -428,7 +429,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeTransition(it.polimi.automata.transition.Transition)}
+	 * {@link it.polimi.automata.BA#removeTransition(it.polimi.automata.transition.Transition)}
 	 * .
 	 */
 	@Test
@@ -443,7 +444,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeAcceptingState(null)}.
+	 * {@link it.polimi.automata.BA#removeAcceptingState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testRemoveAcceptingStateNull() {
@@ -452,7 +453,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeAcceptingState(IllegalState)}
+	 * {@link it.polimi.automata.BA#removeAcceptingState(IllegalState)}
 	 * .
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -462,7 +463,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeAcceptingState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#removeAcceptingState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -474,7 +475,7 @@ public class BAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeInitialState(null)}.
+	 * {@link it.polimi.automata.BA#removeInitialState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testRemoveInitialStateNull() {
@@ -483,7 +484,7 @@ public class BAImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeInitialState(Illegal)}.
+	 * {@link it.polimi.automata.BA#removeInitialState(Illegal)}.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoveInitialStateIllegal() {
@@ -492,7 +493,7 @@ public class BAImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.BA#removeInitialState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.BA#removeInitialState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test

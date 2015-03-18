@@ -1,13 +1,14 @@
 /**
  * 
  */
-package it.polimi.automata.impl;
+package it.polimi.automata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
@@ -63,7 +64,7 @@ public class IntBAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IntersectionBA(new ClaimTransitionFactory<State>());
+		this.ba = new IntersectionBA(new ClaimTransitionFactory());
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -78,16 +79,16 @@ public class IntBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IntersectionBA#IntBAImpl()}.
+	 * Test method for {@link it.polimi.automata.IntersectionBA#IntBAImpl()}.
 	 */
 	@Test
 	public void testIntBAImpl() {
-		assertNotNull(new IntersectionBA(new ClaimTransitionFactory<State>()));
+		assertNotNull(new IntersectionBA(new ClaimTransitionFactory()));
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.IntersectionBA#addMixedState(null)}.
+	 * {@link it.polimi.automata.IntersectionBA#addMixedState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testAddMixedStateNull() {
@@ -96,7 +97,7 @@ public class IntBAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.IntersectionBA#addMixedState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.IntersectionBA#addMixedState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -118,7 +119,7 @@ public class IntBAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.IntersectionBA#getMixedStates()}.
+	 * {@link it.polimi.automata.IntersectionBA#getMixedStates()}.
 	 */
 	@Test
 	public void testGetMixedStates() {
@@ -128,7 +129,7 @@ public class IntBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IntersectionBA#clone()}.
+	 * Test method for {@link it.polimi.automata.IntersectionBA#clone()}.
 	 */
 	@Test
 	public void testClone() {

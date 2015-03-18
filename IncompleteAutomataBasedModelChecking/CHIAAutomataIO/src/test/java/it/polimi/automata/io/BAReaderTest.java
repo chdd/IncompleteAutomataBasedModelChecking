@@ -5,16 +5,11 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.BA;
-import it.polimi.automata.io.transformer.states.BAStateElementParser;
-import it.polimi.automata.io.transformer.states.StateElementParser;
-import it.polimi.automata.io.transformer.transitions.BATransitionParser;
-import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +31,7 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  */
 public class BAReaderTest {
 
-	private StateFactory<State> stateFactory;
+	private StateFactory stateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 
 	private Transition t1;
@@ -47,7 +42,7 @@ public class BAReaderTest {
 	public void setUp() {
 
 		this.stateFactory = new StateFactory();
-		this.transitionFactory = new ClaimTransitionFactory<State>();
+		this.transitionFactory = new ClaimTransitionFactory();
 
 		Set<IGraphProposition> propositions1 = new HashSet<IGraphProposition>();
 		propositions1.add(new SigmaProposition());
@@ -65,17 +60,10 @@ public class BAReaderTest {
 
 	@Test
 	public void test() throws FileNotFoundException, JAXBException {
-		StateElementParser<State, Transition, BA<State, Transition>> stateElementParser = new BAStateElementParser(
-				new StateFactory());
+		BAReader reader = new BAReader(new File(getClass().getClassLoader()
+				.getResource("SendingMessageClaim.xml").getFile()));
 
-		ClaimTransitionParser<State, Transition, BA<State, Transition>> transitionParser = new BATransitionParser(
-				this.transitionFactory);
-		BAReader<State, Transition> reader = new BAReader<State, Transition>(
-		new File(getClass().getClassLoader()
-				.getResource("SendingMessageClaim.xml").getFile()),
-				stateElementParser, transitionParser);
-
-		BA<State, Transition> sendingMessage = reader.read();
+		BA sendingMessage = reader.read();
 
 		assertTrue(sendingMessage.getStates().contains(
 				stateFactory.create("p1", 1)));

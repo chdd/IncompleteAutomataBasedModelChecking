@@ -1,6 +1,5 @@
-package it.polimi.automata.impl;
+package it.polimi.automata;
 
-import it.polimi.automata.Constants;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
@@ -734,7 +733,7 @@ public class BA {
 	
 	public static BA generateRandomBA(double transitionDensity, double acceptanceDensity, int nStates){
 		
-		ClaimTransitionFactory<State> transitionFactory=new ClaimTransitionFactory<State>();
+		ClaimTransitionFactory transitionFactory=new ClaimTransitionFactory();
 		List<IGraphProposition> proposition1=new ArrayList<IGraphProposition>();
 		proposition1.add(new GraphProposition("a", false));
 		proposition1.add(new GraphProposition("b", false));
