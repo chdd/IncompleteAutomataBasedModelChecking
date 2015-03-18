@@ -1,12 +1,13 @@
 /**
  * 
  */
-package it.polimi.automata.transition.impl;
+package it.polimi.automata.transition;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -23,18 +24,18 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  */
 public class ClaimTransitionFactoryImplTest {
 
-	private TransitionFactoryClaimImpl<State> claim;
+	private ClaimTransitionFactory<State> claim;
 	private Set<IGraphProposition> labels;
 
 	@Before
 	public void setUp() {
-		this.claim = new TransitionFactoryClaimImpl<State>();
+		this.claim = new ClaimTransitionFactory<State>();
 		this.labels = new HashSet<IGraphProposition>();
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create()}
+	 * {@link it.polimi.automata.transition.ClaimTransitionFactory#create()}
 	 * .
 	 */
 	@Test
@@ -45,7 +46,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create(java.util.Set)}
+	 * {@link it.polimi.automata.transition.ClaimTransitionFactory#create(java.util.Set)}
 	 * .
 	 */
 	@Test
@@ -59,7 +60,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#createFromLabel(null)}
+	 * {@link it.polimi.automata.transition.ClaimTransitionFactory#createFromLabel(null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -69,7 +70,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create(int, java.util.Set)}
+	 * {@link it.polimi.automata.transition.ClaimTransitionFactory#create(int, java.util.Set)}
 	 * .
 	 * 
 	 * @throws SecurityException
@@ -80,7 +81,7 @@ public class ClaimTransitionFactoryImplTest {
 	@Test
 	public void testCreateIntSetOfLABEL() throws NoSuchFieldException,
 			SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = TransitionFactoryClaimImpl.class
+		Field field = ClaimTransitionFactory.class
 				.getDeclaredField("transitionCount");
 		field.setAccessible(true);
 		field.set(claim, 0);
@@ -93,7 +94,7 @@ public class ClaimTransitionFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.transition.impl.TransitionFactoryClaimImpl#create(int, null)}
+	 * {@link it.polimi.automata.transition.ClaimTransitionFactory#create(int, null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)

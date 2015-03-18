@@ -11,10 +11,10 @@ import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,8 +48,8 @@ public class IBAReaderTest {
 	@Before
 	public void setUp() {
 	
-		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory=new TransitionFactoryModelImpl<State>();
+		this.stateFactory = new StateFactory();
+		this.transitionFactory=new ModelTransitionFactory<State>();
 		
 		Set<IGraphProposition> propositions1=new HashSet<IGraphProposition>();
 		propositions1.add(new GraphProposition("start", false));
@@ -83,7 +83,7 @@ public class IBAReaderTest {
 	@Test
 	public void test() throws FileNotFoundException {
 		StateElementParser<State, Transition, IBA<State, Transition>> stateElementParser = new IBAStateElementParser(
-				new StateFactoryImpl());
+				new StateFactory());
 
 		ModelTransitionParser<State, Transition, IBA<State, Transition>> transitionParser = new IBATransitionParser<State, Transition, IBA<State, Transition>>(
 				this.transitionFactory);

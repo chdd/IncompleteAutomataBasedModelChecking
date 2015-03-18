@@ -1,9 +1,11 @@
 /**
  * 
  */
-package it.polimi.automata.state.impl;
+package it.polimi.automata.state;
 
 import static org.junit.Assert.*;
+import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,23 +16,23 @@ import org.junit.Test;
  */
 public class StateFactoryImplTest {
 
-	private StateFactoryImpl stateFactory;
+	private StateFactory stateFactory;
 
 	/**
 	 * creates a new StateFactory
 	 */
 	@Before
 	public void setUp() {
-		this.stateFactory = new StateFactoryImpl();
+		this.stateFactory = new StateFactory();
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create()}.
+	 * {@link it.polimi.automata.state.StateFactory#create()}.
 	 */
 	@Test
 	public void testCreate() {
-		StateImpl state = this.stateFactory.create();
+		State state = this.stateFactory.create();
 		assertNotNull(state);
 		assertEquals(state.getName(), ""+state.getId());
 		assertTrue(state.getId() >= 0);
@@ -38,12 +40,12 @@ public class StateFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create(java.lang.String)}
+	 * {@link it.polimi.automata.state.StateFactory#create(java.lang.String)}
 	 * .
 	 */
 	@Test
 	public void testCreateString() {
-		StateImpl state = this.stateFactory.create("name");
+		State state = this.stateFactory.create("name");
 		assertNotNull(state);
 		assertEquals(state.getName(), "name");
 		assertTrue(state.getId() >= 0);
@@ -51,7 +53,7 @@ public class StateFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#createFromLabel(null)} .
+	 * {@link it.polimi.automata.state.StateFactory#createFromLabel(null)} .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testCreateString_Null() {
@@ -60,12 +62,12 @@ public class StateFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create(java.lang.String, int)}
+	 * {@link it.polimi.automata.state.StateFactory#create(java.lang.String, int)}
 	 * .
 	 */
 	@Test
 	public void testCreateStringInt() {
-		StateImpl state = this.stateFactory.create("name", 5);
+		State state = this.stateFactory.create("name", 5);
 		assertNotNull(state);
 		assertEquals(state.getName(), "name");
 		assertEquals(state.getId(), 5);
@@ -73,7 +75,7 @@ public class StateFactoryImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateFactoryImpl#create(null, int)}
+	 * {@link it.polimi.automata.state.StateFactory#create(null, int)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)

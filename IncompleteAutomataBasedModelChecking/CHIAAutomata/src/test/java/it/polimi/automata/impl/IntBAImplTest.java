@@ -3,16 +3,17 @@
  */
 package it.polimi.automata.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -57,18 +58,18 @@ public class IntBAImplTest {
 	@Mock
 	private Transition t3;
 
-	private IntBAImpl<State, Transition> ba;
+	private IntersectionBA ba;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IntBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>());
+		this.ba = new IntersectionBA(new ClaimTransitionFactory<State>());
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
 		ba.addMixedState(state3);
-		this.ba.addCharacter(l1);
-		this.ba.addCharacter(l2);
+		this.ba.addProposition(l1);
+		this.ba.addProposition(l2);
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
 		Set<IGraphProposition> returnSet = new HashSet<IGraphProposition>();
@@ -77,16 +78,16 @@ public class IntBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IntBAImpl#IntBAImpl()}.
+	 * Test method for {@link it.polimi.automata.impl.IntersectionBA#IntBAImpl()}.
 	 */
 	@Test
 	public void testIntBAImpl() {
-		assertNotNull(new IntBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>()));
+		assertNotNull(new IntersectionBA(new ClaimTransitionFactory<State>()));
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.IntBAImpl#addMixedState(null)}.
+	 * {@link it.polimi.automata.impl.IntersectionBA#addMixedState(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testAddMixedStateNull() {
@@ -95,7 +96,7 @@ public class IntBAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.IntBAImpl#addMixedState(it.polimi.automata.state.State)}
+	 * {@link it.polimi.automata.impl.IntersectionBA#addMixedState(it.polimi.automata.state.State)}
 	 * .
 	 */
 	@Test
@@ -117,7 +118,7 @@ public class IntBAImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.impl.IntBAImpl#getMixedStates()}.
+	 * {@link it.polimi.automata.impl.IntersectionBA#getMixedStates()}.
 	 */
 	@Test
 	public void testGetMixedStates() {
@@ -127,13 +128,12 @@ public class IntBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IntBAImpl#clone()}.
+	 * Test method for {@link it.polimi.automata.impl.IntersectionBA#clone()}.
 	 */
 	@Test
 	public void testClone() {
-		@SuppressWarnings("unchecked")
-		IntersectionBA<State, Transition> clone = (IntersectionBA< State, Transition>) this.ba.clone();
-		assertEquals(clone.getAlphabet(), this.ba.getAlphabet());
+		IntersectionBA clone = (IntersectionBA) this.ba.clone();
+		assertEquals(clone.getPropositions(), this.ba.getPropositions());
 		assertEquals(clone.getTransitions(), this.ba.getTransitions());
 		assertEquals(clone.getStates(), this.ba.getStates());
 		assertEquals(clone.getInitialStates(), this.ba.getInitialStates());

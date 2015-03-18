@@ -2,9 +2,9 @@ package industrialplant.sc0.init.mod0;
 
 import industrialplant.Constants;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 
 import java.io.BufferedReader;
@@ -23,8 +23,8 @@ public class Mod0Req0 {
 		String ltlFormula=reader.readLine();
 		reader.close();
 		LTLtoBATransformer<State, Transition> ltlToBaTransformer;
-		ltlToBaTransformer=new LTLtoBATransformer<State, Transition>(new StateFactoryImpl(), 
-				new TransitionFactoryClaimImpl<State>());
+		ltlToBaTransformer=new LTLtoBATransformer<State, Transition>(new StateFactory(), 
+				new ClaimTransitionFactory<State>());
 		ltlToBaTransformer.transform(ltlFormula);
 	}
 

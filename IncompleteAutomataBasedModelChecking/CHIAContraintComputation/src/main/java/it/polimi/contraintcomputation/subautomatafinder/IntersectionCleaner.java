@@ -4,6 +4,7 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.checker.emptiness.EmptinessChecker;
+import it.polimi.checker.intersection.IntersectionBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +41,9 @@ public class IntersectionCleaner<S extends State, T extends Transition> {
 	/**
 	 * contains the automaton to be considered by the {@link EmptinessChecker}
 	 */
-	private IntersectionBA<S, T> intersectionAutomaton;
+	private final IntersectionBA<S, T> intersectionAutomaton;
+	
+	private final IntersectionBuilder<S, T> intersectionBuilder;
 
 	/**
 	 * contains the set of the states that has been encountered by <i>some<i>
@@ -61,11 +64,12 @@ public class IntersectionCleaner<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the automaton to be considered is null
 	 */
-	public IntersectionCleaner(IntersectionBA<S, T> automaton) {
+	public IntersectionCleaner(IntersectionBA<S, T> automaton, IntersectionBuilder<S, T> intersectionBuilder) {
 		Preconditions.checkNotNull(automaton,
 				"The intersection automaton to be considered cannot be null");
 
 		this.intersectionAutomaton = automaton;
+		this.intersectionBuilder=intersectionBuilder;
 		this.reachableStates = new HashSet<S>();
 		visitedStates = new HashSet<S>();
 	}
@@ -101,6 +105,13 @@ public class IntersectionCleaner<S extends State, T extends Transition> {
 				this.intersectionAutomaton.getStates());
 		toBeRemoved.removeAll(reachableStates);
 		for (S s : toBeRemoved) {
+			S modelState=this.intersectionBuilder.getIntersectionStateModelStateMap().get(s);
+			this.intersectionBuilder.getModelStateIntersectionStateMap().get(modelState).remove(s);
+			this.intersectionBuilder.getIntersectionStateModelStateMap().remove(s);
+			S claimState=this.intersectionBuilder.getIntersectionStateClaimStateMap().get(s);
+			this.intersectionBuilder.getClaimStateIntersectionStateMap().get(claimState).remove(s);
+			this.intersectionBuilder.getIntersectionStateClaimStateMap().remove(s);
+			
 			this.intersectionAutomaton.removeState(s);
 		}
 		

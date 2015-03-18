@@ -4,10 +4,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateFactoryImpl;
-import it.polimi.automata.state.impl.StateImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,13 +22,13 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 public class LTLtoBATransformerTest1 {
 
 	@Mock
-	private StateFactoryImpl stateFactory;
+	private StateFactory stateFactory;
 	
 	@Mock
-	private TransitionFactoryClaimImpl<State> transitionFactory;
+	private ClaimTransitionFactory<State> transitionFactory;
 
 	@Mock
-	private StateImpl state;
+	private State state;
 	
 	@Mock
 	private Transition transition;

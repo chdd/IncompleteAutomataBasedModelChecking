@@ -1,20 +1,77 @@
 package it.polimi.automata.transition;
 
+import it.polimi.automata.Constants;
+
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.jgrapht.graph.DefaultEdge;
+
+import com.google.common.base.Preconditions;
+
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import it.polimi.automata.transition.impl.TransitionImpl;
 
 /**
- * <p>
  * Represents a transition of an automaton. <br>
- * A transition is identified by an id and is labeled by characters
- * </p>
+ * A transition is identified by an id and is labeled by propositions </p>
  * 
  * @author claudiomenghi
- * @see TransitionImpl
+ * @see {@link Transition}
  */
-public interface Transition {
+@SuppressWarnings("serial")
+public class Transition extends DefaultEdge {
+
+	/**
+	 * contains the id of the transition
+	 */
+	private final int id;
+
+	/**
+	 * contains the labels of the transition the transition can be fired if one
+	 * of the label is satisfied
+	 */
+	private final Set<IGraphProposition> labels;
+
+	/**
+	 * Creates a new transition
+	 * 
+	 * @param labels
+	 *            the <code>Set</code> of labels to be added to the transition
+	 * @param id
+	 *            : the identifier of the transition
+	 * @throws IllegalArgumentException
+	 *             if the id is less than zero
+	 * @throws NullPointerException
+	 *             if the set of labels or one of the label to be added is null
+	 */
+	protected Transition(Set<IGraphProposition> labels, int id) {
+		Preconditions.checkNotNull(labels,
+				"The character that labels the transition cannot be null");
+		Preconditions.checkArgument(id >= 0,
+				"The value of the id cannot be less than zero");
+		this.id = id;
+		this.labels = new HashSet<IGraphProposition>();
+		for (IGraphProposition l : labels) {
+			Preconditions.checkNotNull(l,
+					"No null labels can be added to the transition");
+			this.labels.add(l);
+		}
+	}
+
+	/**
+	 * <p>
+	 * returns <b>the propositions</b> associated with the transition. Depending
+	 * on whether the transition is associated with the model or a property it
+	 * is associated with a set of propositions or a propositional logic
+	 * formula, respectively.
+	 * </p>
+	 * 
+	 * @return the <b>label</b> associated with the transition
+	 */
+	public Set<IGraphProposition> getPropositions() {
+		return Collections.unmodifiableSet(this.labels);
+	}
 
 	/**
 	 * <p>
@@ -23,33 +80,59 @@ public interface Transition {
 	 * 
 	 * @return the <b>id</b> of the transition
 	 */
-	public int getId();
+	public int getId() {
+		return id;
+	}
 
 	/**
-	 * <p>
-	 * returns <b>the label</b> associated with the transition. Depending on
-	 * whether the transition is associated with the model or a property it is
-	 * associated with a set of labels or a propositional logic formula,
-	 * respectively. The semantic of the different labels is that the transition
-	 * can be performed if one of the labels (conditions) is satisfied
-	 * </p>
-	 * 
-	 * @return the <b>label</b> associated with the transition
+	 * {@inheritDoc}
 	 */
-	public Set<IGraphProposition> getPropositions();
+	@Override
+	public String toString() {
+		String ret = "";
+		for (IGraphProposition label : labels) {
+			ret = ret + label.toString() + Constants.AND;
+		}
+		if (ret.endsWith(Constants.AND)) {
+			ret = ret.substring(0, ret.length() - Constants.AND.length());
+		}
+
+		return "{" + Integer.toString(this.id) + "} " + ret + "";
+	}
 
 	/**
-	 * sets the label to the set of labels specified as parameter
+	 * returns the hashCode of the current transition
 	 * 
-	 * @param labels
-	 *            the labels to be set to the transition
-	 * @throws NullPointerException
-	 *             if the set of the labels is <code>null</code> or if a label
-	 *             in the set is <code>null</code>
+	 * @return the hashCode of the current transition
 	 */
-	public void setLabels(Set<IGraphProposition> labels);
-	
-	public boolean equals(Object obj) ;
-	public int hashCode();
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
 
+	/**
+	 * returns true if the transition is equal to the otherTransition passed as
+	 * parameter
+	 * 
+	 * @param otherTransition
+	 *            is the transition with which the current transition must be
+	 *            compare with
+	 * @return true if the two transitions are equals, false otherwise
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transition other = (Transition) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
 }

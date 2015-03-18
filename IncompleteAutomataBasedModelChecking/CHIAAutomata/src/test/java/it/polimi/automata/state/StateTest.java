@@ -1,6 +1,7 @@
-package it.polimi.automata.state.impl;
+package it.polimi.automata.state;
 
 import static org.junit.Assert.*;
+import it.polimi.automata.state.State;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,30 +10,30 @@ import org.junit.Test;
  * @author claudiomenghi
  * 
  */
-public class StateImplTest {
+public class StateTest {
 
-	private StateImpl state1;
-	private StateImpl state2;
-	private StateImpl state3;
-	private StateImpl state4;
-	private StateImpl state5;
-	private StateImpl state6;
+	private State state1;
+	private State state2;
+	private State state3;
+	private State state4;
+	private State state5;
+	private State state6;
 
 	@Before
 	public void setUp() {
-		this.state1 = new StateImpl(1);
-		this.state2 = new StateImpl(2);
-		this.state3 = new StateImpl(2);
+		this.state1 = new State(1);
+		this.state2 = new State(2);
+		this.state3 = new State(2);
 		
-		this.state4=new StateImpl("name1", 3);
-		this.state5=new StateImpl("name1", 4);
-		this.state6 = new StateImpl("name2", 4);
+		this.state4=new State("name1", 3);
+		this.state5=new State("name1", 4);
+		this.state6 = new State("name2", 4);
 		
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#hashCode()}.
+	 * {@link it.polimi.automata.state.State#hashCode()}.
 	 */
 	@Test
 	public void testHashCode() {
@@ -44,7 +45,7 @@ public class StateImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.state.impl.StateImpl#getId()}.
+	 * Test method for {@link it.polimi.automata.state.State#getId()}.
 	 */
 	@Test
 	public void testGetId() {
@@ -57,7 +58,7 @@ public class StateImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.state.impl.StateImpl#getName()}
+	 * Test method for {@link it.polimi.automata.state.State#getName()}
 	 * .
 	 */
 	@Test
@@ -71,11 +72,11 @@ public class StateImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#StateImpl(int)}.
+	 * {@link it.polimi.automata.state.State#StateImpl(int)}.
 	 */
 	@Test
 	public void testStateImplInt() {
-		this.state4=new StateImpl(6);
+		this.state4=new State(6);
 		assertEquals(6, this.state4.getId());
 		assertEquals("", this.state4.getName());
 		
@@ -87,33 +88,33 @@ public class StateImplTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testStateImplInt_NegativeNumber() {
-		new StateImpl(-1);
+		new State(-1);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#StateImpl(java.lang.String, int)}
+	 * {@link it.polimi.automata.state.State#StateImpl(java.lang.String, int)}
 	 * .
 	 */
 	@Test
 	public void testStateImplStringInt() {
-		this.state4=new StateImpl("name", 6);
+		this.state4=new State("name", 6);
 		assertEquals(6, this.state4.getId());
 		assertEquals("name", this.state4.getName());
 	}
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#StateImpl(java.lang.String, null)}
+	 * {@link it.polimi.automata.state.State#StateImpl(java.lang.String, null)}
 	 * .
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testStateImplStringInt_null() {
-		new StateImpl(null, 6);
+		new State(null, 6);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#toString()}.
+	 * {@link it.polimi.automata.state.State#toString()}.
 	 */
 	@Test
 	public void testToString() {
@@ -122,7 +123,7 @@ public class StateImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 * {@link it.polimi.automata.state.State#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject() {
@@ -133,7 +134,7 @@ public class StateImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 * {@link it.polimi.automata.state.State#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject_Other() {
@@ -142,7 +143,7 @@ public class StateImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 * {@link it.polimi.automata.state.State#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject_Same() {
@@ -151,7 +152,7 @@ public class StateImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.state.impl.StateImpl#equals(java.lang.Object)}.
+	 * {@link it.polimi.automata.state.State#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsObject_Null() {

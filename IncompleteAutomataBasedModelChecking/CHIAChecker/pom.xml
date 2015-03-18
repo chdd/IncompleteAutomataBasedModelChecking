@@ -216,7 +216,7 @@
 		</repository>
 	</distributionManagement>
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>it.polimi.chia</groupId>
 			<artifactId>CHIAAutomata</artifactId>
@@ -231,6 +231,11 @@
 			<groupId>it.polimi.chia</groupId>
 			<artifactId>CHIAAutomata</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>it.polimi.chia</groupId>

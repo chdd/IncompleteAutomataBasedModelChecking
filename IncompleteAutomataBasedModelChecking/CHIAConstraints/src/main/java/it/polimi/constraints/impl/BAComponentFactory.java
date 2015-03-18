@@ -1,9 +1,9 @@
 package it.polimi.constraints.impl;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.impl.BAImpl;
+import it.polimi.automata.impl.BA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.constraints.Component;
@@ -36,10 +36,10 @@ public class BAComponentFactory<S extends State, T extends Transition>
 		Preconditions.checkNotNull(transitionFactory,
 				"The transition Factory cannot be null");
 
-		BA<S, T> ba = new BAImpl<S, T>(transitionFactory);
+		BA<S, T> ba = new BA<S, T>(transitionFactory);
 		ComponentImpl<S, T, BA<S, T>> s = new ComponentImpl<S, T, BA<S, T>>(
-				name, StateFactoryImpl.stateCount, modelState, transparent, ba);
-		StateFactoryImpl.stateCount = StateFactoryImpl.stateCount + 1;
+				name, StateFactory.stateCount, modelState, transparent, ba);
+		StateFactory.stateCount = StateFactory.stateCount + 1;
 		return s;
 	}
 
@@ -76,7 +76,7 @@ public class BAComponentFactory<S extends State, T extends Transition>
 
 		ComponentImpl<S, T, BA<S, T>> s = new ComponentImpl<S, T, BA<S, T>>(
 				name, id, modelState, true, automaton);
-		StateFactoryImpl.stateCount = StateFactoryImpl.stateCount + 1;
+		StateFactory.stateCount = StateFactory.stateCount + 1;
 		return s;
 	}
 
@@ -89,11 +89,11 @@ public class BAComponentFactory<S extends State, T extends Transition>
 				.checkNotNull(modelState,
 						"The state of the model associated with the component cannot be null");
 
-		BA<S, T> ba = new BAImpl<S, T>(transitionFactory);
+		BA<S, T> ba = new BA<S, T>(transitionFactory);
 
 		ComponentImpl<S, T, BA<S, T>> component = new ComponentImpl<S, T, BA<S, T>>(
 				name, id, modelState, transparent, ba);
-		StateFactoryImpl.stateCount = Math.max(StateFactoryImpl.stateCount + 1,
+		StateFactory.stateCount = Math.max(StateFactory.stateCount + 1,
 				id + 1);
 		return component;
 

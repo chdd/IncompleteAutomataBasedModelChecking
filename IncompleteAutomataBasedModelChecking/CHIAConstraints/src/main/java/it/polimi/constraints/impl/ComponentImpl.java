@@ -5,7 +5,6 @@ package it.polimi.constraints.impl;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Component;
 
@@ -83,7 +82,7 @@ public class ComponentImpl<S extends State, T extends Transition, A extends BA<S
 	 *            contains the id of the state
 	 * @param modelState
 	 *            is the state of the model to which the component correspond
-	 * @see StateImpl#StateImpl(int)
+	 * @see State#StateImpl(int)
 	 * @throws NullPointerException
 	 *             is generated when the name of the state or when the state of
 	 *             the model is null

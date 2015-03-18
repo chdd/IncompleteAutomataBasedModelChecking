@@ -192,7 +192,7 @@
 			<artifactId>slf4j-nop</artifactId>
 			<version>1.7.10</version>
 		</dependency>
-		
+
 		<!-- JGraph the library upon which CHIA is based -->
 		<dependency>
 			<groupId>jgrapht</groupId>
@@ -240,6 +240,11 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2</version>
 		</dependency>
 
 	</dependencies>

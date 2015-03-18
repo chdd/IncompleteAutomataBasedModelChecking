@@ -13,10 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -92,8 +91,8 @@ public class IBAImplTest {
 	@Mock
 	private Transition outConnection2;
 	
-	private IBAImpl<State, Transition> ba;
-	private IBAImpl<State, Transition> baInject;
+	private IBA ba;
+	private IBA baInject;
 
 	private Map<State, Set<Entry<Transition, State >>> inEntry;
 	private Map<State, Set<Entry<Transition, State >>> outEntry;
@@ -101,12 +100,12 @@ public class IBAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>());
+		this.ba = new IBA(new ClaimTransitionFactory<State>());
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
-		this.ba.addCharacter(l1);
-		this.ba.addCharacter(l2);
+		this.ba.addProposition(l1);
+		this.ba.addProposition(l2);
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
 		this.ba.addTransparentState(state2);
@@ -115,12 +114,12 @@ public class IBAImplTest {
 		returnSet.add(l3);
 		when(t3.getPropositions()).thenReturn(returnSet);
 		
-		this.baInject = new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>());
+		this.baInject = new IBA(new ClaimTransitionFactory<State>());
 		baInject.addInitialState(state1Inject);
 		baInject.addState(state2Inject);
 		baInject.addAcceptState(state3Inject);
-		this.baInject.addCharacter(l1);
-		this.baInject.addCharacter(l2);
+		this.baInject.addProposition(l1);
+		this.baInject.addProposition(l2);
 		this.baInject.addTransition(state1Inject, state2Inject, t1Inject);
 		this.baInject.addTransition(state2Inject, state3Inject, t2Inject);
 		this.baInject.addTransparentState(state2Inject);
@@ -139,15 +138,15 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#IBAImpl()}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#IBAImpl()}.
 	 */
 	@Test
 	public void testIBAImpl() {
-		assertNotNull(new IBAImpl<State, Transition>(new TransitionFactoryClaimImpl<State>()));
+		assertNotNull(new IBA(new ClaimTransitionFactory<State>()));
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#isTransparent(Null)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#isTransparent(Null)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testIsTransparentNull() {
@@ -155,7 +154,7 @@ public class IBAImplTest {
 		
 	}
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#isTransparent(Illegal)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#isTransparent(Illegal)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testIsTransparentIllegal() {
@@ -164,7 +163,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#isTransparent(it.polimi.automata.state.State)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#isTransparent(it.polimi.automata.state.State)}.
 	 */
 	@Test
 	public void testIsTransparent() {
@@ -174,7 +173,7 @@ public class IBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#getTransparentStates()}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#getTransparentStates()}.
 	 */
 	@Test
 	public void testGetTransparentStates() {
@@ -184,7 +183,7 @@ public class IBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#addTransparentState(null)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#addTransparentState(null)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testAddTransparentStateNull() {
@@ -192,7 +191,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#addTransparentState(it.polimi.automata.state.State)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#addTransparentState(it.polimi.automata.state.State)}.
 	 */
 	@Test
 	public void testAddTransparentState() {
@@ -208,12 +207,12 @@ public class IBAImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#clone()}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#clone()}.
 	 */
 	@Test
 	public void testClone() {
-		IBAImpl<State, Transition> clone=this.ba.clone();
-		assertEquals(clone.getAlphabet(), this.ba.getAlphabet());
+		IBA clone=this.ba.clone();
+		assertEquals(clone.getPropositions(), this.ba.getPropositions());
 		assertEquals(clone.getTransitions(), this.ba.getTransitions());
 		assertEquals(clone.getStates(), this.ba.getStates());
 		assertEquals(clone.getInitialStates(), this.ba.getInitialStates());
@@ -224,7 +223,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(null, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(null, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testReplaceNullTransparentState() {
@@ -232,7 +231,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, null, java.util.Map, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, null, java.util.Map, java.util.Map)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testReplaceNullIBA() {
@@ -240,7 +239,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, null, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, null, java.util.Map)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testReplaceNullIncoming() {
@@ -248,7 +247,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, null)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, null)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testReplaceNullOutcoming() {
@@ -256,7 +255,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testReplaceNotTransparent() {
@@ -264,7 +263,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, IllegalMap, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, IllegalMap, java.util.Map)}.
 	 * when one of the NEW incoming connection does not correspond to an old incoming connection
 	 */
 	@Test(expected=IllegalArgumentException.class)
@@ -277,7 +276,7 @@ public class IBAImplTest {
 	
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, IllegalMap, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, IllegalMap, java.util.Map)}.
 	 * when the destination of the NEW incoming connection does not correspond to an initial state of the BA to be injected
 	 */
 	@Test(expected=IllegalArgumentException.class)
@@ -289,7 +288,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, IllegalMap)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, IllegalMap)}.
 	 * when one of the NEW out-coming connection does not correspond to an old out-coming connection
 	 */
 	@Test(expected=IllegalArgumentException.class)
@@ -301,7 +300,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, IllegalMap)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, IllegalMap)}.
 	 * when the initial state of the NEW out-coming connection does not correspond to a final state of the refinement
 	 */
 	@Test(expected=IllegalArgumentException.class)
@@ -314,12 +313,12 @@ public class IBAImplTest {
 	
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
 	 */
 	@Test
 	public void testReplace() {
 		
-		IBA<State, Transition> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		IBA refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 		assertTrue(refinement.getStates().contains(state1));
 		assertFalse(refinement.getStates().contains(state2));
 		assertTrue(refinement.getStates().contains(state3));
@@ -367,14 +366,14 @@ public class IBAImplTest {
 	
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
 	 * performs the same test but considers the state state2 as accepting
 	 */
 	@Test
 	public void testReplace2() {
 		
 		this.ba.addAcceptState(state2);
-		IBA<State, Transition> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		IBA refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 		assertTrue(refinement.getStates().contains(state1));
 		assertFalse(refinement.getStates().contains(state2));
 		assertTrue(refinement.getStates().contains(state3));
@@ -421,7 +420,7 @@ public class IBAImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.impl.IBAImpl#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
+	 * Test method for {@link it.polimi.automata.impl.IBA#replace(it.polimi.automata.state.State, it.polimi.automata.IBA, java.util.Map, java.util.Map)}.
 	 * performs the same test but considers the state state2 as initial
 	 */
 	@Test
@@ -429,7 +428,7 @@ public class IBAImplTest {
 		
 		this.ba.addAcceptState(state2);
 		this.ba.addInitialState(state2);
-		IBA<State, Transition> refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
+		IBA refinement=this.ba.replace(this.state2, this.baInject, this.inEntry, this.outEntry);
 		assertTrue(refinement.getStates().contains(state1));
 		assertFalse(refinement.getStates().contains(state2));
 		assertTrue(refinement.getStates().contains(state3));

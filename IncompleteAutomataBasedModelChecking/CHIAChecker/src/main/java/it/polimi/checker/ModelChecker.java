@@ -149,14 +149,17 @@ public class ModelChecker< S extends State, T extends Transition> {
 		boolean empty = this.checkEmptyIntersectionMc();
 		long stopTime = System.nanoTime();
 
-		double checkingTime = ((stopTime - startIntersectionTime) / 1000000000.0);
+		long checkingMcTime = (stopTime - startIntersectionTime);
 		logger.info("The emptiness checker returned: " + empty + " in: "
-				+ checkingTime + "ms");
+				+ checkingMcTime + "ms");
 
 		// updates the time required to compute the intersection between the
 		// model without transparent states and the claim
-		this.verificationResults.setViolationTime(checkingTime);
+		this.verificationResults.setViolationTime(checkingMcTime);
 		if (!empty) {
+			this.verificationResults.setTotalTime(checkingMcTime);
+			this.verificationResults.setNumInitialStatesIntersection(this.intersectionAutomaton.getStates().size());
+			this.verificationResults.setResult(0);
 			logger.info("The claim is not satisfied");
 			return 0;
 		}
@@ -166,13 +169,13 @@ public class ModelChecker< S extends State, T extends Transition> {
 		long startCheckingPossible = System.nanoTime();
 		boolean emptyIntersection = this.checkEmptyIntersection();
 		long stopCheckingPossible = System.nanoTime();
-		checkingTime = (stopCheckingPossible - startCheckingPossible) / 1000000000.0;
+		long checkingPossibleTime = (stopCheckingPossible - startCheckingPossible) ;
 		logger.info("The emptiness checker returns: " + emptyIntersection
-				+ " in: " + checkingTime + " ms");
+				+ " in: " + checkingPossibleTime + " ms");
 
 		// updates the time required to compute the intersection between the
 		// model without transparent states and the claim
-		this.verificationResults.setPossibleViolationTime(checkingTime);
+		this.verificationResults.setPossibleViolationTime(checkingPossibleTime);
 		// INTERSECTION
 		// sets the number of the states in the intersection
 		this.verificationResults
@@ -191,11 +194,17 @@ public class ModelChecker< S extends State, T extends Transition> {
 		this.verificationResults
 				.setNumMixedStatesIntersection(this.intersectionAutomaton
 						.getMixedStates().size());
+		this.verificationResults.setTotalTime(checkingMcTime+checkingPossibleTime);
+		this.verificationResults.setNumInitialStatesIntersection(this.intersectionAutomaton.getStates().size());
+		
 		if (!emptyIntersection) {
 			logger.info("The claim is possibly satisfied");
+			this.verificationResults.setResult(-1);
+			
 			return -1;
 		} else {
 			logger.info("The claim is satisfied");
+			this.verificationResults.setResult(1);
 			return 1;
 		}
 	}
@@ -261,7 +270,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 *         corresponding states of the intersection automaton
 	 */
 	public Map<S, Set<S>> getModelIntersectionStateMap() {
-		return this.intersectionBuilder.getModelIntersectionStateMap();
+		return this.intersectionBuilder.getModelStateIntersectionStateMap();
 	}
 	
 	/**
@@ -272,7 +281,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 *         corresponding states of the intersection automaton
 	 */
 	public Map<S, Set<S>> getClaimIntersectionStateMap() {
-		return this.intersectionBuilder.getClaimIntersectionStateMap();
+		return this.intersectionBuilder.getClaimStateIntersectionStateMap();
 	}
 
 	/**

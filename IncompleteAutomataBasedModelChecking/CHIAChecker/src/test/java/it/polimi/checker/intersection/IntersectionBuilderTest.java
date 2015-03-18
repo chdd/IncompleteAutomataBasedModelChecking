@@ -9,14 +9,14 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.impl.IBAImpl;
+import it.polimi.automata.impl.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
-import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
@@ -89,11 +89,11 @@ public class IntersectionBuilderTest {
 	
 	@Before
 	public void setUp() {
-		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryClaimImpl<State>();
-		this.claim1 = new IBAImpl<State, Transition>(transitionFactory);
+		TransitionFactory<State, Transition> transitionFactory=new ClaimTransitionFactory<State>();
+		this.claim1 = new IBA<State, Transition>(transitionFactory);
 
-		intersectionTransitionFactory=new TransitionFactoryClaimImpl<State>();
-		stateFactory = new StateFactoryImpl();
+		intersectionTransitionFactory=new ClaimTransitionFactory<State>();
+		stateFactory = new StateFactory();
 		claim1State1 = stateFactory.create("claimState1");
 		claimState2 = stateFactory.create("claimState2");
 		claim1State3 = stateFactory.create("claimState3");
@@ -113,9 +113,9 @@ public class IntersectionBuilderTest {
 		propositionsT3.add(new GraphProposition("c", false));
 		claim1Transition3 = transitionFactory.create(propositionsT3);
 
-		this.claim1.addCharacters(propositionsT1);
-		this.claim1.addCharacters(propositionsT2);
-		this.claim1.addCharacters(propositionsT3);
+		this.claim1.addPropositions(propositionsT1);
+		this.claim1.addPropositions(propositionsT2);
+		this.claim1.addPropositions(propositionsT3);
 		this.claim1.addTransition(claim1State1, claimState2, claim1Transition1);
 		this.claim1.addTransition(claimState2, claim1State3, claim1Transition2);
 		this.claim1
@@ -124,9 +124,9 @@ public class IntersectionBuilderTest {
 		// --------------------------------------
 		// CLAIM 2
 		// --------------------------------------
-		this.claim2 = new IBAImpl<State,Transition>(transitionFactory);
+		this.claim2 = new IBA<State,Transition>(transitionFactory);
 
-		stateFactory = new StateFactoryImpl();
+		stateFactory = new StateFactory();
 		claim2State1 = stateFactory.create("claimState1");
 		claim2State2 = stateFactory.create("claimState2");
 		claim2State3 = stateFactory.create("claimState3");
@@ -146,9 +146,9 @@ public class IntersectionBuilderTest {
 		claim2PropositionsT3.add(new GraphProposition("c", false));
 		claim2Transition3 = transitionFactory.create(claim2PropositionsT3);
 
-		this.claim2.addCharacters(claim2PropositionsT1);
-		this.claim2.addCharacters(claim2PropositionsT2);
-		this.claim2.addCharacters(claim2PropositionsT3);
+		this.claim2.addPropositions(claim2PropositionsT1);
+		this.claim2.addPropositions(claim2PropositionsT2);
+		this.claim2.addPropositions(claim2PropositionsT3);
 		this.claim2
 				.addTransition(claim2State1, claim2State2, claim2Transition1);
 		this.claim2
@@ -159,16 +159,16 @@ public class IntersectionBuilderTest {
 		/*
 		 * MODEL
 		 */
-		this.model1 = new IBAImpl<State,Transition>(transitionFactory);
+		this.model1 = new IBA<State,Transition>(transitionFactory);
 
-		StateFactory<State> modelStateFactory = new StateFactoryImpl();
+		StateFactory<State> modelStateFactory = new StateFactory();
 		this.model1State1 = modelStateFactory.create("modelState1");
 		this.model1State2 = modelStateFactory.create("modelState2");
 		this.model1State3 = modelStateFactory.create("modelState3");
 		this.model1.addState(model1State1);
 		this.model1.addState(model1State2);
 		this.model1.addState(model1State3);
-		TransitionFactory<State, Transition> modelTransitionFactory = new TransitionFactoryModelImpl<State>();
+		TransitionFactory<State, Transition> modelTransitionFactory = new ModelTransitionFactory<State>();
 
 		Set<IGraphProposition> propositionsModelT1 = new HashSet<IGraphProposition>();
 		propositionsModelT1.add(new GraphProposition("a", false));
@@ -182,9 +182,9 @@ public class IntersectionBuilderTest {
 		propositionsModelT3.add(new GraphProposition("c", false));
 		this.model1Transition3 = modelTransitionFactory.create(propositionsModelT3);
 
-		this.model1.addCharacters(propositionsModelT1);
-		this.model1.addCharacters(propositionsModelT2);
-		this.model1.addCharacters(propositionsModelT3);
+		this.model1.addPropositions(propositionsModelT1);
+		this.model1.addPropositions(propositionsModelT2);
+		this.model1.addPropositions(propositionsModelT3);
 		this.model1
 				.addTransition(model1State1, model1State2, model1Transition1);
 		this.model1
@@ -195,9 +195,9 @@ public class IntersectionBuilderTest {
 		/*
 		 * MODEL
 		 */
-		this.model2 = new IBAImpl<State,Transition>(transitionFactory);
+		this.model2 = new IBA<State,Transition>(transitionFactory);
 
-		modelStateFactory = new StateFactoryImpl();
+		modelStateFactory = new StateFactory();
 		this.model2State1 = modelStateFactory.create("modelState1");
 		this.model2State2 = modelStateFactory.create("modelState2");
 		this.model2State3 = modelStateFactory.create("modelState3");
@@ -217,9 +217,9 @@ public class IntersectionBuilderTest {
 		propositionsModel2T3.add(new GraphProposition("c", false));
 		this.model2Transition3 = modelTransitionFactory.create(propositionsModel2T3);
 
-		this.model2.addCharacters(propositionsModel2T1);
-		this.model2.addCharacters(propositionsModel2T2);
-		this.model2.addCharacters(propositionsModel2T3);
+		this.model2.addPropositions(propositionsModel2T1);
+		this.model2.addPropositions(propositionsModel2T2);
+		this.model2.addPropositions(propositionsModel2T3);
 		this.model2
 				.addTransition(model2State1, model2State2, model2Transition1);
 		this.model2

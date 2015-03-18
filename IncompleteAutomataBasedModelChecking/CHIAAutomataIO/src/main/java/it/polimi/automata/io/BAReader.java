@@ -2,7 +2,7 @@ package it.polimi.automata.io;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
-import it.polimi.automata.impl.IBAImpl;
+import it.polimi.automata.impl.IBA;
 import it.polimi.automata.io.transformer.states.StateElementParser;
 import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
 import it.polimi.automata.io.transformer.transitions.TransitionElementParser;
@@ -99,7 +99,7 @@ public class BAReader<S extends State, T extends Transition> {
 		Preconditions.checkNotNull(transitionElementParser,
 				"The transition factory cannot be null");
 
-		this.ba = new IBAImpl<S, T>(
+		this.ba = new IBA<S, T>(
 				transitionElementParser.getTransitionFactory());
 
 		this.file = file;

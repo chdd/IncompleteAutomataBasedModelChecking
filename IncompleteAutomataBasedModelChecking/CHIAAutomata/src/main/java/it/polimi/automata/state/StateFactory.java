@@ -1,17 +1,25 @@
 package it.polimi.automata.state;
 
 
+import org.jgrapht.VertexFactory;
+
+import com.google.common.base.Preconditions;
+
 /**
- * is the factory interface which allows to create the state of the Buchi
- * automaton or of the incomplete buchi automaton
+ * is the factory that allows to create states of the type StateImpl
+ * 
+ * @see {@link State}. It implements the {@link StateFactory} interface
  * 
  * @author claudiomenghi
  * 
- * @param <S>
- *            is the type of the state of the automaton which must extend the
- *            interface {@link State}
  */
-public interface StateFactory<S extends State>{
+public class StateFactory implements VertexFactory<State> {
+
+	/**
+	 * contains the counter whose value is associated to the next id of the
+	 * state to be created
+	 */
+	public static int stateCount = 0;
 
 	/**
 	 * crates a new state with an empty name the id is auto-assigned to the
@@ -19,7 +27,13 @@ public interface StateFactory<S extends State>{
 	 * 
 	 * @return a new state with an empty name
 	 */
-	public S create();
+	public State create() {
+
+		State s = new State(Integer.toString(StateFactory.stateCount),
+				StateFactory.stateCount);
+		StateFactory.stateCount=StateFactory.stateCount+1;
+		return s;
+	}
 
 	/**
 	 * creates a new state with the specified name the id is auto-assigned to
@@ -31,7 +45,13 @@ public interface StateFactory<S extends State>{
 	 * @throws NullPointerException
 	 *             if the name of the state is null
 	 */
-	public S create(String name);
+	public State create(String name) {
+		Preconditions.checkNotNull(name, "The name of the state cannot be null");
+		
+		State s = new State(name, StateFactory.stateCount);
+		StateFactory.stateCount=StateFactory.stateCount+1;
+		return s;
+	}
 
 	/**
 	 * creates a new state with the specified name and id
@@ -47,5 +67,20 @@ public interface StateFactory<S extends State>{
 	 *             if the name of the state is null
 	 * 
 	 */
-	public S create(String name, int id);
+	public State create(String name, int id) {
+		Preconditions.checkNotNull(name, "The name of the state cannot be null");
+		Preconditions.checkArgument(id >= 0, "The id must be grater than or equal to 0");
+		
+		State s = new State(name, id);
+		StateFactory.stateCount = Math.max(StateFactory.stateCount+1,
+				id + 1);
+		return s;
+	}
+
+	public State createVertex() {
+		State s = new State(Integer.toString(StateFactory.stateCount),
+				StateFactory.stateCount);
+		StateFactory.stateCount=StateFactory.stateCount+1;
+		return s;
+	}
 }

@@ -30,7 +30,7 @@ public class ModelCheckingResultsTest {
 		ModelCheckingResults results = new ModelCheckingResults();
 		
 		results.reset();
-		assertTrue(results.getConstraintComputationTime()==0);
+		assertTrue(results.getSubpropertyTime()==0);
 		assertTrue(results.getViolationTime() == 0);
 		assertTrue(results.getPossibleViolationTime() == 0);
 		
@@ -103,25 +103,25 @@ public class ModelCheckingResultsTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getConstraintComputationTime()}
+	 * {@link it.polimi.checker.ModelCheckingResults#getSubpropertyTime()}
 	 * .
 	 */
 	@Test
 	public void testGetConstraintComputationTime() {
 		ModelCheckingResults results = new ModelCheckingResults();
-		assertTrue(results.getConstraintComputationTime() == 0);
+		assertTrue(results.getSubpropertyTime() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setConstraintComputationTime(double)}
+	 * {@link it.polimi.checker.ModelCheckingResults#setSubPropertyComputationTime(double)}
 	 * .
 	 */
 	@Test
 	public void testSetConstraintComputationTime() {
 		ModelCheckingResults results = new ModelCheckingResults();
-		results.setConstraintComputationTime(2);
-		assertTrue(results.getConstraintComputationTime() == 2);
+		results.setSubPropertyComputationTime(2);
+		assertTrue(results.getSubpropertyTime() == 2);
 	}
 
 	/**

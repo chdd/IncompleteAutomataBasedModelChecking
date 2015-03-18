@@ -45,8 +45,8 @@ public class IBATransitionParser<S extends State, T extends Transition, A extend
 				.computePropositions(eElement
 						.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 
-		if(!automaton.getAlphabet().containsAll(propositions)){
-			automaton.addCharacters(propositions);
+		if(!automaton.getPropositions().containsAll(propositions)){
+			automaton.addPropositions(propositions);
 		}
 		T t = transitionFactory.create(id, propositions);
 

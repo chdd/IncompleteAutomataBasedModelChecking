@@ -8,10 +8,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,12 +34,12 @@ public class IntersectionRuleImplTest {
 
 	private TransitionFactory<State, Transition> transitionFactory;
 
-	TransitionFactory<State, Transition> intersectiontransitionFactory=new TransitionFactoryClaimImpl<State>();
+	TransitionFactory<State, Transition> intersectiontransitionFactory=new ClaimTransitionFactory<State>();
 	
 	@Before
 	public void setUp() {
-		transitionFactory = new TransitionFactoryClaimImpl<State>();
-		stateFactory=new StateFactoryImpl();
+		transitionFactory = new ClaimTransitionFactory<State>();
+		stateFactory=new StateFactory();
 		Set<IGraphProposition> modelPropositions = new HashSet<IGraphProposition>();
 		modelPropositions.add(new GraphProposition("a", false));
 		modelTransition = transitionFactory.create(modelPropositions);

@@ -14,20 +14,20 @@ public class ModelCheckingResults {
 	 * the violationTime the time to check whether the claim is not satisfied in
 	 * the model. The time to perform the steps 2 and 3 of the paper.
 	 */
-	private double violationTime;
+	private long violationTime;
 	/**
 	 * the possibleViolationTime the time to check whether the claim is possibly
 	 * satisfied in the model. The time to perform the steps 4 and 5 of the
 	 * paper.
 	 */
-	private double possibleViolationTime;
+	private long possibleViolationTime;
 	
 	/**
 	 * contains the time that is necessary to compute the constraints
 	 */
-	private double constraintComputationTime;
+	private long subPropertyComputationTime;
 
-	private double simplificationTime;
+	private long simplificationTime;
 
 	// specification
 	/**
@@ -43,7 +43,7 @@ public class ModelCheckingResults {
 	 */
 	private int numTransitionSpecification;
 
-	private double totalTime;
+	private long totalTime;
 
 	// model
 	/**
@@ -77,15 +77,40 @@ public class ModelCheckingResults {
 	 */
 	private int numInitialStatesIntersection;
 	/**
+	 * @return the portReachabilityTime
+	 */
+	public long getPortReachabilityTime() {
+		return portReachabilityTime;
+	}
+
+	/**
+	 * @param portReachabilityTime the portReachabilityTime to set
+	 */
+	public void setPortReachabilityTime(long portReachabilityTime) {
+		this.portReachabilityTime = portReachabilityTime;
+	}
+
+	/**
 	 * contains the number of the mixed states of the intersection
 	 */
 	private int numMixedStatesIntersection;
+	
+	private long portReachabilityTime;
+	
+	private final boolean checking;
+	private final boolean subproperties;
+	private final boolean portReachability;
 
-	public ModelCheckingResults() {
+	public ModelCheckingResults(boolean checking, boolean subproperties, boolean portReachability) {
+		this.checking=checking;
+		this.subproperties=subproperties;
+		this.portReachability=portReachability;
+		
 		this.setResult(0);
 		this.setViolationTime(0);
 		this.setPossibleViolationTime(0);
-		this.setConstraintComputationTime(0);
+		this.setPortReachabilityTime(0);
+		this.setSubPropertyComputationTime(0);
 		this.setNumStatesSpecification(0);
 		this.setNumAcceptStatesSpecification(0);
 		this.setNumTransitionSpecification(0);
@@ -105,10 +130,11 @@ public class ModelCheckingResults {
 		this.setResult(0);
 		this.setViolationTime(0);
 		this.setPossibleViolationTime(0);
-		this.setConstraintComputationTime(0);
+		this.setSubPropertyComputationTime(0);
 		this.setNumStatesSpecification(0);
 		this.setNumAcceptStatesSpecification(0);
 		this.setNumTransitionSpecification(0);
+		this.setPortReachabilityTime(0);
 		this.setNumStatesModel(0);
 		this.setNumAcceptStatesModel(0);
 		this.setNumTransitionModel(0);
@@ -127,7 +153,7 @@ public class ModelCheckingResults {
 	 * @return the violationTime the time to check whether the claim is not
 	 *         satisfied in the model
 	 */
-	public double getViolationTime() {
+	public long getViolationTime() {
 		return violationTime;
 	}
 
@@ -139,7 +165,7 @@ public class ModelCheckingResults {
 	 *            the time to check whether the claim is not satisfied in the
 	 *            model
 	 */
-	public void setViolationTime(double violationTime) {
+	public void setViolationTime(long violationTime) {
 		this.violationTime = violationTime;
 	}
 
@@ -152,7 +178,7 @@ public class ModelCheckingResults {
 	 *         possibly satisfied in the model. The time to perform the steps 4
 	 *         and 5 of the paper.
 	 */
-	public double getPossibleViolationTime() {
+	public long getPossibleViolationTime() {
 		return possibleViolationTime;
 	}
 
@@ -165,7 +191,7 @@ public class ModelCheckingResults {
 	 *            the time to check whether the claim is possibly satisfied in
 	 *            the model. The time to perform the steps 4 and 5 of the paper.
 	 */
-	public void setPossibleViolationTime(double possibleViolationTime) {
+	public void setPossibleViolationTime(long possibleViolationTime) {
 		this.possibleViolationTime = possibleViolationTime;
 	}
 
@@ -187,16 +213,16 @@ public class ModelCheckingResults {
 	/**
 	 * @return the constraintComputationTime
 	 */
-	public double getConstraintComputationTime() {
-		return constraintComputationTime;
+	public long getSubpropertyTime() {
+		return subPropertyComputationTime;
 	}
 
 	/**
-	 * @param constraintComputationTime
+	 * @param subPropertyComputationTime
 	 *            the constraintComputationTime to set
 	 */
-	public void setConstraintComputationTime(double constraintComputationTime) {
-		this.constraintComputationTime = constraintComputationTime;
+	public void setSubPropertyComputationTime(long subPropertyComputationTime) {
+		this.subPropertyComputationTime = subPropertyComputationTime;
 	}
 
 	/**
@@ -324,7 +350,7 @@ public class ModelCheckingResults {
 	@Override
 	public String toString() {
 		return numStatesModel + ", " + result + ", " + violationTime + ", "
-				+ possibleViolationTime + ", " + constraintComputationTime
+				+ possibleViolationTime + ", " + subPropertyComputationTime
 				+ ", " + numStatesSpecification + ", "
 				+ numAcceptStatesSpecification + ", "
 				+ numTransitionSpecification + ", " + numAcceptStatesModel
@@ -400,7 +426,7 @@ public class ModelCheckingResults {
 	/**
 	 * @return the totalTime
 	 */
-	public double getTotalVerificationTime() {
+	public long getTotalVerificationTime() {
 		return totalTime;
 	}
 
@@ -408,14 +434,14 @@ public class ModelCheckingResults {
 	 * @param totalTime
 	 *            the totalTime to set
 	 */
-	public void setTotalTime(double totalTime) {
+	public void setTotalTime(long totalTime) {
 		this.totalTime = totalTime;
 	}
 
 	/**
 	 * @return the simplificationTime
 	 */
-	public double getSimplificationTime() {
+	public long getSimplificationTime() {
 		return simplificationTime;
 	}
 
@@ -423,7 +449,28 @@ public class ModelCheckingResults {
 	 * @param simplificationTime
 	 *            the simplificationTime to set
 	 */
-	public void setSimplificationTime(double simplificationTime) {
+	public void setSimplificationTime(long simplificationTime) {
 		this.simplificationTime = simplificationTime;
+	}
+
+	/**
+	 * @return the checking
+	 */
+	public boolean isChecking() {
+		return checking;
+	}
+
+	/**
+	 * @return the subproperties
+	 */
+	public boolean isSubproperties() {
+		return subproperties;
+	}
+
+	/**
+	 * @return the portReachability
+	 */
+	public boolean isPortReachability() {
+		return portReachability;
 	}
 }

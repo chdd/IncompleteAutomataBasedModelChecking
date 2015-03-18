@@ -1,8 +1,6 @@
-package it.polimi.automata.transition.impl;
+package it.polimi.automata.transition;
 
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Set;
 
@@ -21,10 +19,10 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            is the type of the states of the automaton
  */
 @SuppressWarnings("serial")
-public class TransitionFactoryModelImpl<S extends State> extends
-		TransitionFactoryClaimImpl<S> {
+public class ModelTransitionFactory<S extends State> extends
+		ClaimTransitionFactory<S> {
 
-	public TransitionFactoryModelImpl() {
+	public ModelTransitionFactory() {
 		super();
 	}
 

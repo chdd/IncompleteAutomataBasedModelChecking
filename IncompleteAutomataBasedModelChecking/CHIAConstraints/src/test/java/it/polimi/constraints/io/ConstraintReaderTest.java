@@ -7,9 +7,9 @@ import it.polimi.automata.io.transformer.states.StateElementParser;
 import it.polimi.automata.io.transformer.transitions.BATransitionParser;
 import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.in.BAConstraintReader;
@@ -26,10 +26,10 @@ public class ConstraintReaderTest {
 				.getResource("ConstraintM1R1.xml").getFile());
 
 		StateElementParser<State, Transition, BA<State, Transition>> stateElementParser = new BAStateElementParser(
-				new StateFactoryImpl());
+				new StateFactory());
 
 		ClaimTransitionParser<State, Transition, BA<State, Transition>> transitionParser = new BATransitionParser(
-				new TransitionFactoryClaimImpl<State>());
+				new ClaimTransitionFactory<State>());
 
 		BAConstraintReader<State, Transition> constraintReader = new BAConstraintReader<State, Transition>(
 				f,  stateElementParser, transitionParser);

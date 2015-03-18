@@ -11,10 +11,10 @@ import it.polimi.automata.io.transformer.transitions.BATransitionParser;
 import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,8 +46,8 @@ public class BAReaderTest {
 	@Before
 	public void setUp() {
 
-		this.stateFactory = new StateFactoryImpl();
-		this.transitionFactory = new TransitionFactoryClaimImpl<State>();
+		this.stateFactory = new StateFactory();
+		this.transitionFactory = new ClaimTransitionFactory<State>();
 
 		Set<IGraphProposition> propositions1 = new HashSet<IGraphProposition>();
 		propositions1.add(new SigmaProposition());
@@ -66,7 +66,7 @@ public class BAReaderTest {
 	@Test
 	public void test() throws FileNotFoundException, JAXBException {
 		StateElementParser<State, Transition, BA<State, Transition>> stateElementParser = new BAStateElementParser(
-				new StateFactoryImpl());
+				new StateFactory());
 
 		ClaimTransitionParser<State, Transition, BA<State, Transition>> transitionParser = new BATransitionParser(
 				this.transitionFactory);

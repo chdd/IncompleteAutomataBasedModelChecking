@@ -6,13 +6,13 @@ package it.polimi.checker.ibatransparentstateremoval;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
-import it.polimi.automata.impl.IBAImpl;
+import it.polimi.automata.impl.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,10 +35,10 @@ public class IBATransparentStateRemovalTest {
 	@Before
 	public void setUp() {
 		
-		TransitionFactory<State, Transition> transitionFactory=new TransitionFactoryModelImpl<State>();
+		TransitionFactory<State, Transition> transitionFactory=new ModelTransitionFactory<State>();
 		
-		this.ba=new IBAImpl<State, Transition>(transitionFactory);
-		StateFactory<State> factory=new StateFactoryImpl();
+		this.ba=new IBA<State, Transition>(transitionFactory);
+		StateFactory<State> factory=new StateFactory();
 		state1=factory.create();
 		state2=factory.create();
 		state3=factory.create();

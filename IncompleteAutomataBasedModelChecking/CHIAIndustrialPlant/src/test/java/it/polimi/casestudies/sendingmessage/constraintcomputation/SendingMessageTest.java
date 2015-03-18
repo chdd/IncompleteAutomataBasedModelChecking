@@ -17,10 +17,10 @@ import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
 import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
 import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateFactoryImpl;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.impl.TransitionFactoryClaimImpl;
-import it.polimi.automata.transition.impl.TransitionFactoryModelImpl;
+import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.ConstraintWriter;
@@ -56,10 +56,10 @@ public class SendingMessageTest {
 	public void testCHIA() throws FileNotFoundException {
 		logger.info("Running the test: testCHIA");
 		
-		StateElementParser<State, Transition, BA<State,Transition>> stateElementParser=new BAStateElementParser(new StateFactoryImpl());
+		StateElementParser<State, Transition, BA<State,Transition>> stateElementParser=new BAStateElementParser(new StateFactory());
 		
 		ClaimTransitionParser<State, Transition, BA<State,Transition>> transitionElementParser=new 
-				BATransitionParser(new TransitionFactoryClaimImpl<State>());
+				BATransitionParser(new ClaimTransitionFactory<State>());
 		
 		BAReader< State, Transition> claimReader = 
 				new BAReader<State, Transition>(
@@ -71,9 +71,9 @@ public class SendingMessageTest {
 		BA<State, Transition> claim = claimReader.read();
 
 		ModelTransitionParser<State, Transition, IBA<State,Transition>> modelRransitionElementParser=new 
-				IBATransitionParser<State, Transition, IBA<State,Transition>>(new TransitionFactoryModelImpl<State>());
+				IBATransitionParser<State, Transition, IBA<State,Transition>>(new ModelTransitionFactory<State>());
 		
-		StateElementParser<State, Transition, IBA<State,Transition>> ibaStateElementParser=new IBAStateElementParser(new StateFactoryImpl());
+		StateElementParser<State, Transition, IBA<State,Transition>> ibaStateElementParser=new IBAStateElementParser(new StateFactory());
 		
 		
 		IBAReader<State, Transition> modelReader = new IBAReader<State,  Transition>(
@@ -84,7 +84,7 @@ public class SendingMessageTest {
 		IBA<State, Transition> model = modelReader.read();
 		CHIA<State, Transition> chia = new CHIA<State, Transition>(
 				claim, model,
-				new IntersectionRuleImpl<State, Transition>(new TransitionFactoryClaimImpl<State>(),	new StateFactoryImpl()), new TransitionFactoryClaimImpl<State>());
+				new IntersectionRuleImpl<State, Transition>(new ClaimTransitionFactory<State>(),	new StateFactory()), new ClaimTransitionFactory<State>());
 		int result = chia.check();
 		assertTrue(result == -1);
 

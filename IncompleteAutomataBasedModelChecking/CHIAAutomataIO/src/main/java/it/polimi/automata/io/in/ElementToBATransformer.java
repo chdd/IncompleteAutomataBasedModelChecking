@@ -2,7 +2,7 @@ package it.polimi.automata.io.in;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
-import it.polimi.automata.impl.BAImpl;
+import it.polimi.automata.impl.BA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.transformer.states.StateElementParser;
 import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
@@ -49,7 +49,7 @@ public class ElementToBATransformer<S extends State, T extends Transition> imple
 				"The input elemento to be converted into a BA cannot be null");
 		
 		this.mapIdState=new HashMap<Integer, S>();
-		BA<S,T> ba=new BAImpl<S, T>(transitionElementParser.getTransitionFactory());
+		BA<S,T> ba=new BA<S, T>(transitionElementParser.getTransitionFactory());
 		
 		this.loadStates(input, ba);
 		this.loadTransitions(input, ba);

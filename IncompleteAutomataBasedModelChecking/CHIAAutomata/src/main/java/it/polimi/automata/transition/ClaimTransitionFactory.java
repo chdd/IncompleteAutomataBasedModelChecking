@@ -1,8 +1,6 @@
-package it.polimi.automata.transition.impl;
+package it.polimi.automata.transition;
 
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,15 +25,15 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *            proposition or a propositional logic formula {@link Label}
  */
 @SuppressWarnings("serial")
-public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdgeFactory<S, Transition> implements
+public class ClaimTransitionFactory<S extends State>  extends ClassBasedEdgeFactory<S, Transition> implements
 		TransitionFactory<S, Transition> {
 
-	public TransitionFactoryClaimImpl() {
+	public ClaimTransitionFactory() {
 		super(Transition.class);
 	}
 
 	/**
-	 * contains the next id of the {@link TransitionImpl}
+	 * contains the next id of the {@link Transition}
 	 */
 	protected static int transitionCount = 0;
 
@@ -44,9 +42,9 @@ public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdge
 	 */
 	public Transition create() {
 		
-		Transition t = new TransitionImpl(new HashSet<IGraphProposition>(),
-				TransitionFactoryClaimImpl.transitionCount);
-		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount+1;
+		Transition t = new Transition(new HashSet<IGraphProposition>(),
+				ClaimTransitionFactory.transitionCount);
+		ClaimTransitionFactory.transitionCount = ClaimTransitionFactory.transitionCount+1;
 
 		return t;
 	}
@@ -58,9 +56,9 @@ public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdge
 	public Transition create(Set<IGraphProposition> labels) {
 		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
-		Transition t = new TransitionImpl(labels,
-				TransitionFactoryClaimImpl.transitionCount);
-		TransitionFactoryClaimImpl.transitionCount = TransitionFactoryClaimImpl.transitionCount+1;
+		Transition t = new Transition(labels,
+				ClaimTransitionFactory.transitionCount);
+		ClaimTransitionFactory.transitionCount = ClaimTransitionFactory.transitionCount+1;
 
 		return t;
 	}
@@ -73,9 +71,9 @@ public class TransitionFactoryClaimImpl<S extends State>  extends ClassBasedEdge
 		Preconditions.checkArgument(id >=0, "The id must be grater than or equal to zero");
 		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
-		Transition t = new TransitionImpl(labels, id);
-		TransitionFactoryClaimImpl.transitionCount = Math.max(
-				TransitionFactoryClaimImpl.transitionCount++, id++);
+		Transition t = new Transition(labels, id);
+		ClaimTransitionFactory.transitionCount = Math.max(
+				ClaimTransitionFactory.transitionCount++, id++);
 
 		return t;
 	}

@@ -1,11 +1,12 @@
 /**
  * 
  */
-package it.polimi.automata.transition.impl;
+package it.polimi.automata.transition;
 
 import static org.junit.Assert.*;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,12 +23,12 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  */
 public class ModelTransitionFactoryImplTest {
 
-	private TransitionFactoryModelImpl<State> modelFactory;
+	private ModelTransitionFactory<State> modelFactory;
 	private Set<IGraphProposition> labels1;
 	private Set<IGraphProposition> labels2;
 	@Before
 	public void setUp(){
-		this.modelFactory=new TransitionFactoryModelImpl<State>();
+		this.modelFactory=new ModelTransitionFactory<State>();
 		
 		this.labels1=new HashSet<IGraphProposition>();
 		labels1.add(new GraphProposition("p", true));
@@ -37,7 +38,7 @@ public class ModelTransitionFactoryImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionFactoryModelImpl#create(java.util.Set)}.
+	 * Test method for {@link it.polimi.automata.transition.ModelTransitionFactory#create(java.util.Set)}.
 	 */
 	@Test
 	public void testCreateSetOfLABEL() {
@@ -48,7 +49,7 @@ public class ModelTransitionFactoryImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionFactoryModelImpl#createFromLabel(IllegalSet)}.
+	 * Test method for {@link it.polimi.automata.transition.ModelTransitionFactory#createFromLabel(IllegalSet)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testCreateSetOfLABELIllegal() {
@@ -56,7 +57,7 @@ public class ModelTransitionFactoryImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionFactoryModelImpl#createFromLabel(null)}.
+	 * Test method for {@link it.polimi.automata.transition.ModelTransitionFactory#createFromLabel(null)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testCreateSetOfLABELNull() {
@@ -64,7 +65,7 @@ public class ModelTransitionFactoryImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionFactoryModelImpl#create(int, java.util.Set)}.
+	 * Test method for {@link it.polimi.automata.transition.ModelTransitionFactory#create(int, java.util.Set)}.
 	 */
 	@Test
 	public void testCreateIntSetOfLABEL() {
@@ -75,14 +76,14 @@ public class ModelTransitionFactoryImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionFactoryModelImpl#create(int, null)}.
+	 * Test method for {@link it.polimi.automata.transition.ModelTransitionFactory#create(int, null)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testCreateIntSetOfLABELNull() {
 		this.modelFactory.create(1, null);
 	}
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionFactoryModelImpl#create(int, IllegalArgumen)}.
+	 * Test method for {@link it.polimi.automata.transition.ModelTransitionFactory#create(int, IllegalArgumen)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testCreateIntSetOfLABELIllegalArgument() {

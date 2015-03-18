@@ -1,7 +1,6 @@
 package it.polimi.constraints.impl;
 
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.impl.StateImpl;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Port;
 
@@ -18,7 +17,7 @@ import com.google.common.base.Preconditions;
  * @param <T>
  *            is the type of the transition that connects the states
  */
-public class PortImpl<S extends State, T extends Transition> extends StateImpl
+public class PortImpl<S extends State, T extends Transition> extends State
 		implements Port<S, T> {
 
 	

@@ -2,7 +2,7 @@ package it.polimi.automata.io;
 
 import it.polimi.automata.Constants;
 import it.polimi.automata.IBA;
-import it.polimi.automata.impl.IBAImpl;
+import it.polimi.automata.impl.IBA;
 import it.polimi.automata.io.transformer.states.StateElementParser;
 import it.polimi.automata.io.transformer.transitions.ModelTransitionParser;
 import it.polimi.automata.io.transformer.transitions.TransitionElementParser;
@@ -90,7 +90,7 @@ public class IBAReader<S extends State, T extends Transition> {
 
 		this.mapIdState = new HashMap<Integer, S>();
 
-		this.iba = new IBAImpl<S, T>(
+		this.iba = new IBA<S, T>(
 				transitionElementParser.getTransitionFactory());
 		this.file = file;
 		this.stateElementParser = stateElementParser;

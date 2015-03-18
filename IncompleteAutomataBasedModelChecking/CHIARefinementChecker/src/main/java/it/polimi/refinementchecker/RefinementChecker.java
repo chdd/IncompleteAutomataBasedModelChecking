@@ -265,7 +265,7 @@ public class RefinementChecker<S extends State, T extends Transition> {
 		 * useful in the constraint computation
 		 */
 		IntersectionCleaner<S, T> intersectionCleaner = new IntersectionCleaner<S, T>(
-				intersection);
+				intersection, intersectionBuilder);
 		intersectionCleaner.clean();
 
 		/*

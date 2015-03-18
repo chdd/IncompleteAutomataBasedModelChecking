@@ -1,7 +1,7 @@
 package it.polimi.model.ltltoba;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.impl.BAImpl;
+import it.polimi.automata.impl.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
@@ -90,7 +90,7 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 		/*
 		 * creates a new Buchi automaton
 		 */
-		BA<S, T> ba = new BAImpl<S, T>(transitionFactory);
+		BA<S, T> ba = new BA<S, T>(transitionFactory);
 
 		/*
 		 * calls the LTL2BA4J that transforms the LTL formula into the
@@ -239,7 +239,7 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 		T t = this.transitionFactory.create(label);
 
 		// adds the label to the current buchi automaton
-		ba.addCharacters(t.getPropositions());
+		ba.addPropositions(t.getPropositions());
 
 		// add the transition from the source state to the destination state
 		ba.addTransition(source, destination, t);

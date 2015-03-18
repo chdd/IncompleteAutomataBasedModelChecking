@@ -1,10 +1,10 @@
 package it.polimi.contraintcomputation;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Color;
 import it.polimi.constraints.Constraint;
@@ -14,6 +14,7 @@ import it.polimi.contraintcomputation.subautomatafinder.IntersectionCleaner;
 import it.polimi.contraintcomputation.subautomatafinder.ReachabilityChecker;
 import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,14 +40,12 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ConstraintGenerator.class);
 
-	
 	/**
 	 * contains the intersection automaton
 	 */
 	private IntersectionBA<S, T> intersectionAutomaton;
 
-	
-	
+	private final ModelCheckingResults mcResults;
 	private IntersectionBuilder<S, T> intersectionBuilder;
 
 	/**
@@ -67,15 +66,18 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public ConstraintGenerator(IntersectionBuilder<S, T> intersectionBuilder) {
+	public ConstraintGenerator(IntersectionBuilder<S, T> intersectionBuilder,
+			ModelCheckingResults mcResults) {
 
 		Preconditions.checkNotNull(intersectionBuilder,
 				"The intersection builder cannot be null");
-		this.intersectionAutomaton = intersectionBuilder.getPrecomputedIntersectionAutomaton();
-		this.intersectionBuilder=intersectionBuilder;
+		this.intersectionAutomaton = intersectionBuilder
+				.getPrecomputedIntersectionAutomaton();
+		this.intersectionBuilder = intersectionBuilder;
+		this.mcResults = mcResults;
 	}
-	
-	public IntersectionBA<S, T> getIntersectionAutomaton(){
+
+	public IntersectionBA<S, T> getIntersectionAutomaton() {
 		return this.intersectionAutomaton;
 	}
 
@@ -86,7 +88,6 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 	 */
 	public Constraint<S, T, BA<S, T>> generateConstraint() {
 
-		
 		logger.info("Computing the constraint");
 		/*
 		 * removes from the intersection automaton the states from which it is
@@ -94,51 +95,68 @@ public class ConstraintGenerator<S extends State, T extends Transition> {
 		 * useful in the constraint computation
 		 */
 		IntersectionCleaner<S, T> intersectionCleaner = new IntersectionCleaner<S, T>(
-				intersectionAutomaton);
+				intersectionAutomaton, intersectionBuilder);
 		intersectionCleaner.clean();
 
-		
 		SubPropertiesIdentifier<S, T, BA<S, T>> subPropertiesIdentifier = new SubPropertiesIdentifier<S, T, BA<S, T>>(
-				intersectionBuilder,
-				new BAComponentFactory<S, T>());
+				intersectionBuilder, new BAComponentFactory<S, T>(),
+				this.mcResults);
 		Constraint<S, T, BA<S, T>> constraint = subPropertiesIdentifier
-				.getSubAutomata(new HashMap<Port<S,T>, Color>(), new HashMap<Port<S,T>, Color>());
+				.getSubAutomata(new HashMap<Port<S, T>, Color>(),
+						new HashMap<Port<S, T>, Color>());
+
 		
-		Set<Port<S, T>> visitedPorts=new HashSet<Port<S,T>>();
-		
-		/*
-		 * removes the transitions associated with the transparent state, i.e.,
-		 * the internal transition of each component
-		 */
-		
-		IBA<S, T> model = this.intersectionBuilder.getModel().clone();
-		
-		Map<S, Set<S>> forwardReachability=new ReachabilityChecker<S, T, IBA<S, T>>(model, model.getRegularStates()).forwardReachabilitycheck();
-		for(S init: model.getInitialStates()){
-			Set<S> reachableStates=forwardReachability.get(init);
-			for(Port<S, T> port: constraint.getIncomingPorts()){
-				if(reachableStates.contains(port.getSource())){
-					constraint.setPortValue(port, Color.GREEN);
-					visitedPorts.add(port);
-				}	
+		if(mcResults.isPortReachability()){
+			Set<Port<S, T>> visitedPorts = new HashSet<Port<S, T>>();
+
+			long startPortReachabilityTime = System.nanoTime();
+			ReachabilityChecker<S, T, IntersectionBA<S, T>> reachabilityChecker = new ReachabilityChecker<S, T, IntersectionBA<S, T>>(
+					intersectionAutomaton, intersectionAutomaton.getRegularStates());
+			Map<S, Collection<S>> forwardReachability = reachabilityChecker
+					.forwardReachabilitycheck();
+
+			for (S init : intersectionAutomaton.getInitialStates()) {
+
+				if (forwardReachability.containsKey(init)) {
+					Collection<S> reachableStates = forwardReachability.get(init);
+					for (Port<S, T> port : constraint.getIncomingPorts()) {
+						if (reachableStates.contains(port.getSource())) {
+							constraint.setPortValue(port, Color.GREEN);
+							visitedPorts.add(port);
+						}
+					}
+				}
 			}
-		}
-		Map<S, Set<S>> backReachability=new ReachabilityChecker<S, T, IBA<S, T>>(model, model.getRegularStates()).backWardReachabilitycheck();
-		for(S accepting: model.getAcceptStates()){
-			Set<S> reachableStates=backReachability.get(accepting);
-			for(Port<S, T> port: constraint.getOutcomingPorts()){
-				if(reachableStates.contains(port.getDestination())){
-					constraint.setPortValue(port, Color.RED);
-					visitedPorts.add(port);
-				}	
+			Map<S, Collection<S>> backReachability = reachabilityChecker
+					.backWardReachabilitycheck();
+			for (S accepting : intersectionAutomaton.getAcceptStates()) {
+				if (backReachability.containsKey(accepting)) {
+
+					Collection<S> reachableStates = backReachability.get(accepting);
+					for (Port<S, T> port : constraint.getOutcomingPorts()) {
+						if (reachableStates.contains(port.getDestination())) {
+							constraint.setPortValue(port, Color.RED);
+							visitedPorts.add(port);
+						}
+					}
+				}
 			}
-		}
-		for(Port<S, T> port: constraint.getPorts()){
-			if(!visitedPorts.contains(port) && constraint.getPortValue(port)!=Color.RED && constraint.getPortValue(port)!=Color.GREEN){
-				constraint.setPortValue(port, Color.YELLOW);
+			for (Port<S, T> port : constraint.getPorts()) {
+				if (!visitedPorts.contains(port)
+						&& constraint.getPortValue(port) != Color.RED
+						&& constraint.getPortValue(port) != Color.GREEN) {
+					constraint.setPortValue(port, Color.YELLOW);
+				}
 			}
+			long stopPortReachabilityTime = System.nanoTime();
+
+			long portReachabilityTime = ((stopPortReachabilityTime - startPortReachabilityTime));
+
+			mcResults.setPortReachabilityTime(mcResults.getPortReachabilityTime()
+					+ portReachabilityTime);
 		}
 		
+
 		logger.info("Constraint computed");
 		return constraint;
 	}

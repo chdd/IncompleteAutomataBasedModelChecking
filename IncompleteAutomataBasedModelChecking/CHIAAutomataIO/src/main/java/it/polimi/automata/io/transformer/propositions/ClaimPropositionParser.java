@@ -58,7 +58,7 @@ public class ClaimPropositionParser<S extends State, T extends Transition, A ext
 			}
 		}
 
-		ba.addCharacters(propositions);
+		ba.addPropositions(propositions);
 		return propositions;
 	}
 }

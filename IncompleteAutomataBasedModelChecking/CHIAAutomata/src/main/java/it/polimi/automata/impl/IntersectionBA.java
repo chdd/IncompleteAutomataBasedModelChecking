@@ -1,7 +1,5 @@
 package it.polimi.automata.impl;
 
-import it.polimi.automata.BA;
-import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
@@ -36,28 +34,36 @@ import com.google.common.base.Preconditions;
  *            The type of the transitions of the automaton must implement the
  *            interface {@link Transition}
  */
-public class IntBAImpl<S extends State, T extends Transition> extends
-		BAImpl<S, T> implements IntersectionBA<S, T> {
+public class IntersectionBA extends
+		BA {
 
 	/**
 	 * contains the set of the mixed states
 	 */
-	private Set<S> mixedStates;
+	private Set<State> mixedStates;
 	
 	
 	/**
 	 * creates a new intersection automaton
 	 */
-	public IntBAImpl(TransitionFactory<S, T> transitionFactory) {
+	public IntersectionBA(TransitionFactory<State, Transition> transitionFactory) {
 		super(transitionFactory);
-		this.mixedStates = new HashSet<S>();
+		this.mixedStates = new HashSet<State>();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * adds the mixed state s to the states of the {@link IBA} and to the set of
+	 * the mixed state<br>
+	 * if the state is already mixed no action is performed <br>
+	 * if the state is a state of the BA but is not mixed, it is also added to
+	 * the set of the mixed state
+	 * 
+	 * @param s
+	 *            the state to be added in the {@link IBA}
+	 * @throws NullPointerException
+	 *             if the state s is null
 	 */
-	@Override
-	public void addMixedState(S s) {
+	public void addMixedState(State s) {
 		Preconditions.checkNotNull(s == null,
 				"The state to be added cannot be null");
 
@@ -68,27 +74,28 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * returns the set of the mixed states of the Intersection Buchi automaton
+	 * 
+	 * @return the set of the mixed states of the Intersection Buchi automaton
 	 */
-	@Override
-	public Set<S> getMixedStates() {
+	public Set<State> getMixedStates() {
 		return Collections.unmodifiableSet(mixedStates);
 	}
 
 	/**
-	 * returns a copy of the intersection automaton
+	 * creates a copy of the Intersection Buchi Automaton
 	 * 
-	 * @return a copy of the intersection automaton
+	 * @return a copy of the Intersection Buchi Automaton
 	 */
 	@Override
 	public Object clone() {
-		IntersectionBA<S, T> retBA = new IntBAImpl<S, T>((TransitionFactory<S,T>)
+		IntersectionBA retBA = new IntersectionBA((TransitionFactory<State,Transition>)
 				this.automataGraph.getEdgeFactory());
-		for (IGraphProposition l : this.getAlphabet()) {
-			retBA.addCharacter(l);
+		for (IGraphProposition l : this.getPropositions()) {
+			retBA.addProposition(l);
 		}
 
-		for (S s : this.getStates()) {
+		for (State s : this.getStates()) {
 			retBA.addState(s);
 			if (this.getAcceptStates().contains(s)) {
 				retBA.addAcceptState(s);
@@ -100,7 +107,7 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 				retBA.addMixedState(s);
 			}
 		}
-		for (T t : this.getTransitions()) {
+		for (Transition t : this.getTransitions()) {
 			retBA.addTransition(this.getTransitionSource(t),
 					this.getTransitionDestination(t), t);
 		}
@@ -114,16 +121,15 @@ public class IntBAImpl<S extends State, T extends Transition> extends
 
 		return ret;
 	}
-	public void removeState(S state){
+	public void removeState(State state){
 		super.removeState(state);
 		if(this.mixedStates.contains(state)){
 			this.mixedStates.remove(state);
 		}
 	}
 
-	@Override
-	public Set<S> getRegularStates() {
-		Set<S> regularStates=new HashSet<S>();
+	public Set<State> getRegularStates() {
+		Set<State> regularStates=new HashSet<State>();
 		regularStates.addAll(this.getStates());
 		regularStates.removeAll(this.getMixedStates());
 		return regularStates;

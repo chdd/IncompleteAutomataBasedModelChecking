@@ -1,13 +1,14 @@
 /**
  * 
  */
-package it.polimi.automata.transition.impl;
+package it.polimi.automata.transition;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import it.polimi.automata.Constants;
+import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,90 +40,90 @@ public class TransitionImplTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#TransitionImpl(java.util.Set, int)}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#TransitionImpl(java.util.Set, int)}.
 	 */
 	@Test
 	public void testTransitionImpl() {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		TransitionImpl t=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
 		assertEquals(labels, t.getPropositions());
 		assertEquals(1, t.getId());
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#TransitionImpl(java.util.Set, int)}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#TransitionImpl(java.util.Set, int)}.
 	 */
 	@Test(expected=NullPointerException.class)
 	public void testTransitionImpl_Null() {
-		new TransitionImpl(null, 1);
+		new Transition(null, 1);
 	}
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#TransitionImpl(java.util.Set, int)}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#TransitionImpl(java.util.Set, int)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testTransitionImpl_Neg() {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		new TransitionImpl(labels, -1);
+		new Transition(labels, -1);
 		
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#getPropositions()}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#getPropositions()}.
 	 */
 	@Test
 	public void testGetLabels() {
 
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		TransitionImpl t=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
 		assertEquals(labels, t.getPropositions());
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#getId()}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#getId()}.
 	 */
 	@Test
 	public void testGetId() {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		TransitionImpl t=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
 		assertEquals(1, t.getId());
 	}
 
 	
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#toString()}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#toString()}.
 	 */
 	@Test
 	public void testToStringEmpty() {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		TransitionImpl t=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
 		assertTrue(t.toString().equals("{1} "));
 	}
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#toString()}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#toString()}.
 	 */
 	@Test
 	public void testToString() {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
 		labels.add(label1);
 		labels.add(label2);
-		TransitionImpl t=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
 		assertTrue(t.toString().equals("{1} "+"a"+Constants.AND+"b") 
 				|| t.toString().equals("{1} "+"b"+Constants.AND+"a"));
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#equals}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#equals}.
 	 */
 	@Test
 	public void testEquals()  {
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		TransitionImpl t=new TransitionImpl(labels, 1);
-		TransitionImpl t2=new TransitionImpl(labels, 2);
-		TransitionImpl t3=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
+		Transition t2=new Transition(labels, 2);
+		Transition t3=new Transition(labels, 1);
 		Set<IGraphProposition> labels2=new HashSet<IGraphProposition>();
 		labels2.add(label1);
-		TransitionImpl t4=new TransitionImpl(labels2, 1);
+		Transition t4=new Transition(labels2, 1);
 		assertFalse(t.equals(labels));
 		assertFalse(t.equals(null));
 		assertTrue(t.equals(t));
@@ -132,17 +133,17 @@ public class TransitionImplTest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.transition.impl.TransitionImpl#hashCode()}.
+	 * Test method for {@link it.polimi.automata.transition.Transition#hashCode()}.
 	 */
 	@Test
 	public void testHashCode(){
 		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		TransitionImpl t=new TransitionImpl(labels, 1);
-		TransitionImpl t2=new TransitionImpl(labels, 2);
-		TransitionImpl t3=new TransitionImpl(labels, 1);
+		Transition t=new Transition(labels, 1);
+		Transition t2=new Transition(labels, 2);
+		Transition t3=new Transition(labels, 1);
 		Set<IGraphProposition> labels2=new HashSet<IGraphProposition>();
 		labels2.add(label1);
-		TransitionImpl t4=new TransitionImpl(labels2, 1);
+		Transition t4=new Transition(labels2, 1);
 		assertFalse(t.hashCode()==labels.hashCode());
 		assertTrue(t.hashCode()==t.hashCode());
 		assertFalse(t.hashCode()==t2.hashCode());
