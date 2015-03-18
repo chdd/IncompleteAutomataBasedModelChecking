@@ -19,7 +19,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testModelCheckingResults() {
-		assertNotNull(new ModelCheckingResults());
+		assertNotNull(new ModelCheckingResults(true, true, true));
 	}
 
 	/**
@@ -27,7 +27,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testReset() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		
 		results.reset();
 		assertTrue(results.getSubpropertyTime()==0);
@@ -42,7 +42,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getViolationTime() == 0);
 	}
 
@@ -52,7 +52,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setViolationTime(2);
 		assertTrue(results.getViolationTime() == 2);
 	}
@@ -64,7 +64,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetPossibleViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getPossibleViolationTime() == 0);
 	}
 
@@ -75,7 +75,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetPossibleViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setPossibleViolationTime(2);
 		assertTrue(results.getPossibleViolationTime() == 2);
 	}
@@ -86,7 +86,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetResult() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getResult() == 0);
 	}
 
@@ -96,7 +96,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetResult() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setResult(2);
 		assertTrue(results.getResult() == 2);
 	}
@@ -108,7 +108,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetConstraintComputationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getSubpropertyTime() == 0);
 	}
 
@@ -119,7 +119,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetConstraintComputationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setSubPropertyComputationTime(2);
 		assertTrue(results.getSubpropertyTime() == 2);
 	}
@@ -131,7 +131,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumStatesSpecification() == 0);
 	}
 
@@ -142,7 +142,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumStatesSpecification(2);
 		assertTrue(results.getNumStatesSpecification() == 2);
 	}
@@ -154,7 +154,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumAcceptStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumAcceptStatesSpecification() == 0);
 	}
 
@@ -165,7 +165,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumAcceptStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumAcceptStatesSpecification(2);
 		assertTrue(results.getNumAcceptStatesSpecification() == 2);
 	}
@@ -177,7 +177,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumTransitionSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumTransitionSpecification() == 0);
 	}
 
@@ -188,7 +188,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumTransitionSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumTransitionSpecification(2);
 		assertTrue(results.getNumTransitionSpecification() == 2);
 	}
@@ -199,7 +199,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumStatesModel() == 0);
 	}
 
@@ -209,7 +209,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumStatesModel(2);
 		assertTrue(results.getNumStatesModel() == 2);
 	}
@@ -220,7 +220,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumAcceptStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumAcceptStatesModel() == 0);
 	}
 
@@ -231,7 +231,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumAcceptStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumAcceptStatesModel(2);
 		assertTrue(results.getNumAcceptStatesModel() == 2);
 	}
@@ -242,7 +242,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumTransitionModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumTransitionModel() == 0);
 	}
 
@@ -253,7 +253,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumTransitionModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumTransitionModel(2);
 		assertTrue(results.getNumTransitionModel() == 2);
 	}
@@ -265,7 +265,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumTransparentStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumTransparentStatesModel() == 0);
 	}
 
@@ -276,7 +276,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumTransparentStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumTransparentStatesModel(2);
 		assertTrue(results.getNumTransparentStatesModel() == 2);
 	}
@@ -287,7 +287,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testToStringHeader() {
-		assertNotNull(new ModelCheckingResults().toStringHeader());
+		assertNotNull(new ModelCheckingResults(true, true, true).toStringHeader());
 	}
 
 	/**
@@ -296,7 +296,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testToString() {
-		assertNotNull(new ModelCheckingResults().toString());
+		assertNotNull(new ModelCheckingResults(true, true, true).toString());
 	}
 
 	/**
@@ -306,7 +306,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumStatesIntersection() == 0);
 	}
 
@@ -317,7 +317,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumStatesIntersection(2);
 		assertTrue(results.getNumStatesIntersection() == 2);
 	}
@@ -329,7 +329,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumAcceptingStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumAcceptingStatesIntersection() == 0);
 	}
 
@@ -340,7 +340,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumAcceptingStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumAcceptingStatesIntersection(2);
 		assertTrue(results.getNumAcceptingStatesIntersection() == 2);
 	}
@@ -352,7 +352,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumInitialStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumInitialStatesIntersection() == 0);
 	}
 
@@ -363,7 +363,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumInitialStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumInitialStatesIntersection(2);
 		assertTrue(results.getNumInitialStatesIntersection() == 2);
 	}
@@ -375,7 +375,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetNumMixedStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getNumMixedStatesIntersection() == 0);
 	}
 
@@ -386,7 +386,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetNumMixedStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setNumMixedStatesIntersection(2);
 		assertTrue(results.getNumMixedStatesIntersection() == 2);
 	}
@@ -398,7 +398,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetTotalVerificationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getTotalVerificationTime() == 0);
 	}
 
@@ -408,7 +408,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetTotalTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setTotalTime(2);
 		assertTrue(results.getTotalVerificationTime() == 2);
 	}
@@ -419,7 +419,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testGetSimplificationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		assertTrue(results.getSimplificationTime() == 0);
 	}
 
@@ -430,7 +430,7 @@ public class ModelCheckingResultsTest {
 	 */
 	@Test
 	public void testSetSimplificationTime() {
-		ModelCheckingResults results = new ModelCheckingResults();
+		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
 		results.setSimplificationTime(2);
 		assertTrue(results.getSimplificationTime() == 2);
 	}

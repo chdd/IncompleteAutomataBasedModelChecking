@@ -23,7 +23,7 @@ import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
-import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
+import it.polimi.checker.intersection.impl.IntersectionRule;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -82,7 +82,7 @@ public class SendingMessageTest2 {
 		ModelChecker<State, Transition> modelChecker = new ModelChecker<State, Transition>(
 				model,
 				claim,
-				new IntersectionRuleImpl<State, Transition>(new ClaimTransitionFactory<State>(),	new StateFactory()
+				new IntersectionRule<State, Transition>(new ClaimTransitionFactory<State>(),	new StateFactory()
 						),
 			 mp);
 

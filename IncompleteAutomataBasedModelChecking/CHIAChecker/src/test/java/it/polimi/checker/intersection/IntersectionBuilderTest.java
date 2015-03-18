@@ -11,13 +11,11 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
+import it.polimi.automata.transition.Transition;
+import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.emptiness.EmptinessChecker;
-import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,7 +36,7 @@ public class IntersectionBuilderTest {
 	/*
 	 * Claim 1
 	 */
-	private BA<State, Transition> claim1;
+	private BA claim1;
 	private State claim1State1;
 	private State claimState2;
 	private State claim1State3;
@@ -49,7 +47,7 @@ public class IntersectionBuilderTest {
 	/*
 	 * Claim 2
 	 */
-	private BA<State, Transition> claim2;
+	private BA claim2;
 	private State claim2State1;
 	private State claim2State2;
 	private State claim2State3;
@@ -60,7 +58,7 @@ public class IntersectionBuilderTest {
 	/*
 	 * Model 1
 	 */
-	private IBA<State, Transition> model1;
+	private IBA model1;
 	private State model1State1;
 	private State model1State2;
 	private State model1State3;
@@ -71,7 +69,7 @@ public class IntersectionBuilderTest {
 	/*
 	 * Model 2
 	 */
-	private IBA<State, Transition> model2;
+	private IBA model2;
 	private State model2State1;
 	private State model2State2;
 	private State model2State3;
@@ -83,15 +81,13 @@ public class IntersectionBuilderTest {
 	private Set<IGraphProposition> propositionsT2;
 	private Set<IGraphProposition> propositionsT3;
 	
-	private StateFactory<State> stateFactory;
-	private TransitionFactory<State, Transition> intersectionTransitionFactory;
+	private StateFactory stateFactory;
 	
 	@Before
 	public void setUp() {
-		TransitionFactory<State, Transition> transitionFactory=new ClaimTransitionFactory<State>();
-		this.claim1 = new IBA<State, Transition>(transitionFactory);
+		TransitionFactory<State, Transition> transitionFactory=new ClaimTransitionFactory();
+		this.claim1 = new IBA(transitionFactory);
 
-		intersectionTransitionFactory=new ClaimTransitionFactory<State>();
 		stateFactory = new StateFactory();
 		claim1State1 = stateFactory.create("claimState1");
 		claimState2 = stateFactory.create("claimState2");
@@ -123,7 +119,7 @@ public class IntersectionBuilderTest {
 		// --------------------------------------
 		// CLAIM 2
 		// --------------------------------------
-		this.claim2 = new IBA<State,Transition>(transitionFactory);
+		this.claim2 = new IBA(transitionFactory);
 
 		stateFactory = new StateFactory();
 		claim2State1 = stateFactory.create("claimState1");
@@ -158,16 +154,16 @@ public class IntersectionBuilderTest {
 		/*
 		 * MODEL
 		 */
-		this.model1 = new IBA<State,Transition>(transitionFactory);
+		this.model1 = new IBA(transitionFactory);
 
-		StateFactory<State> modelStateFactory = new StateFactory();
+		StateFactory modelStateFactory = new StateFactory();
 		this.model1State1 = modelStateFactory.create("modelState1");
 		this.model1State2 = modelStateFactory.create("modelState2");
 		this.model1State3 = modelStateFactory.create("modelState3");
 		this.model1.addState(model1State1);
 		this.model1.addState(model1State2);
 		this.model1.addState(model1State3);
-		TransitionFactory<State, Transition> modelTransitionFactory = new ModelTransitionFactory<State>();
+		TransitionFactory<State, Transition> modelTransitionFactory = new ModelTransitionFactory();
 
 		Set<IGraphProposition> propositionsModelT1 = new HashSet<IGraphProposition>();
 		propositionsModelT1.add(new GraphProposition("a", false));
@@ -194,7 +190,7 @@ public class IntersectionBuilderTest {
 		/*
 		 * MODEL
 		 */
-		this.model2 = new IBA<State,Transition>(transitionFactory);
+		this.model2 = new IBA(transitionFactory);
 
 		modelStateFactory = new StateFactory();
 		this.model2State1 = modelStateFactory.create("modelState1");
@@ -227,16 +223,7 @@ public class IntersectionBuilderTest {
 				.addTransition(model2State3, model2State3, model2Transition3);
 	}
 
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#IntersectionBuilder(null, it.polimi.automata.state.StateFactory, it.polimi.automata.IntersectionBAFactory, it.polimi.automata.transition.TransitionFactory, it.polimi.automata.IBA, it.polimi.automata.BA)}
-	 * .
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testIntersectionBuilderNullIntersectionRule() {
-		new IntersectionBuilder<State, Transition>(null,
-				model1, claim1);
-	}
+	
 
 	
 
@@ -248,8 +235,7 @@ public class IntersectionBuilderTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testIntersectionBuilderNullModel() {
-		new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		new IntersectionBuilder(
 				 null, claim1);
 	}
 
@@ -260,8 +246,7 @@ public class IntersectionBuilderTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testIntersectionBuilderNullClaim() {
-		new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		new IntersectionBuilder(
 				model1, null);
 	}
 
@@ -274,8 +259,7 @@ public class IntersectionBuilderTest {
 	 */
 	@Test
 	public void testComputeIntersection() {
-		IntersectionBA<State, Transition> intersection = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBA intersection = new IntersectionBuilder(
 				 model1, claim1)
 				.computeIntersection();
 		assertTrue(intersection.getInitialStates().isEmpty());
@@ -289,8 +273,7 @@ public class IntersectionBuilderTest {
 	@Test
 	public void testComputeIntersection1() {
 		this.model1.addInitialState(model1State1);
-		IntersectionBA<State, Transition> intersection = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBA intersection = new IntersectionBuilder(
 				 model1, claim1)
 				.computeIntersection();
 		assertTrue(intersection.getInitialStates().isEmpty());
@@ -304,8 +287,7 @@ public class IntersectionBuilderTest {
 	@Test
 	public void testComputeIntersection2() {
 		this.claim1.addInitialState(claim1State1);
-		IntersectionBA<State, Transition> intersection = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBA intersection = new IntersectionBuilder(
 				 model1, claim1)
 				.computeIntersection();
 		assertTrue(intersection.getInitialStates().isEmpty());
@@ -321,16 +303,15 @@ public class IntersectionBuilderTest {
 
 		this.model1.addInitialState(model1State1);
 		this.claim1.addInitialState(claim1State1);
-		IntersectionBA< State, Transition> intersection = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBA intersection = new IntersectionBuilder(
 				 model1, claim1)
 				.computeIntersection();
-		assertEquals(model1State1.getName() + " - " + claim1State1.getName()
+		assertEquals(model1State1.getId() + " - " + claim1State1.getId()
 				+ " - " + 0,
 				new ArrayList<State>(intersection.getInitialStates()).get(0)
 						.getName());
 		assertTrue(intersection.getStates().size() == 3);
-		assertTrue(new EmptinessChecker<State, Transition>(
+		assertTrue(new EmptinessChecker(
 				intersection).isEmpty());
 	}
 
@@ -346,16 +327,15 @@ public class IntersectionBuilderTest {
 		this.model1.addAcceptState(model1State3);
 		this.claim1.addInitialState(claim1State1);
 		this.claim1.addAcceptState(claim1State3);
-		IntersectionBA<State, Transition> intersection = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBA intersection = new IntersectionBuilder(
 				 model1, claim1)
 				.computeIntersection();
-		assertEquals(model1State1.getName() + " - " + claim1State1.getName()
+		assertEquals(model1State1.getId() + " - " + claim1State1.getId()
 				+ " - " + 0,
 				new ArrayList<State>(intersection.getInitialStates()).get(0)
 						.getName());
 		assertTrue(intersection.getStates().size() == 5);
-		assertFalse(new EmptinessChecker<State, Transition>(
+		assertFalse(new EmptinessChecker(
 				intersection).isEmpty());
 	}
 
@@ -407,11 +387,10 @@ public class IntersectionBuilderTest {
 		this.model1.addAcceptState(model1State3);
 		this.claim2.addInitialState(claim2State1);
 		this.claim2.addAcceptState(claim2State3);
-		IntersectionBA<State, Transition> intersection = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBA intersection = new IntersectionBuilder(
 				 model1, claim2)
 				.computeIntersection();
-		assertTrue(new EmptinessChecker<State, Transition>(
+		assertTrue(new EmptinessChecker(
 				intersection).isEmpty());
 	}
 
@@ -428,13 +407,12 @@ public class IntersectionBuilderTest {
 		this.model2.addAcceptState(model2State3);
 		this.claim1.addInitialState(claim1State1);
 		this.claim1.addAcceptState(claim1State3);
-		IntersectionBuilder<State, Transition> intersectionBuilder = new IntersectionBuilder<State, Transition>(
-				new IntersectionRuleImpl<State, Transition>(intersectionTransitionFactory, this.stateFactory),
+		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
 				 model2, claim1);
 
-		IntersectionBA<State, Transition> intersection = intersectionBuilder
+		IntersectionBA intersection = intersectionBuilder
 				.computeIntersection();
-		assertFalse(new EmptinessChecker<State, Transition>(
+		assertFalse(new EmptinessChecker(
 				intersection).isEmpty());
 		assertTrue(intersection.getStates().size() == 6);
 		assertFalse(intersection.getInitialStates().isEmpty());

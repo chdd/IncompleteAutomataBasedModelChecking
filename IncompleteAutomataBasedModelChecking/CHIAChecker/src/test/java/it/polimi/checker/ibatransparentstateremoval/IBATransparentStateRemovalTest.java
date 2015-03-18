@@ -8,10 +8,9 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.ModelTransitionFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,7 @@ import org.junit.Test;
  */
 public class IBATransparentStateRemovalTest {
 
-	private IBA<State, Transition> ba;
+	private IBA ba;
 	private State state1;
 	private State state2;
 	private State state3;
@@ -34,10 +33,10 @@ public class IBATransparentStateRemovalTest {
 	@Before
 	public void setUp() {
 		
-		TransitionFactory<State, Transition> transitionFactory=new ModelTransitionFactory<State>();
+		TransitionFactory<State, Transition> transitionFactory=new ModelTransitionFactory();
 		
-		this.ba=new IBA<State, Transition>(transitionFactory);
-		StateFactory<State> factory=new StateFactory();
+		this.ba=new IBA(transitionFactory);
+		StateFactory factory=new StateFactory();
 		state1=factory.create();
 		state2=factory.create();
 		state3=factory.create();
@@ -58,7 +57,7 @@ public class IBATransparentStateRemovalTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testTransparentStateRemovalNull() {
-		new IBATransparentStateRemoval<State, Transition>().transparentStateRemoval(null);
+		new IBATransparentStateRemoval().transparentStateRemoval(null);
 	}
 
 	
@@ -68,7 +67,7 @@ public class IBATransparentStateRemovalTest {
 	@Test
 	public void testTransparentStateRemoval() {
 
-		IBA<State, Transition> ret=new IBATransparentStateRemoval<State, Transition>().transparentStateRemoval(this.ba);
+		IBA ret=new IBATransparentStateRemoval().transparentStateRemoval(this.ba);
 		assertTrue(ret.getStates().contains(state1));
 		assertTrue(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));
@@ -82,7 +81,7 @@ public class IBATransparentStateRemovalTest {
 	public void testTransparentStateRemoval2() {
 
 		this.ba.addTransparentState(state2);
-		IBA<State, Transition> ret=new IBATransparentStateRemoval<State, Transition>().transparentStateRemoval(this.ba);
+		IBA ret=new IBATransparentStateRemoval().transparentStateRemoval(this.ba);
 		assertTrue(ret.getStates().contains(state1));
 		assertFalse(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));

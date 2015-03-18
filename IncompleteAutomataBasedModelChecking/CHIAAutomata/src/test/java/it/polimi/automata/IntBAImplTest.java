@@ -8,9 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
@@ -64,7 +62,7 @@ public class IntBAImplTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.ba = new IntersectionBA(new ClaimTransitionFactory());
+		this.ba = new IntersectionBA();
 		ba.addInitialState(state1);
 		ba.addState(state2);
 		ba.addAcceptState(state3);
@@ -83,7 +81,7 @@ public class IntBAImplTest {
 	 */
 	@Test
 	public void testIntBAImpl() {
-		assertNotNull(new IntersectionBA(new ClaimTransitionFactory()));
+		assertNotNull(new IntersectionBA());
 	}
 
 	/**

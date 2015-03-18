@@ -21,7 +21,7 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
-import it.polimi.checker.intersection.impl.IntersectionRuleImpl;
+import it.polimi.checker.intersection.impl.IntersectionRule;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.ConstraintWriter;
 
@@ -84,7 +84,7 @@ public class SendingMessageTest {
 		IBA<State, Transition> model = modelReader.read();
 		CHIA<State, Transition> chia = new CHIA<State, Transition>(
 				claim, model,
-				new IntersectionRuleImpl<State, Transition>(new ClaimTransitionFactory<State>(),	new StateFactory()), new ClaimTransitionFactory<State>());
+				new IntersectionRule<State, Transition>(new ClaimTransitionFactory<State>(),	new StateFactory()), new ClaimTransitionFactory<State>());
 		int result = chia.check();
 		assertTrue(result == -1);
 

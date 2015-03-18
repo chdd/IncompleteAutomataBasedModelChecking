@@ -1,8 +1,8 @@
 package it.polimi.automata;
 
 import it.polimi.automata.state.State;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,8 +46,8 @@ public class IntersectionBA extends
 	/**
 	 * creates a new intersection automaton
 	 */
-	public IntersectionBA(TransitionFactory<State, Transition> transitionFactory) {
-		super(transitionFactory);
+	public IntersectionBA() {
+		super(new ClaimTransitionFactory());
 		this.mixedStates = new HashSet<State>();
 	}
 
@@ -89,8 +89,7 @@ public class IntersectionBA extends
 	 */
 	@Override
 	public Object clone() {
-		IntersectionBA retBA = new IntersectionBA((TransitionFactory<State,Transition>)
-				this.automataGraph.getEdgeFactory());
+		IntersectionBA retBA = new IntersectionBA();
 		for (IGraphProposition l : this.getPropositions()) {
 			retBA.addProposition(l);
 		}

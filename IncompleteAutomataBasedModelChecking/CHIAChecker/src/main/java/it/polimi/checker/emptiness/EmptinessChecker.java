@@ -2,14 +2,12 @@ package it.polimi.checker.emptiness;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
 import com.google.common.base.Preconditions;
-
 
 /**
  * Checks the emptiness of an automaton. The automaton must extend the Buchi
@@ -22,33 +20,25 @@ import com.google.common.base.Preconditions;
  * @see {@link BA}
  * 
  * @author claudiomenghi
- * 
- * @param <S>
- *            is the type of the state of the Buchi Automaton. The type of the
- *            states of the automaton must implement the interface {@link State}
- * @param <T>
- *            is the type of the transition of the Buchi Automaton. The typer of
- *            the transitions of the automaton must implement the interface
- *            {@link Transition}
  */
-public class EmptinessChecker<S extends State, T extends Transition> {
+public class EmptinessChecker {
 
 	/**
 	 * contains the automaton to be considered by the {@link EmptinessChecker}
 	 */
-	private BA<S, T> automaton;
+	private final BA automaton;
 
 	/**
 	 * contains the set of the states that has been encountered by <i>some<i>
 	 * invocation of the first DFS
 	 */
-	private Set<S> hashedStates;
+	private final Set<State> hashedStates;
 
 	/**
 	 * contains the set of the states that has been encountered by <i>some<i>
 	 * invocation of the second DFS
 	 */
-	private Set<S> flaggedStates;
+	private final Set<State> flaggedStates;
 
 	/**
 	 * creates a new Emptiness checker
@@ -58,25 +48,25 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the automaton to be considered is null
 	 */
-	public EmptinessChecker(BA<S, T> automaton) {
+	public EmptinessChecker(BA automaton) {
 		Preconditions.checkNotNull(automaton, "The automaton to be considered cannot be null");
 
 		this.automaton = automaton;
-		this.hashedStates = new HashSet<S>();
-		this.flaggedStates = new HashSet<S>();
+		this.hashedStates = new HashSet<State>();
+		this.flaggedStates = new HashSet<State>();
 	}
 
 	/**
 	 * returns true if the automaton is empty, i.e., when it does not exists an
-	 * infinite path that contains an accepting run that can be accessed
+	 * infinite path that contains an accepting state that can be accessed
 	 * infinitely often, false otherwise
 	 * 
 	 * @return true if the automaton is empty, false otherwise
 	 */
 	public boolean isEmpty() {
 
-		for (S init : this.automaton.getInitialStates()) {
-			if (firstDFS(init,  new Stack<S>())) {
+		for (State init : this.automaton.getInitialStates()) {
+			if (firstDFS(init,  new Stack<State>())) {
 				return false;
 			}
 		}
@@ -92,14 +82,14 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	private boolean firstDFS(S currState, 
-			Stack<S> firstDFSStack) {
+	private boolean firstDFS(State currState, 
+			Stack<State> firstDFSStack) {
 		Preconditions.checkNotNull(currState, "The current state cannot be null");
 		Preconditions.checkNotNull(firstDFSStack, "The stack cannot be null");
 		
 		this.hashedStates.add(currState);
 		firstDFSStack.push(currState);
-		for (S t : automaton.getSuccessors(currState)) {
+		for (State t : automaton.getSuccessors(currState)) {
 			if (!this.hashedStates.contains(t)) {
 				if (this.firstDFS(t, firstDFSStack))
 					return true;
@@ -123,13 +113,13 @@ public class EmptinessChecker<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the current state, the graph or the stack is null
 	 */
-	private boolean secondDFS(S currState, 
-			Stack<S> firstDFSStack) {
+	private boolean secondDFS(State currState, 
+			Stack<State> firstDFSStack) {
 		Preconditions.checkNotNull(currState, "The current state cannot be null");
 		Preconditions.checkNotNull(firstDFSStack, "The first stack cannot be null");
 		
 		this.flaggedStates.add(currState);
-		for (S t : this.automaton.getSuccessors(currState)) {
+		for (State t : this.automaton.getSuccessors(currState)) {
 			if (firstDFSStack.contains(t)) {
 				return true;
 			} else {

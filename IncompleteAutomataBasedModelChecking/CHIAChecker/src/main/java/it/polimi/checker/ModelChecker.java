@@ -4,11 +4,9 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
-import it.polimi.checker.intersection.IntersectionRule;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +22,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class ModelChecker< S extends State, T extends Transition> {
+public class ModelChecker {
 
 	/**
 	 * is the logger of the ModelChecker class
@@ -35,23 +33,19 @@ public class ModelChecker< S extends State, T extends Transition> {
 	/**
 	 * contains the specification to be checked
 	 */
-	private BA<S, T> claim;
+	private BA claim;
 
 	/**
 	 * contains the model to be checked
 	 */
-	private IBA<S, T> model;
+	private IBA model;
 
 	/**
 	 * contains the intersection automaton of the model and its specification
 	 * after the model checking procedure is performed
 	 */
-	private IntersectionBA<S, T> intersectionAutomaton;
+	private IntersectionBA intersectionAutomaton;
 
-	/**
-	 * is the intersection rule to be used in computing the intersection
-	 */
-	private IntersectionRule<S, T> intersectionRule;
 
 	
 	/**
@@ -60,7 +54,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 */
 	private ModelCheckingResults verificationResults;
 
-	private IntersectionBuilder<S, T> intersectionBuilder;
+	private IntersectionBuilder intersectionBuilder;
 
 	/**
 	 * creates a new {@link ModelChecker}
@@ -87,20 +81,16 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public ModelChecker(IBA<S, T> model, BA<S, T> claim,
-			IntersectionRule<S, T> intersectionRule,
+	public ModelChecker(IBA model, BA claim,
 			ModelCheckingResults mp) {
 		Preconditions.checkNotNull(model, "The model to be checked cannot be null");
 		Preconditions.checkNotNull(claim, "The specification to be checked cannot be null");
-		Preconditions.checkNotNull(intersectionRule, "The intersection rule cannot be null");
 		Preconditions.checkNotNull(mp, "The model checking parameters cannot be null");
 
 		this.claim = claim;
 		this.model = model;
 		this.verificationResults = mp;
-		this.intersectionRule = intersectionRule;
-		this.intersectionBuilder = new IntersectionBuilder<S, T>(
-				this.intersectionRule,  model,
+		this.intersectionBuilder = new IntersectionBuilder(model,
 				claim);
 	}
 
@@ -220,16 +210,15 @@ public class ModelChecker< S extends State, T extends Transition> {
 	private boolean checkEmptyIntersectionMc() {
 
 		// removes the transparent states from the model
-		IBA<S, T> mc = new IBATransparentStateRemoval<S, T>()
+		IBA mc = new IBATransparentStateRemoval()
 				.transparentStateRemoval(model);
 		logger.debug("Transparent states removed from the model");
 
 		// computing the intersection
-		this.intersectionAutomaton = new IntersectionBuilder<S, T>(
-				this.intersectionRule, mc, claim)
+		this.intersectionAutomaton = new IntersectionBuilder( mc, claim)
 				.computeIntersection();
 		logger.debug("Intersection automaton computed");
-		return new EmptinessChecker<S, T>(intersectionAutomaton).isEmpty();
+		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
 
 	/**
@@ -246,7 +235,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 		// computing the intersection
 		this.intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
-		return new EmptinessChecker<S, T>(this.intersectionAutomaton)
+		return new EmptinessChecker(this.intersectionAutomaton)
 				.isEmpty();
 	}
 
@@ -269,7 +258,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * @return a map that relates each state of the model to the
 	 *         corresponding states of the intersection automaton
 	 */
-	public Map<S, Set<S>> getModelIntersectionStateMap() {
+	public Map<State, Set<State>> getModelIntersectionStateMap() {
 		return this.intersectionBuilder.getModelStateIntersectionStateMap();
 	}
 	
@@ -280,7 +269,7 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * @return a map that relates each state of the claim to the
 	 *         corresponding states of the intersection automaton
 	 */
-	public Map<S, Set<S>> getClaimIntersectionStateMap() {
+	public Map<State, Set<State>> getClaimIntersectionStateMap() {
 		return this.intersectionBuilder.getClaimStateIntersectionStateMap();
 	}
 
@@ -289,11 +278,11 @@ public class ModelChecker< S extends State, T extends Transition> {
 	 * 
 	 * @return the intersection automaton
 	 */
-	public IntersectionBA<S, T> getIntersectionAutomaton() {
+	public IntersectionBA getIntersectionAutomaton() {
 		return intersectionAutomaton;
 	}
 
-	public  IntersectionBuilder<S, T> getIntersectionBuilder(){
+	public  IntersectionBuilder getIntersectionBuilder(){
 		return this.intersectionBuilder;
 	}
 }

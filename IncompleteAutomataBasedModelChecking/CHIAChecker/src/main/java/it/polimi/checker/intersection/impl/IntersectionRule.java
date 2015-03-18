@@ -1,10 +1,7 @@
 package it.polimi.checker.intersection.impl;
 
-import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.checker.intersection.IntersectionRule;
 
 import java.util.Set;
 
@@ -24,21 +21,19 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class IntersectionRuleImpl<S extends State, T extends Transition>
-		extends IntersectionRule<S, T> {
+public class IntersectionRule{
 
 	
-	public IntersectionRuleImpl(
-			TransitionFactory<S, T> intersectionTransitionFactory,
-			StateFactory<S> stateFactory) {
-		super(intersectionTransitionFactory, stateFactory);
+	private final ClaimTransitionFactory transitionFactory;
+	
+	public IntersectionRule() {
+		this.transitionFactory=new ClaimTransitionFactory();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public T getIntersectionTransition(T modelTransition, T claimTransition) {
+	public Transition getIntersectionTransition(Transition modelTransition, Transition claimTransition) {
 
 		Preconditions.checkNotNull(modelTransition,
 				"The model transition cannot be null");
@@ -47,7 +42,7 @@ public class IntersectionRuleImpl<S extends State, T extends Transition>
 	
 		if (this.satisfies(modelTransition.getPropositions(),
 				claimTransition.getPropositions())) {
-			return intersectionTransitionFactory.create(modelTransition
+			return transitionFactory.create(modelTransition
 					.getPropositions());
 		} else {
 			return null;
