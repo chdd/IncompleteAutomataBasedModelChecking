@@ -5,9 +5,9 @@ import it.polimi.automata.Constants;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.impl.Constraint;
-import it.polimi.constraints.impl.Port;
-import it.polimi.constraints.impl.SubProperty;
+import it.polimi.constraints.Constraint;
+import it.polimi.constraints.Port;
+import it.polimi.constraints.SubProperty;
 
 import java.io.File;
 import java.io.IOException;

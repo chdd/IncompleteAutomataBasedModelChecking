@@ -1,27 +1,13 @@
-/**
- * 
- */
-package it.polimi.constraints.impl;
+package it.polimi.constraints;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
-import it.polimi.constraints.Color;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
-/**
- * Contains a sub-property. A component is a sub part of the intersection
- * automaton that corresponds with a transparent state of the model and will
- * generate a constraint
- * 
- * @author claudiomenghi
- * 
- */
-public class SubProperty {
+public class Replacement {
 
 	private static int counter = 0;
 	/**
@@ -43,15 +29,6 @@ public class SubProperty {
 	private final Set<Port> outcomingPorts;
 
 	/**
-	 * specifies for each port the corresponding color The red color means that
-	 * from this port it is possible to reach an accepting state The green color
-	 * means that the port is reachable from an initial state The yellow color
-	 * means that the port is possibly reachable from an initial state and from
-	 * the port it is possibly reachable an accepting state
-	 */
-	private Map<Port, Color> portValue;
-	
-	/**
 	 * creates a new sub-property that refers to a specific model state and
 	 * contains the corresponding IBA
 	 * 
@@ -65,7 +42,7 @@ public class SubProperty {
 	 *             is generated when the name of the state or when the state of
 	 *             the model is null
 	 */
-	public SubProperty(State modelState, BA automaton,
+	public Replacement(State modelState, BA automaton,
 			Set<Port> incomingPorts, Set<Port> outcomingPorts) {
 		Preconditions.checkNotNull(modelState,
 				"The name of the state cannot be null");
@@ -78,7 +55,6 @@ public class SubProperty {
 		this.automaton = automaton;
 		this.incomingPorts = incomingPorts;
 		this.outcomingPorts = outcomingPorts;
-		this.portValue=new HashMap<Port, Color>();
 	}
 
 	/**
@@ -106,23 +82,28 @@ public class SubProperty {
 	public String toStringAutomata() {
 		return super.toString();
 	}
+	
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((automaton == null) ? 0 : automaton.hashCode());
 		result = prime * result + id;
+		result = prime * result
+				+ ((incomingPorts == null) ? 0 : incomingPorts.hashCode());
+		result = prime * result
+				+ ((modelState == null) ? 0 : modelState.hashCode());
+		result = prime * result
+				+ ((outcomingPorts == null) ? 0 : outcomingPorts.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -133,8 +114,28 @@ public class SubProperty {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SubProperty other = (SubProperty) obj;
+		Replacement other = (Replacement) obj;
+		if (automaton == null) {
+			if (other.automaton != null)
+				return false;
+		} else if (!automaton.equals(other.automaton))
+			return false;
 		if (id != other.id)
+			return false;
+		if (incomingPorts == null) {
+			if (other.incomingPorts != null)
+				return false;
+		} else if (!incomingPorts.equals(other.incomingPorts))
+			return false;
+		if (modelState == null) {
+			if (other.modelState != null)
+				return false;
+		} else if (!modelState.equals(other.modelState))
+			return false;
+		if (outcomingPorts == null) {
+			if (other.outcomingPorts != null)
+				return false;
+		} else if (!outcomingPorts.equals(other.outcomingPorts))
 			return false;
 		return true;
 	}
@@ -159,51 +160,4 @@ public class SubProperty {
 	public Set<Port> getIncomingPorts() {
 		return incomingPorts;
 	}
-	
-	/**
-	 * adds an incoming port to the component
-	 * 
-	 * @param source
-	 *            is the source state of the port
-	 * @param transition
-	 *            is the transition that connect the source state to the
-	 *            destination state, i.e., the state of the automaton that
-	 *            refines the component
-	 * @param destination
-	 *            is the state of the automaton that refines the component to be
-	 *            connected
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
-	 * @throws IllegalArgumentException
-	 *             if the destination state is not a state of the component
-	 */
-	public void addIncomingPort(Port port) {
-	
-		this.incomingPorts.add(port);
-		this.portValue.put(port, Color.YELLOW);
-	}
-
-	/**
-	 * adds an out-coming port to the component
-	 * 
-	 * @param source
-	 *            is the source state of the port, i.e., the state that refines
-	 *            the component to be connected
-	 * @param transition
-	 *            is the transition that connect the source state (i.e., the
-	 *            state of the automaton that refines the component) to the
-	 *            destination state
-	 * @param destination
-	 *            is the destination state of the port
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
-	 * @throws IllegalArgumentException
-	 *             if the source state is not a state of the component
-	 */
-	public void addOutComingPort( Port port) {
-		
-		this.outcomingPorts.add(port);
-		this.portValue.put(port, Color.YELLOW);
-	}
-
 }

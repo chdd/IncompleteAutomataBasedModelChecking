@@ -6,7 +6,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.impl.Port;
+import it.polimi.constraints.Port;
 
 import org.w3c.dom.Element;
 

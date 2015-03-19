@@ -7,8 +7,8 @@ import it.polimi.automata.io.out.StateToElementTransformer;
 import it.polimi.automata.io.out.TransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.impl.Port;
-import it.polimi.constraints.impl.SubProperty;
+import it.polimi.constraints.Port;
+import it.polimi.constraints.SubProperty;
 
 import java.util.Set;
 

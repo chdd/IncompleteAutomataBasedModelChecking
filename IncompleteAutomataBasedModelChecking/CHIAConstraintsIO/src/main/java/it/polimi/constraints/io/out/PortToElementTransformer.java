@@ -3,7 +3,7 @@ package it.polimi.constraints.io.out;
 import it.polimi.automata.Constants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.transformer.propositions.PropositionsToStringTransformer;
-import it.polimi.constraints.impl.Port;
+import it.polimi.constraints.Port;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;

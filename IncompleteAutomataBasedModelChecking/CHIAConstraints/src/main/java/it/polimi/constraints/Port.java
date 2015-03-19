@@ -1,4 +1,4 @@
-package it.polimi.constraints.impl;
+package it.polimi.constraints;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;

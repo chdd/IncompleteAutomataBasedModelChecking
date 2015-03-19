@@ -10,8 +10,8 @@ import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.impl.Constraint;
-import it.polimi.constraints.impl.Port;
+import it.polimi.constraints.Constraint;
+import it.polimi.constraints.Port;
 import it.polimi.contraintcomputation.subautomatafinder.PortSubPropertiesReachabilityChecking;
 import it.polimi.contraintcomputation.subautomatafinder.intersection.PortInternalSubPropertiesReachabilityChecker;
 
