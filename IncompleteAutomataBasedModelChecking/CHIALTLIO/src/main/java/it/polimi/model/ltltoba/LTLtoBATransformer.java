@@ -3,20 +3,20 @@ package it.polimi.model.ltltoba;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-
 import rwth.i2.ltl2ba4j.LTL2BA4J;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
+
+import com.google.common.base.Preconditions;
 
 /**
  * contains the transformer which transforms an LTL formula into the
@@ -24,26 +24,8 @@ import rwth.i2.ltl2ba4j.model.ITransition;
  * 
  * @author claudiomenghi
  *
- * @param <L>
- *            is the type of the labels which decorate the Buchi automaton
- * @param <S>
- *            is the type of the states of the Buchi automaton
- * @param <T>
- *            is the type of the transitions of the Buchi automaton
  */
-public class LTLtoBATransformer<S extends State, T extends Transition> {
-
-	/**
-	 * contains the state factory which is used to create the states of the
-	 * automaton
-	 */
-	private StateFactory<S> stateFactory;
-
-	/**
-	 * contains the transition factory which is used to create the transitions
-	 * of the automaton
-	 */
-	private TransitionFactory<S, T> transitionFactory;
+public class LTLtoBATransformer {
 
 	/**
 	 * creates the LTL to Buchi automaton transformer
@@ -59,17 +41,8 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the stateFactory or the transition factory is null
 	 */
-	public LTLtoBATransformer(StateFactory<S> stateFactory,
-			TransitionFactory<S, T> transitionFactory) {
-		if (stateFactory == null) {
-			throw new NullPointerException("The state factory cannot be null");
-		}
-		if (transitionFactory == null) {
-			throw new NullPointerException(
-					"The transition factory cannot be null");
-		}
-		this.transitionFactory = transitionFactory;
-		this.stateFactory = stateFactory;
+	public LTLtoBATransformer() {
+
 	}
 
 	/**
@@ -80,16 +53,14 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the LTL formula to be transformed is null
 	 */
-	public BA<S, T> transform(String ltlFormula) {
-		if (ltlFormula == null) {
-			throw new NullPointerException(
-					"The LTL formula to be converted cannot be null");
-		}
+	public BA transform(String ltlFormula) {
+		Preconditions.checkNotNull(ltlFormula,
+				"The LTL formula to be converted cannot be null");
 
 		/*
 		 * creates a new Buchi automaton
 		 */
-		BA<S, T> ba = new BA<S, T>(transitionFactory);
+		BA ba = new BA(new ClaimTransitionFactory());
 
 		/*
 		 * calls the LTL2BA4J that transforms the LTL formula into the
@@ -119,7 +90,7 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the Buchi automaton or the set of transitions is null
 	 */
-	private void addTransitionsToTheBA(BA<S, T> ba,
+	private void addTransitionsToTheBA(BA ba,
 			Collection<ITransition> transitions) {
 		if (ba == null) {
 			throw new NullPointerException(
@@ -133,7 +104,7 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 		 * maps each end point (state) of an ITransition to the corresponding
 		 * state of the Buchi Automaton
 		 */
-		Map<IState, S> map = new HashMap<IState, S>();
+		Map<IState, State> map = new HashMap<IState, State>();
 
 		/*
 		 * analyzes each transition and populates the Buchi Automaton with the
@@ -168,19 +139,17 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the endPoint, the map or the buchi automaton is null
 	 */
-	private void analyzeState(IState endPoint, Map<IState, S> map, BA<S, T> ba) {
-		if (endPoint == null) {
-			throw new NullPointerException("The end point state cannot be null");
-		}
-		if (map == null) {
-			throw new NullPointerException("The map cannot be null");
-		}
-		if (ba == null) {
-			throw new NullPointerException("The Buchi Automaton cannot be null");
-		}
+	private void analyzeState(IState endPoint, Map<IState, State> map, BA ba) {
+		Preconditions.checkNotNull(endPoint,
+				"The end point state cannot be null");
+
+		Preconditions.checkNotNull(map, "The map cannot be null");
+		Preconditions.checkNotNull(ba, "The Buchi Automaton cannot be null");
+
+		StateFactory stateFactory = new StateFactory();
 		if (!map.containsKey(endPoint)) {
 			// a new state which correspond to the source state is created
-			S s = stateFactory.create();
+			State s = stateFactory.create();
 			// the source state and the state created are added to the map
 			map.put(endPoint, s);
 			ba.addState(s);
@@ -218,24 +187,25 @@ public class LTLtoBATransformer<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if the transition, the map or the Buchi Automaton is null
 	 */
-	private void analyzeTransition(ITransition transition, Map<IState, S> map,
-			BA<S, T> ba) {
+	private void analyzeTransition(ITransition transition,
+			Map<IState, State> map, BA ba) {
 		Preconditions.checkNotNull(transition,
 				"The transition to be added cannot be null");
 		Preconditions.checkNotNull(map, "The map cannot be null");
 		Preconditions.checkNotNull(ba, "The Buchi automaton cannot be null");
 
+		ClaimTransitionFactory transitionFactory = new ClaimTransitionFactory();
 		// returns the source state of the transition
-		S source = map.get(transition.getSourceState());
+		State source = map.get(transition.getSourceState());
 
 		// returns the destination state of the transition
-		S destination = map.get(transition.getTargetState());
+		State destination = map.get(transition.getTargetState());
 
 		// returns the label of the transition
 		Set<IGraphProposition> label = transition.getLabels();
 
 		// creates a new transition
-		T t = this.transitionFactory.create(label);
+		Transition t = transitionFactory.create(label);
 
 		// adds the label to the current buchi automaton
 		ba.addPropositions(t.getPropositions());

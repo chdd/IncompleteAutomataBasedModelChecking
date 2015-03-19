@@ -7,9 +7,8 @@ import it.polimi.automata.io.out.StateToElementTransformer;
 import it.polimi.automata.io.out.TransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Component;
-import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.impl.Port;
+import it.polimi.constraints.impl.SubProperty;
 
 import java.util.Set;
 
@@ -24,15 +23,9 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  *
- * @param <S>
- *            is the type of the state of the component
- * @param <T>
- *            is the type of the transition of the component
- * @param <A>
- *            is the type of the automaton which refines the component
  */
-public class ComponentToElementTransformer<S extends State, T extends Transition, A extends BA<S, T>>
-		implements Transformer<Component<S, T, A>, Element> {
+public class SubPropertyToElementTransformer
+		implements Transformer<SubProperty, Element> {
 
 	private final Document doc;
 	private final Constraint<S, T, A> constraint;
@@ -43,7 +36,7 @@ public class ComponentToElementTransformer<S extends State, T extends Transition
 	 * @param doc
 	 *            is the document where the element must be placed
 	 */
-	public ComponentToElementTransformer(Document doc, Constraint<S, T, A> constraint) {
+	public SubPropertyToElementTransformer(Document doc, Constraint<S, T, A> constraint) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
 		Preconditions.checkNotNull(constraint, "The contraint cannot be null");
 		
@@ -52,7 +45,7 @@ public class ComponentToElementTransformer<S extends State, T extends Transition
 	}
 	
 	@Override
-	public Element transform(Component<S, T, A> input) {
+	public Element transform(SubProperty input) {
 		
 		// root elements
 		Element constraintElement = doc
@@ -98,9 +91,9 @@ public class ComponentToElementTransformer<S extends State, T extends Transition
 	}
 	
 	private void computingStateElements(Document doc, Element rootElement,
-			Component<S, T, A> intersectionAutomaton) {
+			SubProperty intersectionAutomaton) {
 
-		StateToElementTransformer<S, T, A> stateTransformer = new StateToElementTransformer<S, T, A>(
+		StateToElementTransformer stateTransformer = new StateToElementTransformer(
 				intersectionAutomaton.getAutomaton(), doc);
 		for (S s : intersectionAutomaton.getAutomaton().getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
@@ -109,21 +102,21 @@ public class ComponentToElementTransformer<S extends State, T extends Transition
 	}
 
 	private void addPorts(Document doc, Element portsElement,
-			Set<Port<S, T>> ports) {
+			Set<Port> ports) {
 
-		PortToElementTransformer<S, T> transformer = new PortToElementTransformer<S, T>(
+		PortToElementTransformer transformer = new PortToElementTransformer(
 				doc);
-		for (Port<S, T> port : ports) {
+		for (Port port : ports) {
 			Element portElement = transformer.transform(port);
 			portsElement.appendChild(portElement);
 		}
 	}
 	
 	private void computingTransitionElements(Document doc, Element rootElement,
-			Component<S, T, A> intersectionAutomaton) {
-		TransitionToElementTransformer<S, T, A> transitionTransformer = new TransitionToElementTransformer<S, T, A>(
+			SubProperty intersectionAutomaton) {
+		TransitionToElementTransformer transitionTransformer = new TransitionToElementTransformer(
 				intersectionAutomaton.getAutomaton(), doc);
-		for (T transition : intersectionAutomaton.getAutomaton()
+		for (Transition transition : intersectionAutomaton.getAutomaton()
 				.getTransitions()) {
 			Element transitionElement = transitionTransformer
 					.transform(transition);

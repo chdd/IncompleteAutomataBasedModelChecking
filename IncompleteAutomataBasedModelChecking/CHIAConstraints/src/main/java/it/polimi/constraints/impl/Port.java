@@ -2,35 +2,37 @@ package it.polimi.constraints.impl;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Port;
 
 import com.google.common.base.Preconditions;
 
 /**
- * Is a transition that connect the refinement of a transparent state with a
- * state already specified in the model
+ * The ports class specifies the in/out-coming transitions that connect the
+ * IBA/BA that refers to the sub-property/replacement to the a transparent state
+ * to the states of the IBA of the original model<br/>
+ * 
+ * The port class contains the source and the destinations state of the port, a
+ * boolean flag that specifies if the port is in-coming or out-coming and the
+ * corresponding transition
  * 
  * @author claudiomenghi
  *
- * @param <S>
- *            is the type of the states connected by the transition
- * @param <T>
- *            is the type of the transition that connects the states
  */
-public class PortImpl<S extends State, T extends Transition> extends State
-		implements Port<S, T> {
+public class Port extends State {
 
-	
+	public static int ID_COUNTER = 1;
 
-		/**
+	/**
+	 * is true if the port is an incoming port, false if it is out-coming
+	 */
+	private final boolean incoming;
+
+	/**
 	 * the source can be a state of a sub0-properties or a state of the model
 	 * depending on whether the port is an out-coming or incoming port of the
 	 * sub-properties. If the port is out-coming the source is a state of the
 	 * sub-property, otherwise it is a state of the model
 	 */
-	private final S source;
-	
-	private boolean incoming;
+	private final State source;
 
 	/**
 	 * the destination can be a state of a sub0-properties or a state of the
@@ -38,14 +40,12 @@ public class PortImpl<S extends State, T extends Transition> extends State
 	 * the sub-properties. If the port is out-coming the destination is a state
 	 * of the model, otherwise it is a state of the sub-property
 	 */
-	private final S destination;
+	private final State destination;
 
 	/**
 	 * returns the transition between the source and the destination state
 	 */
-	private final T transition;
-
-	public static int ID_COUNTER=1;
+	private final Transition transition;
 
 	/**
 	 * creates a new port
@@ -65,50 +65,71 @@ public class PortImpl<S extends State, T extends Transition> extends State
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public PortImpl(S source, S destination, T transition, boolean incoming) {
-		this(ID_COUNTER, source, destination, transition, incoming);
-		
-	}
-	public PortImpl(int id, S source, S destination, T transition, boolean incoming) {
-		super(id);
-		PortImpl.ID_COUNTER=PortImpl.ID_COUNTER+1;
-		Preconditions.checkNotNull(source, "The source of the port cannot be null");
+	public Port(State source, State destination, Transition transition,
+			boolean incoming) {
+		super(transition.getId());
+		Port.ID_COUNTER = Port.ID_COUNTER + 1;
+		Preconditions.checkNotNull(source,
+				"The source of the port cannot be null");
 		Preconditions.checkNotNull(destination,
 				"The destination of the port cannot be null");
-		Preconditions.checkNotNull(transition,
-				"The transition that connect the source and the destination cannot be null");
+		Preconditions
+				.checkNotNull(transition,
+						"The transition that connect the source and the destination cannot be null");
 
 		this.source = source;
 		this.destination = destination;
 		this.transition = transition;
-		this.incoming=incoming;
+		this.incoming = incoming;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * the source can be a state of a sub0-properties or a state of the model
+	 * depending on whether the port is an out-coming or incoming port of the
+	 * sub-properties. If the port is out-coming the source is a state of the
+	 * sub-property, otherwise it is a state of the model
+	 * 
+	 * @return the source of the port
 	 */
-	@Override
-	public S getSource() {
+	public State getSource() {
 		return source;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * the destination can be a state of a sub0-properties or a state of the
+	 * model depending on whether the port is an incoming or out-coming port of
+	 * the sub-properties. If the port is out-coming the destination is a state
+	 * of the model, otherwise it is a state of the sub-property
+	 * 
+	 * @return the destination of the port
 	 */
-	@Override
-	public S getDestination() {
+	public State getDestination() {
 		return destination;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * returns the transition between the source and the destination state
+	 * 
+	 * @return the transition between the source and the destination state
 	 */
-	@Override
-	public T getTransition() {
+	public Transition getTransition() {
 		return transition;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * returns true if the transition is an incoming port, false if it is
+	 * out-coming
+	 * 
+	 * @return true if the transition is an incoming port, false if it is
+	 *         out-coming
+	 */
+	public boolean isIncoming() {
+		return incoming;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -124,8 +145,13 @@ public class PortImpl<S extends State, T extends Transition> extends State
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * Returns true if two ports are equals two ports are equal if and only if
+	 * they refer to the same transition, i.e., a transition with the same id
+	 * 
+	 * @param obj
+	 *            is the Port to which the current port must be compared
+	 * @return true if the two ports are equals
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -135,8 +161,7 @@ public class PortImpl<S extends State, T extends Transition> extends State
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		PortImpl<S,T> other = (PortImpl<S,T>) obj;
+		Port other = (Port) obj;
 		if (destination == null) {
 			if (other.destination != null)
 				return false;
@@ -157,20 +182,14 @@ public class PortImpl<S extends State, T extends Transition> extends State
 		return true;
 	}
 
-	@Override
-	public boolean isIncoming() {
-		return incoming;
-	}
-	
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "PortImpl [source=" + source + ", incoming=" + incoming
+		return "Port [source=" + source + ", incoming=" + incoming
 				+ ", destination=" + destination + ", transition=" + transition
 				+ "]";
 	}
-	
-	
+
 }

@@ -5,9 +5,6 @@ import it.polimi.automata.Constants;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.Component;
-import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
 
 import java.io.File;
 import java.util.Map.Entry;
@@ -90,9 +87,9 @@ public class ConstraintWriter<S extends State, I extends Transition,  A extends 
 					.createElement(Constants.XML_ELEMENT_CONSTRAINTS);
 			doc.appendChild(rootElement);
 
-			ComponentToElementTransformer<S, I, A> componentTransformer = new ComponentToElementTransformer<S, I, A>(
+			SubPropertyToElementTransformer<S, I, A> componentTransformer = new SubPropertyToElementTransformer<S, I, A>(
 					doc, constraint);
-			for (Component<S, I, A> component : constraint.getComponents()) {
+			for (SubProperty<S, I, A> component : constraint.getComponents()) {
 
 				Element componentElement=componentTransformer.transform(component);
 				rootElement.appendChild(componentElement);

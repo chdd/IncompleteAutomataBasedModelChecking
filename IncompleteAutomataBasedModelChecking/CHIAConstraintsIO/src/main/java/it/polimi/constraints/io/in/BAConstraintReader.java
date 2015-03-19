@@ -2,16 +2,12 @@ package it.polimi.constraints.io.in;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.Constants;
-import it.polimi.automata.io.transformer.states.StateElementParser;
-import it.polimi.automata.io.transformer.transitions.ClaimTransitionParser;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.Component;
-import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
-import it.polimi.constraints.impl.BAComponentFactory;
-import it.polimi.constraints.impl.ConstraintImpl;
+import it.polimi.constraints.impl.Constraint;
+import it.polimi.constraints.impl.Port;
+import it.polimi.constraints.impl.SubProperty;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,19 +46,14 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(BAConstraintReader.class);
 
-	private File file;
-
-	private final StateElementParser<S, T, BA<S, T>> stateElementParser;
-
-	private final ClaimTransitionParser<S, T, BA<S, T>> transitionElementParser;
+	private final File file;
 
 	/**
 	 * contains a map that given an id returns the corresponding port
 	 */
-	private final Map<Integer, Port<S, T>> mapIdPort;
+	private final Map<Integer, Port> mapIdPort;
 
-	private BAComponentFactory<S, T> componentFactory;
-
+	
 	/**
 	 * creates a new constraint reader
 	 * 
@@ -75,26 +66,17 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public BAConstraintReader(File file, 
-			StateElementParser<S, T, BA<S, T>> stateElementParser,
-			ClaimTransitionParser<S, T, BA<S, T>> transitionElementParser) {
+	public BAConstraintReader(File file) {
 		Preconditions
 				.checkNotNull(file,
 						"The file from which the constraint must be read cannot be null");
-		Preconditions.checkNotNull(stateElementParser,
-				"The parser of the states cannot be null");
-		Preconditions.checkNotNull(transitionElementParser,
-				"The parser of the transitions cannot be null");
 	
 		this.file = file;
-		this.stateElementParser = stateElementParser;
-		this.transitionElementParser = transitionElementParser;
-		this.componentFactory = new BAComponentFactory<S, T>();
-		this.mapIdPort = new HashMap<Integer, Port<S, T>>();
+		this.mapIdPort = new HashMap<Integer, Port>();
 	}
 
-	public Constraint<S, T, BA<S,T>> read() {
-		Constraint<S, T, BA<S,T>> ret = new ConstraintImpl<S, T, BA<S,T>>();
+	public Constraint read() {
+		Constraint ret = new Constraint();
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
@@ -121,7 +103,7 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 		return ret;
 	}
 
-	private void loadConstraint(Element doc, Constraint<S, T, BA<S,T>> constraint) {
+	private void loadConstraint(Element doc, Constraint constraint) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
 		Preconditions.checkNotNull(constraint,
 				"The returning constraint cannot be null");
@@ -135,7 +117,7 @@ public class BAConstraintReader<S extends State, T extends Transition> {
 			Node xmlConstraint = xmlSetOfConstraints.item(stateid);
 			Element xmlConstraintElement = (Element) xmlConstraint;
 
-			Component<S, T, BA<S,T>> component=new ElementToComponentTransformer<S, T>(this.stateElementParser, this.transitionElementParser, this.componentFactory).transform(xmlConstraintElement);
+			SubProperty component=new ElementToSubPropertyTransformer<S, T>(this.stateElementParser, this.transitionElementParser, this.componentFactory).transform(xmlConstraintElement);
 			constraint.addComponent(component);
 			
 			

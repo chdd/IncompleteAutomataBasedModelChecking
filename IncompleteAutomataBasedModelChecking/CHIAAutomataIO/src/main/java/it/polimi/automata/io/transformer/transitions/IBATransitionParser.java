@@ -43,7 +43,7 @@ public class IBATransitionParser  implements Transformer<Element, Transition>{
 		int id = Integer.parseInt(eElement
 				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID));
 
-		Set<IGraphProposition> propositions = new ModelPropositionParser<State, Transition>()
+		Set<IGraphProposition> propositions = new ModelPropositionParser()
 				.computePropositions(eElement
 						.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 

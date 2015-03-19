@@ -269,5 +269,6 @@
 		<module>CHIAFramework</module>
 		<module>RefinementChecker</module>
 		<module>CHIARefinementChecker</module>
+		<module>CHIAConstraintsIO</module>
 	</modules>
 </project>

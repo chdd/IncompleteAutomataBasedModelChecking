@@ -3,9 +3,7 @@ package it.polimi.constraints.io.out;
 import it.polimi.automata.Constants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.transformer.propositions.PropositionsToStringTransformer;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.impl.Port;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -14,17 +12,13 @@ import org.w3c.dom.Element;
 import com.google.common.base.Preconditions;
 
 /**
- * transforms an object of type Port into an XML element
+ *  transforms a port object into the corresponding XML element representation.
  * 
  * @author claudiomenghi
  *
- * @param <S>
- *            is the type of the state involved in the port
- * @param <I>
- *            is the type of the transition included in the port
  */
-public class PortToElementTransformer<S extends State, T extends Transition>
-		implements Transformer<Port<S, T>, Element> {
+public class PortToElementTransformer
+		implements Transformer<Port, Element> {
 
 	private final Document doc;
 
@@ -39,7 +33,7 @@ public class PortToElementTransformer<S extends State, T extends Transition>
 		this.doc = doc;
 	}
 
-	public Element transform(Port<S, T> port) {
+	public Element transform(Port port) {
 		Preconditions.checkNotNull(port, "The port element cannot be null");
 		Element portElement = doc.createElement(Constants.XML_ELEMENT_PORT);
 		

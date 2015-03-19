@@ -10,15 +10,12 @@ import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.Component;
-import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
-import it.polimi.constraints.impl.ComponentFactory;
-import it.polimi.constraints.impl.ConstraintImpl;
-import it.polimi.constraints.impl.PortImpl;
+import it.polimi.constraints.impl.Constraint;
+import it.polimi.constraints.impl.Port;
 import it.polimi.contraintcomputation.subautomatafinder.PortSubPropertiesReachabilityChecking;
 import it.polimi.contraintcomputation.subautomatafinder.intersection.PortInternalSubPropertiesReachabilityChecker;
 
+import java.awt.Component;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,7 +41,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class SubPropertiesIdentifier<S extends State, T extends Transition, A extends BA<S, T>> {
+public class SubPropertiesIdentifier {
 
 	private final Set<IGraphProposition> stutteringPropositions;
 
@@ -58,25 +55,25 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 * contains a map that maps each state of the model with a set of states of
 	 * the intersection automaton
 	 */
-	private Map<S, Set<S>> modelStateIntersectionStateMap;
+	private Map<State, Set<State>> modelStateIntersectionStateMap;
 
 	/**
 	 * contains the intersection automaton
 	 */
-	private IntersectionBA<S, T> intersectionBA;
+	private IntersectionBA intersectionBA;
 
 	/**
 	 * contains the map that connect each state of the model with the
 	 * corresponding clusters
 	 */
-	private Constraint<S, T, A> constraint;
+	private Constraint constraint;
 
 	/**
 	 * associated each state of the intersection automaton to the component
 	 * through which it is associated
 	 */
-	private Map<S, Component<S, T, A>> mapIntersectionStateComponent;
-	private final Map<S, Component<S, T, A>> modelStateComponent;
+	private Map<State, Component> mapIntersectionStateComponent;
+	private final Map<State, Component> modelStateComponent;
 
 	/**
 	 * The incoming transitions are the transitions that enters the current
@@ -84,7 +81,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 * arrives from the outside or transition that reaches the current level
 	 * from the refinement of a transparent state
 	 */
-	private final Map<T, Port<S, T>> mapIntersectionTransitionOutcomingPort;
+	private final Map<Transition, Port> mapIntersectionTransitionOutcomingPort;
 
 	/**
 	 * The out-coming transitions are the transition that leave the current
@@ -92,25 +89,14 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 * leaves the current refinement level to an ``upper level" component or
 	 * transitions that enter the transparent state
 	 */
-	private final Map<T, Port<S, T>> mapIntersectionTransitionIncomingPort;
+	private final Map<Transition, Port> mapIntersectionTransitionIncomingPort;
 
 	/**
 	 * is the original model to be considered
 	 */
-	private IBA<S, T> model;
+	private IBA model;
 
-	/**
-	 * is the factory which is used to create components
-	 */
-	private ComponentFactory<S, T, A> componentFactory;
-
-	/**
-	 * is the factory which is used to create transitions in the refined
-	 * component
-	 */
-	private TransitionFactory<S, T> refinementTransitionFactory;
-
-	private IntersectionBuilder<S, T> intersectionBuilder;
+	private IntersectionBuilder intersectionBuilder;
 
 	private final ModelCheckingResults mcResults;
 
@@ -126,16 +112,14 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 *             if the intersection automaton or the map is null
 	 */
 	public SubPropertiesIdentifier(
-			IntersectionBuilder<S, T> intersectionBuilder,
-			ComponentFactory<S, T, A> componentFactory,
 			ModelCheckingResults mcResults) {
 
 		Preconditions.checkNotNull(intersectionBuilder,
 				"The intersection builder cannot be null");
-		;
+	
 
 		// creating the abstracted automaton
-		this.constraint = new ConstraintImpl<S, T, A>();
+		this.constraint = new Constraint();
 		// setting the map between the intersection state and the model states
 		this.modelStateIntersectionStateMap = intersectionBuilder
 				.getModelStateIntersectionStateMap();
@@ -172,8 +156,8 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 * @return the sub-automata of the automaton that refer to the transparent
 	 *         states of M.
 	 */
-	public Constraint<S, T, A> getSubAutomata(Map<Port<S, T>, Color> inPorts,
-			Map<Port<S, T>, Color> outPorts) {
+	public Constraint getSubAutomata(Map<Port, Color> inPorts,
+			Map<Port, Color> outPorts) {
 
 		Preconditions.checkNotNull(inPorts, "The inport set must be not null");
 		Preconditions.checkNotNull(outPorts,
@@ -215,20 +199,20 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 					outPorts.keySet(), inPorts.keySet());
 			closure.computeTransitionsClosure(this.intersectionBA
 					.getRegularStates());
-			Map<Port<S, T>, Set<Port<S, T>>> reachebilityRelation = closure
+			Map<Port, Set<Port>> reachebilityRelation = closure
 					.getForwardReachabilityRelation();
 
-			for (Port<S, T> sourcePort : reachebilityRelation.keySet()) {
-				for (Port<S, T> destionationPort : reachebilityRelation
+			for (Port sourcePort : reachebilityRelation.keySet()) {
+				for (Port destionationPort : reachebilityRelation
 						.get(sourcePort)) {
 					if (!this.constraint.getPorts().contains(sourcePort)) {
 
-						Component<S, T, A> component = this.mapIntersectionStateComponent
+						Component component = this.mapIntersectionStateComponent
 								.get(sourcePort.getDestination());
 						this.constraint.addIncomingPort(component, sourcePort);
 					}
 					if (!this.constraint.getPorts().contains(destionationPort)) {
-						Component<S, T, A> component = this.mapIntersectionStateComponent
+						Component component = this.mapIntersectionStateComponent
 								.get(destionationPort.getSource());
 						this.constraint.addOutComingPort(component,
 								destionationPort);
@@ -240,7 +224,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 			/*
 			 * 3) COMPUTES THE REACHABILITY INSIDE THE SUBPROPERTIES
 			 */
-			PortInternalSubPropertiesReachabilityChecker<S, T, IntersectionBA<S, T>> intBaclosure = new PortInternalSubPropertiesReachabilityChecker<S, T, IntersectionBA<S, T>>(
+			PortInternalSubPropertiesReachabilityChecker<State, Transition, IntersectionBA> intBaclosure = new PortInternalSubPropertiesReachabilityChecker<S, T, IntersectionBA<S, T>>(
 					this.mapIntersectionTransitionIncomingPort.values(),
 					this.mapIntersectionTransitionOutcomingPort.values(),
 					this.intersectionBuilder, inPorts.keySet(),
@@ -248,22 +232,22 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 			intBaclosure
 					.computeIntersectionTransitionsClosure(this.intersectionBA
 							.getMixedStates());
-			Map<Port<S, T>, Set<Port<S, T>>> reachebilityRelation2 = intBaclosure
+			Map<Port, Set<Port>> reachebilityRelation2 = intBaclosure
 					.getForwardReachabilityRelation();
 
-			for (Port<S, T> sourcePort : reachebilityRelation2.keySet()) {
-				for (Port<S, T> destionationPort : reachebilityRelation2
+			for (Port sourcePort : reachebilityRelation2.keySet()) {
+				for (Port destionationPort : reachebilityRelation2
 						.get(sourcePort)) {
 					if (!this.constraint.getPorts().contains(sourcePort)) {
 
-						Component<S, T, A> component = this.mapIntersectionStateComponent
+						Component component = this.mapIntersectionStateComponent
 								.get(sourcePort.getDestination());
 						this.constraint.addIncomingPort(component, sourcePort);
 						this.constraint.setPortValue(sourcePort,
 								inPorts.get(sourcePort));
 					}
 					if (!this.constraint.getPorts().contains(destionationPort)) {
-						Component<S, T, A> component = this.mapIntersectionStateComponent
+						Component component = this.mapIntersectionStateComponent
 								.get(destionationPort.getSource());
 						this.constraint.addOutComingPort(component,
 								destionationPort);
@@ -290,15 +274,15 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 * creates the transitions inside the current refinement
 	 */
 	private void createTransitions() {
-		Set<T> visitedTransition = new HashSet<T>();
-		for (S modelState : this.intersectionBuilder.getModel()
+		Set<Transition> visitedTransition = new HashSet<Transition>();
+		for (State modelState : this.intersectionBuilder.getModel()
 				.getTransparentStates()) {
 
-			Component<S, T, A> subproperty = this.modelStateComponent
+			Component subproperty = this.modelStateComponent
 					.get(modelState);
 			if (this.modelStateIntersectionStateMap.containsKey(modelState)) {
 
-				for (S intersectionState : this.modelStateIntersectionStateMap
+				for (State intersectionState : this.modelStateIntersectionStateMap
 						.get(modelState)) {
 
 					/*
@@ -309,10 +293,10 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 					 * current level of refinement, i.e., they enter the
 					 * refinement of the transparent state
 					 */
-					for (T incomingTransition : this.intersectionBA
+					for (Transition incomingTransition : this.intersectionBA
 							.getInTransitions(intersectionState)) {
 						visitedTransition.add(incomingTransition);
-						S sourceIntersectionState = this.intersectionBA
+						State sourceIntersectionState = this.intersectionBA
 								.getTransitionSource(incomingTransition);
 
 						if (!incomingTransition.getPropositions().equals(
@@ -324,7 +308,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 								subproperty.getAutomaton().addPropositions(
 										incomingTransition.getPropositions());
 
-								T newTransition = this.intersectionBuilder
+								Transition newTransition = this.intersectionBuilder
 										.getIntersectionrule()
 										.getIntersectionTransitionFactory()
 										.create(incomingTransition.getId(),
@@ -343,7 +327,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 								 * to go to the refinement, i.e., the
 								 * intersection
 								 */
-								Port<S, T> incomingPort = new PortImpl<S, T>(
+								Port incomingPort = new Port(
 										this.intersectionBuilder
 												.getIntersectionStateModelStateMap()
 												.get(sourceIntersectionState),
@@ -370,11 +354,11 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 					 * that moves from the refinement of the transparent state
 					 * to the current level of abstraction
 					 */
-					for (T outcomingTransition : this.intersectionBA
+					for (Transition outcomingTransition : this.intersectionBA
 							.getOutTransitions(intersectionState)) {
 						if (!visitedTransition.contains(outcomingTransition)) {
 							visitedTransition.add(outcomingTransition);
-							S destinationIntersectionState = this.intersectionBA
+							State destinationIntersectionState = this.intersectionBA
 									.getTransitionDestination(outcomingTransition);
 
 							if (!outcomingTransition.getPropositions().equals(
@@ -386,7 +370,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 									subproperty.getAutomaton().addPropositions(
 											outcomingTransition
 													.getPropositions());
-									T newTransition = this.intersectionBuilder
+									Transition newTransition = this.intersectionBuilder
 											.getIntersectionrule()
 											.getIntersectionTransitionFactory()
 											.create(outcomingTransition.getId(),
@@ -407,7 +391,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 									 * refinement to go to the current one (exit
 									 * the transparent)
 									 */
-									Port<S, T> outcomingPort = new PortImpl<S, T>(
+									Port outcomingPort = new Port(
 											intersectionState,
 											this.intersectionBuilder
 													.getIntersectionStateModelStateMap()
@@ -433,7 +417,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 	 * creates the sub-properties related with the current refinement level
 	 */
 	private void createStates() {
-		for (S modelState : this.intersectionBuilder.getModel()
+		for (State modelState : this.intersectionBuilder.getModel()
 				.getTransparentStates()) {
 
 			logger.debug("Analizing the intersection state corresponding to the model state: "
@@ -442,7 +426,7 @@ public class SubPropertiesIdentifier<S extends State, T extends Transition, A ex
 			/*
 			 * creates a component which correspond with the state modelState
 			 */
-			Component<S, T, A> component = componentFactory.create(
+			Component component = componentFactory.create(
 					modelState.getName(), modelState,
 					model.isTransparent(modelState),
 					this.refinementTransitionFactory);

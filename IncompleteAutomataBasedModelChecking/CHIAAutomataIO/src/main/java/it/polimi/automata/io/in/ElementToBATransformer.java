@@ -19,28 +19,16 @@ import com.google.common.base.Preconditions;
 
 public class ElementToBATransformer implements Transformer<Element, BA>  {
 
-	private final BAStateElementParser stateElementParser;
-	private final BATransitionParser transitionElementParser;
 	
 	/**
 	 * contains a map that connects the id with the corresponding state
 	 */
 	private  Map<Integer, State> mapIdState;
-
 	
-	public ElementToBATransformer(
-			BAStateElementParser stateElementParser,
-			BATransitionParser transitionElementParser){
-		Preconditions.checkNotNull(stateElementParser,
-				"The state element parser cannot be null");
-		Preconditions.checkNotNull(transitionElementParser,
-				"The transition factory cannot be null");
-
-		this.stateElementParser=stateElementParser;
-		this.transitionElementParser=transitionElementParser;
+	public ElementToBATransformer(){
 		this.mapIdState=new HashMap<Integer, State>();
-		
 	}
+
 	@Override
 	public BA transform(Element input) {
 		Preconditions.checkNotNull(input,
@@ -54,6 +42,8 @@ public class ElementToBATransformer implements Transformer<Element, BA>  {
 		return ba;
 	} 
 	private void loadStates(Element doc, BA ba) {
+		BAStateElementParser stateElementParser=new BAStateElementParser(ba); 
+		
 		NodeList xmlstates = doc
 				.getElementsByTagName(Constants.XML_ELEMENT_STATE);
 
@@ -61,7 +51,7 @@ public class ElementToBATransformer implements Transformer<Element, BA>  {
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			State s= this.stateElementParser.transform(
+			State s= stateElementParser.transform(
 					eElement);
 			this.mapIdState.put(s.getId(), s);
 
@@ -69,13 +59,15 @@ public class ElementToBATransformer implements Transformer<Element, BA>  {
 	}
 
 	private void loadTransitions(Element doc, BA ba) {
+		BATransitionParser transitionElementParser=new BATransitionParser(ba, this.mapIdState);
+		
 		NodeList xmltransitions = doc
 				.getElementsByTagName(Constants.XML_TAG_TRANSITION);
 
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-			this.transitionElementParser.transform(eElement);
+			transitionElementParser.transform(eElement);
 
 		}
 	}

@@ -1,20 +1,18 @@
 package it.polimi.automata.io.transformer.propositions;
 
 import it.polimi.automata.Constants;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
+import com.google.common.base.Preconditions;
 
-public class ModelPropositionParser<S extends State, T extends Transition> {
+
+public class ModelPropositionParser {
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
