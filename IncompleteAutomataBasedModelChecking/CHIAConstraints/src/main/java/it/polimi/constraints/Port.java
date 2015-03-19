@@ -46,6 +46,9 @@ public class Port extends State {
 	 * returns the transition between the source and the destination state
 	 */
 	private final Transition transition;
+	
+	
+	private Color color;
 
 	/**
 	 * creates a new port
@@ -66,7 +69,7 @@ public class Port extends State {
 	 *             if one of the parameters is null
 	 */
 	public Port(State source, State destination, Transition transition,
-			boolean incoming) {
+			boolean incoming, Color color) {
 		super(transition.getId());
 		Port.ID_COUNTER = Port.ID_COUNTER + 1;
 		Preconditions.checkNotNull(source,
@@ -81,6 +84,7 @@ public class Port extends State {
 		this.destination = destination;
 		this.transition = transition;
 		this.incoming = incoming;
+		this.setColor(color);
 	}
 
 	/**
@@ -190,6 +194,20 @@ public class Port extends State {
 		return "Port [source=" + source + ", incoming=" + incoming
 				+ ", destination=" + destination + ", transition=" + transition
 				+ "]";
+	}
+
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 }
