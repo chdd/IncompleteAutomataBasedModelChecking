@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- defining a Buchi Automaton -->
+	<xs:element name="constraint">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="subproperties">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="subproperty"  minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="value" type="xs:string" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
