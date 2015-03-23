@@ -1,7 +1,7 @@
 package it.polimi.automata.io.out;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.state.State;
 
@@ -30,30 +30,30 @@ public class StateToElementTransformer implements Transformer<State, Element> {
 	public Element transform(State input) {
 		Preconditions.checkNotNull(input, "The input state cannot be null");
 
-		Element stateXMLElement = doc.createElement(Constants.XML_ELEMENT_STATE);
+		Element stateXMLElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_STATE);
 		
 		// adding the id
-		Attr id = doc.createAttribute(Constants.XML_ATTRIBUTE_ID);
+		Attr id = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
 		id.setValue(Integer.toString(input.getId()));
 		stateXMLElement.setAttributeNode(id);
 
 		// adding the name
-		Attr name = doc.createAttribute(Constants.XML_ATTRIBUTE_NAME);
+		Attr name = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
 		name.setValue(input.getName());
 		stateXMLElement.setAttributeNode(name);
 
 		if (this.automaton.getInitialStates().contains(input)) {
 			// adding the id
 			Attr initial = doc
-					.createAttribute(Constants.XML_ATTRIBUTE_INITIAL);
-			initial.setValue(Constants.TRUEVALUE);
+					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_INITIAL);
+			initial.setValue(AutomataIOConstants.TRUEVALUE);
 			stateXMLElement.setAttributeNode(initial);
 		}
 		if (this.automaton.getAcceptStates().contains(input)) {
 			// adding the id
 			Attr accepting = doc
-					.createAttribute(Constants.XML_ATTRIBUTE_ACCEPTING);
-			accepting.setValue(Constants.TRUEVALUE);
+					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING);
+			accepting.setValue(AutomataIOConstants.TRUEVALUE);
 			stateXMLElement.setAttributeNode(accepting);
 		}
 		return stateXMLElement;

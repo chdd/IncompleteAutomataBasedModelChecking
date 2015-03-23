@@ -13,6 +13,23 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <build>
+  <plugins>
+    <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>fully.qualified.MainClass</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
   <dependencies>
      <dependency>
             <groupId>it.polimi.chia</groupId>
@@ -29,5 +46,11 @@
             <artifactId>CHIAContraintComputation</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+                <dependency>
+            <groupId>it.polimi.chia</groupId>
+            <artifactId>CHIAConstraintsIO</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
   </dependencies>
+  
 </project>

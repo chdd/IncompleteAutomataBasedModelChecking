@@ -1,9 +1,9 @@
-package it.polimi.automata.io.transformer.states;
+package it.polimi.automata.io.in.states;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBAWithInvariants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.transformer.propositions.ClaimPropositionParser;
+import it.polimi.automata.io.in.propositions.StringToClaimPropositions;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 
@@ -15,7 +15,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
-public class IBAWithInvariantsStateElementParser implements Transformer<Element, State>{
+public class ElementToIBAWithInvariantsStateTransformer implements Transformer<Element, State>{
 
 	/**
 	 * is the factory which is used to create the states of the Buchi automaton
@@ -24,7 +24,7 @@ public class IBAWithInvariantsStateElementParser implements Transformer<Element,
 	private final IBAWithInvariants iba;
 	
 	
-	public IBAWithInvariantsStateElementParser(StateFactory stateFactory, IBAWithInvariants iba){
+	public ElementToIBAWithInvariantsStateTransformer(StateFactory stateFactory, IBAWithInvariants iba){
 		Preconditions.checkNotNull(stateFactory,"The state factory cannot be null");
 		this.stateFactory=stateFactory;
 		this.iba=iba;
@@ -34,30 +34,30 @@ public class IBAWithInvariantsStateElementParser implements Transformer<Element,
 	public State transform(Element eElement) {
 		
 		int id = Integer.parseInt(eElement
-				.getAttribute(Constants.XML_ATTRIBUTE_ID));
+				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID));
 
 		State s = stateFactory.create(
-				eElement.getAttribute(Constants.XML_ATTRIBUTE_NAME), id);
+				eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME), id);
 		iba.addState(s);
 		
-		if (!eElement.getAttribute(Constants.XML_ATTRIBUTE_INITIAL)
+		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_INITIAL)
 				.isEmpty()) {
 			iba.addInitialState(s);
 		}
-		if (!eElement.getAttribute(Constants.XML_ATTRIBUTE_ACCEPTING)
+		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING)
 				.isEmpty()) {
 			iba.addAcceptState(s);
 		}
-		if (!eElement.getAttribute(Constants.XML_ATTRIBUTE_TRANSPARENT)
+		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSPARENT)
 				.isEmpty()) {
 			iba.addTransparentState(s);
 		}
-		if (!eElement.getAttribute(Constants.XML_ATTRIBUTE_INVARIANT)
+		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_INVARIANT)
 				.isEmpty()) {
 			Set<IGraphProposition> invariantPropositions = 
-					new ClaimPropositionParser()
+					new StringToClaimPropositions()
 					.computePropositions(eElement
-							.getAttribute(Constants.XML_ATTRIBUTE_INVARIANT));
+							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_INVARIANT));
 			iba.addInvariantPropositions(s, invariantPropositions);
 		}
 		

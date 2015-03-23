@@ -1,9 +1,7 @@
 package it.polimi.constraints.io.out;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Port;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -19,15 +17,10 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  *
- * @param <S>
- *            is the type of the states which are included in the ports of the
- *            automaton
- * @param <T>
- *            is the type of the transitions constrained by the ports
  */
-public class PortsGraphToElementTransformer<S extends State, T extends Transition>
+public class PortsGraphToElementTransformer
 		implements
-		Transformer<DefaultDirectedGraph<Port<S, T>, DefaultEdge>, Element> {
+		Transformer<DefaultDirectedGraph<Port, DefaultEdge>, Element> {
 
 	
 	private final Document doc;
@@ -52,22 +45,22 @@ public class PortsGraphToElementTransformer<S extends State, T extends Transitio
 	 *             if the input is null
 	 */
 	@Override
-	public Element transform(DefaultDirectedGraph<Port<S, T>, DefaultEdge> input) {
+	public Element transform(DefaultDirectedGraph<Port, DefaultEdge> input) {
 		Preconditions.checkNotNull(input, "The graph to be converted cannot be null");
 		
 
-		Element portReachability = doc.createElement(Constants.XML_ELEMENT_PORTS_REACHABILITY);
+		Element portReachability = doc.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_REACHABILITY);
 	
 		for (DefaultEdge port : input.edgeSet()) {
 			
-			Element edge = doc.createElement(Constants.XML_ELEMENT_TRANSITION);
+			Element edge = doc.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITION);
 			portReachability.appendChild(edge);
 			
-			Port<S, T> sourceport=input.getEdgeSource(port);
-			edge.setAttribute(Constants.XML_ATTRIBUTE_PORT_SOURCE, Integer.toString(sourceport.getId()));
+			Port sourceport=input.getEdgeSource(port);
+			edge.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_SOURCE, Integer.toString(sourceport.getId()));
 			
-			Port<S, T> destinationport=input.getEdgeTarget(port);
-			edge.setAttribute(Constants.XML_ATTRIBUTE_PORT_DESTINATION, Integer.toString(destinationport.getId()));
+			Port destinationport=input.getEdgeTarget(port);
+			edge.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_DESTINATION, Integer.toString(destinationport.getId()));
 			
 			portReachability.appendChild(edge);
 		}

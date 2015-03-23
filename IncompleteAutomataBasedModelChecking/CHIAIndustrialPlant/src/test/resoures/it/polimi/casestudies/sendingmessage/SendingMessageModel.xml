@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <iba>
-    <state id="1" name="q1" initial="true" />
-    <state id="2" name="send1" transparent="true" />
-    <state id="3" name="send2" transparent="true" />
-    <state id="4" name="q2" accepting="true" />
-    <state id="5" name="q3" accepting="true" />
-
-    <transition id="1" source="1" destination="2" propositions="start" />
-    <transition id="2" source="2" destination="3" propositions="fail" />
-    <transition id="3" source="2" destination="5" propositions="ok" />
-    <transition id="4" source="3" destination="4" propositions="fail" />
-    <transition id="5" source="3" destination="5" propositions="ok" />
-    <transition id="6" source="4" destination="4" propositions="abort" />
-    <transition id="7" source="5" destination="5" propositions="success" />
+    <propositions>
+        <proposition value="(SIGMA)" />
+        <proposition value="(send)" />
+        <proposition value="(!success)" />
+    </propositions>
+    <states>    
+        <state id="1" name="q1" initial="true" />
+        <state id="2" name="send1" transparent="true" />
+        <state id="3" name="send2" transparent="true" />
+        <state id="4" name="q2" accepting="true" />
+        <state id="5" name="q3" accepting="true" />
+    </states>   
+    <transitions>
+        <transition id="1" source="1" destination="2" propositions="(start)" />
+        <transition id="2" source="2" destination="3" propositions="(fail)" />
+        <transition id="3" source="2" destination="5" propositions="(ok)" />
+        <transition id="4" source="3" destination="4" propositions="(fail)" />
+        <transition id="5" source="3" destination="5" propositions="(ok)" />
+        <transition id="6" source="4" destination="4" propositions="(abort)" />
+        <transition id="7" source="5" destination="5" propositions="(success)" />
+    </transitions>  
 </iba>
 

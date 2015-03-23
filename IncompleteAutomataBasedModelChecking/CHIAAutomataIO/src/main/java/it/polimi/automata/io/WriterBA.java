@@ -1,6 +1,6 @@
 package it.polimi.automata.io;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.out.StateToElementTransformer;
 import it.polimi.automata.io.out.TransitionToElementTransformer;
@@ -85,7 +85,7 @@ public class WriterBA {
 
 			// root elements
 			Document doc = docBuilder.newDocument();
-			Element rootElement = doc.createElement(Constants.XML_ELEMENT_BA);
+			Element rootElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_BA);
 			doc.appendChild(rootElement);
 
 			this.computingStateElements(doc, rootElement);

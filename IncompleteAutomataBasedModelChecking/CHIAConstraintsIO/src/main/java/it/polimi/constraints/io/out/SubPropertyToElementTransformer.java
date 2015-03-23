@@ -1,7 +1,6 @@
 package it.polimi.constraints.io.out;
 
-import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.out.StateToElementTransformer;
 import it.polimi.automata.io.out.TransitionToElementTransformer;
@@ -28,7 +27,6 @@ public class SubPropertyToElementTransformer
 		implements Transformer<SubProperty, Element> {
 
 	private final Document doc;
-	private final Constraint<S, T, A> constraint;
 
 	/**
 	 * creates a new PortsGraph To Element Transformer element transformer
@@ -36,12 +34,9 @@ public class SubPropertyToElementTransformer
 	 * @param doc
 	 *            is the document where the element must be placed
 	 */
-	public SubPropertyToElementTransformer(Document doc, Constraint<S, T, A> constraint) {
+	public SubPropertyToElementTransformer(Document doc) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
-		Preconditions.checkNotNull(constraint, "The contraint cannot be null");
-		
 		this.doc = doc;
-		this.constraint=constraint;
 	}
 	
 	@Override
@@ -49,22 +44,22 @@ public class SubPropertyToElementTransformer
 		
 		// root elements
 		Element constraintElement = doc
-				.createElement(Constants.XML_ELEMENT_CONSTRAINT);
+				.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
 	
 		// adding the id
 		Attr modelTransparentStateIDd = doc
-				.createAttribute(Constants.XML_ATTRIBUTE_MODEL_STATE_ID);
+				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID);
 		modelTransparentStateIDd.setValue(Integer.toString(input
 				.getModelState().getId()));
 		constraintElement.setAttributeNode(modelTransparentStateIDd);
 
 		// adding the name of the state
 		Attr modelTransparentStateName = doc
-				.createAttribute(Constants.XML_ATTRIBUTE_NAME);
-		modelTransparentStateName.setValue(input.getName());
+				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
+		modelTransparentStateName.setValue(input.getModelState().getName());
 		constraintElement.setAttributeNode(modelTransparentStateName);
 		
-		Element baElement = doc.createElement(Constants.XML_ELEMENT_BA);
+		Element baElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_BA);
 		constraintElement.appendChild(baElement);
 
 		// computing the states
@@ -75,17 +70,15 @@ public class SubPropertyToElementTransformer
 
 		// adding the outComing Ports
 		Element outComingPorts = doc
-				.createElement(Constants.XML_ELEMENT_PORTS_OUT);
+				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_OUT);
 		constraintElement.appendChild(outComingPorts);
-		this.addPorts(doc, outComingPorts,
-				this.constraint.getOutcomingPorts(input));
+		this.addPorts(doc, outComingPorts, input.getOutcomingPorts());
 
 		// adding the incoming Ports
 		Element inComingPorts = doc
-				.createElement(Constants.XML_ELEMENT_PORTS_IN);
+				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_IN);
 		constraintElement.appendChild(inComingPorts);
-		this.addPorts(doc, inComingPorts, 
-				this.constraint.getIncomingPorts(input));
+		this.addPorts(doc, inComingPorts, input.getIncomingPorts());
 
 		return constraintElement;
 	}
@@ -95,7 +88,7 @@ public class SubPropertyToElementTransformer
 
 		StateToElementTransformer stateTransformer = new StateToElementTransformer(
 				intersectionAutomaton.getAutomaton(), doc);
-		for (S s : intersectionAutomaton.getAutomaton().getStates()) {
+		for (State s : intersectionAutomaton.getAutomaton().getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
 			rootElement.appendChild(xmlStateElement);
 		}

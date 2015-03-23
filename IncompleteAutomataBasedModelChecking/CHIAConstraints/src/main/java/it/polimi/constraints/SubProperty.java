@@ -6,8 +6,6 @@ package it.polimi.constraints;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -41,14 +39,7 @@ public class SubProperty {
 	private final Set<Port> incomingPorts;
 	private final Set<Port> outcomingPorts;
 
-	/**
-	 * specifies for each port the corresponding color The red color means that
-	 * from this port it is possible to reach an accepting state The green color
-	 * means that the port is reachable from an initial state The yellow color
-	 * means that the port is possibly reachable from an initial state and from
-	 * the port it is possibly reachable an accepting state
-	 */
-	private Map<Port, Color> portValue;
+	
 	
 	/**
 	 * creates a new sub-property that refers to a specific model state and
@@ -77,7 +68,6 @@ public class SubProperty {
 		this.automaton = automaton;
 		this.incomingPorts = incomingPorts;
 		this.outcomingPorts = outcomingPorts;
-		this.portValue=new HashMap<Port, Color>();
 	}
 
 	/**
@@ -179,7 +169,7 @@ public class SubProperty {
 	public void addIncomingPort(Port port) {
 	
 		this.incomingPorts.add(port);
-		this.portValue.put(port, Color.YELLOW);
+		port.setColor(Color.YELLOW);
 	}
 
 	/**
@@ -202,7 +192,7 @@ public class SubProperty {
 	public void addOutComingPort( Port port) {
 		
 		this.outcomingPorts.add(port);
-		this.portValue.put(port, Color.YELLOW);
+		port.setColor(Color.YELLOW);
 	}
 
 }

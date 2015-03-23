@@ -1,6 +1,6 @@
 package it.polimi.automata.io.out;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
 
 import java.util.Set;
@@ -19,14 +19,14 @@ public class IGraphPropositionsToStringTransformer implements Transformer<Set<IG
 		String ret = "";
 		for (IGraphProposition label : input) {
 			if (label instanceof SigmaProposition) {
-				ret = ret + Constants.SIGMA;
+				ret = ret + AutomataIOConstants.SIGMA;
 			} else {
-				ret = ret + label.toString() + Constants.AND_NOT_ESCAPED;
+				ret = ret + label.toString() + AutomataIOConstants.AND_NOT_ESCAPED;
 			}
 		}
-		if (ret.endsWith(Constants.AND_NOT_ESCAPED)) {
+		if (ret.endsWith(AutomataIOConstants.AND_NOT_ESCAPED)) {
 			ret = ret.substring(0,
-					ret.length() - Constants.AND_NOT_ESCAPED.length());
+					ret.length() - AutomataIOConstants.AND_NOT_ESCAPED.length());
 		}
 		return ret;
 	}

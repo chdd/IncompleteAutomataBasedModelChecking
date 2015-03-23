@@ -1,6 +1,6 @@
-package it.polimi.automata.io.transformer.propositions;
+package it.polimi.automata.io.in.propositions;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,12 +11,12 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 import com.google.common.base.Preconditions;
 
-public class ClaimPropositionParser {
+public class StringToClaimPropositions {
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
-	 * string must satisfy the regular expression {@link Constants#APREGEX} or
-	 * the regular expression {@link Constants#NOTAPREGEX}
+	 * string must satisfy the regular expression {@link AutomataIOConstants#APREGEX} or
+	 * the regular expression {@link AutomataIOConstants#NOTAPREGEX}
 	 * 
 	 * @param input
 	 *            is the input to be computed
@@ -24,26 +24,27 @@ public class ClaimPropositionParser {
 	 *             if the input is null
 	 * @throws IllegalArgumentException
 	 *             if the input does not match the regular expression
-	 *             {@link Constants#APREGEX} or the regular expression
-	 *             {@link Constants#NOTAPREGEX}
+	 *             {@link AutomataIOConstants#APREGEX} or the regular expression
+	 *             {@link AutomataIOConstants#NOTAPREGEX}
 	 */
 	public Set<IGraphProposition> computePropositions(String input) {
 
 		Preconditions.checkNotNull("The input must be not null");
-		Preconditions.checkArgument(!input.matches(Constants.CLAIM_PROPOSITIONAL_FORMULA), "The input " + input
+		Preconditions.checkArgument(!input.matches(AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA), "The input " + input
 				+ " must match the regular expression: "
-				+ Constants.CLAIM_PROPOSITIONAL_FORMULA);
+				+ AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA);
 		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
 		
-		if (input.equals(Constants.SIGMA)) {
+		if (input.equals("("+AutomataIOConstants.SIGMA+")")) {
 			propositions.add(new SigmaProposition());
 		} else {
-			String[] apsStrings = input.split(Constants.AND);
+			String[] apsStrings = input.split(AutomataIOConstants.AND);
 
 			for (String ap : apsStrings) {
-				if (ap.startsWith(Constants.NOT)) {
+				ap=ap.substring(1, ap.length()-1);
+				if (ap.startsWith(AutomataIOConstants.NOT)) {
 					propositions.add(new GraphProposition(ap
-							.substring(Constants.NOT.length()), true));
+							.substring(AutomataIOConstants.NOT.length()), true));
 				} else {
 					propositions.add(new GraphProposition(ap, false));
 				}

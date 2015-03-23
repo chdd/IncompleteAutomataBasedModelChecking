@@ -2,12 +2,11 @@ package it.polimi.automata;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -29,19 +28,9 @@ import com.google.common.base.Preconditions;
 /**
  * <p>
  * Represents a Buchi Automaton <br>
- * The state of the automaton must must implement the {@link State} interface <br>
- * The transition of the automaton must must implement the {@link Transition}
- * interface <br>
  * </p>
  * 
  * @author claudiomenghi
- * @param <S>
- *            is the type of the state of the Buchi Automaton. The type of the
- *            states of the automaton must implement the interface {@link State}
- * @param <T>
- *            is the type of the transition of the Buchi Automaton. The typer of
- *            the transitions of the automaton must implement the interface
- *            {@link Transition}
  */
 public class BA {
 
@@ -250,24 +239,24 @@ public class BA {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<State> getSuccessors(State s) {
+	public Set<State> getSuccessors(State s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
 		Preconditions.checkArgument(this.getStates().contains(s),
 				"The state "+s+" is not contained into the states of the automaton");
 
 		
-		return Graphs.successorListOf(this.automataGraph, s);
+		return new HashSet<State>(Graphs.successorListOf(this.automataGraph, s));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<State> getPredecessors(State s) {
+	public Set<State> getPredecessors(State s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
 		Preconditions.checkArgument(this.getStates().contains(s),
 				"The state is not contained into the states of the automaton");
 
-		return Graphs.predecessorListOf(this.automataGraph, s);
+		return new HashSet<State>(Graphs.predecessorListOf(this.automataGraph, s));
 	}
 
 	/**

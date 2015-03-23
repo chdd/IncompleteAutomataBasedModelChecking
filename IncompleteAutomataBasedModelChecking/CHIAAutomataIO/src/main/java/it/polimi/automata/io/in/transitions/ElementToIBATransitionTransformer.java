@@ -1,9 +1,9 @@
-package it.polimi.automata.io.transformer.transitions;
+package it.polimi.automata.io.in.transitions;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.transformer.propositions.ModelPropositionParser;
+import it.polimi.automata.io.in.propositions.StringToModelPropositions;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
@@ -17,7 +17,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
-public class IBATransitionParser  implements Transformer<Element, Transition>{
+public class ElementToIBATransitionTransformer  implements Transformer<Element, Transition>{
 
 	
 	/**
@@ -29,7 +29,7 @@ public class IBATransitionParser  implements Transformer<Element, Transition>{
 	private final IBA iba;
 	private final Map<Integer, State> idStateMap;
 	
-	public IBATransitionParser(ClaimTransitionFactory transitionFactory, IBA iba,
+	public ElementToIBATransitionTransformer(ClaimTransitionFactory transitionFactory, IBA iba,
 			Map<Integer, State> idStateMap){
 		Preconditions.checkNotNull(transitionFactory,"The transition factory cannot be null");
 		this.transitionFactory=transitionFactory;
@@ -41,11 +41,11 @@ public class IBATransitionParser  implements Transformer<Element, Transition>{
 	public Transition transform(Element eElement) {
 		
 		int id = Integer.parseInt(eElement
-				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_ID));
+				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID));
 
-		Set<IGraphProposition> propositions = new ModelPropositionParser()
+		Set<IGraphProposition> propositions = new StringToModelPropositions()
 				.computePropositions(eElement
-						.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
+						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 
 		if(!iba.getPropositions().containsAll(propositions)){
 			iba.addPropositions(propositions);
@@ -53,10 +53,10 @@ public class IBATransitionParser  implements Transformer<Element, Transition>{
 		Transition t = transitionFactory.create(id, propositions);
 
 		int sourceId = Integer.parseInt(eElement
-				.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_SOURCE));
+				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE));
 		int destinationId = Integer
 				.parseInt(eElement
-						.getAttribute(Constants.XML_ATTRIBUTE_TRANSITION_DESTINATION));
+						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_DESTINATION));
 		iba.addTransition(idStateMap.get(sourceId),
 				idStateMap.get(destinationId), t);
 		

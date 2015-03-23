@@ -12,14 +12,16 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -59,7 +61,7 @@ public class BAReaderTest {
 	}
 
 	@Test
-	public void test() throws FileNotFoundException, JAXBException {
+	public void test() throws JAXBException, ParserConfigurationException, SAXException, IOException {
 		BAReader reader = new BAReader(new File(getClass().getClassLoader()
 				.getResource("SendingMessageClaim.xml").getFile()));
 

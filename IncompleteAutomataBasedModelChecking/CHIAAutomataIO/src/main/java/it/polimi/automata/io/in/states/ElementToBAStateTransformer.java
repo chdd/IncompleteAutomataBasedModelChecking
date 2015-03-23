@@ -1,7 +1,7 @@
-package it.polimi.automata.io.transformer.states;
+package it.polimi.automata.io.in.states;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
@@ -15,7 +15,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class BAStateElementParser implements Transformer<Element, State>{
+public class ElementToBAStateTransformer implements Transformer<Element, State>{
 
 	
 	/**
@@ -25,7 +25,7 @@ public class BAStateElementParser implements Transformer<Element, State>{
 	private final BA ba;
 	
 	
-	public BAStateElementParser(BA ba){
+	public ElementToBAStateTransformer(BA ba){
 		Preconditions.checkNotNull(ba, "The ba cannot be null");
 		
 		this.stateFactory=new StateFactory();
@@ -36,15 +36,15 @@ public class BAStateElementParser implements Transformer<Element, State>{
 	public State transform(Element eElement) {
 		Preconditions.checkNotNull(eElement,"The element cannot be null");
 		
-		int id= Integer.parseInt(eElement.getAttribute(Constants.XML_ATTRIBUTE_ID));
+		int id= Integer.parseInt(eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID));
 		
-		State s=stateFactory.create(eElement.getAttribute(Constants.XML_ATTRIBUTE_NAME), id);
+		State s=stateFactory.create(eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME), id);
 		ba.addState(s);
 		
-		if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_INITIAL).isEmpty()){
+		if(!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_INITIAL).isEmpty()){
 			ba.addInitialState(s);
 		}
-		if(!eElement.getAttribute(Constants.XML_ATTRIBUTE_ACCEPTING).isEmpty()){
+		if(!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING).isEmpty()){
 			ba.addAcceptState(s);
 		}
 		return s;

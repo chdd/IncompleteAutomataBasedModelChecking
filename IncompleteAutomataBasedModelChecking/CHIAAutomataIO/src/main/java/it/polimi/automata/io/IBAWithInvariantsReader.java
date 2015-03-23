@@ -1,9 +1,9 @@
 package it.polimi.automata.io;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBAWithInvariants;
-import it.polimi.automata.io.transformer.states.IBAStateElementParser;
-import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
+import it.polimi.automata.io.in.states.ElementToIBAStateTransformer;
+import it.polimi.automata.io.in.transitions.ElementToIBATransitionTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
@@ -103,14 +103,14 @@ public class IBAWithInvariantsReader {
 
 	private void loadStates(Element doc) {
 		NodeList xmlstates = doc
-				.getElementsByTagName(Constants.XML_ELEMENT_STATE);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_STATE);
 
 		for (int stateid = 0; stateid < xmlstates.getLength(); stateid++) {
 
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			State state = new IBAStateElementParser(new StateFactory(), iba).transform(
+			State state = new ElementToIBAStateTransformer(new StateFactory(), iba).transform(
 					eElement);
 			this.mapIdState.put(state.getId(), state);
 		}
@@ -118,12 +118,12 @@ public class IBAWithInvariantsReader {
 
 	private void loadTransitions(Element doc) {
 		NodeList xmltransitions = doc
-				.getElementsByTagName(Constants.XML_TAG_TRANSITION);
+				.getElementsByTagName(AutomataIOConstants.XML_TAG_TRANSITION);
 
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-			new IBATransitionParser(new ModelTransitionFactory(), iba, this.mapIdState).transform(eElement);
+			new ElementToIBATransitionTransformer(new ModelTransitionFactory(), iba, this.mapIdState).transform(eElement);
 		}
 	}
 }

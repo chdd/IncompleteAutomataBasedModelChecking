@@ -2,12 +2,8 @@ package it.polimi;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.ModelChecker;
 import it.polimi.checker.ModelCheckingResults;
-import it.polimi.checker.intersection.IntersectionRule;
 import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 
@@ -22,7 +18,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class CHIA<S extends State, T extends Transition> {
+public class CHIA {
 
 	/**
 	 * is the logger of the ModelChecker class
@@ -32,19 +28,19 @@ public class CHIA<S extends State, T extends Transition> {
 	/**
 	 * is the Buchi Automaton that contains the claim to be verified
 	 */
-	private final BA<S, T> claim;
+	private final BA claim;
 
 	/**
 	 * is the Incomplete Buchi Automaton which contains the model that must be
 	 * considered in the verification procedure
 	 */
-	private final IBA<S, T> model;
+	private final IBA model;
 
 	/**
 	 * Is the model checker in charge of verifying whether the property is
 	 * satisfied, not satisfied or possibly satisfied
 	 */
-	private ModelChecker<S, T> mc;
+	private ModelChecker mc;
 
 	/**
 	 * Contains the model checking results, the verification times the
@@ -60,7 +56,6 @@ public class CHIA<S extends State, T extends Transition> {
 		return mcResults;
 	}
 
-	private final IntersectionRule<S, T> intersectionRule;
 
 	/**
 	 * creates a new CHIA checker
@@ -70,25 +65,20 @@ public class CHIA<S extends State, T extends Transition> {
 	 * @param model
 	 *            is the model of the system to be considered in the
 	 *            verification procedure
-	 * @param stateFactory
-	 *            is the factory which is used in the creation of the states of
-	 *            the intersection automaton
-	 * @param intersectionTransitionFactory
-	 *            is the factory which is used in the creation of the transition
-	 *            of the intersection automaton
+	 * @param results
+	 *            is the object in which the model checking results are stored
 	 * @throws NullPointerException
-	 *             is the claim or the model of the system is null
+	 *             if one of the parameters is null
 	 */
-	public CHIA(BA<S, T> claim, IBA<S, T> model, 
-			IntersectionRule<S, T> intersectionRule, TransitionFactory<S, T> transitionFactory, ModelCheckingResults results) {
+	public CHIA(BA claim, IBA model,  ModelCheckingResults results) {
 
 		Preconditions.checkNotNull(claim, "The claim cannot  be null");
 		Preconditions.checkNotNull(model, "The model cannot  be null");
+		Preconditions.checkNotNull(results, "The model cannot  be null");
 		
 		this.claim = claim;
 		this.model = model;
-		this.intersectionRule = intersectionRule;
-		mcResults = results;
+		this.mcResults = results;
 	}
 
 	/**
@@ -102,7 +92,7 @@ public class CHIA<S extends State, T extends Transition> {
 	public int check() {
 		logger.info("Running CHIA");
 
-		mc = new ModelChecker<S, T>(model, claim, intersectionRule, mcResults);
+		mc = new ModelChecker(model, claim, this.mcResults);
 		mcResults.setResult(mc.check());
 
 		logger.info("CHIA model checking phase ended");
@@ -118,7 +108,7 @@ public class CHIA<S extends State, T extends Transition> {
 	 * @throws IllegalStateException
 	 *             if the property is not possibly satisfied
 	 */
-	public Constraint<S, T, BA<S,T>> getConstraint() {
+	public Constraint getConstraint() {
 
 		logger.info("Computing the constraint");
 
@@ -127,10 +117,10 @@ public class CHIA<S extends State, T extends Transition> {
 				"It is not possible to get the constraint if the property is not possibly satisfied");
 
 
-		ConstraintGenerator<S, T> constraintGenerator = new ConstraintGenerator<S, T>(
+		ConstraintGenerator constraintGenerator = new ConstraintGenerator(
 				mc.getIntersectionBuilder(), mcResults);
 		
-		Constraint<S, T, BA<S,T>> constraint = constraintGenerator.generateConstraint();
+		Constraint constraint = constraintGenerator.generateConstraint();
 				logger.info("Constraint computed");
 
 		return constraint;

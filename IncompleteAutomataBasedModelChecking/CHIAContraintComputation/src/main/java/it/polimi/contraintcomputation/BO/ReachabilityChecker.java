@@ -1,10 +1,8 @@
-package it.polimi.contraintcomputation.subautomatafinder;
+package it.polimi.contraintcomputation.BO;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,28 +19,34 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  *
- * @param <S>
- *            is the type of the states of the automaton
- * @param <T>
- *            is the type of the transitions of the automaton
+ * @param <A>
+ *            is the type of the automaton to be considered
  */
-public class ReachabilityChecker<S extends State, T extends Transition, A extends BA<S, T>> {
+public class ReachabilityChecker<A extends BA> {
 
 	/**
 	 * is the automaton to be considered
 	 */
 	private final A ba;
 
+	/**
+	 * contains the forward reachability between the states of the automaton
+	 */
+	private final Map<State, Set<State>> forwardReachabilty;
+	/**
+	 * contains the backward reachability between the states of the automaton
+	 */
+	private final Map<State, Set<State>> backwardReachabilty;
 
-	private Map<S, Collection<S>> forwardReachabilty;
-	private Map<S, Collection<S>> backwardReachabilty;
-
+	/**
+	 * is true if the reachability relation has been already computed
+	 */
 	private boolean performed;
-	
+
 	/**
 	 * contains the set of the reachable states
 	 */
-	private final Set<S> statesUnderAnalysis;
+	private final Set<State> statesUnderAnalysis;
 
 	/**
 	 * creates a new reachability checker
@@ -50,41 +54,39 @@ public class ReachabilityChecker<S extends State, T extends Transition, A extend
 	 * @param ba
 	 *            is the automaton to be considered
 	 */
-	public ReachabilityChecker(A ba, Set<S> statesUnderAnalysis) {
+	public ReachabilityChecker(A ba, Set<State> statesUnderAnalysis) {
 		Preconditions.checkNotNull(ba,
 				"The automaton to be considered cannot be null");
 		Preconditions.checkNotNull(statesUnderAnalysis,
 				"The automaton to be considered cannot be null");
-		
+
 		this.ba = ba;
-		this.statesUnderAnalysis=statesUnderAnalysis;
-		performed=false;
-		this.forwardReachabilty = new HashMap<S, Collection<S>>();
-		this.backwardReachabilty=new HashMap<S, Collection<S>>();
+		this.statesUnderAnalysis = statesUnderAnalysis;
+		performed = false;
+		this.forwardReachabilty = new HashMap<State, Set<State>>();
+		this.backwardReachabilty = new HashMap<State, Set<State>>();
 
 	}
-
 
 	/**
 	 * returns for each state the set of the reachable states
 	 * 
 	 * @return for each state the set of the reachable states
 	 */
-	public Map<S, Collection<S>> forwardReachabilitycheck() {
-		if(performed){
+	public Map<State, Set<State>> forwardReachabilitycheck() {
+		if (performed) {
 			return this.forwardReachabilty;
 		}
-		this.forwardReachabilty = new HashMap<S, Collection<S>>();
-		for (S s : statesUnderAnalysis) {
+		for (State s : statesUnderAnalysis) {
 			this.forwardReachabilty.put(s, ba.getSuccessors(s));
 			this.forwardReachabilty.get(s).add(s);
 			this.backwardReachabilty.put(s, ba.getPredecessors(s));
 			this.backwardReachabilty.get(s).add(s);
 		}
 
-		for (S k : statesUnderAnalysis) {
-			for (S i : statesUnderAnalysis) {
-				for (S j : statesUnderAnalysis) {
+		for (State k : statesUnderAnalysis) {
+			for (State i : statesUnderAnalysis) {
+				for (State j : statesUnderAnalysis) {
 					if (this.forwardReachabilty.get(i).contains(k)
 							&& this.forwardReachabilty.get(k).contains(j)) {
 						this.forwardReachabilty.get(i).add(j);
@@ -93,15 +95,16 @@ public class ReachabilityChecker<S extends State, T extends Transition, A extend
 				}
 			}
 		}
-		performed=true;
+		performed = true;
 		return this.forwardReachabilty;
 	}
-	public Map<S, Collection<S>> backWardReachabilitycheck() {
-		if(performed){
+
+	public Map<State, Set<State>> backWardReachabilitycheck() {
+		if (performed) {
 			return this.backwardReachabilty;
 		}
 		this.forwardReachabilitycheck();
-		performed=true;
+		performed = true;
 		return this.backwardReachabilty;
 	}
 }

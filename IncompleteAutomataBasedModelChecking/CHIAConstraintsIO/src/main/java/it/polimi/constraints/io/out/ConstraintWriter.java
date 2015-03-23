@@ -1,13 +1,10 @@
 package it.polimi.constraints.io.out;
 
-import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Color;
+import it.polimi.automata.AutomataIOConstants;
+import it.polimi.constraints.Constraint;
+import it.polimi.constraints.SubProperty;
 
 import java.io.File;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,12 +26,8 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  *
- * @param <S>
- *            is the type of the state to be written
- * @param <I>
- *            is the type of the transitions to be written
  */
-public class ConstraintWriter<S extends State, I extends Transition,  A extends BA<S, I>> {
+public class ConstraintWriter {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -45,7 +38,8 @@ public class ConstraintWriter<S extends State, I extends Transition,  A extends 
 	/**
 	 * contains the components to be written
 	 */
-	private Constraint<S, I, A> constraint;
+	private Constraint constraint;
+	
 	/**
 	 * contains the file where the intersection automaton must be written
 	 */
@@ -63,7 +57,7 @@ public class ConstraintWriter<S extends State, I extends Transition,  A extends 
 	 *             if the components or the file is null
 	 * 
 	 */
-	public ConstraintWriter(Constraint<S, I, A> constraint, File f) {
+	public ConstraintWriter(Constraint constraint, File f) {
 		Preconditions.checkNotNull(constraint,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(f,
@@ -84,12 +78,12 @@ public class ConstraintWriter<S extends State, I extends Transition,  A extends 
 
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc
-					.createElement(Constants.XML_ELEMENT_CONSTRAINTS);
+					.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINTS);
 			doc.appendChild(rootElement);
 
-			SubPropertyToElementTransformer<S, I, A> componentTransformer = new SubPropertyToElementTransformer<S, I, A>(
-					doc, constraint);
-			for (SubProperty<S, I, A> component : constraint.getComponents()) {
+			SubPropertyToElementTransformer componentTransformer = new SubPropertyToElementTransformer(
+					doc);
+			for (SubProperty component : constraint.getComponents()) {
 
 				Element componentElement=componentTransformer.transform(component);
 				rootElement.appendChild(componentElement);
@@ -97,15 +91,13 @@ public class ConstraintWriter<S extends State, I extends Transition,  A extends 
 			}
 
 			
-			Element graphPortXMLElement = new PortsGraphToElementTransformer<S, I>(
+			Element graphPortXMLElement = new PortsGraphToElementTransformer(
 					doc).transform(this.constraint.getPortsGraph());
 			rootElement.appendChild(graphPortXMLElement);
 
 			Element colors = doc
-					.createElement(Constants.XML_ELEMENT_PORTS_COLORS);
+					.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_COLORS);
 			rootElement.appendChild(colors);
-
-			this.addPortsColor(doc, colors, constraint);
 
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
@@ -124,13 +116,5 @@ public class ConstraintWriter<S extends State, I extends Transition,  A extends 
 		}
 	}
 
-	private void addPortsColor(Document doc, Element colorElement,
-			Constraint<S, I, A> constraint) {
 
-		PortsColorToElementTransformer<S, I, A> portToElementTrasformer=new PortsColorToElementTransformer<S, I, A>(doc, constraint);
-		for (Entry<Port<S, I>, Color> e : constraint.getPortValue().entrySet()) {
-			Element portElement = portToElementTrasformer.transform(e.getKey());
-			colorElement.appendChild(portElement);
-		}
-	}
 }

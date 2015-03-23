@@ -4,7 +4,7 @@
 package it.polimi;
 
 import static org.junit.Assert.*;
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +32,7 @@ public class ConstantsTest {
 	public void test() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
-		Constructor<Constants> constructor = Constants.class
+		Constructor<AutomataIOConstants> constructor = AutomataIOConstants.class
 				.getDeclaredConstructor();
 		constructor.setAccessible(true);
 		assertTrue(Modifier.isPrivate(constructor.getModifiers()));

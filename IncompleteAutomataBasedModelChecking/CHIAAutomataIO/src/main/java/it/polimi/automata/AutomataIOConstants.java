@@ -1,11 +1,14 @@
 package it.polimi.automata;
 
-public final class Constants {
+public final class AutomataIOConstants {
 	
 
 	public final static String XML_ELEMENT_CONSTRAINTS="constraints";
 	public final static String XML_ELEMENT_PORTS_REACHABILITY="portsReachability";
 	public final static String XML_ELEMENT_PORTS_COLORS="portscolors";
+	public final static String XML_ELEMENT_PROPOSITIONS="propositions";
+	public final static String XML_ELEMENT_PROPOSITION="proposition";
+	public final static String XML_ELEMENT_PROPOSITION_VALUE="value";
 	
 	
 	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
@@ -68,20 +71,20 @@ public final class Constants {
 	public static final String APREGEX="[a-z]+";
 	public static final String NOTAPREGEX=NOT+"[a-z]+";
 	public static final String AP="("+APREGEX+")|("+NOTAPREGEX+")";
-	public static final String CLAIM_PROPOSITIONAL_FORMULA="("+Constants.SIGMA +")|(("+AP+")("+Constants.AND+"("+AP+"))*)";
+	public static final String CLAIM_PROPOSITIONAL_FORMULA="("+AutomataIOConstants.SIGMA +")|(("+AP+")("+AutomataIOConstants.AND+"("+AP+"))*)";
 	public static final String MODELAP=APREGEX;
-	public static final String MODEL_PROPOSITIONS="("+Constants.SIGMA +")|(("+MODELAP+")("+Constants.AND+"("+MODELAP+"))*)";
+	public static final String MODEL_PROPOSITIONS="("+AutomataIOConstants.SIGMA +")|(("+MODELAP+")("+AutomataIOConstants.AND+"("+MODELAP+"))*)";
 	
 	
-	public static final String REGEXAND="\\"+Constants.AND+"";
-	public static final String REGEXNOT="\\"+Constants.NOT+"";
-	public static final String REGEXSIGMA="\\("+Constants.SIGMA+"\\)";
+	public static final String REGEXAND="\\"+AutomataIOConstants.AND+"";
+	public static final String REGEXNOT="\\"+AutomataIOConstants.NOT+"";
+	public static final String REGEXSIGMA="\\("+AutomataIOConstants.SIGMA+"\\)";
 	public static final String WORD="[a-zA-Z]+";
 	// PATTERN
 	// (SIGMA)|((?!)WORD (^(?!)WORD)*)||
-	public static final String LABELPATTERN="^("+Constants.REGEXSIGMA+")|(\\((?"+Constants.REGEXNOT+")"+WORD+"("+Constants.REGEXAND+"(?"+Constants.REGEXNOT+")"+WORD+")*\\))";
+	public static final String LABELPATTERN="^("+AutomataIOConstants.REGEXSIGMA+")|(\\((?"+AutomataIOConstants.REGEXNOT+")"+WORD+"("+AutomataIOConstants.REGEXAND+"(?"+AutomataIOConstants.REGEXNOT+")"+WORD+")*\\))";
 
-	private Constants() {
+	private AutomataIOConstants() {
 		// Utility classes should always be final and have an private constructor
 	}
 

@@ -1,9 +1,10 @@
 package it.polimi.automata.io;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBA;
-import it.polimi.automata.io.transformer.states.IBAStateElementParser;
-import it.polimi.automata.io.transformer.transitions.IBATransitionParser;
+import it.polimi.automata.io.in.propositions.StringToClaimPropositions;
+import it.polimi.automata.io.in.states.ElementToIBAStateTransformer;
+import it.polimi.automata.io.in.transitions.ElementToIBATransitionTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
@@ -11,19 +12,28 @@ import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
@@ -33,12 +43,6 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  * 
- * @param <S>
- *            is the type of the State of the Incomplete Buchi Automaton. It
- *            must extend the interface State
- * @param <T>
- *            is the type of the transitions of the automaton. It must implement
- *            the interface Transition
  */
 public class IBAReader {
 
@@ -54,6 +58,8 @@ public class IBAReader {
 
 	
 	private Map<Integer, State> mapIdState;
+
+	private static final String IBA_XSD_PATH = "IBA.xsd";
 
 
 
@@ -106,7 +112,13 @@ public class IBAReader {
 			dom = db.parse(file);
 
 			Element doc = dom.getDocumentElement();
+			
+			//File xsd = new File(this.getClass().getClassLoader()
+			//		.getResource(IBA_XSD_PATH).getFile());
+			//this.validateAgainstXSD(new FileInputStream(this.file),
+			//		new FileInputStream(xsd));
 
+			this.loadPropositions(doc);
 			this.loadStates(doc);
 			this.loadTransitions(doc);
 
@@ -123,27 +135,52 @@ public class IBAReader {
 
 	private void loadStates(Element doc) {
 		NodeList xmlstates = doc
-				.getElementsByTagName(Constants.XML_ELEMENT_STATE);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_STATE);
 
 		for (int stateid = 0; stateid < xmlstates.getLength(); stateid++) {
 
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			State state = new IBAStateElementParser(new StateFactory(), iba).transform(
+			State state = new ElementToIBAStateTransformer(new StateFactory(), iba).transform(
 					eElement);
 			this.mapIdState.put(state.getId(), state);
+		}
+	}
+	
+	private void loadPropositions(Element doc) {
+		NodeList xmlPropositions = doc
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PROPOSITION);
+
+		StringToClaimPropositions propositionParser = new StringToClaimPropositions();
+		for (int stateid = 0; stateid < xmlPropositions.getLength(); stateid++) {
+			Node xmlstate = xmlPropositions.item(stateid);
+			Element eElement = (Element) xmlstate;
+			Set<IGraphProposition> propositions = propositionParser
+					.computePropositions(eElement
+							.getAttribute(AutomataIOConstants.XML_ELEMENT_PROPOSITION_VALUE));
+			this.iba.addPropositions(propositions);
 		}
 	}
 
 	private void loadTransitions(Element doc) {
 		NodeList xmltransitions = doc
-				.getElementsByTagName(Constants.XML_TAG_TRANSITION);
+				.getElementsByTagName(AutomataIOConstants.XML_TAG_TRANSITION);
 
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-			new IBATransitionParser(new ClaimTransitionFactory(), iba, this.mapIdState).transform(eElement);
+			new ElementToIBATransitionTransformer(new ClaimTransitionFactory(), iba, this.mapIdState).transform(eElement);
 		}
+	}
+	private boolean validateAgainstXSD(InputStream xml, InputStream xsd)
+			throws SAXException, IOException {
+		SchemaFactory factory = SchemaFactory
+				.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = factory.newSchema(new StreamSource(xsd));
+		Validator validator = schema.newValidator();
+		validator.validate(new StreamSource(xml));
+		return true;
+
 	}
 }
