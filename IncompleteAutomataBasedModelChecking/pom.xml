@@ -180,12 +180,12 @@
 		</dependency>
 
 		<!-- is the library used for logging -->
-		<dependency>
+	    <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.10</version>
-		</dependency>
-
+		</dependency> 
+		
 		<!-- slf4j 4j no operations -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

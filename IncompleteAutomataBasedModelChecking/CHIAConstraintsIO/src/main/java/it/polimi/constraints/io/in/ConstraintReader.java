@@ -109,7 +109,7 @@ public class ConstraintReader {
 
 			SubProperty subProperty = new ElementToSubPropertyTransformer()
 					.transform(xmlConstraintElement);
-			constraint.addComponent(subProperty);
+			constraint.addSubProperty(subProperty);
 
 			Element xmlOutComingPorts = (Element) xmlConstraintElement
 					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORTS_OUT)

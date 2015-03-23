@@ -1,4 +1,4 @@
-package it.polimi.contraintcomputation.BO;
+package it.polimi.contraintcomputation.statereachability;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;

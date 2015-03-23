@@ -34,10 +34,6 @@ public class Constraint {
 
 	private DefaultDirectedGraph<Port, DefaultEdge> portsGraph;
 
-	
-
-
-
 	/**
 	 * creates a new empty constraint
 	 */
@@ -45,23 +41,29 @@ public class Constraint {
 		this.subProperties = new HashSet<SubProperty>();
 		this.portsGraph = new DefaultDirectedGraph<Port, DefaultEdge>(
 				DefaultEdge.class);
-		
+
 	}
 
 	/**
 	 * adds the component to the set of sub-properties to be considered in the
 	 * refinement of the transparent states
 	 * 
-	 * @param component
+	 * @param subproperty
 	 *            is the component to be considered in the refinement of a
 	 *            transparent state of the model
 	 * @throws NullPointerException
 	 *             if the component is null
 	 */
-	public void addComponent(SubProperty component) {
-		Preconditions.checkNotNull(component, "The component cannot be null");
+	public void addSubProperty(SubProperty subproperty) {
+		Preconditions.checkNotNull(subproperty, "The component cannot be null");
 
-		this.subProperties.add(component);
+		this.subProperties.add(subproperty);
+		for (Port p : subproperty.getIncomingPorts()) {
+			this.portsGraph.addVertex(p);
+		}
+		for (Port p : subproperty.getOutcomingPorts()) {
+			this.portsGraph.addVertex(p);
+		}
 	}
 
 	/**
@@ -100,8 +102,6 @@ public class Constraint {
 
 		this.portsGraph.addEdge(sourcePort, destinationPort);
 	}
-
-
 
 	public int getTotalStates() {
 		int totalStates = 0;
@@ -163,8 +163,6 @@ public class Constraint {
 		throw new IllegalArgumentException("The state " + transparentState
 				+ " is not contained into the set of constrained states");
 	}
-
-	
 
 	public DefaultDirectedGraph<Port, DefaultEdge> getPortsGraph() {
 		return this.portsGraph;
@@ -232,7 +230,7 @@ public class Constraint {
 	public void union(Constraint other) {
 		Preconditions.checkNotNull(other, "The other component cannot be null");
 		this.subProperties.addAll(other.getComponents());
-		
+
 		// generates the union of the two graphs
 		Graphs.addGraph(this.portsGraph, other.portsGraph);
 	}

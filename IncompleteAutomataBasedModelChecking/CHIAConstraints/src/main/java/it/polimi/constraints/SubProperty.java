@@ -6,6 +6,8 @@ package it.polimi.constraints;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -39,8 +41,6 @@ public class SubProperty {
 	private final Set<Port> incomingPorts;
 	private final Set<Port> outcomingPorts;
 
-	
-	
 	/**
 	 * creates a new sub-property that refers to a specific model state and
 	 * contains the corresponding IBA
@@ -55,8 +55,8 @@ public class SubProperty {
 	 *             is generated when the name of the state or when the state of
 	 *             the model is null
 	 */
-	public SubProperty(State modelState, BA automaton,
-			Set<Port> incomingPorts, Set<Port> outcomingPorts) {
+	public SubProperty(State modelState, BA automaton, Set<Port> incomingPorts,
+			Set<Port> outcomingPorts) {
 		Preconditions.checkNotNull(modelState,
 				"The name of the state cannot be null");
 		Preconditions.checkNotNull(automaton,
@@ -66,8 +66,8 @@ public class SubProperty {
 		counter++;
 		this.modelState = modelState;
 		this.automaton = automaton;
-		this.incomingPorts = incomingPorts;
-		this.outcomingPorts = outcomingPorts;
+		this.incomingPorts = Collections.unmodifiableSet(incomingPorts);
+		this.outcomingPorts = Collections.unmodifiableSet(outcomingPorts);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class SubProperty {
 	public Set<Port> getIncomingPorts() {
 		return incomingPorts;
 	}
-	
+
 	/**
 	 * adds an incoming port to the component
 	 * 
@@ -167,7 +167,7 @@ public class SubProperty {
 	 *             if the destination state is not a state of the component
 	 */
 	public void addIncomingPort(Port port) {
-	
+
 		this.incomingPorts.add(port);
 		port.setColor(Color.YELLOW);
 	}
@@ -189,8 +189,8 @@ public class SubProperty {
 	 * @throws IllegalArgumentException
 	 *             if the source state is not a state of the component
 	 */
-	public void addOutComingPort( Port port) {
-		
+	public void addOutComingPort(Port port) {
+
 		this.outcomingPorts.add(port);
 		port.setColor(Color.YELLOW);
 	}

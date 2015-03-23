@@ -75,6 +75,7 @@ public class IntersectionBuilder {
 	 */
 	private final BA claim;
 	private boolean intersectionComputed = false;
+	
 
 	/**
 	 * crates a new {@link IntersectionBuilder} which is in charge of computing
@@ -104,6 +105,7 @@ public class IntersectionBuilder {
 		this.mapModelStateIntersectionTransitions = new HashMap<Transition, State>();
 		this.intersectionStateClaimStateMap = new HashMap<State, State>();
 		this.visitedStates = new HashSet<Triple<State, State, Integer>>();
+		this.intersectionComputed=false;
 	}
 
 	public Map<State, State> getIntersectionStateModelStateMap() {
@@ -118,16 +120,18 @@ public class IntersectionBuilder {
 	 */
 	public IntersectionBA computeIntersection() {
 
-		this.updateAlphabet();
-		this.claimIntersectionStatesMap = new HashMap<State, Set<State>>();
-		this.modelStatesIntersectionStateMap = new HashMap<State, Set<State>>();
-		this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
-		for (State modelInit : model.getInitialStates()) {
-			for (State claimInit : claim.getInitialStates()) {
-				this.computeIntersection(modelInit, claimInit, 0);
+		if(!intersectionComputed){
+			this.updateAlphabet();
+			this.claimIntersectionStatesMap = new HashMap<State, Set<State>>();
+			this.modelStatesIntersectionStateMap = new HashMap<State, Set<State>>();
+			this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
+			for (State modelInit : model.getInitialStates()) {
+				for (State claimInit : claim.getInitialStates()) {
+					this.computeIntersection(modelInit, claimInit, 0);
+				}
 			}
+			this.intersectionComputed = true;
 		}
-		this.intersectionComputed = true;
 		return this.intersection;
 	}
 

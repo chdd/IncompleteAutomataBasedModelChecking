@@ -6,6 +6,7 @@ import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Color;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
+import it.polimi.contraintcomputation.portreachability.PortReachability;
 import it.polimi.contraintcomputation.subpropertyidentifier.IntersectionCleaner;
 import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
 
@@ -99,6 +100,10 @@ public class ConstraintGenerator {
 		Constraint constraint = subPropertiesIdentifier.getSubAutomata(
 				new HashMap<Port, Color>(), new HashMap<Port, Color>());
 
+		PortReachability reachability=new PortReachability(constraint, intersectionBuilder, subPropertiesIdentifier);
+		reachability.computeReachability();
+		
+		
 		// PORT REACHABILITY
 		/*
 		 * if (mcResults.isPortReachability()) { Set<Port> visitedPorts = new

@@ -82,6 +82,8 @@ public class SubPropertiesIdentifier {
 	 */
 	private final Map<Transition, Port> mapIntersectionTransitionOutcomingPort;
 
+	
+
 	/**
 	 * The out-coming transitions are the transition that leave the current
 	 * refinement level: they can be final transition, i.e., transitions that
@@ -90,6 +92,7 @@ public class SubPropertiesIdentifier {
 	 */
 	private final Map<Transition, Port> mapIntersectionTransitionIncomingPort;
 
+	
 	/**
 	 * is the original model to be considered
 	 */
@@ -320,11 +323,11 @@ public class SubPropertiesIdentifier {
 					new HashSet<Port>(), new HashSet<Port>());
 			this.modelStateComponent.put(modelState, subproperty);
 
-			this.constraint.addComponent(subproperty);
+			this.constraint.addSubProperty(subproperty);
 			// adds the abstracted automaton
 
 			if (this.model.getTransparentStates().contains(modelState)) {
-				this.constraint.addComponent(subproperty);
+				this.constraint.addSubProperty(subproperty);
 
 			}
 			// if the transparent state is reachable
@@ -357,5 +360,18 @@ public class SubPropertiesIdentifier {
 				}
 			}
 		}
+	}
+	/**
+	 * @return the mapIntersectionTransitionOutcomingPort
+	 */
+	public Map<Transition, Port> getMapIntersectionTransitionOutcomingPort() {
+		return mapIntersectionTransitionOutcomingPort;
+	}
+	
+	/**
+	 * @return the mapIntersectionTransitionIncomingPort
+	 */
+	public Map<Transition, Port> getMapIntersectionTransitionIncomingPort() {
+		return mapIntersectionTransitionIncomingPort;
 	}
 }
