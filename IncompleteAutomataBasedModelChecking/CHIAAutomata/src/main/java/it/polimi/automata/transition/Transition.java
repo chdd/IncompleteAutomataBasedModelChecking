@@ -1,6 +1,6 @@
 package it.polimi.automata.transition;
 
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataConstants;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -91,10 +91,10 @@ public class Transition extends DefaultEdge {
 	public String toString() {
 		String ret = "";
 		for (IGraphProposition label : labels) {
-			ret = ret + label.toString() + Constants.AND;
+			ret = ret + label.toString() + AutomataConstants.AND;
 		}
-		if (ret.endsWith(Constants.AND)) {
-			ret = ret.substring(0, ret.length() - Constants.AND.length());
+		if (ret.endsWith(AutomataConstants.AND)) {
+			ret = ret.substring(0, ret.length() - AutomataConstants.AND.length());
 		}
 
 		return "{" + Integer.toString(this.id) + "} " + ret + "";

@@ -12,6 +12,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.BAReader;
 import it.polimi.automata.io.IBAReader;
+import it.polimi.automata.io.WriterBA;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.ConstraintWriter;
@@ -33,6 +34,12 @@ public class Main {
 		CHIA chia=new CHIA(claim, model, results);
 		int result=chia.check();
 		System.out.println("The model checking result is "+result);
+		
+		if(config.intersectionPath!=null){
+			chia.getMcResults()
+			new WriterBA(intersectionAutomaton, f)
+			
+		}
 		
 		if(result==-1){
 			Constraint constraint=chia.getConstraint();

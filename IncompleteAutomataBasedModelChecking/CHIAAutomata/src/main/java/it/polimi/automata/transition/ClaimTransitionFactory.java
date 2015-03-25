@@ -19,10 +19,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  *      interface
  * 
  * @author claudiomenghi
- * @param <L>
- *            is the type of the label of the transitions depending on whether
- *            the automaton represents the model or the claim it is a set of
- *            proposition or a propositional logic formula {@link Label}
  */
 @SuppressWarnings("serial")
 public class ClaimTransitionFactory  extends ClassBasedEdgeFactory<State, Transition> implements

@@ -1,6 +1,6 @@
 package it.polimi.automata;
 
-public final class Constants {
+public final class AutomataConstants {
 	
 
 	public static final String AND = "^";
@@ -12,7 +12,7 @@ public final class Constants {
 	
 	public static final String STUTTERING_CHARACTER="stuttering";
 	
-	private Constants() {
+	private AutomataConstants() {
 		// Utility classes should always be final and have an private constructor
 	}
 

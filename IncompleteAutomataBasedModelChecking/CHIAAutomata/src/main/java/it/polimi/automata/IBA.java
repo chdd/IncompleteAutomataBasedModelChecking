@@ -24,27 +24,13 @@ import com.google.common.base.Preconditions;
 
 /**
  * <p>
- * Represents an Incomplete Buchi Automaton which extends a Buchi automaton with
- * transparent states, implements the {@link IBA} interface <br>
- * <br>
- * 
- * @see BA The state of the automaton must must implement the {@link State}
- *      interface <br>
- *      The transition of the automaton must must implement the
- *      {@link Transition} interface <br>
- *      </p>
+ * The \texttt{IBA} class contains the class which describes an Incomplete Buchi
+ * Automaton. The \texttt{IBA} class extends \texttt{BA} by storing the set of
+ * the \emph{transparent} states. <br>
  * 
  * @author claudiomenghi
- * @param <S>
- *            is the type of the state of the Buchi Automaton. The type of the
- *            states of the automaton must implement the interface {@link State}
- * @param <T>
- *            is the type of the transition of the Buchi Automaton. The typer of
- *            the transitions of the automaton must implement the interface
- *            {@link Transition}
  */
-public class IBA extends
-		BA  {
+public class IBA extends BA {
 
 	/**
 	 * contains the set of the transparent states of the automaton
@@ -93,6 +79,20 @@ public class IBA extends
 	}
 
 	/**
+	 * returns the set of the transparent states of the Incomplete Buchi
+	 * Automaton
+	 * 
+	 * @return the set of the transparent states of the Incomplete Buchi
+	 *         Automaton
+	 */
+	public Set<State> getRegularStates() {
+		Set<State> states = new HashSet<State>();
+		states.addAll(this.getStates());
+		states.removeAll(this.getTransparentStates());
+		return states;
+	}
+
+	/**
 	 * adds the transparent state s to the states of the {@link IBA} and to the
 	 * set of the transparent state<br>
 	 * if the state is already transparent no action is performed <br>
@@ -121,7 +121,8 @@ public class IBA extends
 	@Override
 	public IBA clone() {
 		IBA clone = new IBA(
-				(TransitionFactory<State, Transition>) this.automataGraph.getEdgeFactory());
+				(TransitionFactory<State, Transition>) this.automataGraph
+						.getEdgeFactory());
 		for (IGraphProposition l : this.getPropositions()) {
 			clone.addProposition(l);
 		}
@@ -259,7 +260,8 @@ public class IBA extends
 		}
 		// processing the incoming transitions
 		// for each entry
-		for (Entry<State, Set<Entry<Transition, State>>> entry : inComing.entrySet()) {
+		for (Entry<State, Set<Entry<Transition, State>>> entry : inComing
+				.entrySet()) {
 			// for each transition
 			for (Entry<Transition, State> transitionEntry : entry.getValue()) {
 				newIba.addTransition(entry.getKey(),
@@ -268,7 +270,8 @@ public class IBA extends
 		}
 
 		// processing the out-coming transitions
-		for (Entry<State, Set<Entry<Transition, State>>> entry : outComing.entrySet()) {
+		for (Entry<State, Set<Entry<Transition, State>>> entry : outComing
+				.entrySet()) {
 			// for each transition
 			for (Entry<Transition, State> transitionEntry : entry.getValue()) {
 				newIba.addTransition(entry.getKey(),
@@ -313,16 +316,8 @@ public class IBA extends
 		return ret;
 	}
 
-	public Set<State> getRegularStates() {
-		Set<State> states = new HashSet<State>();
-		states.addAll(this.getStates());
-		states.removeAll(this.getTransparentStates());
-		return states;
-	}
-
-	public static IBA generateRandomBA(
-			double transitionDensity, double acceptanceDensity, int nStates,
-			double transparentDensity) {
+	public static IBA generateRandomBA(double transitionDensity,
+			double acceptanceDensity, int nStates, double transparentDensity) {
 
 		ClaimTransitionFactory transitionFactory = new ClaimTransitionFactory();
 
@@ -330,8 +325,7 @@ public class IBA extends
 		proposition1.add(new GraphProposition("a", false));
 		proposition1.add(new GraphProposition("b", false));
 
-		IBA ba = new IBA(
-				new ClaimTransitionFactory());
+		IBA ba = new IBA(new ClaimTransitionFactory());
 		ba.addProposition(new GraphProposition("a", false));
 		ba.addProposition(new GraphProposition("b", false));
 

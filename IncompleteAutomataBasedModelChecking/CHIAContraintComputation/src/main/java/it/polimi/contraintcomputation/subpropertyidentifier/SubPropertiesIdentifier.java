@@ -1,7 +1,7 @@
 package it.polimi.contraintcomputation.subpropertyidentifier;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.Constants;
+import it.polimi.automata.AutomataConstants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
@@ -136,7 +136,7 @@ public class SubPropertiesIdentifier {
 		this.mapIntersectionTransitionIncomingPort = new HashMap<Transition, Port>();
 		this.stutteringPropositions = new HashSet<IGraphProposition>();
 		this.stutteringPropositions.add(new GraphProposition(
-				Constants.STUTTERING_CHARACTER, false));
+				AutomataConstants.STUTTERING_CHARACTER, false));
 
 		logger.info("SubAutomataIdentifier created");
 		this.modelStateComponent = new HashMap<State, SubProperty>();

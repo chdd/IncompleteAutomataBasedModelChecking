@@ -76,17 +76,15 @@ public class Constraint {
 	}
 
 	/**
-	 * add a reachability entity, i.e., id specifies that the in-coming port of
-	 * the destination component is reachable from the outComing port of the
-	 * source component
+	 * add a reachability entity, specifies that the destination port is
+	 * reachable from the sourcePort
 	 * 
-	 * @param destinationIncomingPort
-	 *            is the in-coming reachable port of the destination Component
-	 * @param sourceOutComingPort
-	 *            is the out-coming port from which the incomingPort of the
-	 *            destination component can be reached.
+	 * @param sourcePort
+	 *            is the source port
+	 * @param destinationPort
+	 *            is the destination
 	 * @throws NullPointerException
-	 *             if one of the parameters is null
+	 *             if one of the ports is null
 	 */
 	public void addReachabilityRelation(Port sourcePort, Port destinationPort) {
 		// validates the parameters
@@ -94,12 +92,12 @@ public class Constraint {
 				"The incomingPort port cannot be null");
 		Preconditions.checkNotNull(destinationPort,
 				"The outcomingPort port cannot be null");
-		Preconditions.checkArgument(this.portsGraph.containsVertex(sourcePort),
-				"The vertex: " + sourcePort + " is not contained in the graph");
-		Preconditions.checkArgument(
-				this.portsGraph.containsVertex(destinationPort), "The vertex: "
-						+ destinationPort + " is not contained in the graph");
-
+		if(!this.portsGraph.containsVertex(sourcePort)){
+			this.portsGraph.addVertex(sourcePort);
+		}
+		if(!this.portsGraph.containsVertex(destinationPort)){
+			this.portsGraph.addVertex(destinationPort);
+		}
 		this.portsGraph.addEdge(sourcePort, destinationPort);
 	}
 

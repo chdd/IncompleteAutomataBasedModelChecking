@@ -40,7 +40,13 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import com.google.common.base.Preconditions;
 
 /**
- * contains the reader which is used to read a Buchi automaton
+ * The BAReader class is used to load a BA from a file. It is based on the
+ * ElementToBATransformer which takes as input an XML element which contains the
+ * XML representation of the BA and convert it into a BA object. The BA uses
+ * three different transformers StringToPropositionTransformer,
+ * ElementToBAStateTransformer and ElementToTransitionTransformer which are used
+ * to transform a String into the corresponding set of propositions, and an XML
+ * element into the corresponding state and transition, respectively.
  * 
  * @author claudiomenghi
  * 
@@ -111,11 +117,11 @@ public class BAReader {
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		//TODO add the validation
-		//File xsd = new File(this.getClass().getClassLoader()
-		//		.getResource(BA_XSD_PATH).getFile());
-		//this.validateAgainstXSD(new FileInputStream(this.file),
-		//		new FileInputStream(xsd));
+		// TODO add the validation
+		// File xsd = new File(this.getClass().getClassLoader()
+		// .getResource(BA_XSD_PATH).getFile());
+		// this.validateAgainstXSD(new FileInputStream(this.file),
+		// new FileInputStream(xsd));
 
 		// use the factory to take an instance of the document builder
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -156,7 +162,8 @@ public class BAReader {
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			State s = new ElementToBAStateTransformer(this.ba).transform(eElement);
+			State s = new ElementToBAStateTransformer(this.ba)
+					.transform(eElement);
 			this.mapIdState.put(s.getId(), s);
 
 		}
@@ -169,7 +176,8 @@ public class BAReader {
 		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
 			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
-			new ElementToBATransitionTransformer(ba, mapIdState).transform(eElement);
+			new ElementToBATransitionTransformer(ba, mapIdState)
+					.transform(eElement);
 
 		}
 	}

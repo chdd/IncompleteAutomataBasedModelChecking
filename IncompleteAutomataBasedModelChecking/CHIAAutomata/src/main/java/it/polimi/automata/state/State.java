@@ -1,16 +1,16 @@
 package it.polimi.automata.state;
 
-
 import com.google.common.base.Preconditions;
 
 /**
- * <p>Represents a state of an automaton. <br>
- * A state is identified by an id and has a name</p>
+ * <p>
+ * Represents a state of an automaton. <br>
+ * A state is identified by an id and has a name
+ * </p>
  * 
  * @author claudiomenghi
- * @see State
  */
-public class State{
+public class State {
 
 	/**
 	 * contains the id of the state
@@ -44,7 +44,6 @@ public class State{
 	 *            contains the name of the state
 	 * @param id
 	 *            contains the id of the state
-	 * @see State#StateImpl(int)
 	 * @throws IllegalArgumentException
 	 *             if the value of the id is less than 0
 	 * @throws NullPointerException
@@ -54,25 +53,30 @@ public class State{
 		Preconditions
 				.checkNotNull(name, "The name of the state cannot be null");
 		Preconditions.checkArgument(id >= 0, "The id cannot be < 0");
-		this.id=id;
+		this.id = id;
 		this.name = name;
 	}
 
 	/**
-	 * <p>returns the <br>id</br> of the state<br>
+	 * <p>
+	 * returns the <br>
+	 * id</br> of the state<br>
 	 * The id uniquely identifies the state.
 	 * </p>
 	 * 
-	 * @return the <br>id</br> of the state.
+	 * @return the <br>
+	 *         id</br> of the state.
 	 */
 	public int getId() {
 		return this.id;
 	}
 
 	/**
-	 * returns the <br>name</br> of the state
+	 * returns the <br>
+	 * name</br> of the state
 	 * 
-	 * @return the <br>name</br> of the state
+	 * @return the <br>
+	 *         name</br> of the state
 	 */
 	public String getName() {
 		return name;
@@ -83,11 +87,12 @@ public class State{
 	 */
 	@Override
 	public String toString() {
-		return  id + ": " + name;
+		return id + ": " + name;
 	}
 
 	/**
 	 * returns the hashCode of the state
+	 * 
 	 * @return the hashCode of the state
 	 */
 	@Override
@@ -100,7 +105,9 @@ public class State{
 
 	/**
 	 * returns true if the current state is equal to the other state
-	 * @param otherState is the state to which the current state must be compare with
+	 * 
+	 * @param otherState
+	 *            is the state to which the current state must be compare with
 	 * @return true if the current state is equal to the other state
 	 */
 	@Override

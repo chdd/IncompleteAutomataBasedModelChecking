@@ -66,8 +66,8 @@ public class SubProperty {
 		counter++;
 		this.modelState = modelState;
 		this.automaton = automaton;
-		this.incomingPorts = Collections.unmodifiableSet(incomingPorts);
-		this.outcomingPorts = Collections.unmodifiableSet(outcomingPorts);
+		this.incomingPorts = incomingPorts;
+		this.outcomingPorts = outcomingPorts;
 	}
 
 	/**

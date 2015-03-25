@@ -34,6 +34,7 @@ public class IntersectionBuilder {
 	private IntersectionBA intersection;
 
 	
+	
 	private final Set<Triple<State, State, Integer>> visitedStates;
 
 	/**

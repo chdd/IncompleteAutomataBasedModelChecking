@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.commons.lang3.Validate;
 import org.jgrapht.Graphs;
 import org.jgrapht.experimental.RandomGraphHelper;
 import org.jgrapht.graph.DirectedPseudograph;
@@ -27,7 +26,17 @@ import com.google.common.base.Preconditions;
 
 /**
  * <p>
- * Represents a Buchi Automaton <br>
+ * Represents a Buchi Automaton. The BA class contains the description of a
+ * Buchi Automaton. The BA class is based on the DirectedPseudograph class of
+ * the JGrapT library. The DirectedPseudograph allows to create a non-simple
+ * directed graph in which both graph loops and multiple edges are permitted.
+ * The BA class maintains the set of initial states, the set of accepting
+ * states, and the alphabet of the Buchi Automaton. The constructor of the BA
+ * requires to specify the transition factory to be used, depending on whether
+ * the BA is used to represent the model or the claim to be checked. The BA
+ * class provides methods to access the elements of the BA, such as the one that
+ * allow to get the successors of a state (getSuccessors()) to obtain the
+ * initial states (getInitialStates()). <br>
  * </p>
  * 
  * @author claudiomenghi
@@ -52,7 +61,7 @@ public class BA {
 	/**
 	 * contains the set of the alphabet of the Buchi automaton
 	 */
-	private Set<IGraphProposition> alphabet;
+	private Set<IGraphProposition> propositions;
 
 	/**
 	 * contains the graph on which the Buchi automaton is based
@@ -67,13 +76,14 @@ public class BA {
 	 *            Buchi automaton
 	 */
 	public BA(TransitionFactory<State, Transition> transitionFactory) {
-		Validate.notNull(transitionFactory,
+		Preconditions.checkNotNull(transitionFactory,
 				"The transition factory cannot be null");
 
-		this.alphabet = new HashSet<IGraphProposition>();
+		this.propositions = new HashSet<IGraphProposition>();
 		this.acceptStates = new HashSet<State>();
 		this.initialStates = new HashSet<State>();
-		this.automataGraph = new DirectedPseudograph<State, Transition>(transitionFactory);
+		this.automataGraph = new DirectedPseudograph<State, Transition>(
+				transitionFactory);
 	}
 
 	/**
@@ -91,8 +101,7 @@ public class BA {
 	 * @return the set of the states of the Buchi automaton
 	 */
 	public Set<State> getStates() {
-		return this.automataGraph
-				.vertexSet();
+		return this.automataGraph.vertexSet();
 	}
 
 	/**
@@ -105,12 +114,12 @@ public class BA {
 	}
 
 	/**
-	 * returns the alphabet of the Buchi automaton
+	 * returns the propositions of the Buchi automaton
 	 * 
-	 * @return the alphabet of the Buchi automaton
+	 * @return the propositions of the Buchi automaton
 	 */
 	public Set<IGraphProposition> getPropositions() {
-		return alphabet;
+		return Collections.unmodifiableSet(propositions);
 	}
 
 	/**
@@ -119,10 +128,8 @@ public class BA {
 	 * @return the set of the transitions of the Buchi automaton
 	 */
 	public Set<Transition> getTransitions() {
-		return this.automataGraph
-				.edgeSet();
+		return this.automataGraph.edgeSet();
 	}
-
 
 	/**
 	 * return the set of transitions that exits the state
@@ -151,10 +158,9 @@ public class BA {
 			return Collections.unmodifiableSet(new HashSet<Transition>());
 		}
 		if (this.automataGraph.outgoingEdgesOf(state) == null) {
-			return new HashSet<Transition>();
+			return Collections.unmodifiableSet(new HashSet<Transition>());
 		}
-		return this.automataGraph
-				.outgoingEdgesOf(state);
+		return this.automataGraph.outgoingEdgesOf(state);
 	}
 
 	/**
@@ -181,10 +187,9 @@ public class BA {
 								+ " is not contained into the set of the states of the automaton");
 
 		if (this.automataGraph.incomingEdgesOf(state) == null) {
-			return new HashSet<Transition>();
+			return Collections.unmodifiableSet(new HashSet<Transition>());
 		}
-		return this.automataGraph
-				.incomingEdgesOf(state);
+		return this.automataGraph.incomingEdgesOf(state);
 	}
 
 	/**
@@ -204,8 +209,11 @@ public class BA {
 		Preconditions.checkNotNull(transition,
 				"The transition t cannot be null");
 		Preconditions
-				.checkArgument(this.getTransitions().contains(transition),
-						"The transition "+transition+" is not contained into the set of the transition of the BA");
+				.checkArgument(
+						this.getTransitions().contains(transition),
+						"The transition "
+								+ transition
+								+ " is not contained into the set of the transition of the BA");
 
 		return this.automataGraph.getEdgeTarget(transition);
 	}
@@ -237,26 +245,41 @@ public class BA {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * returns the successors of the s
+	 * 
+	 * @throws NullPointerException
+	 *             if the state s is null
+	 * @throws IllegalArgumentException
+	 *             if the state s is not contained into the set of the states of
+	 *             the automaton
+	 * @return the successors of the state s
 	 */
 	public Set<State> getSuccessors(State s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
-		Preconditions.checkArgument(this.getStates().contains(s),
-				"The state "+s+" is not contained into the states of the automaton");
+		Preconditions.checkArgument(this.getStates().contains(s), "The state "
+				+ s + " is not contained into the states of the automaton");
 
-		
-		return new HashSet<State>(Graphs.successorListOf(this.automataGraph, s));
+		return Collections.unmodifiableSet(new HashSet<State>(Graphs
+				.successorListOf(this.automataGraph, s)));
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * returns the predecessors of a the state s
+	 * 
+	 * @throws NullPointerException
+	 *             if the state s is null
+	 * @throws IllegalArgumentException
+	 *             if the state s is not contained into the set of the states of
+	 *             the automaton
+	 * @return the predecessors of the state s
 	 */
 	public Set<State> getPredecessors(State s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
 		Preconditions.checkArgument(this.getStates().contains(s),
 				"The state is not contained into the states of the automaton");
 
-		return new HashSet<State>(Graphs.predecessorListOf(this.automataGraph, s));
+		return Collections.unmodifiableSet(new HashSet<State>(Graphs
+				.predecessorListOf(this.automataGraph, s)));
 	}
 
 	/**
@@ -270,7 +293,8 @@ public class BA {
 	 *             if the state is null
 	 */
 	public void addInitialState(State state) {
-		Preconditions.checkNotNull(state, "The state s to be added cannot be null");
+		Preconditions.checkNotNull(state,
+				"The state s to be added cannot be null");
 		this.initialStates.add(state);
 		if (!this.getStates().contains(state)) {
 			this.addState(state);
@@ -313,7 +337,6 @@ public class BA {
 		}
 
 	}
-
 
 	/**
 	 * adds the accepting states to the Buchi automaton. If a state is not
@@ -380,36 +403,41 @@ public class BA {
 	}
 
 	/**
-	 * adds the character to the characters of the Buchi automaton. If a
-	 * character is already contained in the set of characters of the Buchi
+	 * adds the propositions to the proposition of the Buchi automaton. If a
+	 * proposition is already contained in the set of characters of the Buchi
 	 * automaton no actions are performed
 	 * 
-	 * @param character
+	 * @param proposition
 	 *            the character to be added to the Buchi automaton
 	 * @throws NullPointerException
 	 *             is generated if the character to be added is null
+	 * @throws IllegalArgumentException
+	 *             if the proposition is negated
 	 */
-	public void addProposition(IGraphProposition character) {
-		Preconditions.checkNotNull(character,
+	public void addProposition(IGraphProposition proposition) {
+		Preconditions.checkNotNull(proposition,
 				"The set of the proposition cannot be null");
-		this.alphabet.add(character);
+		Preconditions.checkArgument(!proposition.isNegated(),
+				"The proposition to be added to the BA cannot be negated");
+
+		this.propositions.add(proposition);
 	}
 
 	/**
-	 * adds the characters to the characters of the Buchi automaton. If a
-	 * character is already contained in the set of characters of the Buchi
+	 * adds the propositions to the propositions of the Buchi automaton. If a
+	 * proposition is already contained in the set of characters of the Buchi
 	 * automaton no actions are performed
 	 * 
-	 * @param characters
+	 * @param propositions
 	 *            the set of the characters to be added to the Buchi automaton
 	 * @throws NullPointerException
 	 *             if the set of the characters or any character inside the set
 	 *             is null
 	 */
-	public void addPropositions(Set<IGraphProposition> characters) {
-		Preconditions.checkNotNull(characters,
+	public void addPropositions(Set<IGraphProposition> propositions) {
+		Preconditions.checkNotNull(propositions,
 				"The set of the characters cannot be null");
-		for (IGraphProposition l : characters) {
+		for (IGraphProposition l : propositions) {
 			this.addProposition(l);
 		}
 	}
@@ -438,7 +466,8 @@ public class BA {
 	 *             a transition that connect source to the destination is
 	 *             already present
 	 */
-	public void addTransition(State source, State destination, Transition transition) {
+	public void addTransition(State source, State destination,
+			Transition transition) {
 
 		Preconditions.checkNotNull(source, "The source state cannot be null");
 		Preconditions.checkNotNull(destination,
@@ -446,7 +475,8 @@ public class BA {
 		Preconditions.checkNotNull(transition, "The transition cannot be null");
 		Preconditions
 				.checkArgument(
-						this.alphabet.containsAll(transition.getPropositions()),
+						this.propositions.containsAll(transition
+								.getPropositions()),
 						"Some of the propositions "
 								+ transition.getPropositions()
 								+ " of the transition are not contained into the alphabet of the automaton");
@@ -458,7 +488,6 @@ public class BA {
 						this.getStates().contains(destination),
 						"The destination state is not contained into the set of the states of the automaton");
 
-	
 		logger.debug("Transitions: " + transition.toString());
 		logger.debug("Adding the transition: " + transition.getId() + " from "
 				+ source.toString() + " to " + destination.toString());
@@ -534,7 +563,7 @@ public class BA {
 
 		this.automataGraph.removeEdge(transition);
 	}
-	
+
 	/**
 	 * removes the specified state from the set of the accepting states of the
 	 * Buchi automaton the method does not remove the states from the states of
@@ -594,7 +623,7 @@ public class BA {
 	public String toString() {
 		String ret = "";
 
-		ret = "ALPHABET: " + this.alphabet + "\n";
+		ret = "ALPHABET: " + this.propositions + "\n";
 		ret = ret + "STATES: " + this.automataGraph.vertexSet() + "\n";
 		ret = ret + "INITIAL STATES: " + this.initialStates + "\n";
 		ret = ret + "ACCEPTING STATES: " + this.acceptStates + "\n";
@@ -617,7 +646,9 @@ public class BA {
 	 * @return a copy of the automaton
 	 */
 	public Object clone() {
-		BA ret = new BA((TransitionFactory<State, Transition>) this.automataGraph.getEdgeFactory());
+		BA ret = new BA(
+				(TransitionFactory<State, Transition>) this.automataGraph
+						.getEdgeFactory());
 		// coping the states
 		ret.addStates(this.getStates());
 		// coping the initial states
@@ -631,7 +662,6 @@ public class BA {
 		}
 		return ret;
 	}
-
 
 	/**
 	 * returns the transition between the source and the destination state. if
@@ -693,12 +723,8 @@ public class BA {
 		Preconditions
 				.checkArgument(this.automataGraph.containsVertex(destination),
 						"The destination state must be contained into the set of the states of the BA");
-		
-		return this.automataGraph.containsEdge(source, destination);
-	}
 
-	public DirectedPseudograph<State, Transition> getGraph() {
-		return this.automataGraph;
+		return this.automataGraph.containsEdge(source, destination);
 	}
 
 	/**
@@ -707,54 +733,63 @@ public class BA {
 	 * alphabet
 	 */
 	public void addStuttering() {
-		for(State acceptingState: this.getAcceptStates()){
-			Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
-			propositions.add(new GraphProposition(Constants.STUTTERING_CHARACTER, false));
+		for (State acceptingState : this.getAcceptStates()) {
+			Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
+			propositions.add(new GraphProposition(
+					AutomataConstants.STUTTERING_CHARACTER, false));
 			this.addPropositions(propositions);
-			Transition stutteringTransition=((TransitionFactory<State, Transition>) this.automataGraph.getEdgeFactory()).create(propositions);
-			this.addTransition(acceptingState, acceptingState, stutteringTransition);
+			Transition stutteringTransition = ((TransitionFactory<State, Transition>) this.automataGraph
+					.getEdgeFactory()).create(propositions);
+			this.addTransition(acceptingState, acceptingState,
+					stutteringTransition);
 		}
 	}
 
 	public TransitionFactory<State, Transition> getTransitionFactory() {
-		return (TransitionFactory<State, Transition>) this.getGraph().getEdgeFactory();
+		return (TransitionFactory<State, Transition>) this.automataGraph
+				.getEdgeFactory();
 	}
-	
-	public static BA generateRandomBA(double transitionDensity, double acceptanceDensity, int nStates){
-		
-		ClaimTransitionFactory transitionFactory=new ClaimTransitionFactory();
-		List<IGraphProposition> proposition1=new ArrayList<IGraphProposition>();
+
+	/**
+	 * is used to generate a random {@link BA}
+	 * 
+	 * @param transitionDensity
+	 * @param acceptanceDensity
+	 * @param nStates
+	 * @return
+	 */
+	public static BA generateRandomBA(double transitionDensity,
+			double acceptanceDensity, int nStates) {
+
+		ClaimTransitionFactory transitionFactory = new ClaimTransitionFactory();
+		List<IGraphProposition> proposition1 = new ArrayList<IGraphProposition>();
 		proposition1.add(new GraphProposition("a", false));
 		proposition1.add(new GraphProposition("b", false));
-		
-		BA ba=new BA(transitionFactory);
+
+		BA ba = new BA(transitionFactory);
 		ba.addProposition(new GraphProposition("a", false));
 		ba.addProposition(new GraphProposition("b", false));
-		
-		
-		int numTransition=(int) Math.round(nStates*transitionDensity);
-		int numAcceptingStates=(int) Math.round(nStates*acceptanceDensity);
-		
-		RandomGraphHelper.addVertices(
-				ba.automataGraph,
-				new StateFactory(),
-				nStates);
-		
-		List<State> states=new ArrayList<State>(ba.getStates());
-		
-		Random randSingleton = new Random();
-		 for (int i = 0; i < numTransition; ++i) {
-			 ba.addTransition(states.get(randSingleton.nextInt(
-					 nStates)), states.get(randSingleton.nextInt(
-							 nStates)), transitionFactory.create());
-		 }
 
-		
-		int i=0;
-		ArrayList<State> baStates=new ArrayList<State>(ba.getStates());
+		int numTransition = (int) Math.round(nStates * transitionDensity);
+		int numAcceptingStates = (int) Math.round(nStates * acceptanceDensity);
+
+		RandomGraphHelper.addVertices(ba.automataGraph, new StateFactory(),
+				nStates);
+
+		List<State> states = new ArrayList<State>(ba.getStates());
+
+		Random randSingleton = new Random();
+		for (int i = 0; i < numTransition; ++i) {
+			ba.addTransition(states.get(randSingleton.nextInt(nStates)),
+					states.get(randSingleton.nextInt(nStates)),
+					transitionFactory.create());
+		}
+
+		int i = 0;
+		ArrayList<State> baStates = new ArrayList<State>(ba.getStates());
 		Collections.shuffle(baStates);
-		for(State s: baStates){
-			if(i<numAcceptingStates){
+		for (State s : baStates) {
+			if (i < numAcceptingStates) {
 				ba.addAcceptState(s);
 				i++;
 			}
@@ -762,9 +797,11 @@ public class BA {
 
 		Collections.shuffle(baStates);
 		ba.addInitialState(baStates.get(0));
-		ba.addTransition(baStates.get(0), baStates.get(1), transitionFactory.create());
-		ba.addTransition(baStates.get(0), baStates.get(2), transitionFactory.create());
-		
+		ba.addTransition(baStates.get(0), baStates.get(1),
+				transitionFactory.create());
+		ba.addTransition(baStates.get(0), baStates.get(2),
+				transitionFactory.create());
+
 		return ba;
 	}
 }
