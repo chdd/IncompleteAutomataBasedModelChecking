@@ -1,0 +1,394 @@
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+@prefix atxa-jdt: <http://www.architexa.com/rdf/jdt#> .
+
+<http://www.architexa.com/rdf/rse-eclipse#CHIAAutomataIO.atxa> a atxa-core:reloFile .
+
+atxa:DetailNode atxa-core:detailLevel "2" .
+
+atxa-core:docRoot atxa-core:browseModel "com.architexa.diagrams.relo.jdt/com.architexa.diagrams.relo.jdt.browse.ClassStrucBrowseModel" ;
+	atxa-core:contains _:node19h8pl4u8x1 .
+
+_:node19h8pl4u8x1 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in> ;
+	atxa-core:posX "265" ;
+	atxa-core:posY "19" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$IBAReader> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$BAReader> .
+
+_:node19h8pl4u8x1 atxa-core:contains _:node19h8o77l7x13713 .
+
+_:node19h8o77l7x13713 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$IBAReader> ;
+	atxa-core:posX "318" ;
+	atxa-core:posY "192" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$IBAReader> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$IBAReader.read()> .
+
+_:node19h8o77l7x13717 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13713 ;
+	rdf:object _:node19h8o77l7x13709 .
+
+_:node19h8o77l7x13713 atxa-core:contains _:node19h8o77l7x13714 .
+
+_:node19h8o77l7x13714 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$IBAReader.read()> ;
+	atxa-core:posX "319" ;
+	atxa-core:posY "210" .
+
+_:node19h8pl4u8x1 atxa-core:contains _:node19h8o77l7x13709 .
+
+_:node19h8o77l7x13709 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer> ;
+	atxa-core:posX "277" ;
+	atxa-core:posY "247" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer.transform(Object,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer.loadTransitions(Element,IBA,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer.loadStates(Element,IBA,)> .
+
+_:node19h8o77l7x13719 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13709 ;
+	rdf:object _:node19h8pl4u8x4 .
+
+_:node19h8o77l7x13720 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13709 ;
+	rdf:object _:node19h8pl4u8x9 .
+
+_:node19h8o77l7x13709 atxa-core:contains _:node19h8o77l7x13710 .
+
+_:node19h8o77l7x13710 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer.transform(Object,)> ;
+	atxa-core:posX "278" ;
+	atxa-core:posY "265" .
+
+_:node19h8o77l7x13709 atxa-core:contains _:node19h8o77l7x13711 .
+
+_:node19h8o77l7x13711 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer.loadTransitions(Element,IBA,)> ;
+	atxa-core:posX "278" ;
+	atxa-core:posY "281" .
+
+_:node19h8o77l7x13709 atxa-core:contains _:node19h8o77l7x13712 .
+
+_:node19h8o77l7x13712 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToIBATransformer.loadStates(Element,IBA,)> ;
+	atxa-core:posX "278" ;
+	atxa-core:posY "297" .
+
+_:node19h8pl4u8x1 atxa-core:contains _:node19h8pl4u8x16 .
+
+_:node19h8pl4u8x16 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer> ;
+	atxa-core:posX "271" ;
+	atxa-core:posY "44" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer.loadStates(Element,BA,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer.loadTransitions(Element,BA,)> .
+
+_:node19h8pl4u8x17 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8pl4u8x16 ;
+	rdf:object _:node19h8pl4u8x18 .
+
+_:node19h8pl4u8x19 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8pl4u8x16 ;
+	rdf:object _:node19h8pl4u8x20 .
+
+_:node19h8pl4u8x16 atxa-core:contains _:node19h8pl4u8x21 .
+
+_:node19h8pl4u8x21 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer.loadStates(Element,BA,)> ;
+	atxa-core:posX "272" ;
+	atxa-core:posY "62" .
+
+_:node19h8pl4u8x16 atxa-core:contains _:node19h8pl4u8x22 .
+
+_:node19h8pl4u8x22 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$ElementToBATransformer.loadTransitions(Element,BA,)> ;
+	atxa-core:posX "272" ;
+	atxa-core:posY "78" .
+
+_:node19h8pl4u8x1 atxa-core:contains _:node19h8o77l7x13715 .
+
+_:node19h8o77l7x13715 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$BAReader> ;
+	atxa-core:posX "312" ;
+	atxa-core:posY "124" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$BAReader> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$BAReader.read()> .
+
+_:node19h8o77l7x13718 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13715 ;
+	rdf:object _:node19h8pl4u8x16 .
+
+_:node19h8o77l7x13715 atxa-core:contains _:node19h8o77l7x13716 .
+
+_:node19h8o77l7x13716 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in$BAReader.read()> ;
+	atxa-core:posX "313" ;
+	atxa-core:posY "142" .
+
+atxa-core:docRoot atxa-core:contains _:node19h8pl4u8x23 .
+
+_:node19h8pl4u8x23 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions> ;
+	atxa-core:posX "477" ;
+	atxa-core:posY "105" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToModelPropositions> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToClaimPropositions> .
+
+_:node19h8pl4u8x23 atxa-core:contains _:node19h8pl4u8x26 .
+
+_:node19h8pl4u8x26 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToModelPropositions> ;
+	atxa-core:posX "483" ;
+	atxa-core:posY "199" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToModelPropositions> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToModelPropositions.transform(Object,)> .
+
+_:node19h8pl4u8x26 atxa-core:contains _:node19h8pl4u8x27 .
+
+_:node19h8pl4u8x27 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToModelPropositions.transform(Object,)> ;
+	atxa-core:posX "484" ;
+	atxa-core:posY "217" .
+
+_:node19h8pl4u8x23 atxa-core:contains _:node19h8pl4u8x24 .
+
+_:node19h8pl4u8x24 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToClaimPropositions> ;
+	atxa-core:posX "487" ;
+	atxa-core:posY "130" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToClaimPropositions> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToClaimPropositions.transform(String,)> .
+
+_:node19h8pl4u8x24 atxa-core:contains _:node19h8pl4u8x25 .
+
+_:node19h8pl4u8x25 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.propositions$StringToClaimPropositions.transform(String,)> ;
+	atxa-core:posX "488" ;
+	atxa-core:posY "148" .
+
+atxa-core:docRoot atxa-core:contains _:node19h8pl4u8x28 .
+
+_:node19h8pl4u8x28 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states> ;
+	atxa-core:posX "22" ;
+	atxa-core:posY "22" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToIBAStateTransformer> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToBAStateTransformer> .
+
+_:node19h8pl4u8x28 atxa-core:contains _:node19h8pl4u8x9 .
+
+_:node19h8pl4u8x9 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToIBAStateTransformer> ;
+	atxa-core:posX "28" ;
+	atxa-core:posY "268" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToIBAStateTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToIBAStateTransformer.transform(Element,)> .
+
+_:node19h8pl4u8x9 atxa-core:contains _:node19h8pl4u8x29 .
+
+_:node19h8pl4u8x29 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToIBAStateTransformer.transform(Element,)> ;
+	atxa-core:posX "29" ;
+	atxa-core:posY "286" .
+
+_:node19h8pl4u8x28 atxa-core:contains _:node19h8pl4u8x20 .
+
+_:node19h8pl4u8x20 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToBAStateTransformer> ;
+	atxa-core:posX "29" ;
+	atxa-core:posY "47" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToBAStateTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToBAStateTransformer.transform(Element,)> .
+
+_:node19h8pl4u8x20 atxa-core:contains _:node19h8pl4u8x30 .
+
+_:node19h8pl4u8x30 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.states$ElementToBAStateTransformer.transform(Element,)> ;
+	atxa-core:posX "30" ;
+	atxa-core:posY "65" .
+
+atxa-core:docRoot atxa-core:contains _:node19h8pl4u8x31 .
+
+_:node19h8pl4u8x31 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions> ;
+	atxa-core:posX "475" ;
+	atxa-core:posY "28" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToBATransitionTransformer> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToIBATransitionTransformer> .
+
+_:node19h8pl4u8x31 atxa-core:contains _:node19h8pl4u8x18 .
+
+_:node19h8pl4u8x18 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToBATransitionTransformer> ;
+	atxa-core:posX "481" ;
+	atxa-core:posY "53" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToBATransitionTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToBATransitionTransformer.transform(Element,)> .
+
+_:node19h8pl4u8x18 atxa-core:contains _:node19h8pl4u8x34 .
+
+_:node19h8pl4u8x34 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToBATransitionTransformer.transform(Element,)> ;
+	atxa-core:posX "482" ;
+	atxa-core:posY "71" .
+
+_:node19h8pl4u8x35 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8pl4u8x34 ;
+	rdf:object _:node19h8pl4u8x24 .
+
+_:node19h8pl4u8x31 atxa-core:contains _:node19h8pl4u8x4 .
+
+_:node19h8pl4u8x4 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToIBATransitionTransformer> ;
+	atxa-core:posX "494" ;
+	atxa-core:posY "266" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToIBATransitionTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToIBATransitionTransformer.transform(Element,)> .
+
+_:node19h8pl4u8x4 atxa-core:contains _:node19h8pl4u8x32 .
+
+_:node19h8pl4u8x32 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.in.transitions$ElementToIBATransitionTransformer.transform(Element,)> ;
+	atxa-core:posX "495" ;
+	atxa-core:posY "284" .
+
+_:node19h8pl4u8x33 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8pl4u8x32 ;
+	rdf:object _:node19h8pl4u8x26 .
+
+atxa-core:docRoot atxa-core:contains _:node19h8o77l7x13736 .
+
+_:node19h8o77l7x13736 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out> ;
+	atxa-core:posX "265" ;
+	atxa-core:posY "350" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out$IntersectionWriter> .
+
+_:node19h8o77l7x13736 atxa-core:contains _:node19h8o77l7x13737 .
+
+_:node19h8o77l7x13737 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out$IntersectionWriter> ;
+	atxa-core:posX "271" ;
+	atxa-core:posY "375" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out$IntersectionWriter> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out$IntersectionWriter.write()> .
+
+_:node19h8o77l7x13733 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13737 ;
+	rdf:object _:node19h8o77l7x13738 .
+
+_:node19h8o77l7x13735 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13737 ;
+	rdf:object _:node19h8o77l7x13739 .
+
+_:node19h8o77l7x13737 atxa-core:contains _:node19h8o77l7x13740 .
+
+_:node19h8o77l7x13740 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out$IntersectionWriter.write()> ;
+	atxa-core:posX "272" ;
+	atxa-core:posY "393" .
+
+atxa-core:docRoot atxa-core:contains _:node19h8o77l7x13741 .
+
+_:node19h8o77l7x13741 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states> ;
+	atxa-core:posX "33" ;
+	atxa-core:posY "346" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states$StateToElementTransformer> .
+
+_:node19h8o77l7x13741 atxa-core:contains _:node19h8o77l7x13738 .
+
+_:node19h8o77l7x13738 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states$StateToElementTransformer> ;
+	atxa-core:posX "39" ;
+	atxa-core:posY "371" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states$StateToElementTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states$StateToElementTransformer.transform(State,)> .
+
+_:node19h8o77l7x13738 atxa-core:contains _:node19h8o77l7x13742 .
+
+_:node19h8o77l7x13742 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.states$StateToElementTransformer.transform(State,)> ;
+	atxa-core:posX "40" ;
+	atxa-core:posY "389" .
+
+atxa-core:docRoot atxa-core:contains _:node19h8o77l7x13743 .
+
+_:node19h8o77l7x13743 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions> ;
+	atxa-core:posX "454" ;
+	atxa-core:posY "428" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions$IGraphPropositionsToStringTransformer> .
+
+_:node19h8o77l7x13743 atxa-core:contains _:node19h8o77l7x13744 .
+
+_:node19h8o77l7x13744 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions$IGraphPropositionsToStringTransformer> ;
+	atxa-core:posX "460" ;
+	atxa-core:posY "453" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions$IGraphPropositionsToStringTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions$IGraphPropositionsToStringTransformer.transform(Object,)> .
+
+_:node19h8o77l7x13744 atxa-core:contains _:node19h8o77l7x13745 .
+
+_:node19h8o77l7x13745 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.propositions$IGraphPropositionsToStringTransformer.transform(Object,)> ;
+	atxa-core:posX "461" ;
+	atxa-core:posY "471" .
+
+atxa-core:docRoot atxa-core:contains _:node19h8o77l7x13746 .
+
+_:node19h8o77l7x13746 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions> ;
+	atxa-core:posX "473" ;
+	atxa-core:posY "348" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions$TransitionToElementTransformer> .
+
+_:node19h8o77l7x13746 atxa-core:contains _:node19h8o77l7x13739 .
+
+_:node19h8o77l7x13739 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions$TransitionToElementTransformer> ;
+	atxa-core:posX "479" ;
+	atxa-core:posY "373" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions$TransitionToElementTransformer> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions$TransitionToElementTransformer.transform(Object,)> .
+
+_:node19h8o77l7x13734 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x13739 ;
+	rdf:object _:node19h8o77l7x13744 .
+
+_:node19h8o77l7x13739 atxa-core:contains _:node19h8o77l7x13747 .
+
+_:node19h8o77l7x13747 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.automata.io.out.transitions$TransitionToElementTransformer.transform(Object,)> ;
+	atxa-core:posX "480" ;
+	atxa-core:posY "391" .
+
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+@prefix atxa-jdt: <http://www.architexa.com/rdf/jdt#> .
+
+<http://www.architexa.com/rdf/rse-eclipse#CHIAAutomataIO.atxa> a atxa-core:reloFile ;
+	atxa-core:contains _:node19h8o77l7x13714 , _:node19h8o77l7x13713 , _:node19h8o77l7x13710 , _:node19h8o77l7x13711 , _:node19h8o77l7x13712 , _:node19h8o77l7x13709 , _:node19h8pl4u8x21 , _:node19h8pl4u8x22 , _:node19h8pl4u8x16 , _:node19h8o77l7x13716 , _:node19h8o77l7x13715 , _:node19h8pl4u8x1 , _:node19h8pl4u8x27 , _:node19h8pl4u8x26 , _:node19h8pl4u8x25 , _:node19h8pl4u8x24 , _:node19h8pl4u8x23 , _:node19h8pl4u8x29 , _:node19h8pl4u8x9 , _:node19h8pl4u8x30 , _:node19h8pl4u8x20 , _:node19h8pl4u8x28 , _:node19h8pl4u8x34 , _:node19h8pl4u8x18 , _:node19h8pl4u8x32 , _:node19h8pl4u8x4 , _:node19h8pl4u8x31 , _:node19h8o77l7x13740 , _:node19h8o77l7x13737 , _:node19h8o77l7x13736 , _:node19h8o77l7x13742 , _:node19h8o77l7x13738 , _:node19h8o77l7x13741 , _:node19h8o77l7x13745 , _:node19h8o77l7x13744 , _:node19h8o77l7x13743 , _:node19h8o77l7x13747 , _:node19h8o77l7x13739 , _:node19h8o77l7x13746 , atxa-core:docRoot , _:node19h8o77l7x13714 , _:node19h8o77l7x13713 , _:node19h8o77l7x13710 , _:node19h8o77l7x13711 , _:node19h8o77l7x13712 , _:node19h8o77l7x13709 , _:node19h8pl4u8x21 , _:node19h8pl4u8x22 , _:node19h8pl4u8x16 , _:node19h8o77l7x13716 , _:node19h8o77l7x13715 , _:node19h8pl4u8x1 , _:node19h8pl4u8x27 , _:node19h8pl4u8x26 , _:node19h8pl4u8x25 , _:node19h8pl4u8x24 , _:node19h8pl4u8x23 , _:node19h8pl4u8x29 , _:node19h8pl4u8x9 , _:node19h8pl4u8x30 , _:node19h8pl4u8x20 , _:node19h8pl4u8x28 , _:node19h8pl4u8x34 , _:node19h8pl4u8x18 , _:node19h8pl4u8x32 , _:node19h8pl4u8x4 , _:node19h8pl4u8x31 , _:node19h8o77l7x13740 , _:node19h8o77l7x13737 , _:node19h8o77l7x13736 , _:node19h8o77l7x13742 , _:node19h8o77l7x13738 , _:node19h8o77l7x13741 , _:node19h8o77l7x13745 , _:node19h8o77l7x13744 , _:node19h8o77l7x13743 , _:node19h8o77l7x13747 , _:node19h8o77l7x13739 , _:node19h8o77l7x13746 , atxa-core:docRoot , _:node19h8o77l7x13717 , _:node19h8o77l7x13719 , _:node19h8o77l7x13720 , _:node19h8pl4u8x17 , _:node19h8pl4u8x19 , _:node19h8o77l7x13718 , _:node19h8pl4u8x35 , _:node19h8pl4u8x33 , _:node19h8o77l7x13733 , _:node19h8o77l7x13735 , _:node19h8o77l7x13734 , _:node19h8o77l7x13717 , _:node19h8o77l7x13719 , _:node19h8o77l7x13720 , _:node19h8pl4u8x17 , _:node19h8pl4u8x19 , _:node19h8o77l7x13718 , _:node19h8pl4u8x35 , _:node19h8pl4u8x33 , _:node19h8o77l7x13733 , _:node19h8o77l7x13735 , _:node19h8o77l7x13734 .
+
