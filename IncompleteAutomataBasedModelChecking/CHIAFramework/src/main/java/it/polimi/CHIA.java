@@ -2,7 +2,7 @@ package it.polimi;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.checker.ModelChecker;
+import it.polimi.checker.Checker;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.ConstraintGenerator;
@@ -40,7 +40,7 @@ public class CHIA {
 	 * Is the model checker in charge of verifying whether the property is
 	 * satisfied, not satisfied or possibly satisfied
 	 */
-	private ModelChecker mc;
+	private Checker modelChecker;
 
 	/**
 	 * Contains the model checking results, the verification times the
@@ -48,14 +48,12 @@ public class CHIA {
 	 */
 	private final ModelCheckingResults mcResults;
 
-
 	/**
 	 * @return the mcResults
 	 */
 	public ModelCheckingResults getMcResults() {
 		return mcResults;
 	}
-
 
 	/**
 	 * creates a new CHIA checker
@@ -70,12 +68,12 @@ public class CHIA {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public CHIA(BA claim, IBA model,  ModelCheckingResults results) {
+	public CHIA(BA claim, IBA model, ModelCheckingResults results) {
 
 		Preconditions.checkNotNull(claim, "The claim cannot  be null");
 		Preconditions.checkNotNull(model, "The model cannot  be null");
 		Preconditions.checkNotNull(results, "The model cannot  be null");
-		
+
 		this.claim = claim;
 		this.model = model;
 		this.mcResults = results;
@@ -92,11 +90,20 @@ public class CHIA {
 	public int check() {
 		logger.info("Running CHIA");
 
-		mc = new ModelChecker(model, claim, this.mcResults);
-		mcResults.setResult(mc.check());
+		modelChecker = new Checker(model, claim, this.mcResults);
+		mcResults.setResult(modelChecker.check());
 
 		logger.info("CHIA model checking phase ended");
 		return mcResults.getResult();
+	}
+
+	/**
+	 * returns the model checker used by CHIA
+	 * 
+	 * @return the model checker used by CHIA
+	 */
+	public Checker getModelChecker() {
+		return this.modelChecker;
 	}
 
 	/**
@@ -112,16 +119,16 @@ public class CHIA {
 
 		logger.info("Computing the constraint");
 
-		Preconditions.checkArgument(
-				mcResults.getResult() == -1,
-				"It is not possible to get the constraint if the property is not possibly satisfied");
-
+		Preconditions
+				.checkArgument(
+						mcResults.getResult() == -1,
+						"It is not possible to get the constraint if the property is not possibly satisfied");
 
 		ConstraintGenerator constraintGenerator = new ConstraintGenerator(
-				mc.getIntersectionBuilder(), mcResults);
-		
+				modelChecker.getIntersectionBuilder(), mcResults);
+
 		Constraint constraint = constraintGenerator.generateConstraint();
-				logger.info("Constraint computed");
+		logger.info("Constraint computed");
 
 		return constraint;
 

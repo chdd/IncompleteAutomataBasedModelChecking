@@ -9,6 +9,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.checker.intersection.IntersectionRule;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class IntersectionRuleImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.impl.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, null, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, null, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
@@ -62,7 +63,7 @@ public class IntersectionRuleImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.impl.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test
@@ -91,7 +92,7 @@ public class IntersectionRuleImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.impl.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test
@@ -111,7 +112,7 @@ public class IntersectionRuleImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.impl.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test

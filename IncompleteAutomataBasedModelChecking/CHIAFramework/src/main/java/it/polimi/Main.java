@@ -8,33 +8,34 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import asg.cliche.Command;
+import asg.cliche.ShellFactory;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.io.BAReader;
-import it.polimi.automata.io.IBAReader;
-import it.polimi.automata.io.WriterBA;
+import it.polimi.automata.io.in.BAReader;
+import it.polimi.automata.io.in.IBAReader;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.ConstraintWriter;
 
 public class Main {
 
+	
+	
 	public static void main(String[] args) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
 		
-		Config.init(args);
-		Config config = Config.getInstance();
+		ShellFactory.createConsoleShell("CHIA", null, new CHIAConsole())
+        .commandLoop();
 		
-		File modelFile=new File(config.modelPath);
-		File claimFile=new File(config.claimPath);
-		File constraintFile=new File(config.constraintPath);
+/*Config.init(args);
+//		Config config = Config.getInstance();
 		
-		IBA model=new IBAReader(modelFile).read();
-		BA claim=new BAReader(claimFile).read();
 		ModelCheckingResults results=new ModelCheckingResults(true, true, true);
 		CHIA chia=new CHIA(claim, model, results);
 		int result=chia.check();
 		System.out.println("The model checking result is "+result);
 		
+		config.
 		if(config.intersectionPath!=null){
 			chia.getMcResults()
 			new WriterBA(intersectionAutomaton, f)
@@ -45,6 +46,6 @@ public class Main {
 			Constraint constraint=chia.getConstraint();
 			ConstraintWriter constraintWriter=new ConstraintWriter(constraint, constraintFile);
 			constraintWriter.write();
-		}	
+		}	*/
 	}
 }

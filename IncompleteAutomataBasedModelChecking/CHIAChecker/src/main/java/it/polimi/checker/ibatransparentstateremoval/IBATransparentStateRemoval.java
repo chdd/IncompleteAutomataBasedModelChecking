@@ -37,7 +37,7 @@ public class IBATransparentStateRemoval {
 	 * @throws NullPointerException
 	 *             if the Incomplete Buchi Automaton is null
 	 */
-	public IBA transparentStateRemoval(
+	public IBA removeTransparentStates(
 			IBA iba) {
 		Preconditions.checkNotNull(iba , "The Incomplete Buchi Automaton cannot be null");
 		

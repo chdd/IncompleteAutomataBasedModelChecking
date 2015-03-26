@@ -5,6 +5,7 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
+import it.polimi.automata.io.in.IBAReader;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
@@ -12,12 +13,15 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -76,7 +80,7 @@ public class IBAReaderTest {
 	}
 	
 	@Test
-	public void test() throws FileNotFoundException {
+	public void test() throws ParserConfigurationException, SAXException, IOException {
 
 		IBAReader reader=new IBAReader(
 				 new File(getClass().getClassLoader()

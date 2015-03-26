@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import it.polimi.CHIA;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.io.BAReader;
-import it.polimi.automata.io.IBAReader;
+import it.polimi.automata.io.in.BAReader;
+import it.polimi.automata.io.in.IBAReader;
 import it.polimi.checker.ModelCheckingResults;
 
 import java.io.File;

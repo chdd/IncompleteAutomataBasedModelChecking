@@ -9,8 +9,6 @@ public final class AutomataIOConstants {
 	public final static String XML_ELEMENT_PROPOSITIONS="propositions";
 	public final static String XML_ELEMENT_PROPOSITION="proposition";
 	public final static String XML_ELEMENT_PROPOSITION_VALUE="value";
-	
-	
 	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
 	public final static String XML_ELEMENT_PORTS_OUT="outports";
 	public final static String XML_ELEMENT_PORTS_IN="inports";
@@ -23,7 +21,10 @@ public final class AutomataIOConstants {
 	public final static String XML_ELEMENT_PORT="port";
 	public final static String XML_ELEMENT_CONSTRAINT="constraint";
 	public final static String XML_ELEMENT_REFINEMENT="refinement";
+	public final static String XML_ELEMENT_STATES="states";
 	public final static String XML_ELEMENT_STATE="state";
+
+	public final static String XML_ELEMENT_TRANSITIONS="transition";
 	public final static String XML_ELEMENT_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_ID="id";
 	public final static String XML_ATTRIBUTE_PORT_SOURCE="source";
@@ -36,6 +37,8 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_INITIAL="initial";
 	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
 	public final static String XML_ATTRIBUTE_TRANSPARENT="transparent";
+	public final static String XML_ATTRIBUTE_MIXED="mixed";
+	public final static String XML_ATTRIBUTE_CONSTRAINED="constrained";
 	
 	public final static String XML_TAG_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_TRANSITION_ID="id";
@@ -44,6 +47,7 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_TRANSITION_PROPOSITIONS="propositions";
 	public final static String XML_ATTRIBUTE_INVARIANT="invariant";
 	
+	public final static String XML_ELEMENT_INTERSECTION="intersection";
 	public final static String XML_ELEMENT_BA="ba";
 	public final static String XML_ELEMENT_IBA="iba";
 	

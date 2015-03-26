@@ -55,8 +55,7 @@ public class ElementToIBAWithInvariantsStateTransformer implements Transformer<E
 		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_INVARIANT)
 				.isEmpty()) {
 			Set<IGraphProposition> invariantPropositions = 
-					new StringToClaimPropositions()
-					.computePropositions(eElement
+					new StringToClaimPropositions().transform(eElement
 							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_INVARIANT));
 			iba.addInvariantPropositions(s, invariantPropositions);
 		}

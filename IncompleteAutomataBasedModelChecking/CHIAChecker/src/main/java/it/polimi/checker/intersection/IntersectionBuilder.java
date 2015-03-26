@@ -7,7 +7,6 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.checker.intersection.impl.IntersectionRule;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -244,8 +243,7 @@ public class IntersectionBuilder {
 					Transition intersectionTransition = new ClaimTransitionFactory()
 							.create(claimTransition.getPropositions());
 
-					this.intersection.addTransition(intersectionState,
-							nextState, intersectionTransition);
+					this.intersection.addConstrainedTransition(intersectionState, nextState, intersectionTransition);
 
 					this.mapModelStateIntersectionTransitions.put(
 							intersectionTransition, modelState);

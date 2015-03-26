@@ -7,9 +7,9 @@ import static org.junit.Assert.assertEquals;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.io.BAReader;
-import it.polimi.automata.io.IBAReader;
-import it.polimi.checker.ModelChecker;
+import it.polimi.automata.io.in.BAReader;
+import it.polimi.automata.io.in.IBAReader;
+import it.polimi.checker.Checker;
 import it.polimi.checker.ModelCheckingResults;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class SendingMessageTest2 {
 		IBA model = modelReader.read();
 
 		ModelCheckingResults mp = new ModelCheckingResults(true, true, true);
-		ModelChecker modelChecker = new ModelChecker(model, claim, mp);
+		Checker modelChecker = new Checker(model, claim, mp);
 
 		int res = modelChecker.check();
 		IntersectionBA intersectionBA = modelChecker

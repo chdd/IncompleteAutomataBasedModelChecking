@@ -1,6 +1,7 @@
 package it.polimi.automata.io.in.propositions;
 
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.io.Transformer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +12,7 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 import com.google.common.base.Preconditions;
 
-public class StringToClaimPropositions {
+public class StringToClaimPropositions implements Transformer<String, Set<IGraphProposition>>{
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
@@ -27,21 +28,21 @@ public class StringToClaimPropositions {
 	 *             {@link AutomataIOConstants#APREGEX} or the regular expression
 	 *             {@link AutomataIOConstants#NOTAPREGEX}
 	 */
-	public Set<IGraphProposition> computePropositions(String input) {
+	public Set<IGraphProposition> transform(String input) {
 
 		Preconditions.checkNotNull("The input must be not null");
-		Preconditions.checkArgument(!input.matches(AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA), "The input " + input
-				+ " must match the regular expression: "
+		Preconditions.checkArgument(input.matches(AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA), "The input " + input
+				+ " must match the claim regular expression: "
 				+ AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA);
+		
 		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
 		
-		if (input.equals("("+AutomataIOConstants.SIGMA+")")) {
+		if (input.equals(AutomataIOConstants.SIGMA)) {
 			propositions.add(new SigmaProposition());
 		} else {
 			String[] apsStrings = input.split(AutomataIOConstants.AND);
 
 			for (String ap : apsStrings) {
-				ap=ap.substring(1, ap.length()-1);
 				if (ap.startsWith(AutomataIOConstants.NOT)) {
 					propositions.add(new GraphProposition(ap
 							.substring(AutomataIOConstants.NOT.length()), true));

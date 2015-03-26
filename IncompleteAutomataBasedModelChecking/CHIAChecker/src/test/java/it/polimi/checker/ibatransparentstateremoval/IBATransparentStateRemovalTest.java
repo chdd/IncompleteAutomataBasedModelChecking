@@ -53,21 +53,21 @@ public class IBATransparentStateRemovalTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#transparentStateRemoval(null)}.
+	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#removeTransparentStates(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testTransparentStateRemovalNull() {
-		new IBATransparentStateRemoval().transparentStateRemoval(null);
+		new IBATransparentStateRemoval().removeTransparentStates(null);
 	}
 
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#transparentStateRemoval(it.polimi.automata.IBA)}.
+	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#removeTransparentStates(it.polimi.automata.IBA)}.
 	 */
 	@Test
 	public void testTransparentStateRemoval() {
 
-		IBA ret=new IBATransparentStateRemoval().transparentStateRemoval(this.ba);
+		IBA ret=new IBATransparentStateRemoval().removeTransparentStates(this.ba);
 		assertTrue(ret.getStates().contains(state1));
 		assertTrue(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));
@@ -75,13 +75,13 @@ public class IBATransparentStateRemovalTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#transparentStateRemoval(it.polimi.automata.IBA)}.
+	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#removeTransparentStates(it.polimi.automata.IBA)}.
 	 */
 	@Test
 	public void testTransparentStateRemoval2() {
 
 		this.ba.addTransparentState(state2);
-		IBA ret=new IBATransparentStateRemoval().transparentStateRemoval(this.ba);
+		IBA ret=new IBATransparentStateRemoval().removeTransparentStates(this.ba);
 		assertTrue(ret.getStates().contains(state1));
 		assertFalse(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));

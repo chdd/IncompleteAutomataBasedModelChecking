@@ -22,13 +22,13 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class ModelChecker {
+public class Checker {
 
 	/**
 	 * is the logger of the ModelChecker class
 	 */
 	private static final Logger logger = LoggerFactory
-			.getLogger(ModelChecker.class);
+			.getLogger(Checker.class);
 
 	/**
 	 * contains the specification to be checked
@@ -57,7 +57,7 @@ public class ModelChecker {
 	private IntersectionBuilder intersectionBuilder;
 
 	/**
-	 * creates a new {@link ModelChecker}
+	 * creates a new {@link Checker}
 	 * 
 	 * @param model
 	 *            is the model to be analyzed by the model checker
@@ -81,7 +81,7 @@ public class ModelChecker {
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public ModelChecker(IBA model, BA claim,
+	public Checker(IBA model, BA claim,
 			ModelCheckingResults mp) {
 		Preconditions.checkNotNull(model, "The model to be checked cannot be null");
 		Preconditions.checkNotNull(claim, "The specification to be checked cannot be null");
@@ -211,7 +211,7 @@ public class ModelChecker {
 
 		// removes the transparent states from the model
 		IBA mc = new IBATransparentStateRemoval()
-				.transparentStateRemoval(model);
+				.removeTransparentStates(model);
 		logger.debug("Transparent states removed from the model");
 
 		// computing the intersection

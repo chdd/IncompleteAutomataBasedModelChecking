@@ -42,7 +42,7 @@ public class ElementToBATransitionTransformer implements Transformer<Element, Tr
 
 		Set<IGraphProposition> propositions = 
 				new StringToClaimPropositions()
-				.computePropositions(eElement
+				.transform(eElement
 						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 
 		Transition t = transitionFactory.create(id, propositions);

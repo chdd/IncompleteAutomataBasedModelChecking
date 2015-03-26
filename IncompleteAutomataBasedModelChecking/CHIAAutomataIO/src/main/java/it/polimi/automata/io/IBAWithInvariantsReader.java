@@ -2,6 +2,7 @@ package it.polimi.automata.io;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBAWithInvariants;
+import it.polimi.automata.io.in.BAReader;
 import it.polimi.automata.io.in.states.ElementToIBAStateTransformer;
 import it.polimi.automata.io.in.transitions.ElementToIBATransitionTransformer;
 import it.polimi.automata.state.State;

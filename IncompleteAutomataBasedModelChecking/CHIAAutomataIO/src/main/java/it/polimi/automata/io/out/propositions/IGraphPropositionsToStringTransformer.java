@@ -1,4 +1,4 @@
-package it.polimi.automata.io.out;
+package it.polimi.automata.io.out.propositions;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;

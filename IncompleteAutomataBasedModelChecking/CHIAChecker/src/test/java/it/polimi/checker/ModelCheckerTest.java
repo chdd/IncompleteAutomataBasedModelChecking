@@ -231,24 +231,24 @@ public class ModelCheckerTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelChecker#ModelChecker(null, it.polimi.automata.BA, it.polimi.checker.ModelCheckingResults)}
+	 * {@link it.polimi.checker.Checker#ModelChecker(null, it.polimi.automata.BA, it.polimi.checker.ModelCheckingResults)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullModel() {
-		new ModelChecker(
+		new Checker(
 				null, claim1,
 				new ModelCheckingResults(true, true, true));
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelChecker#ModelChecker(it.polimi.automata.IBA, null, it.polimi.checker.ModelCheckingResults)}
+	 * {@link it.polimi.checker.Checker#ModelChecker(it.polimi.automata.IBA, null, it.polimi.checker.ModelCheckingResults)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullClaim() {
-			new ModelChecker(
+			new Checker(
 				model1, null,
 				new ModelCheckingResults(true, true, true));
 	}
@@ -257,11 +257,11 @@ public class ModelCheckerTest {
 	
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testCheckNullIntersectionResults() {
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model1, claim1, 
 				null);
 		assertEquals(1, mck.check());
@@ -269,43 +269,43 @@ public class ModelCheckerTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelChecker#ModelChecker(it.polimi.automata.IBA, it.polimi.automata.BA, null)}
+	 * {@link it.polimi.checker.Checker#ModelChecker(it.polimi.automata.IBA, it.polimi.automata.BA, null)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullResutls() {
-		new ModelChecker(
+		new Checker(
 				model1, claim1, 
 				null);
 	}
 
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test
 	public void testCheck() {
 
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model1, claim1, 
 				new ModelCheckingResults(true, true, true));
 		assertEquals(1, mck.check());
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test
 	public void testCheck1() {
 		model1.addInitialState(model1State1);
 		claim1.addInitialState(claim1State1);
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model1, claim1, 
 				new ModelCheckingResults(true, true, true));
 		assertEquals(1, mck.check());
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test
 	public void testCheck2() {
@@ -313,39 +313,39 @@ public class ModelCheckerTest {
 		model1.addAcceptState(model1State3);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model1, claim1, 
 				new ModelCheckingResults(true, true, true));
 		assertEquals(0, mck.check());
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test
 	public void testCheck3() {
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model2, claim2, 
 				new ModelCheckingResults(true, true, true));
 		assertEquals(1, mck.check());
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test
 	public void testCheck5() {
 		model2.addInitialState(model2State1);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model2, claim1, 
 				new ModelCheckingResults(true, true, true));
 		assertEquals(1, mck.check());
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ModelChecker#check()}.
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
 	@Test
 	public void testCheck6() {
@@ -354,7 +354,7 @@ public class ModelCheckerTest {
 		model1.addTransparentState(model1State2);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model1, claim1, 
 				new ModelCheckingResults(true, true, true));
 		assertEquals(-1, mck.check());
@@ -363,7 +363,7 @@ public class ModelCheckerTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelChecker#getVerificationTimes()}.
+	 * {@link it.polimi.checker.Checker#getVerificationTimes()}.
 	 */
 	@Test
 	public void testGetVerificationTimes() {
@@ -372,7 +372,7 @@ public class ModelCheckerTest {
 		model1.addTransparentState(model1State2);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
-		ModelChecker mck = new ModelChecker(
+		Checker mck = new Checker(
 				model1, claim1, 
 				new ModelCheckingResults(true, true, true));
 		assertNotNull(mck.getVerificationTimes());

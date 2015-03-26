@@ -1,9 +1,9 @@
-package it.polimi.automata.io;
+package it.polimi.automata.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.io.out.StateToElementTransformer;
-import it.polimi.automata.io.out.TransitionToElementTransformer;
+import it.polimi.automata.io.out.states.StateToElementTransformer;
+import it.polimi.automata.io.out.transitions.TransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -35,13 +35,13 @@ import com.google.common.base.Preconditions;
  * @param T
  *            is the type of the transitions of the intersection automaton
  */
-public class WriterBA {
+public class IntersectionWriter {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
 	 */
 	private static final Logger logger = LoggerFactory
-			.getLogger(WriterBA.class);
+			.getLogger(IntersectionWriter.class);
 
 	/**
 	 * contains the intersection automaton to be written
@@ -64,7 +64,7 @@ public class WriterBA {
 	 *             if the intersection automaton or the file is null
 	 * 
 	 */
-	public WriterBA(IntersectionBA intersectionAutomaton, File f) {
+	public IntersectionWriter(IntersectionBA intersectionAutomaton, File f) {
 		Preconditions.checkNotNull(intersectionAutomaton,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(f,
@@ -85,11 +85,11 @@ public class WriterBA {
 
 			// root elements
 			Document doc = docBuilder.newDocument();
-			Element rootElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_BA);
-			doc.appendChild(rootElement);
+			Element intersectionAutomatonElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_INTERSECTION);
+			doc.appendChild(intersectionAutomatonElement);
 
-			this.computingStateElements(doc, rootElement);
-			this.computingTransitionElements(doc, rootElement);
+			this.computingStateElements(doc, intersectionAutomatonElement);
+			this.computingTransitionElements(doc, intersectionAutomatonElement);
 
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
@@ -109,22 +109,28 @@ public class WriterBA {
 		}
 	}
 
-	private void computingStateElements(Document doc, Element rootElement) {
+	private void computingStateElements(Document doc, Element intersectionAutomatonElement) {
+		
+		Element statesElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_STATES);
+		intersectionAutomatonElement.appendChild(statesElement);
 		StateToElementTransformer stateTransformer = new StateToElementTransformer(
 				this.intersectionAutomaton, doc);
 		for (State s : this.intersectionAutomaton.getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
-			rootElement.appendChild(xmlStateElement);
+			statesElement.appendChild(xmlStateElement);
 
 		}
 	}
 
-	private void computingTransitionElements(Document doc, Element rootElement) {
+	private void computingTransitionElements(Document doc, Element intersectionAutomatonElement) {
+		Element transitionsElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS);
+		intersectionAutomatonElement.appendChild(transitionsElement);
+		
 		TransitionToElementTransformer transitionTransformer = new TransitionToElementTransformer(
 				this.intersectionAutomaton, doc);
 		for (Transition transition : this.intersectionAutomaton.getTransitions()) {
 			Element transitionElement =transitionTransformer.transform(transition);
-			rootElement.appendChild(transitionElement);
+			transitionsElement.appendChild(transitionElement);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package it.polimi.checker.intersection.impl;
+package it.polimi.checker.intersection;
 
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;

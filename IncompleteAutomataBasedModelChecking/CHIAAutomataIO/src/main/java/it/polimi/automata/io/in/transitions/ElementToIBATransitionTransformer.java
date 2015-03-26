@@ -44,7 +44,7 @@ public class ElementToIBATransitionTransformer  implements Transformer<Element, 
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID));
 
 		Set<IGraphProposition> propositions = new StringToModelPropositions()
-				.computePropositions(eElement
+				.transform(eElement
 						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 
 		if(!iba.getPropositions().containsAll(propositions)){

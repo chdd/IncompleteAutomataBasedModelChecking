@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 import com.google.common.base.Preconditions;
 
@@ -80,6 +81,7 @@ public class BA {
 				"The transition factory cannot be null");
 
 		this.propositions = new HashSet<IGraphProposition>();
+		this.propositions.add(new SigmaProposition());
 		this.acceptStates = new HashSet<State>();
 		this.initialStates = new HashSet<State>();
 		this.automataGraph = new DirectedPseudograph<State, Transition>(
@@ -473,13 +475,26 @@ public class BA {
 		Preconditions.checkNotNull(destination,
 				"The destination state cannot be null");
 		Preconditions.checkNotNull(transition, "The transition cannot be null");
-		Preconditions
-				.checkArgument(
-						this.propositions.containsAll(transition
-								.getPropositions()),
-						"Some of the propositions "
-								+ transition.getPropositions()
-								+ " of the transition are not contained into the alphabet of the automaton");
+
+		for (IGraphProposition p : transition.getPropositions()) {
+			if (p.isNegated()) {
+				IGraphProposition proposition = new GraphProposition(
+						p.getLabel(), false);
+				Preconditions
+						.checkArgument(
+								this.getPropositions().contains(proposition),
+								"The proposition "
+										+ proposition
+										+ " of the transition is not contained into the alphabet of the automaton");
+			} else {
+				Preconditions
+						.checkArgument(
+								this.getPropositions().contains(p),
+								"The proposition "
+										+ p
+										+ " of the transition is not contained into the alphabet of the automaton");
+			}
+		}
 		Preconditions
 				.checkArgument(this.getStates().contains(source),
 						"The source state is not contained into the set of the states of the automaton");

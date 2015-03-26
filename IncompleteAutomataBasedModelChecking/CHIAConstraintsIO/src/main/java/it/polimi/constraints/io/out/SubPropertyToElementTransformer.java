@@ -2,8 +2,8 @@ package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.out.StateToElementTransformer;
-import it.polimi.automata.io.out.TransitionToElementTransformer;
+import it.polimi.automata.io.out.states.StateToElementTransformer;
+import it.polimi.automata.io.out.transitions.TransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Port;

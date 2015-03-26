@@ -1,8 +1,9 @@
-package it.polimi.automata.io.out;
+package it.polimi.automata.io.out.transitions;
 
-import it.polimi.automata.BA;
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.Transformer;
+import it.polimi.automata.io.out.propositions.IGraphPropositionsToStringTransformer;
 import it.polimi.automata.transition.Transition;
 
 import org.w3c.dom.Attr;
@@ -14,11 +15,11 @@ import com.google.common.base.Preconditions;
 public class TransitionToElementTransformer
 		implements Transformer<Transition, Element> {
 
-	private final BA automaton;
+	private final IntersectionBA automaton;
 
 	private final Document doc;
 
-	public TransitionToElementTransformer(BA automaton, Document doc) {
+	public TransitionToElementTransformer(IntersectionBA automaton, Document doc) {
 		Preconditions.checkNotNull(automaton, "The automaton cannot be null");
 		Preconditions.checkNotNull(doc, "The document cannot be null");
 
@@ -54,9 +55,16 @@ public class TransitionToElementTransformer
 		// adding the propositions
 		Attr propositions = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS);
-
+		
 		propositions.setValue(new IGraphPropositionsToStringTransformer().transform(transition.getPropositions()));
 		transitionElement.setAttributeNode(propositions);
+		
+		if(this.automaton.getConstrainedTransitions().contains(transition)){
+			Attr constrained = doc
+					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_CONSTRAINED);
+			constrained.setValue(AutomataIOConstants.TRUEVALUE);
+			transitionElement.setAttributeNode(constrained);
+		}
 		return transitionElement;
 	}
 

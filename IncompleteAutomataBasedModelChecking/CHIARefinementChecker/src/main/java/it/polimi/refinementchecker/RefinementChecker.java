@@ -197,7 +197,7 @@ public class RefinementChecker<S extends State, T extends Transition> {
 		Preconditions.checkNotNull(model, "The model to be checked cannot be null");
 		
 		IBA<S, T> modelWithoutTransparentStates = new IBATransparentStateRemoval<S, T>()
-				.transparentStateRemoval(model.clone());
+				.removeTransparentStates(model.clone());
 
 		// computes the intersection between the claim and the model
 		IntersectionBuilder<S, T> intersectionBuilder = new IntersectionBuilder<S, T>(
