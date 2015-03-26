@@ -91,6 +91,21 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- Build an executable JAR -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>it.polimi.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<archive>
@@ -180,12 +195,12 @@
 		</dependency>
 
 		<!-- is the library used for logging -->
-	    <dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.10</version>
-		</dependency> 
-		
+		</dependency>
+
 		<!-- slf4j 4j no operations -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -261,14 +276,15 @@
 		<module>CHIAAutomata</module>
 		<module>CHIAAutomataIO</module>
 		<module>CHIAChecker</module>
-		<module>CHIALTLIO</module>
-		<module>CHIAConstraints</module>
+		<!-- <module>CHIALTLIO</module> -->
+		<!-- <module>CHIAConstraints</module> -->
 		<!-- <module>CHIAVisualization</module> -->
-		<module>CHIAContraintComputation</module>
+		<!-- <module>CHIAContraintComputation</module> -->
 		<!-- <module>CHIARegexConstraintTransformer</module> -->
 		<module>CHIAFramework</module>
-		<module>RefinementChecker</module>
-		<module>CHIARefinementChecker</module>
-		<module>CHIAConstraintsIO</module>
+		<!--<module>RefinementChecker</module> -->
+		<!--<module>CHIARefinementChecker</module> -->
+		<!--<module>CHIAConstraintsIO</module> -->
+		<module>dateUtils</module>
 	</modules>
 </project>

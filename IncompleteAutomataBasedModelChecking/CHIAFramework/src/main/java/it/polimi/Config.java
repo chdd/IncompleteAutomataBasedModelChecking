@@ -22,16 +22,8 @@ public class Config {
 		new JCommander(_instance, args);
 	}
 	
-	@Parameter(names = { "-m", "--model" }, required = true)
-	public String modelPath;
 	
 	@Parameter(names = { "-i", "--intersection" }, required = false)
 	public String intersectionPath;
-
-	@Parameter(names = { "-cl", "--claim" }, required = true)
-	public String claimPath;
-	
-	@Parameter(names = { "-co", "--constraint" }, required = true)
-	public String constraintPath;	
 	
 }
