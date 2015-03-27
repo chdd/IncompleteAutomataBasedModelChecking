@@ -2,8 +2,8 @@ package it.polimi.automata.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.io.out.states.StateToElementTransformer;
-import it.polimi.automata.io.out.transitions.TransitionToElementTransformer;
+import it.polimi.automata.io.out.states.IntBAStateToElementTransformer;
+import it.polimi.automata.io.out.transitions.IntBATransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
@@ -113,7 +113,7 @@ public class IntersectionWriter {
 		
 		Element statesElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_STATES);
 		intersectionAutomatonElement.appendChild(statesElement);
-		StateToElementTransformer stateTransformer = new StateToElementTransformer(
+		IntBAStateToElementTransformer stateTransformer = new IntBAStateToElementTransformer(
 				this.intersectionAutomaton, doc);
 		for (State s : this.intersectionAutomaton.getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
@@ -126,7 +126,7 @@ public class IntersectionWriter {
 		Element transitionsElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS);
 		intersectionAutomatonElement.appendChild(transitionsElement);
 		
-		TransitionToElementTransformer transitionTransformer = new TransitionToElementTransformer(
+		IntBATransitionToElementTransformer transitionTransformer = new IntBATransitionToElementTransformer(
 				this.intersectionAutomaton, doc);
 		for (Transition transition : this.intersectionAutomaton.getTransitions()) {
 			Element transitionElement =transitionTransformer.transform(transition);

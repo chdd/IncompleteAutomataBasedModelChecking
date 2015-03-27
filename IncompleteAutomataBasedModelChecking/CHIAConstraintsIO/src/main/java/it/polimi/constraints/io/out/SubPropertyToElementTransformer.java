@@ -2,8 +2,8 @@ package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.out.states.StateToElementTransformer;
-import it.polimi.automata.io.out.transitions.TransitionToElementTransformer;
+import it.polimi.automata.io.out.states.BAStateToElementTransformer;
+import it.polimi.automata.io.out.transitions.BATransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.Port;
@@ -86,7 +86,7 @@ public class SubPropertyToElementTransformer
 	private void computingStateElements(Document doc, Element rootElement,
 			SubProperty intersectionAutomaton) {
 
-		StateToElementTransformer stateTransformer = new StateToElementTransformer(
+		BAStateToElementTransformer stateTransformer = new BAStateToElementTransformer(
 				intersectionAutomaton.getAutomaton(), doc);
 		for (State s : intersectionAutomaton.getAutomaton().getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
@@ -107,7 +107,7 @@ public class SubPropertyToElementTransformer
 	
 	private void computingTransitionElements(Document doc, Element rootElement,
 			SubProperty intersectionAutomaton) {
-		TransitionToElementTransformer transitionTransformer = new TransitionToElementTransformer(
+		BATransitionToElementTransformer transitionTransformer = new BATransitionToElementTransformer(
 				intersectionAutomaton.getAutomaton(), doc);
 		for (Transition transition : intersectionAutomaton.getAutomaton()
 				.getTransitions()) {

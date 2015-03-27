@@ -108,6 +108,10 @@ public class BAReader {
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		if(this.getClass().getClassLoader()
+				.getResource(BA_XSD_PATH)==null){
+			throw new InternalError("It was not possible to load the BA.xsd from "+BA_XSD_PATH);
+		}
 		File xsd = new File(this.getClass().getClassLoader().getResource(BA_XSD_PATH).getFile());
 		this.validateAgainstXSD(new FileInputStream(this.file), new FileInputStream(xsd));
 

@@ -52,7 +52,7 @@ public class ElementToPortTransformer {
 
 		Port.ID_COUNTER = Math.max(Port.ID_COUNTER, transitionId + 1);
 		Transition transition = new ModelTransitionFactory().create(
-				transitionId, propositionsParser.computePropositions(labels));
+				transitionId, propositionsParser.transform(labels));
 
 		int sourceStateId = Integer.parseInt(e
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE));

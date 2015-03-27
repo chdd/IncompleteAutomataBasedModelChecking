@@ -1,7 +1,7 @@
 package it.polimi.automata.io.out.states;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.BA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.state.State;
 
@@ -11,13 +11,13 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class StateToElementTransformer implements Transformer<State, Element> {
+public class BAStateToElementTransformer  implements Transformer<State, Element> {
 
-	private final IntersectionBA automaton;
+	protected final BA automaton;
 
-	private final Document doc;
+	protected final Document doc;
 
-	public StateToElementTransformer(IntersectionBA automaton, Document doc) {
+	public BAStateToElementTransformer(BA automaton, Document doc) {
 		Preconditions.checkNotNull(automaton, "The automaton cannot be null");
 		Preconditions.checkNotNull(doc, "The document cannot be null");
 
@@ -56,15 +56,6 @@ public class StateToElementTransformer implements Transformer<State, Element> {
 			accepting.setValue(AutomataIOConstants.TRUEVALUE);
 			stateXMLElement.setAttributeNode(accepting);
 		}
-		if (this.automaton.getMixedStates().contains(input)) {
-			// adding the id
-			Attr accepting = doc
-					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_MIXED);
-			accepting.setValue(AutomataIOConstants.TRUEVALUE);
-			stateXMLElement.setAttributeNode(accepting);
-
-		}
 		return stateXMLElement;
 	}
-
 }

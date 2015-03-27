@@ -6,9 +6,15 @@ import it.polimi.automata.transition.Transition;
 import com.google.common.base.Preconditions;
 
 /**
- * The ports class specifies the in/out-coming transitions that connect the
- * IBA/BA that refers to the sub-property/replacement to the a transparent state
- * to the states of the IBA of the original model<br/>
+ * The Port class is used to describe how the IBA/BA that refers to the
+ * sub-property/replacement to the a transparent state of the model is connected
+ * with the states of the original model. The port class stores in the source,
+ * destination and transition attributes, the source and the destinations state
+ * of the port, and the corresponding transition. Depending on whether the port
+ * represents an in-coming or an out-coming transition the source or the
+ * destination state corresponds with a state of the model. The port is also
+ * associated with a color which specifies whether from the port is possible to
+ * reach an accepting state or is reached from an initial state.
  * 
  * The port class contains the source and the destinations state of the port, a
  * boolean flag that specifies if the port is in-coming or out-coming and the
@@ -19,6 +25,9 @@ import com.google.common.base.Preconditions;
  */
 public class Port extends State {
 
+	/**
+	 * Is the counter which is used to associte to each ne port a new Id
+	 */
 	public static int ID_COUNTER = 1;
 
 	/**
@@ -46,8 +55,12 @@ public class Port extends State {
 	 * returns the transition between the source and the destination state
 	 */
 	private final Transition transition;
-	
-	
+
+	/**
+	 * The port is also associated with a color which specifies whether from the
+	 * port is possible to reach an accepting state or is reached from an
+	 * initial state.
+	 */
 	private Color color;
 
 	/**
@@ -197,16 +210,25 @@ public class Port extends State {
 	}
 
 	/**
-	 * @return the color
+	 * returns the color associated with the port
+	 * 
+	 * @return the color of the port
 	 */
 	public Color getColor() {
 		return color;
 	}
 
 	/**
-	 * @param color the color to set
+	 * sets the color to the port
+	 * 
+	 * @param color
+	 *            the color to set
+	 * @throws NullPointerException
+	 *             if the color is null
 	 */
 	public void setColor(Color color) {
+		Preconditions.checkNotNull(color,
+				"The color of the port cannot be null");
 		this.color = color;
 	}
 

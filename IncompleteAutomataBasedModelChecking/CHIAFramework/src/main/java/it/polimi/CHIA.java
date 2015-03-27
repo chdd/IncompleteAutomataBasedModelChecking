@@ -4,8 +4,6 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.checker.Checker;
 import it.polimi.checker.ModelCheckingResults;
-import it.polimi.constraints.Constraint;
-import it.polimi.contraintcomputation.ConstraintGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +113,7 @@ public class CHIA {
 	 * @throws IllegalStateException
 	 *             if the property is not possibly satisfied
 	 */
-	public Constraint getConstraint() {
+	/*public Constraint getConstraint() {
 
 		logger.info("Computing the constraint");
 
@@ -132,5 +130,5 @@ public class CHIA {
 
 		return constraint;
 
-	}
+	}*/
 }

@@ -83,7 +83,7 @@ public class ConstraintWriter {
 
 			SubPropertyToElementTransformer componentTransformer = new SubPropertyToElementTransformer(
 					doc);
-			for (SubProperty component : constraint.getComponents()) {
+			for (SubProperty component : constraint.getSubProperties()) {
 
 				Element componentElement=componentTransformer.transform(component);
 				rootElement.appendChild(componentElement);

@@ -21,6 +21,15 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.5.3</version>
+					<configuration>
+						<descriptors>
+							<descriptor>src/assembly/bin.xml</descriptor>
+						</descriptors>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>2.3</version>
@@ -90,21 +99,7 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<!-- Build an executable JAR -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>it.polimi.Main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -285,6 +280,5 @@
 		<!--<module>RefinementChecker</module> -->
 		<!--<module>CHIARefinementChecker</module> -->
 		<!--<module>CHIAConstraintsIO</module> -->
-		<module>dateUtils</module>
 	</modules>
 </project>

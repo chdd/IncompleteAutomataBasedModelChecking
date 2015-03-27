@@ -90,6 +90,11 @@ public class IBAReader {
 		Document dom;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		
+		if(this.getClass().getClassLoader()
+				.getResource(IBA_XSD_PATH)==null){
+			throw new InternalError("It was not possible to load the IBA.xsd from "+IBA_XSD_PATH);
+		}
 		File xsd = new File(this.getClass().getClassLoader()
 				.getResource(IBA_XSD_PATH).getFile());
 		this.validateAgainstXSD(new FileInputStream(this.file),

@@ -67,11 +67,11 @@ public class Constraint {
 	}
 
 	/**
-	 * returns the components involved in the constraint
+	 * returns the sub-properties involved in the constraint
 	 * 
-	 * @return the components involved in the constraint
+	 * @return the sub-properties involved in the constraint
 	 */
-	public Set<SubProperty> getComponents() {
+	public Set<SubProperty> getSubProperties() {
 		return this.subProperties;
 	}
 
@@ -92,10 +92,10 @@ public class Constraint {
 				"The incomingPort port cannot be null");
 		Preconditions.checkNotNull(destinationPort,
 				"The outcomingPort port cannot be null");
-		if(!this.portsGraph.containsVertex(sourcePort)){
+		if (!this.portsGraph.containsVertex(sourcePort)) {
 			this.portsGraph.addVertex(sourcePort);
 		}
-		if(!this.portsGraph.containsVertex(destinationPort)){
+		if (!this.portsGraph.containsVertex(destinationPort)) {
 			this.portsGraph.addVertex(destinationPort);
 		}
 		this.portsGraph.addEdge(sourcePort, destinationPort);
@@ -222,37 +222,55 @@ public class Constraint {
 			}
 		}
 
-		this.removeComponent(oldComponent);
+		this.removeSubProperty(oldComponent);
 	}
 
 	public void union(Constraint other) {
 		Preconditions.checkNotNull(other, "The other component cannot be null");
-		this.subProperties.addAll(other.getComponents());
+		this.subProperties.addAll(other.getSubProperties());
 
 		// generates the union of the two graphs
 		Graphs.addGraph(this.portsGraph, other.portsGraph);
 	}
 
-	public void removeComponent(SubProperty component) {
+	/**
+	 * removes a sub-property from the set of sub-properties. The port of the
+	 * sub-properties are removed from the graph of the port
+	 * 
+	 * @param subProperty
+	 *            the sub-property to be removed
+	 * @throws NullPointerException
+	 *             if the sub-property is null
+	 * @throws IllegalArgumentException
+	 *             if the sub-property is not contained into the set of the
+	 *             sub-properties
+	 */
+	public void removeSubProperty(SubProperty subProperty) {
 
-		Preconditions.checkNotNull(component,
-				"The other component cannot be null");
-		this.subProperties.remove(component);
+		Preconditions.checkNotNull(subProperty,
+				"The sub-property to be removed cannot be null");
+		Preconditions
+				.checkArgument(
+						this.subProperties.contains(subProperty),
+						"The subproperty "
+								+ subProperty.getId()
+								+ " must be contained into the set of the sub-properties of the constraint");
+		this.subProperties.remove(subProperty);
 
 		Set<Port> incomingPorts = new HashSet<Port>();
-		incomingPorts.addAll(component.getIncomingPorts());
+		incomingPorts.addAll(subProperty.getIncomingPorts());
 
 		for (Port incomingPort : incomingPorts) {
 			this.portsGraph.removeVertex(incomingPort);
 		}
 
 		Set<Port> outComingPorts = new HashSet<Port>();
-		outComingPorts.addAll(component.getOutcomingPorts());
+		outComingPorts.addAll(subProperty.getOutcomingPorts());
 
 		for (Port outcomingPort : outComingPorts) {
 			this.portsGraph.removeVertex(outcomingPort);
 
 		}
-		this.subProperties.remove(component);
+		this.subProperties.remove(subProperty);
 	}
 }

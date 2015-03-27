@@ -15,21 +15,35 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>fully.qualified.MainClass</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifest>
+								<mainClass>
+									it.polimi.Main
+								</mainClass>
+							</manifest>
+						</archive>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<dependencies>
 		<dependency>
@@ -42,21 +56,15 @@
 			<artifactId>CHIAAutomata</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>it.polimi.chia</groupId>
-			<artifactId>CHIAContraintComputation</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		<!--<dependency> <groupId>it.polimi.chia</groupId> <artifactId>CHIAContraintComputation</artifactId> 
+			<version>0.0.1-SNAPSHOT</version> </dependency> -->
 		<dependency>
 			<groupId>com.googlecode.clichemaven</groupId>
 			<artifactId>cliche</artifactId>
 			<version>110413</version>
 		</dependency>
-		<dependency>
-			<groupId>it.polimi.chia</groupId>
-			<artifactId>CHIAConstraintsIO</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		<!-- <dependency> <groupId>it.polimi.chia</groupId> <artifactId>CHIAConstraintsIO</artifactId> 
+			<version>0.0.1-SNAPSHOT</version> </dependency> -->
 		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>

@@ -2,7 +2,7 @@ package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.out.PropositionsToStringTransformer;
+import it.polimi.automata.io.out.propositions.IGraphPropositionsToStringTransformer;
 import it.polimi.constraints.Port;
 
 import org.w3c.dom.Attr;
@@ -73,7 +73,7 @@ public class PortToElementTransformer
 		Attr transitionPropositions = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS);
 
-		PropositionsToStringTransformer transformer = new PropositionsToStringTransformer();
+		IGraphPropositionsToStringTransformer transformer = new IGraphPropositionsToStringTransformer();
 		transitionPropositions.setValue(transformer.transform(port
 				.getTransition().getPropositions()));
 		portElement.setAttributeNode(transitionPropositions);

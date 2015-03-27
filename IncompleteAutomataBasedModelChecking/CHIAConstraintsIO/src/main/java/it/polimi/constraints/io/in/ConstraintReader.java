@@ -25,7 +25,10 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Preconditions;
 
 /**
- * Loads the constraint from the specified file
+ * The ConstraintReader is used to load the constraint from an XML file. The XML
+ * files must be conform with respect to the XSD} file Constraint.xsd. The
+ * reader uses the ElementToPort, ElementToPortGraph and ElementToSubProperty
+ * transformers to convert the XML elements into the corresponding Java objects.
  * 
  * @author claudiomenghi
  *
@@ -112,8 +115,8 @@ public class ConstraintReader {
 			constraint.addSubProperty(subProperty);
 
 			Element xmlOutComingPorts = (Element) xmlConstraintElement
-					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORTS_OUT)
-					.item(0);
+					.getElementsByTagName(
+							AutomataIOConstants.XML_ELEMENT_PORTS_OUT).item(0);
 			NodeList xmlOutComingPortsList = xmlOutComingPorts
 					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORT);
 			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
@@ -126,8 +129,8 @@ public class ConstraintReader {
 			}
 
 			Element xmlInComingPorts = (Element) xmlConstraintElement
-					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORTS_IN).item(
-							0);
+					.getElementsByTagName(
+							AutomataIOConstants.XML_ELEMENT_PORTS_IN).item(0);
 			NodeList xmlInComingPortsList = xmlInComingPorts
 					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORT);
 			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
@@ -140,12 +143,11 @@ public class ConstraintReader {
 			}
 
 		}
-		Preconditions
-				.checkArgument(
-						doc.getElementsByTagName(
-								AutomataIOConstants.XML_ELEMENT_PORTS_REACHABILITY)
-								.getLength() >= 1,
-						"Port reachability element not present");
+		Preconditions.checkArgument(
+				doc.getElementsByTagName(
+						AutomataIOConstants.XML_ELEMENT_PORTS_REACHABILITY)
+						.getLength() >= 1,
+				"Port reachability element not present");
 		Element portReachability = (Element) doc.getElementsByTagName(
 				AutomataIOConstants.XML_ELEMENT_PORTS_REACHABILITY).item(0);
 		new ElementToPortGraphTransformer(this.mapIdPort,

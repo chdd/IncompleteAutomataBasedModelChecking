@@ -1,7 +1,7 @@
 package it.polimi.automata.io.out.transitions;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.BA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.out.propositions.IGraphPropositionsToStringTransformer;
 import it.polimi.automata.transition.Transition;
@@ -12,14 +12,15 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class TransitionToElementTransformer
-		implements Transformer<Transition, Element> {
+public class BATransitionToElementTransformer implements
+		Transformer<Transition, Element> {
 
-	private final IntersectionBA automaton;
+	protected final BA automaton;
 
-	private final Document doc;
+	protected final Document doc;
 
-	public TransitionToElementTransformer(IntersectionBA automaton, Document doc) {
+	public BATransitionToElementTransformer(BA automaton,
+			Document doc) {
 		Preconditions.checkNotNull(automaton, "The automaton cannot be null");
 		Preconditions.checkNotNull(doc, "The document cannot be null");
 
@@ -29,8 +30,9 @@ public class TransitionToElementTransformer
 
 	@Override
 	public Element transform(Transition transition) {
-		Preconditions.checkNotNull(transition, "The transition element to be converted cannot be null");
-		
+		Preconditions.checkNotNull(transition,
+				"The transition element to be converted cannot be null");
+
 		Element transitionElement = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITION);
 		// adding the id
@@ -41,8 +43,8 @@ public class TransitionToElementTransformer
 		// adding the source
 		Attr sourceId = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE);
-		sourceId.setValue(Integer.toString(this.automaton
-				.getTransitionSource(transition).getId()));
+		sourceId.setValue(Integer.toString(this.automaton.getTransitionSource(
+				transition).getId()));
 		transitionElement.setAttributeNode(sourceId);
 
 		// adding the destination
@@ -55,16 +57,11 @@ public class TransitionToElementTransformer
 		// adding the propositions
 		Attr propositions = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS);
-		
-		propositions.setValue(new IGraphPropositionsToStringTransformer().transform(transition.getPropositions()));
+
+		propositions.setValue(new IGraphPropositionsToStringTransformer()
+				.transform(transition.getPropositions()));
 		transitionElement.setAttributeNode(propositions);
-		
-		if(this.automaton.getConstrainedTransitions().contains(transition)){
-			Attr constrained = doc
-					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_CONSTRAINED);
-			constrained.setValue(AutomataIOConstants.TRUEVALUE);
-			transitionElement.setAttributeNode(constrained);
-		}
+
 		return transitionElement;
 	}
 
