@@ -1,4 +1,4 @@
-package it.polimi.refinementchecker;
+package it.polimi.refinement.constraintcomputation;
 
 import it.polimi.constraints.Color;
 
