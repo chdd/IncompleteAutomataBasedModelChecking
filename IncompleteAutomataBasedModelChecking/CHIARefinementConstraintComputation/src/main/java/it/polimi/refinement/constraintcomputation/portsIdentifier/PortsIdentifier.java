@@ -1,4 +1,4 @@
-package it.polimi.refinementchecker.refinementChecker;
+package it.polimi.refinement.constraintcomputation.portsIdentifier;
 
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Port;
@@ -12,6 +12,14 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * 
+ * Is the abstract class from which the Incoming and Outcoming PortsIdentifier
+ * inherits. It contains the instantiation logic and the common attributes of these classes
+ * 
+ * @author claudiomenghi
+ *
+ */
 public abstract class PortsIdentifier {
 
 	/**
@@ -41,11 +49,11 @@ public abstract class PortsIdentifier {
 	 * contains the set of the intersection port
 	 */
 	protected final Set<Port> ports;
-	
+
 	/**
-	 * creates a new PortsIdentifier. The PortsIdentifier given
-	 * the sub-property and the corresponding replacement computes the incoming
-	 * ports/out-coming ports of the intersection automaton
+	 * creates a new PortsIdentifier. The PortsIdentifier given the sub-property
+	 * and the corresponding replacement computes the incoming ports/out-coming
+	 * ports of the intersection automaton
 	 * 
 	 * @param refinement
 	 *            is the replacement to be considered
@@ -58,8 +66,8 @@ public abstract class PortsIdentifier {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public PortsIdentifier(Replacement refinement,
-			SubProperty subproperty, IntersectionBuilder intersectionBuilder) {
+	public PortsIdentifier(Replacement refinement, SubProperty subproperty,
+			IntersectionBuilder intersectionBuilder) {
 		Preconditions.checkNotNull(refinement, "The refinement cannot be null");
 		Preconditions.checkNotNull(subproperty,
 				"The subproperty cannot be null");
@@ -71,7 +79,7 @@ public abstract class PortsIdentifier {
 		this.intersectionBuilder = intersectionBuilder;
 		this.ports = new HashSet<Port>();
 	}
-	
+
 	/**
 	 * gets the claim port that corresponds to the specific intersection port
 	 * 

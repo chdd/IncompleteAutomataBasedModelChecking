@@ -747,17 +747,22 @@ public class BA {
 	 * stuttering character, which is a character that does not belongs to the
 	 * alphabet
 	 */
-	public void addStuttering() {
-		for (State acceptingState : this.getAcceptStates()) {
-			Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
-			propositions.add(new GraphProposition(
-					AutomataConstants.STUTTERING_CHARACTER, false));
-			this.addPropositions(propositions);
-			Transition stutteringTransition = ((TransitionFactory<State, Transition>) this.automataGraph
-					.getEdgeFactory()).create(propositions);
-			this.addTransition(acceptingState, acceptingState,
-					stutteringTransition);
-		}
+	public void addStuttering(State s) {
+		Preconditions.checkNotNull(s, "The state s cannot be null");
+		Preconditions
+				.checkArgument(
+						this.getStates().contains(s),
+						"The state "
+								+ s
+								+ " must be contained into the set of the states of the automaton ");
+		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
+		propositions.add(new GraphProposition(
+				AutomataConstants.STUTTERING_CHARACTER, false));
+		this.addPropositions(propositions);
+		Transition stutteringTransition = ((TransitionFactory<State, Transition>) this.automataGraph
+				.getEdgeFactory()).create(propositions);
+		this.addTransition(s, s, stutteringTransition);
+
 	}
 
 	public TransitionFactory<State, Transition> getTransitionFactory() {

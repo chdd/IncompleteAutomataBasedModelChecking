@@ -1,4 +1,4 @@
-package it.polimi.refinementchecker.refinementChecker;
+package it.polimi.refinement.constraintcomputation.portsIdentifier;
 
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;

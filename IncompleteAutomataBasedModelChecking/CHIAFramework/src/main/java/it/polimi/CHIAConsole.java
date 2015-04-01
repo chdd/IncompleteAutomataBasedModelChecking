@@ -11,6 +11,7 @@ import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.io.in.ReplacementReader;
 import it.polimi.constraints.io.out.ConstraintWriter;
+import it.polimi.refinementchecker.ReplacementChecker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -138,5 +139,21 @@ public class CHIAConsole {
 			SAXException, IOException {
 		ConstraintWriter constraintWriter=new ConstraintWriter(this.constraint, constraintFilePath, this.model, this.chia.getModelChecker().getIntersectionAutomaton());
 		constraintWriter.write();
+	}
+	
+	@Command(name = "replacementChecking", abbrev = "rc", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
+	public void replacementChecking(){
+		ReplacementChecker rc=new ReplacementChecker(constraint, replacement);
+		int result=rc.check();
+		if (result == 1) {
+			System.out.println("The property is satisfied");
+		}
+		if (result == 0) {
+			System.out.println("The property is not satisfied");
+		}
+		if (result == -1) {
+			System.out.println("The property is possibly satisfied");
+		}
+		
 	}
 }

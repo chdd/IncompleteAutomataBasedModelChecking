@@ -15,9 +15,17 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 
 /**
- * Is used to check the refinement of a transparent state. The refinement
- * checker updates the constraint associated with the transparent state and the
- * constraints associated with the other transparent states.<br>
+ * Is used to check the replacement of a transparent state i.e., check whether
+ * the original property is satisfied, possibly satisfied or not satisfied given
+ * a specific replacement.
+ * 
+ * It takes as input the constraint and a replacement for one of the transparent
+ * states involved in the constraint. The method check returns 1 if the property
+ * is satisfied given the current replacement, -1 if the property is possibly
+ * satisfied or 0 if the property is not satisfied. When a -1 value is generated
+ * the satisfaction of the property may depends on the refinement of other
+ * transparent states involved in the constraint or on the refinement of the
+ * transparent states of the model specified into the replacement itself.
  * 
  * 
  * @author claudiomenghi
@@ -39,11 +47,6 @@ public class ReplacementChecker {
 	 * contains the refinement to be verified
 	 */
 	private final Replacement refinement;
-
-	/**
-	 * contains the new constraint generated
-	 */
-	private Constraint newConstraint;
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -71,10 +74,6 @@ public class ReplacementChecker {
 						"The state constrained in the refinement must be contained into the set of the states of the constraint");
 		this.constraint = constraint;
 		this.refinement = replacement;
-	}
-
-	public Constraint newConstraint() {
-		return this.newConstraint;
 	}
 
 	/**
@@ -108,10 +107,9 @@ public class ReplacementChecker {
 		// where the transparent states have been removed
 		IBA model = this.refinement.getAutomaton();
 
-		AutomatonDecorator automatonDecorator=new AutomatonDecorator();
+		AutomatonDecorator automatonDecorator = new AutomatonDecorator();
 		automatonDecorator.decorateClaim(claim, subproperty);
 		automatonDecorator.decorateModel(model, refinement);
-		
 
 		Checker checker = new Checker(model, claim, new ModelCheckingResults(
 				true, true, true));
