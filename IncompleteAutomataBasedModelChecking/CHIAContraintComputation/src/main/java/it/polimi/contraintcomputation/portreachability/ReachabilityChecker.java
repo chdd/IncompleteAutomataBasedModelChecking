@@ -1,9 +1,11 @@
-package it.polimi.contraintcomputation.statereachability;
+package it.polimi.contraintcomputation.portreachability;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,43 +46,37 @@ public class ReachabilityChecker<A extends BA> {
 	private boolean performed;
 
 	/**
-	 * contains the set of the reachable states
-	 */
-	private final Set<State> statesUnderAnalysis;
-
-	/**
 	 * creates a new reachability checker
 	 * 
 	 * @param ba
 	 *            is the automaton to be considered
 	 */
-	public ReachabilityChecker(A ba, Set<State> statesUnderAnalysis) {
+	public ReachabilityChecker(A ba) {
 		Preconditions.checkNotNull(ba,
-				"The automaton to be considered cannot be null");
-		Preconditions.checkNotNull(statesUnderAnalysis,
 				"The automaton to be considered cannot be null");
 
 		this.ba = ba;
-		this.statesUnderAnalysis = statesUnderAnalysis;
 		performed = false;
 		this.forwardReachabilty = new HashMap<State, Set<State>>();
 		this.backwardReachabilty = new HashMap<State, Set<State>>();
 
 	}
 
-	/**
-	 * returns for each state the set of the reachable states
-	 * 
-	 * @return for each state the set of the reachable states
-	 */
-	public Map<State, Set<State>> forwardReachabilitycheck() {
-		if (performed) {
-			return this.forwardReachabilty;
-		}
+	public void computeReachabilityRelation(Set<State> statesUnderAnalysis) {
+		Preconditions.checkNotNull(statesUnderAnalysis,
+				"The automaton to be considered cannot be null");
+		Preconditions.checkArgument(
+				this.ba.getStates().containsAll(statesUnderAnalysis),
+				"Not all the states are contained in the automaton");
+
 		for (State s : statesUnderAnalysis) {
-			this.forwardReachabilty.put(s, ba.getSuccessors(s));
+			Set<State> nextStates=new HashSet<State>(ba.getSuccessors(s));
+			nextStates.retainAll(statesUnderAnalysis);
+			this.forwardReachabilty.put(s, nextStates);
 			this.forwardReachabilty.get(s).add(s);
-			this.backwardReachabilty.put(s, ba.getPredecessors(s));
+			Set<State> prevStates=new HashSet<State>(ba.getPredecessors(s));
+			prevStates.retainAll(statesUnderAnalysis);
+			this.backwardReachabilty.put(s, prevStates);
 			this.backwardReachabilty.get(s).add(s);
 		}
 
@@ -96,15 +92,28 @@ public class ReachabilityChecker<A extends BA> {
 			}
 		}
 		performed = true;
-		return this.forwardReachabilty;
 	}
 
-	public Map<State, Set<State>> backWardReachabilitycheck() {
-		if (performed) {
-			return this.backwardReachabilty;
-		}
-		this.forwardReachabilitycheck();
-		performed = true;
-		return this.backwardReachabilty;
+	/**
+	 * returns for each state the set of the reachable states
+	 * 
+	 * @return for each state the set of the reachable states
+	 */
+	public Map<State, Set<State>> getForwardReachability() {
+		Preconditions
+				.checkState(
+						performed,
+						"It is necessary to compute the reachability relation before getting the forward relation");
+
+		return Collections.unmodifiableMap(this.forwardReachabilty);
+	}
+
+	public Map<State, Set<State>> getBackwardReachability() {
+		Preconditions
+				.checkState(
+						performed,
+						"It is necessary to compute the reachability relation before getting the backward relation");
+
+		return Collections.unmodifiableMap(this.backwardReachabilty);
 	}
 }

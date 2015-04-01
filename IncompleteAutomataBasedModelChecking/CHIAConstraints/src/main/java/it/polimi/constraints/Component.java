@@ -120,7 +120,6 @@ public abstract class Component {
 
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
 		this.incomingPorts.add(port);
-		port.setColor(Color.YELLOW);
 	}
 
 	/**
@@ -134,7 +133,6 @@ public abstract class Component {
 		
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
 		this.outcomingPorts.add(port);
-		port.setColor(Color.YELLOW);
 	}
 	
 	/**

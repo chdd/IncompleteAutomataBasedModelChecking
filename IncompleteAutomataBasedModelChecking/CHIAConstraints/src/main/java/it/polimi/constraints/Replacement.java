@@ -1,6 +1,5 @@
 package it.polimi.constraints;
 
-import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 
@@ -46,11 +45,11 @@ public class Replacement extends Component {
 	}
 
 	/**
-	 * returns the BA associated with the replacement
+	 * returns the IBA associated with the replacement
 	 * 
-	 * @return the BA associated with the replacement
+	 * @return the IBA associated with the replacement
 	 */
-	public BA getAutomaton() {
+	public IBA getAutomaton() {
 		return this.automaton;
 	}
 

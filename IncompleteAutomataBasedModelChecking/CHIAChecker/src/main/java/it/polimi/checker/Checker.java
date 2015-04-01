@@ -46,6 +46,7 @@ public class Checker {
 	 */
 	private IntersectionBA intersectionAutomaton;
 
+	private boolean performed;
 
 	
 	/**
@@ -61,19 +62,8 @@ public class Checker {
 	 * 
 	 * @param model
 	 *            is the model to be analyzed by the model checker
-	 * @param specification
+	 * @param claim
 	 *            is the specification to be considered by the model checker
-	 * @param intersectionBAFactory
-	 *            is the factory in charge of creating intersection automata
-	 * @param intersectionRule
-	 *            is the intersection rule to be used in computing the
-	 *            intersection
-	 * @param intersectionStateFactory
-	 *            is the intersection factory to be used in computing the states
-	 *            of the intersection
-	 * @param intersectionTransitionFactory
-	 *            is the intersection factory to be used in computing the
-	 *            transitions of the intersection automaton
 	 * @param mp
 	 *            is an object where the results of the verification (e.g., time
 	 *            required from the verification procedure are stored)
@@ -92,6 +82,7 @@ public class Checker {
 		this.verificationResults = mp;
 		this.intersectionBuilder = new IntersectionBuilder(model,
 				claim);
+		this.performed=false;
 	}
 
 	/**
@@ -104,6 +95,7 @@ public class Checker {
 	 *         satisfied, -1 if the property is satisfied with constraints.
 	 */
 	public int check() {
+		performed=true;
 		logger.info("Checking procedure started");
 		// resets the value of the verification parameters
 		this.verificationResults.reset();
@@ -247,7 +239,9 @@ public class Checker {
 	 *         states of the intersection automaton the time required from the
 	 *         verification procedure etc
 	 */
-	public ModelCheckingResults getVerificationTimes() {
+	public ModelCheckingResults getVerificationResults() {
+		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
+		
 		return verificationResults;
 	}
 
@@ -259,6 +253,8 @@ public class Checker {
 	 *         corresponding states of the intersection automaton
 	 */
 	public Map<State, Set<State>> getModelIntersectionStateMap() {
+		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
+		
 		return this.intersectionBuilder.getModelStateIntersectionStateMap();
 	}
 	
@@ -270,6 +266,8 @@ public class Checker {
 	 *         corresponding states of the intersection automaton
 	 */
 	public Map<State, Set<State>> getClaimIntersectionStateMap() {
+		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
+		
 		return this.intersectionBuilder.getClaimStateIntersectionStateMap();
 	}
 
@@ -279,10 +277,14 @@ public class Checker {
 	 * @return the intersection automaton
 	 */
 	public IntersectionBA getIntersectionAutomaton() {
+		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
+		
 		return intersectionAutomaton;
 	}
 
 	public  IntersectionBuilder getIntersectionBuilder(){
+		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
+		
 		return this.intersectionBuilder;
 	}
 }

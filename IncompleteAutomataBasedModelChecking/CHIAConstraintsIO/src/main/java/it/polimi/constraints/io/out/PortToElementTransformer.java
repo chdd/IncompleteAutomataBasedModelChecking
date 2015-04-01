@@ -1,8 +1,12 @@
 package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.IBA;
+import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.out.propositions.IGraphPropositionsToStringTransformer;
+import it.polimi.automata.io.out.states.BAStateToElementTransformer;
+import it.polimi.automata.io.out.states.IBAStateToElementTransformer;
+import it.polimi.automata.io.out.transitions.BATransitionToElementTransformer;
 import it.polimi.constraints.Port;
 
 import org.w3c.dom.Attr;
@@ -21,69 +25,63 @@ public class PortToElementTransformer
 		implements Transformer<Port, Element> {
 
 	private final Document doc;
-
+	private final IBA model;
+	private final IntersectionBA intersection;
+	
 	/**
 	 * creates a new Port element transformer
 	 * 
 	 * @param doc
 	 *            is the document where the element must be placed
 	 */
-	public PortToElementTransformer(Document doc) {
+	public PortToElementTransformer(Document doc, IBA model, IntersectionBA intersection) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
+		Preconditions.checkNotNull(model, "The model cannot be null");
+		Preconditions.checkNotNull(intersection, "The intersection cannot be null");
+		
 		this.doc = doc;
+		this.model=model;
+		this.intersection=intersection;
+		
 	}
 
 	public Element transform(Port port) {
 		Preconditions.checkNotNull(port, "The port element cannot be null");
 		Element portElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_PORT);
 		
-		Attr type = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_TYPE);
+		Attr portId = doc
+				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
+		portId.setValue(Integer.toString(port.getId()));
+		portElement.setAttributeNode(portId);
 		
-		if(port.isIncoming()){
-			type.setValue(AutomataIOConstants.XML_ATTRIBUTE_VALUE_IN);
-		}
-		else{
-			type.setValue(AutomataIOConstants.XML_ATTRIBUTE_VALUE_OUT);	
-		}
-		
-		portElement.setAttributeNode(type);
-
-
-		// transition source
-		Attr transitionSource = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE);
-		transitionSource.setValue(Integer.toString(port.getSource().getId()));
-		portElement.setAttributeNode(transitionSource);
-
-		// transition destination
-		Attr transitionDestination = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_DESTINATION);
-		transitionDestination.setValue(Integer.toString(port.getDestination()
-				.getId()));
-		portElement.setAttributeNode(transitionDestination);
-
-		// transition id
-		Attr transitionId = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID);
-		transitionId.setValue(Integer.toString(port.getId()));
-		portElement.setAttributeNode(transitionId);
-
-		// transition label
-		Attr transitionPropositions = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS);
-
-		IGraphPropositionsToStringTransformer transformer = new IGraphPropositionsToStringTransformer();
-		transitionPropositions.setValue(transformer.transform(port
-				.getTransition().getPropositions()));
-		portElement.setAttributeNode(transitionPropositions);
-
+		Attr portColor = doc
+				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
+		portColor.setValue(port.getColor().toString());
+		portElement.setAttributeNode(portColor);
 
 		// transition source
 		Attr nextPortColor = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
 		nextPortColor.setValue(port.getColor().toString());
 		portElement.setAttributeNode(nextPortColor);
+
+		
+		Element transitionSource;
+		Element transitionDestination;
+		Element transitionElement=new BATransitionToElementTransformer(intersection, doc).transform(port.getTransition());
+
+		if(port.isIncoming()){
+			transitionSource =new IBAStateToElementTransformer(this.model, doc).transform(port.getSource());
+			transitionDestination=new BAStateToElementTransformer(this.intersection, doc).transform(port.getDestination());
+		}
+		else{
+			transitionSource =new BAStateToElementTransformer(this.intersection, doc).transform(port.getSource());
+			transitionDestination=new IBAStateToElementTransformer(this.model, doc).transform(port.getDestination());
+		}
+		
+		portElement.appendChild(transitionSource);
+		portElement.appendChild(transitionDestination);
+		portElement.appendChild(transitionElement);
 		
 		return portElement;
 	}

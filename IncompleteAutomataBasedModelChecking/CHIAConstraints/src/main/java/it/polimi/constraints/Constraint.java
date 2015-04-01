@@ -66,6 +66,13 @@ public class Constraint {
 		}
 	}
 
+	public void addSubProperties(Set<SubProperty> subproperties){
+		Preconditions.checkNotNull(subproperties, "The set of subproperties cannot be null");
+		for(SubProperty subProperty: subproperties){
+			this.addSubProperty(subProperty);
+		}
+
+	}
 	/**
 	 * returns the sub-properties involved in the constraint
 	 * 

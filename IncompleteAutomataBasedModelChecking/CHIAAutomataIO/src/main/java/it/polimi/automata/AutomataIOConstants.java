@@ -19,7 +19,7 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_VALUE_OUT="outport";
 	
 	public final static String XML_ELEMENT_PORT="port";
-	public final static String XML_ELEMENT_CONSTRAINT="constraint";
+	public final static String XML_ELEMENT_SUBPROPERTY="subproperty";
 	public final static String XML_ELEMENT_REFINEMENT="refinement";
 	public final static String XML_ELEMENT_STATES="states";
 	public final static String XML_ELEMENT_STATE="state";

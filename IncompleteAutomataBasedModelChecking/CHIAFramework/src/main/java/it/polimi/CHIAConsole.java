@@ -7,8 +7,10 @@ import it.polimi.automata.io.in.BAReader;
 import it.polimi.automata.io.in.IBAReader;
 import it.polimi.automata.io.out.IntersectionWriter;
 import it.polimi.checker.ModelCheckingResults;
+import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.io.in.ReplacementReader;
+import it.polimi.constraints.io.out.ConstraintWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +27,8 @@ public class CHIAConsole {
 
 	private IBA model;
 	private BA claim;
+	private CHIA chia;
+	private Constraint constraint;
 	
 	private Replacement replacement;
 
@@ -69,7 +73,7 @@ public class CHIAConsole {
 			@Param(name = "intersectionFilePath", description = "The location where the intersection automaton must be saved") String intersectionFilePath) {
 		ModelCheckingResults results = new ModelCheckingResults(true, true,
 				true);
-		CHIA chia = new CHIA(claim, model, results);
+		chia = new CHIA(claim, model, results);
 
 		int result = chia.check();
 		if (result == 1) {
@@ -88,11 +92,51 @@ public class CHIAConsole {
 	}
 	
 	
-	@Command(name = "loadReplacement", abbrev = "lr", description = "I is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
+	@Command(name = "loadReplacement", abbrev = "lr", description = "It is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
 	public void loadReplacement(
 			@Param(name = "replacementFilePath", description = "is the path of the file that contains the replacement to be considered") String replacementFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
 		this.replacement = new ReplacementReader(replacementFilePath).read();
+	}
+	@Command(name = "loadConstraint", abbrev = "lC", description = "It is used to load the constraint from an XML file. The XML file must mach the Constraint.xsd", header = "constraint loaded")
+	public void loadConstraint(
+			@Param(name = "constraintFilePath", description = "is the path of the file that contains the constraint to be considered") String constraintFilePath)
+			throws FileNotFoundException, ParserConfigurationException,
+			SAXException, IOException {
+		this.replacement = new ReplacementReader(constraintFilePath).read();
+	}
+	
+	@Command(name = "computeConstraint", abbrev = "cc", description = "Is used to compute the constraint corresponding to the model and the specified claim. ")
+	public void computeConstraint()
+			throws FileNotFoundException, ParserConfigurationException,
+			SAXException, IOException {
+		ModelCheckingResults results = new ModelCheckingResults(true, true,
+				true);
+		if(chia==null){
+			chia = new CHIA(claim, model, results);
+		}
+		this.constraint=this.chia.generateConstraint();
+	}
+	@Command(name = "computeConstraint", abbrev = "cc", description = "Is used to compute the constraint corresponding to the model and the specified claim. ")
+	public void computeConstraint(
+			@Param(name = "-p", description = "if the -p flag is specified the port reachability relation is not computed") String p)
+			throws FileNotFoundException, ParserConfigurationException,
+			SAXException, IOException {
+		ModelCheckingResults results = new ModelCheckingResults(true, true,
+				true);
+		if(chia==null){
+			chia = new CHIA(claim, model, results);
+		}
+		this.constraint=this.chia.generateConstraintNoPortReachability();
+	}
+	
+	@Command(name = "saveConstraint", abbrev = "sc", description = "It is used to save the constraint in an XML file.", header = "constraint saved")
+	public void saveConstraint(
+			@Param(name = "constraintFilePath", description = "is the path of the file where the constraint must be saved") String constraintFilePath)
+			throws FileNotFoundException, ParserConfigurationException,
+			SAXException, IOException {
+		ConstraintWriter constraintWriter=new ConstraintWriter(this.constraint, constraintFilePath, this.model, this.chia.getModelChecker().getIntersectionAutomaton());
+		constraintWriter.write();
 	}
 }

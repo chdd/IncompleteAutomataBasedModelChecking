@@ -363,7 +363,7 @@ public class ModelCheckerTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.Checker#getVerificationTimes()}.
+	 * {@link it.polimi.checker.Checker#getVerificationResults()}.
 	 */
 	@Test
 	public void testGetVerificationTimes() {
@@ -375,6 +375,6 @@ public class ModelCheckerTest {
 		Checker mck = new Checker(
 				model1, claim1, 
 				new ModelCheckingResults(true, true, true));
-		assertNotNull(mck.getVerificationTimes());
+		assertNotNull(mck.getVerificationResults());
 	}
 }

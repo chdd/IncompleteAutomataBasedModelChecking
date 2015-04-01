@@ -1,6 +1,8 @@
 package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.IBA;
+import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.out.states.BAStateToElementTransformer;
 import it.polimi.automata.io.out.transitions.BATransitionToElementTransformer;
@@ -27,16 +29,20 @@ public class SubPropertyToElementTransformer
 		implements Transformer<SubProperty, Element> {
 
 	private final Document doc;
-
+	private final IBA model;
+	private final IntersectionBA intersectionBA;
+	
 	/**
 	 * creates a new PortsGraph To Element Transformer element transformer
 	 * 
 	 * @param doc
 	 *            is the document where the element must be placed
 	 */
-	public SubPropertyToElementTransformer(Document doc) {
+	public SubPropertyToElementTransformer(Document doc, IBA model, IntersectionBA intersectionBA) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
 		this.doc = doc;
+		this.model=model;
+		this.intersectionBA=intersectionBA;
 	}
 	
 	@Override
@@ -44,7 +50,7 @@ public class SubPropertyToElementTransformer
 		
 		// root elements
 		Element constraintElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
+				.createElement(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
 	
 		// adding the id
 		Attr modelTransparentStateIDd = doc
@@ -98,7 +104,7 @@ public class SubPropertyToElementTransformer
 			Set<Port> ports) {
 
 		PortToElementTransformer transformer = new PortToElementTransformer(
-				doc);
+				doc, model, intersectionBA);
 		for (Port port : ports) {
 			Element portElement = transformer.transform(port);
 			portsElement.appendChild(portElement);

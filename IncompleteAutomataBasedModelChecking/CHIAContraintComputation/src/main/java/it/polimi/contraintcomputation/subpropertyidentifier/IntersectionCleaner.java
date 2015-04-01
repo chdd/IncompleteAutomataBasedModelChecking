@@ -4,6 +4,7 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.contraintcomputation.CHIAOperation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class IntersectionCleaner {
+public class IntersectionCleaner extends CHIAOperation{
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -47,34 +48,31 @@ public class IntersectionCleaner {
 	/**
 	 * creates a new IntersectionCleaner
 	 * 
-	 * @param automaton
-	 *            is the automaton to be considered
 	 * @param intersectionBuilder
-	 *            contains the relation between the states of the intersection
-	 *            automaton and the states of the model
+	 *            contains the intersection automaton, the relation between the
+	 *            states of the intersection automaton and the states of the
+	 *            model etc
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IntersectionCleaner(IntersectionBA automaton,
-			IntersectionBuilder intersectionBuilder) {
-		Preconditions.checkNotNull(automaton,
-				"The intersection automaton to be considered cannot be null");
+	public IntersectionCleaner(IntersectionBuilder intersectionBuilder) {
+		super();
 		Preconditions.checkNotNull(intersectionBuilder,
 				"The intersection Builder cannot be null");
 
-		this.intersectionAutomaton = automaton;
+		this.intersectionAutomaton = intersectionBuilder
+				.getPrecomputedIntersectionAutomaton();
 		this.intersectionBuilder = intersectionBuilder;
 
 	}
 
 	/**
-	 * returns true if the automaton is empty, i.e., when it does not exists an
-	 * infinite path that contains an accepting run that can be accessed
-	 * infinitely often, false otherwise
-	 * 
-	 * @return true if the automaton is empty, false otherwise
+	 * Removes the states from which it is not possible to reach an accepting
+	 * state from the intersection automaton
 	 */
 	public void clean() {
+
+		logger.info("Starting the cleaning phase");
 
 		/*
 		 * contains the set of the states that has been encountered by
@@ -86,7 +84,6 @@ public class IntersectionCleaner {
 		 * contains the set of the visited states
 		 */
 		Set<State> visitedStates = new HashSet<State>();
-		logger.info("Sarting the cleaning phase");
 		Set<State> toBeVisited = new HashSet<State>();
 		toBeVisited.addAll(this.intersectionAutomaton.getAcceptStates());
 		while (!toBeVisited.isEmpty()) {
@@ -126,5 +123,6 @@ public class IntersectionCleaner {
 
 		logger.info("The cleaning phase has removed: " + toBeRemoved.size()
 				+ " states");
+		this.setPerformed(true);
 	}
 }

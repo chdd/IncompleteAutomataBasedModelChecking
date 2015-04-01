@@ -1,6 +1,7 @@
 package it.polimi.constraints.io.in;
 
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.io.in.XMLReader;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.SubProperty;
@@ -33,7 +34,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ConstraintReader {
+public class ConstraintReader extends XMLReader{
 
 	/**
 	 * is the logger of the BAReader class
@@ -102,7 +103,7 @@ public class ConstraintReader {
 				"The returning constraint cannot be null");
 
 		NodeList xmlSetOfConstraints = doc
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
 
 		logger.debug(xmlSetOfConstraints.getLength()
 				+ " constraints present in the file " + file.getName());

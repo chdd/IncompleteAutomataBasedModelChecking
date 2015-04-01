@@ -4,6 +4,9 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.checker.Checker;
 import it.polimi.checker.ModelCheckingResults;
+import it.polimi.constraints.Constraint;
+import it.polimi.contraintcomputation.CHIAOperation;
+import it.polimi.contraintcomputation.ConstraintGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +19,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class CHIA {
+public class CHIA extends CHIAOperation{
 
 	/**
 	 * is the logger of the ModelChecker class
@@ -95,6 +98,23 @@ public class CHIA {
 		return mcResults.getResult();
 	}
 
+	public Constraint generateConstraint(){
+		if(this.modelChecker==null){
+			this.check();
+		}
+		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
+		constraintGenerator.generateConstraint();
+		return constraintGenerator.computePortReachability();
+	}
+	
+	public Constraint generateConstraintNoPortReachability(){
+		if(this.modelChecker==null){
+			this.check();
+		}
+		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
+		return constraintGenerator.generateConstraint();
+	}
+	
 	/**
 	 * returns the model checker used by CHIA
 	 * 
