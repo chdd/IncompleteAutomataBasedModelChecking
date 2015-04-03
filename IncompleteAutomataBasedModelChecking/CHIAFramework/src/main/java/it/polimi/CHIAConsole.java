@@ -11,6 +11,7 @@ import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.io.in.ReplacementReader;
 import it.polimi.constraints.io.out.ConstraintWriter;
+import it.polimi.refinement.constraintcomputation.ReplacementConstraintComputation;
 import it.polimi.refinementchecker.ReplacementChecker;
 
 import java.io.File;
@@ -30,8 +31,8 @@ public class CHIAConsole {
 	private BA claim;
 	private CHIA chia;
 	private Constraint constraint;
-	
 	private Replacement replacement;
+	private ReplacementChecker rc;
 
 	@Command(name = "loadModel", abbrev = "lm", description = "Is used to load the model from an XML file. The XML file must mach the IBA.xsd.", header = "model loaded")
 	public void loadModel(
@@ -141,9 +142,9 @@ public class CHIAConsole {
 		constraintWriter.write();
 	}
 	
-	@Command(name = "replacementChecking", abbrev = "rc", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
+	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
 	public void replacementChecking(){
-		ReplacementChecker rc=new ReplacementChecker(constraint, replacement);
+		rc=new ReplacementChecker(constraint, replacement);
 		int result=rc.check();
 		if (result == 1) {
 			System.out.println("The property is satisfied");
@@ -155,5 +156,14 @@ public class CHIAConsole {
 			System.out.println("The property is possibly satisfied");
 		}
 		
+	}
+	@Command(name = "replacementComputeConstraint", abbrev = "rcc", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
+	public void replacementComputeConstraint(){
+		if(rc==null){
+			this.replacementChecking();
+		}
+		ReplacementConstraintComputation replacementConstraintComputation = new ReplacementConstraintComputation(rc);
+		replacementConstraintComputation.constraintComputation();
+		this.constraint=replacementConstraintComputation.newConstraint();
 	}
 }
