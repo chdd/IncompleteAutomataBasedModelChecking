@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.polimi.chia</groupId>
 	<artifactId>CHIA</artifactId>
@@ -204,11 +205,10 @@
 
 		<!-- JGraph the library upon which CHIA is based -->
 		<dependency>
-			<groupId>jgrapht</groupId>
-			<artifactId>jgrapht</artifactId>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-jdk1.5</artifactId>
 			<version>0.7.3</version>
 		</dependency>
-
 		<!-- Is the library which is used to load the BA from the LTL formula -->
 		<dependency>
 			<groupId>tl2ba4josgi</groupId>
@@ -279,6 +279,6 @@
 		<!--<module>RefinementChecker</module> -->
 		<!--<module>CHIARefinementChecker</module> -->
 		<!--<module>CHIAConstraintsIO</module> -->
-    <module>CHIARefinementConstraintComputation</module>
-  </modules>
+		<module>CHIARefinementConstraintComputation</module>
+	</modules>
 </project>
