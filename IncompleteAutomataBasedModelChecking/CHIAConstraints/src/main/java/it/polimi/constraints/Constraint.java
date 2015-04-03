@@ -150,7 +150,7 @@ public class Constraint {
 	 *             if the transparent state is not contained into the set of the
 	 *             states constrained states
 	 */
-	public SubProperty getSubproperties(State transparentState) {
+	public SubProperty getSubproperty(State transparentState) {
 		Preconditions.checkNotNull(transparentState,
 				"The transparent state under analysis cannot be null");
 		Preconditions
@@ -279,5 +279,13 @@ public class Constraint {
 
 		}
 		this.subProperties.remove(subProperty);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Constraint clone(){
+		Constraint c=new Constraint();
+		c.addSubProperties(this.subProperties);
+		c.portsGraph=(DefaultDirectedGraph<Port, DefaultEdge>) this.portsGraph.clone();
+		return c;
 	}
 }

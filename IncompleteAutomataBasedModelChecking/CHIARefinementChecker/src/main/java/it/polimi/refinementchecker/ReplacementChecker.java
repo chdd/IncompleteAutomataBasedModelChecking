@@ -44,9 +44,20 @@ public class ReplacementChecker {
 	private final Constraint constraint;
 
 	/**
-	 * contains the refinement to be verified
+	 * contains the replacement to be verified
 	 */
-	private final Replacement refinement;
+	private final Replacement replacement;
+	
+	/**
+	 * the sub-property to be considered
+	 */
+	private final SubProperty subproperty;
+	
+	/**
+	 * the checker used to check the refinement
+	 */
+	private Checker checker;
+
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -73,7 +84,10 @@ public class ReplacementChecker {
 								replacement.getModelState()),
 						"The state constrained in the refinement must be contained into the set of the states of the constraint");
 		this.constraint = constraint;
-		this.refinement = replacement;
+		this.replacement = replacement;
+		this.subproperty = this.constraint
+				.getSubproperty(this.replacement.getModelState());
+		
 	}
 
 	/**
@@ -96,8 +110,7 @@ public class ReplacementChecker {
 		// GETTING THE CLAIM
 		// gets the sub-property associated with the model state, i.e., the
 		// claim automaton
-		SubProperty subproperty = this.constraint
-				.getSubproperties(this.refinement.getModelState());
+		
 		// sets the initial and accepting states depending on the incoming and
 		// out-coming transitions
 		BA claim = subproperty.getAutomaton();
@@ -105,15 +118,39 @@ public class ReplacementChecker {
 		// GETTING THE MODEL
 		// gets the model to be considered, i.e., the model of the refinement
 		// where the transparent states have been removed
-		IBA model = this.refinement.getAutomaton();
+		IBA model = this.replacement.getAutomaton();
 
 		AutomatonDecorator automatonDecorator = new AutomatonDecorator();
 		automatonDecorator.decorateClaim(claim, subproperty);
-		automatonDecorator.decorateModel(model, refinement);
+		automatonDecorator.decorateModel(model, replacement);
 
-		Checker checker = new Checker(model, claim, new ModelCheckingResults(
+		checker = new Checker(model, claim, new ModelCheckingResults(
 				true, true, true));
 		// checking if there exists a path that does not satisfy the property
 		return checker.check();
+	}
+	
+	public Checker getChecker(){
+		return this.checker;
+	}
+	
+	/**
+	 * @return the replacement considered by the replacement checker
+	 */
+	public Replacement getReplacement() {
+		return replacement;
+	}
+
+	/**
+	 * @return the sub-property considered by the replacement checker
+	 */
+	public SubProperty getSubproperty() {
+		return subproperty;
+	}
+	/**
+	 * @return the constraint considered by the replacement checker
+	 */
+	public Constraint getConstraint() {
+		return constraint;
 	}
 }

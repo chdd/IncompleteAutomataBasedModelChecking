@@ -98,6 +98,10 @@ public class IncomingPortsIdentifier extends PortsIdentifier {
 
 						intersectionPortClaimPortMap.put(intersectionPort,
 								claimIncomingPort);
+						if(!claimPortIntersectionPortMap.containsKey(claimIncomingPort)){
+							claimPortIntersectionPortMap.put(claimIncomingPort, new HashSet<Port>());
+						}
+						claimPortIntersectionPortMap.get(claimIncomingPort).add(intersectionPort);
 					}
 				}
 			}

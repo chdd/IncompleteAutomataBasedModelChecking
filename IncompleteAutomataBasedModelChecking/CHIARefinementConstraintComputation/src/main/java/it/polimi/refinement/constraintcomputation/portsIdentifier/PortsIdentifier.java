@@ -15,7 +15,8 @@ import com.google.common.base.Preconditions;
 /**
  * 
  * Is the abstract class from which the Incoming and Outcoming PortsIdentifier
- * inherits. It contains the instantiation logic and the common attributes of these classes
+ * inherits. It contains the instantiation logic and the common attributes of
+ * these classes
  * 
  * @author claudiomenghi
  *
@@ -44,6 +45,7 @@ public abstract class PortsIdentifier {
 	 * port and the corresponding claim port
 	 */
 	protected final Map<Port, Port> intersectionPortClaimPortMap = new HashMap<Port, Port>();
+	protected final Map<Port, Set<Port>> claimPortIntersectionPortMap = new HashMap<Port, Set<Port>>();
 
 	/**
 	 * contains the set of the intersection port
@@ -100,4 +102,25 @@ public abstract class PortsIdentifier {
 
 		return this.intersectionPortClaimPortMap.get(intersectionPort);
 	}
+
+	/**
+	 * gets the intersection ports that corresponds to the specific claim port
+	 * 
+	 * @param claimPort
+	 *            is the claim port that is of interest
+	 * @return the set of intersection ports that corresponds to the specific
+	 *         claim port
+	 * @throws NullPointerException
+	 *             if the claim port is null
+	 */
+	public Set<Port> getCorrespondingIntersectionPort(Port claimPort) {
+		Preconditions.checkNotNull(claimPort,
+				"The intersection port cannot be null");
+		if (this.intersectionPortClaimPortMap.containsKey(claimPort)) {
+			return this.claimPortIntersectionPortMap.get(claimPort);
+		} else {
+			return new HashSet<Port>();
+		}
+	}
+
 }

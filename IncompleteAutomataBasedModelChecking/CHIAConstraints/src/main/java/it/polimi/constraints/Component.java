@@ -111,8 +111,9 @@ public abstract class Component {
 	/**
 	 * adds an incoming port to the component
 	 * 
-	 * @param port is the port to be added as an in-coming port
-	 *          
+	 * @param port
+	 *            is the port to be added as an in-coming port
+	 * 
 	 * @throws NullPointerException
 	 *             if the port is null
 	 */
@@ -125,22 +126,48 @@ public abstract class Component {
 	/**
 	 * adds an out-coming port to the component
 	 * 
-	 * @param port is the port to be added as an out-coming port
+	 * @param port
+	 *            is the port to be added as an out-coming port
 	 * @throws NullPointerException
 	 *             if the port is null
 	 */
 	public void addOutComingPort(Port port) {
-		
+
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
 		this.outcomingPorts.add(port);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		return this.getId() + ": " + this.getModelState().getName();
+	}
+
+	/**
+	 * removes the port from the set of incoming or outcoming port
+	 * 
+	 * @param p
+	 *            is the port to be removed
+	 * @throws NullPointerException
+	 *             if the port p is null
+	 * @throws IllegalArgumentException
+	 *             if the port is not contained into the set of incoming or
+	 *             outcoming ports
+	 */
+	public void removePort(Port p) {
+		Preconditions.checkNotNull(p, "The port p cannot be null");
+		Preconditions
+				.checkArgument(this.getIncomingPorts().contains(p)
+						|| this.getOutcomingPorts().contains(p),
+						"The port must be contained in the set of incoming or utcoming ports");
+		if(this.getIncomingPorts().contains(p)){
+			this.incomingPorts.remove(p);
+		}
+		if(this.getOutcomingPorts().contains(p)){
+			this.outcomingPorts.remove(p);
+		}
 	}
 
 	/*
