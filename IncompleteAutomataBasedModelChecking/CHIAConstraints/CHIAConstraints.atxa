@@ -1,0 +1,322 @@
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+@prefix atxa-jdt: <http://www.architexa.com/rdf/jdt#> .
+
+<http://www.architexa.com/rdf/rse-eclipse#CHIAConstraints.atxa> a atxa-core:reloFile .
+
+atxa:DetailNode atxa-core:detailLevel "2" .
+
+atxa-core:docRoot atxa-core:browseModel "com.architexa.diagrams.relo.jdt/com.architexa.diagrams.relo.jdt.browse.ClassStrucBrowseModel" ;
+	atxa-core:contains _:node19hbbhtcox1 .
+
+_:node19hbbhtcox1 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints> ;
+	atxa-core:posX "112" ;
+	atxa-core:posY "108" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color> .
+
+_:node19hbbhtcox1 atxa-core:contains _:node19hbbhtcox21 .
+
+_:node19hbbhtcox21 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement> ;
+	atxa-core:posX "118" ;
+	atxa-core:posY "327" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement.automaton> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement.Replacement(State,IBA,Set,Set,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement.getAutomaton()> .
+
+_:node19h8o77l7x14174 a atxa-core:link ;
+	atxa-core:model atxa-jdt:inherits ;
+	rdf:subject _:node19hbbhtcox21 ;
+	rdf:object _:node19h8o77l7x15860 ;
+	atxa-core:bendpoint _:node19h8o77l7x16512 .
+
+_:node19h8o77l7x16512 atxa-core:bpLocation "186,316" ;
+	atxa-core:bpIndex "0" .
+
+_:node19h8o77l7x14174 atxa-core:bendpoint _:node19h8o77l7x16513 .
+
+_:node19h8o77l7x16513 atxa-core:bpLocation "270,316" ;
+	atxa-core:bpIndex "1" .
+
+_:node19hbbhtcox21 atxa-core:contains _:node19hbbhtcox24 .
+
+_:node19hbbhtcox24 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement.automaton> ;
+	atxa-core:posX "119" ;
+	atxa-core:posY "345" .
+
+_:node19hbbhtcox21 atxa-core:contains _:node19h8o77l7x15863 .
+
+_:node19h8o77l7x15863 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement.Replacement(State,IBA,Set,Set,)> ;
+	atxa-core:posX "119" ;
+	atxa-core:posY "361" .
+
+_:node19hbbhtcox21 atxa-core:contains _:node19h8o77l7x15864 .
+
+_:node19h8o77l7x15864 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Replacement.getAutomaton()> ;
+	atxa-core:posX "119" ;
+	atxa-core:posY "377" .
+
+_:node19hbbhtcox1 atxa-core:contains _:node19h8o77l7x15860 .
+
+_:node19h8o77l7x15860 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component> ;
+	atxa-core:posX "188" ;
+	atxa-core:posY "133" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.id> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.modelState> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.incomingPorts> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.outcomingPorts> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.Component(State,Set,Set,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.getIncomingPorts()> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.addIncomingPort(Port,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.addOutComingPort(Port,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.getOutcomingPorts()> .
+
+_:node19h8o77l7x15683 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19h8o77l7x15860 ;
+	rdf:object _:node19hbbhtcox6 .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15865 .
+
+_:node19h8o77l7x15865 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.id> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "151" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15866 .
+
+_:node19h8o77l7x15866 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.modelState> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "167" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15867 .
+
+_:node19h8o77l7x15867 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.incomingPorts> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "183" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15868 .
+
+_:node19h8o77l7x15868 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.outcomingPorts> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "199" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15869 .
+
+_:node19h8o77l7x15869 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.Component(State,Set,Set,)> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "215" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15870 .
+
+_:node19h8o77l7x15870 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.getIncomingPorts()> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "231" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15871 .
+
+_:node19h8o77l7x15871 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.addIncomingPort(Port,)> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "247" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15872 .
+
+_:node19h8o77l7x15872 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.addOutComingPort(Port,)> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "263" .
+
+_:node19h8o77l7x15860 atxa-core:contains _:node19h8o77l7x15873 .
+
+_:node19h8o77l7x15873 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Component.getOutcomingPorts()> ;
+	atxa-core:posX "189" ;
+	atxa-core:posY "279" .
+
+_:node19hbbhtcox1 atxa-core:contains _:node19hbbhtcox4 .
+
+_:node19hbbhtcox4 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty> ;
+	atxa-core:posX "301" ;
+	atxa-core:posY "331" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty.automaton> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty.SubProperty(State,BA,Set,Set,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty.getAutomaton()> .
+
+_:node19h8o77l7x14173 a atxa-core:link ;
+	atxa-core:model atxa-jdt:inherits ;
+	rdf:subject _:node19hbbhtcox4 ;
+	rdf:object _:node19h8o77l7x15860 ;
+	atxa-core:bendpoint _:node19h8o77l7x16514 .
+
+_:node19h8o77l7x16514 atxa-core:bpLocation "370,316" ;
+	atxa-core:bpIndex "0" .
+
+_:node19h8o77l7x14173 atxa-core:bendpoint _:node19h8o77l7x16515 .
+
+_:node19h8o77l7x16515 atxa-core:bpLocation "270,316" ;
+	atxa-core:bpIndex "1" .
+
+_:node19hbbhtcox4 atxa-core:contains _:node19hbbhtcox33 .
+
+_:node19hbbhtcox33 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty.automaton> ;
+	atxa-core:posX "302" ;
+	atxa-core:posY "349" .
+
+_:node19hbbhtcox4 atxa-core:contains _:node19hbbhtcox36 .
+
+_:node19hbbhtcox36 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty.SubProperty(State,BA,Set,Set,)> ;
+	atxa-core:posX "302" ;
+	atxa-core:posY "365" .
+
+_:node19hbbhtcox4 atxa-core:contains _:node19hbbhtcox40 .
+
+_:node19hbbhtcox40 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$SubProperty.getAutomaton()> ;
+	atxa-core:posX "302" ;
+	atxa-core:posY "381" .
+
+_:node19hbbhtcox1 atxa-core:contains _:node19hbbhtcox2 .
+
+_:node19hbbhtcox2 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint> ;
+	atxa-core:posX "255" ;
+	atxa-core:posY "434" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.Constraint()> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.subProperties> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.portsGraph> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.getSubproperties(State,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.getPortsGraph()> .
+
+_:node19hbbhtcox3 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19hbbhtcox2 ;
+	rdf:object _:node19hbbhtcox4 .
+
+_:node19hbbhtcox5 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19hbbhtcox2 ;
+	rdf:object _:node19hbbhtcox6 .
+
+_:node19hbbhtcox2 atxa-core:contains _:node19hbbhtcox7 .
+
+_:node19hbbhtcox7 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.Constraint()> ;
+	atxa-core:posX "256" ;
+	atxa-core:posY "484" .
+
+_:node19hbbhtcox2 atxa-core:contains _:node19hbbhtcox8 .
+
+_:node19hbbhtcox8 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.subProperties> ;
+	atxa-core:posX "256" ;
+	atxa-core:posY "452" .
+
+_:node19hbbhtcox2 atxa-core:contains _:node19hbbhtcox9 .
+
+_:node19hbbhtcox9 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.portsGraph> ;
+	atxa-core:posX "256" ;
+	atxa-core:posY "468" .
+
+_:node19hbbhtcox2 atxa-core:contains _:node19hbbhtcox10 .
+
+_:node19hbbhtcox10 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.getSubproperties(State,)> ;
+	atxa-core:posX "256" ;
+	atxa-core:posY "500" .
+
+_:node19hbbhtcox2 atxa-core:contains _:node19hbbhtcox11 .
+
+_:node19hbbhtcox11 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Constraint.getPortsGraph()> ;
+	atxa-core:posX "256" ;
+	atxa-core:posY "516" .
+
+_:node19hbbhtcox1 atxa-core:contains _:node19hbbhtcox6 .
+
+_:node19hbbhtcox6 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port> ;
+	atxa-core:posX "480" ;
+	atxa-core:posY "302" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.color> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.destination> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.source> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.transition> .
+
+_:node19hbbhtcox16 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19hbbhtcox6 ;
+	rdf:object _:node19hbbhtcox12 .
+
+_:node19hbbhtcox6 atxa-core:contains _:node19hbbhtcox17 .
+
+_:node19hbbhtcox17 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.color> ;
+	atxa-core:posX "481" ;
+	atxa-core:posY "320" .
+
+_:node19hbbhtcox6 atxa-core:contains _:node19hbbhtcox18 .
+
+_:node19hbbhtcox18 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.destination> ;
+	atxa-core:posX "481" ;
+	atxa-core:posY "336" .
+
+_:node19hbbhtcox6 atxa-core:contains _:node19hbbhtcox19 .
+
+_:node19hbbhtcox19 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.source> ;
+	atxa-core:posX "481" ;
+	atxa-core:posY "352" .
+
+_:node19hbbhtcox6 atxa-core:contains _:node19hbbhtcox20 .
+
+_:node19hbbhtcox20 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Port.transition> ;
+	atxa-core:posX "481" ;
+	atxa-core:posY "368" .
+
+_:node19hbbhtcox1 atxa-core:contains _:node19hbbhtcox12 .
+
+_:node19hbbhtcox12 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color> ;
+	atxa-core:posX "492" ;
+	atxa-core:posY "140" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color.RED> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color.GREEN> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color.YELLOW> .
+
+_:node19hbbhtcox12 atxa-core:contains _:node19hbbhtcox13 .
+
+_:node19hbbhtcox13 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color.RED> ;
+	atxa-core:posX "493" ;
+	atxa-core:posY "158" .
+
+_:node19hbbhtcox12 atxa-core:contains _:node19hbbhtcox14 .
+
+_:node19hbbhtcox14 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color.GREEN> ;
+	atxa-core:posX "493" ;
+	atxa-core:posY "174" .
+
+_:node19hbbhtcox12 atxa-core:contains _:node19hbbhtcox15 .
+
+_:node19hbbhtcox15 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.constraints$Color.YELLOW> ;
+	atxa-core:posX "493" ;
+	atxa-core:posY "190" .
+
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+@prefix atxa-jdt: <http://www.architexa.com/rdf/jdt#> .
+
+<http://www.architexa.com/rdf/rse-eclipse#CHIAConstraints.atxa> a atxa-core:reloFile ;
+	atxa-core:contains _:node19hbbhtcox24 , _:node19h8o77l7x15863 , _:node19h8o77l7x15864 , _:node19hbbhtcox21 , _:node19h8o77l7x15865 , _:node19h8o77l7x15866 , _:node19h8o77l7x15867 , _:node19h8o77l7x15868 , _:node19h8o77l7x15869 , _:node19h8o77l7x15870 , _:node19h8o77l7x15871 , _:node19h8o77l7x15872 , _:node19h8o77l7x15873 , _:node19h8o77l7x15860 , _:node19hbbhtcox33 , _:node19hbbhtcox36 , _:node19hbbhtcox40 , _:node19hbbhtcox4 , _:node19hbbhtcox7 , _:node19hbbhtcox8 , _:node19hbbhtcox9 , _:node19hbbhtcox10 , _:node19hbbhtcox11 , _:node19hbbhtcox2 , _:node19hbbhtcox17 , _:node19hbbhtcox18 , _:node19hbbhtcox19 , _:node19hbbhtcox20 , _:node19hbbhtcox6 , _:node19hbbhtcox13 , _:node19hbbhtcox14 , _:node19hbbhtcox15 , _:node19hbbhtcox12 , _:node19hbbhtcox1 , atxa-core:docRoot , _:node19hbbhtcox24 , _:node19h8o77l7x15863 , _:node19h8o77l7x15864 , _:node19hbbhtcox21 , _:node19h8o77l7x15865 , _:node19h8o77l7x15866 , _:node19h8o77l7x15867 , _:node19h8o77l7x15868 , _:node19h8o77l7x15869 , _:node19h8o77l7x15870 , _:node19h8o77l7x15871 , _:node19h8o77l7x15872 , _:node19h8o77l7x15873 , _:node19h8o77l7x15860 , _:node19hbbhtcox33 , _:node19hbbhtcox36 , _:node19hbbhtcox40 , _:node19hbbhtcox4 , _:node19hbbhtcox7 , _:node19hbbhtcox8 , _:node19hbbhtcox9 , _:node19hbbhtcox10 , _:node19hbbhtcox11 , _:node19hbbhtcox2 , _:node19hbbhtcox17 , _:node19hbbhtcox18 , _:node19hbbhtcox19 , _:node19hbbhtcox20 , _:node19hbbhtcox6 , _:node19hbbhtcox13 , _:node19hbbhtcox14 , _:node19hbbhtcox15 , _:node19hbbhtcox12 , _:node19hbbhtcox1 , atxa-core:docRoot , _:node19h8o77l7x14174 , _:node19h8o77l7x15683 , _:node19h8o77l7x14173 , _:node19hbbhtcox3 , _:node19hbbhtcox5 , _:node19hbbhtcox16 , _:node19h8o77l7x14174 , _:node19h8o77l7x15683 , _:node19h8o77l7x14173 , _:node19hbbhtcox3 , _:node19hbbhtcox5 , _:node19hbbhtcox16 .
+
