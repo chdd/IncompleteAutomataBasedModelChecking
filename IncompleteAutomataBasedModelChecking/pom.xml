@@ -190,18 +190,18 @@
 		</dependency>
 
 		<!-- is the library used for logging -->
-		<dependency>
+		 <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.10</version>
 		</dependency>
 
 		<!-- slf4j 4j no operations -->
-		<dependency>
+	<!-- 	<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-nop</artifactId>
 			<version>1.7.10</version>
-		</dependency>
+		</dependency> -->
 
 		<!-- JGraph the library upon which CHIA is based -->
 		<dependency>
@@ -271,14 +271,13 @@
 		<module>CHIAAutomataIO</module>
 		<module>CHIAChecker</module>
 		<!-- <module>CHIALTLIO</module> -->
-		<!-- <module>CHIAConstraints</module> -->
+		<module>CHIAConstraints</module> 
 		<!-- <module>CHIAVisualization</module> -->
-		<!-- <module>CHIAContraintComputation</module> -->
-		<!-- <module>CHIARegexConstraintTransformer</module> -->
+		 <module>CHIAContraintComputation</module> 
 		<module>CHIAFramework</module>
-		<!--<module>RefinementChecker</module> -->
-		<!--<module>CHIARefinementChecker</module> -->
-		<!--<module>CHIAConstraintsIO</module> -->
+		<module>RefinementChecker</module> 
+		<module>CHIARefinementChecker</module> 
+		<module>CHIAConstraintsIO</module> 
 		<module>CHIARefinementConstraintComputation</module>
 	</modules>
 </project>
