@@ -1,0 +1,328 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-jdt: <http://www.architexa.com/rdf/jdt#> .
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+
+<http://www.architexa.com/rdf/rse-eclipse#CHIARefinementConstraintComputation.atxa> a atxa-core:reloFile .
+
+atxa:DetailNode atxa-core:detailLevel "0" .
+
+atxa-core:docRoot atxa-core:browseModel "com.architexa.diagrams.relo.jdt/com.architexa.diagrams.relo.jdt.browse.ClassStrucBrowseModel" ;
+	atxa-core:contains _:node19img4sgrx7619 .
+
+_:node19img4sgrx7619 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation> ;
+	atxa-core:posX "505" ;
+	atxa-core:posY "371" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation> .
+
+_:node19img4sgrx7619 atxa-core:contains _:node19img4sgrx7620 .
+
+_:node19img4sgrx7620 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation> ;
+	atxa-core:posX "511" ;
+	atxa-core:posY "396" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation.ReplacementConstraintComputation(ReplacementChecker,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation.updatedPathsWithNoTransparentStates(SubProperty,BA,IBA,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation.updatedPathsWithTransparentStates(Component,BA,IBA,)> .
+
+_:node19img4sgrx7620 atxa-core:contains _:node19img4sgrx7621 .
+
+_:node19img4sgrx7621 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation.ReplacementConstraintComputation(ReplacementChecker,)> ;
+	atxa-core:posX "512" ;
+	atxa-core:posY "414" .
+
+_:node19img4sgrx7620 atxa-core:contains _:node19img4sgrx7622 .
+
+_:node19img4sgrx7622 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation.updatedPathsWithNoTransparentStates(SubProperty,BA,IBA,)> ;
+	atxa-core:posX "512" ;
+	atxa-core:posY "430" .
+
+_:node19img4sgrx2324 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19img4sgrx7622 ;
+	rdf:object _:node19img4sgrx7623 .
+
+_:node19img4sgrx2369 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19img4sgrx7622 ;
+	rdf:object _:node19img4sgrx7624 .
+
+_:node19img4sgrx2402 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19img4sgrx7622 ;
+	rdf:object _:node19img4sgrx7625 .
+
+_:node19img4sgrx7620 atxa-core:contains _:node19img4sgrx7626 .
+
+_:node19img4sgrx7626 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation$ReplacementConstraintComputation.updatedPathsWithTransparentStates(Component,BA,IBA,)> ;
+	atxa-core:posX "512" ;
+	atxa-core:posY "446" .
+
+_:node19img4sgrx5616 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19img4sgrx7626 ;
+	rdf:object _:node19img4sgrx7627 .
+
+_:node19img4sgrx5653 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19img4sgrx7626 ;
+	rdf:object _:node19img4sgrx7628 .
+
+_:node19img4sgrx5922 a atxa-core:link ;
+	atxa-core:model atxa-jdt:refType ;
+	rdf:subject _:node19img4sgrx7626 ;
+	rdf:object _:node19img4sgrx7629 .
+
+atxa-core:docRoot atxa-core:contains _:node19img4sgrx7630 .
+
+_:node19img4sgrx7630 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier> ;
+	atxa-core:posX "505" ;
+	atxa-core:posY "96" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$PortsIdentifier> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier> .
+
+_:node19img4sgrx7630 atxa-core:contains _:node19img4sgrx7624 .
+
+_:node19img4sgrx7624 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier> ;
+	atxa-core:posX "511" ;
+	atxa-core:posY "192" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier.OutComingPortsIdentifier(Replacement,SubProperty,IntersectionBuilder,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier.computeIntersectionOutcomingPorts()> .
+
+_:node19img4sgrx44 a atxa-core:link ;
+	atxa-core:model atxa-jdt:inherits ;
+	rdf:subject _:node19img4sgrx7624 ;
+	rdf:object _:node19img4sgrx7631 ;
+	atxa-core:bendpoint _:node19img4sgrx7632 .
+
+_:node19img4sgrx7632 atxa-core:bpLocation "739,176" ;
+	atxa-core:bpIndex "0" .
+
+_:node19img4sgrx44 atxa-core:bendpoint _:node19img4sgrx7633 .
+
+_:node19img4sgrx7633 atxa-core:bpLocation "980,176" ;
+	atxa-core:bpIndex "1" .
+
+_:node19img4sgrx7624 atxa-core:contains _:node19img4sgrx7634 .
+
+_:node19img4sgrx7634 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier.OutComingPortsIdentifier(Replacement,SubProperty,IntersectionBuilder,)> ;
+	atxa-core:posX "512" ;
+	atxa-core:posY "210" .
+
+_:node19img4sgrx7624 atxa-core:contains _:node19img4sgrx7635 .
+
+_:node19img4sgrx7635 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$OutComingPortsIdentifier.computeIntersectionOutcomingPorts()> ;
+	atxa-core:posX "512" ;
+	atxa-core:posY "226" .
+
+_:node19img4sgrx7630 atxa-core:contains _:node19img4sgrx7631 .
+
+_:node19img4sgrx7631 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$PortsIdentifier> ;
+	atxa-core:posX "782" ;
+	atxa-core:posY "121" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$PortsIdentifier> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$PortsIdentifier.PortsIdentifier(Replacement,SubProperty,IntersectionBuilder,)> .
+
+_:node19img4sgrx7631 atxa-core:contains _:node19img4sgrx7636 .
+
+_:node19img4sgrx7636 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$PortsIdentifier.PortsIdentifier(Replacement,SubProperty,IntersectionBuilder,)> ;
+	atxa-core:posX "783" ;
+	atxa-core:posY "139" .
+
+_:node19img4sgrx7630 atxa-core:contains _:node19img4sgrx7625 .
+
+_:node19img4sgrx7625 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier> ;
+	atxa-core:posX "886" ;
+	atxa-core:posY "263" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier.IncomingPortsIdentifier(Replacement,SubProperty,IntersectionBuilder,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier.computeIntersectionIncomingPorts()> .
+
+_:node19img4sgrx43 a atxa-core:link ;
+	atxa-core:model atxa-jdt:inherits ;
+	rdf:subject _:node19img4sgrx7625 ;
+	rdf:object _:node19img4sgrx7631 ;
+	atxa-core:bendpoint _:node19img4sgrx7637 .
+
+_:node19img4sgrx7637 atxa-core:bpLocation "1108,176" ;
+	atxa-core:bpIndex "0" .
+
+_:node19img4sgrx43 atxa-core:bendpoint _:node19img4sgrx7638 .
+
+_:node19img4sgrx7638 atxa-core:bpLocation "980,176" ;
+	atxa-core:bpIndex "1" .
+
+_:node19img4sgrx7625 atxa-core:contains _:node19img4sgrx7639 .
+
+_:node19img4sgrx7639 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier.IncomingPortsIdentifier(Replacement,SubProperty,IntersectionBuilder,)> ;
+	atxa-core:posX "887" ;
+	atxa-core:posY "281" .
+
+_:node19img4sgrx7625 atxa-core:contains _:node19img4sgrx7640 .
+
+_:node19img4sgrx7640 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.portsIdentifier$IncomingPortsIdentifier.computeIntersectionIncomingPorts()> ;
+	atxa-core:posX "887" ;
+	atxa-core:posY "297" .
+
+atxa-core:docRoot atxa-core:contains _:node19img4sgrx7641 .
+
+_:node19img4sgrx7641 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator> ;
+	atxa-core:posX "1055" ;
+	atxa-core:posY "349" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator> .
+
+_:node19img4sgrx7641 atxa-core:contains _:node19img4sgrx7623 .
+
+_:node19img4sgrx7623 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator> ;
+	atxa-core:posX "1061" ;
+	atxa-core:posY "374" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.SubpropertyPortColorPropagator(IntersectionBA,Set,Set,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.updateComponentPorts()> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.backPropagatingRedPorts()> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.forwardPropagatingGreenPorts()> .
+
+_:node19img4sgrx7623 atxa-core:contains _:node19img4sgrx7642 .
+
+_:node19img4sgrx7642 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.SubpropertyPortColorPropagator(IntersectionBA,Set,Set,)> ;
+	atxa-core:posX "1062" ;
+	atxa-core:posY "392" .
+
+_:node19img4sgrx7623 atxa-core:contains _:node19img4sgrx7643 .
+
+_:node19img4sgrx7643 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.updateComponentPorts()> ;
+	atxa-core:posX "1062" ;
+	atxa-core:posY "408" .
+
+_:node19img4sgrx7623 atxa-core:contains _:node19img4sgrx7644 .
+
+_:node19img4sgrx7644 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.backPropagatingRedPorts()> ;
+	atxa-core:posX "1062" ;
+	atxa-core:posY "424" .
+
+_:node19img4sgrx7623 atxa-core:contains _:node19img4sgrx7645 .
+
+_:node19img4sgrx7645 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.colorpropagator$SubpropertyPortColorPropagator.forwardPropagatingGreenPorts()> ;
+	atxa-core:posX "1062" ;
+	atxa-core:posY "440" .
+
+atxa-core:docRoot atxa-core:contains _:node19img4sgrx7646 .
+
+_:node19img4sgrx7646 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger> ;
+	atxa-core:posX "482" ;
+	atxa-core:posY "487" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger> .
+
+_:node19img4sgrx7646 atxa-core:contains _:node19img4sgrx7628 .
+
+_:node19img4sgrx7628 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover> ;
+	atxa-core:posX "1089" ;
+	atxa-core:posY "603" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover.UnreachablePortsRemover(Set,Set,Constraint,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover.remove()> .
+
+_:node19img4sgrx7628 atxa-core:contains _:node19img4sgrx7647 .
+
+_:node19img4sgrx7647 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover.UnreachablePortsRemover(Set,Set,Constraint,)> ;
+	atxa-core:posX "1090" ;
+	atxa-core:posY "621" .
+
+_:node19img4sgrx7628 atxa-core:contains _:node19img4sgrx7648 .
+
+_:node19img4sgrx7648 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsRemover.remove()> ;
+	atxa-core:posX "1090" ;
+	atxa-core:posY "637" .
+
+_:node19img4sgrx7646 atxa-core:contains _:node19img4sgrx7627 .
+
+_:node19img4sgrx7627 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier> ;
+	atxa-core:posX "1067" ;
+	atxa-core:posY "512" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier.UnreachablePortsIdentifier(IntersectionBA,Set,Set,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier.updateComponentPorts()> .
+
+_:node19img4sgrx7627 atxa-core:contains _:node19img4sgrx7649 .
+
+_:node19img4sgrx7649 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier.UnreachablePortsIdentifier(IntersectionBA,Set,Set,)> ;
+	atxa-core:posX "1068" ;
+	atxa-core:posY "530" .
+
+_:node19img4sgrx7627 atxa-core:contains _:node19img4sgrx7650 .
+
+_:node19img4sgrx7650 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$UnreachablePortsIdentifier.updateComponentPorts()> ;
+	atxa-core:posX "1068" ;
+	atxa-core:posY "546" .
+
+_:node19img4sgrx7646 atxa-core:contains _:node19img4sgrx7629 .
+
+_:node19img4sgrx7629 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger> ;
+	atxa-core:posX "488" ;
+	atxa-core:posY "579" .
+
+<http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger> atxa-core:contains <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.Merger(Constraint,Constraint,IntersectionBA,IncomingPortsIdentifier,OutComingPortsIdentifier,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.merge(State,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.computeIncomingPorts(Constraint,SubProperty,ReachabilityChecker,ReachabilityChecker,)> , <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.computeOutcomingPorts(Constraint,SubProperty,ReachabilityChecker,ReachabilityChecker,)> .
+
+_:node19img4sgrx7629 atxa-core:contains _:node19img4sgrx7651 .
+
+_:node19img4sgrx7651 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.Merger(Constraint,Constraint,IntersectionBA,IncomingPortsIdentifier,OutComingPortsIdentifier,)> ;
+	atxa-core:posX "489" ;
+	atxa-core:posY "597" .
+
+_:node19img4sgrx7629 atxa-core:contains _:node19img4sgrx7652 .
+
+_:node19img4sgrx7652 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.merge(State,)> ;
+	atxa-core:posX "489" ;
+	atxa-core:posY "613" .
+
+_:node19img4sgrx7629 atxa-core:contains _:node19img4sgrx7653 .
+
+_:node19img4sgrx7653 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.computeIncomingPorts(Constraint,SubProperty,ReachabilityChecker,ReachabilityChecker,)> ;
+	atxa-core:posX "489" ;
+	atxa-core:posY "629" .
+
+_:node19img4sgrx7629 atxa-core:contains _:node19img4sgrx7654 .
+
+_:node19img4sgrx7654 a atxa-core:node ;
+	atxa-core:model <http://www.architexa.com/rdf/jdt-wkspc#it.polimi.refinement.constraintcomputation.merger$Merger.computeOutcomingPorts(Constraint,SubProperty,ReachabilityChecker,ReachabilityChecker,)> ;
+	atxa-core:posX "489" ;
+	atxa-core:posY "645" .
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix atxa-jdt: <http://www.architexa.com/rdf/jdt#> .
+@prefix atxa-rse-eclipse: <http://www.architexa.com/rdf/rse-eclipse#> .
+@prefix atxa-core: <http://www.architexa.com/rdf/core#> .
+@prefix atxa: <http://www.architexa.com/rdf/> .
+@prefix atxa-jdt-wkspc: <http://www.architexa.com/rdf/jdt-wkspc#> .
+
+<http://www.architexa.com/rdf/rse-eclipse#CHIARefinementConstraintComputation.atxa> a atxa-core:reloFile ;
+	atxa-core:contains _:node19img4sgrx7621 , _:node19img4sgrx7622 , _:node19img4sgrx7626 , _:node19img4sgrx7620 , _:node19img4sgrx7619 , _:node19img4sgrx7634 , _:node19img4sgrx7635 , _:node19img4sgrx7624 , _:node19img4sgrx7636 , _:node19img4sgrx7631 , _:node19img4sgrx7639 , _:node19img4sgrx7640 , _:node19img4sgrx7625 , _:node19img4sgrx7630 , _:node19img4sgrx7642 , _:node19img4sgrx7643 , _:node19img4sgrx7644 , _:node19img4sgrx7645 , _:node19img4sgrx7623 , _:node19img4sgrx7641 , _:node19img4sgrx7647 , _:node19img4sgrx7648 , _:node19img4sgrx7628 , _:node19img4sgrx7649 , _:node19img4sgrx7650 , _:node19img4sgrx7627 , _:node19img4sgrx7651 , _:node19img4sgrx7652 , _:node19img4sgrx7653 , _:node19img4sgrx7654 , _:node19img4sgrx7629 , _:node19img4sgrx7646 , atxa-core:docRoot , _:node19img4sgrx7621 , _:node19img4sgrx7622 , _:node19img4sgrx7626 , _:node19img4sgrx7620 , _:node19img4sgrx7619 , _:node19img4sgrx7634 , _:node19img4sgrx7635 , _:node19img4sgrx7624 , _:node19img4sgrx7636 , _:node19img4sgrx7631 , _:node19img4sgrx7639 , _:node19img4sgrx7640 , _:node19img4sgrx7625 , _:node19img4sgrx7630 , _:node19img4sgrx7642 , _:node19img4sgrx7643 , _:node19img4sgrx7644 , _:node19img4sgrx7645 , _:node19img4sgrx7623 , _:node19img4sgrx7641 , _:node19img4sgrx7647 , _:node19img4sgrx7648 , _:node19img4sgrx7628 , _:node19img4sgrx7649 , _:node19img4sgrx7650 , _:node19img4sgrx7627 , _:node19img4sgrx7651 , _:node19img4sgrx7652 , _:node19img4sgrx7653 , _:node19img4sgrx7654 , _:node19img4sgrx7629 , _:node19img4sgrx7646 , atxa-core:docRoot , _:node19img4sgrx2324 , _:node19img4sgrx2369 , _:node19img4sgrx2402 , _:node19img4sgrx5616 , _:node19img4sgrx5653 , _:node19img4sgrx5922 , _:node19img4sgrx44 , _:node19img4sgrx43 , _:node19img4sgrx2324 , _:node19img4sgrx2369 , _:node19img4sgrx2402 , _:node19img4sgrx5616 , _:node19img4sgrx5653 , _:node19img4sgrx5922 , _:node19img4sgrx44 , _:node19img4sgrx43 .
+
