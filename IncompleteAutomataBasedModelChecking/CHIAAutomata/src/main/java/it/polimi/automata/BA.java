@@ -52,17 +52,17 @@ public class BA {
 	/**
 	 * contains the initial states of the Buchi automaton
 	 */
-	private Set<State> initialStates;
+	protected Set<State> initialStates;
 
 	/**
 	 * contains the accepting states of the Buchi automaton
 	 */
-	private Set<State> acceptStates;
+	protected Set<State> acceptStates;
 
 	/**
 	 * contains the set of the alphabet of the Buchi automaton
 	 */
-	private Set<IGraphProposition> propositions;
+	protected Set<IGraphProposition> propositions;
 
 	/**
 	 * contains the graph on which the Buchi automaton is based

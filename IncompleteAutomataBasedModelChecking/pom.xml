@@ -20,7 +20,7 @@
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
-				<plugin>
+				<!-- <plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.5.3</version>
 					<configuration>
@@ -28,7 +28,7 @@
 							<descriptor>src/assembly/bin.xml</descriptor>
 						</descriptors>
 					</configuration>
-				</plugin>
+				</plugin> -->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
@@ -128,8 +128,8 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.8.1</version>
 				<configuration>
-					<!-- <altDeploymentRepository>internal.repo::default::file://${user.dir}/target/mvn-‌​repo</altDeploymentRepository> -->
-					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+					<altDeploymentRepository>internal.repo::default::file://${user.dir}/target/mvn-‌​repo</altDeploymentRepository> 
+					<!-- <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository> -->
 				</configuration>
 			</plugin>
 			<plugin>
@@ -221,7 +221,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
+			<version>1.1.3</version>
 		</dependency>
 
 		<dependency>
@@ -233,12 +233,6 @@
 			<groupId>jgraph</groupId>
 			<artifactId>jgraph</artifactId>
 			<version>5.13.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -274,8 +268,7 @@
 		<module>CHIAConstraints</module> 
 		<!-- <module>CHIAVisualization</module> -->
 		 <module>CHIAContraintComputation</module> 
-		<module>CHIAFramework</module>
-		<module>RefinementChecker</module> 
+		<module>CHIAFramework</module> 
 		<module>CHIARefinementChecker</module> 
 		<module>CHIAConstraintsIO</module> 
 		<module>CHIARefinementConstraintComputation</module>
