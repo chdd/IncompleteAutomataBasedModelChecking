@@ -88,7 +88,7 @@ public class ConstraintWriter {
 
 	public void write() {
 
-		logger.info("Writing the intersection automaton");
+		logger.info("Writing the constraint automaton");
 		try {
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
@@ -124,7 +124,7 @@ public class ConstraintWriter {
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
-			logger.info("Intersection automaton written");
+			logger.info("Constraint written");
 
 		} catch (ParserConfigurationException pce) {
 			logger.error(pce.getMessage());

@@ -210,7 +210,8 @@ public class IntersectionBuilder {
 						State nextClaimState = claim
 								.getTransitionDestination(claimTransition);
 
-						int nextNumber = this.comuteNumber(nextModelState,
+						int nextNumber = 
+								this.comuteNumber(nextModelState,
 								nextClaimState, number);
 						if (nextNumber < 0 || nextNumber > 2) {
 							throw new InternalError("next number not correct");
@@ -281,7 +282,7 @@ public class IntersectionBuilder {
 	 * @return the number to be associated to the next state of the automaton
 	 */
 	private int comuteNumber(State modelState, State claimState, int prevNumber) {
-		int num = prevNumber;
+		/*int num = prevNumber;
 
 		if (prevNumber == 0 && model.getAcceptStates().contains(modelState)) {
 			num = 1;
@@ -292,7 +293,8 @@ public class IntersectionBuilder {
 		if (prevNumber == 2) {
 			num = 0;
 		}
-		return num;
+		return num;*/
+		return 2;
 	}
 
 	/**

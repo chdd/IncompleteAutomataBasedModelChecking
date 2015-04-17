@@ -9,8 +9,11 @@ import it.polimi.automata.io.out.IntersectionWriter;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Replacement;
+import it.polimi.constraints.io.in.ConstraintReader;
 import it.polimi.constraints.io.in.ReplacementReader;
 import it.polimi.constraints.io.out.ConstraintWriter;
+import it.polimi.model.ltltoba.LTLReader;
+import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.refinement.constraintcomputation.ReplacementConstraintComputation;
 import it.polimi.refinementchecker.ReplacementChecker;
 
@@ -42,13 +45,30 @@ public class CHIAConsole {
 		this.model = new IBAReader(modelFilePath).read();
 	}
 
+	
+	
 	@Command(name = "loadClaim", abbrev = "lc", description = "Is used to load the claim from an XML file. The XML file must mach the BA.xsd.", header = "claim loaded")
 	public void loadClaim(
 			@Param(name = "claimFilePath", description = "is the path of the file that contains the claim to be checked") String claimFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
 		this.claim = new BAReader(claimFilePath).read();
-
+	}
+	@Command(name = "loadLTLClaim", abbrev = "lcLTL", description = "It is used to load the property from an LTL formula", header = "load LTL claim")
+	public void loadProperty(
+			@Param(name = "LTLFormula", description = "is the LTL formula that represents the claim") String ltlProperty
+			){
+		this.claim=new LTLtoBATransformer().transform("!("+ltlProperty+")");
+		System.out.println(this.claim);
+	}
+	
+	@Command(name = "loadLTLClaim", abbrev = "lcLTL", description = "It is used to load the property from an LTL formula", header = "load LTL claim")
+	public void loadProperty(
+			@Param(name = "-f", description = "is the flag that specify that the formula must be loaded from file") String flag,
+			@Param(name = "file", description = "is the path of the file from which the formula must be loaded") String file
+			) throws IOException{
+		this.claim=new LTLReader(file).loadLTLFromFile();
+		System.out.println(this.claim);
 	}
 
 	@Command(name = "check", abbrev = "ck", description = "Is used to check the model against the specified claim. Before running the model checking procedure it is necessary to load the model and the claim to be considered", header = "Checking procedure ended")
@@ -101,12 +121,15 @@ public class CHIAConsole {
 			SAXException, IOException {
 		this.replacement = new ReplacementReader(replacementFilePath).read();
 	}
+	
+	
+			
 	@Command(name = "loadConstraint", abbrev = "lC", description = "It is used to load the constraint from an XML file. The XML file must mach the Constraint.xsd", header = "constraint loaded")
 	public void loadConstraint(
 			@Param(name = "constraintFilePath", description = "is the path of the file that contains the constraint to be considered") String constraintFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
-		this.replacement = new ReplacementReader(constraintFilePath).read();
+		this.constraint = new ConstraintReader(constraintFilePath).read();
 	}
 	
 	@Command(name = "computeConstraint", abbrev = "cc", description = "Is used to compute the constraint corresponding to the model and the specified claim. ")

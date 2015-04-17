@@ -4,10 +4,7 @@ import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.out.states.BAStateToElementTransformer;
-import it.polimi.automata.io.out.transitions.BATransitionToElementTransformer;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
+import it.polimi.automata.io.out.BAToElementTrasformer;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.SubProperty;
 
@@ -65,14 +62,10 @@ public class SubPropertyToElementTransformer
 		modelTransparentStateName.setValue(input.getModelState().getName());
 		constraintElement.setAttributeNode(modelTransparentStateName);
 		
-		Element baElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_BA);
+		Element baElement =new BAToElementTrasformer(doc).transform(input.getAutomaton());
 		constraintElement.appendChild(baElement);
 
-		// computing the states
-		this.computingStateElements(doc, baElement, input);
-
-		// computing the transitions
-		this.computingTransitionElements(doc, baElement, input);
+		
 
 		// adding the outComing Ports
 		Element outComingPorts = doc
@@ -89,16 +82,7 @@ public class SubPropertyToElementTransformer
 		return constraintElement;
 	}
 	
-	private void computingStateElements(Document doc, Element rootElement,
-			SubProperty intersectionAutomaton) {
-
-		BAStateToElementTransformer stateTransformer = new BAStateToElementTransformer(
-				intersectionAutomaton.getAutomaton(), doc);
-		for (State s : intersectionAutomaton.getAutomaton().getStates()) {
-			Element xmlStateElement = stateTransformer.transform(s);
-			rootElement.appendChild(xmlStateElement);
-		}
-	}
+	
 
 	private void addPorts(Document doc, Element portsElement,
 			Set<Port> ports) {
@@ -111,15 +95,5 @@ public class SubPropertyToElementTransformer
 		}
 	}
 	
-	private void computingTransitionElements(Document doc, Element rootElement,
-			SubProperty intersectionAutomaton) {
-		BATransitionToElementTransformer transitionTransformer = new BATransitionToElementTransformer(
-				intersectionAutomaton.getAutomaton(), doc);
-		for (Transition transition : intersectionAutomaton.getAutomaton()
-				.getTransitions()) {
-			Element transitionElement = transitionTransformer
-					.transform(transition);
-			rootElement.appendChild(transitionElement);
-		}
-	}
+	
 }

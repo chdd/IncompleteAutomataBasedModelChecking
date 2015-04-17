@@ -16,8 +16,6 @@ import java.util.Set;
 import org.jgrapht.Graphs;
 import org.jgrapht.experimental.RandomGraphHelper;
 import org.jgrapht.graph.DirectedPseudograph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -44,10 +42,7 @@ import com.google.common.base.Preconditions;
  */
 public class BA {
 
-	/**
-	 * is the logger of the SubAutomataIdentifier class
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(BA.class);
+	
 
 	/**
 	 * contains the initial states of the Buchi automaton
@@ -502,10 +497,6 @@ public class BA {
 				.checkArgument(
 						this.getStates().contains(destination),
 						"The destination state is not contained into the set of the states of the automaton");
-
-		logger.debug("Transitions: " + transition.toString());
-		logger.debug("Adding the transition: " + transition.getId() + " from "
-				+ source.toString() + " to " + destination.toString());
 
 		this.automataGraph.addEdge(source, destination, transition);
 	}

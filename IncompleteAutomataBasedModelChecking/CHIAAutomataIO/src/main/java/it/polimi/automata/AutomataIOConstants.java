@@ -24,7 +24,7 @@ public final class AutomataIOConstants {
 	public final static String XML_ELEMENT_STATES="states";
 	public final static String XML_ELEMENT_STATE="state";
 
-	public final static String XML_ELEMENT_TRANSITIONS="transition";
+	public final static String XML_ELEMENT_TRANSITIONS="transitions";
 	public final static String XML_ELEMENT_TRANSITION="transition";
 	public final static String XML_ATTRIBUTE_ID="id";
 	public final static String XML_ATTRIBUTE_PORT_SOURCE="source";

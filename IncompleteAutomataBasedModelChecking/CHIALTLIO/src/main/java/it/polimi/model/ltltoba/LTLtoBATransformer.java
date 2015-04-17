@@ -15,6 +15,7 @@ import rwth.i2.ltl2ba4j.LTL2BA4J;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 import com.google.common.base.Preconditions;
 
@@ -44,6 +45,8 @@ public class LTLtoBATransformer {
 	public LTLtoBATransformer() {
 
 	}
+	
+	
 
 	/**
 	 * transforms the LTL formula into the corresponding Buchi Automaton
@@ -208,8 +211,16 @@ public class LTLtoBATransformer {
 		Transition t = transitionFactory.create(label);
 
 		// adds the label to the current buchi automaton
-		ba.addPropositions(t.getPropositions());
-
+		
+		for(IGraphProposition p: t.getPropositions()){
+			if(!p.isNegated()){
+				ba.addProposition(p);
+			}
+			else{
+				ba.addProposition(new GraphProposition(p.getLabel(), false));
+			}
+		}
+		
 		// add the transition from the source state to the destination state
 		ba.addTransition(source, destination, t);
 

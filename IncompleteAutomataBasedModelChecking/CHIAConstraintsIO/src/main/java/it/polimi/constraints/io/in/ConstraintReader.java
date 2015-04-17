@@ -51,6 +51,22 @@ public class ConstraintReader extends XMLReader{
 	 * contains a map that given an id returns the corresponding port
 	 */
 	private final Map<Integer, Port> mapIdPort;
+	
+	/**
+	 * creates a new constraint reader which can be used to read a constraint
+	 * automaton through the method
+	 * @see Constraint#read()
+	 * 
+	 * @param filePath
+	 *            is the path of the file from which the automaton must be read
+	 * @throws NullPointerException
+	 *             if one of the parameters is null
+	 */
+	public ConstraintReader(String filePath) {
+		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
+		this.file = new File(filePath);
+		this.mapIdPort = new HashMap<Integer, Port>();
+	}
 
 	/**
 	 * creates a new constraint reader
