@@ -662,9 +662,10 @@ public class BA {
 		// coping the accepting states
 		ret.addAcceptStates(this.getAcceptStates());
 		// coping the accepting states
+		ret.addPropositions(this.getPropositions());
 		for (Transition t : this.getTransitions()) {
-			ret.addTransition(ret.getTransitionSource(t),
-					ret.getTransitionDestination(t), t);
+			ret.addTransition(this.getTransitionSource(t),
+					this.getTransitionDestination(t), t);
 		}
 		return ret;
 	}

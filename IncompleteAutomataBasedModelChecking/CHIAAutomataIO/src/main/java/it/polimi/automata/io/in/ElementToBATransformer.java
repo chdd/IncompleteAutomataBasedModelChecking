@@ -85,8 +85,8 @@ public class ElementToBATransformer implements Transformer<Element, BA>  {
 		NodeList xmltransitions = doc
 				.getElementsByTagName(AutomataIOConstants.XML_TAG_TRANSITION);
 
-		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
-			Node xmltransition = xmltransitions.item(transitionid);
+		for (int transitionCounter = 0; transitionCounter < xmltransitions.getLength(); transitionCounter++) {
+			Node xmltransition = xmltransitions.item(transitionCounter);
 			Element eElement = (Element) xmltransition;
 			transitionElementParser.transform(eElement);
 

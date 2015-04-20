@@ -101,16 +101,24 @@ public class ConstraintGenerator {
 		subPropertiesIdentifier = new SubPropertiesIdentifier(
 				intersectionBuilder, this.mcResults);
 		constraint.addSubProperties(subPropertiesIdentifier.getSubProperties());
+		logger.info("Constraint computed");
 		return constraint;
 		
 	}
 	
+	/**
+	 * computes the reachability between the ports, i.e., it updates the reachability relation between the 
+	 * ports and updates the corresponding colors
+	 * 
+	 * @return the constraints where the color of the ports have been updated
+	 */
 	public Constraint computePortReachability(){
+		logger.info("Udating the Port reachability relation");
 		PortReachability reachability = new PortReachability(constraint,
 				intersectionBuilder, subPropertiesIdentifier);
 		reachability.computeReachability();
 
-		logger.info("Constraint computed");
+		logger.info("Port reachability relation updated");
 		return constraint;
 		
 	}

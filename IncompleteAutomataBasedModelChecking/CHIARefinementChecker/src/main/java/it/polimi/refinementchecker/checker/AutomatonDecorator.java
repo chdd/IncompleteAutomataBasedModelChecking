@@ -30,7 +30,8 @@ public class AutomatonDecorator {
 	 * and marks as initial each state that is reached from a green incoming
 	 * transition and as accepting each state left by a red outcoming
 	 * transition. The accepting states generated are also equipped with a
-	 * self-loop transition marked with a stuttering character.
+	 * self-loop transition marked with a stuttering character. This procedure
+	 * allows the client to check the presence of accepting paths.
 	 * 
 	 * @param claim
 	 *            is the claim which corresponds to the subproperty
@@ -57,6 +58,50 @@ public class AutomatonDecorator {
 		}
 		for (Port outPort : subproperty.getOutcomingPorts()) {
 			if (outPort.getColor().equals(Color.RED)) {
+				Preconditions
+						.checkArgument(
+								claim.getStates().contains(outPort.getSource()),
+								"The source of an out-coming port must be contained in the set of the states of the claim");
+				claim.addAcceptState(outPort.getSource());
+				claim.addStuttering(outPort.getSource());
+			}
+		}
+	}
+
+	/**
+	 * the decorateClaim method takes the claim contained into the subproperty
+	 * and marks as initial each state that is reached from a green or yellow
+	 * incoming transition and as accepting each state left by a red or yellow
+	 * outcoming transition. The accepting states generated are also equipped
+	 * with a self-loop transition marked with a stuttering character. This
+	 * procedure allows the client to check the presence of possibly accepting
+	 * paths.
+	 * 
+	 * @param claim
+	 *            is the claim which corresponds to the subproperty
+	 * @param subproperty
+	 *            is the subproperty to be considered
+	 * @throws NullPointerException
+	 *             if the claim or the subproperty is null
+	 */
+	public void decoratePossiblyClaim(BA claim, SubProperty subproperty) {
+		Preconditions.checkNotNull(claim,
+				"The claim to be considered cannot be null");
+		Preconditions.checkNotNull(subproperty,
+				"The subproperty to be considered cannot be null");
+
+		for (Port inPort : subproperty.getIncomingPorts()) {
+			if (inPort.getColor().equals(Color.GREEN) || inPort.getColor().equals(Color.YELLOW) ) {
+				Preconditions
+						.checkArgument(
+								claim.getStates().contains(
+										inPort.getDestination()),
+								"The destination of an incoming port must be contained in the set of the states of the claim");
+				claim.addInitialState(inPort.getDestination());
+			}
+		}
+		for (Port outPort : subproperty.getOutcomingPorts()) {
+			if (outPort.getColor().equals(Color.RED) || outPort.getColor().equals(Color.YELLOW)) {
 				Preconditions
 						.checkArgument(
 								claim.getStates().contains(outPort.getSource()),

@@ -80,6 +80,7 @@ public class Merger {
 		// creating the return constraint c
 		Constraint c = this.originalConstraint.clone();
 		SubProperty subProperty = this.originalConstraint.getSubproperty(s);
+		//REMOVING THE SUB-PROPERTY
 		c.removeSubProperty(subProperty);
 		c.addSubProperties(this.subConstraint.getSubProperties());
 		for (DefaultEdge edge : this.subConstraint.getPortsGraph().edgeSet()) {
@@ -105,9 +106,7 @@ public class Merger {
 		// COMPUTING THE OUTCOMING PORTS
 		computeOutcomingPorts(c, subProperty, regularReachabilityChecker,
 				mixedReachabilityChecker);
-		//REMOVING THE SUB-PROPERTY
-		c.removeSubProperty(subProperty);
-
+	
 		return c;
 	}
 

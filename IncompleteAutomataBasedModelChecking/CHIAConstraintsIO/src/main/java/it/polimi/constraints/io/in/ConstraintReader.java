@@ -5,8 +5,10 @@ import it.polimi.automata.io.in.XMLReader;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.SubProperty;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,9 +74,9 @@ public class ConstraintReader extends XMLReader{
 	 * creates a new constraint reader
 	 * 
 	 * @param file
-	 *            is the file from which the constraint must be rea
+	 *            is the file from which the constraint must be read
 	 * @throws NullPointerException
-	 *             if one of the parameters is null
+	 *             if the file to be considered is null
 	 */
 	public ConstraintReader(File file) {
 		Preconditions
@@ -88,16 +90,22 @@ public class ConstraintReader extends XMLReader{
 	public Constraint read() {
 		Constraint ret = new Constraint();
 
+		
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
-			// use the factory to take an instance of the document builder
+			if(this.getClass().getClassLoader()
+					.getResource(ConstraintsIOConstants.CONSTRAINT_XSD_PATH)==null){
+				throw new InternalError("It was not possible to load the BA.xsd from "+ConstraintsIOConstants.CONSTRAINT_XSD_PATH);
+			}
+			File xsd = new File(this.getClass().getClassLoader().getResource(ConstraintsIOConstants.CONSTRAINT_XSD_PATH).getFile());
+			this.validateAgainstXSD(new FileInputStream(this.file), new FileInputStream(xsd));
+
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			// parse using the builder to get the DOM mapping of the
 			// XML file
 			dom = db.parse(file);
-
 			Element doc = dom.getDocumentElement();
 
 			this.loadConstraint(doc, ret);
@@ -122,7 +130,7 @@ public class ConstraintReader extends XMLReader{
 				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
 
 		logger.debug(xmlSetOfConstraints.getLength()
-				+ " constraints present in the file " + file.getName());
+				+ " subproperties present in the file " + file.getName());
 		for (int stateid = 0; stateid < xmlSetOfConstraints.getLength(); stateid++) {
 			Node xmlConstraint = xmlSetOfConstraints.item(stateid);
 			Element xmlConstraintElement = (Element) xmlConstraint;
@@ -139,7 +147,7 @@ public class ConstraintReader extends XMLReader{
 			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 				Element xmlOutComingPort = (Element) xmlOutComingPortsList
 						.item(portId);
-				Port port = new ElementToPortTransformer()
+				Port port = new ElementToPortTransformer(false)
 						.transform(xmlOutComingPort);
 				this.mapIdPort.put(port.getId(), port);
 				subProperty.addOutComingPort(port);
@@ -153,7 +161,7 @@ public class ConstraintReader extends XMLReader{
 			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 				Element xmlInComingPort = (Element) xmlInComingPortsList
 						.item(portId);
-				Port port = new ElementToPortTransformer()
+				Port port = new ElementToPortTransformer(true)
 						.transform(xmlInComingPort);
 				this.mapIdPort.put(port.getId(), port);
 				subProperty.addIncomingPort(port);
@@ -167,7 +175,10 @@ public class ConstraintReader extends XMLReader{
 				"Port reachability element not present");
 		Element portReachability = (Element) doc.getElementsByTagName(
 				AutomataIOConstants.XML_ELEMENT_PORTS_REACHABILITY).item(0);
+		
 		new ElementToPortGraphTransformer(this.mapIdPort,
 				constraint.getPortsGraph()).transform(portReachability);
+		logger.debug("constraint loaded ");
+
 	}
 }

@@ -1,8 +1,6 @@
 package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.IBA;
-import it.polimi.automata.IntersectionBA;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.SubProperty;
 
@@ -37,8 +35,6 @@ public class ConstraintWriter {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ConstraintWriter.class);
 
-	private final IBA model;
-	private final IntersectionBA intersectionBA;
 	
 	/**
 	 * contains the components to be written
@@ -50,16 +46,21 @@ public class ConstraintWriter {
 	 */
 	private File file;
 	
-	public ConstraintWriter(Constraint constraint, String filePath, IBA model, IntersectionBA intersectionBA){
+	/**
+	 * creates a new Writer which is in charge of writing the constraint to an XML file
+	 * @param constraint is the constraint to be written
+	 * @param filePath is the path where the constraint must be written
+	 * @param model is the model to be considered
+	 * @param intersectionBA
+	 */
+	public ConstraintWriter(Constraint constraint, String filePath){
 		Preconditions.checkNotNull(constraint,
-				"The intersection automaton cannot be null");
+				"The constraint cannot be null");
 		Preconditions.checkNotNull(filePath,
-				"The file where the automaton must be written cannot be null");
+				"The file where the constraint must be written cannot be null");
 
 		this.constraint = constraint;
 		this.file = new File(filePath);
-		this.model=model;
-		this.intersectionBA=intersectionBA;
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class ConstraintWriter {
 	 *             if the components or the file is null
 	 * 
 	 */
-	public ConstraintWriter(Constraint constraint, File f, IBA model, IntersectionBA intersectionBA) {
+	public ConstraintWriter(Constraint constraint, File f) {
 		Preconditions.checkNotNull(constraint,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(f,
@@ -82,8 +83,6 @@ public class ConstraintWriter {
 
 		this.constraint = constraint;
 		this.file = f;
-		this.model=model;
-		this.intersectionBA=intersectionBA;
 	}
 
 	public void write() {
@@ -97,11 +96,11 @@ public class ConstraintWriter {
 
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc
-					.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINTS);
+					.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
 			doc.appendChild(rootElement);
 
 			SubPropertyToElementTransformer componentTransformer = new SubPropertyToElementTransformer(
-					doc, model, intersectionBA);
+					doc);
 			for (SubProperty component : constraint.getSubProperties()) {
 
 				Element componentElement=componentTransformer.transform(component);
@@ -114,9 +113,6 @@ public class ConstraintWriter {
 					doc).transform(this.constraint.getPortsGraph());
 			rootElement.appendChild(graphPortXMLElement);
 
-			Element colors = doc
-					.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_COLORS);
-			rootElement.appendChild(colors);
 
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();

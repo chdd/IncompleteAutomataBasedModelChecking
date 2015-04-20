@@ -30,12 +30,12 @@ import asg.cliche.Param;
 
 public class CHIAConsole {
 
-	private IBA model;
-	private BA claim;
-	private CHIA chia;
-	private Constraint constraint;
-	private Replacement replacement;
-	private ReplacementChecker rc;
+	protected IBA model;
+	protected BA claim;
+	protected CHIA chia;
+	protected Constraint constraint;
+	protected Replacement replacement;
+	protected ReplacementChecker replacementChecker;
 
 	@Command(name = "loadModel", abbrev = "lm", description = "Is used to load the model from an XML file. The XML file must mach the IBA.xsd.", header = "model loaded")
 	public void loadModel(
@@ -75,7 +75,7 @@ public class CHIAConsole {
 	public void check() {
 		ModelCheckingResults results = new ModelCheckingResults(true, true,
 				true);
-		CHIA chia = new CHIA(claim, model, results);
+		chia = new CHIA(claim, model, results);
 
 		int result = chia.check();
 		if (result == 1) {
@@ -161,14 +161,14 @@ public class CHIAConsole {
 			@Param(name = "constraintFilePath", description = "is the path of the file where the constraint must be saved") String constraintFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
-		ConstraintWriter constraintWriter=new ConstraintWriter(this.constraint, constraintFilePath, this.model, this.chia.getModelChecker().getIntersectionAutomaton());
+		ConstraintWriter constraintWriter=new ConstraintWriter(this.constraint, constraintFilePath);
 		constraintWriter.write();
 	}
 	
-	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
+	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated.", header = "Performing the replacement checking")
 	public void replacementChecking(){
-		rc=new ReplacementChecker(constraint, replacement);
-		int result=rc.check();
+		replacementChecker=new ReplacementChecker(constraint, replacement);
+		int result=replacementChecker.check();
 		if (result == 1) {
 			System.out.println("The property is satisfied");
 		}
@@ -178,15 +178,44 @@ public class CHIAConsole {
 		if (result == -1) {
 			System.out.println("The property is possibly satisfied");
 		}
-		
 	}
+	
+	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated", header = "Performing the replacement checking")
+	public void replacementChecking(
+			@Param(name = "intersectionFilePath", description = "The location where the intersection automaton must be saved") String intersectionFilePath) {
+		replacementChecker=new ReplacementChecker(constraint, replacement);
+		int result=replacementChecker.check();
+		if (result == 1) {
+			System.out.println("The property is satisfied");
+		}
+		if (result == 0) {
+			System.out.println("The property is not satisfied");
+		}
+		if (result == -1) {
+			System.out.println("The property is possibly satisfied");
+		}
+		IntersectionBA intersectionAutomaton=replacementChecker.getChecker().getIntersectionAutomaton();
+		IntersectionWriter intersectionWriter=new IntersectionWriter(intersectionAutomaton, new File(intersectionFilePath));
+		intersectionWriter.write();
+	}
+	
+	
 	@Command(name = "replacementComputeConstraint", abbrev = "rcc", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
 	public void replacementComputeConstraint(){
-		if(rc==null){
+		if(replacementChecker==null){
 			this.replacementChecking();
 		}
-		ReplacementConstraintComputation replacementConstraintComputation = new ReplacementConstraintComputation(rc);
+		ReplacementConstraintComputation replacementConstraintComputation = new ReplacementConstraintComputation(replacementChecker);
 		replacementConstraintComputation.constraintComputation();
 		this.constraint=replacementConstraintComputation.newConstraint();
+	}
+	
+	@Command(name = "saveReplacementConstraint", abbrev = "rsc", description = "It is used to save the constraint in an XML file.", header = "constraint saved")
+	public void replacementSaveConstraint(
+			@Param(name = "constraintFilePath", description = "is the path of the file where the constraint must be saved") String constraintFilePath)
+			throws FileNotFoundException, ParserConfigurationException,
+			SAXException, IOException {
+		ConstraintWriter constraintWriter=new ConstraintWriter(this.constraint, constraintFilePath);
+		constraintWriter.write();
 	}
 }

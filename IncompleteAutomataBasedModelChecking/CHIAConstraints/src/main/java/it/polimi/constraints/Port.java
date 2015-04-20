@@ -26,7 +26,7 @@ import com.google.common.base.Preconditions;
 public class Port extends State {
 
 	/**
-	 * Is the counter which is used to associte to each ne port a new Id
+	 * Is the counter which is used to associate to each new port a new Id
 	 */
 	public static int ID_COUNTER = 1;
 
@@ -231,5 +231,4 @@ public class Port extends State {
 				"The color of the port cannot be null");
 		this.color = color;
 	}
-
 }

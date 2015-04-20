@@ -2,6 +2,7 @@ package it.polimi.constraints.io.in;
 
 import it.polimi.automata.io.in.XMLReader;
 import it.polimi.constraints.Replacement;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +40,6 @@ public class ReplacementReader extends XMLReader{
 	private static final Logger logger = LoggerFactory
 			.getLogger(ConstraintReader.class);
 
-	private static final String REPLACEMENT_XSD_PATH="Replacement.xsd";
 	
 	private final File file;
 	
@@ -84,10 +84,10 @@ public class ReplacementReader extends XMLReader{
 			// use the factory to take an instance of the document builder
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			if(this.getClass().getClassLoader()
-					.getResource(REPLACEMENT_XSD_PATH)==null){
-				throw new InternalError("It was not possible to load the BA.xsd from "+REPLACEMENT_XSD_PATH);
+					.getResource(ConstraintsIOConstants.REPLACEMENT_XSD_PATH)==null){
+				throw new InternalError("It was not possible to load the BA.xsd from "+ConstraintsIOConstants.REPLACEMENT_XSD_PATH);
 			}
-			File xsd = new File(this.getClass().getClassLoader().getResource(REPLACEMENT_XSD_PATH).getFile());
+			File xsd = new File(this.getClass().getClassLoader().getResource(ConstraintsIOConstants.REPLACEMENT_XSD_PATH).getFile());
 			this.validateAgainstXSD(new FileInputStream(this.file), new FileInputStream(xsd));
 			// parse using the builder to get the DOM mapping of the
 			// XML file
@@ -95,7 +95,7 @@ public class ReplacementReader extends XMLReader{
 
 			Element doc = dom.getDocumentElement();
 
-			Replacement ret = this.loadRefinement(doc);
+			Replacement ret = this.loadReplacement(doc);
 			return ret;
 
 		} catch (ParserConfigurationException pce) {
@@ -109,7 +109,7 @@ public class ReplacementReader extends XMLReader{
 		return null;
 	}
 
-	private Replacement loadRefinement(Element doc) {
+	private Replacement loadReplacement(Element doc) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
 
 		Replacement refinement = new ElementToReplacementTransformer()

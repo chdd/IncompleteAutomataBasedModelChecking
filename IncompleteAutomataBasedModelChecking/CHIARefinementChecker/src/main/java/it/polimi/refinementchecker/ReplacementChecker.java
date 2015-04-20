@@ -47,17 +47,16 @@ public class ReplacementChecker {
 	 * contains the replacement to be verified
 	 */
 	private final Replacement replacement;
-	
+
 	/**
 	 * the sub-property to be considered
 	 */
 	private final SubProperty subproperty;
-	
+
 	/**
 	 * the checker used to check the refinement
 	 */
 	private Checker checker;
-
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -85,9 +84,9 @@ public class ReplacementChecker {
 						"The state constrained in the refinement must be contained into the set of the states of the constraint");
 		this.constraint = constraint;
 		this.replacement = replacement;
-		this.subproperty = this.constraint
-				.getSubproperty(this.replacement.getModelState());
-		
+		this.subproperty = this.constraint.getSubproperty(this.replacement
+				.getModelState());
+
 	}
 
 	/**
@@ -110,30 +109,62 @@ public class ReplacementChecker {
 		// GETTING THE CLAIM
 		// gets the sub-property associated with the model state, i.e., the
 		// claim automaton
-		
+
 		// sets the initial and accepting states depending on the incoming and
 		// out-coming transitions
-		BA claim = subproperty.getAutomaton();
+		BA claim = (BA) subproperty.getAutomaton().clone();
 
 		// GETTING THE MODEL
 		// gets the model to be considered, i.e., the model of the refinement
 		// where the transparent states have been removed
-		IBA model = this.replacement.getAutomaton();
+		IBA model = this.replacement.getAutomaton().clone();
 
 		AutomatonDecorator automatonDecorator = new AutomatonDecorator();
 		automatonDecorator.decorateClaim(claim, subproperty);
 		automatonDecorator.decorateModel(model, replacement);
 
-		checker = new Checker(model, claim, new ModelCheckingResults(
-				true, true, true));
-		// checking if there exists a path that does not satisfy the property
-		return checker.check();
+		System.out.println(claim);
+		checker = new Checker(model, claim, new ModelCheckingResults(true,
+				true, true));
+		int res = checker.check();
+		// if the result is 0 it means that there exists a violating path:
+		// a path that connects a green and a red transition
+		if (res == 0) {
+			checker.getVerificationResults().setResult(0);
+			return res;
+		} else {
+
+			// if the result is -1 it means that the property is possibly
+			// satisfied
+			if (res == -1) {
+				checker.getVerificationResults().setResult(-1);
+				return res;
+			} else {
+				// res == 1
+				// I should check the presence of path that connect yellow ports
+				BA claim2 = (BA) subproperty.getAutomaton().clone();
+				automatonDecorator = new AutomatonDecorator();
+				automatonDecorator.decoratePossiblyClaim(claim2, subproperty);
+				automatonDecorator.decorateModel(model, replacement);
+				checker = new Checker(model, claim2, new ModelCheckingResults(
+						true, true, true));
+				// if an accepting path is found the property is not NOT SATISFIED, but it is POSSIBLY SATISFIED
+				if(checker.check()==0){
+					checker.getVerificationResults().setResult(-1);
+					return -1;
+				}
+				else{
+					checker.getVerificationResults().setResult(1);
+					return 1;
+				}
+			}
+		}
 	}
-	
-	public Checker getChecker(){
+
+	public Checker getChecker() {
 		return this.checker;
 	}
-	
+
 	/**
 	 * @return the replacement considered by the replacement checker
 	 */
@@ -147,6 +178,7 @@ public class ReplacementChecker {
 	public SubProperty getSubproperty() {
 		return subproperty;
 	}
+
 	/**
 	 * @return the constraint considered by the replacement checker
 	 */

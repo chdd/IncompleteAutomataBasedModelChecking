@@ -56,7 +56,7 @@ public class ElementToReplacementTransformer implements Transformer<Element, Rep
 		for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 			Element xmlOutComingPort = (Element) xmlOutComingPortsList
 					.item(portId);
-			Port port = new ElementToPortTransformer()
+			Port port = new ElementToPortTransformer(false)
 					.transform(xmlOutComingPort);
 			outcomingPorts.add(port);
 		}
@@ -69,7 +69,7 @@ public class ElementToReplacementTransformer implements Transformer<Element, Rep
 		for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 			Element xmlInComingPort = (Element) xmlInComingPortsList
 					.item(portId);
-			Port port = new ElementToPortTransformer()
+			Port port = new ElementToPortTransformer(true)
 					.transform(xmlInComingPort);
 			incomingPorts.add(port);
 		}

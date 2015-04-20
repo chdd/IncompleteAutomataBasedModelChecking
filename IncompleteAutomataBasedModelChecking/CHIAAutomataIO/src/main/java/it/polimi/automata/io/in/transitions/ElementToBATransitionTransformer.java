@@ -3,6 +3,7 @@ package it.polimi.automata.io.in.transitions;
 import it.polimi.automata.BA;
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
+import it.polimi.automata.io.in.ParsingException;
 import it.polimi.automata.io.in.propositions.StringToClaimPropositions;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
@@ -12,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.w3c.dom.Element;
+
+import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
@@ -37,9 +40,16 @@ public class ElementToBATransitionTransformer implements Transformer<Element, Tr
 	
 	@Override
 	public Transition transform(Element eElement) {
-		int id = Integer.parseInt(eElement
-				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID));
-
+		Preconditions.checkNotNull(eElement, "The element to consider cannot be null");
+		int id =0;
+		try{
+			id = Integer.parseInt(eElement
+					.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID));
+		}
+		catch(IllegalArgumentException e){
+			throw ParsingException.createException(eElement);
+		}
+	
 		Set<IGraphProposition> propositions = 
 				new StringToClaimPropositions()
 				.transform(eElement

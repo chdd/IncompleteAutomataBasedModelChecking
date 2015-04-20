@@ -139,7 +139,7 @@ public class Constraint {
 	}
 
 	/**
-	 * returns the component associated with the transparent state
+	 * returns the sub-property associated with the transparent state
 	 * 
 	 * @param transparentState
 	 *            is the transparent state under analysis
@@ -260,7 +260,7 @@ public class Constraint {
 				.checkArgument(
 						this.subProperties.contains(subProperty),
 						"The subproperty "
-								+ subProperty.getId()
+								+ subProperty.getId() +" corresponding to model state:"+ subProperty.getModelState()
 								+ " must be contained into the set of the sub-properties of the constraint");
 		this.subProperties.remove(subProperty);
 

@@ -48,18 +48,28 @@ public class ReplacementConstraintComputation {
 	private final Constraint constraint;
 
 	/**
-	 * contains the refinement to be verified
+	 * contains the replacement to be verified
 	 */
-	private final Replacement refinement;
+	private final Replacement replacement;
 
 	/**
 	 * contains the new constraint generated
 	 */
 	private Constraint newConstraint;
 
+	/**
+	 * contains the checker which is used to check the replacement
+	 */
 	private final ReplacementChecker replacementChecker;
 
+	/**
+	 * is the identifiers use to compute the incoming ports
+	 */
 	private IncomingPortsIdentifier incomingPortIdentifier;
+
+	/**
+	 * is the identifier used to compute the out-coming ports
+	 */
 	private OutComingPortsIdentifier outcomingPortIdentifier;
 
 	/**
@@ -68,33 +78,40 @@ public class ReplacementConstraintComputation {
 	 * constraint associated with the transparent state and the constraints
 	 * associated with the other transparent states.
 	 * 
-	 * @param constraint
-	 *            is the constraint that must be considered by the
-	 *            RefinementChecker
-	 * @param component
-	 *            is the replacement to be considered by the refinement checker
+	 * @param replacementChecker
+	 *            the replacement checker used to check the replacement against
+	 *            the constraint
 	 * @throws NullPointerException
-	 *             if one of the parameters is null
+	 *             if the replacementChecker is null
 	 */
 	public ReplacementConstraintComputation(
 			ReplacementChecker replacementChecker) {
 		Preconditions.checkNotNull(replacementChecker,
 				"The constraint to be checked cannot be null");
 		this.constraint = replacementChecker.getConstraint();
-		this.refinement = replacementChecker.getReplacement();
+		this.replacement = replacementChecker.getReplacement();
 		this.replacementChecker = replacementChecker;
 	}
 
+	/**
+	 * returns the new constraint which have been computed
+	 * 
+	 * @return the new constraint which have been computed
+	 */
 	public Constraint newConstraint() {
 		return this.newConstraint;
 	}
 
+	/**
+	 * compute the constraint associated with the given constraint and the
+	 * replacement
+	 */
 	public void constraintComputation() {
 		// GETTING THE CLAIM
 		// gets the sub-property associated with the model state, i.e., the
 		// claim automaton
 		SubProperty subproperty = this.constraint
-				.getSubproperty(this.refinement.getModelState());
+				.getSubproperty(this.replacement.getModelState());
 		// sets the initial and accepting states depending on the incoming and
 		// out-coming transitions
 		BA claim = subproperty.getAutomaton();
@@ -102,11 +119,11 @@ public class ReplacementConstraintComputation {
 		// GETTING THE MODEL
 		// gets the model to be considered, i.e., the model of the refinement
 		// where the transparent states have been removed
-		IBA model = this.refinement.getAutomaton();
+		IBA model = this.replacement.getAutomaton();
 
 		this.updatedPathsWithNoTransparentStates(subproperty, claim, model);
 
-		this.updatedPathsWithTransparentStates(subproperty, claim, model);
+		this.newConstraint=this.updatedPathsWithTransparentStates(subproperty, claim, model);
 
 	}
 
@@ -115,6 +132,16 @@ public class ReplacementConstraintComputation {
 	 * refinement. Indeed, when the refinement contains transparent states the
 	 * paths that do not include any transparent state are analyzed. These paths
 	 * do not generate any constraint
+	 * 
+	 * @param subproperty
+	 *            is the sub-property to be considered
+	 * @param claim
+	 *            is the BA which corresponds to the claim of the sub-property
+	 * @param model
+	 *            is the model that constraints the state specified by the
+	 *            sub-property
+	 * @throws NullPointerException
+	 *             if one of the parameters is null
 	 */
 	private void updatedPathsWithNoTransparentStates(SubProperty subproperty,
 			BA claim, IBA model) {
@@ -136,11 +163,11 @@ public class ReplacementConstraintComputation {
 				.computeIntersection();
 
 		// computes the incoming ports of the intersection automaton
-		incomingPortIdentifier = new IncomingPortsIdentifier(refinement,
+		incomingPortIdentifier = new IncomingPortsIdentifier(replacement,
 				subproperty, intersectionBuilder);
 		Set<Port> incomingPorts = incomingPortIdentifier
 				.computeIntersectionIncomingPorts();
-		outcomingPortIdentifier = new OutComingPortsIdentifier(refinement,
+		outcomingPortIdentifier = new OutComingPortsIdentifier(replacement,
 				subproperty, intersectionBuilder);
 		Set<Port> outcomingPorts = outcomingPortIdentifier
 				.computeIntersectionOutcomingPorts();
@@ -174,7 +201,8 @@ public class ReplacementConstraintComputation {
 		ConstraintGenerator cg = new ConstraintGenerator(
 				this.replacementChecker.getChecker());
 		Constraint subConstraint = cg.generateConstraint();
-		
+		logger.debug("Generated a new constraint with: "+subConstraint.getSubProperties().size()+" sub-properties");
+
 		// identifies the unreachable ports
 		UnreachablePortsIdentifier uid = new UnreachablePortsIdentifier(
 				this.replacementChecker.getChecker().getIntersectionAutomaton(),
@@ -183,7 +211,7 @@ public class ReplacementConstraintComputation {
 						.computeIntersectionOutcomingPorts());
 		Set<Port> unreachableInPorts = uid.getUnreachableInPorts();
 		Set<Port> unreachableOutPorts = uid.getUnreachableOutPorts();
-		
+
 		// removes the unreachable ports
 		UnreachablePortsRemover remover = new UnreachablePortsRemover(
 				unreachableInPorts, unreachableOutPorts, subConstraint);
@@ -196,7 +224,7 @@ public class ReplacementConstraintComputation {
 				this.replacementChecker.getChecker().getIntersectionAutomaton(),
 				this.incomingPortIdentifier, this.outcomingPortIdentifier);
 		Constraint c = merger.merge(subproperty.getModelState());
-	
+
 		return c;
 	}
 }

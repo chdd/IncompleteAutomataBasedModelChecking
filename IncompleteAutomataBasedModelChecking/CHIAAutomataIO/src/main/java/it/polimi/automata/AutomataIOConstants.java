@@ -3,7 +3,7 @@ package it.polimi.automata;
 public final class AutomataIOConstants {
 	
 
-	public final static String XML_ELEMENT_CONSTRAINTS="constraints";
+	public final static String XML_ELEMENT_CONSTRAINT="constraint";
 	public final static String XML_ELEMENT_PORTS_REACHABILITY="portsReachability";
 	public final static String XML_ELEMENT_PORTS_COLORS="portscolors";
 	public final static String XML_ELEMENT_PROPOSITIONS="propositions";

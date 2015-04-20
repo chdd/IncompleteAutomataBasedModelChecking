@@ -27,8 +27,7 @@ public class Checker {
 	/**
 	 * is the logger of the ModelChecker class
 	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(Checker.class);
+	private static final Logger logger = LoggerFactory.getLogger(Checker.class);
 
 	/**
 	 * contains the specification to be checked
@@ -48,7 +47,6 @@ public class Checker {
 
 	private boolean performed;
 
-	
 	/**
 	 * contains the results of the verification (if the specification is
 	 * satisfied or not, the time required by the model checking procedure etc)
@@ -71,18 +69,19 @@ public class Checker {
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public Checker(IBA model, BA claim,
-			ModelCheckingResults mp) {
-		Preconditions.checkNotNull(model, "The model to be checked cannot be null");
-		Preconditions.checkNotNull(claim, "The specification to be checked cannot be null");
-		Preconditions.checkNotNull(mp, "The model checking parameters cannot be null");
+	public Checker(IBA model, BA claim, ModelCheckingResults mp) {
+		Preconditions.checkNotNull(model,
+				"The model to be checked cannot be null");
+		Preconditions.checkNotNull(claim,
+				"The specification to be checked cannot be null");
+		Preconditions.checkNotNull(mp,
+				"The model checking parameters cannot be null");
 
 		this.claim = claim;
 		this.model = model;
 		this.verificationResults = mp;
-		this.intersectionBuilder = new IntersectionBuilder(model,
-				claim);
-		this.performed=false;
+		this.intersectionBuilder = new IntersectionBuilder(model, claim);
+		this.performed = false;
 	}
 
 	/**
@@ -95,7 +94,7 @@ public class Checker {
 	 *         satisfied, -1 if the property is satisfied with constraints.
 	 */
 	public int check() {
-		performed=true;
+		performed = true;
 		logger.info("Checking procedure started");
 		// resets the value of the verification parameters
 		this.verificationResults.reset();
@@ -140,7 +139,9 @@ public class Checker {
 		this.verificationResults.setViolationTime(checkingMcTime);
 		if (!empty) {
 			this.verificationResults.setTotalTime(checkingMcTime);
-			this.verificationResults.setNumInitialStatesIntersection(this.intersectionAutomaton.getStates().size());
+			this.verificationResults
+					.setNumInitialStatesIntersection(this.intersectionAutomaton
+							.getStates().size());
 			this.verificationResults.setResult(0);
 			logger.info("The claim is not satisfied");
 			return 0;
@@ -151,7 +152,7 @@ public class Checker {
 		long startCheckingPossible = System.nanoTime();
 		boolean emptyIntersection = this.checkEmptyIntersection();
 		long stopCheckingPossible = System.nanoTime();
-		long checkingPossibleTime = (stopCheckingPossible - startCheckingPossible) ;
+		long checkingPossibleTime = (stopCheckingPossible - startCheckingPossible);
 		logger.info("The emptiness checker returns: " + emptyIntersection
 				+ " in: " + checkingPossibleTime + " ms");
 
@@ -176,13 +177,16 @@ public class Checker {
 		this.verificationResults
 				.setNumMixedStatesIntersection(this.intersectionAutomaton
 						.getMixedStates().size());
-		this.verificationResults.setTotalTime(checkingMcTime+checkingPossibleTime);
-		this.verificationResults.setNumInitialStatesIntersection(this.intersectionAutomaton.getStates().size());
-		
+		this.verificationResults.setTotalTime(checkingMcTime
+				+ checkingPossibleTime);
+		this.verificationResults
+				.setNumInitialStatesIntersection(this.intersectionAutomaton
+						.getStates().size());
+
 		if (!emptyIntersection) {
 			logger.info("The claim is possibly satisfied");
 			this.verificationResults.setResult(-1);
-			
+
 			return -1;
 		} else {
 			logger.info("The claim is satisfied");
@@ -206,9 +210,13 @@ public class Checker {
 				.removeTransparentStates(model);
 		logger.debug("Transparent states removed from the model");
 
+		// associating the intersectionBuilder
+		this.intersectionBuilder = new IntersectionBuilder(mc, claim);
+
 		// computing the intersection
-		this.intersectionAutomaton = new IntersectionBuilder( mc, claim)
+		this.intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
+
 		logger.debug("Intersection automaton computed");
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
@@ -227,8 +235,7 @@ public class Checker {
 		// computing the intersection
 		this.intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
-		return new EmptinessChecker(this.intersectionAutomaton)
-				.isEmpty();
+		return new EmptinessChecker(this.intersectionAutomaton).isEmpty();
 	}
 
 	/**
@@ -240,34 +247,40 @@ public class Checker {
 	 *         verification procedure etc
 	 */
 	public ModelCheckingResults getVerificationResults() {
-		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
-		
+		Preconditions
+				.checkState(performed,
+						"You must run the model checker before performing this operation");
+
 		return verificationResults;
 	}
 
 	/**
-	 * returns a map that relates each state of the model to the
-	 * corresponding states of the intersection automaton
+	 * returns a map that relates each state of the model to the corresponding
+	 * states of the intersection automaton
 	 * 
-	 * @return a map that relates each state of the model to the
-	 *         corresponding states of the intersection automaton
+	 * @return a map that relates each state of the model to the corresponding
+	 *         states of the intersection automaton
 	 */
 	public Map<State, Set<State>> getModelIntersectionStateMap() {
-		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
-		
+		Preconditions
+				.checkState(performed,
+						"You must run the model checker before performing this operation");
+
 		return this.intersectionBuilder.getModelStateIntersectionStateMap();
 	}
-	
+
 	/**
-	 * returns a map that relates each state of the claim to the
-	 * corresponding states of the intersection automaton
+	 * returns a map that relates each state of the claim to the corresponding
+	 * states of the intersection automaton
 	 * 
-	 * @return a map that relates each state of the claim to the
-	 *         corresponding states of the intersection automaton
+	 * @return a map that relates each state of the claim to the corresponding
+	 *         states of the intersection automaton
 	 */
 	public Map<State, Set<State>> getClaimIntersectionStateMap() {
-		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
-		
+		Preconditions
+				.checkState(performed,
+						"You must run the model checker before performing this operation");
+
 		return this.intersectionBuilder.getClaimStateIntersectionStateMap();
 	}
 
@@ -277,14 +290,18 @@ public class Checker {
 	 * @return the intersection automaton
 	 */
 	public IntersectionBA getIntersectionAutomaton() {
-		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
-		
+		Preconditions
+				.checkState(performed,
+						"You must run the model checker before performing this operation");
+
 		return intersectionAutomaton;
 	}
 
-	public  IntersectionBuilder getIntersectionBuilder(){
-		Preconditions.checkState(performed, "You must run the model checker before performing this operation");
-		
+	public IntersectionBuilder getIntersectionBuilder() {
+		Preconditions
+				.checkState(performed,
+						"You must run the model checker before performing this operation");
+
 		return this.intersectionBuilder;
 	}
 }

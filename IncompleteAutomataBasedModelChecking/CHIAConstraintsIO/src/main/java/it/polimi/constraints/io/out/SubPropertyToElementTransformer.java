@@ -1,8 +1,6 @@
 package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.IBA;
-import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.out.BAToElementTrasformer;
 import it.polimi.constraints.Port;
@@ -22,33 +20,29 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class SubPropertyToElementTransformer
-		implements Transformer<SubProperty, Element> {
+public class SubPropertyToElementTransformer implements
+		Transformer<SubProperty, Element> {
 
 	private final Document doc;
-	private final IBA model;
-	private final IntersectionBA intersectionBA;
-	
+
 	/**
 	 * creates a new PortsGraph To Element Transformer element transformer
 	 * 
 	 * @param doc
 	 *            is the document where the element must be placed
 	 */
-	public SubPropertyToElementTransformer(Document doc, IBA model, IntersectionBA intersectionBA) {
+	public SubPropertyToElementTransformer(Document doc) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
 		this.doc = doc;
-		this.model=model;
-		this.intersectionBA=intersectionBA;
 	}
-	
+
 	@Override
 	public Element transform(SubProperty input) {
-		
+
 		// root elements
 		Element constraintElement = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
-	
+
 		// adding the id
 		Attr modelTransparentStateIDd = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID);
@@ -61,39 +55,46 @@ public class SubPropertyToElementTransformer
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
 		modelTransparentStateName.setValue(input.getModelState().getName());
 		constraintElement.setAttributeNode(modelTransparentStateName);
-		
-		Element baElement =new BAToElementTrasformer(doc).transform(input.getAutomaton());
+
+		Element baElement = new BAToElementTrasformer(doc).transform(input
+				.getAutomaton());
 		constraintElement.appendChild(baElement);
-
-		
-
-		// adding the outComing Ports
-		Element outComingPorts = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_OUT);
-		constraintElement.appendChild(outComingPorts);
-		this.addPorts(doc, outComingPorts, input.getOutcomingPorts());
 
 		// adding the incoming Ports
 		Element inComingPorts = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_IN);
 		constraintElement.appendChild(inComingPorts);
-		this.addPorts(doc, inComingPorts, input.getIncomingPorts());
+		this.addPorts(inComingPorts, input.getIncomingPorts());
+
+		// adding the outComing Ports
+		Element outComingPorts = doc
+				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_OUT);
+		constraintElement.appendChild(outComingPorts);
+		this.addPorts(outComingPorts, input.getOutcomingPorts());
 
 		return constraintElement;
 	}
-	
-	
 
-	private void addPorts(Document doc, Element portsElement,
-			Set<Port> ports) {
-
+	/**
+	 * adds the set of the port to the specified portElement
+	 * 
+	 * @param portsElement
+	 *            is the element where the ports must be added
+	 * @param ports
+	 *            the set of ports to be added
+	 * @throws NullPointerException
+	 *             if one of the argument is null
+	 */
+	private void addPorts(Element portsElement, Set<Port> ports) {
+		Preconditions.checkNotNull(portsElement, "The element where the ports must be added cannot be null");
+		Preconditions.checkNotNull(ports, "The set of the ports to be added cannot be null");
+		// create a new port transformed
 		PortToElementTransformer transformer = new PortToElementTransformer(
-				doc, model, intersectionBA);
+				doc);
+		// transforms each port into the corresponding port element 
 		for (Port port : ports) {
 			Element portElement = transformer.transform(port);
 			portsElement.appendChild(portElement);
 		}
 	}
-	
-	
 }

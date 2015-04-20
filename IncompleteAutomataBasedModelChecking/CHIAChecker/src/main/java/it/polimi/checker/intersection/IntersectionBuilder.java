@@ -32,49 +32,49 @@ public class IntersectionBuilder {
 	/**
 	 * contains the intersection automaton generated
 	 */
-	private IntersectionBA intersection;
+	protected IntersectionBA intersection;
 
-	private final Set<Triple<State, State, Integer>> visitedStates;
+	protected final Set<Triple<State, State, Integer>> visitedStates;
 
 	/**
 	 * contains the intersection rule which is used to build the intersection
 	 * transitions
 	 */
-	private final IntersectionRule intersectionrule;
+	protected final IntersectionRule intersectionrule;
 
-	private Map<Transition, State> mapModelStateIntersectionTransitions;
+	protected Map<Transition, State> mapModelStateIntersectionTransitions;
 
 	/**
 	 * Keeps track of the created states. For each couple of state of the model
 	 * and of the claim, given an integer returns the state of the intersection
 	 * automaton
 	 */
-	private Map<State, Map<State, Map<Integer, State>>> createdStates;
+	protected Map<State, Map<State, Map<Integer, State>>> createdStates;
 
 	/**
 	 * for each state of the model contains the corresponding states of the
 	 * intersection automaton
 	 */
-	private Map<State, Set<State>> modelStatesIntersectionStateMap;
-	private final Map<State, State> intersectionStateModelStateMap;
+	protected Map<State, Set<State>> modelStatesIntersectionStateMap;
+	protected final Map<State, State> intersectionStateModelStateMap;
 
 	/**
 	 * for each state of the claim contains the corresponding states of the
 	 * intersection automaton
 	 */
-	private Map<State, Set<State>> claimIntersectionStatesMap;
-	private final Map<State, State> intersectionStateClaimStateMap;
+	protected Map<State, Set<State>> claimIntersectionStatesMap;
+	protected final Map<State, State> intersectionStateClaimStateMap;
 
 	/**
 	 * contains the model to be considered in the intersection procedure
 	 */
-	private final IBA model;
+	protected final IBA model;
 
 	/**
 	 * contains the claim to be considered in the intersection procedure
 	 */
-	private final BA claim;
-	private boolean intersectionComputed = false;
+	protected final BA claim;
+	protected boolean intersectionComputed = false;
 
 	/**
 	 * crates a new {@link IntersectionBuilder} which is in charge of computing

@@ -60,84 +60,51 @@
 				<xs:element name="inports">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="port">
-								<xs:complexType>
-									<xs:sequence>
-										<xs:element name="sourcestate" minOccurs="0"
-											maxOccurs="unbounded">
-											<xs:complexType>
-												<xs:attribute name="id" type="xs:integer" use="required" />
-												<xs:attribute name="name" type="xs:string" />
-											</xs:complexType>
-										</xs:element>
-										<xs:element name="destinationstate" minOccurs="0"
-											maxOccurs="unbounded">
-											<xs:complexType>
-												<xs:attribute name="id" type="xs:integer" use="required" />
-												<xs:attribute name="name" type="xs:string" />
-											</xs:complexType>
-										</xs:element>
-										<xs:element name="transition" minOccurs="0"
-											maxOccurs="unbounded">
-											<xs:complexType>
-												<xs:attribute name="id" type="xs:positiveInteger"
-													use="required" />
-												<xs:attribute name="source" type="xs:integer"
-													use="required" />
-												<xs:attribute name="destination" type="xs:integer"
-													use="required" />
-												<xs:attribute name="propositions" type="xs:string" />
-											</xs:complexType>
-										</xs:element>
-									</xs:sequence>
-									<xs:attribute name="id" type="xs:positiveInteger"
-										use="required" />
-								</xs:complexType>
-							</xs:element>
+							<xs:element name="port" type="port" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="outports">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="port">
-								<xs:complexType>
-									<xs:sequence>
-										<xs:element name="sourcestate" minOccurs="0"
-											maxOccurs="unbounded">
-											<xs:complexType>
-												<xs:attribute name="id" type="xs:integer" use="required" />
-												<xs:attribute name="name" type="xs:string" />
-											</xs:complexType>
-										</xs:element>
-										<xs:element name="destinationstate" minOccurs="0"
-											maxOccurs="unbounded">
-											<xs:complexType>
-												<xs:attribute name="id" type="xs:integer" use="required" />
-												<xs:attribute name="name" type="xs:string" />
-											</xs:complexType>
-										</xs:element>
-										<xs:element name="transition" minOccurs="0"
-											maxOccurs="unbounded">
-											<xs:complexType>
-												<xs:attribute name="id" type="xs:positiveInteger"
-													use="required" />
-												<xs:attribute name="source" type="xs:integer"
-													use="required" />
-												<xs:attribute name="destination" type="xs:integer"
-													use="required" />
-												<xs:attribute name="propositions" type="xs:string" />
-											</xs:complexType>
-										</xs:element>
-									</xs:sequence>
-									<xs:attribute name="id" type="xs:positiveInteger"
-										use="required" />
-								</xs:complexType>
-							</xs:element>
-    </xs:sequence>
+							<xs:element name="port" type="port" />
+						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
+			<xs:attribute name="modelstateId" type="xs:integer" use="required" />
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="state">
+		<xs:attribute name="id" type="xs:integer" use="required" />
+		<xs:attribute name="name" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="transition">
+		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
+		<xs:attribute name="source" type="xs:integer" use="required" />
+		<xs:attribute name="destination" type="xs:integer" use="required" />
+		<xs:attribute name="propositions" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="port">
+		<xs:sequence>
+			<xs:element name="sourcestate">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="state" type="state" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="destinationstate">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="state" type="state" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="transition" minOccurs="0" maxOccurs="unbounded"
+				type="transition" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
+		<xs:attribute name="color" type="xs:string" use="required" />
+	</xs:complexType>
 </xs:schema>
