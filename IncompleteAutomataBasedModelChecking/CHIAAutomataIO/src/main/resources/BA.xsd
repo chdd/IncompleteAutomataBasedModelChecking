@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:chia="http://NamespaceTest.com/CHIA"
-	targetNamespace="chia:ba" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified">
-	<xs:import schemaLocation="./Propositions.xsd" namespace="http://NamespaceTest.com/CHIA" />
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:chia="http://NamespaceTest.com/CHIA" elementFormDefault="qualified">
 	<!-- defining a Buchi Automaton -->
 	<xs:element name="ba">
 		<xs:complexType>

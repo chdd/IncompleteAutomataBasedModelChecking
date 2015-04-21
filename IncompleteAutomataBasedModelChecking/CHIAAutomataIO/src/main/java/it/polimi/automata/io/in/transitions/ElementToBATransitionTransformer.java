@@ -62,6 +62,8 @@ public class ElementToBATransitionTransformer implements Transformer<Element, Tr
 		int destinationId = Integer
 				.parseInt(eElement
 						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_DESTINATION));
+		Preconditions.checkArgument(idStateMap.containsKey(sourceId), "The id: "+sourceId+" is not contained into the set of the id of the states");
+		Preconditions.checkArgument(idStateMap.containsKey(destinationId), "The id: "+destinationId+" is not contained into the set of the id of the states");
 		automaton.addTransition(idStateMap.get(sourceId),
 				idStateMap.get(destinationId), t);
 		return t;

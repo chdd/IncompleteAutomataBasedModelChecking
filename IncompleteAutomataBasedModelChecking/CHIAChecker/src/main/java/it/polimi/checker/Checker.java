@@ -232,6 +232,8 @@ public class Checker {
 	 */
 	private boolean checkEmptyIntersection() {
 
+		this.intersectionBuilder = new IntersectionBuilder(this.model, claim);
+
 		// computing the intersection
 		this.intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();

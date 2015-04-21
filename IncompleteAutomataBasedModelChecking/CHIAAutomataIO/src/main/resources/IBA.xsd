@@ -3,9 +3,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:chia="http://NamespaceTest.com/CHIA" elementFormDefault="qualified">
 
-	<xs:import schemaLocation="./Propositions.xsd" namespace="http://NamespaceTest.com/CHIA" />
-
-
 	<!-- defining a Buchi Automaton -->
 	<xs:element name="iba">
 		<xs:complexType>
