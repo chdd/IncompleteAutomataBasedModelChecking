@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.experimental.RandomGraphHelper;
+import org.jgrapht.graph.AbstractGraph;
 import org.jgrapht.graph.DirectedPseudograph;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
@@ -760,6 +761,14 @@ public class BA {
 	public TransitionFactory<State, Transition> getTransitionFactory() {
 		return (TransitionFactory<State, Transition>) this.automataGraph
 				.getEdgeFactory();
+	}
+	
+	/**
+	 * returns the graph over which the BA is constructed
+	 * @return the graph over which the BA is constructed
+	 */
+	public AbstractGraph<State, Transition> getGraph(){
+		return new ProxyDirectedPseudograph<State, Transition>(this.automataGraph);
 	}
 
 	/**
