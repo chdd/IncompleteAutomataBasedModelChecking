@@ -32,6 +32,17 @@ public class Transition extends DefaultEdge {
 	 * of the label is satisfied
 	 */
 	private final Set<IGraphProposition> labels;
+	
+	/**
+	 * contains the id of the last transition created
+	 */
+	protected static int transition_counter=0;
+	
+	public Transition(){
+		this.id=transition_counter;
+		transition_counter++;
+		this.labels = new HashSet<IGraphProposition>();
+	}
 
 	/**
 	 * Creates a new transition

@@ -29,18 +29,13 @@ public class ClaimTransitionFactory  extends ClassBasedEdgeFactory<State, Transi
 	}
 
 	/**
-	 * contains the next id of the {@link Transition}
-	 */
-	protected static int transitionCount = 0;
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public Transition create() {
 		
 		Transition t = new Transition(new HashSet<IGraphProposition>(),
-				ClaimTransitionFactory.transitionCount);
-		ClaimTransitionFactory.transitionCount = ClaimTransitionFactory.transitionCount+1;
+				Transition.transition_counter);
+		Transition.transition_counter = Transition.transition_counter+1;
 
 		return t;
 	}
@@ -52,9 +47,8 @@ public class ClaimTransitionFactory  extends ClassBasedEdgeFactory<State, Transi
 	public Transition create(Set<IGraphProposition> labels) {
 		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
-		Transition t = new Transition(labels,
-				ClaimTransitionFactory.transitionCount);
-		ClaimTransitionFactory.transitionCount = ClaimTransitionFactory.transitionCount+1;
+		Transition t = new Transition(labels,Transition.transition_counter);
+		Transition.transition_counter = Transition.transition_counter+1;
 
 		return t;
 	}
@@ -68,8 +62,8 @@ public class ClaimTransitionFactory  extends ClassBasedEdgeFactory<State, Transi
 		Preconditions.checkNotNull(labels, "The labels to be added at the Transition cannot be null");
 
 		Transition t = new Transition(labels, id);
-		ClaimTransitionFactory.transitionCount = Math.max(
-				ClaimTransitionFactory.transitionCount++, id++);
+		Transition.transition_counter = Math.max(
+				Transition.transition_counter+1, id+1);
 
 		return t;
 	}

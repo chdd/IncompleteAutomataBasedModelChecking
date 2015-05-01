@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graphs;
 import org.jgrapht.experimental.RandomGraphHelper;
-import org.jgrapht.graph.AbstractGraph;
 import org.jgrapht.graph.DirectedPseudograph;
+import org.jgrapht.graph.UnmodifiableDirectedGraph;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
@@ -767,8 +768,8 @@ public class BA {
 	 * returns the graph over which the BA is constructed
 	 * @return the graph over which the BA is constructed
 	 */
-	public AbstractGraph<State, Transition> getGraph(){
-		return new ProxyDirectedPseudograph<State, Transition>(this.automataGraph);
+	public DirectedGraph<State, Transition> getGraph(){
+		return new UnmodifiableDirectedGraph<State, Transition>(this.automataGraph);
 	}
 
 	/**

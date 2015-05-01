@@ -125,7 +125,13 @@ public class IntersectionBuilder {
 			this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
 			for (State modelInit : model.getInitialStates()) {
 				for (State claimInit : claim.getInitialStates()) {
-					this.computeIntersection(modelInit, claimInit, 0);
+					if(claim.getAcceptStates().contains(claimInit)){
+						this.computeIntersection(modelInit, claimInit, 1);
+					}
+					else{
+						this.computeIntersection(modelInit, claimInit, 0);
+					}
+					
 				}
 			}
 			this.intersectionComputed = true;
@@ -137,8 +143,13 @@ public class IntersectionBuilder {
 			State claimInitialState) {
 
 		this.intersection = new IntersectionBA();
-		this.computeIntersection(modelInitialState, claimInitialState, 0);
-
+		if(claim.getAcceptStates().contains(claimInitialState)){
+			this.computeIntersection(modelInitialState, claimInitialState, 1);
+		}
+		else{
+			this.computeIntersection(modelInitialState, claimInitialState, 0);
+		}
+		
 		this.intersectionComputed = true;
 		return this.intersection;
 	}
@@ -294,7 +305,10 @@ public class IntersectionBuilder {
 			num = 0;
 		}
 		return num;*/
-		return 2;
+		if(claim.getAcceptStates().contains(claimState)){
+			return 2;
+		}
+		return 1;
 	}
 
 	/**
