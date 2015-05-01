@@ -2,6 +2,7 @@ package it.polimi.constraints.io.out;
 
 import java.io.StringWriter;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -33,6 +34,9 @@ public class ConstraintToStringTransformer {
 				.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(constraintElement);
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
 		StringWriter stringWriter = new StringWriter();
 		StreamResult result = new StreamResult(stringWriter);

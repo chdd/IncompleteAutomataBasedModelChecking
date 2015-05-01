@@ -1,24 +1,16 @@
 package it.polimi.automata;
 
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 
-import org.jgrapht.experimental.RandomGraphHelper;
-
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 import com.google.common.base.Preconditions;
 
@@ -314,70 +306,5 @@ public class IBA extends BA {
 
 		}
 		return ret;
-	}
-
-	public static IBA generateRandomBA(double transitionDensity,
-			double acceptanceDensity, int nStates, double transparentDensity) {
-
-		ClaimTransitionFactory transitionFactory = new ClaimTransitionFactory();
-
-		List<IGraphProposition> proposition1 = new ArrayList<IGraphProposition>();
-		proposition1.add(new GraphProposition("a", false));
-		proposition1.add(new GraphProposition("b", false));
-
-		IBA ba = new IBA(new ClaimTransitionFactory());
-		ba.addProposition(new GraphProposition("a", false));
-		ba.addProposition(new GraphProposition("b", false));
-
-		int numTransition = (int) Math.round(nStates * transitionDensity);
-		int numAcceptingStates = (int) Math.round(nStates * acceptanceDensity);
-		int numTransparentStates = (int) Math.round(nStates
-				* transparentDensity);
-
-		RandomGraphHelper.addVertices(ba.automataGraph, new StateFactory(),
-				nStates);
-
-		List<State> states = new ArrayList<State>(ba.getStates());
-
-		Random randSingleton = new Random();
-		for (int i = 0; i < numTransition; ++i) {
-			ba.addTransition(states.get(randSingleton.nextInt(nStates)),
-					states.get(randSingleton.nextInt(nStates)),
-					transitionFactory.create());
-		}
-
-		ArrayList<State> baStates = new ArrayList<State>(ba.getStates());
-		Collections.shuffle(baStates);
-
-		int i = 0;
-		for (State s : baStates) {
-			if (i < numAcceptingStates) {
-				ba.addAcceptState(s);
-			}
-			i++;
-		}
-		i = 0;
-		Collections.shuffle(baStates);
-		for (State s : baStates) {
-			if (i < numAcceptingStates) {
-				ba.addAcceptState(s);
-			}
-			i++;
-		}
-		i = 0;
-		Collections.shuffle(baStates);
-		for (State s : baStates) {
-			if (i < numTransparentStates) {
-				ba.addTransparentState(s);
-			}
-			i++;
-		}
-		Collections.shuffle(baStates);
-		ba.addInitialState(baStates.get(0));
-		ba.addTransition(baStates.get(0), baStates.get(1),
-				transitionFactory.create());
-		ba.addTransition(baStates.get(0), baStates.get(2),
-				transitionFactory.create());
-		return ba;
 	}
 }

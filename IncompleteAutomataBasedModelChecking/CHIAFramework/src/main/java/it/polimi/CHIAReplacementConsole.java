@@ -6,6 +6,7 @@ import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.io.in.ConstraintReader;
 import it.polimi.constraints.io.in.ReplacementReader;
+import it.polimi.constraints.io.out.ConstraintToStringTransformer;
 import it.polimi.constraints.io.out.ConstraintWriter;
 import it.polimi.refinement.constraintcomputation.ReplacementConstraintComputation;
 import it.polimi.refinementchecker.ReplacementChecker;
@@ -98,6 +99,14 @@ public class CHIAReplacementConsole {
 			ConstraintWriter constraintWriter=new ConstraintWriter(this.constraint, constraintFilePath);
 			constraintWriter.write();
 		}
+	}
+	@Command(name = "displayConstraint", abbrev = "dispC", description = "It is used to display the constraint into the console.", header = "Constraint displayed")
+	public void dispConstraint() throws Exception{
+		if(!constraintLoaded){
+			System.out.println("You must load the constraint before checking it");
+			return;
+		}
+		System.out.println(new ConstraintToStringTransformer().transform(this.constraint));
 	}
 	
 	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated.", header = "Performing the replacement checking")
