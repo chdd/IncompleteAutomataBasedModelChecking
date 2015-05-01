@@ -126,20 +126,24 @@ public class ConstraintReader extends XMLReader{
 		Preconditions.checkNotNull(constraint,
 				"The returning constraint cannot be null");
 
-		NodeList xmlSetOfConstraints = doc
+		// contains the list of sub-properties
+		NodeList xmlSubproperties = doc
 				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
 
-		logger.debug(xmlSetOfConstraints.getLength()
+		logger.debug(xmlSubproperties.getLength()
 				+ " subproperties present in the file " + file.getName());
-		for (int stateid = 0; stateid < xmlSetOfConstraints.getLength(); stateid++) {
-			Node xmlConstraint = xmlSetOfConstraints.item(stateid);
-			Element xmlConstraintElement = (Element) xmlConstraint;
+		for (int stateid = 0; stateid < xmlSubproperties.getLength(); stateid++) {
+			// considers each sub-property
+			Node xmlSubproperty = xmlSubproperties.item(stateid);
+			Element xmlSubPropertyElement = (Element) xmlSubproperty;
 
+			// loads the sub-property
 			SubProperty subProperty = new ElementToSubPropertyTransformer()
-					.transform(xmlConstraintElement);
+					.transform(xmlSubPropertyElement);
 			constraint.addSubProperty(subProperty);
 
-			Element xmlOutComingPorts = (Element) xmlConstraintElement
+			// loads the out-coming ports
+			Element xmlOutComingPorts = (Element) xmlSubPropertyElement
 					.getElementsByTagName(
 							AutomataIOConstants.XML_ELEMENT_PORTS_OUT).item(0);
 			NodeList xmlOutComingPortsList = xmlOutComingPorts
@@ -153,7 +157,8 @@ public class ConstraintReader extends XMLReader{
 				subProperty.addOutComingPort(port);
 			}
 
-			Element xmlInComingPorts = (Element) xmlConstraintElement
+			// loads the incoming ports
+			Element xmlInComingPorts = (Element) xmlSubPropertyElement
 					.getElementsByTagName(
 							AutomataIOConstants.XML_ELEMENT_PORTS_IN).item(0);
 			NodeList xmlInComingPortsList = xmlInComingPorts

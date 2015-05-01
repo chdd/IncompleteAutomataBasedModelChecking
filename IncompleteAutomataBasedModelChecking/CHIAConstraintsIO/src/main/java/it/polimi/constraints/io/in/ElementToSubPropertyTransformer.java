@@ -26,7 +26,7 @@ public class ElementToSubPropertyTransformer implements Transformer<Element, Sub
 	@Override
 	public SubProperty transform(Element input) {
 
-		Preconditions.checkNotNull(input, "The input element cannot be null");
+		Preconditions.checkNotNull(input, "The subproperty to be converted cannot be null");
 		int componentId = Integer.parseInt(input
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID));
 

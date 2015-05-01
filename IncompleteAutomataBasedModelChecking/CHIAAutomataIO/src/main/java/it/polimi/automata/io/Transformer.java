@@ -21,5 +21,5 @@ public interface Transformer<I, O> {
 	 * @throws NullPointerException
 	 *             if the input is null
 	 */
-	public O transform(I input);
+	public O transform(I input) throws Exception;
 }

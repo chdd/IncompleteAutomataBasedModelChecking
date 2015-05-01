@@ -1,13 +1,9 @@
 package it.polimi.constraints.io.out;
 
-import it.polimi.automata.AutomataIOConstants;
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.SubProperty;
 
 import java.io.File;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -17,7 +13,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
@@ -90,34 +85,12 @@ public class ConstraintWriter {
 		logger.info("Writing the constraint automaton");
 		try {
 
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-			Document doc = docBuilder.newDocument();
-			Element rootElement = doc
-					.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
-			doc.appendChild(rootElement);
-
-			SubPropertyToElementTransformer componentTransformer = new SubPropertyToElementTransformer(
-					doc);
-			for (SubProperty component : constraint.getSubProperties()) {
-
-				Element componentElement=componentTransformer.transform(component);
-				rootElement.appendChild(componentElement);
-
-			}
-
-			
-			Element graphPortXMLElement = new PortsGraphToElementTransformer(
-					doc).transform(this.constraint.getPortsGraph());
-			rootElement.appendChild(graphPortXMLElement);
-
+			Element constraintElement=new ConstraintToElementTransformer().transform(this.constraint);
 
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
+			DOMSource source = new DOMSource(constraintElement);
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
 			logger.info("Constraint written");

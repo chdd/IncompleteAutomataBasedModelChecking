@@ -57,8 +57,17 @@
 							<xs:complexType>
 								<xs:sequence>
 									<xs:element name="transition" minOccurs="0"
-										maxOccurs="unbounded" type="transition">
-									</xs:element>
+											maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:attribute name="id" type="xs:positiveInteger"
+													use="required" />
+												<xs:attribute name="source" type="xs:integer"
+													use="required" />
+												<xs:attribute name="destination" type="xs:integer"
+													use="required" />
+												<xs:attribute name="propositions" type="xs:string" />
+											</xs:complexType>
+									</xs:element>		
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
@@ -93,8 +102,6 @@
 	</xs:complexType>
 	<xs:complexType name="transition">
 		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
-		<xs:attribute name="source" type="xs:integer" use="required" />
-		<xs:attribute name="destination" type="xs:integer" use="required" />
 		<xs:attribute name="propositions" type="xs:string" />
 	</xs:complexType>
 	<xs:complexType name="port">
