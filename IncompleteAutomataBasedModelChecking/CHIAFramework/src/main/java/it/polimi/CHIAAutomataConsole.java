@@ -15,8 +15,8 @@ import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.ConstraintWriter;
 import it.polimi.constraints.io.out.ElementToStringTransformer;
-import it.polimi.model.ltltoba.LTLReader;
-import it.polimi.model.ltltoba.LTLtoBATransformer;
+//import it.polimi.model.ltltoba.LTLReader;
+//import it.polimi.model.ltltoba.LTLtoBATransformer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,7 +80,7 @@ public class CHIAAutomataConsole {
 		this.claimLoaded = true;
 	}
 
-	@Command(name = "loadLTLClaim", abbrev = "lcLTL", description = "It is used to load the property from an LTL formula", header = "load LTL claim")
+	/*@Command(name = "loadLTLClaim", abbrev = "lcLTL", description = "It is used to load the property from an LTL formula", header = "load LTL claim")
 	public void loadProperty(
 			@Param(name = "LTLFormula", description = "is the LTL formula that represents the claim") String ltlProperty) {
 		this.claim = new LTLtoBATransformer().transform("!(" + ltlProperty
@@ -89,8 +89,9 @@ public class CHIAAutomataConsole {
 		this.checked = false;
 		this.constraintComputed = false;
 		this.claimLoaded = true;
-	}
+	}*/
 
+	/*
 	@Command(name = "loadLTLClaim", abbrev = "lcLTL", description = "It is used to load the property from an LTL formula", header = "load LTL claim")
 	public void loadProperty(
 			@Param(name = "-f", description = "is the flag that specify that the formula must be loaded from file") String flag,
@@ -100,7 +101,7 @@ public class CHIAAutomataConsole {
 		this.checked = false;
 		this.constraintComputed = false;
 		this.claimLoaded = true;
-	}
+	}*/
 
 	@Command(name = "check", abbrev = "ck", description = "Is used to check the model against the specified claim. Before running the model checking procedure it is necessary to load the model and the claim to be considered", header = "Checking procedure ended")
 	public void check() {
