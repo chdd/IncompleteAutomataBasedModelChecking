@@ -9,6 +9,11 @@ import org.xml.sax.SAXException;
 
 import asg.cliche.ShellFactory;
 
+/**
+ * Contains the main of the application
+ * @author Claudio1
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException {
