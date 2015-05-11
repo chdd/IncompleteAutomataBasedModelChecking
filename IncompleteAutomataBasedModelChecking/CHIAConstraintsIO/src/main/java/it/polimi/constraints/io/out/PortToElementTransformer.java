@@ -13,12 +13,6 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-/**
- * transforms a port object into the corresponding XML element representation.
- * 
- * @author claudiomenghi
- *
- */
 public class PortToElementTransformer implements Transformer<Port, Element> {
 
 	private final Document doc;
@@ -46,17 +40,6 @@ public class PortToElementTransformer implements Transformer<Port, Element> {
 		portId.setValue(Integer.toString(port.getId()));
 		portElement.setAttributeNode(portId);
 
-		Attr portColor = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
-		portColor.setValue(port.getColor().toString());
-		portElement.setAttributeNode(portColor);
-
-		// transition source
-		Attr nextPortColor = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
-		nextPortColor.setValue(port.getColor().toString());
-		portElement.setAttributeNode(nextPortColor);
-
 		Element transitionSourceStateContainer = doc
 				.createElement(ConstraintsIOConstants.XML_ELEMENT_PORT_SOURCE_STATE);
 		Element transitionDestinationStateContainer = doc
@@ -83,4 +66,5 @@ public class PortToElementTransformer implements Transformer<Port, Element> {
 
 		return portElement;
 	}
+
 }

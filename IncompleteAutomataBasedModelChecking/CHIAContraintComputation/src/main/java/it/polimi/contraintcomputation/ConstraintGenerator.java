@@ -7,6 +7,7 @@ import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.portreachability.PortReachability;
 import it.polimi.contraintcomputation.subpropertyidentifier.IntersectionCleaner;
 import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
+import it.polimi.contraintcomputation.subpropertyidentifier.coloring.Coloring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,9 @@ public class ConstraintGenerator {
 		subPropertiesIdentifier = new SubPropertiesIdentifier(
 				intersectionBuilder, this.mcResults);
 		constraint.addSubProperties(subPropertiesIdentifier.getSubProperties());
+		
+		Coloring coloring=new Coloring(subPropertiesIdentifier);
+		coloring.startColoring();
 		logger.info("Constraint computed");
 		return constraint;
 		

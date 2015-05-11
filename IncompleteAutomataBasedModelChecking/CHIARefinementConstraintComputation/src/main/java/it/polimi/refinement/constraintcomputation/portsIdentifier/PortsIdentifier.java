@@ -1,7 +1,7 @@
 package it.polimi.refinement.constraintcomputation.portsIdentifier;
 
 import it.polimi.checker.intersection.IntersectionBuilder;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.SubProperty;
 
@@ -44,13 +44,13 @@ public abstract class PortsIdentifier {
 	 * contains a map that keeps tracks of the relation between an intersection
 	 * port and the corresponding claim port
 	 */
-	protected final Map<Port, Port> intersectionPortClaimPortMap = new HashMap<Port, Port>();
-	protected final Map<Port, Set<Port>> claimPortIntersectionPortMap = new HashMap<Port, Set<Port>>();
+	protected final Map<ColoredPort, ColoredPort> intersectionPortClaimPortMap = new HashMap<ColoredPort, ColoredPort>();
+	protected final Map<ColoredPort, Set<ColoredPort>> claimPortIntersectionPortMap = new HashMap<ColoredPort, Set<ColoredPort>>();
 
 	/**
 	 * contains the set of the intersection port
 	 */
-	protected final Set<Port> ports;
+	protected final Set<ColoredPort> ports;
 
 	/**
 	 * creates a new PortsIdentifier. The PortsIdentifier given the sub-property
@@ -79,7 +79,7 @@ public abstract class PortsIdentifier {
 		this.refinement = refinement;
 		this.subproperty = subproperty;
 		this.intersectionBuilder = intersectionBuilder;
-		this.ports = new HashSet<Port>();
+		this.ports = new HashSet<ColoredPort>();
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class PortsIdentifier {
 	 * @throws NullPointerException
 	 *             if the intersection port is null
 	 */
-	public Port getCorrespondingClaimPort(Port intersectionPort) {
+	public ColoredPort getCorrespondingClaimPort(ColoredPort intersectionPort) {
 		Preconditions.checkNotNull(intersectionPort,
 				"The intersection port cannot be null");
 		Preconditions
@@ -113,13 +113,13 @@ public abstract class PortsIdentifier {
 	 * @throws NullPointerException
 	 *             if the claim port is null
 	 */
-	public Set<Port> getCorrespondingIntersectionPort(Port claimPort) {
+	public Set<ColoredPort> getCorrespondingIntersectionPort(ColoredPort claimPort) {
 		Preconditions.checkNotNull(claimPort,
 				"The intersection port cannot be null");
 		if (this.intersectionPortClaimPortMap.containsKey(claimPort)) {
 			return this.claimPortIntersectionPortMap.get(claimPort);
 		} else {
-			return new HashSet<Port>();
+			return new HashSet<ColoredPort>();
 		}
 	}
 

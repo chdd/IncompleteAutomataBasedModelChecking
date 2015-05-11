@@ -38,7 +38,7 @@ public class ReplacementReader extends XMLReader{
 	 * is the logger of the BAReader class
 	 */
 	private static final Logger logger = LoggerFactory
-			.getLogger(ConstraintReader.class);
+			.getLogger(ReplacementReader.class);
 
 	
 	private final File file;
@@ -99,11 +99,11 @@ public class ReplacementReader extends XMLReader{
 			return ret;
 
 		} catch (ParserConfigurationException pce) {
-			logger.error(pce.getMessage());
+			logger.error(pce.toString());
 		} catch (SAXException se) {
-			logger.error(se.getMessage());
+			logger.error(se.toString());
 		} catch (IOException ioe) {
-			logger.error(ioe.getMessage());
+			logger.error(ioe.toString());
 		}
 
 		return null;

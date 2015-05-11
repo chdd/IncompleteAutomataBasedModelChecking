@@ -3,6 +3,7 @@ package it.polimi.refinement.constraintcomputation.portsIdentifier;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.SubProperty;
@@ -46,11 +47,11 @@ public class OutComingPortsIdentifier extends PortsIdentifier{
 		
 	}
 
-	public Set<Port> computeIntersectionOutcomingPorts() {
+	public Set<ColoredPort> computeIntersectionOutcomingPorts() {
 
-		Set<Port> claimOutcomingPorts = this.subproperty.getOutcomingPorts();
+		Set<ColoredPort> claimOutcomingPorts = this.subproperty.getOutcomingPorts();
 
-		for (Port claimOutcomingPort : claimOutcomingPorts) {
+		for (ColoredPort claimOutcomingPort : claimOutcomingPorts) {
 			for (Port modelOutcomingPort : refinement.getOutcomingPorts()) {
 
 				if (claimOutcomingPort
@@ -81,7 +82,7 @@ public class OutComingPortsIdentifier extends PortsIdentifier{
 
 					for (State outState : outintersectionStates) {
 
-						Port intersectionPort = new Port(
+						ColoredPort intersectionPort = new ColoredPort(
 								outState, claimOutcomingPort.getDestination(),
 								transition, false, claimOutcomingPort.getColor());
 						this.ports.add(intersectionPort);
@@ -89,7 +90,7 @@ public class OutComingPortsIdentifier extends PortsIdentifier{
 						this.intersectionPortClaimPortMap.put(intersectionPort,
 								claimOutcomingPort);
 						if(!claimPortIntersectionPortMap.containsKey(claimOutcomingPort)){
-							claimPortIntersectionPortMap.put(claimOutcomingPort, new HashSet<Port>());
+							claimPortIntersectionPortMap.put(claimOutcomingPort, new HashSet<ColoredPort>());
 						}
 						claimPortIntersectionPortMap.get(claimOutcomingPort).add(intersectionPort);
 					}

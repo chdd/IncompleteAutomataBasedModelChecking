@@ -1,5 +1,6 @@
 package it.polimi.checker.intersection;
 
+import it.polimi.automata.AutomataConstants;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 
@@ -21,29 +22,28 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class IntersectionRule{
+public class IntersectionRule {
 
-	
 	private final ClaimTransitionFactory transitionFactory;
-	
+
 	public IntersectionRule() {
-		this.transitionFactory=new ClaimTransitionFactory();
+		this.transitionFactory = new ClaimTransitionFactory();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Transition getIntersectionTransition(Transition modelTransition, Transition claimTransition) {
+	public Transition getIntersectionTransition(Transition modelTransition,
+			Transition claimTransition) {
 
 		Preconditions.checkNotNull(modelTransition,
 				"The model transition cannot be null");
 		Preconditions.checkNotNull(claimTransition,
 				"The claim transition cannot be null");
-	
+
 		if (this.satisfies(modelTransition.getPropositions(),
 				claimTransition.getPropositions())) {
-			return transitionFactory.create(modelTransition
-					.getPropositions());
+			return transitionFactory.create(modelTransition.getPropositions());
 		} else {
 			return null;
 		}
@@ -62,6 +62,12 @@ public class IntersectionRule{
 			Set<IGraphProposition> claimLabel) {
 		Preconditions.checkNotNull(modelLabel, "The model cannot be null");
 		Preconditions.checkNotNull(claimLabel, "The claim cannot be null");
+
+		IGraphProposition stuttering = new GraphProposition(
+				AutomataConstants.STUTTERING_CHARACTER, false);
+		if (modelLabel.contains(stuttering)) {
+			return claimLabel.contains(stuttering);
+		}
 
 		// for each proposition of the claim
 		for (IGraphProposition claimProposition : claimLabel) {

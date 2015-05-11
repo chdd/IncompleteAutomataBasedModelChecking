@@ -5,9 +5,10 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.Component;
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.SubProperty;
 import it.polimi.contraintcomputation.ConstraintGenerator;
@@ -17,7 +18,7 @@ import it.polimi.refinement.constraintcomputation.merger.UnreachablePortsIdentif
 import it.polimi.refinement.constraintcomputation.merger.UnreachablePortsRemover;
 import it.polimi.refinement.constraintcomputation.portsIdentifier.IncomingPortsIdentifier;
 import it.polimi.refinement.constraintcomputation.portsIdentifier.OutComingPortsIdentifier;
-import it.polimi.refinementchecker.ReplacementChecker;
+import it.polimi.refinementchecker.SubPropertyChecker;
 
 import java.util.Set;
 
@@ -60,8 +61,10 @@ public class ReplacementConstraintComputation {
 	/**
 	 * contains the checker which is used to check the replacement
 	 */
-	private final ReplacementChecker replacementChecker;
+	private final SubPropertyChecker replacementChecker;
 
+	
+	private final AcceptingPolicy acceptingPolicy;
 	/**
 	 * is the identifiers use to compute the incoming ports
 	 */
@@ -85,10 +88,11 @@ public class ReplacementConstraintComputation {
 	 *             if the replacementChecker is null
 	 */
 	public ReplacementConstraintComputation(
-			ReplacementChecker replacementChecker) {
+			SubPropertyChecker replacementChecker, AcceptingPolicy acceptingPolicy, Constraint constraint) {
 		Preconditions.checkNotNull(replacementChecker,
 				"The constraint to be checked cannot be null");
-		this.constraint = replacementChecker.getConstraint();
+		this.acceptingPolicy=acceptingPolicy;
+		this.constraint = constraint;
 		this.replacement = replacementChecker.getReplacement();
 		this.replacementChecker = replacementChecker;
 	}
@@ -158,18 +162,18 @@ public class ReplacementConstraintComputation {
 
 		// computes the intersection between the claim and the model
 		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
-				modelWithoutTransparentStates, claim);
+				modelWithoutTransparentStates, claim, this.acceptingPolicy);
 		IntersectionBA intersectionBA = intersectionBuilder
 				.computeIntersection();
 
 		// computes the incoming ports of the intersection automaton
 		incomingPortIdentifier = new IncomingPortsIdentifier(replacement,
 				subproperty, intersectionBuilder);
-		Set<Port> incomingPorts = incomingPortIdentifier
+		Set<ColoredPort> incomingPorts = incomingPortIdentifier
 				.computeIntersectionIncomingPorts();
 		outcomingPortIdentifier = new OutComingPortsIdentifier(replacement,
 				subproperty, intersectionBuilder);
-		Set<Port> outcomingPorts = outcomingPortIdentifier
+		Set<ColoredPort> outcomingPorts = outcomingPortIdentifier
 				.computeIntersectionOutcomingPorts();
 
 		SubpropertyPortColorPropagator portColorPropagator = new SubpropertyPortColorPropagator(
@@ -209,8 +213,8 @@ public class ReplacementConstraintComputation {
 				this.incomingPortIdentifier.computeIntersectionIncomingPorts(),
 				this.outcomingPortIdentifier
 						.computeIntersectionOutcomingPorts());
-		Set<Port> unreachableInPorts = uid.getUnreachableInPorts();
-		Set<Port> unreachableOutPorts = uid.getUnreachableOutPorts();
+		Set<ColoredPort> unreachableInPorts = uid.getUnreachableInPorts();
+		Set<ColoredPort> unreachableOutPorts = uid.getUnreachableOutPorts();
 
 		// removes the unreachable ports
 		UnreachablePortsRemover remover = new UnreachablePortsRemover(

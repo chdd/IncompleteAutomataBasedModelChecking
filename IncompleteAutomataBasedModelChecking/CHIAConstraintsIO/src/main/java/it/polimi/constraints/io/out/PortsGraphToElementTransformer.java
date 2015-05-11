@@ -2,7 +2,7 @@ package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
  */
 public class PortsGraphToElementTransformer
 		implements
-		Transformer<DefaultDirectedGraph<Port, DefaultEdge>, Element> {
+		Transformer<DefaultDirectedGraph<ColoredPort, DefaultEdge>, Element> {
 
 	
 	private final Document doc;
@@ -45,7 +45,7 @@ public class PortsGraphToElementTransformer
 	 *             if the input is null
 	 */
 	@Override
-	public Element transform(DefaultDirectedGraph<Port, DefaultEdge> input) {
+	public Element transform(DefaultDirectedGraph<ColoredPort, DefaultEdge> input) {
 		Preconditions.checkNotNull(input, "The graph to be converted cannot be null");
 		
 
@@ -56,10 +56,10 @@ public class PortsGraphToElementTransformer
 			Element edge = doc.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITION);
 			portReachability.appendChild(edge);
 			
-			Port sourceport=input.getEdgeSource(port);
+			ColoredPort sourceport=input.getEdgeSource(port);
 			edge.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_SOURCE, Integer.toString(sourceport.getId()));
 			
-			Port destinationport=input.getEdgeTarget(port);
+			ColoredPort destinationport=input.getEdgeTarget(port);
 			edge.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_DESTINATION, Integer.toString(destinationport.getId()));
 			
 			portReachability.appendChild(edge);

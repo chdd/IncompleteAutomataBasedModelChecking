@@ -1,12 +1,14 @@
 package it.polimi.constraints.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.io.Transformer;
+import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.automata.io.out.BAToElementTrasformer;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -20,10 +22,8 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class SubPropertyToElementTransformer implements
-		Transformer<SubProperty, Element> {
+public class SubPropertyToElementTransformer extends XMLTrasformer<SubProperty, Element>{
 
-	private final Document doc;
 
 	/**
 	 * creates a new PortsGraph To Element Transformer element transformer
@@ -32,13 +32,13 @@ public class SubPropertyToElementTransformer implements
 	 *            is the document where the element must be placed
 	 */
 	public SubPropertyToElementTransformer(Document doc) {
-		Preconditions.checkNotNull(doc, "The document element cannot be null");
-		this.doc = doc;
+		super(doc);
 	}
 
 	@Override
-	public Element transform(SubProperty input) {
+	public Element transform(SubProperty input) throws ParserConfigurationException {
 
+		Document doc=this.getDocument();
 		// root elements
 		Element constraintElement = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
@@ -82,17 +82,18 @@ public class SubPropertyToElementTransformer implements
 	 *            is the element where the ports must be added
 	 * @param ports
 	 *            the set of ports to be added
+	 * @throws ParserConfigurationException 
 	 * @throws NullPointerException
 	 *             if one of the argument is null
 	 */
-	private void addPorts(Element portsElement, Set<Port> ports) {
+	private void addPorts(Element portsElement, Set<ColoredPort> ports) throws ParserConfigurationException {
 		Preconditions.checkNotNull(portsElement, "The element where the ports must be added cannot be null");
 		Preconditions.checkNotNull(ports, "The set of the ports to be added cannot be null");
 		// create a new port transformed
-		PortToElementTransformer transformer = new PortToElementTransformer(
-				doc);
+		ColoredPortToElementTransformer transformer = new ColoredPortToElementTransformer(this.getDocument()
+				);
 		// transforms each port into the corresponding port element 
-		for (Port port : ports) {
+		for (ColoredPort port : ports) {
 			Element portElement = transformer.transform(port);
 			portsElement.appendChild(portElement);
 		}

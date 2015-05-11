@@ -121,6 +121,7 @@ public class IntersectionCleaner extends CHIAOperation {
 		Set<State> toBeRemoved = new HashSet<State>(
 				this.intersectionAutomaton.getStates());
 		toBeRemoved.removeAll(reachableStates);
+		
 		// removing the non reachable states
 		for (State s : toBeRemoved) {
 			State modelState = this.intersectionBuilder

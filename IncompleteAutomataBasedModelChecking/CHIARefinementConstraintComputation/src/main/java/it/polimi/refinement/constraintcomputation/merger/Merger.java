@@ -3,7 +3,7 @@ package it.polimi.refinement.constraintcomputation.merger;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 import it.polimi.contraintcomputation.portreachability.ReachabilityChecker;
 import it.polimi.refinement.constraintcomputation.portsIdentifier.IncomingPortsIdentifier;
@@ -114,14 +114,14 @@ public class Merger {
 			ReachabilityChecker<IntersectionBA> regularReachabilityChecker,
 			ReachabilityChecker<IntersectionBA> mixedReachabilityChecker) {
 
-		for (Port outPort : subProperty.getOutcomingPorts()) {
-			for (Port refinedOutPort : this.outcomingPortsIdentifier
+		for (ColoredPort outPort : subProperty.getOutcomingPorts()) {
+			for (ColoredPort refinedOutPort : this.outcomingPortsIdentifier
 					.getCorrespondingIntersectionPort(outPort)) {
 				if (intersectionAutomaton.getMixedStates().contains(
 						refinedOutPort.getSource())) {
 					for (SubProperty subPropertySubConstraint : this.subConstraint
 							.getSubProperties()) {
-						for (Port subConstraintInPort : subPropertySubConstraint
+						for (ColoredPort subConstraintInPort : subPropertySubConstraint
 								.getOutcomingPorts()) {
 							if (!Collections
 									.disjoint(
@@ -152,7 +152,7 @@ public class Merger {
 				else {
 					for (SubProperty subPropertySubConstraint : this.subConstraint
 							.getSubProperties()) {
-						for (Port subConstraintOutPort : subPropertySubConstraint
+						for (ColoredPort subConstraintOutPort : subPropertySubConstraint
 								.getOutcomingPorts()) {
 							if (!Collections.disjoint(
 									regularReachabilityChecker
@@ -161,7 +161,7 @@ public class Merger {
 									intersectionAutomaton
 											.getSuccessors(subConstraintOutPort
 													.getSource()))) {
-								for (Port p : Graphs.successorListOf(
+								for (ColoredPort p : Graphs.successorListOf(
 										c.getPortsGraph(), outPort)) {
 									c.addReachabilityRelation(
 											subConstraintOutPort, p);
@@ -186,14 +186,14 @@ public class Merger {
 			ReachabilityChecker<IntersectionBA> regularReachabilityChecker,
 			ReachabilityChecker<IntersectionBA> mixedReachabilityChecker) {
 		// analyzes an incoming port of the sub-property
-		for (Port inPort : subProperty.getIncomingPorts()) {
-			for (Port refinedInPort : this.incomingPortsIdentifier
+		for (ColoredPort inPort : subProperty.getIncomingPorts()) {
+			for (ColoredPort refinedInPort : this.incomingPortsIdentifier
 					.getCorrespondingIntersectionPort(inPort)) {
 				if (intersectionAutomaton.getMixedStates().contains(
 						refinedInPort.getDestination())) {
 					for (SubProperty subPropertySubConstraint : this.subConstraint
 							.getSubProperties()) {
-						for (Port subConstraintOutPort : subPropertySubConstraint
+						for (ColoredPort subConstraintOutPort : subPropertySubConstraint
 								.getOutcomingPorts()) {
 							if (!Collections
 									.disjoint(
@@ -224,7 +224,7 @@ public class Merger {
 				else {
 					for (SubProperty subPropertySubConstraint : this.subConstraint
 							.getSubProperties()) {
-						for (Port subConstraintInPort : subPropertySubConstraint
+						for (ColoredPort subConstraintInPort : subPropertySubConstraint
 								.getIncomingPorts()) {
 							if (!Collections
 									.disjoint(
@@ -235,7 +235,7 @@ public class Merger {
 											intersectionAutomaton
 													.getPredecessors(subConstraintInPort
 															.getDestination()))) {
-								for (Port p : Graphs.predecessorListOf(
+								for (ColoredPort p : Graphs.predecessorListOf(
 										c.getPortsGraph(), inPort)) {
 									c.addReachabilityRelation(p,
 											subConstraintInPort);

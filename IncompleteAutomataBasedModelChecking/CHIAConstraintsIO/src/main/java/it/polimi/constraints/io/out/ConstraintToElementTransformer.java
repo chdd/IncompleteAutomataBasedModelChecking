@@ -1,13 +1,13 @@
 package it.polimi.constraints.io.out;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.SubProperty;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,9 +39,9 @@ public class ConstraintToElementTransformer implements
 		Element rootElement = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
 		doc.appendChild(rootElement);
-
-		SubPropertyToElementTransformer componentTransformer = new SubPropertyToElementTransformer(
-				doc);
+		
+		SubPropertyToElementTransformer componentTransformer = new SubPropertyToElementTransformer(doc
+				);
 		for (SubProperty component : constraint.getSubProperties()) {
 
 			Element componentElement = componentTransformer

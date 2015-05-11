@@ -5,6 +5,7 @@ import it.polimi.constraints.Constraint;
 import java.io.File;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -91,6 +92,10 @@ public class ConstraintWriter {
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(constraintElement);
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
 			logger.info("Constraint written");

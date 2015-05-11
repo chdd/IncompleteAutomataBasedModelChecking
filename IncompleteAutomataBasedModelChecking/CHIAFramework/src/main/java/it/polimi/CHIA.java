@@ -4,6 +4,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.checker.Checker;
 import it.polimi.checker.ModelCheckingResults;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.CHIAOperation;
 import it.polimi.contraintcomputation.ConstraintGenerator;
@@ -36,6 +37,8 @@ public class CHIA extends CHIAOperation{
 	 * considered in the verification procedure
 	 */
 	private final IBA model;
+	
+	private final AcceptingPolicy acceptingPolicy;
 
 	/**
 	 * Is the model checker in charge of verifying whether the property is
@@ -69,12 +72,14 @@ public class CHIA extends CHIAOperation{
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public CHIA(BA claim, IBA model, ModelCheckingResults results) {
+	public CHIA(BA claim, IBA model, AcceptingPolicy acceptingPolicy, ModelCheckingResults results) {
 
 		Preconditions.checkNotNull(claim, "The claim cannot  be null");
 		Preconditions.checkNotNull(model, "The model cannot  be null");
 		Preconditions.checkNotNull(results, "The model cannot  be null");
+		Preconditions.checkNotNull(acceptingPolicy, "The acceptingPolicy cannot  be null");
 
+		this.acceptingPolicy=acceptingPolicy;
 		this.claim = claim;
 		this.model = model;
 		this.mcResults = results;
@@ -91,7 +96,7 @@ public class CHIA extends CHIAOperation{
 	public int check() {
 		logger.info("Running CHIA");
 
-		modelChecker = new Checker(model, claim, this.mcResults);
+		modelChecker = new Checker(model, claim, acceptingPolicy, this.mcResults);
 		mcResults.setResult(modelChecker.check());
 
 		logger.info("CHIA model checking phase ended");

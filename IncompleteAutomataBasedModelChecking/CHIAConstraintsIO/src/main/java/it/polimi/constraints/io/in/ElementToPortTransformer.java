@@ -6,7 +6,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Color;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.Port;
 import it.polimi.constraints.io.ConstraintsIOConstants;
 
@@ -14,13 +14,6 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-/**
- * transforms an XML element which represents a port into the corresponding port
- * Java element.
- * 
- * @author claudiomenghi
- *
- */
 public class ElementToPortTransformer {
 
 	private final boolean incoming;
@@ -50,7 +43,7 @@ public class ElementToPortTransformer {
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID));
 		
 		
-		Port.ID_COUNTER = Math.max(Port.ID_COUNTER, portId + 1);
+		ColoredPort.ID_COUNTER = Math.max(ColoredPort.ID_COUNTER, portId + 1);
 		
 		
 		Element sourceStateElement=(Element) e.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PORT_SOURCE_STATE).item(0);
@@ -62,12 +55,7 @@ public class ElementToPortTransformer {
 		Element transitionElement=(Element) e.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PORT_TRANSITION).item(0);
 		Transition transition=this.loadTransition(transitionElement);
 		
-		Color color = Color.valueOf(e
-				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR));
-
-		
-		return new Port(sourceState, destinationState, transition, incoming,
-				color);
+		return new Port(sourceState, destinationState, transition, incoming);
 		
 	}
 	

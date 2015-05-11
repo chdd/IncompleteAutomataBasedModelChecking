@@ -32,14 +32,14 @@ public class Constraint {
 	 */
 	private Set<SubProperty> subProperties;
 
-	private DefaultDirectedGraph<Port, DefaultEdge> portsGraph;
+	private DefaultDirectedGraph<ColoredPort, DefaultEdge> portsGraph;
 
 	/**
 	 * creates a new empty constraint
 	 */
 	public Constraint() {
 		this.subProperties = new HashSet<SubProperty>();
-		this.portsGraph = new DefaultDirectedGraph<Port, DefaultEdge>(
+		this.portsGraph = new DefaultDirectedGraph<ColoredPort, DefaultEdge>(
 				DefaultEdge.class);
 
 	}
@@ -58,10 +58,10 @@ public class Constraint {
 		Preconditions.checkNotNull(subproperty, "The component cannot be null");
 
 		this.subProperties.add(subproperty);
-		for (Port p : subproperty.getIncomingPorts()) {
+		for (ColoredPort p : subproperty.getIncomingPorts()) {
 			this.portsGraph.addVertex(p);
 		}
-		for (Port p : subproperty.getOutcomingPorts()) {
+		for (ColoredPort p : subproperty.getOutcomingPorts()) {
 			this.portsGraph.addVertex(p);
 		}
 	}
@@ -93,7 +93,7 @@ public class Constraint {
 	 * @throws NullPointerException
 	 *             if one of the ports is null
 	 */
-	public void addReachabilityRelation(Port sourcePort, Port destinationPort) {
+	public void addReachabilityRelation(ColoredPort sourcePort, ColoredPort destinationPort) {
 		// validates the parameters
 		Preconditions.checkNotNull(sourcePort,
 				"The incomingPort port cannot be null");
@@ -168,21 +168,30 @@ public class Constraint {
 		throw new IllegalArgumentException("The state " + transparentState
 				+ " is not contained into the set of constrained states");
 	}
+	
+	public boolean isConstrained(State transparentState){
+		for (SubProperty c : subProperties) {
+			if (c.getModelState().equals(transparentState)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-	public DefaultDirectedGraph<Port, DefaultEdge> getPortsGraph() {
+	public DefaultDirectedGraph<ColoredPort, DefaultEdge> getPortsGraph() {
 		return this.portsGraph;
 	}
 
-	public void setPortGraph(DefaultDirectedGraph<Port, DefaultEdge> portsGraph) {
+	public void setPortGraph(DefaultDirectedGraph<ColoredPort, DefaultEdge> portsGraph) {
 		this.portsGraph = portsGraph;
 
 	}
 
 	public void replace(SubProperty oldComponent, Constraint newConstraint,
-			Map<Port, Set<Port>> mapOldPropertyNewConstraintIncomingPorts,
-			Map<Port, Set<Port>> mapOldPropertyNewConstraintOutcomingPorts,
-			Map<Port, Port> intersectionIncomingPortClaimPortMap,
-			Map<Port, Port> intersectionOutcomingPortClaimPortMap)
+			Map<ColoredPort, Set<ColoredPort>> mapOldPropertyNewConstraintIncomingPorts,
+			Map<ColoredPort, Set<ColoredPort>> mapOldPropertyNewConstraintOutcomingPorts,
+			Map<ColoredPort, ColoredPort> intersectionIncomingPortClaimPortMap,
+			Map<ColoredPort, ColoredPort> intersectionOutcomingPortClaimPortMap)
 
 	{
 		Preconditions.checkNotNull(oldComponent,
@@ -196,14 +205,14 @@ public class Constraint {
 
 		this.union(newConstraint);
 		// coping the old INCOMING transition to the new ports
-		for (Port oldIncomingPort : mapOldPropertyNewConstraintIncomingPorts
+		for (ColoredPort oldIncomingPort : mapOldPropertyNewConstraintIncomingPorts
 				.keySet()) {
 			if (intersectionIncomingPortClaimPortMap
 					.containsKey(oldIncomingPort)) {
 				for (DefaultEdge e : this.portsGraph
 						.incomingEdgesOf(intersectionIncomingPortClaimPortMap
 								.get(oldIncomingPort))) {
-					for (Port newIncomingPort : mapOldPropertyNewConstraintIncomingPorts
+					for (ColoredPort newIncomingPort : mapOldPropertyNewConstraintIncomingPorts
 							.get(oldIncomingPort)) {
 						this.portsGraph.addEdge(
 								this.portsGraph.getEdgeSource(e),
@@ -213,14 +222,14 @@ public class Constraint {
 			}
 		}
 		// coping the old OUTCOMING transitions to the new ports
-		for (Port oldOutcomingPort : mapOldPropertyNewConstraintOutcomingPorts
+		for (ColoredPort oldOutcomingPort : mapOldPropertyNewConstraintOutcomingPorts
 				.keySet()) {
 			if (intersectionOutcomingPortClaimPortMap
 					.containsKey(oldOutcomingPort)) {
 				for (DefaultEdge e : this.portsGraph
 						.outgoingEdgesOf(intersectionOutcomingPortClaimPortMap
 								.get(oldOutcomingPort))) {
-					for (Port newOutcomingPort : mapOldPropertyNewConstraintOutcomingPorts
+					for (ColoredPort newOutcomingPort : mapOldPropertyNewConstraintOutcomingPorts
 							.get(oldOutcomingPort)) {
 						this.portsGraph.addEdge(newOutcomingPort,
 								this.portsGraph.getEdgeTarget(e));
@@ -264,17 +273,17 @@ public class Constraint {
 								+ " must be contained into the set of the sub-properties of the constraint");
 		this.subProperties.remove(subProperty);
 
-		Set<Port> incomingPorts = new HashSet<Port>();
+		Set<ColoredPort> incomingPorts = new HashSet<ColoredPort>();
 		incomingPorts.addAll(subProperty.getIncomingPorts());
 
-		for (Port incomingPort : incomingPorts) {
+		for (ColoredPort incomingPort : incomingPorts) {
 			this.portsGraph.removeVertex(incomingPort);
 		}
 
-		Set<Port> outComingPorts = new HashSet<Port>();
+		Set<ColoredPort> outComingPorts = new HashSet<ColoredPort>();
 		outComingPorts.addAll(subProperty.getOutcomingPorts());
 
-		for (Port outcomingPort : outComingPorts) {
+		for (ColoredPort outcomingPort : outComingPorts) {
 			this.portsGraph.removeVertex(outcomingPort);
 
 		}
@@ -285,7 +294,7 @@ public class Constraint {
 	public Constraint clone(){
 		Constraint c=new Constraint();
 		c.addSubProperties(this.subProperties);
-		c.portsGraph=(DefaultDirectedGraph<Port, DefaultEdge>) this.portsGraph.clone();
+		c.portsGraph=(DefaultDirectedGraph<ColoredPort, DefaultEdge>) this.portsGraph.clone();
 		return c;
 	}
 }

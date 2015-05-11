@@ -146,7 +146,7 @@ public class IntersectionBA extends BA {
 	 * @return a copy of the Intersection Buchi Automaton
 	 */
 	@Override
-	public Object clone() {
+	public IntersectionBA clone() {
 		IntersectionBA retBA = new IntersectionBA();
 		for (IGraphProposition l : this.getPropositions()) {
 			retBA.addProposition(l);
@@ -170,6 +170,38 @@ public class IntersectionBA extends BA {
 		}
 
 		return retBA;
+	}
+
+	/**
+	 * returns an abstraction of the intersection automaton that contains only
+	 * the purely regular states and the transitions between them
+	 * 
+	 * @return an abstraction of the intersection automaton that contains only
+	 *         the purely regular states and the transitions between them
+	 */
+	public IntersectionBA getPurelyRegularStateAbstraction() {
+		IntersectionBA ret=new IntersectionBA();
+		
+		ret.addPropositions(this.getPropositions());
+		Set<State> abstractionStates=new HashSet<State>(this.getStates());
+		abstractionStates.removeAll(this.getMixedStates());
+		for(State s: abstractionStates){
+			ret.addState(s);
+			if(this.getAcceptStates().contains(s)){
+				ret.addAcceptState(s);
+			}
+			if(this.getInitialStates().contains(s)){
+				ret.addInitialState(s);
+			}
+		}
+		
+		for(Transition t: this.getTransitions()){
+			if(abstractionStates.contains(this.getTransitionSource(t)) && abstractionStates.contains(this.getTransitionDestination(t))){
+				ret.addTransition(this.getTransitionSource(t),
+						this.getTransitionDestination(t), t);
+			}
+		}
+		return ret;
 	}
 
 	/**

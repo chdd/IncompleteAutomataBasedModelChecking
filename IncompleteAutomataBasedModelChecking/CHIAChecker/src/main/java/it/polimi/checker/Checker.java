@@ -7,6 +7,7 @@ import it.polimi.automata.state.State;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +54,7 @@ public class Checker {
 	 */
 	private ModelCheckingResults verificationResults;
 
+	private final AcceptingPolicy acceptingPolicy;
 	private IntersectionBuilder intersectionBuilder;
 
 	/**
@@ -69,18 +71,21 @@ public class Checker {
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public Checker(IBA model, BA claim, ModelCheckingResults mp) {
+	public Checker(IBA model, BA claim, AcceptingPolicy acceptingPolicy, ModelCheckingResults mp) {
 		Preconditions.checkNotNull(model,
 				"The model to be checked cannot be null");
 		Preconditions.checkNotNull(claim,
 				"The specification to be checked cannot be null");
 		Preconditions.checkNotNull(mp,
 				"The model checking parameters cannot be null");
+		Preconditions.checkNotNull(acceptingPolicy,
+				"The accepting policy cannot be null");
 
+		this.acceptingPolicy=acceptingPolicy;
 		this.claim = claim;
 		this.model = model;
 		this.verificationResults = mp;
-		this.intersectionBuilder = new IntersectionBuilder(model, claim);
+		this.intersectionBuilder = new IntersectionBuilder(model, claim, acceptingPolicy);
 		this.performed = false;
 	}
 
@@ -211,7 +216,7 @@ public class Checker {
 		logger.debug("Transparent states removed from the model");
 
 		// associating the intersectionBuilder
-		this.intersectionBuilder = new IntersectionBuilder(mc, claim);
+		this.intersectionBuilder = new IntersectionBuilder(mc, claim, acceptingPolicy);
 
 		// computing the intersection
 		this.intersectionAutomaton = this.intersectionBuilder
@@ -232,7 +237,7 @@ public class Checker {
 	 */
 	private boolean checkEmptyIntersection() {
 
-		this.intersectionBuilder = new IntersectionBuilder(this.model, claim);
+		this.intersectionBuilder = new IntersectionBuilder(this.model, claim, acceptingPolicy);
 
 		// computing the intersection
 		this.intersectionAutomaton = this.intersectionBuilder

@@ -1,7 +1,7 @@
 package it.polimi.refinement.constraintcomputation.merger;
 
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 
 import java.util.HashMap;
@@ -32,15 +32,15 @@ public class UnreachablePortsRemover {
 	/**
 	 * contains the set of incoming ports
 	 */
-	private final Set<Port> incomingPorts;
+	private final Set<ColoredPort> incomingPorts;
 
 	/**
 	 * contains the set of outcoming ports
 	 */
-	private final Set<Port> outcomingPorts;
+	private final Set<ColoredPort> outcomingPorts;
 
-	private final Map<Port, Integer> backMapCount;
-	private final Map<Port, Integer> forwardMapCount;
+	private final Map<ColoredPort, Integer> backMapCount;
+	private final Map<ColoredPort, Integer> forwardMapCount;
 	/**
 	 * contains the constraint to be considered
 	 */
@@ -61,36 +61,36 @@ public class UnreachablePortsRemover {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public UnreachablePortsRemover(Set<Port> incomingPorts,
-			Set<Port> outcomingPorts, Constraint constraint) {
+	public UnreachablePortsRemover(Set<ColoredPort> incomingPorts,
+			Set<ColoredPort> outcomingPorts, Constraint constraint) {
 		Preconditions.checkNotNull(incomingPorts);
 		Preconditions.checkNotNull(outcomingPorts);
 		Preconditions.checkNotNull(constraint);
 		this.incomingPorts = incomingPorts;
 		this.outcomingPorts = outcomingPorts;
 		this.constraint = constraint;
-		this.backMapCount = new HashMap<Port, Integer>();
-		for (Port p : constraint.getPortsGraph().vertexSet()) {
+		this.backMapCount = new HashMap<ColoredPort, Integer>();
+		for (ColoredPort p : constraint.getPortsGraph().vertexSet()) {
 			this.backMapCount.put(p, 0);
 		}
-		this.forwardMapCount = new HashMap<Port, Integer>();
-		for (Port p : constraint.getPortsGraph().vertexSet()) {
+		this.forwardMapCount = new HashMap<ColoredPort, Integer>();
+		for (ColoredPort p : constraint.getPortsGraph().vertexSet()) {
 			this.forwardMapCount.put(p, 0);
 		}
 	}
 
 	public void remove() {
-		Set<Port> toBeRemoved = new HashSet<Port>();
+		Set<ColoredPort> toBeRemoved = new HashSet<ColoredPort>();
 		toBeRemoved.addAll(this.backRemover());
 		toBeRemoved.addAll(this.forwardRemover());
 		for (SubProperty subproperty : this.constraint.getSubProperties()) {
-			for (Port incomingPort : subproperty.getIncomingPorts()) {
+			for (ColoredPort incomingPort : subproperty.getIncomingPorts()) {
 				if (toBeRemoved.contains(incomingPort)) {
 					subproperty.removePort(incomingPort);
 					this.constraint.getPortsGraph().removeVertex(incomingPort);
 				}
 			}
-			for (Port outcomingPort : subproperty.getOutcomingPorts()) {
+			for (ColoredPort outcomingPort : subproperty.getOutcomingPorts()) {
 				if (toBeRemoved.contains(outcomingPort)) {
 					subproperty.removePort(outcomingPort);
 					this.constraint.getPortsGraph().removeVertex(outcomingPort);
@@ -99,14 +99,14 @@ public class UnreachablePortsRemover {
 		}
 	}
 
-	private Set<Port> backRemover() {
-		Set<Port> hashedPorts = new HashSet<Port>();
-		Set<Port> toBeAnalyzed = new HashSet<Port>();
+	private Set<ColoredPort> backRemover() {
+		Set<ColoredPort> hashedPorts = new HashSet<ColoredPort>();
+		Set<ColoredPort> toBeAnalyzed = new HashSet<ColoredPort>();
 		toBeAnalyzed.addAll(this.incomingPorts);
 
 		while (!toBeAnalyzed.isEmpty()) {
-			Port port = toBeAnalyzed.iterator().next();
-			for (Port predecessor : Graphs.predecessorListOf(
+			ColoredPort port = toBeAnalyzed.iterator().next();
+			for (ColoredPort predecessor : Graphs.predecessorListOf(
 					constraint.getPortsGraph(), port)) {
 				this.backMapCount.put(predecessor, this.backMapCount.get(predecessor) + 1);
 				
@@ -124,14 +124,14 @@ public class UnreachablePortsRemover {
 		return hashedPorts;
 	}
 
-	private Set<Port> forwardRemover() {
-		Set<Port> hashedPorts = new HashSet<Port>();
-		Set<Port> toBeAnalyzed = new HashSet<Port>();
+	private Set<ColoredPort> forwardRemover() {
+		Set<ColoredPort> hashedPorts = new HashSet<ColoredPort>();
+		Set<ColoredPort> toBeAnalyzed = new HashSet<ColoredPort>();
 		toBeAnalyzed.addAll(this.outcomingPorts);
 
 		while (!toBeAnalyzed.isEmpty()) {
-			Port port = toBeAnalyzed.iterator().next();
-			for (Port successor : Graphs.successorListOf(
+			ColoredPort port = toBeAnalyzed.iterator().next();
+			for (ColoredPort successor : Graphs.successorListOf(
 					constraint.getPortsGraph(), port)) {
 				this.forwardMapCount.put(successor, this.forwardMapCount.get(successor) + 1);
 				

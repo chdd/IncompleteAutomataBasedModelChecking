@@ -10,7 +10,7 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.checker.ModelCheckingResults;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 import it.polimi.contraintcomputation.CHIAOperation;
 
@@ -77,7 +77,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	 * arrives from the outside or transition that reaches the current level
 	 * from the refinement of a transparent state
 	 */
-	private final Map<Transition, Port> mapIntersectionTransitionOutcomingPort;
+	private final Map<Transition, ColoredPort> mapIntersectionTransitionOutcomingPort;
 
 	/**
 	 * The out-coming transitions are the transition that leave the current
@@ -85,7 +85,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	 * leaves the current refinement level to an ``upper level" component or
 	 * transitions that enter the transparent state
 	 */
-	private final Map<Transition, Port> mapIntersectionTransitionIncomingPort;
+	private final Map<Transition, ColoredPort> mapIntersectionTransitionIncomingPort;
 
 	/**
 	 * is the original model to be considered
@@ -123,8 +123,8 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 		// creating the map between a state and the corresponding component
 		this.mapIntersectionStateComponent = new HashMap<State, SubProperty>();
 
-		this.mapIntersectionTransitionOutcomingPort = new HashMap<Transition, Port>();
-		this.mapIntersectionTransitionIncomingPort = new HashMap<Transition, Port>();
+		this.mapIntersectionTransitionOutcomingPort = new HashMap<Transition, ColoredPort>();
+		this.mapIntersectionTransitionIncomingPort = new HashMap<Transition, ColoredPort>();
 		this.stutteringPropositions = new HashSet<IGraphProposition>();
 		this.stutteringPropositions.add(new GraphProposition(
 				AutomataConstants.STUTTERING_CHARACTER, false));
@@ -145,7 +145,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	 *         states of M.
 	 */
 	public Set<SubProperty> getSubProperties() {
-		
+
 		logger.info("Computing the subproperties");
 		if (this.isPerformed()) {
 			return Collections.unmodifiableSet(this.subProperties);
@@ -212,12 +212,12 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 							 * left the current level of refinement to go to the
 							 * refinement, i.e., the intersection
 							 */
-							Port incomingPort = new Port(
+							ColoredPort incomingPort = new ColoredPort(
 									this.intersectionBuilder
 											.getIntersectionStateModelStateMap()
 											.get(sourceIntersectionState),
 									intersectionState, incomingTransition,
-									true, Color.BLACK);
+									true, Color.YELLOW);
 
 							this.mapIntersectionTransitionIncomingPort.put(
 									incomingTransition, incomingPort);
@@ -267,12 +267,12 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 							 * leaved the previous level of the refinement to go
 							 * to the current one (exit the transparent)
 							 */
-							Port outcomingPort = new Port(
+							ColoredPort outcomingPort = new ColoredPort(
 									intersectionState,
 									this.intersectionBuilder
 											.getIntersectionStateModelStateMap()
 											.get(destinationIntersectionState),
-									outcomingTransition, false, Color.BLACK);
+									outcomingTransition, false, Color.YELLOW);
 
 							this.mapIntersectionTransitionOutcomingPort.put(
 									outcomingTransition, outcomingPort);
@@ -301,7 +301,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 			BA ba = new BA(new ClaimTransitionFactory());
 			ba.addPropositions(intersectionBuilder.getClaim().getPropositions());
 			SubProperty subproperty = new SubProperty(modelState, ba,
-					new HashSet<Port>(), new HashSet<Port>());
+					new HashSet<ColoredPort>(), new HashSet<ColoredPort>());
 
 			this.modelModelStateSubProperty.put(modelState, subproperty);
 
@@ -343,7 +343,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	/**
 	 * @return the mapIntersectionTransitionOutcomingPort
 	 */
-	public Map<Transition, Port> getMapIntersectionTransitionOutcomingPort() {
+	public Map<Transition, ColoredPort> getMapIntersectionTransitionOutcomingPort() {
 		Preconditions
 				.checkState(
 						this.isPerformed(),
@@ -409,7 +409,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	 * @throws IllegalArgumentException
 	 *             if the transition t is not associated with an outcoming port
 	 */
-	public Port getOutPort(Transition t) {
+	public ColoredPort getOutPort(Transition t) {
 		Preconditions
 				.checkState(this.isPerformed(),
 						"You must compute the subproperties before performing this operation");
@@ -432,7 +432,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	 * @throws IllegalArgumentException
 	 *             if the transition t is not associated with a port
 	 */
-	public Port getInPort(Transition t) {
+	public ColoredPort getInPort(Transition t) {
 		Preconditions
 				.checkState(this.isPerformed(),
 						"You must compute the subproperties before performing this operation");
@@ -446,7 +446,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	/**
 	 * @return the mapIntersectionTransitionIncomingPort
 	 */
-	public Map<Transition, Port> getMapIntersectionTransitionIncomingPort() {
+	public Map<Transition, ColoredPort> getMapIntersectionTransitionIncomingPort() {
 		Preconditions
 				.checkState(
 						this.isPerformed(),
@@ -454,29 +454,45 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 
 		return mapIntersectionTransitionIncomingPort;
 	}
+
 	/**
 	 * returns the set of the incoming ports of the sub-properties
-	 * @return the set of the incoming ports of the sub-properties 
+	 * 
+	 * @return the set of the incoming ports of the sub-properties
 	 */
-	public Set<Port> inPorts(){
+	public Set<ColoredPort> inPorts() {
 		Preconditions
-		.checkState(
-				this.isPerformed(),
-				"The map of the incoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
+				.checkState(
+						this.isPerformed(),
+						"The map of the incoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
 
-		return Collections.unmodifiableSet(new HashSet<Port>(this.mapIntersectionTransitionIncomingPort.values()));
+		return Collections.unmodifiableSet(new HashSet<ColoredPort>(
+				this.mapIntersectionTransitionIncomingPort.values()));
 	}
+
 	/**
 	 * returns the set of the out-coming ports of the sub-properties
-	 * @return the set of the out-coming ports of the sub-properties 
+	 * 
+	 * @return the set of the out-coming ports of the sub-properties
 	 */
-	public Set<Port> outPorts(){
+	public Set<ColoredPort> outPorts() {
 		Preconditions
-		.checkState(
-				this.isPerformed(),
-				"The map of the outcoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
+				.checkState(
+						this.isPerformed(),
+						"The map of the outcoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
 
-		return Collections.unmodifiableSet(new HashSet<Port>(this.mapIntersectionTransitionOutcomingPort.values()));
+		return Collections.unmodifiableSet(new HashSet<ColoredPort>(
+				this.mapIntersectionTransitionOutcomingPort.values()));
+	}
+
+	/**
+	 * returns the intersection automaton used in the sub-property
+	 * identification
+	 * 
+	 * @return the intersection automaton used in the sub-property
+	 *         idenfification
+	 */
+	public IntersectionBA getIntersectionBA() {
+		return this.intersectionBA;
 	}
 }
-

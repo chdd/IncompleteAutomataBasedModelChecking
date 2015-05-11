@@ -60,14 +60,16 @@
 				<xs:element name="inports">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="port" type="port" />
+							<xs:element name="port" type="port" minOccurs="0"
+								maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="outports">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="port" type="port" />
+							<xs:element name="port" type="port" minOccurs="0"
+								maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -99,8 +101,7 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="transition" minOccurs="0" maxOccurs="unbounded"
-				type="transition" />
+			<xs:element name="transition" type="transition" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
 	</xs:complexType>

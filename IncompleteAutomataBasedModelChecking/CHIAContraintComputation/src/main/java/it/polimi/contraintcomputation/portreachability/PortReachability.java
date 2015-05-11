@@ -13,7 +13,7 @@ import it.polimi.automata.transition.Transition;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.constraints.Color;
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
 
@@ -157,7 +157,7 @@ public class PortReachability {
 					.getInTransitions(source)) {
 
 				if (this.subPropertiesIdentifier.isInTransition(inTransition)) {
-					Port inPort = this.subPropertiesIdentifier
+					ColoredPort inPort = this.subPropertiesIdentifier
 							.getInPort(inTransition);
 
 					for (State destination : reachabilityEntry.getValue()) {
@@ -167,7 +167,7 @@ public class PortReachability {
 
 							if (this.subPropertiesIdentifier
 									.isOutTransition(outTransition)) {
-								Port outPort = this.subPropertiesIdentifier
+								ColoredPort outPort = this.subPropertiesIdentifier
 										.getOutPort(outTransition);
 								inPort.setColor(Color.YELLOW);
 								outPort.setColor(Color.YELLOW);
@@ -181,10 +181,10 @@ public class PortReachability {
 		}
 		
 		// computing the incoming ports that are also outcoming
-		Set<Port> inports=subPropertiesIdentifier.inPorts();
-		Set<Port> outports=subPropertiesIdentifier.outPorts();
-		for(Port inport: inports){
-			for(Port outport: outports){
+		Set<ColoredPort> inports=subPropertiesIdentifier.inPorts();
+		Set<ColoredPort> outports=subPropertiesIdentifier.outPorts();
+		for(ColoredPort inport: inports){
+			for(ColoredPort outport: outports){
 				if(inport.getId()==outport.getId()){
 					constraint.addReachabilityRelation(inport,
 							outport);
@@ -210,7 +210,7 @@ public class PortReachability {
 						.getInTransitions(source)) {
 
 					if (this.subPropertiesIdentifier.isInTransition(inTransition)) {
-						Port inPort = this.subPropertiesIdentifier
+						ColoredPort inPort = this.subPropertiesIdentifier
 								.getInPort(inTransition);
 
 						for (State destination : reachabilityEntry.getValue()) {
@@ -219,7 +219,7 @@ public class PortReachability {
 									.getOutTransitions(destination)) {
 								if (this.subPropertiesIdentifier
 										.isOutTransition(outTransition)) {
-									Port outPort = this.subPropertiesIdentifier
+									ColoredPort outPort = this.subPropertiesIdentifier
 											.getOutPort(outTransition);
 									inPort.setColor(Color.YELLOW);
 									outPort.setColor(Color.YELLOW);

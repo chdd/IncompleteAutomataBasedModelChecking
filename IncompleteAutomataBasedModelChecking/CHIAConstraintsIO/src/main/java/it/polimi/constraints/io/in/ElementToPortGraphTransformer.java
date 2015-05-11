@@ -2,7 +2,7 @@ package it.polimi.constraints.io.in;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 
 import java.util.Map;
 
@@ -22,20 +22,20 @@ import com.google.common.base.Preconditions;
  *
  */
 public class ElementToPortGraphTransformer implements
-		Transformer<Element, DefaultDirectedGraph<Port, DefaultEdge>> {
+		Transformer<Element, DefaultDirectedGraph<ColoredPort, DefaultEdge>> {
 
-	private final Map<Integer, Port> mapIdPort;
-	private final DefaultDirectedGraph<Port, DefaultEdge> graph;
+	private final Map<Integer, ColoredPort> mapIdPort;
+	private final DefaultDirectedGraph<ColoredPort, DefaultEdge> graph;
 
-	public ElementToPortGraphTransformer(Map<Integer, Port> mapIdPort,
-			DefaultDirectedGraph<Port, DefaultEdge> graph) {
+	public ElementToPortGraphTransformer(Map<Integer, ColoredPort> mapIdPort,
+			DefaultDirectedGraph<ColoredPort, DefaultEdge> graph) {
 		Preconditions.checkNotNull(mapIdPort, "The map id port cannot be null");
 		this.mapIdPort = mapIdPort;
 		this.graph = graph;
 	}
 
 	@Override
-	public DefaultDirectedGraph<Port, DefaultEdge> transform(Element input) {
+	public DefaultDirectedGraph<ColoredPort, DefaultEdge> transform(Element input) {
 
 		Preconditions.checkNotNull(input,
 				"The port reachability element cannot be null");

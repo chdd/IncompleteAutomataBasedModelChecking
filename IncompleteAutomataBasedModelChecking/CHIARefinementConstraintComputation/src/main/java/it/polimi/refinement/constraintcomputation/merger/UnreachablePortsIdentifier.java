@@ -2,7 +2,7 @@ package it.polimi.refinement.constraintcomputation.merger;
 
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,11 +24,11 @@ public class UnreachablePortsIdentifier {
 	/**
 	 * contains the set of incoming ports
 	 */
-	private final Set<Port> incomingPorts;
+	private final Set<ColoredPort> incomingPorts;
 	/**
 	 * contains the set of outcoming ports
 	 */
-	private final Set<Port> outcomingPorts;
+	private final Set<ColoredPort> outcomingPorts;
 
 	/**
 	 * is a set which contains the states from which it is possible to reach a
@@ -45,12 +45,12 @@ public class UnreachablePortsIdentifier {
 	/**
 	 * contains the set of unreachable out-coming ports
 	 */
-	private final Set<Port> unreachableOutPorts;
+	private final Set<ColoredPort> unreachableOutPorts;
 	
 	/**
 	 * contains the set of unreachable incoming ports
 	 */
-	private final Set<Port> unreachableInPorts;
+	private final Set<ColoredPort> unreachableInPorts;
 
 	/**
 	 * creates a new component color updater which refers to the specific port
@@ -59,7 +59,7 @@ public class UnreachablePortsIdentifier {
 	 *            the constraint to be updated
 	 */
 	public UnreachablePortsIdentifier(IntersectionBA intersection,
-			Set<Port> incomingPorts, Set<Port> outcomingPorts) {
+			Set<ColoredPort> incomingPorts, Set<ColoredPort> outcomingPorts) {
 		Preconditions.checkNotNull(intersection,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(incomingPorts,
@@ -71,8 +71,8 @@ public class UnreachablePortsIdentifier {
 		this.outcomingPorts = outcomingPorts;
 		this.redStates = new HashSet<State>();
 		this.greenStates=new HashSet<State>();
-		this.unreachableOutPorts=new HashSet<Port>();
-		this.unreachableInPorts=new HashSet<Port>();
+		this.unreachableOutPorts=new HashSet<ColoredPort>();
+		this.unreachableInPorts=new HashSet<ColoredPort>();
 	}
 	
 	/**
@@ -103,7 +103,7 @@ public class UnreachablePortsIdentifier {
 	 *             the refinement checking
 	 */
 	private void forwardPropagatingGreenPorts() {
-		for (Port p : this.incomingPorts) {
+		for (ColoredPort p : this.incomingPorts) {
 			this.greenStates.add(p.getDestination());
 		}
 		Set<State> toBeAnalyzed = new HashSet<State>(this.greenStates);
@@ -118,7 +118,7 @@ public class UnreachablePortsIdentifier {
 			}
 			toBeAnalyzed.remove(currentState);
 		}
-		for (Port p : this.outcomingPorts) {
+		for (ColoredPort p : this.outcomingPorts) {
 			if (!this.greenStates.contains(p.getSource())) {
 				this.unreachableOutPorts.add(p);
 			}
@@ -140,7 +140,7 @@ public class UnreachablePortsIdentifier {
 		// each state that is a source of an outcoming red port is added to the
 		// set of the states from which it is possible to reach a red out-coming
 		// port
-		for (Port p : this.outcomingPorts) {
+		for (ColoredPort p : this.outcomingPorts) {
 			this.redStates.add(p.getSource());
 		}
 		Set<State> toBeAnalyzed = new HashSet<State>(this.redStates);
@@ -155,7 +155,7 @@ public class UnreachablePortsIdentifier {
 			}
 			toBeAnalyzed.remove(currentState);
 		}
-		for (Port p : this.incomingPorts) {
+		for (ColoredPort p : this.incomingPorts) {
 			if (!this.redStates.contains(p.getDestination())) {
 				this.unreachableInPorts.add(p);
 			}
@@ -165,14 +165,14 @@ public class UnreachablePortsIdentifier {
 	/**
 	 * @return the unreachableOutPorts
 	 */
-	public Set<Port> getUnreachableOutPorts() {
+	public Set<ColoredPort> getUnreachableOutPorts() {
 		return Collections.unmodifiableSet(unreachableOutPorts);
 	}
 
 	/**
 	 * @return the unreachableInPorts
 	 */
-	public Set<Port> getUnreachableInPorts() {
+	public Set<ColoredPort> getUnreachableInPorts() {
 		return Collections.unmodifiableSet(unreachableInPorts);
 	}
 }

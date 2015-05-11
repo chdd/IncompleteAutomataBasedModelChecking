@@ -3,7 +3,7 @@ package it.polimi.constraints.io.in;
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.in.XMLReader;
 import it.polimi.constraints.Constraint;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 import it.polimi.constraints.io.ConstraintsIOConstants;
 
@@ -52,7 +52,7 @@ public class ConstraintReader extends XMLReader{
 	/**
 	 * contains a map that given an id returns the corresponding port
 	 */
-	private final Map<Integer, Port> mapIdPort;
+	private final Map<Integer, ColoredPort> mapIdPort;
 	
 	/**
 	 * creates a new constraint reader which can be used to read a constraint
@@ -67,7 +67,7 @@ public class ConstraintReader extends XMLReader{
 	public ConstraintReader(String filePath) {
 		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
 		this.file = new File(filePath);
-		this.mapIdPort = new HashMap<Integer, Port>();
+		this.mapIdPort = new HashMap<Integer, ColoredPort>();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ConstraintReader extends XMLReader{
 						"The file from which the constraint must be read cannot be null");
 
 		this.file = file;
-		this.mapIdPort = new HashMap<Integer, Port>();
+		this.mapIdPort = new HashMap<Integer, ColoredPort>();
 	}
 
 	public Constraint read() {
@@ -151,7 +151,7 @@ public class ConstraintReader extends XMLReader{
 			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 				Element xmlOutComingPort = (Element) xmlOutComingPortsList
 						.item(portId);
-				Port port = new ElementToPortTransformer(false)
+				ColoredPort port = new ElementToColoredPortTransformer(false)
 						.transform(xmlOutComingPort);
 				this.mapIdPort.put(port.getId(), port);
 				subProperty.addOutComingPort(port);
@@ -166,7 +166,7 @@ public class ConstraintReader extends XMLReader{
 			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 				Element xmlInComingPort = (Element) xmlInComingPortsList
 						.item(portId);
-				Port port = new ElementToPortTransformer(true)
+				ColoredPort port = new ElementToColoredPortTransformer(true)
 						.transform(xmlInComingPort);
 				this.mapIdPort.put(port.getId(), port);
 				subProperty.addIncomingPort(port);

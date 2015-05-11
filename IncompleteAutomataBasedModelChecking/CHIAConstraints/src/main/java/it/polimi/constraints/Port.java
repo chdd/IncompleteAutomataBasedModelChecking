@@ -5,24 +5,6 @@ import it.polimi.automata.transition.Transition;
 
 import com.google.common.base.Preconditions;
 
-/**
- * The Port class is used to describe how the IBA/BA that refers to the
- * sub-property/replacement to the a transparent state of the model is connected
- * with the states of the original model. The port class stores in the source,
- * destination and transition attributes, the source and the destinations state
- * of the port, and the corresponding transition. Depending on whether the port
- * represents an in-coming or an out-coming transition the source or the
- * destination state corresponds with a state of the model. The port is also
- * associated with a color which specifies whether from the port is possible to
- * reach an accepting state or is reached from an initial state.
- * 
- * The port class contains the source and the destinations state of the port, a
- * boolean flag that specifies if the port is in-coming or out-coming and the
- * corresponding transition
- * 
- * @author claudiomenghi
- *
- */
 public class Port extends State {
 
 	/**
@@ -56,12 +38,6 @@ public class Port extends State {
 	 */
 	private final Transition transition;
 
-	/**
-	 * The port is also associated with a color which specifies whether from the
-	 * port is possible to reach an accepting state or is reached from an
-	 * initial state.
-	 */
-	private Color color;
 
 	/**
 	 * creates a new port
@@ -82,9 +58,9 @@ public class Port extends State {
 	 *             if one of the parameters is null
 	 */
 	public Port(State source, State destination, Transition transition,
-			boolean incoming, Color color) {
+			boolean incoming) {
 		super(transition.getId());
-		Port.ID_COUNTER = Port.ID_COUNTER + 1;
+		ColoredPort.ID_COUNTER = ColoredPort.ID_COUNTER + 1;
 		Preconditions.checkNotNull(source,
 				"The source of the port cannot be null");
 		Preconditions.checkNotNull(destination,
@@ -97,7 +73,6 @@ public class Port extends State {
 		this.destination = destination;
 		this.transition = transition;
 		this.incoming = incoming;
-		this.setColor(color);
 	}
 
 	/**
@@ -207,28 +182,5 @@ public class Port extends State {
 		return "Port [source=" + source + ", incoming=" + incoming
 				+ ", destination=" + destination + ", transition=" + transition
 				+ "]";
-	}
-
-	/**
-	 * returns the color associated with the port
-	 * 
-	 * @return the color of the port
-	 */
-	public Color getColor() {
-		return color;
-	}
-
-	/**
-	 * sets the color to the port
-	 * 
-	 * @param color
-	 *            the color to set
-	 * @throws NullPointerException
-	 *             if the color is null
-	 */
-	public void setColor(Color color) {
-		Preconditions.checkNotNull(color,
-				"The color of the port cannot be null");
-		this.color = color;
 	}
 }

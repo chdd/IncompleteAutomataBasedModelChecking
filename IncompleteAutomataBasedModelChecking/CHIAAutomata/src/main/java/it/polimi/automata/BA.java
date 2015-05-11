@@ -38,8 +38,6 @@ import com.google.common.base.Preconditions;
  */
 public class BA {
 
-	
-
 	/**
 	 * contains the initial states of the Buchi automaton
 	 */
@@ -647,7 +645,8 @@ public class BA {
 	 * 
 	 * @return a copy of the automaton
 	 */
-	public Object clone() {
+	@Override
+	public BA clone() {
 		BA ret = new BA(
 				(TransitionFactory<State, Transition>) this.automataGraph
 						.getEdgeFactory());
@@ -731,9 +730,12 @@ public class BA {
 	}
 
 	/**
-	 * adds to each accepting states a transition labeled with the special
-	 * stuttering character, which is a character that does not belongs to the
-	 * alphabet
+	 * adds to the accepting state s a transition labeled with the special
+	 * stuttering character (a character which is outside the alphabet), which
+	 * is a character that does not belongs to the alphabet
+	 * 
+	 * @param s
+	 *            the state to be stuttered
 	 */
 	public void addStuttering(State s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
@@ -757,12 +759,14 @@ public class BA {
 		return (TransitionFactory<State, Transition>) this.automataGraph
 				.getEdgeFactory();
 	}
-	
+
 	/**
 	 * returns the graph over which the BA is constructed
+	 * 
 	 * @return the graph over which the BA is constructed
 	 */
-	public DirectedGraph<State, Transition> getGraph(){
-		return new UnmodifiableDirectedGraph<State, Transition>(this.automataGraph);
+	public DirectedGraph<State, Transition> getGraph() {
+		return new UnmodifiableDirectedGraph<State, Transition>(
+				this.automataGraph);
 	}
 }

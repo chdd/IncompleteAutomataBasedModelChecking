@@ -12,9 +12,7 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-import it.polimi.constraints.Constraint;
-
-public class ConstraintToStringTransformer {
+public class ElementToStringTransformer {
 
 	/**
 	 * transforms the constraint into the corresponding String representation
@@ -25,15 +23,13 @@ public class ConstraintToStringTransformer {
 	 * @throws Exception
 	 *             if a problem occurs during the transformation
 	 */
-	public String transform(Constraint constraint) throws Exception {
-		Preconditions.checkNotNull(constraint);
-		Element constraintElement = new ConstraintToElementTransformer()
-				.transform(constraint);
-
+	public String transform(Element element) throws Exception {
+		Preconditions.checkNotNull(element);
+		
 		TransformerFactory transformerFactory = TransformerFactory
 				.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource source = new DOMSource(constraintElement);
+		DOMSource source = new DOMSource(element);
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");

@@ -2,12 +2,14 @@ package it.polimi.automata.io.out;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.BA;
-import it.polimi.automata.io.Transformer;
+import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.automata.io.out.propositions.PropositionToElementTrasformer;
 import it.polimi.automata.io.out.states.BAStateToElementTransformer;
 import it.polimi.automata.io.out.transitions.BATransitionToElementTransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,22 +17,19 @@ import org.w3c.dom.Element;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
-import com.google.common.base.Preconditions;
+public class BAToElementTrasformer extends XMLTrasformer<BA, Element> {
 
-public class BAToElementTrasformer implements Transformer<BA, Element> {
-
-
-	protected final Document doc;
-
-	public BAToElementTrasformer(
-			Document doc) {
-		Preconditions.checkNotNull(doc, "The document cannot be null");
-		this.doc = doc;
+	public BAToElementTrasformer(Document doc) {
+		super(doc);
+	}
+	
+	public BAToElementTrasformer() throws ParserConfigurationException {
+		super();
 	}
 	@Override
-	public Element transform(BA input) {
+	public Element transform(BA input) throws ParserConfigurationException {
 
-		 
+		Document doc=this.getDocument();
 		Element baElement =
 				doc.createElement(AutomataIOConstants.XML_ELEMENT_BA);
 		

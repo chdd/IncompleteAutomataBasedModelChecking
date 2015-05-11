@@ -3,7 +3,7 @@ package it.polimi.refinement.constraintcomputation.colorpropagator;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.constraints.Color;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,11 +29,11 @@ public class SubpropertyPortColorPropagator {
 	/**
 	 * contains the set of incoming ports
 	 */
-	private final Set<Port> incomingPorts;
+	private final Set<ColoredPort> incomingPorts;
 	/**
 	 * contains the set of outcoming ports
 	 */
-	private final Set<Port> outcomingPorts;
+	private final Set<ColoredPort> outcomingPorts;
 
 	/**
 	 * is a set which contains the states from which it is possible to reach a
@@ -54,7 +54,7 @@ public class SubpropertyPortColorPropagator {
 	 *            the constraint to be updated
 	 */
 	public SubpropertyPortColorPropagator(IntersectionBA intersection,
-			Set<Port> incomingPorts, Set<Port> outcomingPorts) {
+			Set<ColoredPort> incomingPorts, Set<ColoredPort> outcomingPorts) {
 		Preconditions.checkNotNull(intersection,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(incomingPorts,
@@ -95,7 +95,7 @@ public class SubpropertyPortColorPropagator {
 	 *             the refinement checking
 	 */
 	private void forwardPropagatingGreenPorts() {
-		for (Port p : this.incomingPorts) {
+		for (ColoredPort p : this.incomingPorts) {
 			if (p.getColor().equals(Color.GREEN)) {
 				this.greenStates.add(p.getDestination());
 			}
@@ -112,7 +112,7 @@ public class SubpropertyPortColorPropagator {
 			}
 			toBeAnalyzed.remove(currentState);
 		}
-		for (Port p : this.outcomingPorts) {
+		for (ColoredPort p : this.outcomingPorts) {
 			if (this.greenStates.contains(p.getSource())) {
 				if (p.getColor().equals(Color.RED)) {
 					throw new InternalError(
@@ -139,7 +139,7 @@ public class SubpropertyPortColorPropagator {
 		// each state that is a source of an outcoming red port is added to the
 		// set of the states from which it is possible to reach a red out-coming
 		// port
-		for (Port p : this.outcomingPorts) {
+		for (ColoredPort p : this.outcomingPorts) {
 			if (p.getColor().equals(Color.RED)) {
 				this.redStates.add(p.getSource());
 			}
@@ -156,7 +156,7 @@ public class SubpropertyPortColorPropagator {
 			}
 			toBeAnalyzed.remove(currentState);
 		}
-		for (Port p : this.incomingPorts) {
+		for (ColoredPort p : this.incomingPorts) {
 			if (this.redStates.contains(p.getDestination())) {
 				if (p.getColor().equals(Color.GREEN)) {
 					throw new InternalError(

@@ -77,5 +77,4 @@ public class ElementToReplacementTransformer implements Transformer<Element, Rep
 		Replacement replacement=new Replacement(modelState, ba, incomingPorts, outcomingPorts);
 		return replacement;
 	}
-
 }

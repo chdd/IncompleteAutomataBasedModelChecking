@@ -6,7 +6,7 @@ import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.in.ElementToBATransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.constraints.Port;
+import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
 
 import java.util.HashSet;
@@ -45,7 +45,7 @@ public class ElementToSubPropertyTransformer implements Transformer<Element, Sub
 		
 		State modelState = new StateFactory().create(stateName,
 				componentId);
-		SubProperty component = new SubProperty(modelState, ba, new HashSet<Port>(), new HashSet<Port>());
+		SubProperty component = new SubProperty(modelState, ba, new HashSet<ColoredPort>(), new HashSet<ColoredPort>());
 				
 				
 		return component;

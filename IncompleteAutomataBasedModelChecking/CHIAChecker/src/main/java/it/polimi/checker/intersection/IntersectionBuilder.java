@@ -7,6 +7,8 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.KripkeAcceptingPolicy;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class IntersectionBuilder {
 	 * contains the claim to be considered in the intersection procedure
 	 */
 	protected final BA claim;
+	protected final AcceptingPolicy acceptingPolicy;
 	protected boolean intersectionComputed = false;
 
 	/**
@@ -90,11 +93,24 @@ public class IntersectionBuilder {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IntersectionBuilder(IBA model, BA claim) {
+	public IntersectionBuilder(IBA model, BA claim,
+			AcceptingPolicy acceptingPolicy) {
 		Preconditions.checkNotNull(model,
 				"The model of the system cannot be null");
 		Preconditions.checkNotNull(claim, "The claim cannot be null");
+		Preconditions.checkNotNull(acceptingPolicy,
+				"The accepting policy cannot be null");
 
+		this.acceptingPolicy = acceptingPolicy;
+		this.acceptingPolicy.setClaim(claim);
+		this.acceptingPolicy.setModel(model);
+		if (acceptingPolicy instanceof KripkeAcceptingPolicy) {
+			Preconditions
+					.checkArgument(
+							model.getAcceptStates().containsAll(
+									model.getStates()),
+							"The Kripke accepting policy is not consistend with the current model. All the states of the model must be accepting for the Kripke policy to be used ");
+		}
 		this.intersectionrule = new IntersectionRule();
 		this.intersection = new IntersectionBA();
 		this.model = model;
@@ -125,13 +141,7 @@ public class IntersectionBuilder {
 			this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
 			for (State modelInit : model.getInitialStates()) {
 				for (State claimInit : claim.getInitialStates()) {
-					if(claim.getAcceptStates().contains(claimInit)){
-						this.computeIntersection(modelInit, claimInit, 1);
-					}
-					else{
-						this.computeIntersection(modelInit, claimInit, 0);
-					}
-					
+					this.computeIntersection(modelInit, claimInit, this.acceptingPolicy.comuteInitNumber(modelInit, claimInit));
 				}
 			}
 			this.intersectionComputed = true;
@@ -143,12 +153,7 @@ public class IntersectionBuilder {
 			State claimInitialState) {
 
 		this.intersection = new IntersectionBA();
-		if(claim.getAcceptStates().contains(claimInitialState)){
-			this.computeIntersection(modelInitialState, claimInitialState, 1);
-		}
-		else{
-			this.computeIntersection(modelInitialState, claimInitialState, 0);
-		}
+		this.computeIntersection(modelInitialState, claimInitialState, this.acceptingPolicy.comuteInitNumber(modelInitialState, claimInitialState));
 		
 		this.intersectionComputed = true;
 		return this.intersection;
@@ -221,8 +226,7 @@ public class IntersectionBuilder {
 						State nextClaimState = claim
 								.getTransitionDestination(claimTransition);
 
-						int nextNumber = 
-								this.comuteNumber(nextModelState,
+						int nextNumber = this.acceptingPolicy.comuteNumber(nextModelState,
 								nextClaimState, number);
 						if (nextNumber < 0 || nextNumber > 2) {
 							throw new InternalError("next number not correct");
@@ -250,7 +254,7 @@ public class IntersectionBuilder {
 					State nextClaimState = claim
 							.getTransitionDestination(claimTransition);
 
-					int nextNumber = this.comuteNumber(modelState,
+					int nextNumber = this.acceptingPolicy.comuteNumber(modelState,
 							nextClaimState, number);
 
 					State nextState = this.computeIntersection(modelState,
@@ -277,38 +281,6 @@ public class IntersectionBuilder {
 	 */
 	public Map<Transition, State> getIntersectionTransitionsTransparentStatesMap() {
 		return mapModelStateIntersectionTransitions;
-	}
-
-	/**
-	 * given the number of the previous state, the current model state, the
-	 * claim state and the model and the claim returns the number to be
-	 * associated to the state to be created
-	 * 
-	 * @param modelState
-	 *            the model state under analysis
-	 * @param claimState
-	 *            the claim state under analysis
-	 * @param prevNumber
-	 *            the number of the previous state
-	 * @return the number to be associated to the next state of the automaton
-	 */
-	private int comuteNumber(State modelState, State claimState, int prevNumber) {
-		/*int num = prevNumber;
-
-		if (prevNumber == 0 && model.getAcceptStates().contains(modelState)) {
-			num = 1;
-		}
-		if (prevNumber == 1 && claim.getAcceptStates().contains(claimState)) {
-			num = 2;
-		}
-		if (prevNumber == 2) {
-			num = 0;
-		}
-		return num;*/
-		if(claim.getAcceptStates().contains(claimState)){
-			return 2;
-		}
-		return 1;
 	}
 
 	/**

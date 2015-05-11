@@ -1,17 +1,18 @@
 package it.polimi;
 
-import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.io.out.IntersectionWriter;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.KripkeAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.Replacement;
 import it.polimi.constraints.io.in.ConstraintReader;
 import it.polimi.constraints.io.in.ReplacementReader;
-import it.polimi.constraints.io.out.ConstraintToStringTransformer;
+import it.polimi.constraints.io.out.ConstraintToElementTransformer;
 import it.polimi.constraints.io.out.ConstraintWriter;
-import it.polimi.refinement.constraintcomputation.ReplacementConstraintComputation;
-import it.polimi.refinementchecker.ReplacementChecker;
+import it.polimi.constraints.io.out.ElementToStringTransformer;
+import it.polimi.constraints.io.out.ReplacementToElementTransformer;
+import it.polimi.refinementchecker.SubPropertyChecker;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -45,7 +46,7 @@ public class CHIAReplacementConsole {
 	/**
 	 * is the checker used in the replacement checking activity
 	 */
-	protected ReplacementChecker replacementChecker;
+	protected SubPropertyChecker subpropertyChecker;
 	/**
 	 * is a flag which specifies if a constraint have been loaded from a file
 	 */
@@ -62,8 +63,11 @@ public class CHIAReplacementConsole {
 	 * is a flag which specifies whether the constraint have been computed
 	 */
 	private boolean constraintcomputed=false;
+	
+	AcceptingPolicy policy = new KripkeAcceptingPolicy();
 
-	@Command(name = "loadReplacement", abbrev = "lr", description = "It is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
+
+	@Command(name = "loadReplacement", abbrev = "lR", description = "It is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
 	public void loadReplacement(
 			@Param(name = "replacementFilePath", description = "is the path of the file that contains the replacement to be considered") String replacementFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
@@ -74,7 +78,21 @@ public class CHIAReplacementConsole {
 		constraintcomputed=false;
 	}
 	
-	
+	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
+	public void changePolicy(
+			@Param(name = "policy", description = "is the policy to be used KRIPKE or NORMAL") String policy){
+		if(policy.equals("KRIPKE")){
+			this.policy=new KripkeAcceptingPolicy();
+		}
+		else{
+			if(policy.equals("NORMAL")){
+				this.policy=new NormalAcceptingPolicy();
+			}
+			else{
+				System.out.println("Parameter: "+policy+" not accepted");
+			}
+		}
+	}
 			
 	@Command(name = "loadConstraint", abbrev = "lC", description = "It is used to load the constraint from an XML file. The XML file must mach the Constraint.xsd", header = "constraint loaded")
 	public void loadConstraint(
@@ -106,11 +124,22 @@ public class CHIAReplacementConsole {
 			System.out.println("You must load the constraint before checking it");
 			return;
 		}
-		System.out.println(new ConstraintToStringTransformer().transform(this.constraint));
+		System.out.println(new ElementToStringTransformer().transform(new ConstraintToElementTransformer().transform(this.constraint)));
+	}
+	
+	@Command(name = "displayReplacement", abbrev = "dispR", description = "It is used to display the replacement into the console.", header = "Replacement displayed")
+	public void dispReplacement() throws Exception{
+		if(!this.replacementLoaded){
+			System.out.println("You must load the replacement before checking it");
+			return;
+		}
+		System.out.println(new ElementToStringTransformer().transform(new ReplacementToElementTransformer().transform(this.replacement)));
 	}
 	
 	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated.", header = "Performing the replacement checking")
 	public void replacementChecking(){
+		// TODO
+		/*
 		if(!constraintLoaded){
 			System.out.println("You must load the constraint before checking it");
 			return;
@@ -129,13 +158,44 @@ public class CHIAReplacementConsole {
 		}
 		if (result == -1) {
 			System.out.println("The property is possibly satisfied");
+		}*/
+	}
+	
+	@Command(name = "subpropertyChecking", abbrev = "subck", description = " is used to check the replacement  against the corresponding sub-property. It does not update the corresponding constraint.", header = "Performing the sub-property checking")
+	public void subpropertyChecking(){
+		if(!constraintLoaded){
+			System.out.println("You must load the constraint before checking it");
+			return;
+		}
+		if(!this.replacementLoaded){
+			System.out.println("You must load the replacement before checking it");
+			return;
+		}
+		if(!this.constraint.isConstrained(replacement.getModelState())){
+			System.out.println("There are no constraints associated to the state "+replacement.getModelState()+" the property is trivially satisfied");
+			return;
+		}
+		
+		subpropertyChecker=new SubPropertyChecker(constraint.getSubproperty(replacement.getModelState()), replacement, this.policy);
+		int result=subpropertyChecker.check();
+		if (result == 1) {
+			System.out.println("The property is satisfied");
+		}
+		if (result == 0) {
+			System.out.println("The property is not satisfied");
+		}
+		if (result == -1) {
+			System.out.println("The property is possibly satisfied");
 		}
 	}
+	
 	
 	@Command(name = "replacementChecking", abbrev = "rck", description = "Is used to check the replacement against the constraint previously generated", header = "Performing the replacement checking")
 	public void replacementChecking(
 			@Param(name = "intersectionFilePath", description = "The location where the intersection automaton must be saved") String intersectionFilePath) {
-		if(!constraintLoaded){
+		
+		//TODO
+		/*if(!constraintLoaded){
 			System.out.println("You must load the constraint before checking it");
 			return;
 		}
@@ -156,19 +216,20 @@ public class CHIAReplacementConsole {
 		}
 		IntersectionBA intersectionAutomaton=replacementChecker.getChecker().getIntersectionAutomaton();
 		IntersectionWriter intersectionWriter=new IntersectionWriter(intersectionAutomaton, new File(intersectionFilePath));
-		intersectionWriter.write();
+		intersectionWriter.write();*/
 	}
 	
 	
 	@Command(name = "replacementComputeConstraint", abbrev = "rcc", description = "Is used to check the replacement against the constraint previously generated.", header = "replacement checking performed")
 	public void replacementComputeConstraint(){
-		if(!checked){
+		//TODO
+		/*if(!checked){
 			System.out.println("You must run the model checker before computing the constraint");
 			return;
 		}
 		ReplacementConstraintComputation replacementConstraintComputation = new ReplacementConstraintComputation(replacementChecker);
 		replacementConstraintComputation.constraintComputation();
-		this.newConstraint=replacementConstraintComputation.newConstraint();
+		this.newConstraint=replacementConstraintComputation.newConstraint();*/
 	}
 	
 	@Command(name = "saveReplacementConstraint", abbrev = "rsc", description = "It is used to save the constraint in an XML file.", header = "constraint saved")
