@@ -87,7 +87,7 @@ public class ModelCheckingResultsTest {
 	@Test
 	public void testGetResult() {
 		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
-		assertTrue(results.getResult() == 0);
+		assertTrue(results.getResult() == SatisfactionValue.NOTSATISFIED);
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class ModelCheckingResultsTest {
 	@Test
 	public void testSetResult() {
 		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
-		results.setResult(2);
-		assertTrue(results.getResult() == 2);
+		results.setResult(SatisfactionValue.SATISFIED);
+		assertTrue(results.getResult() == SatisfactionValue.SATISFIED);
 	}
 
 	/**

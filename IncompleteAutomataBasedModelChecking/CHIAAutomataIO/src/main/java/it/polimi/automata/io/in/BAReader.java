@@ -34,6 +34,8 @@ import com.google.common.base.Preconditions;
  */
 public class BAReader extends XMLReader{
 
+	private final static String NAME="READ CLAIM";
+	
 	/**
 	 * is the logger of the BAReader class
 	 */
@@ -59,7 +61,7 @@ public class BAReader extends XMLReader{
 	 *             if one of the parameters is null
 	 */
 	public BAReader(String filePath) {
-
+		super(NAME);
 		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
 		this.file = new File(filePath);
 	}
@@ -76,7 +78,7 @@ public class BAReader extends XMLReader{
 	 *             if one of the parameters is null
 	 */
 	public BAReader(File file) {
-
+		super(NAME);
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
 		this.file = file;
 	}
@@ -96,8 +98,8 @@ public class BAReader extends XMLReader{
 	 */
 	public BA read() throws ParserConfigurationException,
 			FileNotFoundException, SAXException, IOException {
-
-		logger.info("Reding the Buchi automaton");
+		
+		logger.info("Reding the Claim");
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
@@ -116,9 +118,11 @@ public class BAReader extends XMLReader{
 		dom = db.parse(file);
 
 		Element doc = dom.getDocumentElement();
-		BA ba=new ElementToBATransformer().transform(doc);
+		BA ba=new BAElementToTransformer().transform(doc);
 		
-		logger.info("Buchi automaton readed");
+		logger.info("Claim Readed");
+		this.performed();
+
 		return ba;
 	}
 

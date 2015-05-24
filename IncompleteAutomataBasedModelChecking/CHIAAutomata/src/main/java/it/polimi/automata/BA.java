@@ -151,7 +151,7 @@ public class BA {
 		if (this.automataGraph.outgoingEdgesOf(state) == null) {
 			return Collections.unmodifiableSet(new HashSet<Transition>());
 		}
-		return this.automataGraph.outgoingEdgesOf(state);
+		return Collections.unmodifiableSet(this.automataGraph.outgoingEdgesOf(state));
 	}
 
 	/**

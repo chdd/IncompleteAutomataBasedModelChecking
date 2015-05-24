@@ -65,8 +65,7 @@ public class IntersectionCleaner extends CHIAOperation {
 		Preconditions.checkNotNull(intersectionBuilder,
 				"The intersection Builder cannot be null");
 
-		this.intersectionAutomaton = intersectionBuilder
-				.getPrecomputedIntersectionAutomaton();
+		this.intersectionAutomaton = intersectionBuilder.computeIntersection();
 		this.intersectionBuilder = intersectionBuilder;
 
 	}
@@ -124,20 +123,7 @@ public class IntersectionCleaner extends CHIAOperation {
 		
 		// removing the non reachable states
 		for (State s : toBeRemoved) {
-			State modelState = this.intersectionBuilder
-					.getIntersectionStateModelStateMap().get(s);
-			this.intersectionBuilder.getModelStateIntersectionStateMap()
-					.get(modelState).remove(s);
-			this.intersectionBuilder.getIntersectionStateModelStateMap()
-					.remove(s);
-			State claimState = this.intersectionBuilder
-					.getIntersectionStateClaimStateMap().get(s);
-			this.intersectionBuilder.getClaimStateIntersectionStateMap()
-					.get(claimState).remove(s);
-			this.intersectionBuilder.getIntersectionStateClaimStateMap()
-					.remove(s);
-
-			this.intersectionAutomaton.removeState(s);
+			this.intersectionBuilder.removeIntersectionState(s);
 		}
 
 		logger.info("The cleaning phase has removed: " + toBeRemoved.size()

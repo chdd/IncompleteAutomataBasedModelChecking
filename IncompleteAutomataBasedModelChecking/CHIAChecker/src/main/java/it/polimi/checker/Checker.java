@@ -3,17 +3,15 @@ package it.polimi.checker;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.state.State;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
@@ -23,8 +21,9 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class Checker {
+public class Checker extends CHIAAction {
 
+	private static final String NAME="CHECK";
 	/**
 	 * is the logger of the ModelChecker class
 	 */
@@ -33,30 +32,19 @@ public class Checker {
 	/**
 	 * contains the specification to be checked
 	 */
-	private BA claim;
+	private final BA claim;
 
 	/**
 	 * contains the model to be checked
 	 */
-	private IBA model;
+	private final IBA model;
 
 	/**
-	 * contains the intersection automaton of the model and its specification
-	 * after the model checking procedure is performed
+	 * contains the builder which is used to compute the intersection automaton
 	 */
-	private IntersectionBA intersectionAutomaton;
-
-	private boolean performed;
-
-	/**
-	 * contains the results of the verification (if the specification is
-	 * satisfied or not, the time required by the model checking procedure etc)
-	 */
-	private ModelCheckingResults verificationResults;
-
-	private final AcceptingPolicy acceptingPolicy;
 	private IntersectionBuilder intersectionBuilder;
 
+	private final AcceptingPolicy acceptingPolicy;
 	/**
 	 * creates a new {@link Checker}
 	 * 
@@ -64,29 +52,25 @@ public class Checker {
 	 *            is the model to be analyzed by the model checker
 	 * @param claim
 	 *            is the specification to be considered by the model checker
-	 * @param mp
-	 *            is an object where the results of the verification (e.g., time
-	 *            required from the verification procedure are stored)
+	 * @param acceptingPolicy
+	 *            specifies the acceptingPolicy to be used in the intersection procedure
 	 * @throws NullPointerException
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
 	 */
-	public Checker(IBA model, BA claim, AcceptingPolicy acceptingPolicy, ModelCheckingResults mp) {
+	public Checker(IBA model, BA claim, AcceptingPolicy acceptingPolicy) {
+		super(NAME);
 		Preconditions.checkNotNull(model,
 				"The model to be checked cannot be null");
 		Preconditions.checkNotNull(claim,
 				"The specification to be checked cannot be null");
-		Preconditions.checkNotNull(mp,
-				"The model checking parameters cannot be null");
 		Preconditions.checkNotNull(acceptingPolicy,
 				"The accepting policy cannot be null");
 
-		this.acceptingPolicy=acceptingPolicy;
 		this.claim = claim;
 		this.model = model;
-		this.verificationResults = mp;
+		this.acceptingPolicy=acceptingPolicy;
 		this.intersectionBuilder = new IntersectionBuilder(model, claim, acceptingPolicy);
-		this.performed = false;
 	}
 
 	/**
@@ -98,105 +82,34 @@ public class Checker {
 	 * @return 0 if the property is not satisfied, 1 if the property is
 	 *         satisfied, -1 if the property is satisfied with constraints.
 	 */
-	public int check() {
-		performed = true;
+	public SatisfactionValue check() {
 		logger.info("Checking procedure started");
-		// resets the value of the verification parameters
-		this.verificationResults.reset();
-		logger.info("Verification results resetted");
-
-		// SPECIFICATION
-		// updates the set of the number of the states in the claim
-		this.verificationResults.setNumStatesSpecification(this.claim
-				.getStates().size());
-
-		logger.info("The claims has: " + this.claim.getStates().size()
-				+ " states");
-		// updates the number of accepting states of the claim
-		this.verificationResults.setNumAcceptStatesSpecification(this.claim
-				.getAcceptStates().size());
-
-		// MODEL
-		// updates the number of the states of the model
-		this.verificationResults.setNumStatesModel(this.model.getStates()
-				.size());
-		// updates the number of accepting states of the model
-		this.verificationResults.setNumAcceptStatesModel(this.model
-				.getAcceptStates().size());
-		// updates the number of transparent states in the model
-		this.verificationResults.setNumTransparentStatesModel(this.model
-				.getTransparentStates().size());
-
-		logger.info("The model has: " + this.model.getStates().size()
-				+ " states");
+		
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL WITHOUT TRANSPARENT
 		// STATES AND THE CLAIM
-		long startIntersectionTime = System.nanoTime();
 		boolean empty = this.checkEmptyIntersectionMc();
-		long stopTime = System.nanoTime();
-
-		long checkingMcTime = (stopTime - startIntersectionTime);
-		logger.info("The emptiness checker returned: " + empty + " in: "
-				+ checkingMcTime + "ms");
-
+		//long stopTime = System.nanoTime();
+		
 		// updates the time required to compute the intersection between the
 		// model without transparent states and the claim
-		this.verificationResults.setViolationTime(checkingMcTime);
 		if (!empty) {
-			this.verificationResults.setTotalTime(checkingMcTime);
-			this.verificationResults
-					.setNumInitialStatesIntersection(this.intersectionAutomaton
-							.getStates().size());
-			this.verificationResults.setResult(0);
-			logger.info("The claim is not satisfied");
-			return 0;
+			this.performed();
+			logger.info("Checking procedure ended");
+			
+			return SatisfactionValue.NOTSATISFIED;
 		}
 
-		logger.info("Checking the intersection between the claim and the original model");
 		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE CLAIM
-		long startCheckingPossible = System.nanoTime();
 		boolean emptyIntersection = this.checkEmptyIntersection();
-		long stopCheckingPossible = System.nanoTime();
-		long checkingPossibleTime = (stopCheckingPossible - startCheckingPossible);
-		logger.info("The emptiness checker returns: " + emptyIntersection
-				+ " in: " + checkingPossibleTime + " ms");
-
-		// updates the time required to compute the intersection between the
-		// model without transparent states and the claim
-		this.verificationResults.setPossibleViolationTime(checkingPossibleTime);
-		// INTERSECTION
-		// sets the number of the states in the intersection
-		this.verificationResults
-				.setNumStatesIntersection(this.intersectionAutomaton
-						.getStates().size());
-
-		// sets the number of accepting states of the intersection
-		this.verificationResults
-				.setNumAcceptingStatesIntersection(this.intersectionAutomaton
-						.getAcceptStates().size());
-		// sets the number of initial states in the intersection
-		this.verificationResults
-				.setNumInitialStatesIntersection(this.intersectionAutomaton
-						.getInitialStates().size());
-		// sets the number of mixed states in the intersection
-		this.verificationResults
-				.setNumMixedStatesIntersection(this.intersectionAutomaton
-						.getMixedStates().size());
-		this.verificationResults.setTotalTime(checkingMcTime
-				+ checkingPossibleTime);
-		this.verificationResults
-				.setNumInitialStatesIntersection(this.intersectionAutomaton
-						.getStates().size());
-
+		this.performed();
 		if (!emptyIntersection) {
-			logger.info("The claim is possibly satisfied");
-			this.verificationResults.setResult(-1);
 
-			return -1;
+			logger.info("Checking procedure ended");
+			return SatisfactionValue.POSSIBLYSATISFIED;
 		} else {
-			logger.info("The claim is satisfied");
-			this.verificationResults.setResult(1);
-			return 1;
+
+			logger.info("Checking procedure ended");
+			return SatisfactionValue.SATISFIED;
 		}
 	}
 
@@ -213,16 +126,14 @@ public class Checker {
 		// removes the transparent states from the model
 		IBA mc = new IBATransparentStateRemoval()
 				.removeTransparentStates(model);
-		logger.debug("Transparent states removed from the model");
-
+		
 		// associating the intersectionBuilder
 		this.intersectionBuilder = new IntersectionBuilder(mc, claim, acceptingPolicy);
 
 		// computing the intersection
-		this.intersectionAutomaton = this.intersectionBuilder
+		IntersectionBA intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
 
-		logger.debug("Intersection automaton computed");
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
 
@@ -240,73 +151,19 @@ public class Checker {
 		this.intersectionBuilder = new IntersectionBuilder(this.model, claim, acceptingPolicy);
 
 		// computing the intersection
-		this.intersectionAutomaton = this.intersectionBuilder
+		IntersectionBA intersectionAutomaton = this.intersectionBuilder
 				.computeIntersection();
-		return new EmptinessChecker(this.intersectionAutomaton).isEmpty();
+		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
 
+	
 	/**
-	 * returns the verification results, the time required from the verification
-	 * procedure, the number of states generated etc
-	 * 
-	 * @return the resulting parameters of the verification, the number of the
-	 *         states of the intersection automaton the time required from the
-	 *         verification procedure etc
+	 * returns the intersection builder used by the model checker
+	 * @return the intersection builder used by the model checker
 	 */
-	public ModelCheckingResults getVerificationResults() {
-		Preconditions
-				.checkState(performed,
-						"You must run the model checker before performing this operation");
-
-		return verificationResults;
-	}
-
-	/**
-	 * returns a map that relates each state of the model to the corresponding
-	 * states of the intersection automaton
-	 * 
-	 * @return a map that relates each state of the model to the corresponding
-	 *         states of the intersection automaton
-	 */
-	public Map<State, Set<State>> getModelIntersectionStateMap() {
-		Preconditions
-				.checkState(performed,
-						"You must run the model checker before performing this operation");
-
-		return this.intersectionBuilder.getModelStateIntersectionStateMap();
-	}
-
-	/**
-	 * returns a map that relates each state of the claim to the corresponding
-	 * states of the intersection automaton
-	 * 
-	 * @return a map that relates each state of the claim to the corresponding
-	 *         states of the intersection automaton
-	 */
-	public Map<State, Set<State>> getClaimIntersectionStateMap() {
-		Preconditions
-				.checkState(performed,
-						"You must run the model checker before performing this operation");
-
-		return this.intersectionBuilder.getClaimStateIntersectionStateMap();
-	}
-
-	/**
-	 * returns the intersection automaton
-	 * 
-	 * @return the intersection automaton
-	 */
-	public IntersectionBA getIntersectionAutomaton() {
-		Preconditions
-				.checkState(performed,
-						"You must run the model checker before performing this operation");
-
-		return intersectionAutomaton;
-	}
-
 	public IntersectionBuilder getIntersectionBuilder() {
 		Preconditions
-				.checkState(performed,
+				.checkState(this.isPerformed(),
 						"You must run the model checker before performing this operation");
 
 		return this.intersectionBuilder;

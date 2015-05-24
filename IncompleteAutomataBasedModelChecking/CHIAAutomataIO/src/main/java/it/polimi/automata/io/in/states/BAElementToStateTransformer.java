@@ -15,7 +15,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ElementToBAStateTransformer implements Transformer<Element, State>{
+public class BAElementToStateTransformer implements Transformer<Element, State>{
 
 	
 	/**
@@ -25,7 +25,7 @@ public class ElementToBAStateTransformer implements Transformer<Element, State>{
 	private final BA ba;
 	
 	
-	public ElementToBAStateTransformer(BA ba){
+	public BAElementToStateTransformer(BA ba){
 		Preconditions.checkNotNull(ba, "The ba cannot be null");
 		
 		this.stateFactory=new StateFactory();

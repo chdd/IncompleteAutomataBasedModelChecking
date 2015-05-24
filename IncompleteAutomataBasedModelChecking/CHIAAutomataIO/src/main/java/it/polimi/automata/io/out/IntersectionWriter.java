@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import action.CHIAAction;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -35,18 +37,15 @@ import com.google.common.base.Preconditions;
  * @param T
  *            is the type of the transitions of the intersection automaton
  */
-public class IntersectionWriter {
+public class IntersectionWriter extends CHIAAction{
 
+	private static final String NAME="WRITE INTERSECTION";
 	/**
 	 * is the logger of the SubAutomataIdentifier class
 	 */
 	private static final Logger logger = LoggerFactory
 			.getLogger(IntersectionWriter.class);
 
-	/**
-	 * contains the intersection automaton to be written
-	 */
-	private IntersectionBA intersectionAutomaton;
 	/**
 	 * contains the file where the intersection automaton must be written
 	 */
@@ -64,17 +63,15 @@ public class IntersectionWriter {
 	 *             if the intersection automaton or the file is null
 	 * 
 	 */
-	public IntersectionWriter(IntersectionBA intersectionAutomaton, File f) {
-		Preconditions.checkNotNull(intersectionAutomaton,
-				"The intersection automaton cannot be null");
+	public IntersectionWriter(File f) {
+		super(NAME);
 		Preconditions.checkNotNull(f,
 				"The file where the automaton must be written cannot be null");
 
-		this.intersectionAutomaton = intersectionAutomaton;
 		this.f = f;
 	}
 
-	public void write() {
+	public void write(IntersectionBA intersectionAutomaton) {
 
 		logger.info("Writing the intersection automaton");
 		try {
@@ -88,8 +85,8 @@ public class IntersectionWriter {
 			Element intersectionAutomatonElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_INTERSECTION);
 			doc.appendChild(intersectionAutomatonElement);
 
-			this.computingStateElements(doc, intersectionAutomatonElement);
-			this.computingTransitionElements(doc, intersectionAutomatonElement);
+			this.computingStateElements(doc, intersectionAutomatonElement, intersectionAutomaton);
+			this.computingTransitionElements(doc, intersectionAutomatonElement, intersectionAutomaton);
 
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
@@ -109,26 +106,26 @@ public class IntersectionWriter {
 		}
 	}
 
-	private void computingStateElements(Document doc, Element intersectionAutomatonElement) {
+	private void computingStateElements(Document doc, Element intersectionAutomatonElement, IntersectionBA intersectionAutomaton) {
 		
 		Element statesElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_STATES);
 		intersectionAutomatonElement.appendChild(statesElement);
 		IntBAStateToElementTransformer stateTransformer = new IntBAStateToElementTransformer(
-				this.intersectionAutomaton, doc);
-		for (State s : this.intersectionAutomaton.getStates()) {
+				intersectionAutomaton, doc);
+		for (State s : intersectionAutomaton.getStates()) {
 			Element xmlStateElement = stateTransformer.transform(s);
 			statesElement.appendChild(xmlStateElement);
 
 		}
 	}
 
-	private void computingTransitionElements(Document doc, Element intersectionAutomatonElement) {
+	private void computingTransitionElements(Document doc, Element intersectionAutomatonElement, IntersectionBA intersectionAutomaton) {
 		Element transitionsElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS);
 		intersectionAutomatonElement.appendChild(transitionsElement);
 		
 		IntBATransitionToElementTransformer transitionTransformer = new IntBATransitionToElementTransformer(
-				this.intersectionAutomaton, doc);
-		for (Transition transition : this.intersectionAutomaton.getTransitions()) {
+				intersectionAutomaton, doc);
+		for (Transition transition : intersectionAutomaton.getTransitions()) {
 			Element transitionElement =transitionTransformer.transform(transition);
 			transitionsElement.appendChild(transitionElement);
 		}

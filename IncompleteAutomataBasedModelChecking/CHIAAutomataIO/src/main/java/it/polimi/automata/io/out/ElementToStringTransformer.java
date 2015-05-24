@@ -1,4 +1,4 @@
-package it.polimi.constraints.io.out;
+package it.polimi.automata.io.out;
 
 import java.io.StringWriter;
 

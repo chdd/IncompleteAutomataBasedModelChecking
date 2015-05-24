@@ -60,8 +60,8 @@ public class IntersectionRule {
 	 */
 	protected boolean satisfies(Set<IGraphProposition> modelLabel,
 			Set<IGraphProposition> claimLabel) {
-		Preconditions.checkNotNull(modelLabel, "The model cannot be null");
-		Preconditions.checkNotNull(claimLabel, "The claim cannot be null");
+		Preconditions.checkNotNull(modelLabel, "The model label cannot be null");
+		Preconditions.checkNotNull(claimLabel, "The claim label cannot be null");
 
 		IGraphProposition stuttering = new GraphProposition(
 				AutomataConstants.STUTTERING_CHARACTER, false);

@@ -8,7 +8,7 @@ public class ModelCheckingResults {
 	/**
 	 * contains the result of the verification
 	 */
-	private int result;
+	private SatisfactionValue result;
 
 	/**
 	 * the violationTime the time to check whether the claim is not satisfied in
@@ -106,7 +106,7 @@ public class ModelCheckingResults {
 		this.subproperties=subproperties;
 		this.portReachability=portReachability;
 		
-		this.setResult(0);
+		this.setResult(SatisfactionValue.NOTSATISFIED);
 		this.setViolationTime(0);
 		this.setPossibleViolationTime(0);
 		this.setPortReachabilityTime(0);
@@ -127,7 +127,7 @@ public class ModelCheckingResults {
 	}
 
 	public void reset() {
-		this.setResult(0);
+		this.setResult(SatisfactionValue.NOTSATISFIED);
 		this.setViolationTime(0);
 		this.setPossibleViolationTime(0);
 		this.setSubPropertyComputationTime(0);
@@ -198,7 +198,7 @@ public class ModelCheckingResults {
 	/**
 	 * @return the result
 	 */
-	public int getResult() {
+	public SatisfactionValue getResult() {
 		return result;
 	}
 
@@ -206,7 +206,7 @@ public class ModelCheckingResults {
 	 * @param result
 	 *            the result to set
 	 */
-	public void setResult(int result) {
+	public void setResult(SatisfactionValue result) {
 		this.result = result;
 	}
 

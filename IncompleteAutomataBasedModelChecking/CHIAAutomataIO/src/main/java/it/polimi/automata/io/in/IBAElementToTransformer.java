@@ -1,13 +1,16 @@
 package it.polimi.automata.io.in;
 
-import it.polimi.automata.BA;
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.BA;
+import it.polimi.automata.IBA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.in.propositions.StringToModelPropositions;
-import it.polimi.automata.io.in.states.ElementToBAStateTransformer;
-import it.polimi.automata.io.in.transitions.ElementToBATransitionTransformer;
+import it.polimi.automata.io.in.states.IBAElementToStateTransformer;
+import it.polimi.automata.io.in.transitions.IBAElementToTransitionTransformer;
 import it.polimi.automata.state.State;
+import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,25 +24,27 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
-public class ElementToBATransformer implements Transformer<Element, BA>  {
+public class IBAElementToTransformer implements Transformer<Element, IBA>  {
 
 	
 	/**
 	 * contains a map that connects the id with the corresponding state
 	 */
 	private  Map<Integer, State> mapIdState;
-	
-	public ElementToBATransformer(){
-		this.mapIdState=new HashMap<Integer, State>();
-	}
 
+	
+	public IBAElementToTransformer(){
+	
+		this.mapIdState=new HashMap<Integer, State>();
+		
+	}
 	@Override
-	public BA transform(Element input) {
+	public IBA transform(Element input) {
 		Preconditions.checkNotNull(input,
 				"The input elemento to be converted into a BA cannot be null");
 		
 		this.mapIdState=new HashMap<Integer, State>();
-		BA ba=new BA(new ClaimTransitionFactory());
+		IBA ba=new IBA(new ModelTransitionFactory());
 		
 		this.loadPropositions(input, ba);
 		this.loadStates(input, ba);
@@ -61,10 +66,9 @@ public class ElementToBATransformer implements Transformer<Element, BA>  {
 
 		}
 	}
-	
-	private void loadStates(Element doc, BA ba) {
-		ElementToBAStateTransformer stateElementParser=new ElementToBAStateTransformer(ba); 
+	private void loadStates(Element doc, IBA ba) {
 		
+		IBAElementToStateTransformer stateElementParser=new IBAElementToStateTransformer(new StateFactory(), ba);
 		NodeList xmlstates = doc
 				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_STATE);
 
@@ -72,25 +76,24 @@ public class ElementToBATransformer implements Transformer<Element, BA>  {
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			State s= stateElementParser.transform(
+			State s=stateElementParser.transform(
 					eElement);
 			this.mapIdState.put(s.getId(), s);
 
 		}
 	}
 
-	private void loadTransitions(Element doc, BA ba) {
-		ElementToBATransitionTransformer transitionElementParser=new ElementToBATransitionTransformer(ba, this.mapIdState);
-		
+	private void loadTransitions(Element doc, IBA ba) {
+		IBAElementToTransitionTransformer transitionElementParser=new IBAElementToTransitionTransformer(new ClaimTransitionFactory(), ba, this.mapIdState);
 		NodeList xmltransitions = doc
 				.getElementsByTagName(AutomataIOConstants.XML_TAG_TRANSITION);
 
-		for (int transitionCounter = 0; transitionCounter < xmltransitions.getLength(); transitionCounter++) {
-			Node xmltransition = xmltransitions.item(transitionCounter);
+		for (int transitionid = 0; transitionid < xmltransitions.getLength(); transitionid++) {
+			Node xmltransition = xmltransitions.item(transitionid);
 			Element eElement = (Element) xmltransition;
+
 			transitionElementParser.transform(eElement);
 
 		}
 	}
-
 }

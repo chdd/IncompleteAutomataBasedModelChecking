@@ -12,6 +12,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -27,6 +29,13 @@ import com.google.common.base.Preconditions;
  */
 public class IBAReader extends XMLReader {
 
+	private final static String NAME="READ MODEL";
+	
+	/**
+	 * is the logger of the BAReader class
+	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(IBAReader.class);
 	/**
 	 * is the File from which the IBA must be read
 	 */
@@ -43,6 +52,7 @@ public class IBAReader extends XMLReader {
 	 *             if the path is null
 	 */
 	public IBAReader(String filePath) {
+		super(NAME);
 		Preconditions.checkNotNull(filePath,
 				"The path of the file cannot be null");
 		this.file = new File(filePath);
@@ -60,6 +70,7 @@ public class IBAReader extends XMLReader {
 	 *             if one of the parameters is null
 	 */
 	public IBAReader(File file) {
+		super(NAME);
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
 
 		this.file = file;
@@ -80,6 +91,8 @@ public class IBAReader extends XMLReader {
 	 */
 	public IBA read() throws ParserConfigurationException,
 			FileNotFoundException, SAXException, IOException {
+
+		logger.info("Reding the Model");
 
 		Document dom;
 
@@ -102,8 +115,12 @@ public class IBAReader extends XMLReader {
 
 		Element doc = dom.getDocumentElement();
 
-		IBA iba = new ElementToIBATransformer().transform(doc);
+		IBA iba = new IBAElementToTransformer().transform(doc);
+		this.performed();
+		logger.info("Model readed");
+
 		return iba;
+		
 
 	}
 }

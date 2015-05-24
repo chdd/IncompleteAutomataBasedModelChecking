@@ -191,5 +191,10 @@
 			<artifactId>CHIAAutomata</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>it.polimi.chia</groupId>
+			<artifactId>CHIAAction</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

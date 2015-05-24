@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class ElementToIBAStateTransformer implements Transformer<Element, State> {
+public class IBAElementToStateTransformer implements Transformer<Element, State> {
 
 	
 
@@ -21,7 +21,7 @@ public class ElementToIBAStateTransformer implements Transformer<Element, State>
 	private final IBA iba;
 	
 	
-	public ElementToIBAStateTransformer(StateFactory stateFactory, IBA iba){
+	public IBAElementToStateTransformer(StateFactory stateFactory, IBA iba){
 		Preconditions.checkNotNull(stateFactory,"The state factory cannot be null");
 		Preconditions.checkNotNull(iba,"The incomplete Buchi automaton cannot be null");
 		

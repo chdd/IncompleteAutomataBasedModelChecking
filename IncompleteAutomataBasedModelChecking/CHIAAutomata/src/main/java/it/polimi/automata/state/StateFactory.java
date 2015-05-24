@@ -5,11 +5,11 @@ import org.jgrapht.VertexFactory;
 import com.google.common.base.Preconditions;
 
 /**
- * is the factory that allows to create states of the type State
+ * Is the factory which  allows to create states of the type State
  * 
- * @see {@link State}. It implements the {@link StateFactory} interface
+ * @see {@link State}. 
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  * 
  */
 public class StateFactory implements VertexFactory<State> {
@@ -24,7 +24,7 @@ public class StateFactory implements VertexFactory<State> {
 	 * crates a new state with an empty name the id is auto-assigned to the
 	 * state
 	 * 
-	 * @return a new state with an empty name
+	 * @return a new state with an empty name and an auto-assigned id
 	 */
 	public State create() {
 

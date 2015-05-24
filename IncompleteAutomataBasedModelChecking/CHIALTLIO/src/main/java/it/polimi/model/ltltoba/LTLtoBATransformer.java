@@ -16,6 +16,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
@@ -26,24 +27,15 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class LTLtoBATransformer {
+public class LTLtoBATransformer extends CHIAAction{
 
+	private static final String NAME="CONVERTING LTL TO AUTOMATON";
 	/**
 	 * creates the LTL to Buchi automaton transformer
 	 * 
-	 * @param stateFactory
-	 *            is the factory which is used to create the states of the
-	 *            automaton
-	 * @param transitionFactory
-	 *            is the factory which is used
-	 * @param labelFactory
-	 *            is the factory which is used to create the labels of the
-	 *            transitions
-	 * @throws NullPointerException
-	 *             if the stateFactory or the transition factory is null
 	 */
 	public LTLtoBATransformer() {
-
+		super(NAME);
 	}
 	
 	

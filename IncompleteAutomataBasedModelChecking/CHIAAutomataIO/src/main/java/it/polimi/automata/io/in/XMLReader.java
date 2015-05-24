@@ -11,7 +11,13 @@ import javax.xml.validation.Validator;
 
 import org.xml.sax.SAXException;
 
-public abstract class XMLReader {
+import action.CHIAAction;
+
+public abstract class XMLReader extends CHIAAction {
+
+	public XMLReader(String name) {
+		super(name);
+	}
 
 	protected boolean validateAgainstXSD(InputStream xml, InputStream xsd)
 			throws SAXException, IOException {

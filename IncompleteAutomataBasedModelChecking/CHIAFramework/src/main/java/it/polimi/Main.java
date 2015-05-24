@@ -20,5 +20,6 @@ public class Main {
 		
 		ShellFactory.createConsoleShell("CHIA", null, new CHIAConsole())
         .commandLoop();
+		
 	}
 }

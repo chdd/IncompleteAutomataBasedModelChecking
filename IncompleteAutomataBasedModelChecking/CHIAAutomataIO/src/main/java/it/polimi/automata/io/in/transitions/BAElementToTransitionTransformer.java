@@ -18,7 +18,7 @@ import com.google.common.base.Preconditions;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
-public class ElementToBATransitionTransformer implements Transformer<Element, Transition>{
+public class BAElementToTransitionTransformer implements Transformer<Element, Transition>{
 
 	
 	/**
@@ -29,7 +29,7 @@ public class ElementToBATransitionTransformer implements Transformer<Element, Tr
 	private final BA automaton;
 	private final Map<Integer, State> idStateMap;
 	
-	public ElementToBATransitionTransformer(BA automaton, Map<Integer, State> idStateMap){
+	public BAElementToTransitionTransformer(BA automaton, Map<Integer, State> idStateMap){
 				
 		this.transitionFactory=new ClaimTransitionFactory();
 		this.automaton=automaton;

@@ -17,7 +17,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
-public class ElementToIBATransitionTransformer  implements Transformer<Element, Transition>{
+public class IBAElementToTransitionTransformer  implements Transformer<Element, Transition>{
 
 	
 	/**
@@ -29,7 +29,7 @@ public class ElementToIBATransitionTransformer  implements Transformer<Element, 
 	private final IBA iba;
 	private final Map<Integer, State> idStateMap;
 	
-	public ElementToIBATransitionTransformer(ClaimTransitionFactory transitionFactory, IBA iba,
+	public IBAElementToTransitionTransformer(ClaimTransitionFactory transitionFactory, IBA iba,
 			Map<Integer, State> idStateMap){
 		Preconditions.checkNotNull(transitionFactory,"The transition factory cannot be null");
 		this.transitionFactory=transitionFactory;

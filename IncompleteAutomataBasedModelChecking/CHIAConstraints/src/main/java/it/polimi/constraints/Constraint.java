@@ -1,16 +1,14 @@
 package it.polimi.constraints;
 
-import it.polimi.automata.state.State;
-
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import org.jgrapht.Graphs;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import it.polimi.automata.state.State;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 /**
  * The Constraint class describes the constraint associated with the
@@ -27,102 +25,49 @@ import com.google.common.base.Preconditions;
 public class Constraint {
 
 	/**
-	 * is the set of the components to be considered in the refinement of the
-	 * transparent states
+	 * is the set sub-property to be considered in the refinement of the
+	 * transparent state
 	 */
-	private Set<SubProperty> subProperties;
-
-	private DefaultDirectedGraph<ColoredPort, DefaultEdge> portsGraph;
+	private final Set<SubProperty> subProperties;
+	
+	private final BiMap<State, SubProperty> stateSubPropertyMap;
 
 	/**
 	 * creates a new empty constraint
+	 * 
+	 * @param subProperty
+	 *            is the sub-property to be associated to the constraint
 	 */
 	public Constraint() {
 		this.subProperties = new HashSet<SubProperty>();
-		this.portsGraph = new DefaultDirectedGraph<ColoredPort, DefaultEdge>(
-				DefaultEdge.class);
-
+		this.stateSubPropertyMap=HashBiMap.create();
 	}
 
 	/**
-	 * adds the component to the set of sub-properties to be considered in the
-	 * refinement of the transparent states
+	 * returns the sub-property associated with the constraint
 	 * 
-	 * @param subproperty
-	 *            is the component to be considered in the refinement of a
-	 *            transparent state of the model
+	 * @return the sub-property associated with the constraint
+	 */
+	public Set<SubProperty> getSubProperty() {
+		return Collections.unmodifiableSet(subProperties);
+	}
+
+	/**
+	 * adds the sub-property to the set of the sub-properties of the constraint
+	 * 
+	 * @param subProperty
+	 *            the sub-property to be added to the set of sub-properties
 	 * @throws NullPointerException
-	 *             if the component is null
+	 *             if the sub-property is null
+	 * @throws IllegalArgumentException
+	 *             if the sub-property constraints an already constrained state
 	 */
-	public void addSubProperty(SubProperty subproperty) {
-		Preconditions.checkNotNull(subproperty, "The component cannot be null");
-
-		this.subProperties.add(subproperty);
-		for (ColoredPort p : subproperty.getIncomingPorts()) {
-			this.portsGraph.addVertex(p);
-		}
-		for (ColoredPort p : subproperty.getOutcomingPorts()) {
-			this.portsGraph.addVertex(p);
-		}
-	}
-
-	public void addSubProperties(Set<SubProperty> subproperties){
-		Preconditions.checkNotNull(subproperties, "The set of subproperties cannot be null");
-		for(SubProperty subProperty: subproperties){
-			this.addSubProperty(subProperty);
-		}
-
-	}
-	/**
-	 * returns the sub-properties involved in the constraint
-	 * 
-	 * @return the sub-properties involved in the constraint
-	 */
-	public Set<SubProperty> getSubProperties() {
-		return this.subProperties;
-	}
-
-	/**
-	 * add a reachability entity, specifies that the destination port is
-	 * reachable from the sourcePort
-	 * 
-	 * @param sourcePort
-	 *            is the source port
-	 * @param destinationPort
-	 *            is the destination
-	 * @throws NullPointerException
-	 *             if one of the ports is null
-	 */
-	public void addReachabilityRelation(ColoredPort sourcePort, ColoredPort destinationPort) {
-		// validates the parameters
-		Preconditions.checkNotNull(sourcePort,
-				"The incomingPort port cannot be null");
-		Preconditions.checkNotNull(destinationPort,
-				"The outcomingPort port cannot be null");
-		if (!this.portsGraph.containsVertex(sourcePort)) {
-			this.portsGraph.addVertex(sourcePort);
-		}
-		if (!this.portsGraph.containsVertex(destinationPort)) {
-			this.portsGraph.addVertex(destinationPort);
-		}
-		this.portsGraph.addEdge(sourcePort, destinationPort);
-	}
-
-	public int getTotalStates() {
-		int totalStates = 0;
-		for (SubProperty c : subProperties) {
-			totalStates = totalStates + c.getAutomaton().getStates().size();
-		}
-		return totalStates;
-	}
-
-	public int getTotalTransitions() {
-		int totalTransitions = 0;
-		for (SubProperty c : subProperties) {
-			totalTransitions = totalTransitions
-					+ c.getAutomaton().getTransitions().size();
-		}
-		return totalTransitions;
+	public void addSubProperty(SubProperty subProperty) {
+		Preconditions.checkNotNull(subProperty,
+				"The sub-Property to be considered cannot be null");
+		Preconditions.checkArgument(!this.stateSubPropertyMap.containsKey(subProperty.getModelState()), "A sub-property is already associated with the transparent state"+subProperty.getModelState());
+		this.subProperties.add(subProperty);
+		this.stateSubPropertyMap.put(subProperty.getModelState(), subProperty);
 	}
 
 	/**
@@ -131,170 +76,6 @@ public class Constraint {
 	 * @return the set of the states of the model constrained by the constraint
 	 */
 	public Set<State> getConstrainedStates() {
-		Set<State> constrainedStates = new HashSet<State>();
-		for (SubProperty c : subProperties) {
-			constrainedStates.add(c.getModelState());
-		}
-		return constrainedStates;
-	}
-
-	/**
-	 * returns the sub-property associated with the transparent state
-	 * 
-	 * @param transparentState
-	 *            is the transparent state under analysis
-	 * @return the sub-properties associated with the transparent state
-	 * @throws NullPointerException
-	 *             if the transparent state is null
-	 * @throws IllegalArgumentException
-	 *             if the transparent state is not contained into the set of the
-	 *             states constrained states
-	 */
-	public SubProperty getSubproperty(State transparentState) {
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state under analysis cannot be null");
-		Preconditions
-				.checkArgument(
-						this.getConstrainedStates().contains(transparentState),
-						"The state "
-								+ transparentState
-								+ " is not contained into the set of constrained states");
-
-		for (SubProperty c : subProperties) {
-			if (c.getModelState().equals(transparentState)) {
-				return c;
-			}
-		}
-		throw new IllegalArgumentException("The state " + transparentState
-				+ " is not contained into the set of constrained states");
-	}
-	
-	public boolean isConstrained(State transparentState){
-		for (SubProperty c : subProperties) {
-			if (c.getModelState().equals(transparentState)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public DefaultDirectedGraph<ColoredPort, DefaultEdge> getPortsGraph() {
-		return this.portsGraph;
-	}
-
-	public void setPortGraph(DefaultDirectedGraph<ColoredPort, DefaultEdge> portsGraph) {
-		this.portsGraph = portsGraph;
-
-	}
-
-	public void replace(SubProperty oldComponent, Constraint newConstraint,
-			Map<ColoredPort, Set<ColoredPort>> mapOldPropertyNewConstraintIncomingPorts,
-			Map<ColoredPort, Set<ColoredPort>> mapOldPropertyNewConstraintOutcomingPorts,
-			Map<ColoredPort, ColoredPort> intersectionIncomingPortClaimPortMap,
-			Map<ColoredPort, ColoredPort> intersectionOutcomingPortClaimPortMap)
-
-	{
-		Preconditions.checkNotNull(oldComponent,
-				"The component to be replaced cannot be null");
-		Preconditions.checkNotNull(newConstraint,
-				"The new constraint cannot be null");
-		Preconditions
-				.checkArgument(
-						this.subProperties.contains(oldComponent),
-						"The old component must be contained into the set of the components of the constraint");
-
-		this.union(newConstraint);
-		// coping the old INCOMING transition to the new ports
-		for (ColoredPort oldIncomingPort : mapOldPropertyNewConstraintIncomingPorts
-				.keySet()) {
-			if (intersectionIncomingPortClaimPortMap
-					.containsKey(oldIncomingPort)) {
-				for (DefaultEdge e : this.portsGraph
-						.incomingEdgesOf(intersectionIncomingPortClaimPortMap
-								.get(oldIncomingPort))) {
-					for (ColoredPort newIncomingPort : mapOldPropertyNewConstraintIncomingPorts
-							.get(oldIncomingPort)) {
-						this.portsGraph.addEdge(
-								this.portsGraph.getEdgeSource(e),
-								newIncomingPort);
-					}
-				}
-			}
-		}
-		// coping the old OUTCOMING transitions to the new ports
-		for (ColoredPort oldOutcomingPort : mapOldPropertyNewConstraintOutcomingPorts
-				.keySet()) {
-			if (intersectionOutcomingPortClaimPortMap
-					.containsKey(oldOutcomingPort)) {
-				for (DefaultEdge e : this.portsGraph
-						.outgoingEdgesOf(intersectionOutcomingPortClaimPortMap
-								.get(oldOutcomingPort))) {
-					for (ColoredPort newOutcomingPort : mapOldPropertyNewConstraintOutcomingPorts
-							.get(oldOutcomingPort)) {
-						this.portsGraph.addEdge(newOutcomingPort,
-								this.portsGraph.getEdgeTarget(e));
-					}
-				}
-			}
-		}
-
-		this.removeSubProperty(oldComponent);
-	}
-
-	public void union(Constraint other) {
-		Preconditions.checkNotNull(other, "The other component cannot be null");
-		this.subProperties.addAll(other.getSubProperties());
-
-		// generates the union of the two graphs
-		Graphs.addGraph(this.portsGraph, other.portsGraph);
-	}
-
-	/**
-	 * removes a sub-property from the set of sub-properties. The port of the
-	 * sub-properties are removed from the graph of the port
-	 * 
-	 * @param subProperty
-	 *            the sub-property to be removed
-	 * @throws NullPointerException
-	 *             if the sub-property is null
-	 * @throws IllegalArgumentException
-	 *             if the sub-property is not contained into the set of the
-	 *             sub-properties
-	 */
-	public void removeSubProperty(SubProperty subProperty) {
-
-		Preconditions.checkNotNull(subProperty,
-				"The sub-property to be removed cannot be null");
-		Preconditions
-				.checkArgument(
-						this.subProperties.contains(subProperty),
-						"The subproperty "
-								+ subProperty.getId() +" corresponding to model state:"+ subProperty.getModelState()
-								+ " must be contained into the set of the sub-properties of the constraint");
-		this.subProperties.remove(subProperty);
-
-		Set<ColoredPort> incomingPorts = new HashSet<ColoredPort>();
-		incomingPorts.addAll(subProperty.getIncomingPorts());
-
-		for (ColoredPort incomingPort : incomingPorts) {
-			this.portsGraph.removeVertex(incomingPort);
-		}
-
-		Set<ColoredPort> outComingPorts = new HashSet<ColoredPort>();
-		outComingPorts.addAll(subProperty.getOutcomingPorts());
-
-		for (ColoredPort outcomingPort : outComingPorts) {
-			this.portsGraph.removeVertex(outcomingPort);
-
-		}
-		this.subProperties.remove(subProperty);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Constraint clone(){
-		Constraint c=new Constraint();
-		c.addSubProperties(this.subProperties);
-		c.portsGraph=(DefaultDirectedGraph<ColoredPort, DefaultEdge>) this.portsGraph.clone();
-		return c;
+		return this.stateSubPropertyMap.keySet();
 	}
 }

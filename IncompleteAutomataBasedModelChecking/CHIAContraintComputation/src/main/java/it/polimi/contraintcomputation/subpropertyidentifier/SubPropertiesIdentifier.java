@@ -2,13 +2,10 @@ package it.polimi.contraintcomputation.subpropertyidentifier;
 
 import it.polimi.automata.AutomataConstants;
 import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
-import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
-import it.polimi.checker.ModelCheckingResults;
-import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.checker.Checker;
 import it.polimi.constraints.Color;
 import it.polimi.constraints.ColoredPort;
 import it.polimi.constraints.SubProperty;
@@ -51,25 +48,20 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 			.getLogger(SubPropertiesIdentifier.class);
 
 	/**
-	 * contains the intersection automaton
+	 * contains the subProperty that refers to the transparent state
 	 */
-	private final IntersectionBA intersectionBA;
+	private final SubProperty subProperty;
 
 	/**
-	 * contains the subPropertis identified
+	 * is the checker which has been used to check the model against the
+	 * corresponding claim
 	 */
-	private Set<SubProperty> subProperties;
+	private final Checker checker;
 
 	/**
-	 * associates each state of the intersection automaton to the sub-property
-	 * it belongs with
+	 * the transparent state that is considered
 	 */
-	private Map<State, SubProperty> mapIntersectionStateComponent;
-
-	/**
-	 * associates each state of the model to the sub-property it belongs with
-	 */
-	private final Map<State, SubProperty> modelModelStateSubProperty;
+	private final State transparentState;
 
 	/**
 	 * The incoming transitions are the transitions that enters the current
@@ -88,40 +80,44 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	private final Map<Transition, ColoredPort> mapIntersectionTransitionIncomingPort;
 
 	/**
-	 * is the original model to be considered
-	 */
-	private final IBA model;
-
-	private final ModelCheckingResults mcResults;
-
-	private final IntersectionBuilder intersectionBuilder;
-
-	/**
-	 * creates an identifier for the sub automata of the intersection automata
+	 * creates an identifier that is used to isolate the sub-property that
+	 * refers to the transparentState
 	 * 
-	 * @param intersectionBA
-	 *            is the intersection automata to be considered
-	 * @param modelStateIntersectionStateMap
-	 *            maps each state of the model to the corresponding states of
-	 *            the intersection automaton
+	 * @param checker
+	 *            is the checker that has been used to check the model and the
+	 *            claim
+	 * @param transparentState
+	 *            is the transparent state of interest
 	 * @throws NullPointerException
-	 *             if the intersection automaton or the map is null
+	 *             if the checker is null or the transparentState is null
+	 * @throws IllegalArgumentException
+	 *             the transparentState must be a transparent state of the model
+	 * @throws IllegalStateException
+	 *             the checking activity must be performed before the
+	 *             sub-property identification
+	 * 
 	 */
-	public SubPropertiesIdentifier(IntersectionBuilder intersectionBuilder,
-			ModelCheckingResults mcResults) {
+	public SubPropertiesIdentifier(Checker checker, State transparentState) {
 
 		super();
-		Preconditions.checkNotNull(intersectionBuilder,
-				"The intersection builder cannot be null");
+		Preconditions.checkNotNull(checker, "The checker cannot be null");
+		Preconditions.checkNotNull(transparentState,
+				"The transparent state to be considered cannot be null");
 
-		this.subProperties = new HashSet<SubProperty>();
-		// setting the intersection automaton
-		this.intersectionBA = intersectionBuilder
-				.getPrecomputedIntersectionAutomaton();
-		// setting the model
-		this.model = intersectionBuilder.getModel();
-		// creating the map between a state and the corresponding component
-		this.mapIntersectionStateComponent = new HashMap<State, SubProperty>();
+		Preconditions
+				.checkState(
+						checker.isPerformed(),
+						"The checking activity must be performed before the computation of the sub-property");
+		Preconditions
+				.checkArgument(checker.getIntersectionBuilder().getModel()
+						.getTransparentStates().contains(transparentState),
+						"The state to be considered must be a transparent state of the model");
+
+		this.transparentState = transparentState;
+		this.checker = checker;
+
+		this.subProperty = new SubProperty(transparentState, new BA(
+				new ClaimTransitionFactory()));
 
 		this.mapIntersectionTransitionOutcomingPort = new HashMap<Transition, ColoredPort>();
 		this.mapIntersectionTransitionIncomingPort = new HashMap<Transition, ColoredPort>();
@@ -130,9 +126,7 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 				AutomataConstants.STUTTERING_CHARACTER, false));
 
 		logger.info("SubAutomataIdentifier created");
-		this.modelModelStateSubProperty = new HashMap<State, SubProperty>();
-		this.mcResults = mcResults;
-		this.intersectionBuilder = intersectionBuilder;
+
 	}
 
 	/**
@@ -144,211 +138,176 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 	 * @return the sub-automata of the automaton that refer to the transparent
 	 *         states of M.
 	 */
-	public Set<SubProperty> getSubProperties() {
+	public SubProperty getSubProperty() {
+		logger.info("Subproperty computation started");
 
-		logger.info("Computing the subproperties");
 		if (this.isPerformed()) {
-			return Collections.unmodifiableSet(this.subProperties);
+			return this.subProperty;
 		}
 
-		long startSubPropertyComputationTime = System.nanoTime();
+		this.addPropositions();
 		this.createStates();
 		this.createTransitions();
-		long stopSubPropertyComputationTime = System.nanoTime();
 
-		long checkingMcTime = ((stopSubPropertyComputationTime - startSubPropertyComputationTime));
-
-		mcResults.setSubPropertyComputationTime(checkingMcTime);
-
-		logger.info("Subproperties ");
-		this.setPerformed(true);
-		return this.subProperties;
+		logger.info("Subproperty computation ended");
+		return this.subProperty;
 	}
 
-	/**
-	 * creates the transitions inside the current refinement
-	 */
-	private void createTransitions() {
-		for (State modelState : this.model.getTransparentStates()) {
+	private void addPropositions() {
+		/*
+		 * creates a component which correspond with the state modelState
+		 */
+		this.subProperty.getAutomaton().addPropositions(
+				this.checker.getIntersectionBuilder().getClaim()
+						.getPropositions());
 
-			SubProperty subproperty = this.modelModelStateSubProperty
-					.get(modelState);
-
-			for (State intersectionState : this.intersectionBuilder
-					.getAssociatedStates(modelState)) {
-
-				/*
-				 * first the algorithm searches for out-coming transition. The
-				 * transition that reaches an intersection state associated with
-				 * a transparent state of the model are POTENTIAL out-coming
-				 * transitions since they leaves the current level of
-				 * refinement, i.e., they enter the refinement of the
-				 * transparent state
-				 */
-				for (Transition incomingTransition : this.intersectionBA
-						.getInTransitions(intersectionState)) {
-					State sourceIntersectionState = this.intersectionBA
-							.getTransitionSource(incomingTransition);
-
-					if (!incomingTransition.getPropositions().equals(
-							stutteringPropositions)) {
-						if (this.intersectionBuilder
-								.getIntersectionTransitionsTransparentStatesMap()
-								.containsKey(incomingTransition)) {
-
-							Transition newTransition = new ClaimTransitionFactory()
-									.create(incomingTransition.getId(),
-											incomingTransition
-													.getPropositions());
-							subproperty.getAutomaton().addTransition(
-									sourceIntersectionState, intersectionState,
-									newTransition);
-						}
-
-						else {
-
-							/*
-							 * the destination is an intersection state since I
-							 * left the current level of refinement to go to the
-							 * refinement, i.e., the intersection
-							 */
-							ColoredPort incomingPort = new ColoredPort(
-									this.intersectionBuilder
-											.getIntersectionStateModelStateMap()
-											.get(sourceIntersectionState),
-									intersectionState, incomingTransition,
-									true, Color.YELLOW);
-
-							this.mapIntersectionTransitionIncomingPort.put(
-									incomingTransition, incomingPort);
-							/*
-							 * the port outcomingPort is out-coming for the
-							 * current level of refinement but is an incoming
-							 * port with respect to the
-							 * intersectionStateComponent
-							 */
-							subproperty.addIncomingPort(incomingPort);
-
-						}
-					}
-				}
-				/*
-				 * The transitions that exit a mixed state are potential
-				 * incoming transitions since they are potential transitions
-				 * that moves from the refinement of the transparent state to
-				 * the current level of abstraction
-				 */
-				for (Transition outcomingTransition : this.intersectionBA
-						.getOutTransitions(intersectionState)) {
-					State destinationIntersectionState = this.intersectionBA
-							.getTransitionDestination(outcomingTransition);
-
-					if (!outcomingTransition.getPropositions().equals(
-							stutteringPropositions)) {
-						if (this.intersectionBuilder
-								.getIntersectionTransitionsTransparentStatesMap()
-								.containsKey(outcomingTransition)) {
-
-							Transition newTransition = new ClaimTransitionFactory()
-									.create(outcomingTransition.getId(),
-											outcomingTransition
-													.getPropositions());
-
-							subproperty.getAutomaton()
-									.addTransition(intersectionState,
-											destinationIntersectionState,
-											newTransition);
-						}
-
-						else {
-
-							/*
-							 * the source state is an intersection state since I
-							 * leaved the previous level of the refinement to go
-							 * to the current one (exit the transparent)
-							 */
-							ColoredPort outcomingPort = new ColoredPort(
-									intersectionState,
-									this.intersectionBuilder
-											.getIntersectionStateModelStateMap()
-											.get(destinationIntersectionState),
-									outcomingTransition, false, Color.YELLOW);
-
-							this.mapIntersectionTransitionOutcomingPort.put(
-									outcomingTransition, outcomingPort);
-
-							subproperty.addOutComingPort(outcomingPort);
-						}
-
-					}
-				}
-			}
-		}
 	}
 
 	/**
 	 * creates the sub-properties related with the current refinement level
 	 */
 	private void createStates() {
-		for (State modelState : this.model.getTransparentStates()) {
 
-			logger.debug("Analizing the intersection state corresponding to the model state: "
-					+ modelState.getName());
+		/*
+		 * gets the intersectionState associated with the state of the model
+		 * modelState
+		 */
+		for (State intersectionState : this.checker.getIntersectionBuilder()
+				.getModelIntersectionStates(this.transparentState)) {
 
-			/*
-			 * creates a component which correspond with the state modelState
-			 */
-			BA ba = new BA(new ClaimTransitionFactory());
-			ba.addPropositions(intersectionBuilder.getClaim().getPropositions());
-			SubProperty subproperty = new SubProperty(modelState, ba,
-					new HashSet<ColoredPort>(), new HashSet<ColoredPort>());
-
-			this.modelModelStateSubProperty.put(modelState, subproperty);
-
-			this.subProperties.add(subproperty);
-
-			/*
-			 * gets the intersectionState associated with the state of the model
-			 * modelState
-			 */
-			for (State intersectionState : this.intersectionBuilder
-					.getAssociatedStates(modelState)) {
-
-				if (this.intersectionBA.getStates().contains(intersectionState)) {
-					this.mapIntersectionStateComponent.put(intersectionState,
-							subproperty);
-
-					subproperty.getAutomaton().addState(intersectionState);
-					if (this.intersectionBA.getInitialStates().contains(
-							intersectionState)) {
-						// add the component to the initial states of the
-						// abstracted
-						// automaton
-						subproperty.getAutomaton().addInitialState(
-								intersectionState);
-					}
-					if (this.intersectionBA.getAcceptStates().contains(
-							intersectionState)) {
-						// add the component to the accepting states of the
-						// abstracted automaton
-						subproperty.getAutomaton().addAcceptState(
-								intersectionState);
-					}
-				}
-
+			this.subProperty.getAutomaton().addState(intersectionState);
+			if (this.checker.getIntersectionBuilder()
+					.getIntersectionAutomaton().getInitialStates()
+					.contains(intersectionState)) {
+				// add the component to the initial states of the
+				// abstracted
+				// automaton
+				this.subProperty.getAutomaton().addInitialState(
+						intersectionState);
+			}
+			if (this.checker.getIntersectionBuilder()
+					.getIntersectionAutomaton().getAcceptStates()
+					.contains(intersectionState)) {
+				// add the component to the accepting states of the
+				// abstracted automaton
+				this.subProperty.getAutomaton().addAcceptState(
+						intersectionState);
 			}
 		}
 	}
 
 	/**
-	 * @return the mapIntersectionTransitionOutcomingPort
+	 * creates the transitions inside the current refinement
 	 */
-	public Map<Transition, ColoredPort> getMapIntersectionTransitionOutcomingPort() {
-		Preconditions
-				.checkState(
-						this.isPerformed(),
-						"The map of the outcoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
-		return mapIntersectionTransitionOutcomingPort;
+	private void createTransitions() {
+
+		for (State intersectionState : this.checker.getIntersectionBuilder()
+				.getModelIntersectionStates(this.transparentState)) {
+
+			/*
+			 * first the algorithm searches for out-coming transition. The
+			 * transition that reaches an intersection state associated with a
+			 * transparent state of the model are POTENTIAL out-coming
+			 * transitions since they leaves the current level of refinement,
+			 * i.e., they enter the refinement of the transparent state
+			 */
+			for (Transition incomingTransition : this.checker
+					.getIntersectionBuilder().getIntersectionAutomaton()
+					.getInTransitions(intersectionState)) {
+				State sourceIntersectionState = this.checker
+						.getIntersectionBuilder().getIntersectionAutomaton()
+						.getTransitionSource(incomingTransition);
+
+				if (!incomingTransition.getPropositions().equals(
+						stutteringPropositions)) {
+					if (this.checker.getIntersectionBuilder()
+							.getIntersectionTransitionsTransparentStatesMap()
+							.containsKey(incomingTransition)) {
+
+						Transition newTransition = new ClaimTransitionFactory()
+								.create(incomingTransition.getId(),
+										incomingTransition.getPropositions());
+						this.subProperty.getAutomaton().addTransition(
+								sourceIntersectionState, intersectionState,
+								newTransition);
+					}
+
+					else {
+
+						/*
+						 * the destination is an intersection state since I left
+						 * the current level of refinement to go to the
+						 * refinement, i.e., the intersection
+						 */
+						ColoredPort incomingPort = new ColoredPort(this.checker
+								.getIntersectionBuilder().getModelState(
+										sourceIntersectionState),
+								intersectionState, incomingTransition, true,
+								Color.YELLOW);
+
+						this.mapIntersectionTransitionIncomingPort.put(
+								incomingTransition, incomingPort);
+						/*
+						 * the port outcomingPort is out-coming for the current
+						 * level of refinement but is an incoming port with
+						 * respect to the intersectionStateComponent
+						 */
+						this.subProperty.addIncomingPort(incomingPort);
+
+					}
+				}
+			}
+			/*
+			 * The transitions that exit a mixed state are potential incoming
+			 * transitions since they are potential transitions that moves from
+			 * the refinement of the transparent state to the current level of
+			 * abstraction
+			 */
+			for (Transition outcomingTransition : this.checker
+					.getIntersectionBuilder().getIntersectionAutomaton()
+					.getOutTransitions(intersectionState)) {
+				State destinationIntersectionState = this.checker
+						.getIntersectionBuilder().getIntersectionAutomaton()
+						.getTransitionDestination(outcomingTransition);
+
+				if (!outcomingTransition.getPropositions().equals(
+						stutteringPropositions)) {
+					if (this.checker.getIntersectionBuilder()
+							.getIntersectionTransitionsTransparentStatesMap()
+							.containsKey(outcomingTransition)) {
+
+						Transition newTransition = new ClaimTransitionFactory()
+								.create(outcomingTransition.getId(),
+										outcomingTransition.getPropositions());
+
+						this.subProperty.getAutomaton().addTransition(
+								intersectionState,
+								destinationIntersectionState, newTransition);
+					}
+
+					else {
+
+						/*
+						 * the source state is an intersection state since I
+						 * leaved the previous level of the refinement to go to
+						 * the current one (exit the transparent)
+						 */
+						ColoredPort outcomingPort = new ColoredPort(
+								intersectionState, this.checker
+										.getIntersectionBuilder()
+										.getModelState(
+												destinationIntersectionState),
+								outcomingTransition, false, Color.YELLOW);
+
+						this.mapIntersectionTransitionOutcomingPort.put(
+								outcomingTransition, outcomingPort);
+
+						this.subProperty.addOutComingPort(outcomingPort);
+					}
+
+				}
+			}
+		}
 	}
 
 	/**
@@ -452,47 +411,19 @@ public class SubPropertiesIdentifier extends CHIAOperation {
 						this.isPerformed(),
 						"The map of the incoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
 
-		return mapIntersectionTransitionIncomingPort;
+		return Collections
+				.unmodifiableMap(mapIntersectionTransitionIncomingPort);
 	}
 
 	/**
-	 * returns the set of the incoming ports of the sub-properties
-	 * 
-	 * @return the set of the incoming ports of the sub-properties
+	 * @return the mapIntersectionTransitionOutcomingPort
 	 */
-	public Set<ColoredPort> inPorts() {
-		Preconditions
-				.checkState(
-						this.isPerformed(),
-						"The map of the incoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
-
-		return Collections.unmodifiableSet(new HashSet<ColoredPort>(
-				this.mapIntersectionTransitionIncomingPort.values()));
-	}
-
-	/**
-	 * returns the set of the out-coming ports of the sub-properties
-	 * 
-	 * @return the set of the out-coming ports of the sub-properties
-	 */
-	public Set<ColoredPort> outPorts() {
+	public Map<Transition, ColoredPort> getMapIntersectionTransitionOutcomingPort() {
 		Preconditions
 				.checkState(
 						this.isPerformed(),
 						"The map of the outcoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
-
-		return Collections.unmodifiableSet(new HashSet<ColoredPort>(
-				this.mapIntersectionTransitionOutcomingPort.values()));
-	}
-
-	/**
-	 * returns the intersection automaton used in the sub-property
-	 * identification
-	 * 
-	 * @return the intersection automaton used in the sub-property
-	 *         idenfification
-	 */
-	public IntersectionBA getIntersectionBA() {
-		return this.intersectionBA;
+		return Collections
+				.unmodifiableMap(mapIntersectionTransitionOutcomingPort);
 	}
 }
