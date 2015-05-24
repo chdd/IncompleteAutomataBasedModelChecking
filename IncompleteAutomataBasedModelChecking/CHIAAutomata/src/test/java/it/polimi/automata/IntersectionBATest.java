@@ -25,7 +25,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  * 
  */
-public class IntBAImplTest {
+public class IntersectionBATest {
 
 	@Mock
 	private State state1;

@@ -15,6 +15,7 @@ public class StateTest {
 	private State state1;
 	private State state2;
 	private State state3;
+	
 	private State state4;
 	private State state5;
 	private State state6;

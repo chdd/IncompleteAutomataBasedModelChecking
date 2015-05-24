@@ -90,7 +90,7 @@ public class BATest {
 		assertNotNull(ba.getPropositions());
 		assertTrue(ba.getInitialStates().isEmpty());
 		assertTrue(ba.getAcceptStates().isEmpty());
-		assertTrue(ba.getPropositions().isEmpty());
+		assertTrue(ba.getPropositions().size()==1);
 	}
 
 	/**

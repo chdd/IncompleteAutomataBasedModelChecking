@@ -78,8 +78,8 @@ public class ClaimTransitionFactoryImplTest {
 	@Test
 	public void testCreateIntSetOfLABEL() throws NoSuchFieldException,
 			SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = ClaimTransitionFactory.class
-				.getDeclaredField("transitionCount");
+		Field field = Transition.class
+				.getDeclaredField("transition_counter");
 		field.setAccessible(true);
 		field.set(claim, 0);
 		Transition t = this.claim.create(5, labels);
