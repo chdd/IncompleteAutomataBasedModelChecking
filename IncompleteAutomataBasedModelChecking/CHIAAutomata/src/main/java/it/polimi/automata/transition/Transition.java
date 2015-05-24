@@ -32,14 +32,14 @@ public class Transition extends DefaultEdge {
 	 * of the label is satisfied
 	 */
 	private final Set<IGraphProposition> labels;
-	
+
 	/**
 	 * contains the id of the last transition created
 	 */
-	protected static int transition_counter=0;
-	
-	public Transition(){
-		this.id=transition_counter;
+	protected static int transition_counter = 0;
+
+	public Transition() {
+		this.id = transition_counter;
 		transition_counter++;
 		this.labels = new HashSet<IGraphProposition>();
 	}
@@ -66,6 +66,10 @@ public class Transition extends DefaultEdge {
 		for (IGraphProposition l : labels) {
 			Preconditions.checkNotNull(l,
 					"No null labels can be added to the transition");
+			Preconditions
+					.checkArgument(
+							l.getLabel().matches("^[a-z]+|SIGMA$"),
+							"The label of the transition must be made by lower case character of the special string SIGMA, i.e., it must match the regular expression [a-z]+|SIGMA");
 			this.labels.add(l);
 		}
 	}
@@ -105,7 +109,8 @@ public class Transition extends DefaultEdge {
 			ret = ret + label.toString() + AutomataConstants.AND;
 		}
 		if (ret.endsWith(AutomataConstants.AND)) {
-			ret = ret.substring(0, ret.length() - AutomataConstants.AND.length());
+			ret = ret.substring(0,
+					ret.length() - AutomataConstants.AND.length());
 		}
 
 		return "{" + Integer.toString(this.id) + "} " + ret + "";
