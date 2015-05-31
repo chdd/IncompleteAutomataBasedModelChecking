@@ -8,8 +8,8 @@
 		<artifactId>CHIA</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>CHIAConstraints</artifactId>
-	<name>CHIAConstraints</name>
+	<artifactId>CHIAConstraint</artifactId>
+	<name>CHIAConstraint</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

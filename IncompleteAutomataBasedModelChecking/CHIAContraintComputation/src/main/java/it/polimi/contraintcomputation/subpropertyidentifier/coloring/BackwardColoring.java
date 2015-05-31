@@ -3,8 +3,8 @@ package it.polimi.contraintcomputation.subpropertyidentifier.coloring;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Color;
-import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
+import it.polimi.constraints.transitions.Color;
+import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertyIdentifier;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,7 +39,7 @@ public class BackwardColoring {
 	 * is the identifier which has been used to generate the sub-property of
 	 * interest
 	 */
-	private final SubPropertiesIdentifier subPropertyIntifier;
+	private final SubPropertyIdentifier subPropertyIntifier;
 
 	/**
 	 * contains the set of the visited states. It is used to has the already
@@ -66,7 +66,7 @@ public class BackwardColoring {
 	 *             the set of the states of the automaton
 	 */
 	public BackwardColoring(IntersectionBA intersectionAutomaton,
-			Set<State> states, Color color, SubPropertiesIdentifier subProperty) {
+			Set<State> states, Color color, SubPropertyIdentifier subProperty) {
 		Preconditions.checkNotNull(intersectionAutomaton,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(states,
@@ -75,7 +75,7 @@ public class BackwardColoring {
 				"The color to be considered cannot be null");
 		Preconditions
 				.checkArgument(
-						this.intersectionAutomaton.getStates().containsAll(
+						intersectionAutomaton.getStates().containsAll(
 								states),
 						"All the states to be considered must be contained into the set of the states of the automaton");
 
@@ -121,8 +121,8 @@ public class BackwardColoring {
 						.getTransitionDestination(t);
 				if (this.subPropertyIntifier.getSubProperty().getAutomaton()
 						.getStates().contains(successor)) {
-					if (!(this.subPropertyIntifier.getOutPort(t).getColor() == Color.RED)) {
-						this.subPropertyIntifier.getOutPort(t).setColor(color);
+					if (!(this.subPropertyIntifier.getOutgoingPort(t).getColor() == Color.RED)) {
+						this.subPropertyIntifier.getOutgoingPort(t).setColor(color);
 					}
 				} else {
 					if (!visitedStates.contains(s)) {

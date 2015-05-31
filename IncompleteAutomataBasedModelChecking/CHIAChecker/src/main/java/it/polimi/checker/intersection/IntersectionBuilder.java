@@ -23,7 +23,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicates;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
@@ -36,7 +35,7 @@ import com.google.common.collect.SetMultimap;
  */
 public class IntersectionBuilder extends CHIAAction {
 
-	private final static String NAME="COMPUTE INTERSECTION";
+	private final static String NAME = "COMPUTE INTERSECTION";
 	/**
 	 * contains the intersection automaton generated
 	 */
@@ -58,6 +57,7 @@ public class IntersectionBuilder extends CHIAAction {
 	 * corresponding model state
 	 */
 	private final Map<Transition, State> mapConstrainedTransitionModelTransparentState;
+	private final SetMultimap<State, Transition> mapTransparentStateConstrainedTransition;
 
 	/**
 	 * Keeps track of the created states. For each couple of state of the model
@@ -126,6 +126,7 @@ public class IntersectionBuilder extends CHIAAction {
 		this.modelStateintersectionStateMap = HashMultimap.create();
 		this.intersectionStateClaimStateMap = new HashMap<State, State>();
 		this.claimStateintersectionStateMap = HashMultimap.create();
+		this.mapTransparentStateConstrainedTransition = HashMultimap.create();
 		this.acceptingPolicy = acceptingPolicy;
 		this.acceptingPolicy.setClaim(claim);
 		this.acceptingPolicy.setModel(model);
@@ -162,10 +163,19 @@ public class IntersectionBuilder extends CHIAAction {
 									claimInit));
 				}
 			}
-			Multimaps.invertFrom(Multimaps.forMap(this.intersectionStateClaimStateMap),
+			Multimaps.invertFrom(
+					Multimaps.forMap(this.intersectionStateClaimStateMap),
 					this.claimStateintersectionStateMap);
-			Multimaps.invertFrom(Multimaps.forMap(this.intersectionStateModelStateMap),
+			Multimaps.invertFrom(
+					Multimaps.forMap(this.intersectionStateModelStateMap),
 					this.modelStateintersectionStateMap);
+
+			Multimaps
+					.invertFrom(
+							Multimaps
+									.forMap(this.mapConstrainedTransitionModelTransparentState),
+							this.mapTransparentStateConstrainedTransition);
+
 			this.performed();
 		}
 		return this.intersection;
@@ -377,14 +387,15 @@ public class IntersectionBuilder extends CHIAAction {
 				"The state " + intersectionState
 						+ " is not a state of the intersection automaton");
 
-		this.claimStateintersectionStateMap = Multimaps.filterValues(
-				this.claimStateintersectionStateMap,
-				Predicates.equalTo(intersectionState));
-		this.modelStateintersectionStateMap = Multimaps.filterValues(
-				this.modelStateintersectionStateMap,
-				Predicates.equalTo(intersectionState));
 		this.intersectionStateClaimStateMap.remove(intersectionState);
 		this.intersectionStateModelStateMap.remove(intersectionState);
+		Multimaps.invertFrom(
+				Multimaps.forMap(this.intersectionStateClaimStateMap),
+				this.claimStateintersectionStateMap);
+		Multimaps.invertFrom(
+				Multimaps.forMap(this.intersectionStateModelStateMap),
+				this.modelStateintersectionStateMap);
+
 		this.intersection.removeState(intersectionState);
 	}
 
@@ -410,6 +421,53 @@ public class IntersectionBuilder extends CHIAAction {
 	}
 
 	/**
+	 * returns the set of the states of the intersection automaton associated
+	 * with the specified state of the claim and of the model
+	 * 
+	 * @param claimState
+	 *            is the state of the claim that is considered
+	 * @param modelState
+	 *            is the state of the model that is considered
+	 * @return the set of the states of the intersection automaton associated
+	 *         with the state of the claim and of the model specified as
+	 *         parameter
+	 * @throws NullPointerException
+	 *             if one of the states is null
+	 * @throws IllegalArgumentException
+	 *             if the state of the claim is not contained into the claim or
+	 *             if the state of the model is not contained into the model
+	 */
+	public Set<State> getIntersectionStates(State claimState, State modelState) {
+		Preconditions.checkNotNull(claimState,
+				"The state of the claim cannot be null");
+		Preconditions.checkNotNull(modelState,
+				"The state of the model cannot be null");
+		Preconditions
+				.checkArgument(
+						this.claim.getStates().contains(claimState),
+						"The state "
+								+ claimState
+								+ " is not contained into the set of the states of the claim");
+		Preconditions
+				.checkArgument(
+						this.model.getStates().contains(modelState),
+						"The state "
+								+ modelState
+								+ " is not contained into the set of the states of the model");
+		if(!createdStates.containsKey(modelState)){
+			return new HashSet<State>();
+		}
+		else{
+			if(!createdStates.get(modelState).containsKey(claimState)){
+				return new HashSet<State>();
+			}
+			else{
+				return Collections.unmodifiableSet(new HashSet<State>(createdStates.get(modelState).get(claimState).values()));
+			}
+		}
+	}
+
+	/**
 	 * returns the set of the states of the intersection which are associated
 	 * with a specific state of the model
 	 * 
@@ -427,6 +485,7 @@ public class IntersectionBuilder extends CHIAAction {
 				"The intersection has still not be computed");
 		Preconditions
 				.checkNotNull(modelState, "The claim state cannot be null");
+
 		return this.modelStateintersectionStateMap.get(modelState);
 	}
 
@@ -484,8 +543,7 @@ public class IntersectionBuilder extends CHIAAction {
 
 		return this.claim;
 	}
-	
-	
+
 	/**
 	 * returns the intersection automaton
 	 * 
@@ -493,13 +551,40 @@ public class IntersectionBuilder extends CHIAAction {
 	 * @throws IllegalStateException
 	 *             if the intersection has still to be computed
 	 */
-	public IntersectionBA getIntersectionAutomaton(){
+	public IntersectionBA getIntersectionAutomaton() {
 		Preconditions
-		.checkState(
-				this.isPerformed(),
-				"it is necessary to compute the intersection before returning the intersection automaton");
+				.checkState(
+						this.isPerformed(),
+						"it is necessary to compute the intersection before returning the intersection automaton");
 		return this.intersection;
 
-		
+	}
+
+	/**
+	 * returns the set of constrained transitions associated with the
+	 * transparent state
+	 * 
+	 * @param transparentState
+	 *            is the transparent state of the model to be considered
+	 * @return the set of transition associated with the transparent state
+	 * @throws NullPointerException
+	 *             if the transparent state is null
+	 * @throws IllegalArgumentException
+	 *             if the transparent state is not a transparent state of the
+	 *             model
+	 */
+	public Set<Transition> getConstrainedTransitions(State transparentState) {
+		Preconditions.checkNotNull(transparentState,
+				"The transparent state to be considered cannot be null");
+		Preconditions.checkArgument(
+				this.model.getTransparentStates().contains(transparentState),
+				"The state " + transparentState + " is not transparent");
+		return this.mapTransparentStateConstrainedTransition
+				.get(transparentState);
+	}
+	
+	public AcceptingPolicy getAcceptingPolicy(){
+		return this.acceptingPolicy;
 	}
 }
+

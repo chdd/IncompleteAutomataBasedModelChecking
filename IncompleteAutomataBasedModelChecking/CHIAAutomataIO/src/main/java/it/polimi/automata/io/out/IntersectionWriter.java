@@ -1,11 +1,6 @@
 package it.polimi.automata.io.out;
 
-import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.io.out.states.IntBAStateToElementTransformer;
-import it.polimi.automata.io.out.transitions.IntBATransitionToElementTransformer;
-import it.polimi.automata.state.State;
-import it.polimi.automata.transition.Transition;
 
 import java.io.File;
 
@@ -82,12 +77,10 @@ public class IntersectionWriter extends CHIAAction{
 
 			// root elements
 			Document doc = docBuilder.newDocument();
-			Element intersectionAutomatonElement = doc.createElement(AutomataIOConstants.XML_ELEMENT_INTERSECTION);
+			Element intersectionAutomatonElement = new IntersectionToElementTransformer().transform(intersectionAutomaton);
 			doc.appendChild(intersectionAutomatonElement);
 
-			this.computingStateElements(doc, intersectionAutomatonElement, intersectionAutomaton);
-			this.computingTransitionElements(doc, intersectionAutomatonElement, intersectionAutomaton);
-
+			
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -106,28 +99,5 @@ public class IntersectionWriter extends CHIAAction{
 		}
 	}
 
-	private void computingStateElements(Document doc, Element intersectionAutomatonElement, IntersectionBA intersectionAutomaton) {
-		
-		Element statesElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_STATES);
-		intersectionAutomatonElement.appendChild(statesElement);
-		IntBAStateToElementTransformer stateTransformer = new IntBAStateToElementTransformer(
-				intersectionAutomaton, doc);
-		for (State s : intersectionAutomaton.getStates()) {
-			Element xmlStateElement = stateTransformer.transform(s);
-			statesElement.appendChild(xmlStateElement);
-
-		}
-	}
-
-	private void computingTransitionElements(Document doc, Element intersectionAutomatonElement, IntersectionBA intersectionAutomaton) {
-		Element transitionsElement=doc.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS);
-		intersectionAutomatonElement.appendChild(transitionsElement);
-		
-		IntBATransitionToElementTransformer transitionTransformer = new IntBATransitionToElementTransformer(
-				intersectionAutomaton, doc);
-		for (Transition transition : intersectionAutomaton.getTransitions()) {
-			Element transitionElement =transitionTransformer.transform(transition);
-			transitionsElement.appendChild(transitionElement);
-		}
-	}
+	
 }

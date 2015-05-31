@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.automata.state.State;
+import it.polimi.constraints.components.SubProperty;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
@@ -29,7 +30,11 @@ public class Constraint {
 	 * transparent state
 	 */
 	private final Set<SubProperty> subProperties;
-	
+
+	/**
+	 * is a map that specifies for each transparent state the corresponding
+	 * sub-property and viceversa
+	 */
 	private final BiMap<State, SubProperty> stateSubPropertyMap;
 
 	/**
@@ -40,7 +45,7 @@ public class Constraint {
 	 */
 	public Constraint() {
 		this.subProperties = new HashSet<SubProperty>();
-		this.stateSubPropertyMap=HashBiMap.create();
+		this.stateSubPropertyMap = HashBiMap.create();
 	}
 
 	/**
@@ -50,6 +55,26 @@ public class Constraint {
 	 */
 	public Set<SubProperty> getSubProperty() {
 		return Collections.unmodifiableSet(subProperties);
+	}
+
+	/**
+	 * returns the sub-property associated with the specified state
+	 * 
+	 * @param state
+	 *            the state of the model to which the sub-property is associated
+	 * @return the sub-property associated with the specified state of the model
+	 * @throws NullPointerException
+	 *             if the state is null
+	 * @throws IllegalArgumentException
+	 *             if the state is not associated with any sub-property
+	 */
+	public SubProperty getSubProperty(State state) {
+		Preconditions.checkNotNull(state,
+				"The state to be considered cannot be null");
+		Preconditions.checkArgument(
+				this.stateSubPropertyMap.containsKey(state),
+				"No sub-property associated with the state: " + state);
+		return this.stateSubPropertyMap.get(state);
 	}
 
 	/**
@@ -65,7 +90,10 @@ public class Constraint {
 	public void addSubProperty(SubProperty subProperty) {
 		Preconditions.checkNotNull(subProperty,
 				"The sub-Property to be considered cannot be null");
-		Preconditions.checkArgument(!this.stateSubPropertyMap.containsKey(subProperty.getModelState()), "A sub-property is already associated with the transparent state"+subProperty.getModelState());
+		Preconditions.checkArgument(!this.stateSubPropertyMap
+				.containsKey(subProperty.getModelState()),
+				"A sub-property is already associated with the transparent state"
+						+ subProperty.getModelState());
 		this.subProperties.add(subProperty);
 		this.stateSubPropertyMap.put(subProperty.getModelState(), subProperty);
 	}

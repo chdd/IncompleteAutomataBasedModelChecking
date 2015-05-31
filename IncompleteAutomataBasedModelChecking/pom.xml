@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.polimi.chia</groupId>
 	<artifactId>CHIA</artifactId>
@@ -19,15 +20,9 @@
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<pluginManagement>
 			<plugins>
-				<!-- <plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.3</version>
-					<configuration>
-						<descriptors>
-							<descriptor>src/assembly/bin.xml</descriptor>
-						</descriptors>
-					</configuration>
-				</plugin> -->
+				<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>2.5.3</version> 
+					<configuration> <descriptors> <descriptor>src/assembly/bin.xml</descriptor> 
+					</descriptors> </configuration> </plugin> -->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
@@ -127,7 +122,7 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.8.1</version>
 				<configuration>
-					<altDeploymentRepository>internal.repo::default::file://${user.dir}/target/mvn-‌​repo</altDeploymentRepository> 
+					<altDeploymentRepository>internal.repo::default::file://${user.dir}/target/mvn-‌​repo</altDeploymentRepository>
 					<!-- <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository> -->
 				</configuration>
 			</plugin>
@@ -189,18 +184,15 @@
 		</dependency>
 
 		<!-- is the library used for logging -->
-		 <dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.10</version>
 		</dependency>
 
 		<!-- slf4j 4j no operations -->
-	<!-- 	<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-nop</artifactId>
-			<version>1.7.10</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-nop</artifactId> 
+			<version>1.7.10</version> </dependency> -->
 
 		<!-- JGraph the library upon which CHIA is based -->
 		<dependency>
@@ -227,6 +219,11 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
 			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javabits.jgrapht</groupId>
+			<artifactId>jgrapht-core</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>jgraph</groupId>
@@ -264,13 +261,14 @@
 		<module>CHIAAutomataIO</module>
 		<module>CHIAChecker</module>
 		<!-- <module>CHIALTLIO</module> -->
-		<module>CHIAConstraints</module> 
+		<module>CHIAConstraint</module>
 		<!-- <module>CHIAVisualization</module> -->
-		 <module>CHIAContraintComputation</module> 
-		<module>CHIAFramework</module> 
-		<module>CHIARefinementChecker</module> 
-		<module>CHIAConstraintsIO</module> 
+		<module>CHIAContraintComputation</module>
+		<module>CHIAFramework</module>
+		<module>CHIARefinementChecker</module>
+		<module>CHIAConstraintIO</module>
 		<module>CHIARefinementConstraintComputation</module>
-    <module>CHIAScalabilityEvaluator</module>
-  </modules>
+		<module>CHIAScalabilityEvaluator</module>
+		<module>CHIAAction</module>
+	</modules>
 </project>

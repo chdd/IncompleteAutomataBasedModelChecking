@@ -53,7 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>it.polimi.chia</groupId>
-			<artifactId>CHIAConstraintsIO</artifactId>
+			<artifactId>CHIAConstraintIO</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -68,15 +68,10 @@
 		</dependency>
 		<dependency>
             <groupId>it.polimi.chia</groupId>
-            <artifactId>CHIARefinementChecker</artifactId>
+            <artifactId>CHIAReplacementChecker</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>it.polimi.chia</groupId>
-            <artifactId>CHIARefinementConstraintComputation</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-		
+     	
 		
 		
 		<!--<dependency> <groupId>it.polimi.chia</groupId> <artifactId>CHIAContraintComputation</artifactId> 

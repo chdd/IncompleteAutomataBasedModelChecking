@@ -4,6 +4,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.checker.Checker;
 import it.polimi.checker.ModelCheckingResults;
+import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.Constraint;
 import it.polimi.contraintcomputation.CHIAOperation;
@@ -93,10 +94,10 @@ public class CHIA extends CHIAOperation{
 	 *         satisfied in the model. -1 if the claim is possibly satisfied in
 	 *         the model
 	 */
-	public int check() {
+	public SatisfactionValue check() {
 		logger.info("Running CHIA");
 
-		modelChecker = new Checker(model, claim, acceptingPolicy, this.mcResults);
+		modelChecker = new Checker(model, claim, acceptingPolicy);
 		mcResults.setResult(modelChecker.check());
 
 		logger.info("CHIA model checking phase ended");
@@ -109,7 +110,8 @@ public class CHIA extends CHIAOperation{
 		}
 		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
 		constraintGenerator.generateConstraint();
-		return constraintGenerator.computePortReachability();
+		//return constraintGenerator.computePortReachability();
+		return null;
 	}
 	
 	public Constraint generateConstraintNoPortReachability(){

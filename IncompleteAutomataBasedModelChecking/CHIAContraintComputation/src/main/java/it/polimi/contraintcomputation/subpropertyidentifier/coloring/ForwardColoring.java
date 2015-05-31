@@ -3,8 +3,8 @@ package it.polimi.contraintcomputation.subpropertyidentifier.coloring;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
-import it.polimi.constraints.Color;
-import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
+import it.polimi.constraints.transitions.Color;
+import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertyIdentifier;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ public class ForwardColoring {
 	 */
 	private final Color color;
 
-	private final SubPropertiesIdentifier subProperty;
+	private final SubPropertyIdentifier subProperty;
 
 	private final Set<State> visitedStates;
 
@@ -58,7 +58,7 @@ public class ForwardColoring {
 	 *             the set of the states of the automaton
 	 */
 	public ForwardColoring(IntersectionBA intersectionAutomaton,
-			Set<State> states, Color color, SubPropertiesIdentifier subProperty) {
+			Set<State> states, Color color, SubPropertyIdentifier subProperty) {
 		Preconditions.checkNotNull(intersectionAutomaton,
 				"The intersection automaton cannot be null");
 		Preconditions.checkNotNull(states,
@@ -67,7 +67,7 @@ public class ForwardColoring {
 				"The color to be considered cannot be null");
 		Preconditions
 				.checkArgument(
-						this.intersectionAutomaton.getStates().containsAll(
+						intersectionAutomaton.getStates().containsAll(
 								states),
 						"All the states to be considered must be contained into the set of the states of the automaton");
 
@@ -110,11 +110,11 @@ public class ForwardColoring {
 				}
 			} else {
 				if(this.color==Color.GREEN){
-					subProperty.getInPort(outTransition).setColor(this.color);
+					subProperty.getIncomingPort(outTransition).setColor(this.color);
 				}
 				else{
-					if(subProperty.getInPort(outTransition).getColor()!=Color.GREEN){
-						subProperty.getInPort(outTransition).setColor(Color.YELLOW);
+					if(subProperty.getIncomingPort(outTransition).getColor()!=Color.GREEN){
+						subProperty.getIncomingPort(outTransition).setColor(Color.YELLOW);
 					}
 				}
 			}

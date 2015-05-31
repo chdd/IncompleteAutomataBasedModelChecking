@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
  */
 public class Checker extends CHIAAction {
 
-	private static final String NAME="CHECK";
+	private static final String NAME = "CHECK";
 	/**
 	 * is the logger of the ModelChecker class
 	 */
@@ -45,6 +45,8 @@ public class Checker extends CHIAAction {
 	private IntersectionBuilder intersectionBuilder;
 
 	private final AcceptingPolicy acceptingPolicy;
+	private SatisfactionValue satisfactionValue;
+
 	/**
 	 * creates a new {@link Checker}
 	 * 
@@ -53,7 +55,8 @@ public class Checker extends CHIAAction {
 	 * @param claim
 	 *            is the specification to be considered by the model checker
 	 * @param acceptingPolicy
-	 *            specifies the acceptingPolicy to be used in the intersection procedure
+	 *            specifies the acceptingPolicy to be used in the intersection
+	 *            procedure
 	 * @throws NullPointerException
 	 *             if the model, the specification or the model checking
 	 *             parameters are null
@@ -69,8 +72,9 @@ public class Checker extends CHIAAction {
 
 		this.claim = claim;
 		this.model = model;
-		this.acceptingPolicy=acceptingPolicy;
-		this.intersectionBuilder = new IntersectionBuilder(model, claim, acceptingPolicy);
+		this.acceptingPolicy = acceptingPolicy;
+		this.intersectionBuilder = new IntersectionBuilder(model, claim,
+				acceptingPolicy);
 	}
 
 	/**
@@ -83,34 +87,40 @@ public class Checker extends CHIAAction {
 	 *         satisfied, -1 if the property is satisfied with constraints.
 	 */
 	public SatisfactionValue check() {
-		logger.info("Checking procedure started");
-		
-		// COMPUTES THE INTERSECTION BETWEEN THE MODEL WITHOUT TRANSPARENT
-		// STATES AND THE CLAIM
-		boolean empty = this.checkEmptyIntersectionMc();
-		//long stopTime = System.nanoTime();
-		
-		// updates the time required to compute the intersection between the
-		// model without transparent states and the claim
-		if (!empty) {
+
+		if (!this.isPerformed()) {
+			logger.info("Checking procedure started");
+
+			// COMPUTES THE INTERSECTION BETWEEN THE MODEL WITHOUT TRANSPARENT
+			// STATES AND THE CLAIM
+			boolean empty = this.checkEmptyIntersectionMc();
+			// long stopTime = System.nanoTime();
+
+			// updates the time required to compute the intersection between the
+			// model without transparent states and the claim
+			if (!empty) {
+				this.performed();
+				logger.info("Checking procedure ended");
+				this.satisfactionValue=SatisfactionValue.NOTSATISFIED;
+				return SatisfactionValue.NOTSATISFIED;
+			}
+
+			// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE CLAIM
+			boolean emptyIntersection = this.checkEmptyIntersection();
 			this.performed();
-			logger.info("Checking procedure ended");
-			
-			return SatisfactionValue.NOTSATISFIED;
+			if (!emptyIntersection) {
+
+				logger.info("Checking procedure ended");
+				this.satisfactionValue=SatisfactionValue.POSSIBLYSATISFIED;
+				return SatisfactionValue.POSSIBLYSATISFIED;
+			} else {
+
+				logger.info("Checking procedure ended");
+				this.satisfactionValue=SatisfactionValue.SATISFIED;
+				return SatisfactionValue.SATISFIED;
+			}
 		}
-
-		// COMPUTES THE INTERSECTION BETWEEN THE MODEL AND THE CLAIM
-		boolean emptyIntersection = this.checkEmptyIntersection();
-		this.performed();
-		if (!emptyIntersection) {
-
-			logger.info("Checking procedure ended");
-			return SatisfactionValue.POSSIBLYSATISFIED;
-		} else {
-
-			logger.info("Checking procedure ended");
-			return SatisfactionValue.SATISFIED;
-		}
+		return this.satisfactionValue;
 	}
 
 	/**
@@ -126,9 +136,10 @@ public class Checker extends CHIAAction {
 		// removes the transparent states from the model
 		IBA mc = new IBATransparentStateRemoval()
 				.removeTransparentStates(model);
-		
+
 		// associating the intersectionBuilder
-		this.intersectionBuilder = new IntersectionBuilder(mc, claim, acceptingPolicy);
+		this.intersectionBuilder = new IntersectionBuilder(mc, claim,
+				acceptingPolicy);
 
 		// computing the intersection
 		IntersectionBA intersectionAutomaton = this.intersectionBuilder
@@ -148,7 +159,8 @@ public class Checker extends CHIAAction {
 	 */
 	private boolean checkEmptyIntersection() {
 
-		this.intersectionBuilder = new IntersectionBuilder(this.model, claim, acceptingPolicy);
+		this.intersectionBuilder = new IntersectionBuilder(this.model, claim,
+				acceptingPolicy);
 
 		// computing the intersection
 		IntersectionBA intersectionAutomaton = this.intersectionBuilder
@@ -156,9 +168,9 @@ public class Checker extends CHIAAction {
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
 
-	
 	/**
 	 * returns the intersection builder used by the model checker
+	 * 
 	 * @return the intersection builder used by the model checker
 	 */
 	public IntersectionBuilder getIntersectionBuilder() {

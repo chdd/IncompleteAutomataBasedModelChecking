@@ -57,6 +57,12 @@ public class IBAElementToTransitionTransformer  implements Transformer<Element, 
 		int destinationId = Integer
 				.parseInt(eElement
 						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_DESTINATION));
+		if(idStateMap.get(sourceId)==null){
+			throw new IllegalArgumentException("State with id "+sourceId+" not present in the automaton");
+		}
+		if(idStateMap.get(destinationId)==null){
+			throw new IllegalArgumentException("State with id "+destinationId+" not present in the automaton");
+		}
 		iba.addTransition(idStateMap.get(sourceId),
 				idStateMap.get(destinationId), t);
 		

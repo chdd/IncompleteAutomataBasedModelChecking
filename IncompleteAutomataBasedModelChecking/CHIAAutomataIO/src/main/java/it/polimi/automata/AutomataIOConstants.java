@@ -20,12 +20,24 @@ public final class AutomataIOConstants {
 	
 	public final static String XML_ELEMENT_PORT="port";
 	public final static String XML_ELEMENT_SUBPROPERTY="subproperty";
+	public final static String XML_ELEMENT_REPLACEMENT="replacement";
+	
 	public final static String XML_ELEMENT_REFINEMENT="refinement";
 	public final static String XML_ELEMENT_STATES="states";
+	
+	public final static String XML_LOWER_REACHABILITY="lowerReachability";
+	public final static String XML_UPPER_REACHABILITY="upperReachability";
+	
+	
+	
 	public final static String XML_ELEMENT_STATE="state";
 
 	public final static String XML_ELEMENT_TRANSITIONS="transitions";
 	public final static String XML_ELEMENT_TRANSITION="transition";
+	public final static String XML_ELEMENT_REACHABILITY="reachabilityElement";
+	public final static String XML_ELEMENT_REACHABILITIES="reachabilityElements";
+	
+	
 	public final static String XML_ATTRIBUTE_ID="id";
 	public final static String XML_ATTRIBUTE_PORT_SOURCE="source";
 	public final static String XML_ATTRIBUTE_PORT_DESTINATION="destination";
@@ -34,6 +46,7 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_COLOR="color";
 	
 	public final static String XML_ATTRIBUTE_MODEL_STATE_ID="modelstateId";
+	public final static String XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE="indispensable";
 	public final static String XML_ATTRIBUTE_INITIAL="initial";
 	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
 	public final static String XML_ATTRIBUTE_TRANSPARENT="transparent";
@@ -50,6 +63,11 @@ public final class AutomataIOConstants {
 	public final static String XML_ELEMENT_INTERSECTION="intersection";
 	public final static String XML_ELEMENT_BA="ba";
 	public final static String XML_ELEMENT_IBA="iba";
+	
+	public final static String XML_ELEMENT_REACHABILITY_ELEMENT="reachabilityElement";
+	public final static String XML_ELEMENT_REACHABILITY_ELEMENT_SOURCE="source";
+	public final static String XML_ELEMENT_REACHABILITY_ELEMENT_DESTINATION="destination";
+	
 	
 	
 	/**

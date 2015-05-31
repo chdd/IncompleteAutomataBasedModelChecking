@@ -123,4 +123,8 @@ public class State {
 			return false;
 		return true;
 	}
+	
+	public State clone(){
+		return new State(this.name, this.id);
+	}
 }

@@ -92,7 +92,7 @@ public class BA {
 	 * @return the set of the states of the Buchi automaton
 	 */
 	public Set<State> getStates() {
-		return this.automataGraph.vertexSet();
+		return Collections.unmodifiableSet(this.automataGraph.vertexSet());
 	}
 
 	/**
@@ -151,7 +151,8 @@ public class BA {
 		if (this.automataGraph.outgoingEdgesOf(state) == null) {
 			return Collections.unmodifiableSet(new HashSet<Transition>());
 		}
-		return Collections.unmodifiableSet(this.automataGraph.outgoingEdgesOf(state));
+		return Collections.unmodifiableSet(this.automataGraph
+				.outgoingEdgesOf(state));
 	}
 
 	/**
@@ -485,8 +486,11 @@ public class BA {
 			}
 		}
 		Preconditions
-				.checkArgument(this.getStates().contains(source),
-						"The source state is not contained into the set of the states of the automaton");
+				.checkArgument(
+						this.getStates().contains(source),
+						"The source state "
+								+ source
+								+ " is not contained into the set of the states of the automaton");
 		Preconditions
 				.checkArgument(
 						this.getStates().contains(destination),
@@ -768,5 +772,16 @@ public class BA {
 	public DirectedGraph<State, Transition> getGraph() {
 		return new UnmodifiableDirectedGraph<State, Transition>(
 				this.automataGraph);
+	}
+
+	/**
+	 * returns the size of the automaton: the number of transitions plus the
+	 * number of the states
+	 * 
+	 * @return the size of the automaton which corresponds to the sum of the
+	 *         number of transitions and states of the automaton
+	 */
+	public int size() {
+		return this.automataGraph.vertexSet().size()+this.automataGraph.edgeSet().size();
 	}
 }

@@ -7,6 +7,7 @@ import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.contraintcomputation.CHIAOperation;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,49 +79,53 @@ public class IntersectionCleaner extends CHIAOperation {
 
 		logger.info("Starting the cleaning phase");
 
-
 		this.removeNoSuccessorStates();
+
 		/*
 		 * contains the set of the visited states
 		 */
-		StrongConnectivityInspector<State, Transition> connectivityInspector=new StrongConnectivityInspector<State, Transition>(this.intersectionAutomaton.getGraph());
-		List<Set<State>> connectedSets=connectivityInspector.stronglyConnectedSets();
-		
+		StrongConnectivityInspector<State, Transition> connectivityInspector = new StrongConnectivityInspector<State, Transition>(
+				this.intersectionAutomaton.getGraph());
+		List<Set<State>> connectedSets = connectivityInspector
+				.stronglyConnectedSets();
+
 		/*
 		 * contains the set of the states that has been encountered by
 		 * <i>some<i> invocation of the first DFS
 		 */
-		Set<State> reachableStates = new HashSet<State>();
-
-		Set<State> visitedStates = new HashSet<State>();
-	
-		Set<State> toBeVisited = new HashSet<State>();
-		
-		for(Set<State> scc:connectedSets){
-			for(State s: this.intersectionAutomaton.getAcceptStates()){
-				if(scc.contains(s)){
-					toBeVisited.add(s);
+		Set<State> next = new HashSet<State>();
+		for (Set<State> scc : connectedSets) {
+			if (!Collections.disjoint(scc,
+					this.intersectionAutomaton.getAcceptStates())) {
+				if(scc.size()>1){
+					next.addAll(scc);
+				}
+				else{
+					State scState=scc.iterator().next();
+					if(this.intersectionAutomaton.getSuccessors(scState).contains(scState)){
+						next.add(scState);
+					}
 				}
 			}
 		}
-		while (!toBeVisited.isEmpty()) {
+		
+		Set<State> visited = new HashSet<State>();
+		while (!next.isEmpty()) {
 
-			State currentState = toBeVisited.iterator().next();
-			if (!visitedStates.contains(currentState)) {
-				toBeVisited.addAll(this.intersectionAutomaton
-						.getPredecessors(currentState));
-				reachableStates.addAll(this.intersectionAutomaton
-						.getPredecessors(currentState));
-
-				visitedStates.add(currentState);
-			}
-			toBeVisited.remove(currentState);
+			State currentState = next.iterator().next();
+			visited.add(currentState);
+			next.remove(currentState);
+			
+			Set<State> potentialNext=new HashSet<State>(this.intersectionAutomaton
+					.getPredecessors(currentState));
+			potentialNext.removeAll(visited);
+			next.addAll(potentialNext);
 		}
 
 		Set<State> toBeRemoved = new HashSet<State>(
 				this.intersectionAutomaton.getStates());
-		toBeRemoved.removeAll(reachableStates);
-		
+		toBeRemoved.removeAll(visited);
+
 		// removing the non reachable states
 		for (State s : toBeRemoved) {
 			this.intersectionBuilder.removeIntersectionState(s);
@@ -130,23 +135,26 @@ public class IntersectionCleaner extends CHIAOperation {
 				+ " states");
 		this.setPerformed(true);
 	}
-	
+
 	/**
-	 * removes the nodes with no successors. The node with no successors cannot not involved from definition into
-	 * infinite paths
+	 * removes the nodes with no successors. The node with no successors cannot
+	 * not involved from definition into infinite paths
 	 * 
-	 * @param automata the automata from which the state with no successors must be removed
+	 * @param automata
+	 *            the automata from which the state with no successors must be
+	 *            removed
 	 */
-	private void removeNoSuccessorStates(){
-		
-		DirectedGraph<State, Transition> g=this.intersectionAutomaton.getGraph();
-		Set<State> toBeRemoved=new HashSet<State>();
-		for(State s: g.vertexSet()){
-			if(g.outDegreeOf(s)==0){
+	private void removeNoSuccessorStates() {
+
+		DirectedGraph<State, Transition> g = this.intersectionAutomaton
+				.getGraph();
+		Set<State> toBeRemoved = new HashSet<State>();
+		for (State s : g.vertexSet()) {
+			if (g.outDegreeOf(s) == 0) {
 				toBeRemoved.add(s);
 			}
 		}
-		for(State s: toBeRemoved){
+		for (State s : toBeRemoved) {
 			this.intersectionAutomaton.removeState(s);
 		}
 	}

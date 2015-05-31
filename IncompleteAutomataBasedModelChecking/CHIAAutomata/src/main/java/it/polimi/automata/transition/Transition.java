@@ -55,6 +55,11 @@ public class Transition extends DefaultEdge {
 	 *             if the id is less than zero
 	 * @throws NullPointerException
 	 *             if the set of labels or one of the label to be added is null
+	 * @throws NullPointerException
+	 *             if one of the label to be added is null
+	 * @throws IllegalArgumentException
+	 *             if one of the label is not made by lower case character or
+	 *             the especial proposition SIGMA
 	 */
 	protected Transition(Set<IGraphProposition> labels, int id) {
 		Preconditions.checkNotNull(labels,
@@ -64,15 +69,11 @@ public class Transition extends DefaultEdge {
 		this.id = id;
 		this.labels = new HashSet<IGraphProposition>();
 		for (IGraphProposition l : labels) {
-			Preconditions.checkNotNull(l,
-					"No null labels can be added to the transition");
-			Preconditions
-					.checkArgument(
-							l.getLabel().matches("^[a-z]+|SIGMA$"),
-							"The label of the transition must be made by lower case character of the special string SIGMA, i.e., it must match the regular expression [a-z]+|SIGMA");
 			this.labels.add(l);
 		}
 	}
+
+	
 
 	/**
 	 * <p>

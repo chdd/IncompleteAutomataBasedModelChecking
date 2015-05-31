@@ -6,7 +6,7 @@
 		<artifactId>CHIA</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>CHIARefinementChecker</artifactId>
+	<artifactId>CHIAReplacementChecker</artifactId>
 	<name>CHIARefinementChecker</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>it.polimi.chia</groupId>
-			<artifactId>CHIAConstraints</artifactId>
+			<artifactId>CHIAConstraint</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

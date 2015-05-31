@@ -1,27 +1,36 @@
 package it.polimi.contraintcomputation;
 
+import it.polimi.automata.IBA;
+import it.polimi.automata.state.State;
 import it.polimi.checker.Checker;
-import it.polimi.checker.ModelCheckingResults;
-import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.checker.SatisfactionValue;
 import it.polimi.constraints.Constraint;
-import it.polimi.contraintcomputation.portreachability.PortReachability;
+import it.polimi.constraints.components.SubProperty;
+import it.polimi.contraintcomputation.portreachability.ReachabilityIdentifier;
 import it.polimi.contraintcomputation.subpropertyidentifier.IntersectionCleaner;
-import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertiesIdentifier;
+import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertyIdentifier;
 import it.polimi.contraintcomputation.subpropertyidentifier.coloring.Coloring;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import action.CHIAAction;
+
 import com.google.common.base.Preconditions;
 
 /**
- * The constraint generator computes a constraint. A constraint is a (set of)
- * sub-model(s) for the unspecified components is produce
+ * The constraint generator computes a constraint. A constraint specifies the
+ * behavior the replacement of the transparent state must satisfy
  * 
  * @author claudiomenghi
  * 
  */
-public class ConstraintGenerator {
+public class ConstraintGenerator extends CHIAAction {
+
+	private final static String NAME = "CONSTRAINT GENERATION";
 
 	/**
 	 * is the logger of the ConstraintGenerator class
@@ -29,24 +38,15 @@ public class ConstraintGenerator {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ConstraintGenerator.class);
 
+	private final Checker checker;
 
-
-	/**
-	 * is updated with the Model checking results, which stores the verification
-	 * results and the time required from the different verification steps
-	 */
-	private final ModelCheckingResults mcResults;
-
-	/**
-	 * is the intersection Builder. The intersection Builder is used by the
-	 * Constraint generation class to analyze the relation between the
-	 * intersection state and the states of the model, i.e., given a specific
-	 * state of the model to have the corresponding state of the intersection
-	 * automaton and vice-versa
-	 */
-	private final IntersectionBuilder intersectionBuilder;
-	private SubPropertiesIdentifier subPropertiesIdentifier;
 	private final Constraint constraint;
+
+	/**
+	 * is a map that contains for each subproperty the subpropertyIdentifier
+	 * using to compute the sub-property
+	 */
+	private final Map<SubProperty, SubPropertyIdentifier> subpropetySubPropertyIdentifierMap;
 
 	/**
 	 * creates a new ConstraintGenerator object which starting from the
@@ -63,15 +63,18 @@ public class ConstraintGenerator {
 	 *             generation
 	 */
 	public ConstraintGenerator(Checker checker) {
+		super(NAME);
+		Preconditions.checkNotNull(checker, "The model checker cannot be null");
 		Preconditions
-				.checkState(checker.getVerificationResults().getResult() == -1,
+				.checkState(
+						checker.check() == SatisfactionValue.POSSIBLYSATISFIED,
 						"You can perform the constraint generation iff the claim is possibly satisfied");
 
 		Preconditions.checkNotNull(checker,
 				"The intersection builder cannot be null");
-		this.intersectionBuilder = checker.getIntersectionBuilder();
-		this.mcResults = checker.getVerificationResults();
+		this.checker = checker;
 		this.constraint = new Constraint();
+		this.subpropetySubPropertyIdentifierMap = new HashMap<SubProperty, SubPropertyIdentifier>();
 	}
 
 	/**
@@ -88,9 +91,34 @@ public class ConstraintGenerator {
 		 * useful in the constraint computation
 		 */
 		IntersectionCleaner intersectionCleaner = new IntersectionCleaner(
-				intersectionBuilder);
+				this.checker.getIntersectionBuilder());
 		intersectionCleaner.clean();
 
+		for (State transparentState : this.checker.getIntersectionBuilder()
+				.getModel().getTransparentStates()) {
+
+			constraint.addSubProperty(this
+					.generateSubProperty(transparentState));
+
+		}
+
+		logger.info("Constraint computed");
+		return constraint;
+
+	}
+
+	/**
+	 * returns the sub-property associated with the specific transparent state
+	 * 
+	 * @param transparentState
+	 *            the transparent state to be considered
+	 * @return the sub-property associated with the transparent state
+	 * @throws NullPointerException
+	 *             if the transparent state is null
+	 */
+	private SubProperty generateSubProperty(State transparentState) {
+		Preconditions.checkNotNull(transparentState,
+				"The transparent state to be considered cannot be null");
 		/*
 		 * extract the sub-properties from the intersection automaton. It
 		 * identifies the portions of the state space (the set of the mixed
@@ -99,31 +127,61 @@ public class ConstraintGenerator {
 		 * ports, i.e., the set of the transition that connect the sub-property
 		 * to the original model.
 		 */
-		subPropertiesIdentifier = new SubPropertiesIdentifier(
-				intersectionBuilder, this.mcResults);
-		constraint.addSubProperties(subPropertiesIdentifier.getSubProperties());
-		
-		Coloring coloring=new Coloring(subPropertiesIdentifier);
-		coloring.startColoring();
-		logger.info("Constraint computed");
-		return constraint;
-		
+		SubPropertyIdentifier subPropertiesIdentifier = new SubPropertyIdentifier(
+				this.checker, transparentState);
+		SubProperty subProperty = subPropertiesIdentifier.getSubProperty();
+		this.subpropetySubPropertyIdentifierMap.put(subProperty,
+				subPropertiesIdentifier);
+		return subProperty;
 	}
-	
+
+	public void coloring() {
+
+		for (java.util.Map.Entry<SubProperty, SubPropertyIdentifier> entry : this.subpropetySubPropertyIdentifierMap
+				.entrySet()) {
+			Coloring coloring = new Coloring(entry.getValue());
+			coloring.startColoring();
+		}
+	}
+
 	/**
-	 * computes the reachability between the ports, i.e., it updates the reachability relation between the 
-	 * ports and updates the corresponding colors
+	 * computes the reachability between the ports, i.e., it updates the
+	 * reachability relation between the ports and updates the corresponding
+	 * colors
 	 * 
 	 * @return the constraints where the color of the ports have been updated
 	 */
-	public Constraint computePortReachability(){
+	public Constraint computePortReachability() {
 		logger.info("Udating the Port reachability relation");
-		PortReachability reachability = new PortReachability(constraint,
-				intersectionBuilder, subPropertiesIdentifier);
-		reachability.computeReachability();
+		
+		for(Map.Entry<SubProperty, SubPropertyIdentifier> e: subpropetySubPropertyIdentifierMap.entrySet()){
+			ReachabilityIdentifier reachability = new ReachabilityIdentifier(this.checker.getIntersectionBuilder(),
+					e.getValue());
+			reachability.computeReachability();
 
+		}
+		
 		logger.info("Port reachability relation updated");
 		return constraint;
+
+	}
+	public void computeIndispensable(){
+		for (java.util.Map.Entry<SubProperty, SubPropertyIdentifier> entry : this.subpropetySubPropertyIdentifierMap
+				.entrySet()) {
+			State modelState=entry.getKey().getModelState();
+			IBA model=checker.getIntersectionBuilder().getModel().clone();
+			model.removeState(modelState);
+			SatisfactionValue value=new Checker(model, checker.getIntersectionBuilder().getClaim(), checker.getIntersectionBuilder().getAcceptingPolicy()).check();
+			if(value==SatisfactionValue.NOTSATISFIED){
+				throw new InternalError("It is not possible that removing a transparent state of the model makes the property not satisfied");
+			}
+			if(value==SatisfactionValue.POSSIBLYSATISFIED){
+				entry.getKey().setIndispensable(false);
+			}
+			if(value==SatisfactionValue.SATISFIED){
+				entry.getKey().setIndispensable(true);
+			}
+		}
 		
 	}
 }

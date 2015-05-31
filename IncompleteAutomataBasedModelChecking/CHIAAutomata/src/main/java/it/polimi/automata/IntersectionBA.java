@@ -126,7 +126,7 @@ public class IntersectionBA extends BA {
 		}
 	}
 
-	public Set<State> getRegularStates() {
+	public Set<State> getPurelyRegularStates() {
 		Set<State> regularStates = new HashSet<State>();
 		regularStates.addAll(this.getStates());
 		regularStates.removeAll(this.getMixedStates());
@@ -179,12 +179,10 @@ public class IntersectionBA extends BA {
 	 * @return an abstraction of the intersection automaton that contains only
 	 *         the purely regular states and the transitions between them
 	 */
-	public IntersectionBA getPurelyRegularStateAbstraction() {
+	public IntersectionBA getAbstraction(Set<State> abstractionStates) {
 		IntersectionBA ret=new IntersectionBA();
 		
 		ret.addPropositions(this.getPropositions());
-		Set<State> abstractionStates=new HashSet<State>(this.getStates());
-		abstractionStates.removeAll(this.getMixedStates());
 		for(State s: abstractionStates){
 			ret.addState(s);
 			if(this.getAcceptStates().contains(s)){
