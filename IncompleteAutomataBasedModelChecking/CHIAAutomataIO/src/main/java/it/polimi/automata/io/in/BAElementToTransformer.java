@@ -27,7 +27,7 @@ public class BAElementToTransformer implements Transformer<Element, BA>  {
 	/**
 	 * contains a map that connects the id with the corresponding state
 	 */
-	private  Map<Integer, State> mapIdState;
+	protected  Map<Integer, State> mapIdState;
 	
 	public BAElementToTransformer(){
 		this.mapIdState=new HashMap<Integer, State>();

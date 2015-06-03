@@ -30,7 +30,7 @@ public class IBAElementToTransformer implements Transformer<Element, IBA>  {
 	/**
 	 * contains a map that connects the id with the corresponding state
 	 */
-	private  Map<Integer, State> mapIdState;
+	protected  Map<Integer, State> mapIdState;
 
 	
 	public IBAElementToTransformer(){
