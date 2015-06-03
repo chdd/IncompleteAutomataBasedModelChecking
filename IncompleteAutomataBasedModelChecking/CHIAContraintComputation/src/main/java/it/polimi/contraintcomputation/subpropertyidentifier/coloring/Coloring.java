@@ -46,7 +46,7 @@ public class Coloring {
 	public void startColoring() {
 
 		IntersectionBA intersectionAutomaton = this.subPropertyIdentifier
-				.getChecker().getIntersectionBuilder()
+				.getChecker().getUpperIntersectionBuilder()
 				.getIntersectionAutomaton();
 
 		Set<State> initialStates = new HashSet<State>(

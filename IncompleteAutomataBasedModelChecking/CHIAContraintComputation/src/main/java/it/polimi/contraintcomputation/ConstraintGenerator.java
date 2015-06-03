@@ -91,10 +91,10 @@ public class ConstraintGenerator extends CHIAAction {
 		 * useful in the constraint computation
 		 */
 		IntersectionCleaner intersectionCleaner = new IntersectionCleaner(
-				this.checker.getIntersectionBuilder());
+				this.checker.getUpperIntersectionBuilder());
 		intersectionCleaner.clean();
 
-		for (State transparentState : this.checker.getIntersectionBuilder()
+		for (State transparentState : this.checker.getUpperIntersectionBuilder()
 				.getModel().getTransparentStates()) {
 
 			constraint.addSubProperty(this
@@ -155,7 +155,7 @@ public class ConstraintGenerator extends CHIAAction {
 		logger.info("Udating the Port reachability relation");
 		
 		for(Map.Entry<SubProperty, SubPropertyIdentifier> e: subpropetySubPropertyIdentifierMap.entrySet()){
-			ReachabilityIdentifier reachability = new ReachabilityIdentifier(this.checker.getIntersectionBuilder(),
+			ReachabilityIdentifier reachability = new ReachabilityIdentifier(this.checker.getUpperIntersectionBuilder(),
 					e.getValue());
 			reachability.computeReachability();
 
@@ -169,9 +169,9 @@ public class ConstraintGenerator extends CHIAAction {
 		for (java.util.Map.Entry<SubProperty, SubPropertyIdentifier> entry : this.subpropetySubPropertyIdentifierMap
 				.entrySet()) {
 			State modelState=entry.getKey().getModelState();
-			IBA model=checker.getIntersectionBuilder().getModel().clone();
+			IBA model=checker.getUpperIntersectionBuilder().getModel().clone();
 			model.removeState(modelState);
-			SatisfactionValue value=new Checker(model, checker.getIntersectionBuilder().getClaim(), checker.getIntersectionBuilder().getAcceptingPolicy()).check();
+			SatisfactionValue value=new Checker(model, checker.getUpperIntersectionBuilder().getClaim(), checker.getUpperIntersectionBuilder().getAcceptingPolicy()).check();
 			if(value==SatisfactionValue.NOTSATISFIED){
 				throw new InternalError("It is not possible that removing a transparent state of the model makes the property not satisfied");
 			}

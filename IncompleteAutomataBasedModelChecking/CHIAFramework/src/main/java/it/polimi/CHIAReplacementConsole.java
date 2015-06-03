@@ -116,7 +116,7 @@ public class CHIAReplacementConsole {
 			long endTime = System.currentTimeMillis();
 			logger.info("Verification result: "+result.toString());
 			logger.info("Verification time: "+Long.toString(endTime-startTime)+" ms");
-			logger.info("Dimension of the intersection automaton (states+transitions): "+this.replacementChecker.getIntersectionBA().size());
+			logger.info("Dimension of the intersection automaton (states+transitions): "+(this.replacementChecker.getUpperIntersectionBA().size()+this.replacementChecker.getLowerIntersectionBA().size()));
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -154,7 +154,7 @@ public class CHIAReplacementConsole {
 			this.chiaState = chiaState
 					.perform(IntersectionToStringTransformer.class);
 			IntersectionToStringTransformer action = new IntersectionToStringTransformer();
-			logger.info(action.toString(this.replacementChecker.getIntersectionBA()));
+			logger.info(action.toString(this.replacementChecker.getUpperIntersectionBA()));
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}

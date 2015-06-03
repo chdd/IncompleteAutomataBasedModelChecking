@@ -61,7 +61,9 @@ public class ReplacementChecker extends CHIAAction {
 
 	private final AcceptingPolicy acceptingPolicy;
 
-	private IntersectionBA intersectionBA;
+	private IntersectionBA upperIntersectionBA;
+
+	private IntersectionBA lowerIntersectionBA;
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -121,6 +123,7 @@ public class ReplacementChecker extends CHIAAction {
 			this.performed();
 			return SatisfactionValue.POSSIBLYSATISFIED;
 		}
+
 		this.performed();
 		return SatisfactionValue.SATISFIED;
 	}
@@ -129,12 +132,10 @@ public class ReplacementChecker extends CHIAAction {
 		BA claim = subproperty.getAutomaton().clone();
 		IBA model = this.replacement.getAutomaton().clone();
 
-		Set<State> modelInitialStates = model.getInitialStates();
 		Set<State> additionalInitStatesModel = this
-				.getAdditionalModelInitialStates();
-		Set<State> claimInitialStates = claim.getInitialStates();
+				.getAdditionalModelInitialStates(model);
 		Set<State> additionalInitStatesClaim = this
-				.getAdditionalClaimGreenInitialStates();
+				.getAdditionalClaimGreenInitialStates(claim);
 
 		for (State s : additionalInitStatesModel) {
 			model.addInitialState(s);
@@ -147,10 +148,15 @@ public class ReplacementChecker extends CHIAAction {
 
 		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
 				model, claim, this.acceptingPolicy);
-		this.intersectionBA = intersectionBuilder.computeIntersection();
+		this.lowerIntersectionBA = intersectionBuilder.computeIntersection();
 
 		TransitionFactory<State, Transition> transitionFactory = new ClaimTransitionFactory();
 		StateFactory stateFactory = new StateFactory();
+
+		State greenState = stateFactory.create("GREEN");
+		intersectionBuilder.getIntersectionAutomaton().addState(greenState);
+		intersectionBuilder.getIntersectionAutomaton().addInitialState(
+				greenState);
 
 		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
 				.getIncomingPorts()) {
@@ -174,19 +180,22 @@ public class ReplacementChecker extends CHIAAction {
 										initTransitionReplacement
 												.getDestination());
 						for (State initialState : initntersectionStates) {
-							State greenState = stateFactory.create("GREEN");
-							intersectionBuilder.getIntersectionAutomaton()
-									.addState(greenState);
-							intersectionBuilder.getIntersectionAutomaton()
-									.addInitialState(greenState);
-							intersectionBuilder.getIntersectionAutomaton()
-									.addTransition(greenState, initialState,
-											transitionFactory.create());
+							if (!intersectionBuilder.getIntersectionAutomaton()
+									.isPredecessor(greenState, initialState)) {
+								intersectionBuilder.getIntersectionAutomaton()
+										.addTransition(greenState,
+												initialState,
+												transitionFactory.create());
+							}
 						}
 					}
 				}
 			}
 		}
+		State redState = stateFactory.create("RED");
+		intersectionBuilder.getIntersectionAutomaton().addAcceptState(redState);
+		intersectionBuilder.getIntersectionAutomaton().addTransition(redState,
+				redState, transitionFactory.create());
 		for (ColoredPluggingTransition outTransitionSubProperty : this.subproperty
 				.getOutcomingPorts()) {
 			if (outTransitionSubProperty.getColor() == Color.RED) {
@@ -204,17 +213,12 @@ public class ReplacementChecker extends CHIAAction {
 										outTransitionSubProperty.getSource(),
 										outTransitionReplacement.getSource());
 						for (State outState : outIntersectionStates) {
-							intersectionBuilder.getIntersectionAutomaton()
-									.addAcceptState(outState);
-							State redState = stateFactory.create("RED");
-							intersectionBuilder.getIntersectionAutomaton()
-									.addAcceptState(redState);
-							intersectionBuilder.getIntersectionAutomaton()
-									.addTransition(outState, redState,
-											transitionFactory.create());
-							intersectionBuilder.getIntersectionAutomaton()
-									.addTransition(redState, redState,
-											transitionFactory.create());
+							if (!intersectionBuilder.getIntersectionAutomaton()
+									.isPredecessor(outState, redState)) {
+								intersectionBuilder.getIntersectionAutomaton()
+										.addTransition(outState, redState,
+												transitionFactory.create());
+							}
 						}
 					}
 				}
@@ -223,29 +227,48 @@ public class ReplacementChecker extends CHIAAction {
 
 		for (Entry<ColoredPluggingTransition, ColoredPluggingTransition> reachabilityEntry : this.subproperty
 				.getLowerReachabilityRelation().getMap().entries()) {
-			Set<State> sourceStates = intersectionBuilder
-					.getClaimIntersectionStates(reachabilityEntry.getKey()
-							.getSource());
-			Set<State> destinationStates = intersectionBuilder
-					.getClaimIntersectionStates(reachabilityEntry.getValue()
-							.getSource());
+
+			Set<State> sourceStates = new HashSet<State>();
+			for (PluggingTransition outgoingTransition : this.replacement
+					.getOutcomingPorts()) {
+				if (this.isOutgoingEqual(outgoingTransition,
+						reachabilityEntry.getKey())) {
+					sourceStates.addAll(intersectionBuilder
+							.getIntersectionStates(reachabilityEntry.getKey()
+									.getSource(), outgoingTransition
+									.getSource()));
+				}
+			}
+			Set<State> destinationStates = new HashSet<State>();
+
+			for (PluggingTransition incomingTransition : this.replacement
+					.getIncomingPorts()) {
+				if (this.isIncomingEqual(incomingTransition,
+						reachabilityEntry.getValue())) {
+					destinationStates.addAll(intersectionBuilder
+							.getIntersectionStates(reachabilityEntry.getValue()
+									.getDestination(), incomingTransition
+									.getDestination()));
+				}
+			}
 			for (State sourceState : sourceStates) {
 				for (State destinationState : destinationStates) {
-					intersectionBuilder.getIntersectionAutomaton()
-							.addTransition(sourceState, destinationState,
-									transitionFactory.create());
+					if (!intersectionBuilder.getIntersectionAutomaton()
+							.isSuccessor(sourceState, destinationState)) {
+						intersectionBuilder.getIntersectionAutomaton()
+								.addTransition(sourceState, destinationState,
+										transitionFactory.create());
+					}
 				}
 			}
 		}
-		additionalInitStatesModel.removeAll(modelInitialStates);
-		additionalInitStatesClaim.removeAll(claimInitialStates);
 		for (State modelInit : additionalInitStatesModel) {
 			for (State claimInit : additionalInitStatesClaim) {
 				for (State intInit : intersectionBuilder.getIntersectionStates(
 						claimInit, modelInit)) {
-					if (this.intersectionBA.getInitialStates()
-							.contains(intInit)) {
-						this.intersectionBA.removeInitialState(intInit);
+					if (this.lowerIntersectionBA.getInitialStates().contains(
+							intInit)) {
+						this.lowerIntersectionBA.removeInitialState(intInit);
 					}
 				}
 			}
@@ -269,26 +292,30 @@ public class ReplacementChecker extends CHIAAction {
 		BA claim = subproperty.getAutomaton().clone();
 		IBA model = this.replacement.getAutomaton().clone();
 
-		Set<State> modelInitialStates=model.getInitialStates();
-		Set<State> additionalInitStatesModel=this.getAdditionalModelInitialStates();
-		Set<State> claimInitialStates=claim.getInitialStates();
-		Set<State> additionalInitStatesClaim=this.getAdditionalClaimGreenAndYellowInitialStates();
-		
-		for(State s:additionalInitStatesModel){
+		Set<State> additionalInitStatesModel = this
+				.getAdditionalModelInitialStates(model);
+		Set<State> additionalInitStatesClaim = this
+				.getAdditionalClaimGreenAndYellowInitialStates(claim);
+
+		for (State s : additionalInitStatesModel) {
 			model.addInitialState(s);
 		}
 
-		for(State s:additionalInitStatesClaim){
+		for (State s : additionalInitStatesClaim) {
 			claim.addInitialState(s);
 		}
-		
-		
+
 		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
 				model, claim, this.acceptingPolicy);
-		this.intersectionBA = intersectionBuilder.computeIntersection();
+		this.upperIntersectionBA = intersectionBuilder.computeIntersection();
 
 		TransitionFactory<State, Transition> transitionFactory = new ClaimTransitionFactory();
 		StateFactory stateFactory = new StateFactory();
+
+		State greenState = stateFactory.create("GREEN");
+		intersectionBuilder.getIntersectionAutomaton().addState(greenState);
+		intersectionBuilder.getIntersectionAutomaton().addInitialState(
+				greenState);
 
 		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
 				.getIncomingPorts()) {
@@ -313,19 +340,22 @@ public class ReplacementChecker extends CHIAAction {
 										initTransitionReplacement
 												.getDestination());
 						for (State initialState : initntersectionStates) {
-							State greenState = stateFactory.create("GREEN");
-							intersectionBuilder.getIntersectionAutomaton()
-									.addState(greenState);
-							intersectionBuilder.getIntersectionAutomaton()
-									.addInitialState(greenState);
-							intersectionBuilder.getIntersectionAutomaton()
-									.addTransition(greenState, initialState,
-											transitionFactory.create());
+							if (!intersectionBuilder.getIntersectionAutomaton()
+									.isPredecessor(greenState, initialState)) {
+								intersectionBuilder.getIntersectionAutomaton()
+										.addTransition(greenState,
+												initialState,
+												transitionFactory.create());
+							}
 						}
 					}
 				}
 			}
 		}
+		State redState = stateFactory.create("RED");
+		intersectionBuilder.getIntersectionAutomaton().addAcceptState(redState);
+		intersectionBuilder.getIntersectionAutomaton().addTransition(redState,
+				redState, transitionFactory.create());
 		for (ColoredPluggingTransition outTransitionSubProperty : this.subproperty
 				.getOutcomingPorts()) {
 			if (outTransitionSubProperty.getColor() == Color.RED
@@ -344,17 +374,12 @@ public class ReplacementChecker extends CHIAAction {
 										outTransitionSubProperty.getSource(),
 										outTransitionReplacement.getSource());
 						for (State outState : outIntersectionStates) {
-							intersectionBuilder.getIntersectionAutomaton()
-									.addAcceptState(outState);
-							State redState = stateFactory.create("RED");
-							intersectionBuilder.getIntersectionAutomaton()
-									.addAcceptState(redState);
-							intersectionBuilder.getIntersectionAutomaton()
-									.addTransition(outState, redState,
-											transitionFactory.create());
-							intersectionBuilder.getIntersectionAutomaton()
-									.addTransition(redState, redState,
-											transitionFactory.create());
+							if (!intersectionBuilder.getIntersectionAutomaton()
+									.isPredecessor(outState, redState)) {
+								intersectionBuilder.getIntersectionAutomaton()
+										.addTransition(outState, redState,
+												transitionFactory.create());
+							}
 						}
 					}
 				}
@@ -363,29 +388,47 @@ public class ReplacementChecker extends CHIAAction {
 
 		for (Entry<ColoredPluggingTransition, ColoredPluggingTransition> reachabilityEntry : this.subproperty
 				.getUpperReachabilityRelation().getMap().entries()) {
-			Set<State> sourceStates = intersectionBuilder
-					.getClaimIntersectionStates(reachabilityEntry.getKey()
-							.getSource());
-			Set<State> destinationStates = intersectionBuilder
-					.getClaimIntersectionStates(reachabilityEntry.getValue()
-							.getSource());
+			Set<State> sourceStates = new HashSet<State>();
+			for (PluggingTransition outgoingTransition : this.replacement
+					.getOutcomingPorts()) {
+				if (this.isOutgoingEqual(outgoingTransition,
+						reachabilityEntry.getKey())) {
+					sourceStates.addAll(intersectionBuilder
+							.getIntersectionStates(reachabilityEntry.getKey()
+									.getSource(), outgoingTransition
+									.getSource()));
+				}
+			}
+			Set<State> destinationStates = new HashSet<State>();
+			for (PluggingTransition incomingTransition : this.replacement
+					.getIncomingPorts()) {
+				if (this.isIncomingEqual(incomingTransition,
+						reachabilityEntry.getValue())) {
+					destinationStates.addAll(intersectionBuilder
+							.getIntersectionStates(reachabilityEntry.getValue()
+									.getDestination(), incomingTransition
+									.getDestination()));
+				}
+			}
 			for (State sourceState : sourceStates) {
 				for (State destinationState : destinationStates) {
-					intersectionBuilder.getIntersectionAutomaton()
-							.addTransition(sourceState, destinationState,
-									transitionFactory.create());
+					if (!intersectionBuilder.getIntersectionAutomaton()
+							.isSuccessor(sourceState, destinationState)) {
+
+						intersectionBuilder.getIntersectionAutomaton()
+								.addTransition(sourceState, destinationState,
+										transitionFactory.create());
+					}
 				}
 			}
 		}
-		additionalInitStatesModel.removeAll(modelInitialStates);
-		additionalInitStatesClaim.removeAll(claimInitialStates);
 		for (State modelInit : additionalInitStatesModel) {
 			for (State claimInit : additionalInitStatesClaim) {
 				for (State intInit : intersectionBuilder.getIntersectionStates(
 						claimInit, modelInit)) {
-					if (this.intersectionBA.getInitialStates()
-							.contains(intInit)) {
-						this.intersectionBA.removeInitialState(intInit);
+					if (this.upperIntersectionBA.getInitialStates().contains(
+							intInit)) {
+						this.upperIntersectionBA.removeInitialState(intInit);
 					}
 				}
 			}
@@ -401,36 +444,48 @@ public class ReplacementChecker extends CHIAAction {
 
 	}
 
-	private Set<State> getAdditionalClaimGreenInitialStates() {
-		Set<State> claimInitialStates = new HashSet<State>();
-		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
-				.getIncomingPorts()) {
-			if (initTransitionSubProperty.getColor() == Color.GREEN) {
-				claimInitialStates.add(initTransitionSubProperty
-						.getDestination());
-			}
-		}
-		return claimInitialStates;
-	}
-
-	private Set<State> getAdditionalClaimGreenAndYellowInitialStates() {
+	private Set<State> getAdditionalClaimGreenInitialStates(BA claim) {
 		Set<State> claimInitialStates = new HashSet<State>();
 		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
 				.getIncomingPorts()) {
 			if (initTransitionSubProperty.getColor() == Color.GREEN
-					|| initTransitionSubProperty.getColor() == Color.YELLOW) {
-				claimInitialStates.add(initTransitionSubProperty
-						.getDestination());
+					|| initTransitionSubProperty.getColor() == Color.BLACK) {
+				if (!claim.getInitialStates().contains(
+						initTransitionSubProperty.getDestination())) {
+					claimInitialStates.add(initTransitionSubProperty
+							.getDestination());
+				}
 			}
 		}
 		return claimInitialStates;
 	}
 
-	private Set<State> getAdditionalModelInitialStates() {
+	private Set<State> getAdditionalClaimGreenAndYellowInitialStates(BA claim) {
+		Set<State> claimInitialStates = new HashSet<State>();
+		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
+				.getIncomingPorts()) {
+			if (initTransitionSubProperty.getColor() == Color.GREEN
+					|| initTransitionSubProperty.getColor() == Color.YELLOW
+					|| initTransitionSubProperty.getColor() == Color.BLACK) {
+				if (!claim.getInitialStates().contains(
+						initTransitionSubProperty.getDestination())) {
+					claimInitialStates.add(initTransitionSubProperty
+							.getDestination());
+				}
+			}
+		}
+		return claimInitialStates;
+	}
+
+	private Set<State> getAdditionalModelInitialStates(IBA model) {
 		Set<State> modelInitialStates = new HashSet<State>();
 		for (PluggingTransition initTransitionReplacement : this.replacement
 				.getIncomingPorts()) {
-			modelInitialStates.add(initTransitionReplacement.getDestination());
+			if (!model.getInitialStates().contains(
+					initTransitionReplacement.getDestination())) {
+				modelInitialStates.add(initTransitionReplacement
+						.getDestination());
+			}
 		}
 		return modelInitialStates;
 
@@ -450,10 +505,47 @@ public class ReplacementChecker extends CHIAAction {
 		return subproperty;
 	}
 
-	public IntersectionBA getIntersectionBA() {
+	public IntersectionBA getUpperIntersectionBA() {
 		Preconditions
 				.checkArgument(this.isPerformed(),
 						"You must check the replacement before getting the intersection ");
-		return intersectionBA;
+		return this.upperIntersectionBA;
+	}
+
+	public IntersectionBA getLowerIntersectionBA() {
+		Preconditions
+				.checkArgument(this.isPerformed(),
+						"You must check the replacement before getting the intersection ");
+		return this.lowerIntersectionBA;
+	}
+
+	public boolean isOutgoingEqual(PluggingTransition replacementTransition,
+			ColoredPluggingTransition subPropertyTransition) {
+
+		if (replacementTransition
+				.getTransition()
+				.getPropositions()
+				.equals(subPropertyTransition.getTransition().getPropositions())) {
+			if (replacementTransition.getDestination().equals(
+					subPropertyTransition.getDestination())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isIncomingEqual(PluggingTransition replacementTransition,
+			ColoredPluggingTransition subPropertyTransition) {
+
+		if (replacementTransition
+				.getTransition()
+				.getPropositions()
+				.equals(subPropertyTransition.getTransition().getPropositions())) {
+			if (replacementTransition.getSource().equals(
+					subPropertyTransition.getSource())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

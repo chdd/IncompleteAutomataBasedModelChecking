@@ -42,7 +42,12 @@ public class Checker extends CHIAAction {
 	/**
 	 * contains the builder which is used to compute the intersection automaton
 	 */
-	private IntersectionBuilder intersectionBuilder;
+	private IntersectionBuilder lowerIntersectionBuilder;
+
+	/**
+	 * contains the builder which is used to compute the intersection automaton
+	 */
+	private IntersectionBuilder upperIntersectionBuilder;
 
 	private final AcceptingPolicy acceptingPolicy;
 	private SatisfactionValue satisfactionValue;
@@ -73,8 +78,6 @@ public class Checker extends CHIAAction {
 		this.claim = claim;
 		this.model = model;
 		this.acceptingPolicy = acceptingPolicy;
-		this.intersectionBuilder = new IntersectionBuilder(model, claim,
-				acceptingPolicy);
 	}
 
 	/**
@@ -101,7 +104,7 @@ public class Checker extends CHIAAction {
 			if (!empty) {
 				this.performed();
 				logger.info("Checking procedure ended");
-				this.satisfactionValue=SatisfactionValue.NOTSATISFIED;
+				this.satisfactionValue = SatisfactionValue.NOTSATISFIED;
 				return SatisfactionValue.NOTSATISFIED;
 			}
 
@@ -111,12 +114,12 @@ public class Checker extends CHIAAction {
 			if (!emptyIntersection) {
 
 				logger.info("Checking procedure ended");
-				this.satisfactionValue=SatisfactionValue.POSSIBLYSATISFIED;
+				this.satisfactionValue = SatisfactionValue.POSSIBLYSATISFIED;
 				return SatisfactionValue.POSSIBLYSATISFIED;
 			} else {
 
 				logger.info("Checking procedure ended");
-				this.satisfactionValue=SatisfactionValue.SATISFIED;
+				this.satisfactionValue = SatisfactionValue.SATISFIED;
 				return SatisfactionValue.SATISFIED;
 			}
 		}
@@ -138,11 +141,11 @@ public class Checker extends CHIAAction {
 				.removeTransparentStates(model);
 
 		// associating the intersectionBuilder
-		this.intersectionBuilder = new IntersectionBuilder(mc, claim,
+		this.lowerIntersectionBuilder = new IntersectionBuilder(mc, claim,
 				acceptingPolicy);
 
 		// computing the intersection
-		IntersectionBA intersectionAutomaton = this.intersectionBuilder
+		IntersectionBA intersectionAutomaton = this.lowerIntersectionBuilder
 				.computeIntersection();
 
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
@@ -159,11 +162,11 @@ public class Checker extends CHIAAction {
 	 */
 	private boolean checkEmptyIntersection() {
 
-		this.intersectionBuilder = new IntersectionBuilder(this.model, claim,
-				acceptingPolicy);
+		this.upperIntersectionBuilder = new IntersectionBuilder(this.model,
+				claim, acceptingPolicy);
 
 		// computing the intersection
-		IntersectionBA intersectionAutomaton = this.intersectionBuilder
+		IntersectionBA intersectionAutomaton = this.upperIntersectionBuilder
 				.computeIntersection();
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
@@ -173,11 +176,41 @@ public class Checker extends CHIAAction {
 	 * 
 	 * @return the intersection builder used by the model checker
 	 */
-	public IntersectionBuilder getIntersectionBuilder() {
+	public IntersectionBuilder getUpperIntersectionBuilder() {
 		Preconditions
 				.checkState(this.isPerformed(),
 						"You must run the model checker before performing this operation");
 
-		return this.intersectionBuilder;
+		return this.upperIntersectionBuilder;
+	}
+
+	public IntersectionBA getUpperIntersectionBA() {
+		Preconditions
+				.checkState(this.isPerformed(),
+						"You must run the model checker before performing this operation");
+
+		Preconditions.checkState(this.upperIntersectionBuilder!=null, "The lower upper autonaton has not been computed");
+		return this.upperIntersectionBuilder.getIntersectionAutomaton();
+
+	}
+	
+	public IntersectionBA getLowerIntersectionBA() {
+		Preconditions
+				.checkState(this.isPerformed(),
+						"You must run the model checker before performing this operation");
+		Preconditions.checkState(this.lowerIntersectionBuilder!=null, "The lower intersection autonaton has not been computed");
+		return this.lowerIntersectionBuilder.getIntersectionAutomaton();
+
+	}
+	
+	public int getIntersectionAutomataSize(){
+		int size=0;
+		if(this.lowerIntersectionBuilder!=null){
+			size=size+this.lowerIntersectionBuilder.getIntersectionAutomaton().size();
+		}
+		if(this.upperIntersectionBuilder!=null){
+			size=size+this.upperIntersectionBuilder.getIntersectionAutomaton().size();
+		}
+		return size;
 	}
 }

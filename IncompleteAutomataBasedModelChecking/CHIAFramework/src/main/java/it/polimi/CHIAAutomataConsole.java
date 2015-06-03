@@ -143,7 +143,7 @@ public class CHIAAutomataConsole {
 			long endTime = System.currentTimeMillis();
 			logger.info("Verification result: "+result.toString());
 			logger.info("Verification time: "+Long.toString(endTime-startTime)+" ms");
-			logger.info("Dimension of the intersection automaton (states+transitions): "+this.checker.getIntersectionBuilder().getIntersectionAutomaton().size());
+			logger.info("Dimension of the intersection automaton (states+transitions): "+this.checker.getIntersectionAutomataSize());
 			;
 
 		} catch (CHIAException e) {
@@ -218,7 +218,7 @@ public class CHIAAutomataConsole {
 					new File(intersectionFilePath));
 
 			IntersectionBA intersectionAutomaton = this.checker
-					.getIntersectionBuilder().getIntersectionAutomaton();
+					.getUpperIntersectionBuilder().getIntersectionAutomaton();
 			intersectionWriter.write(intersectionAutomaton);
 		} catch (CHIAException e) {
 			logger.info(e.toString());

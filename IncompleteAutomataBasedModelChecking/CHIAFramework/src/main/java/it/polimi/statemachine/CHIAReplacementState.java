@@ -96,6 +96,12 @@ public enum CHIAReplacementState implements CHIAState{
 			if(chiaAction==IntersectionToStringTransformer.class){
 				return CHECKED;
 			}
+			if(chiaAction==ConstraintReader.class){
+				return READY;
+			}
+			if(chiaAction==ReplacementReader.class){
+				return READY;
+			}
 			throw new CHIAException("You cannot perform the action: "
 					+ chiaAction.getName() + " into the state "
 					+ this.toString());

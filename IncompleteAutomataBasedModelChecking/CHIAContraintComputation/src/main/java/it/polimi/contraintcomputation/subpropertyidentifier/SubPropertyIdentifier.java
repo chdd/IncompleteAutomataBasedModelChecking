@@ -109,7 +109,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 						checker.isPerformed(),
 						"The checking activity must be performed before the computation of the sub-property");
 		Preconditions
-				.checkArgument(checker.getIntersectionBuilder().getModel()
+				.checkArgument(checker.getUpperIntersectionBuilder().getModel()
 						.getTransparentStates().contains(transparentState),
 						"The state to be considered must be a transparent state of the model");
 
@@ -161,7 +161,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 		 * creates a component which correspond with the state modelState
 		 */
 		this.subProperty.getAutomaton().addPropositions(
-				this.checker.getIntersectionBuilder().getClaim()
+				this.checker.getUpperIntersectionBuilder().getClaim()
 						.getPropositions());
 
 	}
@@ -175,10 +175,10 @@ public class SubPropertyIdentifier extends CHIAOperation {
 		 * gets the intersectionState associated with the state of the model
 		 * modelState
 		 */
-		for (State intersectionState : this.checker.getIntersectionBuilder()
+		for (State intersectionState : this.checker.getUpperIntersectionBuilder()
 				.getModelIntersectionStates(this.transparentState)) {
 			this.subProperty.getAutomaton().addState(intersectionState);
-			if (this.checker.getIntersectionBuilder()
+			if (this.checker.getUpperIntersectionBuilder()
 					.getIntersectionAutomaton().getInitialStates()
 					.contains(intersectionState)) {
 				// add the component to the initial states of the
@@ -187,7 +187,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 				this.subProperty.getAutomaton().addInitialState(
 						intersectionState);
 			}
-			if (this.checker.getIntersectionBuilder()
+			if (this.checker.getUpperIntersectionBuilder()
 					.getIntersectionAutomaton().getAcceptStates()
 					.contains(intersectionState)) {
 				// add the component to the accepting states of the
@@ -205,7 +205,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 */
 	private void createInternalTransitions() {
 		for (Transition internalTransition : this.checker
-				.getIntersectionBuilder().getConstrainedTransitions(
+				.getUpperIntersectionBuilder().getConstrainedTransitions(
 						this.transparentState)) {
 			if (!internalTransition.getPropositions().equals(
 					stutteringPropositions)) {
@@ -213,10 +213,10 @@ public class SubPropertyIdentifier extends CHIAOperation {
 				Transition newTransition = new ClaimTransitionFactory().create(
 						internalTransition.getId(),
 						internalTransition.getPropositions());
-				State sourceState = this.checker.getIntersectionBuilder()
+				State sourceState = this.checker.getUpperIntersectionBuilder()
 						.getIntersectionAutomaton()
 						.getTransitionSource(internalTransition);
-				State destinationState = this.checker.getIntersectionBuilder()
+				State destinationState = this.checker.getUpperIntersectionBuilder()
 						.getIntersectionAutomaton()
 						.getTransitionDestination(internalTransition);
 				this.subProperty.getAutomaton().addTransition(sourceState,
@@ -229,7 +229,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 * creates the incoming transitions associated with the sub-property
 	 */
 	private void createIncomingTransitions() {
-		for (State intersectionState : this.checker.getIntersectionBuilder()
+		for (State intersectionState : this.checker.getUpperIntersectionBuilder()
 				.getModelIntersectionStates(this.transparentState)) {
 
 			/*
@@ -240,12 +240,12 @@ public class SubPropertyIdentifier extends CHIAOperation {
 			 * i.e., they enter the refinement of the transparent state
 			 */
 			for (Transition incomingTransition : this.checker
-					.getIntersectionBuilder().getIntersectionAutomaton()
+					.getUpperIntersectionBuilder().getIntersectionAutomaton()
 					.getInTransitions(intersectionState)) {
 				
-				if(!this.checker.getIntersectionBuilder().getConstrainedTransitions(this.transparentState).contains(incomingTransition)){
+				if(!this.checker.getUpperIntersectionBuilder().getConstrainedTransitions(this.transparentState).contains(incomingTransition)){
 					State sourceIntersectionState = this.checker
-							.getIntersectionBuilder().getIntersectionAutomaton()
+							.getUpperIntersectionBuilder().getIntersectionAutomaton()
 							.getTransitionSource(incomingTransition);
 
 					if (!incomingTransition.getPropositions().equals(
@@ -257,7 +257,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 						 * i.e., the intersection
 						 */
 						ColoredPluggingTransition incomingPort = new ColoredPluggingTransition(
-								this.checker.getIntersectionBuilder()
+								this.checker.getUpperIntersectionBuilder()
 										.getModelState(sourceIntersectionState),
 								intersectionState, incomingTransition, true,
 								Color.BLACK);
@@ -289,7 +289,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 */
 	private void createOutgoingTransitions() {
 
-		for (State intersectionState : this.checker.getIntersectionBuilder()
+		for (State intersectionState : this.checker.getUpperIntersectionBuilder()
 				.getModelIntersectionStates(this.transparentState)) {
 			/*
 			 * The transitions that exit a mixed state are potential incoming
@@ -298,11 +298,11 @@ public class SubPropertyIdentifier extends CHIAOperation {
 			 * abstraction
 			 */
 			for (Transition outcomingTransition : this.checker
-					.getIntersectionBuilder().getIntersectionAutomaton()
+					.getUpperIntersectionBuilder().getIntersectionAutomaton()
 					.getOutTransitions(intersectionState)) {
-				if(!this.checker.getIntersectionBuilder().getIntersectionAutomaton().getConstrainedTransitions().contains(outcomingTransition)){
+				if(!this.checker.getUpperIntersectionBuilder().getIntersectionAutomaton().getConstrainedTransitions().contains(outcomingTransition)){
 					State destinationIntersectionState = this.checker
-							.getIntersectionBuilder().getIntersectionAutomaton()
+							.getUpperIntersectionBuilder().getIntersectionAutomaton()
 							.getTransitionDestination(outcomingTransition);
 
 					if (!outcomingTransition.getPropositions().equals(
@@ -315,7 +315,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 						 */
 						ColoredPluggingTransition outcomingPort = new ColoredPluggingTransition(
 								intersectionState, this.checker
-										.getIntersectionBuilder().getModelState(
+										.getUpperIntersectionBuilder().getModelState(
 												destinationIntersectionState),
 								outcomingTransition, false, Color.BLACK);
 
