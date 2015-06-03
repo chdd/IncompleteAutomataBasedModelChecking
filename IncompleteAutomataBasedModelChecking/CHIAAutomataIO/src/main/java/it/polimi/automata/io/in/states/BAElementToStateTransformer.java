@@ -22,7 +22,7 @@ public class BAElementToStateTransformer implements Transformer<Element, State>{
 	 * is the factory which is used to create the states of the Buchi automaton
 	 */
 	protected final StateFactory stateFactory;
-	private final BA ba;
+	protected final BA ba;
 	
 	
 	public BAElementToStateTransformer(BA ba){

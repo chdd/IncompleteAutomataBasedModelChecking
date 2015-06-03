@@ -18,7 +18,7 @@ public class IBAElementToStateTransformer implements Transformer<Element, State>
 	 * is the factory which is used to create the states of the Buchi automaton
 	 */
 	protected final StateFactory stateFactory;
-	private final IBA iba;
+	protected final IBA iba;
 	
 	
 	public IBAElementToStateTransformer(StateFactory stateFactory, IBA iba){
