@@ -12,13 +12,9 @@ import com.google.common.base.Preconditions;
  * @author Claudio Menghi
  * 
  */
-public class StateFactory implements VertexFactory<State> {
+public class StateFactory extends AbstractStateFactory implements VertexFactory<State> {
 
-	/**
-	 * contains the counter whose value is associated to the next id of the
-	 * state to be created
-	 */
-	public static int stateCount = 0;
+	
 
 	/**
 	 * crates a new state with an empty name the id is auto-assigned to the
