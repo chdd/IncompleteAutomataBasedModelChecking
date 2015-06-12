@@ -32,7 +32,7 @@ public class IntersectionBA extends BA {
 	private final Set<State> mixedStates;
 
 	/**
-	 * contrained transitions
+	 * constrained transitions
 	 */
 	private final Set<Transition> constrainedTransitions;
 
@@ -191,6 +191,9 @@ public class IntersectionBA extends BA {
 			if(this.getInitialStates().contains(s)){
 				ret.addInitialState(s);
 			}
+			if(this.getMixedStates().contains(s)){
+				ret.addMixedState(s);
+			}
 		}
 		
 		for(Transition t: this.getTransitions()){
@@ -206,7 +209,7 @@ public class IntersectionBA extends BA {
 	 * @return the constrainedTransitions
 	 */
 	public Set<Transition> getConstrainedTransitions() {
-		return constrainedTransitions;
+		return Collections.unmodifiableSet(constrainedTransitions);
 	}
 
 }
