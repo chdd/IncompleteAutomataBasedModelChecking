@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author claudiomenghi
  * 
  */
-public class StateFactoryImplTest {
+public class StateFactoryTest {
 
 	private StateFactory stateFactory;
 

@@ -1,4 +1,4 @@
-package it.polimi.statemachine;
+package action;
 
 public class CHIAException extends Exception {
 
