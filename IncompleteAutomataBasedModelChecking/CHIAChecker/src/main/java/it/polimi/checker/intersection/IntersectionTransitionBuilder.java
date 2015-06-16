@@ -1,6 +1,7 @@
 package it.polimi.checker.intersection;
 
 import it.polimi.automata.AutomataConstants;
+import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 
@@ -13,7 +14,7 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 import com.google.common.base.Preconditions;
 
 /**
- * Defines an {@link IntersectionRule} that specifies how the transitions of the
+ * Defines an {@link IntersectionTransitionBuilder} that specifies how the transitions of the
  * intersection automaton is generated starting from the transition of the model
  * and the claim. <br>
  * The transition of the model can be performed only if it satisfies the
@@ -22,18 +23,18 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class IntersectionRule {
+public class IntersectionTransitionBuilder {
 
 	private final ClaimTransitionFactory transitionFactory;
 
-	public IntersectionRule() {
+	public IntersectionTransitionBuilder() {
 		this.transitionFactory = new ClaimTransitionFactory();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Transition getIntersectionTransition(Transition modelTransition,
+	public Transition getIntersectionTransition(State source, State destination, Transition modelTransition,
 			Transition claimTransition) {
 
 		Preconditions.checkNotNull(modelTransition,
@@ -47,6 +48,11 @@ public class IntersectionRule {
 		} else {
 			return null;
 		}
+	}
+	
+	public boolean isCompatible( Transition modelTransition,
+			Transition claimTransition){
+		return this.satisfies(modelTransition.getPropositions(), claimTransition.getPropositions());
 	}
 
 	/**

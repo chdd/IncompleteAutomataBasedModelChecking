@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?><constraint>
+    <subproperty indispensable="false" modelstateId="2" name="t1">
+        <ba>
+            <propositions>
+                <proposition value="b"/>
+                <proposition value="a"/>
+            </propositions>
+            <states>
+                <state accepting="true" id="19" name="2 - 1 - 2"/>
+                <state id="24" name="2 - 1 - 0"/>
+                <state id="15" name="2 - 2 - 1"/>
+                <state accepting="true" id="13" name="2 - 2 - 2"/>
+                <state id="21" name="2 - 1 - 1"/>
+                <state id="14" name="2 - 2 - 0"/>
+            </states>
+            <transitions>
+                <transition destination="14" id="54" propositions="!b" source="13"/>
+                <transition destination="21" id="53" propositions="!b^!a" source="14"/>
+                <transition destination="21" id="38" propositions="SIGMA" source="24"/>
+                <transition destination="19" id="39" propositions="SIGMA" source="21"/>
+                <transition destination="24" id="55" propositions="!b^!a" source="13"/>
+                <transition destination="24" id="40" propositions="SIGMA" source="19"/>
+                <transition destination="13" id="50" propositions="!b" source="15"/>
+                <transition destination="15" id="52" propositions="!b" source="14"/>
+                <transition destination="19" id="51" propositions="!b^!a" source="15"/>
+            </transitions>
+        </ba>
+        <inports>
+            <port color="YELLOW" id="65">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="14" name="2 - 2 - 0"/>
+                </destinationstate>
+                <transition id="49" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="63">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="21" name="2 - 1 - 1"/>
+                </destinationstate>
+                <transition id="28" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="67">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="14" name="2 - 2 - 0"/>
+                </destinationstate>
+                <transition id="57" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="47">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="24" name="2 - 1 - 0"/>
+                </destinationstate>
+                <transition id="36" propositions="a"/>
+            </port>
+            <port color="GREEN" id="55">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="15" name="2 - 2 - 1"/>
+                </destinationstate>
+                <transition id="63" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="59">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="21" name="2 - 1 - 1"/>
+                </destinationstate>
+                <transition id="31" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="45">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="19" name="2 - 1 - 2"/>
+                </destinationstate>
+                <transition id="41" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="51">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="24" name="2 - 1 - 0"/>
+                </destinationstate>
+                <transition id="44" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="49">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="24" name="2 - 1 - 0"/>
+                </destinationstate>
+                <transition id="43" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="53">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="15" name="2 - 2 - 1"/>
+                </destinationstate>
+                <transition id="21" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="61">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="21" name="2 - 1 - 1"/>
+                </destinationstate>
+                <transition id="32" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="43">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="19" name="2 - 1 - 2"/>
+                </destinationstate>
+                <transition id="24" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="57">
+                <sourcestate>
+                    <state id="3" name="t0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="13" name="2 - 2 - 2"/>
+                </destinationstate>
+                <transition id="16" propositions="a"/>
+            </port>
+        </inports>
+        <outports>
+            <port color="YELLOW" id="79">
+                <sourcestate>
+                    <state id="14" name="2 - 2 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="18" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="71">
+                <sourcestate>
+                    <state id="24" name="2 - 1 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="37" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="73">
+                <sourcestate>
+                    <state id="15" name="2 - 2 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="19" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="69">
+                <sourcestate>
+                    <state id="19" name="2 - 1 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="25" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="75">
+                <sourcestate>
+                    <state id="13" name="2 - 2 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="17" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="77">
+                <sourcestate>
+                    <state id="21" name="2 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="29" propositions="a"/>
+            </port>
+        </outports>
+        <lowerReachability>
+            <reachabilityElements>
+                <reachabilityElement accepting="false" destination="55" source="79"/>
+                <reachabilityElement accepting="true" destination="65" source="73"/>
+                <reachabilityElement accepting="false" destination="63" source="69"/>
+                <reachabilityElement accepting="true" destination="47" source="77"/>
+                <reachabilityElement accepting="false" destination="55" source="75"/>
+                <reachabilityElement accepting="false" destination="63" source="71"/>
+            </reachabilityElements>
+        </lowerReachability>
+        <upperReachability>
+            <reachabilityElements>
+                <reachabilityElement accepting="true" destination="65" source="79"/>
+                <reachabilityElement accepting="true" destination="53" source="73"/>
+                <reachabilityElement accepting="true" destination="55" source="79"/>
+                <reachabilityElement accepting="true" destination="65" source="73"/>
+                <reachabilityElement accepting="true" destination="55" source="73"/>
+                <reachabilityElement accepting="true" destination="53" source="79"/>
+                <reachabilityElement accepting="true" destination="59" source="69"/>
+                <reachabilityElement accepting="true" destination="61" source="77"/>
+                <reachabilityElement accepting="true" destination="43" source="75"/>
+                <reachabilityElement accepting="true" destination="59" source="71"/>
+                <reachabilityElement accepting="true" destination="67" source="73"/>
+                <reachabilityElement accepting="true" destination="49" source="71"/>
+                <reachabilityElement accepting="true" destination="45" source="79"/>
+                <reachabilityElement accepting="true" destination="67" source="79"/>
+                <reachabilityElement accepting="true" destination="45" source="73"/>
+                <reachabilityElement accepting="true" destination="47" source="69"/>
+                <reachabilityElement accepting="true" destination="63" source="73"/>
+                <reachabilityElement accepting="true" destination="47" source="71"/>
+                <reachabilityElement accepting="true" destination="49" source="69"/>
+                <reachabilityElement accepting="true" destination="63" source="79"/>
+                <reachabilityElement accepting="true" destination="51" source="77"/>
+                <reachabilityElement accepting="true" destination="61" source="69"/>
+                <reachabilityElement accepting="true" destination="63" source="75"/>
+                <reachabilityElement accepting="true" destination="61" source="71"/>
+                <reachabilityElement accepting="true" destination="45" source="75"/>
+                <reachabilityElement accepting="true" destination="59" source="77"/>
+                <reachabilityElement accepting="true" destination="67" source="75"/>
+                <reachabilityElement accepting="true" destination="49" source="77"/>
+                <reachabilityElement accepting="true" destination="51" source="69"/>
+                <reachabilityElement accepting="true" destination="43" source="79"/>
+                <reachabilityElement accepting="true" destination="43" source="73"/>
+                <reachabilityElement accepting="true" destination="47" source="77"/>
+                <reachabilityElement accepting="true" destination="65" source="75"/>
+                <reachabilityElement accepting="true" destination="55" source="75"/>
+                <reachabilityElement accepting="true" destination="51" source="71"/>
+                <reachabilityElement accepting="true" destination="53" source="75"/>
+                <reachabilityElement accepting="true" destination="51" source="75"/>
+                <reachabilityElement accepting="true" destination="59" source="73"/>
+                <reachabilityElement accepting="true" destination="59" source="79"/>
+                <reachabilityElement accepting="true" destination="49" source="73"/>
+                <reachabilityElement accepting="true" destination="43" source="77"/>
+                <reachabilityElement accepting="true" destination="45" source="71"/>
+                <reachabilityElement accepting="true" destination="61" source="75"/>
+                <reachabilityElement accepting="true" destination="63" source="69"/>
+                <reachabilityElement accepting="true" destination="49" source="79"/>
+                <reachabilityElement accepting="true" destination="45" source="69"/>
+                <reachabilityElement accepting="true" destination="57" source="79"/>
+                <reachabilityElement accepting="true" destination="47" source="73"/>
+                <reachabilityElement accepting="true" destination="63" source="71"/>
+                <reachabilityElement accepting="true" destination="57" source="73"/>
+                <reachabilityElement accepting="true" destination="47" source="79"/>
+                <reachabilityElement accepting="true" destination="57" source="75"/>
+                <reachabilityElement accepting="true" destination="47" source="75"/>
+                <reachabilityElement accepting="true" destination="61" source="73"/>
+                <reachabilityElement accepting="true" destination="49" source="75"/>
+                <reachabilityElement accepting="true" destination="61" source="79"/>
+                <reachabilityElement accepting="true" destination="45" source="77"/>
+                <reachabilityElement accepting="true" destination="43" source="71"/>
+                <reachabilityElement accepting="true" destination="59" source="75"/>
+                <reachabilityElement accepting="true" destination="51" source="79"/>
+                <reachabilityElement accepting="true" destination="43" source="69"/>
+                <reachabilityElement accepting="true" destination="63" source="77"/>
+                <reachabilityElement accepting="true" destination="51" source="73"/>
+            </reachabilityElements>
+        </upperReachability>
+    </subproperty>
+    <subproperty indispensable="false" modelstateId="3" name="t0">
+        <ba>
+            <propositions>
+                <proposition value="b"/>
+                <proposition value="a"/>
+            </propositions>
+            <states>
+                <state id="12" name="3 - 2 - 1"/>
+                <state accepting="true" id="26" name="3 - 2 - 2"/>
+                <state id="18" name="3 - 1 - 1"/>
+                <state accepting="true" id="25" name="3 - 1 - 2"/>
+                <state id="17" name="3 - 2 - 0"/>
+                <state id="23" name="3 - 1 - 0"/>
+            </states>
+            <transitions>
+                <transition destination="18" id="34" propositions="SIGMA" source="23"/>
+                <transition destination="12" id="23" propositions="!b" source="17"/>
+                <transition destination="25" id="62" propositions="!b^!a" source="12"/>
+                <transition destination="26" id="61" propositions="!b" source="12"/>
+                <transition destination="23" id="46" propositions="SIGMA" source="25"/>
+                <transition destination="25" id="47" propositions="SIGMA" source="18"/>
+                <transition destination="18" id="48" propositions="!b^!a" source="17"/>
+                <transition destination="23" id="60" propositions="!b^!a" source="26"/>
+                <transition destination="17" id="59" propositions="!b" source="26"/>
+            </transitions>
+        </ba>
+        <inports>
+            <port color="YELLOW" id="11">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="23" name="3 - 1 - 0"/>
+                </destinationstate>
+                <transition id="35" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="7">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="17" name="3 - 2 - 0"/>
+                </destinationstate>
+                <transition id="20" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="9">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="23" name="3 - 1 - 0"/>
+                </destinationstate>
+                <transition id="30" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="5">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="18" name="3 - 1 - 1"/>
+                </destinationstate>
+                <transition id="27" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="3">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="18" name="3 - 1 - 1"/>
+                </destinationstate>
+                <transition id="26" propositions="b"/>
+            </port>
+            <port color="GREEN" id="1">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="12" name="3 - 2 - 1"/>
+                </destinationstate>
+                <transition id="15" propositions="a"/>
+            </port>
+        </inports>
+        <outports>
+            <port color="YELLOW" id="17">
+                <sourcestate>
+                    <state id="26" name="3 - 2 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="57" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="31">
+                <sourcestate>
+                    <state id="25" name="3 - 1 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="45" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="25">
+                <sourcestate>
+                    <state id="18" name="3 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="42" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="21">
+                <sourcestate>
+                    <state id="18" name="3 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="24" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="15">
+                <sourcestate>
+                    <state id="12" name="3 - 2 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="56" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="37">
+                <sourcestate>
+                    <state id="23" name="3 - 1 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="31" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="23">
+                <sourcestate>
+                    <state id="18" name="3 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="41" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="13">
+                <sourcestate>
+                    <state id="12" name="3 - 2 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="16" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="33">
+                <sourcestate>
+                    <state id="17" name="3 - 2 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="21" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="19">
+                <sourcestate>
+                    <state id="26" name="3 - 2 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="58" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="39">
+                <sourcestate>
+                    <state id="23" name="3 - 1 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="32" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="29">
+                <sourcestate>
+                    <state id="25" name="3 - 1 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="44" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="41">
+                <sourcestate>
+                    <state id="23" name="3 - 1 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="33" propositions="a"/>
+            </port>
+            <port color="YELLOW" id="27">
+                <sourcestate>
+                    <state id="25" name="3 - 1 - 2"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2" name="t1"/>
+                </destinationstate>
+                <transition id="43" propositions="b"/>
+            </port>
+            <port color="YELLOW" id="35">
+                <sourcestate>
+                    <state id="17" name="3 - 2 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="22" propositions="a"/>
+            </port>
+        </outports>
+        <lowerReachability>
+            <reachabilityElements>
+                <reachabilityElement accepting="false" destination="1" source="35"/>
+                <reachabilityElement accepting="false" destination="3" source="31"/>
+                <reachabilityElement accepting="true" destination="11" source="25"/>
+                <reachabilityElement accepting="false" destination="5" source="31"/>
+                <reachabilityElement accepting="true" destination="9" source="25"/>
+                <reachabilityElement accepting="false" destination="1" source="19"/>
+                <reachabilityElement accepting="false" destination="3" source="41"/>
+                <reachabilityElement accepting="false" destination="5" source="41"/>
+                <reachabilityElement accepting="true" destination="7" source="15"/>
+            </reachabilityElements>
+        </lowerReachability>
+        <upperReachability>
+            <reachabilityElements>
+                <reachabilityElement accepting="true" destination="7" source="17"/>
+                <reachabilityElement accepting="true" destination="11" source="35"/>
+                <reachabilityElement accepting="true" destination="1" source="13"/>
+                <reachabilityElement accepting="true" destination="9" source="23"/>
+                <reachabilityElement accepting="true" destination="3" source="21"/>
+                <reachabilityElement accepting="true" destination="5" source="19"/>
+                <reachabilityElement accepting="true" destination="3" source="37"/>
+                <reachabilityElement accepting="true" destination="5" source="23"/>
+                <reachabilityElement accepting="true" destination="1" source="33"/>
+                <reachabilityElement accepting="true" destination="9" source="19"/>
+                <reachabilityElement accepting="true" destination="3" source="17"/>
+                <reachabilityElement accepting="true" destination="1" source="35"/>
+                <reachabilityElement accepting="true" destination="11" source="13"/>
+                <reachabilityElement accepting="true" destination="3" source="39"/>
+                <reachabilityElement accepting="true" destination="11" source="33"/>
+                <reachabilityElement accepting="true" destination="3" source="31"/>
+                <reachabilityElement accepting="true" destination="11" source="23"/>
+                <reachabilityElement accepting="true" destination="9" source="35"/>
+                <reachabilityElement accepting="true" destination="11" source="19"/>
+                <reachabilityElement accepting="true" destination="3" source="41"/>
+                <reachabilityElement accepting="true" destination="5" source="35"/>
+                <reachabilityElement accepting="true" destination="3" source="15"/>
+                <reachabilityElement accepting="true" destination="3" source="29"/>
+                <reachabilityElement accepting="true" destination="3" source="27"/>
+                <reachabilityElement accepting="true" destination="5" source="33"/>
+                <reachabilityElement accepting="true" destination="9" source="13"/>
+                <reachabilityElement accepting="true" destination="1" source="19"/>
+                <reachabilityElement accepting="true" destination="9" source="33"/>
+                <reachabilityElement accepting="true" destination="5" source="13"/>
+                <reachabilityElement accepting="true" destination="3" source="25"/>
+                <reachabilityElement accepting="true" destination="7" source="15"/>
+                <reachabilityElement accepting="true" destination="9" source="39"/>
+                <reachabilityElement accepting="true" destination="11" source="25"/>
+                <reachabilityElement accepting="true" destination="5" source="39"/>
+                <reachabilityElement accepting="true" destination="11" source="15"/>
+                <reachabilityElement accepting="true" destination="11" source="29"/>
+                <reachabilityElement accepting="true" destination="11" source="27"/>
+                <reachabilityElement accepting="true" destination="9" source="37"/>
+                <reachabilityElement accepting="true" destination="3" source="19"/>
+                <reachabilityElement accepting="true" destination="11" source="41"/>
+                <reachabilityElement accepting="true" destination="9" source="17"/>
+                <reachabilityElement accepting="true" destination="5" source="21"/>
+                <reachabilityElement accepting="true" destination="5" source="37"/>
+                <reachabilityElement accepting="true" destination="7" source="19"/>
+                <reachabilityElement accepting="true" destination="11" source="31"/>
+                <reachabilityElement accepting="true" destination="5" source="17"/>
+                <reachabilityElement accepting="true" destination="1" source="15"/>
+                <reachabilityElement accepting="true" destination="3" source="23"/>
+                <reachabilityElement accepting="true" destination="9" source="21"/>
+                <reachabilityElement accepting="true" destination="3" source="33"/>
+                <reachabilityElement accepting="true" destination="7" source="13"/>
+                <reachabilityElement accepting="true" destination="5" source="27"/>
+                <reachabilityElement accepting="true" destination="5" source="29"/>
+                <reachabilityElement accepting="true" destination="1" source="17"/>
+                <reachabilityElement accepting="true" destination="5" source="15"/>
+                <reachabilityElement accepting="true" destination="11" source="39"/>
+                <reachabilityElement accepting="true" destination="9" source="25"/>
+                <reachabilityElement accepting="true" destination="9" source="27"/>
+                <reachabilityElement accepting="true" destination="9" source="15"/>
+                <reachabilityElement accepting="true" destination="9" source="29"/>
+                <reachabilityElement accepting="true" destination="5" source="25"/>
+                <reachabilityElement accepting="true" destination="3" source="13"/>
+                <reachabilityElement accepting="true" destination="7" source="33"/>
+                <reachabilityElement accepting="true" destination="7" source="35"/>
+                <reachabilityElement accepting="true" destination="9" source="41"/>
+                <reachabilityElement accepting="true" destination="5" source="31"/>
+                <reachabilityElement accepting="true" destination="11" source="17"/>
+                <reachabilityElement accepting="true" destination="11" source="37"/>
+                <reachabilityElement accepting="true" destination="11" source="21"/>
+                <reachabilityElement accepting="true" destination="5" source="41"/>
+                <reachabilityElement accepting="true" destination="9" source="31"/>
+                <reachabilityElement accepting="true" destination="3" source="35"/>
+            </reachabilityElements>
+        </upperReachability>
+    </subproperty>
+</constraint>

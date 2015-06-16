@@ -21,7 +21,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
-public class BAElementToTransformer implements Transformer<Element, BA>  {
+public class ElementToBATransformer implements Transformer<Element, BA>  {
 
 	
 	/**
@@ -29,7 +29,7 @@ public class BAElementToTransformer implements Transformer<Element, BA>  {
 	 */
 	protected  Map<Integer, State> mapIdState;
 	
-	public BAElementToTransformer(){
+	public ElementToBATransformer(){
 		this.mapIdState=new HashMap<Integer, State>();
 	}
 
