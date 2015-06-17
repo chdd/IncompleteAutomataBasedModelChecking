@@ -11,7 +11,6 @@ import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.KripkeAcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
