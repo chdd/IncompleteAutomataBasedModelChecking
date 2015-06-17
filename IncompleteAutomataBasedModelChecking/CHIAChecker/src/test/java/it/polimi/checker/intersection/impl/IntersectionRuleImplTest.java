@@ -9,7 +9,7 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.checker.intersection.IntersectionRule;
+import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,12 +49,12 @@ public class IntersectionRuleImplTest {
 	
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, null, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionTransitionBuilder#getIntersectionTransition(it.polimi.automata.transition.Transition, null, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testGetIntersectionNullClaimTransition() {
-		new IntersectionRule()
+		new IntersectionTransitionBuilder()
 				.getIntersectionTransition(modelTransition, null);
 	}
 
@@ -63,7 +63,7 @@ public class IntersectionRuleImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionTransitionBuilder#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test
@@ -84,7 +84,7 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRule()
+				new IntersectionTransitionBuilder()
 						.getIntersectionTransition(modelTransition,
 								claimTransition)
 						.getPropositions());
@@ -92,7 +92,7 @@ public class IntersectionRuleImplTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionTransitionBuilder#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test
@@ -106,13 +106,13 @@ public class IntersectionRuleImplTest {
 		claimPropositions.add(new GraphProposition("b", true));
 		claimTransition = transitionFactory.create(claimPropositions);
 
-		assertNull(new IntersectionRule()
+		assertNull(new IntersectionTransitionBuilder()
 				.getIntersectionTransition(modelTransition, claimTransition));
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionRule#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
+	 * {@link it.polimi.checker.intersection.IntersectionTransitionBuilder#getIntersectionTransition(it.polimi.automata.transition.Transition, it.polimi.automata.transition.Transition, it.polimi.automata.transition.TransitionFactory)}
 	 * .
 	 */
 	@Test
@@ -135,7 +135,7 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRule()
+				new IntersectionTransitionBuilder()
 						.getIntersectionTransition(modelTransition,
 								claimTransition)
 						.getPropositions());
@@ -158,7 +158,7 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRule()
+				new IntersectionTransitionBuilder()
 						.getIntersectionTransition(modelTransition,
 								claimTransition)
 						.getPropositions());
@@ -185,7 +185,7 @@ public class IntersectionRuleImplTest {
 
 		assertEquals(
 				intersectionTransition.getPropositions(),
-				new IntersectionRule()
+				new IntersectionTransitionBuilder()
 						.getIntersectionTransition(modelTransition,
 								claimTransition)
 						.getPropositions());
@@ -204,7 +204,7 @@ public class IntersectionRuleImplTest {
 
 		
 
-		assertNull(new IntersectionRule()
+		assertNull(new IntersectionTransitionBuilder()
 		.getIntersectionTransition(modelTransition,
 				claimTransition));
 	}

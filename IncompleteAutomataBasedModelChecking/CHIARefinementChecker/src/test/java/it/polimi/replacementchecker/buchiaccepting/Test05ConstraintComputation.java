@@ -1,4 +1,4 @@
-package it.polimi.replacementchecker;
+package it.polimi.replacementchecker.buchiaccepting;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -21,6 +21,7 @@ import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
+import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
 
@@ -79,13 +80,13 @@ public class Test05ConstraintComputation {
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 
 		this.model = new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test05/model.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test05/model.xml").getFile())).perform();
 
 		this.claim = new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test05/claim.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test05/claim.xml").getFile())).perform();
 
 		this.replacement = new ReplacementReader(new File(getClass()
-				.getClassLoader().getResource(path + "test05/replacement.xml")
+				.getClassLoader().getResource(path + "buchiaccepting/test05/replacement.xml")
 				.getFile())).perform();
 		stateFactory = new StateFactory();
 		stateFactory = new StateFactory();

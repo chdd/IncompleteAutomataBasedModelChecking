@@ -1,4 +1,4 @@
-package it.polimi.replacementchecker;
+package it.polimi.replacementchecker.buchiaccepting;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.BA;
@@ -16,6 +16,7 @@ import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
+import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
 
@@ -24,7 +25,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test10ConstraintComputation {
+public class Test08ConstraintComputation {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -40,17 +41,17 @@ public class Test10ConstraintComputation {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test10/replacement.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test08/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test10/constraint.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test08/constraint.xml").getFile())).perform();
 		this.refinement=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test10/refinement.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test08/refinement.xml").getFile())).perform();
 		
 		this.claim=new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test10/claim.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test08/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test10/model.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test08/model.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test
@@ -75,15 +76,15 @@ public class Test10ConstraintComputation {
 		checker=new Checker(refinement, claim, this.acceptingPolicy);
 		SatisfactionValue ret=checker.perform();
 		System.out.println(checker.getUpperIntersectionBA());
-		assertTrue(ret==SatisfactionValue.SATISFIED);
+		assertTrue(ret==SatisfactionValue.POSSIBLYSATISFIED);
 		
 		ReplacementChecker replacementChecker=new ReplacementChecker(this.constraint.getSubProperty(this.replacement.getModelState()), replacement, this.acceptingPolicy);
 		
 		SatisfactionValue retValue=replacementChecker.perform();
 		System.out.println(retValue);
-		System.out.println(replacementChecker.getLowerIntersectionBA());
+		System.out.println(replacementChecker.getUpperIntersectionBA());
 		
-		assertTrue(retValue==SatisfactionValue.SATISFIED);
+		assertTrue(retValue==SatisfactionValue.POSSIBLYSATISFIED);
 		
 		
 	}

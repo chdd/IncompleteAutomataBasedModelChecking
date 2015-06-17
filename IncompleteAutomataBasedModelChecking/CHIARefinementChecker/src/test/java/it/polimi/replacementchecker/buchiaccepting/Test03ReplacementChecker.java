@@ -1,4 +1,4 @@
-package it.polimi.replacementchecker;
+package it.polimi.replacementchecker.buchiaccepting;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.checker.SatisfactionValue;
@@ -8,6 +8,7 @@ import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
+import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
 
@@ -25,10 +26,10 @@ public class Test03ReplacementChecker {
 	@Before
 	public void setUp(){
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test03/replacement.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test03/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test03/constraint.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test03/constraint.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test

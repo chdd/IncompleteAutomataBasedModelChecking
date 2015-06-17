@@ -17,9 +17,9 @@ public class LTLtoBATransformerTest1 {
 	@Test
 	public void test() {
 		LTLtoBATransformer ltlToBATransformer;
-		ltlToBATransformer=new LTLtoBATransformer();
+		ltlToBATransformer=new LTLtoBATransformer("[]a");
 		
-		BA ba=ltlToBATransformer.transform("[]a");
+		BA ba=ltlToBATransformer.perform();
 		
 		assertTrue(ba.getInitialStates().size()==1);
 		assertTrue(ba.getAcceptStates().size()==1);

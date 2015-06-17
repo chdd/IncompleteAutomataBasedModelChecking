@@ -1,4 +1,4 @@
-package it.polimi.replacementchecker;
+package it.polimi.replacementchecker.buchiaccepting;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.BA;
@@ -17,6 +17,7 @@ import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
+import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
 
@@ -44,13 +45,13 @@ public class Test04ConstraintComputation {
 	@Before
 	public void setUp() throws Exception {
 		this.model = new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test04/model.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test04/model.xml").getFile())).perform();
 
 		this.claim = new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test04/claim.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test04/claim.xml").getFile())).perform();
 
 		this.replacement=new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test04/replacement.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test04/replacement.xml").getFile())).perform();
 		this.intersectionStateFactory=new IntersectionStateFactory();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}

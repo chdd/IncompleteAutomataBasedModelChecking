@@ -66,7 +66,7 @@ public class BAReaderTest {
 		BAReader reader = new BAReader(new File(getClass().getClassLoader()
 				.getResource("SendingMessageClaim.xml").getFile()));
 
-		BA sendingMessage = reader.read();
+		BA sendingMessage = reader.perform();
 
 		assertTrue(sendingMessage.getStates().contains(
 				stateFactory.create("p1", 1)));

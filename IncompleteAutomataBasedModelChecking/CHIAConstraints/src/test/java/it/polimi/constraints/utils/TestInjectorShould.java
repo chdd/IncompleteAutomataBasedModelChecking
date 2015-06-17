@@ -124,7 +124,7 @@ public class TestInjectorShould {
 	
 	@Test
 	public void injectTheOutgoingTransitionsOfTheReplacement() throws Exception {
-		for(PluggingTransition plugTransition: replacement.getOutcomingPorts()){
+		for(PluggingTransition plugTransition: replacement.getOutcomingTransition()){
 			assertTrue(result.getTransitions().contains(plugTransition.getTransition()));
 			assertTrue(result.getTransitionSource(plugTransition.getTransition()).equals(plugTransition.getSource()));
 			assertTrue(result.getTransitionDestination(plugTransition.getTransition()).equals(plugTransition.getDestination()));

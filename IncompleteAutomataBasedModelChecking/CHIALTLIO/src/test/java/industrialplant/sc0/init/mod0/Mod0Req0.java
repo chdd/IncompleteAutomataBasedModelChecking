@@ -19,8 +19,8 @@ public class Mod0Req0 {
 		String ltlFormula=reader.readLine();
 		reader.close();
 		LTLtoBATransformer ltlToBaTransformer;
-		ltlToBaTransformer=new LTLtoBATransformer();
-		ltlToBaTransformer.transform(ltlFormula);
+		ltlToBaTransformer=new LTLtoBATransformer(ltlFormula);
+		ltlToBaTransformer.perform();
 	}
 
 }

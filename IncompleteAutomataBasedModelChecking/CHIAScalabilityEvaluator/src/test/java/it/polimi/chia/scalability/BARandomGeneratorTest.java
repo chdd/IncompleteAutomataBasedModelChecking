@@ -87,7 +87,7 @@ public class BARandomGeneratorTest {
 		BARandomGenerator baRandGenerator = new BARandomGenerator(propositions,
 				stateFactory, transitionDensity, acceptanceDensity, numStates,
 				random);
-		BA ba = baRandGenerator.generateRandomBA();
+		BA ba = baRandGenerator.perform();
 		return ba;
 	}
 }
