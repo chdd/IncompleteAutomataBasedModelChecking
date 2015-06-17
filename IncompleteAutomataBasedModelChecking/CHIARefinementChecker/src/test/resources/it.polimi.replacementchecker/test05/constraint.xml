@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><constraint>
+    <subproperty indispensable="true" modelstateId="3" name="t0">
+        <ba>
+            <propositions>
+                <proposition value="b"/>
+                <proposition value="a"/>
+            </propositions>
+            <states>
+                <state id="20" name="20"/>
+                <state id="19" name="19"/>
+                <state accepting="true" id="15" name="15"/>
+                <state id="13" name="13"/>
+                <state id="14" name="14"/>
+                <state accepting="true" id="21" name="21"/>
+            </states>
+            <transitions>
+                <transition destination="21" id="101102" propositions="SIGMA" source="20"/>
+                <transition destination="19" id="101115" propositions="!b^!a" source="15"/>
+                <transition destination="15" id="101099" propositions="!b" source="14"/>
+                <transition destination="20" id="101113" propositions="!b^!a" source="13"/>
+                <transition destination="13" id="101114" propositions="!b" source="15"/>
+                <transition destination="14" id="101112" propositions="!b" source="13"/>
+                <transition destination="19" id="101107" propositions="SIGMA" source="21"/>
+                <transition destination="21" id="101108" propositions="!b^!a" source="14"/>
+                <transition destination="20" id="101106" propositions="SIGMA" source="19"/>
+            </transitions>
+        </ba>
+        <inports>
+            <port color="BLACK" id="23188">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="21" name="21"/>
+                </destinationstate>
+                <transition id="101100" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23182">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="20" name="20"/>
+                </destinationstate>
+                <transition id="101103" propositions="a"/>
+            </port>
+            <port color="GREEN" id="23184">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="15" name="15"/>
+                </destinationstate>
+                <transition id="101116" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23186">
+                <sourcestate>
+                    <state id="4" name="4"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="14" name="14"/>
+                </destinationstate>
+                <transition id="101109" propositions="a"/>
+            </port>
+        </inports>
+        
+        <outports>
+            <port color="BLACK" id="23192">
+                <sourcestate>
+                    <state id="19" name="19"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="101105" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23196">
+                <sourcestate>
+                    <state id="13" name="13"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="101111" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23198">
+                <sourcestate>
+                    <state id="14" name="14"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="101098" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23190">
+                <sourcestate>
+                    <state id="20" name="20"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="101101" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23194">
+                <sourcestate>
+                    <state id="15" name="15"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="101110" propositions="a"/>
+            </port>
+            <port color="BLACK" id="23200">
+                <sourcestate>
+                    <state id="21" name="21"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="4" name="4"/>
+                </destinationstate>
+                <transition id="101104" propositions="a"/>
+            </port>
+        </outports>
+        <lowerReachability>
+            <reachabilityElements>
+                <reachabilityElement accepting="false" destination="23186" source="23194"/>
+                <reachabilityElement accepting="false" destination="23184" source="23196"/>
+                <reachabilityElement accepting="false" destination="23182" source="23200"/>
+                <reachabilityElement accepting="false" destination="23188" source="23192"/>
+                <reachabilityElement accepting="false" destination="23184" source="23198"/>
+                <reachabilityElement accepting="false" destination="23188" source="23190"/>
+            </reachabilityElements>
+        </lowerReachability>
+        <upperReachability>
+            <reachabilityElements>
+                <reachabilityElement accepting="false" destination="23186" source="23194"/>
+                <reachabilityElement accepting="false" destination="23184" source="23196"/>
+                <reachabilityElement accepting="false" destination="23182" source="23200"/>
+                <reachabilityElement accepting="false" destination="23188" source="23192"/>
+                <reachabilityElement accepting="false" destination="23184" source="23198"/>
+                <reachabilityElement accepting="false" destination="23188" source="23190"/>
+            </reachabilityElements>
+        </upperReachability>
+    </subproperty>
+</constraint>

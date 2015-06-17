@@ -9,20 +9,9 @@
 			<state accepting="true" id="5" name="5" />
 		</states>
 		<transitions>
-			<transition destination="5" id="101077" propositions="b"
-				source="5" />
 		</transitions>
 	</iba>
 	<inports>
-		<port id="23151">
-			<sourcestate>
-				<state id="4" name="4" />
-			</sourcestate>
-			<destinationstate>
-				<state id="5" name="5" />
-			</destinationstate>
-			<transition id="101078" propositions="b" />
-		</port>
 		<port id="23167">
 			<sourcestate>
 				<state id="4" name="4" />
