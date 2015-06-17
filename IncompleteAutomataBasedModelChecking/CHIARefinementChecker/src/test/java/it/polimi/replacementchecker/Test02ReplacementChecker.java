@@ -24,8 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test7ConstraintComputation {
-
+public class Test02ReplacementChecker {
 	private static final String path = "it.polimi.replacementchecker/";
 
 	private Constraint constraint;
@@ -40,17 +39,17 @@ public class Test7ConstraintComputation {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/replacement.xml").getFile())).perform();
+				.getResource(path + "test2/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/constraint.xml").getFile())).perform();
+				.getResource(path + "test2/constraint.xml").getFile())).perform();
 		this.refinement=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/refinement.xml").getFile())).perform();
+				.getResource(path + "test2/refinement.xml").getFile())).perform();
 		
 		this.claim=new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/claim.xml").getFile())).perform();
+				.getResource(path + "test2/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/model.xml").getFile())).perform();
+				.getResource(path + "test2/model.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test
@@ -59,8 +58,6 @@ public class Test7ConstraintComputation {
 		
 		Checker checker=new Checker(model, claim, this.acceptingPolicy);
 		
-		checker.perform();
-		System.out.println(checker.getUpperIntersectionBA());
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
 		cg.computeIndispensable();
@@ -85,5 +82,4 @@ public class Test7ConstraintComputation {
 		
 		
 	}
-
 }

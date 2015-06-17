@@ -24,7 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test8ConstraintComputation {
+public class Test07ConstraintComputation {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -40,17 +40,17 @@ public class Test8ConstraintComputation {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test8/replacement.xml").getFile())).perform();
+				.getResource(path + "test7/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test8/constraint.xml").getFile())).perform();
+				.getResource(path + "test7/constraint.xml").getFile())).perform();
 		this.refinement=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test8/refinement.xml").getFile())).perform();
+				.getResource(path + "test7/refinement.xml").getFile())).perform();
 		
 		this.claim=new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test8/claim.xml").getFile())).perform();
+				.getResource(path + "test7/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test8/model.xml").getFile())).perform();
+				.getResource(path + "test7/model.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test
@@ -60,7 +60,6 @@ public class Test8ConstraintComputation {
 		Checker checker=new Checker(model, claim, this.acceptingPolicy);
 		
 		checker.perform();
-		
 		System.out.println(checker.getUpperIntersectionBA());
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
@@ -74,16 +73,15 @@ public class Test8ConstraintComputation {
 		
 		checker=new Checker(refinement, claim, this.acceptingPolicy);
 		SatisfactionValue ret=checker.perform();
-		System.out.println(checker.getUpperIntersectionBA());
-		assertTrue(ret==SatisfactionValue.POSSIBLYSATISFIED);
+		System.out.println(checker.getLowerIntersectionBA());
+		assertTrue(ret==SatisfactionValue.SATISFIED);
+		
 		
 		ReplacementChecker replacementChecker=new ReplacementChecker(this.constraint.getSubProperty(this.replacement.getModelState()), replacement, this.acceptingPolicy);
 		
 		SatisfactionValue retValue=replacementChecker.perform();
-		System.out.println(retValue);
-		System.out.println(replacementChecker.getUpperIntersectionBA());
-		
-		assertTrue(retValue==SatisfactionValue.POSSIBLYSATISFIED);
+		System.out.println(replacementChecker.getLowerIntersectionBA());
+		assertTrue(retValue==SatisfactionValue.SATISFIED);
 		
 		
 	}

@@ -25,7 +25,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test4ConstraintComputation {
+public class Test04ConstraintComputation {
 
 	private static final String path = "it.polimi.replacementchecker/";
 

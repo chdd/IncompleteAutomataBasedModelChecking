@@ -24,7 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test9ConstraintComputation {
+public class Test08ConstraintComputation {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -40,17 +40,17 @@ public class Test9ConstraintComputation {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test9/replacement.xml").getFile())).perform();
+				.getResource(path + "test8/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test9/constraint.xml").getFile())).perform();
+				.getResource(path + "test8/constraint.xml").getFile())).perform();
 		this.refinement=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test9/refinement.xml").getFile())).perform();
+				.getResource(path + "test8/refinement.xml").getFile())).perform();
 		
 		this.claim=new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test9/claim.xml").getFile())).perform();
+				.getResource(path + "test8/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test9/model.xml").getFile())).perform();
+				.getResource(path + "test8/model.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test

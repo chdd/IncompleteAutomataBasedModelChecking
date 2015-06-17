@@ -11,8 +11,6 @@ import it.polimi.automata.io.out.ElementToStringTransformer;
 import it.polimi.automata.state.IntersectionStateFactory;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
-import it.polimi.automata.transition.Transition;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.IntersectionTransitionBuilder;
@@ -25,8 +23,6 @@ import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -35,11 +31,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
-
-public class Test5ConstraintComputation {
+public class Test05ConstraintComputation {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -70,16 +62,6 @@ public class Test5ConstraintComputation {
 	private State state3;
 	private State state4;
 	
-	private Transition modelTransition1;
-	private Transition modelTransition3;
-	private Transition modelTransition7;
-	private Transition modelTransition9;
-	
-	private Transition claimTransition1;
-	private Transition claimTransition2;
-	private Transition claimTransition3;
-	
-	private Transition intersectionTransition1;
 	
 	private IntersectionBA upperIntersectionBA;
 
@@ -90,8 +72,6 @@ public class Test5ConstraintComputation {
 	private StateFactory stateFactory;
 
 	
-	private IntersectionTransitionBuilder intersectionTransitionFactory;
-
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
@@ -128,40 +108,6 @@ public class Test5ConstraintComputation {
 		state20 = stateFactory.create("20", 20);
 		state21 = stateFactory.create("21", 21);
 		
-		IGraphProposition b=new GraphProposition("b", false);
-		
-		IGraphProposition a=new GraphProposition("a", false);
-		
-		Set<IGraphProposition> labels=new HashSet<IGraphProposition>();
-		labels.add(b);
-		this.modelTransition1=new ClaimTransitionFactory().create(1, labels);
-		
-		labels=new HashSet<IGraphProposition>();
-		labels.add(a);
-		this.modelTransition3=new ClaimTransitionFactory().create(3, labels);
-		
-		labels=new HashSet<IGraphProposition>();
-		labels.add(a);
-		this.modelTransition7=new ClaimTransitionFactory().create(7, labels);
-		
-		labels=new HashSet<IGraphProposition>();
-		labels.add(a);
-		this.modelTransition9=new ClaimTransitionFactory().create(9, labels);
-		
-		labels=new HashSet<IGraphProposition>();
-		labels.add(new SigmaProposition());
-		this.claimTransition1=new ClaimTransitionFactory().create(1, labels);
-		
-		labels=new HashSet<IGraphProposition>();
-		labels.add(new GraphProposition("b", true));
-		this.claimTransition2=new ClaimTransitionFactory().create(2, labels);
-		
-		labels=new HashSet<IGraphProposition>();
-		labels.add(new GraphProposition("b", true));
-		labels.add(new GraphProposition("a", true));
-		this.claimTransition3=new ClaimTransitionFactory().create(3, labels);
-	
-		this.intersectionTransitionFactory=new IntersectionTransitionBuilder();
 		this.mockIntersectionStateCreation();
 		
 
@@ -220,6 +166,10 @@ public class Test5ConstraintComputation {
 		cg.computeIndispensable();
 		cg.computePortReachability();
 		cg.coloring();
+
+		System.out.println(new ElementToStringTransformer()
+				.transform(new ConstraintToElementTransformer()
+						.transform(constraint)));
 
 		ReplacementChecker rc = new ReplacementChecker(
 				constraint.getSubProperty(replacement.getModelState()),

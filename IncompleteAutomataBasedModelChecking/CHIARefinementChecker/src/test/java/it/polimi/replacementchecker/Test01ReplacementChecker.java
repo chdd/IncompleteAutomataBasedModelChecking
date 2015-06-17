@@ -14,7 +14,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test1ReplacementChecker {
+public class Test01ReplacementChecker {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
