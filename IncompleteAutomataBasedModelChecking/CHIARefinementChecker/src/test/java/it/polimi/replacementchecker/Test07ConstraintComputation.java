@@ -40,17 +40,17 @@ public class Test07ConstraintComputation {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/replacement.xml").getFile())).perform();
+				.getResource(path + "test07/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/constraint.xml").getFile())).perform();
+				.getResource(path + "test07/constraint.xml").getFile())).perform();
 		this.refinement=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/refinement.xml").getFile())).perform();
+				.getResource(path + "test07/refinement.xml").getFile())).perform();
 		
 		this.claim=new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/claim.xml").getFile())).perform();
+				.getResource(path + "test07/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test7/model.xml").getFile())).perform();
+				.getResource(path + "test07/model.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test

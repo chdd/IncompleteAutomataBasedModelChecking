@@ -25,10 +25,10 @@ public class Test01ReplacementChecker {
 	@Before
 	public void setUp(){
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test1/replacement.xml").getFile())).perform();
+				.getResource(path + "test01/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test1/constraint.xml").getFile())).perform();
+				.getResource(path + "test01/constraint.xml").getFile())).perform();
 		this.acceptingPolicy=new KripkeAcceptingPolicy();
 	}
 	@Test

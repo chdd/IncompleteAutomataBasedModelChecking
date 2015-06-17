@@ -39,17 +39,17 @@ public class Test02ReplacementChecker {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test2/replacement.xml").getFile())).perform();
+				.getResource(path + "test02/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "test2/constraint.xml").getFile())).perform();
+				.getResource(path + "test02/constraint.xml").getFile())).perform();
 		this.refinement=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test2/refinement.xml").getFile())).perform();
+				.getResource(path + "test02/refinement.xml").getFile())).perform();
 		
 		this.claim=new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test2/claim.xml").getFile())).perform();
+				.getResource(path + "test02/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test2/model.xml").getFile())).perform();
+				.getResource(path + "test02/model.xml").getFile())).perform();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
 	@Test

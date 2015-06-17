@@ -79,13 +79,13 @@ public class Test05ConstraintComputation {
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 
 		this.model = new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test5/model.xml").getFile())).perform();
+				.getResource(path + "test05/model.xml").getFile())).perform();
 
 		this.claim = new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test5/claim.xml").getFile())).perform();
+				.getResource(path + "test05/claim.xml").getFile())).perform();
 
 		this.replacement = new ReplacementReader(new File(getClass()
-				.getClassLoader().getResource(path + "test5/replacement.xml")
+				.getClassLoader().getResource(path + "test05/replacement.xml")
 				.getFile())).perform();
 		stateFactory = new StateFactory();
 		stateFactory = new StateFactory();

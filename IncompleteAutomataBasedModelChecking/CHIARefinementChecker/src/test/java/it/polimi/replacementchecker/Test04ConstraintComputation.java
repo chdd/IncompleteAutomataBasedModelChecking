@@ -44,13 +44,13 @@ public class Test04ConstraintComputation {
 	@Before
 	public void setUp() throws Exception {
 		this.model = new IBAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test4/model.xml").getFile())).perform();
+				.getResource(path + "test04/model.xml").getFile())).perform();
 
 		this.claim = new BAReader(new File(getClass().getClassLoader()
-				.getResource(path + "test4/claim.xml").getFile())).perform();
+				.getResource(path + "test04/claim.xml").getFile())).perform();
 
 		this.replacement=new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "test4/replacement.xml").getFile())).perform();
+				.getResource(path + "test04/replacement.xml").getFile())).perform();
 		this.intersectionStateFactory=new IntersectionStateFactory();
 		this.acceptingPolicy=new NormalAcceptingPolicy();
 	}
