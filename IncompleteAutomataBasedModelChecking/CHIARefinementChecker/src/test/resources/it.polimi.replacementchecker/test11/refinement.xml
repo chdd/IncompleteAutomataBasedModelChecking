@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iba>
+	<propositions>
+		<proposition value="b" />
+		<proposition value="a" />
+	</propositions>
+	<states>
+		<state id="2" name="2" />
+		<state accepting="true" id="3" name="3" />
+		<state id="4" name="4" />
+		<state id="5" initial="true" name="5" />
+		<state id="6" name="6" />
+	</states>
+	<transitions>
+		<transition destination="2" id="131275" propositions="a"
+			source="3" />
+		<transition destination="6" id="131269" propositions="a"
+			source="2" />
+		<transition destination="6" id="131278" propositions="a"
+			source="6" />
+		<transition destination="3" id="131271" propositions="a"
+			source="6" />
+		<transition destination="4" id="131284" propositions="a"
+			source="5" />
+		<transition destination="3" id="131262" propositions="a"
+			source="4" />
+	</transitions>
+</iba>
