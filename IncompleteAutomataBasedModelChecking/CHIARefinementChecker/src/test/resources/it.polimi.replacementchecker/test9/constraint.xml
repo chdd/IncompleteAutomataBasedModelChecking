@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><constraint>
+    <subproperty indispensable="false" modelstateId="1" name="t0">
+        <ba>
+            <propositions>
+                <proposition value="b"/>
+                <proposition value="a"/>
+            </propositions>
+            <states>
+                <state id="5101" name="1 - 1 - 1"/>
+            </states>
+            <transitions>
+                <transition destination="5101" id="14851" propositions="SIGMA" source="5101"/>
+            </transitions>
+        </ba>
+        <inports>
+            <port color="YELLOW" id="1697">
+                <sourcestate>
+                    <state id="2" name="t1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="5101" name="1 - 1 - 1"/>
+                </destinationstate>
+                <transition id="14852" propositions="b"/>
+            </port>
+        </inports>
+        <outports>
+            <port color="RED" id="1699">
+                <sourcestate>
+                    <state id="5101" name="1 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="3" name="3"/>
+                </destinationstate>
+                <transition id="14850" propositions="b"/>
+            </port>
+        </outports>
+        <lowerReachability>
+            <reachabilityElements/>
+        </lowerReachability>
+        <upperReachability>
+            <reachabilityElements/>
+        </upperReachability>
+    </subproperty>
+    <subproperty indispensable="true" modelstateId="2" name="t1">
+        <ba>
+            <propositions>
+                <proposition value="b"/>
+                <proposition value="a"/>
+            </propositions>
+            <states>
+                <state id="5100" name="2 - 1 - 1"/>
+                <state id="5095" initial="true" name="2 - 2 - 0"/>
+                <state id="5099" name="2 - 2 - 1"/>
+            </states>
+            <transitions>
+                <transition destination="5100" id="14854" propositions="SIGMA" source="5100"/>
+                <transition destination="5099" id="14856" propositions="!b" source="5095"/>
+                <transition destination="5100" id="14855" propositions="!b^!a" source="5099"/>
+                <transition destination="5099" id="14843" propositions="!b" source="5099"/>
+                <transition destination="5100" id="14857" propositions="!b^!a" source="5095"/>
+            </transitions>
+        </ba>
+        <inports/>
+        <outports>
+            <port color="YELLOW" id="1701">
+                <sourcestate>
+                    <state id="5100" name="2 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="1" name="t0"/>
+                </destinationstate>
+                <transition id="14852" propositions="b"/>
+            </port>
+            <port color="RED" id="1703">
+                <sourcestate>
+                    <state id="5100" name="2 - 1 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="3" name="3"/>
+                </destinationstate>
+                <transition id="14853" propositions="a"/>
+            </port>
+            <port color="RED" id="1705">
+                <sourcestate>
+                    <state id="5095" name="2 - 2 - 0"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="3" name="3"/>
+                </destinationstate>
+                <transition id="14841" propositions="a"/>
+            </port>
+            <port color="RED" id="1707">
+                <sourcestate>
+                    <state id="5099" name="2 - 2 - 1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="3" name="3"/>
+                </destinationstate>
+                <transition id="14842" propositions="a"/>
+            </port>
+        </outports>
+        <lowerReachability>
+            <reachabilityElements/>
+        </lowerReachability>
+        <upperReachability>
+            <reachabilityElements/>
+        </upperReachability>
+    </subproperty>
+</constraint>
