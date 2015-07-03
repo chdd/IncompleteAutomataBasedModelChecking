@@ -1,19 +1,26 @@
 package it.polimi.automata.io.out;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import it.polimi.automata.BA;
 import action.CHIAAction;
 
-public class BAToStringTrasformer extends CHIAAction{
+import com.google.common.base.Preconditions;
+
+public class BAToStringTrasformer extends CHIAAction<String>{
 
 	private final static String NAME="PRINT CLAIM";
 	
-	public BAToStringTrasformer() {
+	protected BA claim;
+	
+	public BAToStringTrasformer(BA claim) {
 		super(NAME);
+		Preconditions.checkNotNull("The claim to be converted cannot be null");
+		this.claim=claim;
 	}
 
-	public String toString(BA claim) throws ParserConfigurationException, Exception{
+	@Override
+	public String perform() throws Exception {
 		return new ElementToStringTransformer().transform(new BAToElementTrasformer().transform(claim));
+		
+		
 	}
 }

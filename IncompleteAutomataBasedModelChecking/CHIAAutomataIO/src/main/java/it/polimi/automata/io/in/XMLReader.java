@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 import action.CHIAAction;
 
-public abstract class XMLReader extends CHIAAction {
+public abstract class XMLReader<O> extends CHIAAction<O> {
 
 	public XMLReader(String name) {
 		super(name);

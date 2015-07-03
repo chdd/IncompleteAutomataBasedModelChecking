@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,7 +31,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class BAReader extends XMLReader{
+public class BAReader extends XMLReader<BA>{
 
 	private final static String NAME="READ CLAIM";
 	
@@ -49,6 +48,7 @@ public class BAReader extends XMLReader{
 
 	private static final String BA_XSD_PATH = "BA.xsd";
 
+	
 	
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
@@ -83,22 +83,8 @@ public class BAReader extends XMLReader{
 		this.file = file;
 	}
 
-	/**
-	 * read the Buchi Automaton from the reader
-	 * 
-	 * @return a new Buchi automaton which is parsed from the reader
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws FileNotFoundException
-	 * @throws JAXBException
-	 * @throws GraphIOException
-	 *             is generated if a problem occurs in the loading of the Buchi
-	 *             Automaton
-	 */
-	public BA read() throws ParserConfigurationException,
-			FileNotFoundException, SAXException, IOException {
-		
+	@Override
+	public BA perform() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
 		logger.info("Reding the Claim");
 
 		Document dom;
@@ -118,13 +104,10 @@ public class BAReader extends XMLReader{
 		dom = db.parse(file);
 
 		Element doc = dom.getDocumentElement();
-		BA ba=new BAElementToTransformer().transform(doc);
+		BA ba=new ElementToBATransformer().transform(doc);
 		
 		logger.info("Claim Readed");
 		this.performed();
-
 		return ba;
 	}
-
-	
 }

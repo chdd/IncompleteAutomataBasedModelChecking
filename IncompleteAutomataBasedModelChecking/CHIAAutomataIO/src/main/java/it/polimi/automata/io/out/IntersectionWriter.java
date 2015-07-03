@@ -32,7 +32,7 @@ import com.google.common.base.Preconditions;
  * @param T
  *            is the type of the transitions of the intersection automaton
  */
-public class IntersectionWriter extends CHIAAction{
+public class IntersectionWriter extends CHIAAction<Void>{
 
 	private static final String NAME="WRITE INTERSECTION";
 	/**
@@ -46,6 +46,8 @@ public class IntersectionWriter extends CHIAAction{
 	 */
 	private File f;
 
+	
+	protected final IntersectionBA intersectionAutomaton;
 	/**
 	 * creates a new Writer for the intersection automaton
 	 * 
@@ -58,15 +60,15 @@ public class IntersectionWriter extends CHIAAction{
 	 *             if the intersection automaton or the file is null
 	 * 
 	 */
-	public IntersectionWriter(File f) {
+	public IntersectionWriter(File f, IntersectionBA intersectionAutomaton) {
 		super(NAME);
 		Preconditions.checkNotNull(f,
 				"The file where the automaton must be written cannot be null");
-
+		this.intersectionAutomaton=intersectionAutomaton;
 		this.f = f;
 	}
 
-	public void write(IntersectionBA intersectionAutomaton) {
+	public Void perform() {
 
 		logger.info("Writing the intersection automaton");
 		try {
@@ -77,7 +79,7 @@ public class IntersectionWriter extends CHIAAction{
 
 			// root elements
 			Document doc = docBuilder.newDocument();
-			Element intersectionAutomatonElement = new IntersectionToElementTransformer().transform(intersectionAutomaton);
+			Element intersectionAutomatonElement = new IntersectionToElementTransformer(doc).transform(intersectionAutomaton);
 			doc.appendChild(intersectionAutomatonElement);
 
 			
@@ -89,6 +91,7 @@ public class IntersectionWriter extends CHIAAction{
 			transformer.transform(source, result);
 
 			logger.info("Intersection automaton written");
+			return null;
 
 		} catch (ParserConfigurationException pce) {
 			logger.error(pce.getMessage());
@@ -97,7 +100,6 @@ public class IntersectionWriter extends CHIAAction{
 			logger.error(tfe.getMessage());
 			tfe.printStackTrace();
 		}
+		return null;
 	}
-
-	
 }

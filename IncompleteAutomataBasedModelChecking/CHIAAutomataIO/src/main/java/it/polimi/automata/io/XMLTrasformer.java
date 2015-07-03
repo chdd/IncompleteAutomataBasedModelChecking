@@ -11,7 +11,8 @@ import com.google.common.base.Preconditions;
 
 public abstract class XMLTrasformer<I, O extends Element> implements Transformer<I, O>{
 
-	private Document doc;
+	private final Document doc;
+	
 	public XMLTrasformer(Document doc){
 		Preconditions.checkNotNull(doc, "The document cannot be null");
 		this.doc=doc;
@@ -25,9 +26,8 @@ public abstract class XMLTrasformer<I, O extends Element> implements Transformer
 		this.doc=docBuilder.newDocument();
 	}
 	
-	protected Document getDocument(){
-		
-		return doc;
+	public Document getDocument(){
+		return this.doc;
 	}
 	
 	

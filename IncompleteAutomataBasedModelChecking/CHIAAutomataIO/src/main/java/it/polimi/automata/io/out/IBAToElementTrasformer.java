@@ -32,7 +32,7 @@ public class IBAToElementTrasformer extends XMLTrasformer<IBA, Element> {
 
 		Document doc=this.getDocument();
 		Element baElement =
-				doc.createElement(AutomataIOConstants.XML_ELEMENT_BA);
+				doc.createElement(AutomataIOConstants.XML_ELEMENT_IBA);
 		
 		Element propositions=doc.createElement(AutomataIOConstants.XML_ELEMENT_PROPOSITIONS);
 		baElement.appendChild(propositions);

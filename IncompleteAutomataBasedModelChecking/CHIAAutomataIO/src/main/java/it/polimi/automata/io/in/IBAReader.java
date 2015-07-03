@@ -4,19 +4,14 @@ import it.polimi.automata.IBA;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
@@ -27,7 +22,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class IBAReader extends XMLReader {
+public class IBAReader extends XMLReader<IBA> {
 
 	private final static String NAME="READ MODEL";
 	
@@ -40,6 +35,7 @@ public class IBAReader extends XMLReader {
 	 * is the File from which the IBA must be read
 	 */
 	private final File file;
+	
 
 	private static final String IBA_XSD_PATH = "IBA.xsd";
 
@@ -76,22 +72,8 @@ public class IBAReader extends XMLReader {
 		this.file = file;
 	}
 
-	/**
-	 * read the Buchi Automaton from the reader
-	 * 
-	 * @return a new Buchi automaton which is parsed from the reader
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws FileNotFoundException
-	 * @throws JAXBException
-	 * @throws GraphIOException
-	 *             is generated if a problem occurs in the loading of the Buchi
-	 *             Automaton
-	 */
-	public IBA read() throws ParserConfigurationException,
-			FileNotFoundException, SAXException, IOException {
-
+	@Override
+	public IBA  perform() throws Exception {
 		logger.info("Reding the Model");
 
 		Document dom;
@@ -115,12 +97,9 @@ public class IBAReader extends XMLReader {
 
 		Element doc = dom.getDocumentElement();
 
-		IBA iba = new IBAElementToTransformer().transform(doc);
+		IBA iba = new ElementToIBATransformer().transform(doc);
 		this.performed();
 		logger.info("Model readed");
-
 		return iba;
-		
-
 	}
 }
