@@ -1,28 +1,11 @@
 package it.polimi.replacementchecker;
 
-import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
-import it.polimi.automata.transition.Transition;
-import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.emptiness.EmptinessChecker;
-import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
-import it.polimi.checker.intersection.IntersectionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
-import it.polimi.constraints.transitions.Color;
-import it.polimi.constraints.transitions.ColoredPluggingTransition;
-import it.polimi.constraints.transitions.PluggingTransition;
-
-import java.util.Map.Entry;
-import java.util.HashSet;
-import java.util.Set;
-
 import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
@@ -43,7 +26,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class ReplacementChecker extends CHIAAction {
+public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 	/**
 	 * the name of the action
@@ -64,6 +47,8 @@ public class ReplacementChecker extends CHIAAction {
 	private IntersectionBA upperIntersectionBA;
 
 	private IntersectionBA lowerIntersectionBA;
+	
+	private boolean isTriviallySatisfied;
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -106,6 +91,7 @@ public class ReplacementChecker extends CHIAAction {
 								+ replacement.getModelState());
 		this.replacement = replacement;
 		this.subproperty = subProperty;
+		this.setTriviallySatisfied(true);
 	}
 
 	/**
@@ -113,7 +99,7 @@ public class ReplacementChecker extends CHIAAction {
 	 * 
 	 * @return the updated constraint
 	 */
-	public SatisfactionValue check() {
+	public SatisfactionValue perform() {
 
 		if (this.checkNotSatisfied()) {
 			this.performed();
@@ -129,153 +115,13 @@ public class ReplacementChecker extends CHIAAction {
 	}
 
 	private boolean checkNotSatisfied() {
-		BA claim = subproperty.getAutomaton().clone();
-		IBA model = this.replacement.getAutomaton().clone();
 
-		Set<State> additionalInitStatesModel = this
-				.getAdditionalModelInitialStates(model);
-		Set<State> additionalInitStatesClaim = this
-				.getAdditionalClaimGreenInitialStates(claim);
+		UnderApproximationBuilder overApproximationBuilder = new UnderApproximationBuilder(
+				replacement, subproperty, acceptingPolicy);
 
-		for (State s : additionalInitStatesModel) {
-			model.addInitialState(s);
-		}
-
-		for (State s : additionalInitStatesClaim) {
-			claim.addInitialState(s);
-		}
-		model = new IBATransparentStateRemoval().removeTransparentStates(model);
-
-		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
-				model, claim, this.acceptingPolicy);
-		this.lowerIntersectionBA = intersectionBuilder.computeIntersection();
-
-		TransitionFactory<State, Transition> transitionFactory = new ClaimTransitionFactory();
-		StateFactory stateFactory = new StateFactory();
-
-		State greenState = stateFactory.create("GREEN");
-		intersectionBuilder.getIntersectionAutomaton().addState(greenState);
-		intersectionBuilder.getIntersectionAutomaton().addInitialState(
-				greenState);
-
-		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
-				.getIncomingPorts()) {
-			if (initTransitionSubProperty.getColor() == Color.GREEN) {
-				for (PluggingTransition initTransitionReplacement : this.replacement
-						.getIncomingPorts()) {
-					// if the two incoming transitions have the same source and
-					// the same label
-					if (initTransitionReplacement.getSource().equals(
-							initTransitionReplacement.getSource())
-							&& initTransitionSubProperty
-									.getTransition()
-									.getPropositions()
-									.equals(initTransitionReplacement
-											.getTransition().getPropositions())) {
-
-						Set<State> initntersectionStates = intersectionBuilder
-								.getIntersectionStates(
-										initTransitionSubProperty
-												.getDestination(),
-										initTransitionReplacement
-												.getDestination());
-						for (State initialState : initntersectionStates) {
-							if (!intersectionBuilder.getIntersectionAutomaton()
-									.isPredecessor(greenState, initialState)) {
-								intersectionBuilder.getIntersectionAutomaton()
-										.addTransition(greenState,
-												initialState,
-												transitionFactory.create());
-							}
-						}
-					}
-				}
-			}
-		}
-		State redState = stateFactory.create("RED");
-		intersectionBuilder.getIntersectionAutomaton().addAcceptState(redState);
-		intersectionBuilder.getIntersectionAutomaton().addTransition(redState,
-				redState, transitionFactory.create());
-		for (ColoredPluggingTransition outTransitionSubProperty : this.subproperty
-				.getOutcomingPorts()) {
-			if (outTransitionSubProperty.getColor() == Color.RED) {
-				for (PluggingTransition outTransitionReplacement : this.replacement
-						.getOutcomingPorts()) {
-					if (outTransitionSubProperty.getDestination().equals(
-							outTransitionReplacement.getDestination())
-							&& outTransitionSubProperty
-									.getTransition()
-									.getPropositions()
-									.equals(outTransitionReplacement
-											.getTransition().getPropositions())) {
-						Set<State> outIntersectionStates = intersectionBuilder
-								.getIntersectionStates(
-										outTransitionSubProperty.getSource(),
-										outTransitionReplacement.getSource());
-						for (State outState : outIntersectionStates) {
-							if (!intersectionBuilder.getIntersectionAutomaton()
-									.isPredecessor(outState, redState)) {
-								intersectionBuilder.getIntersectionAutomaton()
-										.addTransition(outState, redState,
-												transitionFactory.create());
-							}
-						}
-					}
-				}
-			}
-		}
-
-		for (Entry<ColoredPluggingTransition, ColoredPluggingTransition> reachabilityEntry : this.subproperty
-				.getLowerReachabilityRelation().getMap().entries()) {
-
-			Set<State> sourceStates = new HashSet<State>();
-			for (PluggingTransition outgoingTransition : this.replacement
-					.getOutcomingPorts()) {
-				if (this.isOutgoingEqual(outgoingTransition,
-						reachabilityEntry.getKey())) {
-					sourceStates.addAll(intersectionBuilder
-							.getIntersectionStates(reachabilityEntry.getKey()
-									.getSource(), outgoingTransition
-									.getSource()));
-				}
-			}
-			Set<State> destinationStates = new HashSet<State>();
-
-			for (PluggingTransition incomingTransition : this.replacement
-					.getIncomingPorts()) {
-				if (this.isIncomingEqual(incomingTransition,
-						reachabilityEntry.getValue())) {
-					destinationStates.addAll(intersectionBuilder
-							.getIntersectionStates(reachabilityEntry.getValue()
-									.getDestination(), incomingTransition
-									.getDestination()));
-				}
-			}
-			for (State sourceState : sourceStates) {
-				for (State destinationState : destinationStates) {
-					if (!intersectionBuilder.getIntersectionAutomaton()
-							.isSuccessor(sourceState, destinationState)) {
-						intersectionBuilder.getIntersectionAutomaton()
-								.addTransition(sourceState, destinationState,
-										transitionFactory.create());
-					}
-				}
-			}
-		}
-		for (State modelInit : additionalInitStatesModel) {
-			for (State claimInit : additionalInitStatesClaim) {
-				for (State intInit : intersectionBuilder.getIntersectionStates(
-						claimInit, modelInit)) {
-					if (this.lowerIntersectionBA.getInitialStates().contains(
-							intInit)) {
-						this.lowerIntersectionBA.removeInitialState(intInit);
-					}
-				}
-			}
-		}
-
+		this.lowerIntersectionBA = overApproximationBuilder.perform();
 		EmptinessChecker emptinessChecker = new EmptinessChecker(
-				intersectionBuilder.getIntersectionAutomaton());
+				this.lowerIntersectionBA);
 
 		if (!emptinessChecker.isEmpty()) {
 			return true;
@@ -287,207 +133,24 @@ public class ReplacementChecker extends CHIAAction {
 	private boolean checkPossiblySatisfied() {
 
 		if (!this.subproperty.isIndispensable()) {
+			this.upperIntersectionBA = new IntersectionBA();
+			this.setTriviallySatisfied(true);
 			return true;
+
 		}
-		BA claim = subproperty.getAutomaton().clone();
-		IBA model = this.replacement.getAutomaton().clone();
+		this.setTriviallySatisfied(false);
+		OverApproximationBuilder overApproximationBuilder = new OverApproximationBuilder(
+				replacement, subproperty, acceptingPolicy);
 
-		Set<State> additionalInitStatesModel = this
-				.getAdditionalModelInitialStates(model);
-		Set<State> additionalInitStatesClaim = this
-				.getAdditionalClaimGreenAndYellowInitialStates(claim);
-
-		for (State s : additionalInitStatesModel) {
-			model.addInitialState(s);
-		}
-
-		for (State s : additionalInitStatesClaim) {
-			claim.addInitialState(s);
-		}
-
-		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
-				model, claim, this.acceptingPolicy);
-		this.upperIntersectionBA = intersectionBuilder.computeIntersection();
-
-		TransitionFactory<State, Transition> transitionFactory = new ClaimTransitionFactory();
-		StateFactory stateFactory = new StateFactory();
-
-		State greenState = stateFactory.create("GREEN");
-		intersectionBuilder.getIntersectionAutomaton().addState(greenState);
-		intersectionBuilder.getIntersectionAutomaton().addInitialState(
-				greenState);
-
-		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
-				.getIncomingPorts()) {
-			if (initTransitionSubProperty.getColor() == Color.GREEN
-					|| initTransitionSubProperty.getColor() == Color.YELLOW) {
-				for (PluggingTransition initTransitionReplacement : this.replacement
-						.getIncomingPorts()) {
-					// if the two incoming transitions have the same source and
-					// the same label
-					if (initTransitionReplacement.getSource().equals(
-							initTransitionReplacement.getSource())
-							&& initTransitionSubProperty
-									.getTransition()
-									.getPropositions()
-									.equals(initTransitionReplacement
-											.getTransition().getPropositions())) {
-
-						Set<State> initntersectionStates = intersectionBuilder
-								.getIntersectionStates(
-										initTransitionSubProperty
-												.getDestination(),
-										initTransitionReplacement
-												.getDestination());
-						for (State initialState : initntersectionStates) {
-							if (!intersectionBuilder.getIntersectionAutomaton()
-									.isPredecessor(greenState, initialState)) {
-								intersectionBuilder.getIntersectionAutomaton()
-										.addTransition(greenState,
-												initialState,
-												transitionFactory.create());
-							}
-						}
-					}
-				}
-			}
-		}
-		State redState = stateFactory.create("RED");
-		intersectionBuilder.getIntersectionAutomaton().addAcceptState(redState);
-		intersectionBuilder.getIntersectionAutomaton().addTransition(redState,
-				redState, transitionFactory.create());
-		for (ColoredPluggingTransition outTransitionSubProperty : this.subproperty
-				.getOutcomingPorts()) {
-			if (outTransitionSubProperty.getColor() == Color.RED
-					|| outTransitionSubProperty.getColor() == Color.YELLOW) {
-				for (PluggingTransition outTransitionReplacement : this.replacement
-						.getOutcomingPorts()) {
-					if (outTransitionSubProperty.getDestination().equals(
-							outTransitionReplacement.getDestination())
-							&& outTransitionSubProperty
-									.getTransition()
-									.getPropositions()
-									.equals(outTransitionReplacement
-											.getTransition().getPropositions())) {
-						Set<State> outIntersectionStates = intersectionBuilder
-								.getIntersectionStates(
-										outTransitionSubProperty.getSource(),
-										outTransitionReplacement.getSource());
-						for (State outState : outIntersectionStates) {
-							if (!intersectionBuilder.getIntersectionAutomaton()
-									.isPredecessor(outState, redState)) {
-								intersectionBuilder.getIntersectionAutomaton()
-										.addTransition(outState, redState,
-												transitionFactory.create());
-							}
-						}
-					}
-				}
-			}
-		}
-
-		for (Entry<ColoredPluggingTransition, ColoredPluggingTransition> reachabilityEntry : this.subproperty
-				.getUpperReachabilityRelation().getMap().entries()) {
-			Set<State> sourceStates = new HashSet<State>();
-			for (PluggingTransition outgoingTransition : this.replacement
-					.getOutcomingPorts()) {
-				if (this.isOutgoingEqual(outgoingTransition,
-						reachabilityEntry.getKey())) {
-					sourceStates.addAll(intersectionBuilder
-							.getIntersectionStates(reachabilityEntry.getKey()
-									.getSource(), outgoingTransition
-									.getSource()));
-				}
-			}
-			Set<State> destinationStates = new HashSet<State>();
-			for (PluggingTransition incomingTransition : this.replacement
-					.getIncomingPorts()) {
-				if (this.isIncomingEqual(incomingTransition,
-						reachabilityEntry.getValue())) {
-					destinationStates.addAll(intersectionBuilder
-							.getIntersectionStates(reachabilityEntry.getValue()
-									.getDestination(), incomingTransition
-									.getDestination()));
-				}
-			}
-			for (State sourceState : sourceStates) {
-				for (State destinationState : destinationStates) {
-					if (!intersectionBuilder.getIntersectionAutomaton()
-							.isSuccessor(sourceState, destinationState)) {
-
-						intersectionBuilder.getIntersectionAutomaton()
-								.addTransition(sourceState, destinationState,
-										transitionFactory.create());
-					}
-				}
-			}
-		}
-		for (State modelInit : additionalInitStatesModel) {
-			for (State claimInit : additionalInitStatesClaim) {
-				for (State intInit : intersectionBuilder.getIntersectionStates(
-						claimInit, modelInit)) {
-					if (this.upperIntersectionBA.getInitialStates().contains(
-							intInit)) {
-						this.upperIntersectionBA.removeInitialState(intInit);
-					}
-				}
-			}
-		}
+		this.upperIntersectionBA = overApproximationBuilder.perform();
 
 		EmptinessChecker emptinessChecker = new EmptinessChecker(
-				intersectionBuilder.getIntersectionAutomaton());
+				this.upperIntersectionBA);
 
 		if (!emptinessChecker.isEmpty()) {
 			return true;
 		}
 		return false;
-
-	}
-
-	private Set<State> getAdditionalClaimGreenInitialStates(BA claim) {
-		Set<State> claimInitialStates = new HashSet<State>();
-		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
-				.getIncomingPorts()) {
-			if (initTransitionSubProperty.getColor() == Color.GREEN
-					|| initTransitionSubProperty.getColor() == Color.BLACK) {
-				if (!claim.getInitialStates().contains(
-						initTransitionSubProperty.getDestination())) {
-					claimInitialStates.add(initTransitionSubProperty
-							.getDestination());
-				}
-			}
-		}
-		return claimInitialStates;
-	}
-
-	private Set<State> getAdditionalClaimGreenAndYellowInitialStates(BA claim) {
-		Set<State> claimInitialStates = new HashSet<State>();
-		for (ColoredPluggingTransition initTransitionSubProperty : this.subproperty
-				.getIncomingPorts()) {
-			if (initTransitionSubProperty.getColor() == Color.GREEN
-					|| initTransitionSubProperty.getColor() == Color.YELLOW
-					|| initTransitionSubProperty.getColor() == Color.BLACK) {
-				if (!claim.getInitialStates().contains(
-						initTransitionSubProperty.getDestination())) {
-					claimInitialStates.add(initTransitionSubProperty
-							.getDestination());
-				}
-			}
-		}
-		return claimInitialStates;
-	}
-
-	private Set<State> getAdditionalModelInitialStates(IBA model) {
-		Set<State> modelInitialStates = new HashSet<State>();
-		for (PluggingTransition initTransitionReplacement : this.replacement
-				.getIncomingPorts()) {
-			if (!model.getInitialStates().contains(
-					initTransitionReplacement.getDestination())) {
-				modelInitialStates.add(initTransitionReplacement
-						.getDestination());
-			}
-		}
-		return modelInitialStates;
 
 	}
 
@@ -509,6 +172,10 @@ public class ReplacementChecker extends CHIAAction {
 		Preconditions
 				.checkArgument(this.isPerformed(),
 						"You must check the replacement before getting the intersection ");
+		Preconditions
+				.checkState(
+						this.upperIntersectionBA != null,
+						"The upper intersection BA cannot be null, you cannot get the upper intersection automaton if the property is not possibly satisfied");
 		return this.upperIntersectionBA;
 	}
 
@@ -516,36 +183,33 @@ public class ReplacementChecker extends CHIAAction {
 		Preconditions
 				.checkArgument(this.isPerformed(),
 						"You must check the replacement before getting the intersection ");
+		Preconditions.checkState(this.lowerIntersectionBA != null,
+				"The lower intersection BA cannot be null");
 		return this.lowerIntersectionBA;
 	}
 
-	public boolean isOutgoingEqual(PluggingTransition replacementTransition,
-			ColoredPluggingTransition subPropertyTransition) {
-
-		if (replacementTransition
-				.getTransition()
-				.getPropositions()
-				.equals(subPropertyTransition.getTransition().getPropositions())) {
-			if (replacementTransition.getDestination().equals(
-					subPropertyTransition.getDestination())) {
-				return true;
-			}
+	public int getIntersectionAutomataSize() {
+		int res = 0;
+		if (this.upperIntersectionBA != null) {
+			res = res + this.upperIntersectionBA.size();
 		}
-		return false;
+		if (this.lowerIntersectionBA != null) {
+			res = res + this.lowerIntersectionBA.size();
+		}
+		return res;
 	}
 
-	public boolean isIncomingEqual(PluggingTransition replacementTransition,
-			ColoredPluggingTransition subPropertyTransition) {
+	/**
+	 * @return the isTriviallySatisfied
+	 */
+	public boolean isTriviallySatisfied() {
+		return isTriviallySatisfied;
+	}
 
-		if (replacementTransition
-				.getTransition()
-				.getPropositions()
-				.equals(subPropertyTransition.getTransition().getPropositions())) {
-			if (replacementTransition.getSource().equals(
-					subPropertyTransition.getSource())) {
-				return true;
-			}
-		}
-		return false;
+	/**
+	 * @param isTriviallySatisfied the isTriviallySatisfied to set
+	 */
+	public void setTriviallySatisfied(boolean isTriviallySatisfied) {
+		this.isTriviallySatisfied = isTriviallySatisfied;
 	}
 }

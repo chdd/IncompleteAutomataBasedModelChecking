@@ -15,7 +15,7 @@ import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
@@ -77,7 +77,7 @@ public class Test05ConstraintComputation {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		
-		this.acceptingPolicy=new NormalAcceptingPolicy();
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
 
 		this.model = new IBAReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test05/model.xml").getFile())).perform();

@@ -11,7 +11,7 @@ import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
@@ -53,7 +53,7 @@ public class Test04ConstraintComputation {
 		this.replacement=new ReplacementReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test04/replacement.xml").getFile())).perform();
 		this.intersectionStateFactory=new IntersectionStateFactory();
-		this.acceptingPolicy=new NormalAcceptingPolicy();
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
 	}
 
 	@Test

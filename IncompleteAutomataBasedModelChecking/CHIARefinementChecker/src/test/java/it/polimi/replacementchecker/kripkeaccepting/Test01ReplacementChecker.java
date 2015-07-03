@@ -10,7 +10,7 @@ import it.polimi.automata.io.out.ElementToStringTransformer;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.KripkeAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
@@ -53,7 +53,7 @@ public class Test01ReplacementChecker {
 				.getResource(path + "kripke/test01/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
 				.getResource(path + "kripke/test01/model.xml").getFile())).perform();
-		this.acceptingPolicy=new KripkeAcceptingPolicy();
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.KRIPKE);
 	}
 	@Test
 	public void test() throws ParserConfigurationException, Exception {

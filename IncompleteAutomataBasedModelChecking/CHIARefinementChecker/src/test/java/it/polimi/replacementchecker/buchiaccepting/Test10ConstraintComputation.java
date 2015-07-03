@@ -9,7 +9,7 @@ import it.polimi.automata.io.out.ElementToStringTransformer;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
@@ -52,7 +52,7 @@ public class Test10ConstraintComputation {
 				.getResource(path + "buchiaccepting/test10/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test10/model.xml").getFile())).perform();
-		this.acceptingPolicy=new NormalAcceptingPolicy();
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
 	}
 	@Test
 	public void test() throws ParserConfigurationException, Exception {

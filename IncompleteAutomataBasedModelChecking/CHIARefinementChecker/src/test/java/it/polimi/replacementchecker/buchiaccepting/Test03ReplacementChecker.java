@@ -3,7 +3,7 @@ package it.polimi.replacementchecker.buchiaccepting;
 import static org.junit.Assert.assertTrue;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
@@ -30,7 +30,7 @@ public class Test03ReplacementChecker {
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test03/constraint.xml").getFile())).perform();
-		this.acceptingPolicy=new NormalAcceptingPolicy();
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
 	}
 	@Test
 	public void test() {
