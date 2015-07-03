@@ -16,7 +16,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * Represents a transition of an automaton. <br>
  * A transition is identified by an id and is labeled by propositions </p>
  * 
- * @author claudiomenghi
+ * @author claudio menghi
  * @see {@link Transition}
  */
 @SuppressWarnings("serial")
@@ -36,7 +36,7 @@ public class Transition extends DefaultEdge {
 	/**
 	 * contains the id of the last transition created
 	 */
-	protected static int transition_counter = 0;
+	protected static int transition_counter = 1;
 
 	public Transition() {
 		this.id = transition_counter;
