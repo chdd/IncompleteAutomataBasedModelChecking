@@ -14,9 +14,9 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 import com.google.common.base.Preconditions;
 
 /**
- * Defines an {@link IntersectionTransitionBuilder} that specifies how the transitions of the
- * intersection automaton is generated starting from the transition of the model
- * and the claim. <br>
+ * Defines an {@link IntersectionTransitionBuilder} that specifies how the
+ * transitions of the intersection automaton is generated starting from the
+ * transition of the model and the claim. <br>
  * The transition of the model can be performed only if it satisfies the
  * conditions specified in the claim
  * 
@@ -41,7 +41,9 @@ public class IntersectionTransitionBuilder {
 				"The model transition cannot be null");
 		Preconditions.checkNotNull(claimTransition,
 				"The claim transition cannot be null");
-
+		if(!this.isCompatible(modelTransition, claimTransition)){
+			throw new InternalError("The transition of the model:  "+modelTransition+" and the transition of the claim: "+claimTransition+" are not compatible");
+		}
 		if (this.satisfies(modelTransition.getPropositions(),
 				claimTransition.getPropositions())) {
 			return transitionFactory.create(modelTransition.getPropositions());
@@ -49,10 +51,11 @@ public class IntersectionTransitionBuilder {
 			return null;
 		}
 	}
-	
-	public boolean isCompatible( Transition modelTransition,
-			Transition claimTransition){
-		return this.satisfies(modelTransition.getPropositions(), claimTransition.getPropositions());
+
+	public boolean isCompatible(Transition modelTransition,
+			Transition claimTransition) {
+		return this.satisfies(modelTransition.getPropositions(),
+				claimTransition.getPropositions());
 	}
 
 	/**
@@ -66,8 +69,10 @@ public class IntersectionTransitionBuilder {
 	 */
 	protected boolean satisfies(Set<IGraphProposition> modelLabel,
 			Set<IGraphProposition> claimLabel) {
-		Preconditions.checkNotNull(modelLabel, "The model label cannot be null");
-		Preconditions.checkNotNull(claimLabel, "The claim label cannot be null");
+		Preconditions
+				.checkNotNull(modelLabel, "The model label cannot be null");
+		Preconditions
+				.checkNotNull(claimLabel, "The claim label cannot be null");
 
 		IGraphProposition stuttering = new GraphProposition(
 				AutomataConstants.STUTTERING_CHARACTER, false);

@@ -13,7 +13,8 @@ import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -238,7 +239,7 @@ public class ModelCheckerTest {
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullModel() {
 		new Checker(
-				null, claim1, new NormalAcceptingPolicy());
+				null, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 	}
 
 	/**
@@ -249,7 +250,7 @@ public class ModelCheckerTest {
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullClaim() {
 			new Checker(
-				model1, null, new NormalAcceptingPolicy());
+				model1, null, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 	}
 
 	
@@ -261,7 +262,7 @@ public class ModelCheckerTest {
 	@Test(expected = NullPointerException.class)
 	public void testCheckNullIntersectionResults() {
 		Checker mck = new Checker(
-				model1, claim1,  new NormalAcceptingPolicy());
+				model1, claim1,  AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(1, mck.perform());
 	}
 	
@@ -273,7 +274,7 @@ public class ModelCheckerTest {
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullResutls() {
 		new Checker(
-				model1, claim1, new NormalAcceptingPolicy());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 	}
 
 	/**
@@ -283,7 +284,7 @@ public class ModelCheckerTest {
 	public void testCheck() {
 
 		Checker mck = new Checker(
-				model1, claim1, new NormalAcceptingPolicy());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(1, mck.perform());
 	}
 	
@@ -295,7 +296,7 @@ public class ModelCheckerTest {
 		model1.addInitialState(model1State1);
 		claim1.addInitialState(claim1State1);
 		Checker mck = new Checker(
-				model1, claim1, new NormalAcceptingPolicy());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(1, mck.perform());
 	}
 	
@@ -309,7 +310,7 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model1, claim1, new NormalAcceptingPolicy());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(0, mck.perform());
 	}
 	
@@ -319,7 +320,7 @@ public class ModelCheckerTest {
 	@Test
 	public void testCheck3() {
 		Checker mck = new Checker(
-				model2, claim2, new NormalAcceptingPolicy());
+				model2, claim2, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(1, mck.perform());
 	}
 	
@@ -332,7 +333,7 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model2, claim1, new NormalAcceptingPolicy());
+				model2, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(1, mck.perform());
 	}
 	
@@ -347,7 +348,7 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model1, claim1, new NormalAcceptingPolicy());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertEquals(-1, mck.perform());
 	}
 	
@@ -364,7 +365,7 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model1, claim1, new NormalAcceptingPolicy());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		assertNotNull(mck);
 	}
 }

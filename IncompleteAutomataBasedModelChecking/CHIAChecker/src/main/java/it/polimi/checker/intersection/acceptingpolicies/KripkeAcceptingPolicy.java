@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 public class KripkeAcceptingPolicy extends AcceptingPolicy {
 
 	
-	public KripkeAcceptingPolicy(){
+	protected KripkeAcceptingPolicy(){
 		
 	}
 	

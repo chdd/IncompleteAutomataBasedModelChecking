@@ -3,14 +3,12 @@ package it.polimi.checker;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.state.IntersectionStateFactory;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
+import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
@@ -21,13 +19,9 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class Checker extends CHIAAction {
+public class Checker extends CHIAAction<SatisfactionValue> {
 
 	private static final String NAME = "CHECK";
-	/**
-	 * is the logger of the ModelChecker class
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(Checker.class);
 
 	/**
 	 * contains the specification to be checked
@@ -51,6 +45,50 @@ public class Checker extends CHIAAction {
 
 	private final AcceptingPolicy acceptingPolicy;
 	private SatisfactionValue satisfactionValue;
+
+	private final IntersectionStateFactory intersectionStateFactory;
+	
+	/**
+	 * is the intersection transition builder to be used in the computation of the intersection automaton
+	 */
+	private final IntersectionTransitionBuilder intersectionTransitionBuilder;
+
+	/**
+	 * creates a new {@link Checker}
+	 * 
+	 * @param model
+	 *            is the model to be analyzed by the model checker
+	 * @param claim
+	 *            is the specification to be considered by the model checker
+	 * @param acceptingPolicy
+	 *            specifies the acceptingPolicy to be used in the intersection
+	 *            procedure
+	 * @param intersectionStateFactory
+	 *            is the factory to be used in the creation of the states of the
+	 *            intersection automaton
+	 * @throws NullPointerException
+	 *             if the model, the specification or the model checking
+	 *             parameters are null
+	 */
+	public Checker(IBA model, BA claim, AcceptingPolicy acceptingPolicy,
+			IntersectionStateFactory intersectionStateFactory, IntersectionTransitionBuilder intersectionTransitionBuilder) {
+		super(NAME);
+		Preconditions.checkNotNull(model,
+				"The model to be checked cannot be null");
+		Preconditions.checkNotNull(claim,
+				"The specification to be checked cannot be null");
+		Preconditions.checkNotNull(acceptingPolicy,
+				"The accepting policy cannot be null");
+		Preconditions.checkNotNull(intersectionStateFactory,
+				"The intersection state factory cannot be null");
+		Preconditions.checkNotNull(intersectionTransitionBuilder, "the intersection transition builder cannot be null");
+
+		this.claim = claim;
+		this.model = model;
+		this.acceptingPolicy = acceptingPolicy;
+		this.intersectionStateFactory = intersectionStateFactory;
+		this.intersectionTransitionBuilder=intersectionTransitionBuilder;
+	}
 
 	/**
 	 * creates a new {@link Checker}
@@ -78,6 +116,8 @@ public class Checker extends CHIAAction {
 		this.claim = claim;
 		this.model = model;
 		this.acceptingPolicy = acceptingPolicy;
+		this.intersectionStateFactory = new IntersectionStateFactory();
+		this.intersectionTransitionBuilder=new IntersectionTransitionBuilder();
 	}
 
 	/**
@@ -89,10 +129,9 @@ public class Checker extends CHIAAction {
 	 * @return 0 if the property is not satisfied, 1 if the property is
 	 *         satisfied, -1 if the property is satisfied with constraints.
 	 */
-	public SatisfactionValue check() {
+	public SatisfactionValue perform() {
 
 		if (!this.isPerformed()) {
-			logger.info("Checking procedure started");
 
 			// COMPUTES THE INTERSECTION BETWEEN THE MODEL WITHOUT TRANSPARENT
 			// STATES AND THE CLAIM
@@ -103,7 +142,6 @@ public class Checker extends CHIAAction {
 			// model without transparent states and the claim
 			if (!empty) {
 				this.performed();
-				logger.info("Checking procedure ended");
 				this.satisfactionValue = SatisfactionValue.NOTSATISFIED;
 				return SatisfactionValue.NOTSATISFIED;
 			}
@@ -112,13 +150,10 @@ public class Checker extends CHIAAction {
 			boolean emptyIntersection = this.checkEmptyIntersection();
 			this.performed();
 			if (!emptyIntersection) {
-
-				logger.info("Checking procedure ended");
 				this.satisfactionValue = SatisfactionValue.POSSIBLYSATISFIED;
 				return SatisfactionValue.POSSIBLYSATISFIED;
 			} else {
 
-				logger.info("Checking procedure ended");
 				this.satisfactionValue = SatisfactionValue.SATISFIED;
 				return SatisfactionValue.SATISFIED;
 			}
@@ -142,11 +177,11 @@ public class Checker extends CHIAAction {
 
 		// associating the intersectionBuilder
 		this.lowerIntersectionBuilder = new IntersectionBuilder(mc, claim,
-				acceptingPolicy);
+				acceptingPolicy, this.intersectionStateFactory, this.intersectionTransitionBuilder);
 
 		// computing the intersection
 		IntersectionBA intersectionAutomaton = this.lowerIntersectionBuilder
-				.computeIntersection();
+				.perform();
 
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
@@ -163,11 +198,11 @@ public class Checker extends CHIAAction {
 	private boolean checkEmptyIntersection() {
 
 		this.upperIntersectionBuilder = new IntersectionBuilder(this.model,
-				claim, acceptingPolicy);
+				claim, acceptingPolicy, this.intersectionStateFactory, this.intersectionTransitionBuilder);
 
 		// computing the intersection
 		IntersectionBA intersectionAutomaton = this.upperIntersectionBuilder
-				.computeIntersection();
+				.perform();
 		return new EmptinessChecker(intersectionAutomaton).isEmpty();
 	}
 
@@ -189,27 +224,33 @@ public class Checker extends CHIAAction {
 				.checkState(this.isPerformed(),
 						"You must run the model checker before performing this operation");
 
-		Preconditions.checkState(this.upperIntersectionBuilder!=null, "The lower upper autonaton has not been computed");
+		Preconditions.checkState(this.upperIntersectionBuilder != null,
+				"The lower upper autonaton has not been computed");
 		return this.upperIntersectionBuilder.getIntersectionAutomaton();
 
 	}
-	
+
 	public IntersectionBA getLowerIntersectionBA() {
 		Preconditions
 				.checkState(this.isPerformed(),
 						"You must run the model checker before performing this operation");
-		Preconditions.checkState(this.lowerIntersectionBuilder!=null, "The lower intersection autonaton has not been computed");
+		Preconditions.checkState(this.lowerIntersectionBuilder != null,
+				"The lower intersection autonaton has not been computed");
 		return this.lowerIntersectionBuilder.getIntersectionAutomaton();
 
 	}
-	
-	public int getIntersectionAutomataSize(){
-		int size=0;
-		if(this.lowerIntersectionBuilder!=null){
-			size=size+this.lowerIntersectionBuilder.getIntersectionAutomaton().size();
+
+	public int getIntersectionAutomataSize() {
+		int size = 0;
+		if (this.lowerIntersectionBuilder != null) {
+			size = size
+					+ this.lowerIntersectionBuilder.getIntersectionAutomaton()
+							.size();
 		}
-		if(this.upperIntersectionBuilder!=null){
-			size=size+this.upperIntersectionBuilder.getIntersectionAutomaton().size();
+		if (this.upperIntersectionBuilder != null) {
+			size = size
+					+ this.upperIntersectionBuilder.getIntersectionAutomaton()
+							.size();
 		}
 		return size;
 	}

@@ -17,7 +17,8 @@ import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 import it.polimi.checker.emptiness.EmptinessChecker;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -238,7 +239,7 @@ public class IntersectionBuilderTest {
 	@Test(expected = NullPointerException.class)
 	public void testIntersectionBuilderNullModel() {
 		new IntersectionBuilder(
-				 null, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder());
+				 null, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder());
 	}
 
 	/**
@@ -249,7 +250,7 @@ public class IntersectionBuilderTest {
 	@Test(expected = NullPointerException.class)
 	public void testIntersectionBuilderNullClaim() {
 		new IntersectionBuilder(
-				model1, null, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder());
+				model1, null, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder());
 	}
 
 	
@@ -262,7 +263,7 @@ public class IntersectionBuilderTest {
 	@Test
 	public void testComputeIntersection() {
 		IntersectionBA intersection = new IntersectionBuilder(
-				 model1, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
+				 model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
 				.perform();
 		assertTrue(intersection.getInitialStates().isEmpty());
 	}
@@ -276,7 +277,7 @@ public class IntersectionBuilderTest {
 	public void testComputeIntersection1() {
 		this.model1.addInitialState(model1State1);
 		IntersectionBA intersection = new IntersectionBuilder(
-				 model1, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
+				 model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
 				.perform();
 		assertTrue(intersection.getInitialStates().isEmpty());
 	}
@@ -290,7 +291,7 @@ public class IntersectionBuilderTest {
 	public void testComputeIntersection2() {
 		this.claim1.addInitialState(claim1State1);
 		IntersectionBA intersection = new IntersectionBuilder(
-				 model1, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
+				 model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
 				.perform();
 		assertTrue(intersection.getInitialStates().isEmpty());
 	}
@@ -306,7 +307,7 @@ public class IntersectionBuilderTest {
 		this.model1.addInitialState(model1State1);
 		this.claim1.addInitialState(claim1State1);
 		IntersectionBA intersection = new IntersectionBuilder(
-				 model1, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
+				 model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
 				.perform();
 		assertEquals(model1State1.getId() + " - " + claim1State1.getId()
 				+ " - " + 0,
@@ -330,7 +331,7 @@ public class IntersectionBuilderTest {
 		this.claim1.addInitialState(claim1State1);
 		this.claim1.addAcceptState(claim1State3);
 		IntersectionBA intersection = new IntersectionBuilder(
-				 model1, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
+				 model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
 				.perform();
 		assertEquals(model1State1.getId() + " - " + claim1State1.getId()
 				+ " - " + 0,
@@ -390,7 +391,7 @@ public class IntersectionBuilderTest {
 		this.claim2.addInitialState(claim2State1);
 		this.claim2.addAcceptState(claim2State3);
 		IntersectionBA intersection = new IntersectionBuilder(
-				 model1, claim2, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
+				 model1, claim2, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder())
 				.perform();
 		assertTrue(new EmptinessChecker(
 				intersection).isEmpty());
@@ -410,7 +411,7 @@ public class IntersectionBuilderTest {
 		this.claim1.addInitialState(claim1State1);
 		this.claim1.addAcceptState(claim1State3);
 		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
-				 model2, claim1, new NormalAcceptingPolicy(), new IntersectionStateFactory(), new IntersectionTransitionBuilder());
+				 model2, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), new IntersectionStateFactory(), new IntersectionTransitionBuilder());
 
 		IntersectionBA intersection = intersectionBuilder
 				.perform();

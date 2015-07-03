@@ -3,8 +3,8 @@ package it.polimi.checker.intersection;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.state.IntersectionStateFactory;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
@@ -33,7 +33,7 @@ import com.google.common.collect.SetMultimap;
  * 
  * @author claudiomenghi
  */
-public class IntersectionBuilder extends CHIAAction {
+public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 	private final static String NAME = "COMPUTE INTERSECTION";
 	/**
@@ -50,7 +50,7 @@ public class IntersectionBuilder extends CHIAAction {
 	 * contains the intersection rule which is used to build the intersection
 	 * transitions
 	 */
-	private final IntersectionRule intersectionrule;
+	private final IntersectionTransitionBuilder intersectionTransitionBuilder;
 
 	/**
 	 * contains a map that associate to each constraint transition the
@@ -91,6 +91,12 @@ public class IntersectionBuilder extends CHIAAction {
 	private final BA claim;
 
 	/**
+	 * contains the factory which is used to create the states of the
+	 * intersection automaton
+	 */
+	private final IntersectionStateFactory intersectionStateFactory;
+
+	/**
 	 * is the accepting policy to be used in the computation of the intersection
 	 * automaton
 	 */
@@ -107,6 +113,12 @@ public class IntersectionBuilder extends CHIAAction {
 	 *            is the model to be considered in the intersection procedure
 	 * @param claim
 	 *            is the claim to be considered in the intersection procedure
+	 * @param intersectionStateFactory
+	 *            is the factory which is used to create the states of the
+	 *            intersection automaton
+	 * @param intersectionTransitionBuilder
+	 *            is used to compute the intersection transitions from the
+	 *            transition of the model and of the claim
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 * @throws IllegalArgumentException
@@ -114,13 +126,18 @@ public class IntersectionBuilder extends CHIAAction {
 	 *             and not all the states of the model are accepting
 	 */
 	public IntersectionBuilder(IBA model, BA claim,
-			AcceptingPolicy acceptingPolicy) {
+			AcceptingPolicy acceptingPolicy,
+			IntersectionStateFactory intersectionStateFactory,
+			IntersectionTransitionBuilder intersectionTransitionBuilder) {
 		super(NAME);
 		Preconditions.checkNotNull(model,
 				"The model of the system cannot be null");
 		Preconditions.checkNotNull(claim, "The claim cannot be null");
 		Preconditions.checkNotNull(acceptingPolicy,
 				"The accepting policy cannot be null");
+		Preconditions.checkNotNull(intersectionStateFactory,
+				"The intersection state factory cannot be null");
+		Preconditions.checkNotNull(intersectionTransitionBuilder, "The intersection transition builder cannot be null");
 
 		this.intersectionStateModelStateMap = new HashMap<State, State>();
 		this.modelStateintersectionStateMap = HashMultimap.create();
@@ -130,20 +147,21 @@ public class IntersectionBuilder extends CHIAAction {
 		this.acceptingPolicy = acceptingPolicy;
 		this.acceptingPolicy.setClaim(claim);
 		this.acceptingPolicy.setModel(model);
-		if (acceptingPolicy instanceof KripkeAcceptingPolicy) {
-			Preconditions
-					.checkArgument(
-							model.getAcceptStates().containsAll(
-									model.getStates()),
-							"The Kripke accepting policy is not consistend with the current model. All the states of the model must be accepting for the Kripke policy to be used ");
-		}
-		this.intersectionrule = new IntersectionRule();
+		/*
+		 * if (acceptingPolicy instanceof KripkeAcceptingPolicy) { Preconditions
+		 * .checkArgument( model.getAcceptStates().containsAll(
+		 * model.getStates()),
+		 * "The Kripke accepting policy is not consistend with the current model. All the states of the model must be accepting for the Kripke policy to be used "
+		 * ); }
+		 */
+		this.intersectionTransitionBuilder = intersectionTransitionBuilder;
 		this.intersection = new IntersectionBA();
 		this.model = model;
 		this.claim = claim;
 		this.mapConstrainedTransitionModelTransparentState = new HashMap<Transition, State>();
 		this.visitedStates = new HashSet<Triple<State, State, Integer>>();
 		this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
+		this.intersectionStateFactory = intersectionStateFactory;
 	}
 
 	/**
@@ -152,7 +170,7 @@ public class IntersectionBuilder extends CHIAAction {
 	 * 
 	 * @return the intersection of this automaton and the automaton a2
 	 */
-	public IntersectionBA computeIntersection() {
+	public IntersectionBA perform() {
 		if (!this.isPerformed()) {
 			this.updateAlphabet();
 
@@ -193,6 +211,10 @@ public class IntersectionBuilder extends CHIAAction {
 			this.intersection.addProposition(l);
 		}
 	}
+	public void updateIntersection(State modelState, State claimState,
+			int number){
+		this.computeIntersection(modelState, claimState, number);
+	}
 
 	/**
 	 * is a recursive procedure that computes the intersection of this automaton
@@ -218,9 +240,9 @@ public class IntersectionBuilder extends CHIAAction {
 			return this.createdStates.get(modelState).get(claimState)
 					.get(number);
 		} else {
-			State intersectionState = new StateFactory().create(modelState
-					.getId() + " - " + claimState.getId() + " - " + number);
-
+			
+			State intersectionState = this.intersectionStateFactory.create(
+					modelState, claimState, number);
 			this.addStateIntoTheIntersectionAutomaton(intersectionState,
 					modelState, claimState, number);
 			this.updateVisitedStates(intersectionState, modelState, claimState,
@@ -235,11 +257,9 @@ public class IntersectionBuilder extends CHIAAction {
 				for (Transition claimTransition : claim
 						.getOutTransitions(claimState)) {
 
-					Transition t = this.intersectionrule
-							.getIntersectionTransition(modelTransition,
-									claimTransition);
+					
 					// if the two transitions are compatible
-					if (t != null) {
+					if (this.intersectionTransitionBuilder.isCompatible(modelTransition, claimTransition)) {
 
 						// creates a new state made by the states s1next and s2
 						// next
@@ -250,9 +270,13 @@ public class IntersectionBuilder extends CHIAAction {
 
 						int nextNumber = this.acceptingPolicy.comuteNumber(
 								nextModelState, nextClaimState, number);
+						
 						State nextState = this.computeIntersection(
 								nextModelState, nextClaimState, nextNumber);
 
+						Transition t = this.intersectionTransitionBuilder
+								.getIntersectionTransition(intersectionState, nextState, modelTransition,
+										claimTransition);
 						this.intersection.addTransition(intersectionState,
 								nextState, t);
 					}
@@ -352,7 +376,14 @@ public class IntersectionBuilder extends CHIAAction {
 		this.intersection.addState(intersectionState);
 		if (this.model.getInitialStates().contains(modelState)
 				&& this.claim.getInitialStates().contains(claimState)) {
-			this.intersection.addInitialState(intersectionState);
+			if (this.acceptingPolicy instanceof KripkeAcceptingPolicy) {
+				this.intersection.addInitialState(intersectionState);
+			} else {
+				if (number == 0) {
+					this.intersection.addInitialState(intersectionState);
+				}
+			}
+
 		}
 		if (number == 2) {
 			this.intersection.addAcceptState(intersectionState);
@@ -389,6 +420,12 @@ public class IntersectionBuilder extends CHIAAction {
 
 		this.intersectionStateClaimStateMap.remove(intersectionState);
 		this.intersectionStateModelStateMap.remove(intersectionState);
+		this.mapTransparentStateConstrainedTransition
+				.removeAll(intersectionState);
+
+		this.claimStateintersectionStateMap = HashMultimap.create();
+		this.modelStateintersectionStateMap = HashMultimap.create();
+
 		Multimaps.invertFrom(
 				Multimaps.forMap(this.intersectionStateClaimStateMap),
 				this.claimStateintersectionStateMap);
@@ -396,6 +433,29 @@ public class IntersectionBuilder extends CHIAAction {
 				Multimaps.forMap(this.intersectionStateModelStateMap),
 				this.modelStateintersectionStateMap);
 
+		for (Transition t : this.intersection
+				.getInTransitions(intersectionState)) {
+			if (this.mapConstrainedTransitionModelTransparentState
+					.containsKey(t)) {
+				State transparentState = this.mapConstrainedTransitionModelTransparentState
+						.get(t);
+				this.mapTransparentStateConstrainedTransition.get(
+						transparentState).remove(t);
+				this.mapConstrainedTransitionModelTransparentState.remove(t);
+			}
+		}
+
+		for (Transition t : this.intersection
+				.getOutTransitions(intersectionState)) {
+			if (this.mapConstrainedTransitionModelTransparentState
+					.containsKey(t)) {
+				State transparentState = this.mapConstrainedTransitionModelTransparentState
+						.get(t);
+				this.mapTransparentStateConstrainedTransition.get(
+						transparentState).remove(t);
+				this.mapConstrainedTransitionModelTransparentState.remove(t);
+			}
+		}
 		this.intersection.removeState(intersectionState);
 	}
 
@@ -454,19 +514,47 @@ public class IntersectionBuilder extends CHIAAction {
 						"The state "
 								+ modelState
 								+ " is not contained into the set of the states of the model");
-		if(!createdStates.containsKey(modelState)){
+		if (!createdStates.containsKey(modelState)) {
 			return new HashSet<State>();
-		}
-		else{
-			if(!createdStates.get(modelState).containsKey(claimState)){
+		} else {
+			if (!createdStates.get(modelState).containsKey(claimState)) {
 				return new HashSet<State>();
-			}
-			else{
-				return Collections.unmodifiableSet(new HashSet<State>(createdStates.get(modelState).get(claimState).values()));
+			} else {
+				return Collections
+						.unmodifiableSet(new HashSet<State>(createdStates
+								.get(modelState).get(claimState).values()));
 			}
 		}
 	}
 
+	public State getIntersectionState(State claimState, State modelState, int number) {
+		Preconditions.checkNotNull(claimState,
+				"The state of the claim cannot be null");
+		Preconditions.checkNotNull(modelState,
+				"The state of the model cannot be null");
+		Preconditions
+				.checkArgument(
+						this.claim.getStates().contains(claimState),
+						"The state "
+								+ claimState
+								+ " is not contained into the set of the states of the claim");
+		Preconditions
+				.checkArgument(
+						this.model.getStates().contains(modelState),
+						"The state "
+								+ modelState
+								+ " is not contained into the set of the states of the model");
+		if (!createdStates.containsKey(modelState)) {
+			return null;
+		} else {
+			if (!createdStates.get(modelState).containsKey(claimState)) {
+				return null;
+			} else {
+				return createdStates
+								.get(modelState).get(claimState).get(number);
+			}
+		}
+	}
 	/**
 	 * returns the set of the states of the intersection which are associated
 	 * with a specific state of the model
@@ -579,12 +667,20 @@ public class IntersectionBuilder extends CHIAAction {
 		Preconditions.checkArgument(
 				this.model.getTransparentStates().contains(transparentState),
 				"The state " + transparentState + " is not transparent");
+		Preconditions
+				.checkState(
+						this.intersection.getTransitions().containsAll(
+								this.mapTransparentStateConstrainedTransition
+										.get(transparentState)),
+						"Internal error there are transitions associated to the transparent state "
+								+ transparentState
+								+ " which do not belongs to the intersection automaton");
 		return this.mapTransparentStateConstrainedTransition
 				.get(transparentState);
 	}
-	
-	public AcceptingPolicy getAcceptingPolicy(){
+
+	public AcceptingPolicy getAcceptingPolicy() {
 		return this.acceptingPolicy;
 	}
-}
 
+}
