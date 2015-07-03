@@ -53,7 +53,7 @@ public class Constraint {
 	 * 
 	 * @return the sub-property associated with the constraint
 	 */
-	public Set<SubProperty> getSubProperty() {
+	public Set<SubProperty> getSubProperties() {
 		return Collections.unmodifiableSet(subProperties);
 	}
 

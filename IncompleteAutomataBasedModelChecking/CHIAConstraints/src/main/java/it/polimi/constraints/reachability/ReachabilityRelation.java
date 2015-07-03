@@ -2,6 +2,10 @@ package it.polimi.constraints.reachability;
 
 import it.polimi.constraints.transitions.ColoredPluggingTransition;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
@@ -22,6 +26,9 @@ public class ReachabilityRelation {
 	 */
 	private final SetMultimap<ColoredPluggingTransition, ColoredPluggingTransition> map;
 
+	private final Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean> acceptingMap;
+	private final Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean> claimMap;
+	private final Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean> modelMap;
 	/**
 	 * creates a new empty reachability relation. The reachability relation is
 	 * used to map the incoming transitions which are reachable from the
@@ -29,6 +36,9 @@ public class ReachabilityRelation {
 	 */
 	public ReachabilityRelation() {
 		this.map = HashMultimap.create();
+		this.acceptingMap = new HashMap<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean>();
+		this.claimMap = new HashMap<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean>();
+		this.modelMap = new HashMap<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean>();
 	}
 
 	/**
@@ -45,13 +55,20 @@ public class ReachabilityRelation {
 	 *             if one of the two transitions is null
 	 */
 	public void addTransition(ColoredPluggingTransition sourceTransition,
-			ColoredPluggingTransition destinationTransition) {
+			ColoredPluggingTransition destinationTransition, Boolean accepting, Boolean modelAccepting, Boolean claimAccepting) {
 		Preconditions.checkNotNull(sourceTransition,
 				"The source transition cannot be null");
 		Preconditions.checkNotNull(destinationTransition,
 				"The destination transition cannot be null");
 
 		this.map.put(sourceTransition, destinationTransition);
+		this.acceptingMap
+				.put(new AbstractMap.SimpleEntry<ColoredPluggingTransition, ColoredPluggingTransition>(
+						sourceTransition, destinationTransition), accepting);
+		this.modelMap.put(new AbstractMap.SimpleEntry<ColoredPluggingTransition, ColoredPluggingTransition>(
+				sourceTransition, destinationTransition), modelAccepting);
+		this.claimMap.put(new AbstractMap.SimpleEntry<ColoredPluggingTransition, ColoredPluggingTransition>(
+				sourceTransition, destinationTransition), claimAccepting);
 	}
 
 	/**
@@ -61,5 +78,8 @@ public class ReachabilityRelation {
 	 */
 	public SetMultimap<ColoredPluggingTransition, ColoredPluggingTransition> getMap() {
 		return this.map;
+	}
+	public Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean> getReachabilityAcceptingMap(){
+		return this.acceptingMap;
 	}
 }

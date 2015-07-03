@@ -74,7 +74,7 @@ public class ColoredPluggingTransition extends PluggingTransition {
 	public String toString() {
 		return "Port [source=" + this.getSource() + ", incoming=" + this.isIncoming()
 				+ ", destination=" + this.getDestination() + ", transition=" + this.getTransition()
-				+ "color=" + color + "]";
+				+ ", color=" + color + "]";
 	}
 
 	@Override
