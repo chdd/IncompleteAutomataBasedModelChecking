@@ -10,7 +10,7 @@ import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
-public class LTLReader extends CHIAAction{
+public class LTLReader extends CHIAAction<BA>{
 	
 	private String filePath;
 	
@@ -27,7 +27,7 @@ public class LTLReader extends CHIAAction{
 		this.filePath=filePath;
 	}
 	
-	public BA loadLTLFromFile() throws IOException{
+	public BA perform() throws IOException{
 		
 		String ltlFormula="";
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -55,7 +55,7 @@ public class LTLReader extends CHIAAction{
 	    }
 		
 	    System.out.println(ltlFormula);
-		BA ba=new LTLtoBATransformer().transform("!("+ltlFormula+")");
+		BA ba=new LTLtoBATransformer("!("+ltlFormula+")").perform();
 		
 		return ba;
 	}

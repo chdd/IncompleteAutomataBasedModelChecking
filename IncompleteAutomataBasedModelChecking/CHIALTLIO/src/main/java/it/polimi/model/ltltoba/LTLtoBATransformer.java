@@ -27,16 +27,23 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class LTLtoBATransformer extends CHIAAction{
+public class LTLtoBATransformer extends CHIAAction<BA>{
 
 	private static final String NAME="CONVERTING LTL TO AUTOMATON";
+	
+	protected String ltlFormula;
 	/**
 	 * creates the LTL to Buchi automaton transformer
 	 * 
 	 */
-	public LTLtoBATransformer() {
+	public LTLtoBATransformer(String ltlFormula) {
 		super(NAME);
+		Preconditions.checkNotNull(ltlFormula,
+				"The LTL formula to be converted cannot be null");
+		this.ltlFormula=ltlFormula;
+
 	}
+	
 	
 	
 
@@ -48,10 +55,8 @@ public class LTLtoBATransformer extends CHIAAction{
 	 * @throws NullPointerException
 	 *             if the LTL formula to be transformed is null
 	 */
-	public BA transform(String ltlFormula) {
-		Preconditions.checkNotNull(ltlFormula,
-				"The LTL formula to be converted cannot be null");
-
+	public BA perform() {
+		
 		/*
 		 * creates a new Buchi automaton
 		 */
