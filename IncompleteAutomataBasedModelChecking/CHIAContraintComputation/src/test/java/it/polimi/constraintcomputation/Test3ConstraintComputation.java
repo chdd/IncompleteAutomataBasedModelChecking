@@ -31,6 +31,7 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -240,7 +241,7 @@ public class Test3ConstraintComputation {
 				"The expected number of incoming transitions for the state 16 is one",
 				incomingTransition.size() == 1);
 
-		Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Boolean> map = constraint
+		Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>> map = constraint
 				.getSubProperties().iterator().next()
 				.getLowerReachabilityRelation().getReachabilityAcceptingMap();
 		assertTrue(
@@ -253,7 +254,7 @@ public class Test3ConstraintComputation {
 				"The reachability reachability replation between the state 14 and the state 15 must be accepting",
 				map.get(new AbstractMap.SimpleEntry<ColoredPluggingTransition, ColoredPluggingTransition>(
 						outgoingTransitions.iterator().next(),
-						incomingTransition.iterator().next()))==true);
+						incomingTransition.iterator().next())).getLeft()==true);
 	}
 
 }

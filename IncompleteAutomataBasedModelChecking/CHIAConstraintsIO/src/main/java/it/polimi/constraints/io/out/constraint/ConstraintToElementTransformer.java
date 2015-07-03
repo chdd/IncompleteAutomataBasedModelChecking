@@ -1,14 +1,12 @@
 package it.polimi.constraints.io.out.constraint;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.io.Transformer;
+import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.SubProperty;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -17,8 +15,14 @@ import org.w3c.dom.Element;
  * @author Claudio1
  *
  */
-public class ConstraintToElementTransformer implements
-		Transformer<Constraint, Element> {
+public class ConstraintToElementTransformer extends XMLTrasformer<Constraint, Element> {
+
+
+	public ConstraintToElementTransformer() throws ParserConfigurationException {
+		super();
+	}
+	
+ 
 
 	/**
 	 * takes as input a constraint and returns the corresponding XML element
@@ -26,23 +30,18 @@ public class ConstraintToElementTransformer implements
 	 * @param constraint
 	 *            the constraint to be converted into the corresponding XML
 	 *            element
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
-	public Element transform(Constraint constraint)
-			throws Exception {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory
-				.newInstance();
-		DocumentBuilder docBuilder;
-		docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.newDocument();
-		Element rootElement = doc
+	public Element transform(Constraint constraint) throws Exception {
+
+		Element rootElement = this.getDocument()
 				.createElement(AutomataIOConstants.XML_ELEMENT_CONSTRAINT);
-		doc.appendChild(rootElement);
-		
-		SubPropertyToElementTrasformer subPropertyTransformer = new SubPropertyToElementTrasformer(doc
-				);
-		for (SubProperty subProperty : constraint.getSubProperty()) {
+		 this.getDocument().appendChild(rootElement);
+
+		SubPropertyToElementTrasformer subPropertyTransformer = new SubPropertyToElementTrasformer(
+				 this.getDocument());
+		for (SubProperty subProperty : constraint.getSubProperties()) {
 
 			Element componentElement = subPropertyTransformer
 					.transform(subProperty);
@@ -50,6 +49,6 @@ public class ConstraintToElementTransformer implements
 
 		}
 
-				return rootElement;
+		return rootElement;
 	}
 }

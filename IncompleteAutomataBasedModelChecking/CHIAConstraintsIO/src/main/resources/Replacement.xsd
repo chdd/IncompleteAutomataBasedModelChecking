@@ -75,6 +75,7 @@
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="modelstateId" type="xs:integer" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="state">

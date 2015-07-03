@@ -36,9 +36,9 @@ public class PortToElementTransformer implements Transformer<PluggingTransition,
 		Element portElement = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_PORT);
 
-		//Attr portId = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
-		//portId.setValue(Integer.toString(port.getId()));
-		//portElement.setAttributeNode(portId);
+		Attr portId = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
+		portId.setValue(Integer.toString(port.getId()));
+		portElement.setAttributeNode(portId);
 
 		Element transitionSourceStateContainer = doc
 				.createElement(ConstraintsIOConstants.XML_ELEMENT_PORT_SOURCE_STATE);

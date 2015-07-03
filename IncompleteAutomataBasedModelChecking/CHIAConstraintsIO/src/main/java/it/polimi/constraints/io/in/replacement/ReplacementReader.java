@@ -32,7 +32,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ReplacementReader extends XMLReader{
+public class ReplacementReader extends XMLReader<Replacement>{
 
 	
 	private final static String NAME="READ REPLACEMENT";
@@ -78,7 +78,7 @@ public class ReplacementReader extends XMLReader{
 		this.file = file;
 	}
 
-	public Replacement read() {
+	public Replacement perform() {
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
@@ -99,6 +99,9 @@ public class ReplacementReader extends XMLReader{
 			Element doc = dom.getDocumentElement();
 
 			Replacement ret = this.loadReplacement(doc);
+			if(ret==null){
+				throw new InternalError("The read replacement is null");
+			}
 			return ret;
 
 		} catch (ParserConfigurationException pce) {
@@ -115,10 +118,13 @@ public class ReplacementReader extends XMLReader{
 	private Replacement loadReplacement(Element doc) {
 		Preconditions.checkNotNull(doc, "The document element cannot be null");
 
-		Replacement refinement = new ElementToReplacementTransformer()
+		Replacement replacement = new ElementToReplacementTransformer()
 				.transform(doc);
 
-		return refinement;
+		if(replacement==null){
+			throw new InternalError("The read replacement is null");
+		}
+		return replacement;
 
 	}
 }

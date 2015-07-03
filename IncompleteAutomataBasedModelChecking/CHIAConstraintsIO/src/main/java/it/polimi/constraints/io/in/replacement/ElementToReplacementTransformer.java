@@ -3,7 +3,7 @@ package it.polimi.constraints.io.in.replacement;
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.in.IBAElementToTransformer;
+import it.polimi.automata.io.in.ElementToIBATransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.constraints.components.Replacement;
@@ -35,7 +35,7 @@ public class ElementToReplacementTransformer implements Transformer<Element, Rep
 		String stateName = input.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
 		
 		
-		IBAElementToTransformer elementToIBATransformer=new IBAElementToTransformer();
+		ElementToIBATransformer elementToIBATransformer=new ElementToIBATransformer();
 		
 		NodeList list=input.getElementsByTagName(
 				AutomataIOConstants.XML_ELEMENT_IBA);

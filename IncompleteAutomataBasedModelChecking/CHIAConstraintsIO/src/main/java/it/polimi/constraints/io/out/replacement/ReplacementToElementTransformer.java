@@ -1,8 +1,8 @@
 package it.polimi.constraints.io.out.replacement;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.out.BAToElementTrasformer;
+import it.polimi.automata.io.XMLTrasformer;
+import it.polimi.automata.io.out.IBAToElementTrasformer;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.transitions.PluggingTransition;
 
@@ -18,9 +18,14 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class ReplacementToElementTransformer implements Transformer<Replacement, Element> {
+public class ReplacementToElementTransformer extends XMLTrasformer<Replacement, Element> {
 
 	
+	public ReplacementToElementTransformer()
+			throws ParserConfigurationException {
+		super();
+	}
+
 	@Override
 	public Element transform(Replacement input) throws ParserConfigurationException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory
@@ -46,7 +51,7 @@ public class ReplacementToElementTransformer implements Transformer<Replacement,
 		modelTransparentStateName.setValue(input.getModelState().getName());
 		constraintElement.setAttributeNode(modelTransparentStateName);
 
-		Element baElement = new BAToElementTrasformer(doc).transform(input
+		Element baElement = new IBAToElementTrasformer(doc).transform(input
 				.getAutomaton());
 		constraintElement.appendChild(baElement);
 
@@ -60,7 +65,7 @@ public class ReplacementToElementTransformer implements Transformer<Replacement,
 		Element outComingPorts = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_OUT);
 		constraintElement.appendChild(outComingPorts);
-		this.addPorts(outComingPorts, input.getOutcomingPorts(), doc);
+		this.addPorts(outComingPorts, input.getOutcomingTransition(), doc);
 
 		return constraintElement;
 	}

@@ -3,7 +3,7 @@ package it.polimi.constraints.io.in.constraint;
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.BA;
 import it.polimi.automata.io.Transformer;
-import it.polimi.automata.io.in.BAElementToTransformer;
+import it.polimi.automata.io.in.ElementToBATransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.constraints.components.SubProperty;
@@ -35,7 +35,7 @@ public class ElementToSubPropertyTransformer implements
 		String stateName = input
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
 
-		BAElementToTransformer elementToBATransformer = new BAElementToTransformer();
+		ElementToBATransformer elementToBATransformer = new ElementToBATransformer();
 
 		NodeList list = input
 				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_BA);

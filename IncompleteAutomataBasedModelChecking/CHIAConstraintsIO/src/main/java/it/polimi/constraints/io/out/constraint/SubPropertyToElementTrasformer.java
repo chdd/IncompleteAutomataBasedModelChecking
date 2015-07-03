@@ -69,13 +69,13 @@ public class SubPropertyToElementTrasformer extends XMLTrasformer<SubProperty, E
 		Element inComingPorts = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_IN);
 		constraintElement.appendChild(inComingPorts);
-		this.addPorts(inComingPorts, input.getIncomingPorts());
+		this.addPorts(inComingPorts, input.getIncomingTransitions());
 
 		// adding the outComing Ports
 		Element outComingPorts = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_OUT);
 		constraintElement.appendChild(outComingPorts);
-		this.addPorts(outComingPorts, input.getOutcomingPorts());
+		this.addPorts(outComingPorts, input.getOutgoingTransitions());
 
 		Element lowerReachability=new ReachabilityToElementTransformer(this.getDocument()).transform(input.getLowerReachabilityRelation());
 		Element lower = doc

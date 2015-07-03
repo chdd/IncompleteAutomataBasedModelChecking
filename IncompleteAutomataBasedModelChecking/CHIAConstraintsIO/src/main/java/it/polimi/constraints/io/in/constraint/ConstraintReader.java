@@ -5,12 +5,10 @@ import it.polimi.automata.io.in.XMLReader;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.ConstraintsIOConstants;
-import it.polimi.constraints.io.out.constraint.reachability.ReachabilityToElementTransformer;
 import it.polimi.constraints.reachability.ReachabilityRelation;
 import it.polimi.constraints.transitions.ColoredPluggingTransition;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -39,7 +38,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ConstraintReader extends XMLReader{
+public class ConstraintReader extends XMLReader<Constraint>{
 
 	
 	private static final String NAME="READ CONSTRAINT";
@@ -88,7 +87,7 @@ public class ConstraintReader extends XMLReader{
 		this.file = file;
 	}
 
-	public Constraint read() {
+	public Constraint perform() {
 		Constraint ret = new Constraint();
 
 		
@@ -179,13 +178,13 @@ public class ConstraintReader extends XMLReader{
 			Element lowerReachability=(Element) xmlSubPropertyElement.getElementsByTagName(AutomataIOConstants.XML_LOWER_REACHABILITY).item(0);
 			ReachabilityRelation lowerReachabilityRelation=new ElementToReachabilityRelationTransformer(mapIdPort).transform(lowerReachability);
 			
-			for(Entry<ColoredPluggingTransition, ColoredPluggingTransition> entry: lowerReachabilityRelation.getMap().entries()){
-				subProperty.addReachabilityRelation(entry.getKey(), entry.getValue());
+			for(Entry<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>> entry: lowerReachabilityRelation.getReachabilityAcceptingMap().entrySet()){
+				subProperty.addReachabilityRelation(entry.getKey().getKey(), entry.getKey().getValue(), entry.getValue().getLeft(), entry.getValue().getMiddle(), entry.getValue().getRight());
 			}
 			Element upperReachability=(Element) xmlSubPropertyElement.getElementsByTagName(AutomataIOConstants.XML_UPPER_REACHABILITY).item(0);
 			ReachabilityRelation upperReachabilityRelation=new ElementToReachabilityRelationTransformer(mapIdPort).transform(upperReachability);
-			for(Entry<ColoredPluggingTransition, ColoredPluggingTransition> entry: upperReachabilityRelation.getMap().entries()){
-				subProperty.addPossibleReachabilityRelation(entry.getKey(), entry.getValue());
+			for(Entry<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>> entry: upperReachabilityRelation.getReachabilityAcceptingMap().entrySet()){
+				subProperty.addPossibleReachabilityRelation(entry.getKey().getKey(), entry.getKey().getValue(), entry.getValue().getLeft(), entry.getValue().getMiddle(), entry.getValue().getRight());
 			}
 		}
 		

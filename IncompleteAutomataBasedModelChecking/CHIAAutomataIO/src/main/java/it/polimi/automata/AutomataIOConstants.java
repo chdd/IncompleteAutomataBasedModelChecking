@@ -49,6 +49,8 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE="indispensable";
 	public final static String XML_ATTRIBUTE_INITIAL="initial";
 	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
+	public final static String XML_ATTRIBUTE_ACCEPTING_CLAIM="acceptingclaim";
+	public final static String XML_ATTRIBUTE_ACCEPTING_MODEL="acceptingmodel";
 	public final static String XML_ATTRIBUTE_TRANSPARENT="transparent";
 	public final static String XML_ATTRIBUTE_MIXED="mixed";
 	public final static String XML_ATTRIBUTE_CONSTRAINED="constrained";

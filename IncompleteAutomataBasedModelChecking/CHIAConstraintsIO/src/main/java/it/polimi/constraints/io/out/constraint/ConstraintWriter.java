@@ -25,7 +25,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ConstraintWriter extends CHIAAction {
+public class ConstraintWriter extends CHIAAction<Void> {
 
 	/**
 	 * is the logger of the SubAutomataIdentifier class
@@ -86,7 +86,7 @@ public class ConstraintWriter extends CHIAAction {
 		this.file = f;
 	}
 
-	public void write() throws Exception {
+	public Void perform() throws Exception {
 
 		logger.info("Writing the constraint automaton");
 		try {
@@ -112,6 +112,7 @@ public class ConstraintWriter extends CHIAAction {
 			logger.error(tfe.getMessage());
 			tfe.printStackTrace();
 		}
+		return null;
 	}
 
 

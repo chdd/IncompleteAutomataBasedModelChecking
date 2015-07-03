@@ -7,14 +7,16 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import action.CHIAAction;
 
-public class ReplacementToStringTransformer extends CHIAAction {
+public class ReplacementToStringTransformer extends CHIAAction<String> {
 	private final static String NAME = "PRINT REPLACEMENT";
 
-	public ReplacementToStringTransformer() {
+	protected Replacement constraint;
+	public ReplacementToStringTransformer(Replacement constraint) {
 		super(NAME);
+		this.constraint=constraint;
 	}
 
-	public String toString(Replacement constraint) throws ParserConfigurationException,
+	public String perform() throws ParserConfigurationException,
 			Exception {
 		return new ElementToStringTransformer()
 				.transform(new ReplacementToElementTransformer().transform(constraint));
