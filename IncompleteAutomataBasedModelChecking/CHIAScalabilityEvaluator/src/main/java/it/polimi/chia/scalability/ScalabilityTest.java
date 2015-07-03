@@ -9,10 +9,11 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.KripkeAcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
-import it.polimi.chia.scalability.configuration.RandomConfiguration;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
+import it.polimi.chia.scalability.configuration.Configuration;
 import it.polimi.chia.scalability.configuration.RandomConfigurationGenerator;
+import it.polimi.chia.scalability.results.Record;
+import it.polimi.chia.scalability.results.ResultWriter;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
@@ -23,8 +24,6 @@ import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,20 +43,29 @@ public class ScalabilityTest {
 	
 	private final static String testDirectory="/Users/Claudio1/Desktop/Test/Test";
 	private final static String generalTestDirectory="/Users/Claudio1/Desktop/Test";
+	private final static String resultsFile="results.txt";
+	private final static String resultsFilePossibly="resultsPossibly.txt";
+
 	
-	private final static AcceptingPolicy acceptingPolicy=new KripkeAcceptingPolicy();
+	private final static AcceptingPolicy acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.KRIPKE);
 	
 	public static void main(String[] args) throws Exception {
 
+		System.out.println("--------------------------- STARTING THE TEST: ------------------------");
+		
 		Stopwatch timer = Stopwatch.createUnstarted();
 
+		System.out.println("--------------------------- STARTING THE TEST: ------------------------");
+		
 		FileUtils.deleteDirectory(new File(generalTestDirectory));
 		FileUtils.forceMkdir(new File(generalTestDirectory));
-		
+		ResultWriter resultWriter=new ResultWriter(new File(generalTestDirectory+"/"+resultsFile));
+		ResultWriter resultPossiblyWriter=new ResultWriter(new File(generalTestDirectory+"/"+resultsFilePossibly));
 		RandomConfigurationGenerator randomConfigurationGenerator = new RandomConfigurationGenerator();
 		
 		LTLtoBATransformer action = new LTLtoBATransformer("!((a)U(b))");
 		BA claim = action.perform();
+		
 		
 		//BA claim = generateRandomClaim(new RandomConfiguration(3, 2, 0.5, 0, 0));
 		
@@ -66,12 +74,12 @@ public class ScalabilityTest {
 			
 			i++;
 			
-			
+			Record record;
 			File dir = new File(testDirectory+i);
 			dir.mkdir();
 
 			System.out.println("--------------------------- TEST: "+i+"------------------------");
-			RandomConfiguration randomConfiguration = randomConfigurationGenerator
+			Configuration configuration = randomConfigurationGenerator
 					.next();
 			
 			//BA claim = generateRandomClaim(randomConfiguration);
@@ -82,17 +90,17 @@ public class ScalabilityTest {
 			claimWriter.perform();
 			
 			BARandomGenerator modelBAgenerator = new BARandomGenerator(
-					randomConfiguration.getPropositions(), new StateFactory(),
-					randomConfiguration.getTransitionDensity(),
-					randomConfiguration.getAcceptingDensity(),
-					randomConfiguration.getnStates(), new Random());
+					configuration.getPropositions(), new StateFactory(),
+					configuration.getTransitionDensity(),
+					configuration.getAcceptingDensity(),
+					configuration.getnStates(), new Random());
 			
 			BA modelBA = modelBAgenerator.perform();
 
 			IBARandomGenerator ibaGenerator = new IBARandomGenerator(modelBA,
 					new StateFactory(),
-					randomConfiguration.getTransparentDensity(),
-					randomConfiguration.getReplacementDensity());
+					configuration.getTransparentDensity(),
+					configuration.getReplacementDensity());
 			
 			IBA model=ibaGenerator.perform();
 			
@@ -105,13 +113,14 @@ public class ScalabilityTest {
 			Checker checker = new Checker(model, claim, acceptingPolicy);
 			SatisfactionValue value = checker.perform();
 			
-			logger.info("Random configuration: "+randomConfiguration);
+			logger.info("Random configuration: "+configuration);
 			logger.info("Verification of the IBA vs the BA: "+value.toString());
 			logger.info("The property is: "+value.toString());
+			
 			if(value==SatisfactionValue.POSSIBLYSATISFIED){
 				
 				// compute the constraint
-				Constraint constraint=computeConstraint(claim, model);
+				Constraint constraint=computeConstraint(claim, model,checker);
 				
 				ConstraintToElementTransformer constraintTransformer=new ConstraintToElementTransformer();
 				XMLWriter constraintWriter=new XMLWriter(new File(testDirectory+i+"/constraint.xml"), constraintTransformer.transform(constraint));
@@ -134,15 +143,12 @@ public class ScalabilityTest {
 				refinementWriter.perform();
 				
 				timer.reset();
-				ThreadMXBean thradBean = ManagementFactory.getThreadMXBean();
-				long startTime = thradBean.getCurrentThreadCpuTime();
 				timer.start();
 				SatisfactionValue refinementSatisfactionvalue =refinementChecker.perform();
 				timer.stop();
-				long stopTime = thradBean.getCurrentThreadCpuTime();
-				logger.info("REFINEMENT VERIFICATION PERFORMED IN: "+timer.elapsed(TimeUnit.MILLISECONDS)+" ms ");
+				logger.info("REFINEMENT VERIFICATION PERFORMED IN: "+timer.elapsed(TimeUnit.NANOSECONDS)+" ms ");
 				logger.info("REFINEMENT VERIFICATION STATES OF THE INTERSECTION AUTOMATON: "+refinementChecker.getIntersectionAutomataSize());
-				long refinementVerificationTime=timer.elapsed(TimeUnit.MILLISECONDS);
+				long refinementVerificationTime=timer.elapsed(TimeUnit.NANOSECONDS);
 				
 				// VERIFICATION OF THE REPLACEMENT
 				ReplacementChecker replacementChecker = new ReplacementChecker(constraint.getSubProperty(replacement.getModelState()), replacement, acceptingPolicy);
@@ -156,10 +162,10 @@ public class ScalabilityTest {
 				timer.start();
 				SatisfactionValue replacementSatisfactionvalue= replacementChecker.perform();
 				timer.stop();
-				logger.info("REPLACEMENT VERIFICATION PERFORMED IN: "+timer.elapsed(TimeUnit.MILLISECONDS)+" ms ");
+				logger.info("REPLACEMENT VERIFICATION PERFORMED IN: "+timer.elapsed(TimeUnit.NANOSECONDS)+" ms ");
 				logger.info("REPLACEMENT VERIFICATION STATES OF THE INTERSECTION AUTOMATON: "+replacementChecker.getIntersectionAutomataSize());
 
-				long replacementVerificationTime=timer.elapsed(TimeUnit.MILLISECONDS);
+				long replacementVerificationTime=timer.elapsed(TimeUnit.NANOSECONDS);
 				
 				if(refinementVerificationTime<replacementVerificationTime){
 					logger.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
@@ -171,33 +177,25 @@ public class ScalabilityTest {
 					logger.info("&&&&&&&&&&&&&&&&&&&& THE VERIFICATION OF THE REPLACEMENT IS MORE EFFICIENT &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 					logger.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 				}
-				
-				System.gc();
-				System.runFinalization ();
 				if(refinementSatisfactionvalue!=replacementSatisfactionvalue){
 					throw new InternalError("The verification of the refinement states that "+refinementSatisfactionvalue.toString()+" while the verification of the replacement states that  "+replacementSatisfactionvalue.toString());
 				}
 				logger.info("The property is: "+refinementSatisfactionvalue.toString());
+				record=new Record(configuration, value, refinementSatisfactionvalue, replacementChecker.isTriviallySatisfied(), refinementChecker.getIntersectionAutomataSize(), replacementChecker.getIntersectionAutomataSize(), refinementVerificationTime, replacementVerificationTime);
+				resultPossiblyWriter.append(record);
 			}
+			else{
+				record=new Record(configuration, value);
+			}
+			resultWriter.append(record);
+			System.gc();
+			System.runFinalization ();
+			
 		}
 	}
 	
-	private static BA generateRandomClaim(RandomConfiguration randomConfiguration){
-		BARandomGenerator claimgenerator = new BARandomGenerator(
-				randomConfiguration.getPropositions(), new StateFactory(),
-				randomConfiguration.getTransitionDensity(),
-				randomConfiguration.getAcceptingDensity(),
-				randomConfiguration.getnStates(), new Random());
-
-		return claimgenerator.perform();
-	}
 	
-
-	
-	private static Constraint computeConstraint(BA claim, IBA model){
-		
-		Checker checker = new Checker(model, claim, new NormalAcceptingPolicy());
-		
+	private static Constraint computeConstraint(BA claim, IBA model, Checker checker){
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
 		cg.coloring();

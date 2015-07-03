@@ -1,5 +1,12 @@
 package it.polimi.chia.scalability.configuration;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -11,8 +18,12 @@ import com.google.common.base.Preconditions;
  * @author Claudio Menghi
  *
  */
-public class RandomConfiguration {
+public class Configuration {
 
+	/**
+	 * is the identifier of the configuration
+	 */
+	private final int configurationId;
 	/**
 	 * the number of transitions of the BA
 	 */
@@ -33,6 +44,13 @@ public class RandomConfiguration {
 	 * the density of the states to be inserted into the replacement
 	 */
 	private final double replacementDensity;
+	
+	/**
+	 * The set of propositions to be considered in the generation of the random
+	 * automaton
+	 */
+	private final Set<IGraphProposition> propositions;
+
 
 	/**
 	 * creates a new test configuration
@@ -52,7 +70,7 @@ public class RandomConfiguration {
 	 *             accepting or the transparent states or the replacement
 	 *             density is less than zero
 	 */
-	public RandomConfiguration(int nStates, double transitionDensity,
+	public Configuration(int configurationId,int nStates, double transitionDensity,
 			double acceptingDensity, double transparentDensity,
 			double replacementDensity) {
 		Preconditions.checkArgument(nStates >= 0,
@@ -67,7 +85,12 @@ public class RandomConfiguration {
 						"The density of the transparent states must be grather or equal to zero");
 		Preconditions.checkArgument(replacementDensity >= 0,
 				"The replacement density must be grather or equal to zero");
-		
+
+		this.configurationId=configurationId;
+		this.propositions = new HashSet<IGraphProposition>();
+		this.propositions.add(new GraphProposition("a", false));
+		this.propositions.add(new GraphProposition("b", false));
+
 		this.transitionDensity = transitionDensity;
 		this.acceptingDensity = acceptingDensity;
 		this.nStates = nStates;
@@ -110,12 +133,30 @@ public class RandomConfiguration {
 		return transparentDensity;
 	}
 
+	/**
+	 * returns the set of the propositions to be used in the generation of the
+	 * automaton
+	 * 
+	 * @return the set of the propositions to be used in the generation of the
+	 * automaton
+	 */
+	public Set<IGraphProposition> getPropositions() {
+		return Collections.unmodifiableSet(propositions);
+	}
+
 	@Override
 	public String toString() {
 		return "TestConfiguration [nStates=" + nStates + ", transitionDensity="
 				+ transitionDensity + ", acceptingDensity=" + acceptingDensity
 				+ ", transparentDensity=" + transparentDensity
 				+ ", replacementDensity=" + replacementDensity + "]";
+	}
+
+	/**
+	 * @return the configurationId
+	 */
+	public int getConfigurationId() {
+		return configurationId;
 	}
 
 }

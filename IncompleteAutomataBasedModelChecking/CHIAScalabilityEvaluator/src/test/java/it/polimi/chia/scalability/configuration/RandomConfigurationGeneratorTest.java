@@ -14,7 +14,7 @@ public class RandomConfigurationGeneratorTest {
 		
 		while(configurationGenerator.hasNext()){
 			configurationNum++;
-			RandomConfiguration conf=configurationGenerator.next();
+			Configuration conf=configurationGenerator.next();
 			System.out.println(conf);
 			
 		}

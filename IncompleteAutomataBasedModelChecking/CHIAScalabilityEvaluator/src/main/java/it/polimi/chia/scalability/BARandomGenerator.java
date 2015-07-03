@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
@@ -35,7 +36,7 @@ import com.google.common.base.Preconditions;
  * @author Claudio Menghi
  *
  */
-public class BARandomGenerator {
+public class BARandomGenerator extends CHIAAction<BA>{
 
 	/**
 	 * contains the number of the states to be added to the BA
@@ -79,6 +80,8 @@ public class BARandomGenerator {
 	 * of the automaton
 	 */
 	private ClaimTransitionFactory transitionFactory;
+	
+	private static final String ACTION_NAME="BA random generation";
 
 	/**
 	 * Creates a random generator for a Buchi automaton
@@ -110,6 +113,7 @@ public class BARandomGenerator {
 			StateFactory stateFactory, double transitionDensity,
 			double acceptanceDensity, int nStates,
 			Random transitionsStateChooser) {
+		super(ACTION_NAME);
 		Preconditions.checkNotNull(propositions,
 				"The set of propositions cannot be null");
 		Preconditions.checkNotNull(stateFactory,
@@ -136,7 +140,7 @@ public class BARandomGenerator {
 	 * 
 	 * @return the randomly generated BA
 	 */
-	public BA generateRandomBA() {
+	public BA perform() {
 
 		this.ba = new BA(transitionFactory);
 

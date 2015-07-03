@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
@@ -121,25 +122,35 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 		Preconditions.checkNotNull(stateFactory,
 				"The state factory cannot be null");
 		Preconditions
-				.checkArgument(transparentStateDensity >= 0,
-						"The transparent state density must be grater than or equal to zero");
-		Preconditions.checkArgument(replacementDensity >= 0,
-				"The replacement density must be grater than or equal to zero");
+				.checkArgument(transparentStateDensity >= 0 && replacementDensity<=1,
+						"The transparent state density must be grater than or equal to zero and less than or equal to 1");
+		Preconditions.checkArgument(replacementDensity >= 0 && replacementDensity<=1,
+				"The replacement density must be grater than or equal to zero and less than or equal to 1");
 
+		
 		Preconditions
 				.checkArgument(
-						transparentStateDensity * ba.getStates().size()
-								* replacementDensity * ba.getStates().size() < ba
-								.getStates().size(),
-						"The ransparentStateDensity * ba.getStates().size() * replacementDensit* ba.getStates().size() < ba.getStates().size()");
+						Math.abs(Math.abs(transparentStateDensity)
+								* ba.getStates().size()
+								+ Math.abs(replacementDensity)
+								* ba.getStates().size()) <= ba.getStates()
+								.size(),
+						"The transparentStateDensity * ba.getStates().size() * replacementDensity* ba.getStates().size() <= ba.getStates().size(): "
+								+ Math.abs(Math.abs(transparentStateDensity)
+										* ba.getStates().size()
+										+ Math.abs(replacementDensity)
+										* ba.getStates().size())
+								+ "<"
+								+ ba.getStates().size());
 
-		this.numTransparentStates = (int) Math.round(ba.getStates().size()
+		this.numTransparentStates = (int) Math.abs(ba.getStates().size()
 				* transparentStateDensity);
 		this.ba = ba;
 		this.transparentStateReplacementMap = HashBiMap.create();
 		this.stateReplacementMap = new HashMap<State, Replacement>();
-		this.numEncapsulatedStates = (int) Math
-				.round((ba.getStates().size() - 1) * replacementDensity);
+		this.numEncapsulatedStates = (int) Math.abs((ba.getStates().size() - 1)
+				* replacementDensity);
+		Preconditions.checkArgument(numEncapsulatedStates<=ba.getStates().size(), "The number of the encapsultated states must be less than or equal to the states of the BA");
 		this.stateFactory = stateFactory;
 	}
 
@@ -159,14 +170,17 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 		// creates the transparent states and the corresponding replacements
 		this.createTransparentStatesAndReplacements();
 
-		List<State> baStates = new ArrayList<State>(ba.getStates());
-		Collections.shuffle(baStates);
-		Set<State> subset = ImmutableSet.copyOf(Iterables.limit(baStates,
-				this.transparentStateReplacementMap.keySet().size()));
+		Set<State> subset=new HashSet<State>();
+		if(this.transparentStateReplacementMap.keySet().size()>0){
+			List<State> baStates = new ArrayList<State>(ba.getStates());
+			Collections.shuffle(baStates);
+			 subset = ImmutableSet.copyOf(Iterables.limit(baStates, numEncapsulatedStates));
 
-		// adds the subset of states to the replacement
-		this.addStatesToTheReplacement(subset);
+			// adds the subset of states to the replacement
+			this.addStatesToTheReplacements(subset);
 
+		}
+		
 		// adds the remaining states to the IBA as regular states
 		Set<State> remainingBAStates = new HashSet<State>(ba.getStates());
 		remainingBAStates.removeAll(subset);
@@ -199,36 +213,52 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 	 *             if the set of state is not included in the set of states of
 	 *             the BA
 	 */
-	private void addStatesToTheReplacement(Set<State> states) {
+	private void addStatesToTheReplacements(Set<State> states) {
 		Preconditions.checkNotNull(states,
 				"The set of the states cannot be null");
 		Preconditions
 				.checkArgument(
 						this.ba.getStates().containsAll(states),
 						"The set of states must be contained into the set of the states of the automaton");
+		Preconditions
+				.checkArgument(
+						this.transparentStateReplacementMap.keySet().size()
+								+ numEncapsulatedStates <= this.ba.getStates()
+								.size(),
+						"The number of the transparent states ("
+								+ this.transparentStateReplacementMap.keySet()
+										.size()
+								+ ")\n plus by the number of states added inside each replacement ("
+								+ numEncapsulatedStates
+								+ ") \n must be less than or equal the numebr of states of the Ba from which the IBA must be extracted("
+								+ this.ba.getStates() + ")");
 
-		Iterator<State> transparentStatesIterator = this.transparentStateReplacementMap
-				.keySet().iterator();
+		
+
+		List<State> transparentStates = new ArrayList<State>(
+				this.transparentStateReplacementMap.keySet());
+		for(State transparentState: transparentStates){
+			iba.addTransparentState(transparentState);
+		}
+		
 		Iterator<State> baStatesIterator = states.iterator();
 
-		while (transparentStatesIterator.hasNext()) {
-
-			State transparentState = transparentStatesIterator.next();
-			Replacement replacement = this.transparentStateReplacementMap
-					.get(transparentState);
-			iba.addTransparentState(transparentState);
-			System.out.println(numEncapsulatedStates);
+		Random random=new Random();
+		
+		if(transparentStates.size()>0){
 			for (int i = 0; i < numEncapsulatedStates; i++) {
 
 				State baState = baStatesIterator.next();
+				State transparentState=transparentStates.get(random.nextInt(transparentStates.size()));
+				
+				Replacement replacement = this.transparentStateReplacementMap
+						.get(transparentState);
 				replacement.getAutomaton().addState(baState);
 				this.stateReplacementMap.put(baState,
-						this.transparentStateReplacementMap
-								.get(transparentState));
+						this.transparentStateReplacementMap.get(transparentState));
 				if (this.ba.getInitialStates().contains(baState)) {
 					iba.addInitialState(transparentState);
-					replacement.getAutomaton()
-							.addInitialState(baState);
+					replacement.getAutomaton().addInitialState(baState);
 				}
 				if (this.ba.getAcceptStates().contains(baState)) {
 					iba.addAcceptState(transparentState);
@@ -236,6 +266,8 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 				}
 			}
 		}
+		
+
 	}
 
 	/**

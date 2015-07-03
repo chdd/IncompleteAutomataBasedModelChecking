@@ -3,12 +3,12 @@ package it.polimi.chia.scalability.configuration;
 import java.util.Iterator;
 
 public class RandomConfigurationGenerator implements
-		Iterator<RandomConfiguration> {
+		Iterator<Configuration> {
 
 	// N STATES
-	protected static final int INIT_NSTATES = 10;
-	protected static final int FINAL_NSTATES = 100;
-	protected static final int INCREMENT_NSTATES = 10;
+	protected static final int INIT_NSTATES = 3;
+	protected static final int FINAL_NSTATES = 50;
+	protected static final int INCREMENT_NSTATES = 1;
 
 	// TRANSITIONS DENSITIES
 	protected static final double INIT_TRANSITION_DENSITY = 1.0;
@@ -21,9 +21,9 @@ public class RandomConfigurationGenerator implements
 	protected static final double INCREMENT_ACCEPTING_DENSITY = 0.2;
 
 	// TRANSPARENT DENSITIES
-	protected static final double INIT_TRANSPARENT_DENSITY = 10;
-	protected static final double FINAL_TRANSPARENT_DENSITY = 100;
-	protected static final double INCREMENT_TRANSPARENT_DENSITY = 10;
+	protected static final double INIT_TRANSPARENT_DENSITY = 0.1;
+	protected static final double FINAL_TRANSPARENT_DENSITY = 0.5;
+	protected static final double INCREMENT_TRANSPARENT_DENSITY = 0.1;
 
 	// REPLACEMENT DENSITIES
 	protected static final double INIT_REPLACEMENT_DENSITY = 0.1;
@@ -55,47 +55,54 @@ public class RandomConfigurationGenerator implements
 	}
 
 	@Override
-	public RandomConfiguration next() {
+	public Configuration next() {
 
-		RandomConfiguration testConfiguration = new RandomConfiguration(
+		
+		
+		Configuration testConfiguration = new Configuration(configurationNumber,
 				currentNumberOfStates, transitionDensity, acceptingDensity,
 				transparentDensity, replacementDensity);
-		currentNumberOfStates = currentNumberOfStates + INCREMENT_NSTATES;
-
+		
+		this.transitionDensity = roundDouble(transitionDensity
+				+ INCREMENT_TRANSITION_DENSITY);
+		
 		this.configurationNumber++;
 		if (this.hasNext()) {
-			if (currentNumberOfStates > FINAL_NSTATES) {
-				currentNumberOfStates = INIT_NSTATES;
-				this.transitionDensity = roundDouble(transitionDensity
-						+ INCREMENT_TRANSITION_DENSITY);
-				if (this.transitionDensity > FINAL_TRANSITION_DENSITY) {
-					this.transitionDensity = INIT_TRANSITION_DENSITY;
-					this.acceptingDensity = roundDouble(this.acceptingDensity
-							+ INCREMENT_ACCEPTING_DENSITY);
-					if (this.acceptingDensity > FINAL_ACCEPTING_DENSITY) {
-						this.acceptingDensity = INIT_ACCEPTING_DENSITY;
-						this.transparentDensity = roundDouble(this.transparentDensity
-								+ INCREMENT_TRANSPARENT_DENSITY);
-						if (this.transparentDensity > FINAL_TRANSPARENT_DENSITY) {
-							this.transparentDensity = INIT_TRANSPARENT_DENSITY;
-							this.replacementDensity = roundDouble(this.replacementDensity
-									+ INCREMENT_REPLACEMENT_DENSITY);
-							if (this.replacementDensity > FINAL_REPLACEMENT_DENSITY) {
+			if (this.transitionDensity > FINAL_TRANSITION_DENSITY) {
+				this.transitionDensity = INIT_TRANSITION_DENSITY;
+				this.acceptingDensity = roundDouble(this.acceptingDensity
+						+ INCREMENT_ACCEPTING_DENSITY);
+				if (this.acceptingDensity > FINAL_ACCEPTING_DENSITY) {
+					this.acceptingDensity = INIT_ACCEPTING_DENSITY;
+					this.transparentDensity = roundDouble(this.transparentDensity
+							+ INCREMENT_TRANSPARENT_DENSITY);
+					if (this.transparentDensity > FINAL_TRANSPARENT_DENSITY) {
+						this.transparentDensity = INIT_TRANSPARENT_DENSITY;
+						this.replacementDensity = roundDouble(this.replacementDensity
+								+ INCREMENT_REPLACEMENT_DENSITY);
+						if (this.replacementDensity > FINAL_REPLACEMENT_DENSITY) {
+							this.replacementDensity=INIT_REPLACEMENT_DENSITY;
+							currentNumberOfStates = currentNumberOfStates + INCREMENT_NSTATES;
+							if (currentNumberOfStates > FINAL_NSTATES) {
 								throw new InternalError(
 										"The number of configurations generated is too high");
+
 							}
 						}
 					}
 				}
 			}
+
 		}
+		
+		
 
 		return testConfiguration;
 
 	}
 
-	private double roundDouble(double number){
-		return Math.round( number * 100.0 ) / 100.0;
+	private double roundDouble(double number) {
+		return Math.abs((number * 100.0) / 100.0);
 	}
 
 	public int getNumberOfPossibleConfigurations() {
