@@ -7,6 +7,7 @@ import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.replacement.ReplacementToStringTransformer;
 import it.polimi.replacementchecker.ReplacementChecker;
 import action.CHIAAction;
+import action.CHIAException;
 
 public enum CHIAReplacementState implements CHIAState{
 	
@@ -15,7 +16,17 @@ public enum CHIAReplacementState implements CHIAState{
 	 */
 	INIT {
 		@Override
-		public CHIAReplacementState perform(Class<? extends CHIAAction> chiaAction) throws CHIAException {
+		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
+			if(chiaAction==ReplacementReader.class){
+				return true;
+			}
+			if(chiaAction==ConstraintReader.class){
+				return true;
+			}
+			return false;
+		}
+		@Override
+		public CHIAReplacementState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 		
 			if(chiaAction==ReplacementReader.class){
 				return REPLACEMENTLOADED;
@@ -32,7 +43,20 @@ public enum CHIAReplacementState implements CHIAState{
 	},
 	REPLACEMENTLOADED {
 		@Override
-		public CHIAReplacementState perform(Class<? extends CHIAAction> chiaAction) throws CHIAException {
+		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
+			if(chiaAction==ReplacementReader.class){
+				return true;
+			}
+			if(chiaAction==ConstraintReader.class){
+				return true;
+			}
+			if(chiaAction==ReplacementToStringTransformer.class){
+				return true;
+			}
+			return false;
+		}
+		@Override
+		public CHIAReplacementState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 
 			if(chiaAction==ReplacementReader.class){
 				return REPLACEMENTLOADED;
@@ -50,7 +74,20 @@ public enum CHIAReplacementState implements CHIAState{
 	},
 	CONSTRAINTLOADED {
 		@Override
-		public CHIAReplacementState perform(Class<? extends CHIAAction> chiaAction) throws CHIAException {
+		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
+			if(chiaAction==ConstraintReader.class){
+				return true;
+			}
+			if(chiaAction==ReplacementReader.class){
+				return true;
+			}
+			if(chiaAction==ConstraintToStringTrasformer.class){
+				return true;
+			}
+			return false;
+		}
+		@Override
+		public CHIAReplacementState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 
 			if(chiaAction==ConstraintReader.class){
 				return CONSTRAINTLOADED;
@@ -68,7 +105,20 @@ public enum CHIAReplacementState implements CHIAState{
 	},
 	READY {
 		@Override
-		public CHIAReplacementState perform(Class<? extends CHIAAction> chiaAction) throws CHIAException {
+		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
+			if(chiaAction==ConstraintToStringTrasformer.class){
+				return true;
+			}
+			if(chiaAction==ReplacementToStringTransformer.class){
+				return true;
+			}
+			if(chiaAction==ReplacementChecker.class){
+				return true;
+			}
+			return false;
+		}
+		@Override
+		public CHIAReplacementState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 			
 			if(chiaAction==ConstraintToStringTrasformer.class){
 				return READY;
@@ -86,7 +136,26 @@ public enum CHIAReplacementState implements CHIAState{
 	},
 	CHECKED {
 		@Override
-		public CHIAReplacementState perform(Class<? extends CHIAAction> chiaAction) throws CHIAException {
+		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
+			if(chiaAction==ConstraintToStringTrasformer.class){
+				return true;
+			}
+			if(chiaAction==ReplacementToStringTransformer.class){
+				return true;
+			}
+			if(chiaAction==IntersectionToStringTransformer.class){
+				return true;
+			}
+			if(chiaAction==ConstraintReader.class){
+				return true;
+			}
+			if(chiaAction==ReplacementReader.class){
+				return true;
+			}
+			return false;
+		}
+		@Override
+		public CHIAReplacementState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 			if(chiaAction==ConstraintToStringTrasformer.class){
 				return CHECKED;
 			}
@@ -109,7 +178,9 @@ public enum CHIAReplacementState implements CHIAState{
 	};
 	
 
-	public abstract CHIAReplacementState perform(Class<? extends CHIAAction> chiaAction)
+	public abstract CHIAReplacementState perform(Class<? extends CHIAAction<?>> chiaAction)
 			throws CHIAException;
+	
+	
 	
 }

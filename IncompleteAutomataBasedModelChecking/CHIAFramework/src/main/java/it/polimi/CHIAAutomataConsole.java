@@ -12,8 +12,7 @@ import it.polimi.automata.io.out.IntersectionWriter;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.KripkeAcceptingPolicy;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.constraint.ConstraintWriter;
@@ -23,11 +22,13 @@ import it.polimi.contraintcomputation.ConstraintGenerator;
 import it.polimi.model.ltltoba.LTLReader;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.statemachine.CHIAAutomataState;
-import it.polimi.statemachine.CHIAException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -35,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import action.CHIAAction;
+import action.CHIAException;
 import asg.cliche.Command;
 import asg.cliche.Param;
 
@@ -54,34 +57,29 @@ public class CHIAAutomataConsole {
 	private ConstraintGenerator cg;
 
 	public CHIAAutomataConsole() {
-		policy = new KripkeAcceptingPolicy();
+		policy =AcceptingPolicy.getAcceptingPolicy(AcceptingType.KRIPKE);
 		chiaState = CHIAAutomataState.INIT;
 	}
 
 	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
 	public void changePolicy(
 			@Param(name = "policy", description = "is the policy to be used KRIPKE or NORMAL") String policy) {
-		if (policy.equals("KRIPKE")) {
-			this.policy = new KripkeAcceptingPolicy();
-		} else {
-			if (policy.equals("NORMAL")) {
-				this.policy = new NormalAcceptingPolicy();
-			} else {
-				System.out.println("Parameter: " + policy + " not accepted");
-			}
+		try{
+			this.policy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.valueOf(policy));
+		} catch(Exception e) {
+				System.out.println("Parameter: " + policy + " not accepted the policy must be one of "+AcceptingType.values().toString());
 		}
 	}
 
 	@Command(name = "loadModel", abbrev = "lm", description = "Is used to load the model from an XML file. The XML file must mach the IBA.xsd.", header = "model loaded")
 	public void loadModel(
 			@Param(name = "modelFilePath", description = "is the path of the file that contains the model to be checked") String modelFilePath)
-			throws FileNotFoundException, ParserConfigurationException,
-			SAXException, IOException {
+			throws Exception {
 		try {
 			this.chiaState = chiaState.perform(IBAReader.class);
 
 			IBAReader action = new IBAReader(modelFilePath);
-			this.model = action.read();
+			this.model = action.perform();
 
 		} catch (CHIAException e) {
 			logger.info(e.toString());
@@ -98,7 +96,7 @@ public class CHIAAutomataConsole {
 
 			this.chiaState = chiaState.perform(BAReader.class);
 			BAReader action = new BAReader(claimFilePath);
-			this.claim = action.read();
+			this.claim = action.perform();
 
 		} catch (CHIAException e) {
 			logger.info(e.toString());
@@ -110,8 +108,9 @@ public class CHIAAutomataConsole {
 			@Param(name = "LTLFormula", description = "is the LTL formula that represents the claim") String ltlProperty) {
 		try {
 			this.chiaState = chiaState.perform(LTLtoBATransformer.class);
-			LTLtoBATransformer action = new LTLtoBATransformer();
-			this.claim = action.transform("!(" + ltlProperty + ")");
+			LTLtoBATransformer action = new LTLtoBATransformer("!("
+					+ ltlProperty + ")");
+			this.claim = action.perform();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -126,7 +125,7 @@ public class CHIAAutomataConsole {
 			this.chiaState = chiaState.perform(LTLReader.class);
 
 			LTLReader action = new LTLReader(file);
-			this.claim = action.loadLTLFromFile();
+			this.claim = action.perform();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -136,14 +135,16 @@ public class CHIAAutomataConsole {
 	public void check() {
 		try {
 			this.chiaState = chiaState.perform(Checker.class);
-
-			long startTime = System.currentTimeMillis();
+			ThreadMXBean thradBean = ManagementFactory.getThreadMXBean();
+			long startTime = thradBean.getCurrentThreadCpuTime();
 			checker = new Checker(model, claim, policy);
-			SatisfactionValue result=checker.check();
-			long endTime = System.currentTimeMillis();
-			logger.info("Verification result: "+result.toString());
-			logger.info("Verification time: "+Long.toString(endTime-startTime)+" ms");
-			logger.info("Dimension of the intersection automaton (states+transitions): "+this.checker.getIntersectionAutomataSize());
+			SatisfactionValue result = checker.perform();
+			long endTime = thradBean.getCurrentThreadCpuTime();
+			logger.info("Verification result: " + result.toString());
+			logger.info("Verification time: "
+					+ Long.toString(TimeUnit.MILLISECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS)) + " ms");
+			logger.info("Dimension of the intersection automaton (states+transitions): "
+					+ this.checker.getIntersectionAutomataSize());
 			;
 
 		} catch (CHIAException e) {
@@ -157,7 +158,7 @@ public class CHIAAutomataConsole {
 		try {
 			this.chiaState = chiaState.perform(ConstraintGenerator.class);
 			cg = new ConstraintGenerator(this.checker);
-			this.constraint = cg.generateConstraint();
+			this.constraint = cg.perform();
 			// this.constraint = this.chia.generateConstraint();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
@@ -168,21 +169,16 @@ public class CHIAAutomataConsole {
 	@Command(name = "computeConstraint", abbrev = "cc", description = "Is used to compute the constraint corresponding to the model and the specified claim. ")
 	public void computeConstraint(
 			@Param(name = "-p", description = "if the -p flag is specified the port reachability relation is not computed") String p)
-			throws FileNotFoundException, ParserConfigurationException,
-			SAXException, IOException {
+			throws Exception {
 		try {
-			this.chiaState = chiaState.perform(ConstraintGenerator.class);
 
-			logger.info("Subproperty computation started");
 			cg = new ConstraintGenerator(this.checker);
-			this.constraint = cg.generateConstraint();
+			this.constraint = this.performAction(cg);
 			cg.coloring();
-			logger.info("Subproperty computation ended");
-
-			// this.constraint = this.chia.generateConstraint();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
+
 	}
 
 	@Command(name = "computeConstraint", abbrev = "cc", description = "Is used to compute the constraint corresponding to the model and the specified claim. ")
@@ -196,7 +192,7 @@ public class CHIAAutomataConsole {
 
 			logger.info("Subproperty computation started");
 			cg = new ConstraintGenerator(this.checker);
-			this.constraint = cg.generateConstraint();
+			this.constraint = cg.perform();
 			cg.coloring();
 			cg.computePortReachability();
 			cg.computeIndispensable();
@@ -214,12 +210,12 @@ public class CHIAAutomataConsole {
 		try {
 			this.chiaState = chiaState.perform(IntersectionWriter.class);
 
-			IntersectionWriter intersectionWriter = new IntersectionWriter(
-					new File(intersectionFilePath));
-
 			IntersectionBA intersectionAutomaton = this.checker
 					.getUpperIntersectionBuilder().getIntersectionAutomaton();
-			intersectionWriter.write(intersectionAutomaton);
+			IntersectionWriter intersectionWriter = new IntersectionWriter(
+					new File(intersectionFilePath), intersectionAutomaton);
+
+			intersectionWriter.perform();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -234,7 +230,7 @@ public class CHIAAutomataConsole {
 
 			ConstraintWriter constraintWriter = new ConstraintWriter(
 					this.constraint, constraintFilePath);
-			constraintWriter.write();
+			constraintWriter.perform();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -252,8 +248,8 @@ public class CHIAAutomataConsole {
 		try {
 
 			this.chiaState = chiaState.perform(BAToStringTrasformer.class);
-			BAToStringTrasformer action = new BAToStringTrasformer();
-			logger.info(action.toString(this.claim));
+			BAToStringTrasformer action = new BAToStringTrasformer(this.claim);
+			logger.info(action.perform());
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -264,8 +260,9 @@ public class CHIAAutomataConsole {
 		try {
 			this.chiaState = chiaState
 					.perform(ConstraintToStringTrasformer.class);
-			ConstraintToStringTrasformer action = new ConstraintToStringTrasformer();
-			logger.info(action.toString(this.constraint));
+			ConstraintToStringTrasformer action = new ConstraintToStringTrasformer(
+					this.constraint);
+			logger.info(action.perform());
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -274,5 +271,20 @@ public class CHIAAutomataConsole {
 	@Command(name = "exit", abbrev = "exit", description = "Returns to the CHIA main console", header = "CHIA Automata console exit")
 	public void exit() {
 	}
-	
+
+	private <O> O performAction(CHIAAction<O> chiaAction) throws Exception {
+		if (this.chiaState.isPerformable(ConstraintGenerator.class)) {
+			logger.info("Subproperty computation started");
+			O result = chiaAction.perform();
+			logger.info("Subproperty computation ended");
+
+			this.chiaState = chiaState.perform(ConstraintGenerator.class);
+			return result;
+		} else {
+			throw new CHIAException("The action " + chiaAction.getName()
+					+ " cannot be performed into the state " + chiaState.name());
+		}
+
+	}
+
 }

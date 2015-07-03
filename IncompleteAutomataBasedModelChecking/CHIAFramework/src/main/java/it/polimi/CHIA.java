@@ -98,7 +98,7 @@ public class CHIA extends CHIAOperation{
 		logger.info("Running CHIA");
 
 		modelChecker = new Checker(model, claim, acceptingPolicy);
-		mcResults.setResult(modelChecker.check());
+		mcResults.setResult(modelChecker.perform());
 
 		logger.info("CHIA model checking phase ended");
 		return mcResults.getResult();
@@ -109,7 +109,7 @@ public class CHIA extends CHIAOperation{
 			this.check();
 		}
 		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
-		constraintGenerator.generateConstraint();
+		constraintGenerator.perform();
 		//return constraintGenerator.computePortReachability();
 		return null;
 	}
@@ -119,7 +119,7 @@ public class CHIA extends CHIAOperation{
 			this.check();
 		}
 		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
-		return constraintGenerator.generateConstraint();
+		return constraintGenerator.perform();
 	}
 	
 	/**
