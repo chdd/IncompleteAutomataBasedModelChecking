@@ -262,7 +262,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 								intersectionState, incomingTransition, true,
 								Color.BLACK);
 						
-						if(!this.subProperty.getIncomingPorts().contains(incomingPort)){
+						if(!this.subProperty.getIncomingTransitions().contains(incomingPort)){
 							this.mapIntersectionTransitionIncomingPort.put(
 									incomingTransition, incomingPort);
 							/*
@@ -319,7 +319,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 												destinationIntersectionState),
 								outcomingTransition, false, Color.BLACK);
 
-						if(!this.subProperty.getOutcomingPorts().contains(outcomingPort)){
+						if(!this.subProperty.getOutgoingTransitions().contains(outcomingPort)){
 							this.mapIntersectionTransitionOutcomingPort.put(
 									outcomingTransition, outcomingPort);
 

@@ -35,7 +35,7 @@ public class ForwardColoring {
 	 */
 	private final Color color;
 
-	private final SubPropertyIdentifier subProperty;
+	private final SubPropertyIdentifier subPropertyIdentifier;
 
 	private final Set<State> visitedStates;
 
@@ -74,7 +74,7 @@ public class ForwardColoring {
 		this.intersectionAutomaton = intersectionAutomaton;
 		this.states = states;
 		this.color = color;
-		this.subProperty = subProperty;
+		this.subPropertyIdentifier = subProperty;
 		this.visitedStates = new HashSet<State>();
 	}
 
@@ -109,12 +109,14 @@ public class ForwardColoring {
 					this.color(destinationState);
 				}
 			} else {
-				if(this.color==Color.GREEN){
-					subProperty.getIncomingPort(outTransition).setColor(this.color);
-				}
-				else{
-					if(subProperty.getIncomingPort(outTransition).getColor()!=Color.GREEN){
-						subProperty.getIncomingPort(outTransition).setColor(Color.YELLOW);
+				if(this.subPropertyIdentifier.isInTransition(outTransition)){
+					if(this.color==Color.GREEN){
+						subPropertyIdentifier.getIncomingPort(outTransition).setColor(this.color);
+					}
+					else{
+						if(subPropertyIdentifier.getIncomingPort(outTransition).getColor()!=Color.GREEN){
+							subPropertyIdentifier.getIncomingPort(outTransition).setColor(Color.YELLOW);
+						}
 					}
 				}
 			}

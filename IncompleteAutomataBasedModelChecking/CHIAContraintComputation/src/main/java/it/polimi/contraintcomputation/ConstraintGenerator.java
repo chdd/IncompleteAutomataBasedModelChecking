@@ -28,7 +28,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class ConstraintGenerator extends CHIAAction {
+public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 	private final static String NAME = "CONSTRAINT GENERATION";
 
@@ -67,7 +67,7 @@ public class ConstraintGenerator extends CHIAAction {
 		Preconditions.checkNotNull(checker, "The model checker cannot be null");
 		Preconditions
 				.checkState(
-						checker.check() == SatisfactionValue.POSSIBLYSATISFIED,
+						checker.perform() == SatisfactionValue.POSSIBLYSATISFIED,
 						"You can perform the constraint generation iff the claim is possibly satisfied");
 
 		Preconditions.checkNotNull(checker,
@@ -82,7 +82,7 @@ public class ConstraintGenerator extends CHIAAction {
 	 * 
 	 * @return the constraint of the automaton
 	 */
-	public Constraint generateConstraint() {
+	public Constraint perform() {
 
 		logger.info("Computing the constraint");
 		/*
@@ -171,7 +171,7 @@ public class ConstraintGenerator extends CHIAAction {
 			State modelState=entry.getKey().getModelState();
 			IBA model=checker.getUpperIntersectionBuilder().getModel().clone();
 			model.removeState(modelState);
-			SatisfactionValue value=new Checker(model, checker.getUpperIntersectionBuilder().getClaim(), checker.getUpperIntersectionBuilder().getAcceptingPolicy()).check();
+			SatisfactionValue value=new Checker(model, checker.getUpperIntersectionBuilder().getClaim(), checker.getUpperIntersectionBuilder().getAcceptingPolicy()).perform();
 			if(value==SatisfactionValue.NOTSATISFIED){
 				throw new InternalError("It is not possible that removing a transparent state of the model makes the property not satisfied");
 			}

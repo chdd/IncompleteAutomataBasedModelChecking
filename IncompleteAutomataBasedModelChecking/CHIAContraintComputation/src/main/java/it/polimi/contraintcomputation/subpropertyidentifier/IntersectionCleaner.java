@@ -66,7 +66,7 @@ public class IntersectionCleaner extends CHIAOperation {
 		Preconditions.checkNotNull(intersectionBuilder,
 				"The intersection Builder cannot be null");
 
-		this.intersectionAutomaton = intersectionBuilder.computeIntersection();
+		this.intersectionAutomaton = intersectionBuilder.perform();
 		this.intersectionBuilder = intersectionBuilder;
 
 	}
@@ -155,7 +155,7 @@ public class IntersectionCleaner extends CHIAOperation {
 			}
 		}
 		for (State s : toBeRemoved) {
-			this.intersectionAutomaton.removeState(s);
+			this.intersectionBuilder.removeIntersectionState(s);
 		}
 	}
 }

@@ -104,7 +104,7 @@ public class BackwardColoring {
 				} else {
 					State scState = scc.iterator().next();
 					if (abstractedIntersectionAutomaton.getSuccessors(scState)
-							.equals(scState)) {
+							.contains(scState)) {
 						next.add(scState);
 					}
 				}
@@ -115,22 +115,21 @@ public class BackwardColoring {
 			State s = next.iterator().next();
 			visitedStates.add(s);
 			next.remove(s);
-			for (Transition t : abstractedIntersectionAutomaton
-					.getOutTransitions(s)) {
-				State successor = abstractedIntersectionAutomaton
-						.getTransitionDestination(t);
+			for (Transition t : intersectionAutomaton
+					.getInTransitions(s)) {
+				State source = intersectionAutomaton
+						.getTransitionSource(t);
 				if (this.subPropertyIntifier.getSubProperty().getAutomaton()
-						.getStates().contains(successor)) {
+						.getStates().contains(source)) {
 					if (!(this.subPropertyIntifier.getOutgoingPort(t).getColor() == Color.RED)) {
 						this.subPropertyIntifier.getOutgoingPort(t).setColor(color);
 					}
 				} else {
-					if (!visitedStates.contains(s)) {
-						next.add(s);
+					if (!visitedStates.contains(source) && this.states.contains(source)) {
+						next.add(source);
 					}
 				}
 			}
 		}
-
 	}
 }
