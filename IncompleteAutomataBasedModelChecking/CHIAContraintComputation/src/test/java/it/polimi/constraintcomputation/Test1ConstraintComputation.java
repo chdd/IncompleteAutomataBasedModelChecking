@@ -8,7 +8,8 @@ import it.polimi.automata.io.in.IBAReader;
 import it.polimi.automata.io.out.ElementToStringTransformer;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
@@ -38,7 +39,7 @@ public class Test1ConstraintComputation {
 	@Test
 	public void test() throws ParserConfigurationException, Exception {
 		
-		Checker checker=new Checker(model, claim, new NormalAcceptingPolicy());
+		Checker checker=new Checker(model, claim, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
 		SatisfactionValue returnValue=checker.perform();
 		assertTrue("The property must be possibly satisfied", returnValue==SatisfactionValue.POSSIBLYSATISFIED);
 		

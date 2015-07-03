@@ -14,7 +14,8 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.IntersectionTransitionBuilder;
-import it.polimi.checker.intersection.acceptingpolicies.NormalAcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
@@ -117,7 +118,7 @@ public class Test3ConstraintComputation {
 	public void test() throws ParserConfigurationException, Exception {
 
 		Checker checker = new Checker(model, claim,
-				new NormalAcceptingPolicy(), intersectionStateFactory, new IntersectionTransitionBuilder());
+				AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), intersectionStateFactory, new IntersectionTransitionBuilder());
 		SatisfactionValue returnValue = checker.perform();
 		assertTrue("The property must be possibly satisfied",
 				returnValue == SatisfactionValue.POSSIBLYSATISFIED);
