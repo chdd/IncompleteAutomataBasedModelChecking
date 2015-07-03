@@ -36,7 +36,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class BA {
+public class BA implements Cloneable{
 
 	/**
 	 * contains the initial states of the Buchi automaton
@@ -496,7 +496,21 @@ public class BA {
 						this.getStates().contains(destination),
 						"The destination state is not contained into the set of the states of the automaton");
 
-		this.automataGraph.addEdge(source, destination, transition);
+		Preconditions
+				.checkArgument(
+						!this.getTransitions().contains(transition),
+						"The transition "
+								+ transition
+								+ " is already contained into the set of the transitions of the automaton");
+		boolean result = this.automataGraph.addEdge(source, destination,
+				transition);
+
+		if (result == false) {
+			throw new IllegalArgumentException(
+					"It was not possible to insert the transition "
+							+ transition + " with source " + source
+							+ " and destination " + destination);
+		}
 	}
 
 	/**
@@ -782,6 +796,7 @@ public class BA {
 	 *         number of transitions and states of the automaton
 	 */
 	public int size() {
-		return this.automataGraph.vertexSet().size()+this.automataGraph.edgeSet().size();
+		return this.automataGraph.vertexSet().size()
+				+ this.automataGraph.edgeSet().size();
 	}
 }
