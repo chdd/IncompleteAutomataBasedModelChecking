@@ -38,14 +38,14 @@ public class Abstractor<A extends BA> {
 		Preconditions.checkNotNull(states,
 				"The set of the states to be maintained cannot be null");
 		Preconditions
-				.checkArgument(ba.getStates().contains(states),
+				.checkArgument(ba.getStates().containsAll(states),
 						"All the states in the set states must be contained in the automaton");
 
 		// clones the incomplete Buchi Automaton
 		@SuppressWarnings("unchecked")
 		A retIba = (A) ba.clone();
 		// removes the transparent states from the Buchi Automaton
-		for (State s : retIba.getStates()) {
+		for (State s : ba.getStates()) {
 			if (!states.contains(s)) {
 				retIba.removeState(s);
 			}
