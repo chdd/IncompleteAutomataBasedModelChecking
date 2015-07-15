@@ -10,15 +10,15 @@ public final class AutomataIOConstants {
 	public final static String XML_ELEMENT_PROPOSITION="proposition";
 	public final static String XML_ELEMENT_PROPOSITION_VALUE="value";
 	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
-	public final static String XML_ELEMENT_PORTS_OUT="outports";
-	public final static String XML_ELEMENT_PORTS_IN="inports";
+	public final static String XML_ELEMENT_TRANSITIONS_OUT="outtransitions";
+	public final static String XML_ELEMENT_TRANSITIONS_IN="intransitions";
 	
 	public final static String XML_ATTRIBUTE_PORT_TYPE="type";
 	
 	public final static String XML_ATTRIBUTE_VALUE_IN="inport";
 	public final static String XML_ATTRIBUTE_VALUE_OUT="outport";
 	
-	public final static String XML_ELEMENT_PORT="port";
+	public final static String XML_ELEMENT_PLUG_TRANSITION="plugtransition";
 	public final static String XML_ELEMENT_SUBPROPERTY="subproperty";
 	public final static String XML_ELEMENT_REPLACEMENT="replacement";
 	

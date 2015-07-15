@@ -52,7 +52,7 @@ public class Test09ConstraintComputation {
 				.getResource(path + "buchiaccepting/test09/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test09/model.xml").getFile())).perform();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 	}
 	@Test
 	public void test() throws ParserConfigurationException, Exception {

@@ -6,14 +6,13 @@ import it.polimi.constraints.io.ConstraintsIOConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -36,12 +35,7 @@ public class ReplacementReader extends XMLReader<Replacement>{
 
 	
 	private final static String NAME="READ REPLACEMENT";
-	/**
-	 * is the logger of the BAReader class
-	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReplacementReader.class);
-
+	
 	
 	private final File file;
 	
@@ -78,12 +72,11 @@ public class ReplacementReader extends XMLReader<Replacement>{
 		this.file = file;
 	}
 
-	public Replacement perform() {
+	public Replacement perform() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
 			// use the factory to take an instance of the document builder
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			if(this.getClass().getClassLoader()
@@ -104,15 +97,8 @@ public class ReplacementReader extends XMLReader<Replacement>{
 			}
 			return ret;
 
-		} catch (ParserConfigurationException pce) {
-			logger.error(pce.toString());
-		} catch (SAXException se) {
-			logger.error(se.toString());
-		} catch (IOException ioe) {
-			logger.error(ioe.toString());
-		}
+	
 
-		return null;
 	}
 
 	private Replacement loadReplacement(Element doc) {

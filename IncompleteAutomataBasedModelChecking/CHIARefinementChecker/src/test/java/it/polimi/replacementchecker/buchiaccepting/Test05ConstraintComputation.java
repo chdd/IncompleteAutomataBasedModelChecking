@@ -77,7 +77,7 @@ public class Test05ConstraintComputation {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 
 		this.model = new IBAReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test05/model.xml").getFile())).perform();

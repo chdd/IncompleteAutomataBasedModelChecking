@@ -1,13 +1,11 @@
-package it.polimi.constraints.io.out.constraint;
+package it.polimi.constraints.io.out.replacement;
 
 import it.polimi.automata.AutomataIOConstants;
-import it.polimi.automata.io.XMLTrasformer;
+import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.out.states.StateToElementTrasformer;
 import it.polimi.automata.io.out.transitions.TransitionToElementTransformer;
 import it.polimi.constraints.io.ConstraintsIOConstants;
-import it.polimi.constraints.transitions.ColoredPluggingTransition;
-
-import javax.xml.parsers.ParserConfigurationException;
+import it.polimi.constraints.transitions.PluggingTransition;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -15,15 +13,10 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-/**
- * converts an incoming or outgoing transition of the sub-property into the corresponding XML element
- * 
- * @author claudiomenghi
- *
- */
-public class ColoredPluggingTransitionToElementTransformer extends XMLTrasformer<ColoredPluggingTransition, Element> {
+public class PluggingTransitionToElementTransformer implements Transformer<PluggingTransition, Element> {
 
-	
+	private final Document doc;
+
 	/**
 	 * creates a new Port element transformer
 	 * 
@@ -32,30 +25,20 @@ public class ColoredPluggingTransitionToElementTransformer extends XMLTrasformer
 	 * @throws NullPointerException
 	 *             if the document is null
 	 */
-	public ColoredPluggingTransitionToElementTransformer(Document doc) {
-		super(doc);
+	public PluggingTransitionToElementTransformer(Document doc) {
+		Preconditions.checkNotNull(doc, "The document element cannot be null");
+
+		this.doc = doc;
 	}
 
-	public Element transform(ColoredPluggingTransition port) throws ParserConfigurationException {
+	public Element transform(PluggingTransition port) {
 		Preconditions.checkNotNull(port, "The port element cannot be null");
-		Document doc=this.getDocument();
 		Element portElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_PORT);
+				.createElement(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 
 		Attr portId = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
 		portId.setValue(Integer.toString(port.getId()));
 		portElement.setAttributeNode(portId);
-
-		Attr portColor = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
-		portColor.setValue(port.getColor().toString());
-		portElement.setAttributeNode(portColor);
-
-		// transition source
-		Attr nextPortColor = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
-		nextPortColor.setValue(port.getColor().toString());
-		portElement.setAttributeNode(nextPortColor);
 
 		Element transitionSourceStateContainer = doc
 				.createElement(ConstraintsIOConstants.XML_ELEMENT_PORT_SOURCE_STATE);
@@ -83,4 +66,5 @@ public class ColoredPluggingTransitionToElementTransformer extends XMLTrasformer
 
 		return portElement;
 	}
+
 }

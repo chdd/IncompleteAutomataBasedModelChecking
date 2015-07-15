@@ -10,7 +10,7 @@ public class RandomConfigurationGeneratorTest {
 	public void test() {
 		int configurationNum=0;
 		
-		RandomConfigurationGenerator configurationGenerator=new RandomConfigurationGenerator();
+		RandomConfigurationGenerator configurationGenerator=new RandomConfigurationGenerator(null);
 		
 		while(configurationGenerator.hasNext()){
 			configurationNum++;

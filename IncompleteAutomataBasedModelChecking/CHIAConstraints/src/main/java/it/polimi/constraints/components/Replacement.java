@@ -96,7 +96,7 @@ public class Replacement extends Component {
 	 * @throws NullPointerException
 	 *             if the port is null
 	 */
-	public void addIncomingPort(PluggingTransition port) {
+	public void addIncomingTransition(PluggingTransition port) {
 
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
 		this.incomingPorts.add(port);
@@ -110,7 +110,7 @@ public class Replacement extends Component {
 	 * @throws NullPointerException
 	 *             if the port is null
 	 */
-	public void addOutComingPort(PluggingTransition port) {
+	public void addOutComingTransition(PluggingTransition port) {
 
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
 		this.outcomingPorts.add(port);

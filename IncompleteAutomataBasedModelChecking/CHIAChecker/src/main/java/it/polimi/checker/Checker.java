@@ -1,9 +1,13 @@
 package it.polimi.checker;
 
+import java.util.Stack;
+
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.IntersectionStateFactory;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval;
 import it.polimi.checker.intersection.IntersectionBuilder;
@@ -52,6 +56,9 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 	 * is the intersection transition builder to be used in the computation of the intersection automaton
 	 */
 	private final IntersectionTransitionBuilder intersectionTransitionBuilder;
+	
+	private Stack<State> stateCounterexample;
+	private Stack<Transition> transitionCounterexample;
 
 	/**
 	 * creates a new {@link Checker}
@@ -183,7 +190,11 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 		IntersectionBA intersectionAutomaton = this.lowerIntersectionBuilder
 				.perform();
 
-		return new EmptinessChecker(intersectionAutomaton).isEmpty();
+		EmptinessChecker mcEmptinessChecker=new EmptinessChecker(intersectionAutomaton);
+		boolean result=mcEmptinessChecker.isEmpty();
+		this.stateCounterexample=mcEmptinessChecker.getCounterExample();
+		this.transitionCounterexample=mcEmptinessChecker.getTransitionCounterExample();
+		return result;
 	}
 
 	/**
@@ -253,5 +264,21 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 							.size();
 		}
 		return size;
+	}
+
+	/**
+	 * @return the stateCounterexample
+	 */
+	public Stack<State> getStateCounterexample() {
+		return stateCounterexample;
+	}
+
+	
+
+	/**
+	 * @return the transitionCounterexample
+	 */
+	public Stack<Transition> getTransitionCounterexample() {
+		return transitionCounterexample;
 	}
 }

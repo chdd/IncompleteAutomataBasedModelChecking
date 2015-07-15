@@ -14,8 +14,6 @@ import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.StrongConnectivityInspector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -35,12 +33,7 @@ import com.google.common.base.Preconditions;
  */
 public class IntersectionCleaner extends CHIAOperation {
 
-	/**
-	 * is the logger of the SubAutomataIdentifier class
-	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(IntersectionCleaner.class);
-
+	
 	/**
 	 * contains the automaton to be considered by the {@link EmptinessChecker}
 	 */
@@ -77,8 +70,7 @@ public class IntersectionCleaner extends CHIAOperation {
 	 */
 	public void clean() {
 
-		logger.info("Starting the cleaning phase");
-
+		
 		this.removeNoSuccessorStates();
 
 		/*
@@ -131,8 +123,6 @@ public class IntersectionCleaner extends CHIAOperation {
 			this.intersectionBuilder.removeIntersectionState(s);
 		}
 
-		logger.info("The cleaning phase has removed: " + toBeRemoved.size()
-				+ " states");
 		this.setPerformed(true);
 	}
 

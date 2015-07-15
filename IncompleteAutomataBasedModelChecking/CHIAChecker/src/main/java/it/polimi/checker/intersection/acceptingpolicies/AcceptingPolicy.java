@@ -9,7 +9,7 @@ import it.polimi.automata.state.State;
 public abstract class AcceptingPolicy {
 
 	public static enum AcceptingType {
-		KRIPKE, NORMAL
+		KRIPKE, BA
 	}
 
 	protected IBA model;
@@ -65,7 +65,7 @@ public abstract class AcceptingPolicy {
 		if (acceptingType.equals(AcceptingType.KRIPKE)) {
 			return new KripkeAcceptingPolicy();
 		}
-		if (acceptingType.equals(AcceptingType.NORMAL.toString())) {
+		if (acceptingType.equals(AcceptingType.BA)) {
 			return new NormalAcceptingPolicy();
 		}
 		throw new IllegalArgumentException("The accepting policy "

@@ -1,12 +1,14 @@
 package it.polimi.contraintcomputation.portreachability;
 
-import it.polimi.automata.BA;
+import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
+import it.polimi.checker.intersection.IntersectionBuilder;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.base.Preconditions;
@@ -23,7 +25,7 @@ public class AcceptingStatePathChecker {
 	/**
 	 * the Buchi automaton to be considered
 	 */
-	private final BA ba;
+	private final IntersectionBA intersection;
 
 	private boolean performed;
 
@@ -40,6 +42,7 @@ public class AcceptingStatePathChecker {
 
 	private final Map<State, Map<State, Boolean>> reachability;
 
+	private final Map<State, State> changeMap;
 	/**
 	 * This map specifies for each accepting state the set of the states that
 	 * are reachable through a forward search
@@ -50,7 +53,7 @@ public class AcceptingStatePathChecker {
 	 * creates a new checker that aims to detect whether there exists a path
 	 * from the source to the destination that contains an accepting state
 	 * 
-	 * @param ba
+	 * @param intersection
 	 *            the BA under analysis
 	 * @param states
 	 *            the set of the states that can be traversed in the
@@ -58,17 +61,29 @@ public class AcceptingStatePathChecker {
 	 * @throws NullPointerException
 	 *             if the BA under analysis is null
 	 */
-	public AcceptingStatePathChecker(BA ba, Set<State> states) {
-		Preconditions.checkNotNull(ba, "The BA under analysis cannot be null");
+	public AcceptingStatePathChecker(IntersectionBuilder intersectionBuilder, IntersectionBA intersection, Set<State> states) {
+		Preconditions.checkNotNull(intersection, "The BA under analysis cannot be null");
 		Preconditions
 				.checkArgument(
-						ba.getStates().containsAll(states),
+						intersection.getStates().containsAll(states),
 						"The set of the states that can be traversed in the reachability search must be contained into the set of the states of the BA");
-		this.ba = ba;
+		this.intersection = intersection;
 		this.acceptingStateBackwardReachability = new HashMap<State, Set<State>>();
 		this.acceptingStateForwardReachability = new HashMap<State, Set<State>>();
 		this.states = Collections.unmodifiableSet(states);
 		this.reachability = new HashMap<State, Map<State, Boolean>>();
+		this.changeMap=new HashMap<State, State>();
+		Set<State> acceptingStates = new HashSet<State>(
+				intersection.getAcceptStates());
+		acceptingStates.retainAll(states);
+		for(State acceptingState: acceptingStates){
+			for(State prevState: intersection.getPredecessors(acceptingState)){
+				if(intersectionBuilder.getNumber(prevState)==1){
+					this.changeMap.put(prevState, acceptingState);
+				}
+			}
+		}
+		
 		performed = false;
 	}
 
@@ -92,9 +107,9 @@ public class AcceptingStatePathChecker {
 		Preconditions.checkNotNull(source, "The source state cannot be null");
 		Preconditions.checkNotNull(destination,
 				"The destination state cannot be null");
-		Preconditions.checkArgument(this.ba.getStates().contains(source),
+		Preconditions.checkArgument(this.intersection.getStates().contains(source),
 				"The source state must be a state of the BA");
-		Preconditions.checkArgument(this.ba.getStates().contains(destination),
+		Preconditions.checkArgument(this.intersection.getStates().contains(destination),
 				"The destination state must be a state of the BA");
 		Preconditions
 				.checkArgument(
@@ -106,29 +121,29 @@ public class AcceptingStatePathChecker {
 						"The destination state must be contained into the set of the states that can be traversed");
 		if (!this.performed) {
 
-			Set<State> acceptingStates = new HashSet<State>(
-					ba.getAcceptStates());
-			acceptingStates.retainAll(states);
-			for (State s : acceptingStates) {
+			for (Entry<State,State> entry : this.changeMap.entrySet()) {
 
-				this.acceptingStateBackwardReachability.put(s, new HashSet<State>());
-				this.acceptingStateForwardReachability.put(s, new HashSet<State>());
 				
-				backwardCheck(s);
-				forwardCheck(s);
+				this.acceptingStateBackwardReachability.put(entry.getKey(), new HashSet<State>());
+				this.acceptingStateForwardReachability.put(entry.getValue(), new HashSet<State>());
+				
+				backwardCheck(entry.getKey());
+				forwardCheck(entry.getValue());
 			}
 			performed = true;
 		}
 		if (this.hasBeenAlreadyChecked(source, destination)) {
 			return reachability.get(source).get(destination);
 		} else {
-			for (State s : ba.getAcceptStates()) {
-				
-				if (this.acceptingStateBackwardReachability.containsKey(s)
-						&& this.acceptingStateBackwardReachability.get(s)
-								.contains(source) &&
-								this.acceptingStateForwardReachability.containsKey(s) &&
-								this.acceptingStateForwardReachability.get(s).contains(destination)) {
+			for (Entry<State,State> entry : this.changeMap.entrySet()) {
+	
+				if (this.acceptingStateBackwardReachability.containsKey(entry.getKey())
+						&& 
+						this.acceptingStateBackwardReachability.get(entry.getKey())
+								.contains(source) 
+								&&
+								this.acceptingStateForwardReachability.containsKey(entry.getValue()) &&
+								this.acceptingStateForwardReachability.get(entry.getValue()).contains(destination)) {
 					if(reachability.containsKey(source)){
 						reachability.get(source).put(destination, true);
 						return true;
@@ -160,11 +175,7 @@ public class AcceptingStatePathChecker {
 	 * @return
 	 */
 	private void backwardCheck(State acceptingState) {
-		Preconditions
-				.checkArgument(
-						this.states.contains(acceptingState),
-						"The accepting state must be contained into the set of the states that can be traversed");
-
+		
 		this.acceptingStateBackwardReachability.get(acceptingState).add(acceptingState);
 		Set<State> nextStates = new HashSet<State>();
 		nextStates.add(acceptingState);
@@ -173,7 +184,7 @@ public class AcceptingStatePathChecker {
 			State next = nextStates.iterator().next();
 			nextStates.remove(next);
 			visitedStates.add(next);
-			for (State pred : this.ba.getPredecessors(next)) {
+			for (State pred : this.intersection.getPredecessors(next)) {
 				if (this.states.contains(pred) && !visitedStates.contains(pred)) {
 					this.acceptingStateBackwardReachability.get(acceptingState)
 							.add(pred);
@@ -190,11 +201,7 @@ public class AcceptingStatePathChecker {
 	 * @return
 	 */
 	private void forwardCheck(State acceptingState) {
-		Preconditions
-				.checkArgument(
-						this.states.contains(acceptingState),
-						"The accepting state must be contained into the set of the states that can be traversed");
-
+		
 		this.acceptingStateForwardReachability.get(acceptingState).add(acceptingState);
 		Set<State> nextStates = new HashSet<State>();
 		nextStates.add(acceptingState);
@@ -203,7 +210,7 @@ public class AcceptingStatePathChecker {
 			State next = nextStates.iterator().next();
 			nextStates.remove(next);
 			visitedStates.add(next);
-			for (State succ : this.ba.getSuccessors(next)) {
+			for (State succ : this.intersection.getSuccessors(next)) {
 				if (this.states.contains(succ) && !visitedStates.contains(succ)) {
 					this.acceptingStateForwardReachability.get(acceptingState)
 							.add(succ);

@@ -174,6 +174,9 @@ public enum CHIAAutomataState implements CHIAState {
 			if (chiaAction==BAReader.class) {
 				return true;
 			}
+			if (chiaAction==IBAReader.class) {
+				return true;
+			}
 			return false;
 		}
 		@Override
@@ -191,6 +194,9 @@ public enum CHIAAutomataState implements CHIAState {
 				return READY;
 			}
 			if (chiaAction==BAReader.class) {
+				return READY;
+			}
+			if (chiaAction==IBAReader.class) {
 				return READY;
 			}
 			throw new CHIAException("You cannot perform the action: "

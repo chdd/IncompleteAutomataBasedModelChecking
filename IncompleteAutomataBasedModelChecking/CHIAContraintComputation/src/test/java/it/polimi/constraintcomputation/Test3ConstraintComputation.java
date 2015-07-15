@@ -19,6 +19,7 @@ import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.Acceptin
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
+import it.polimi.constraints.reachability.ReachabilityEntry;
 import it.polimi.constraints.transitions.ColoredPluggingTransition;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 
@@ -31,11 +32,12 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang3.tuple.Triple;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.google.common.collect.Multimap;
 
 public class Test3ConstraintComputation {
 
@@ -119,7 +121,7 @@ public class Test3ConstraintComputation {
 	public void test() throws ParserConfigurationException, Exception {
 
 		Checker checker = new Checker(model, claim,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL), intersectionStateFactory, new IntersectionTransitionBuilder());
+				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA), intersectionStateFactory, new IntersectionTransitionBuilder());
 		SatisfactionValue returnValue = checker.perform();
 		assertTrue("The property must be possibly satisfied",
 				returnValue == SatisfactionValue.POSSIBLYSATISFIED);
@@ -241,7 +243,7 @@ public class Test3ConstraintComputation {
 				"The expected number of incoming transitions for the state 16 is one",
 				incomingTransition.size() == 1);
 
-		Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>> map = constraint
+		Multimap<State, ReachabilityEntry> map = constraint
 				.getSubProperties().iterator().next()
 				.getLowerReachabilityRelation().getReachabilityAcceptingMap();
 		assertTrue(
@@ -250,11 +252,6 @@ public class Test3ConstraintComputation {
 						outgoingTransitions.iterator().next(),
 						incomingTransition.iterator().next())));
 
-		assertTrue(
-				"The reachability reachability replation between the state 14 and the state 15 must be accepting",
-				map.get(new AbstractMap.SimpleEntry<ColoredPluggingTransition, ColoredPluggingTransition>(
-						outgoingTransitions.iterator().next(),
-						incomingTransition.iterator().next())).getLeft()==true);
 	}
 
 }

@@ -66,6 +66,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 	 */
 	private final Map<State, Map<State, Map<Integer, State>>> createdStates;
 
+	private final Map<State, Integer> intersectionStateNumber;
 	/**
 	 * for each state of the model contains the corresponding states of the
 	 * intersection automaton
@@ -162,6 +163,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 		this.visitedStates = new HashSet<Triple<State, State, Integer>>();
 		this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
 		this.intersectionStateFactory = intersectionStateFactory;
+		this.intersectionStateNumber=new HashMap<State, Integer>();
 	}
 
 	/**
@@ -372,7 +374,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 	private void addStateIntoTheIntersectionAutomaton(State intersectionState,
 			State modelState, State claimState, int number) {
-
+		this.intersectionStateNumber.put(intersectionState, number);
 		this.intersection.addState(intersectionState);
 		if (this.model.getInitialStates().contains(modelState)
 				&& this.claim.getInitialStates().contains(claimState)) {
@@ -600,6 +602,17 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 						"The intersection state is not present in the set of the states of the intersection automaton");
 		return intersectionStateModelStateMap.get(intersectionState);
 	}
+	
+	public State getClaimState(State intersectionState) {
+		Preconditions.checkNotNull(intersectionState,
+				"The intersection state to be considered cannot be null");
+		Preconditions
+				.checkArgument(
+						this.intersection.getStates().contains(
+								intersectionState),
+						"The intersection state is not present in the set of the states of the intersection automaton");
+		return this.intersectionStateClaimStateMap.get(intersectionState);
+	}
 
 	/**
 	 * returns the model from which the intersection is computed
@@ -681,6 +694,13 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 	public AcceptingPolicy getAcceptingPolicy() {
 		return this.acceptingPolicy;
+	}
+	
+	public int getNumber(State intersectionState){
+		Preconditions.checkNotNull("The state cannot be null");
+		Preconditions.checkArgument(this.intersection.getStates().contains(intersectionState));
+		
+		return this.intersectionStateNumber.get(intersectionState);
 	}
 
 }

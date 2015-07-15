@@ -4,6 +4,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.constraints.reachability.ReachabilityRelation;
 import it.polimi.constraints.transitions.ColoredPluggingTransition;
+import it.polimi.constraints.transitions.PluggingTransition;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -117,17 +118,18 @@ public class SubProperty extends Component {
 	/**
 	 * adds an incoming port to the component
 	 * 
-	 * @param port
+	 * @param transition
 	 *            is the port to be added as an in-coming port
 	 * 
 	 * @throws NullPointerException
 	 *             if the port is null
 	 */
-	public void addIncomingTransition(ColoredPluggingTransition port) {
+	public void addIncomingTransition(ColoredPluggingTransition transition) {
 
-		Preconditions.checkNotNull(port, "The port to be added cannot be null");
-		this.incomingPorts.put(port.hashCode(), port);
+		Preconditions.checkNotNull(transition, "The incoming transition to be added cannot be null");
+		this.incomingPorts.put(transition.hashCode(), transition);
 	}
+	
 
 	public ColoredPluggingTransition getIncomingTransition(
 			ColoredPluggingTransition port) {
@@ -195,9 +197,9 @@ public class SubProperty extends Component {
 	 * reachable from the sourcePort through a path that only involves purely
 	 * regular states
 	 * 
-	 * @param sourcePort
+	 * @param outgoingTransition
 	 *            is the source port
-	 * @param destinationPort
+	 * @param incomingTransition
 	 *            is the destination
 	 * @throws NullPointerException
 	 *             if one of the ports is null
@@ -208,28 +210,28 @@ public class SubProperty extends Component {
 	 *             if the destination port is not an incoming port of the
 	 *             sub-property
 	 */
-	public void addReachabilityRelation(ColoredPluggingTransition sourcePort,
-			ColoredPluggingTransition destinationPort, Boolean accepting, Boolean modelAcceptingState, Boolean claimAcceptingState) {
+	public void addReachabilityRelation(ColoredPluggingTransition outgoingTransition,
+			ColoredPluggingTransition incomingTransition, Boolean accepting, Boolean modelAcceptingState, Boolean claimAcceptingState) {
 		// validates the parameters
-		Preconditions.checkNotNull(sourcePort,
+		Preconditions.checkNotNull(outgoingTransition,
 				"The incomingPort port cannot be null");
-		Preconditions.checkNotNull(destinationPort,
+		Preconditions.checkNotNull(incomingTransition,
 				"The outcomingPort port cannot be null");
 		Preconditions
 				.checkArgument(
-						this.getOutgoingTransitions().contains(sourcePort),
+						this.getOutgoingTransitions().contains(outgoingTransition),
 						"The source port "
-								+ sourcePort
+								+ outgoingTransition
 								+ " must be contained into the set of the outgoing port of the sub-property");
 		Preconditions
 				.checkArgument(
-						this.getIncomingTransitions().contains(destinationPort),
+						this.getIncomingTransitions().contains(incomingTransition),
 						"The destination port "
-								+ destinationPort
+								+ incomingTransition
 								+ " must be contained into the set of the incoming port of the sub-property");
 
-		this.lowerApproximationReachabilityRelation.addTransition(sourcePort,
-				destinationPort, accepting, modelAcceptingState, claimAcceptingState);
+		this.lowerApproximationReachabilityRelation.addTransition(outgoingTransition,
+				incomingTransition, accepting, modelAcceptingState, claimAcceptingState);
 	}
 
 	public ReachabilityRelation getLowerReachabilityRelation() {
@@ -245,9 +247,9 @@ public class SubProperty extends Component {
 	 * reachable from the sourcePort through a path that only involves purely
 	 * regular and mixed states
 	 * 
-	 * @param sourcePort
+	 * @param outgoingTransition
 	 *            is the source port
-	 * @param destinationPort
+	 * @param incomingTransition
 	 *            is the destination
 	 * @throws NullPointerException
 	 *             if one of the ports is null
@@ -259,28 +261,28 @@ public class SubProperty extends Component {
 	 *             sub-property
 	 */
 	public void addPossibleReachabilityRelation(
-			ColoredPluggingTransition sourcePort,
-			ColoredPluggingTransition destinationPort, Boolean accepting, Boolean modelAcceptingState, Boolean claimAcceptingState) {
+			ColoredPluggingTransition outgoingTransition,
+			ColoredPluggingTransition incomingTransition, Boolean accepting, Boolean modelAcceptingState, Boolean claimAcceptingState) {
 		// validates the parameters
-		Preconditions.checkNotNull(sourcePort,
+		Preconditions.checkNotNull(outgoingTransition,
 				"The incomingPort port cannot be null");
-		Preconditions.checkNotNull(destinationPort,
+		Preconditions.checkNotNull(incomingTransition,
 				"The outcomingPort port cannot be null");
 		Preconditions
 				.checkArgument(
-						this.getOutgoingTransitions().contains(sourcePort),
+						this.getOutgoingTransitions().contains(outgoingTransition),
 						"The source port "
-								+ sourcePort
+								+ outgoingTransition
 								+ " must be contained into the set of the outgoing port of the sub-property");
 		Preconditions
 				.checkArgument(
-						this.getIncomingTransitions().contains(destinationPort),
+						this.getIncomingTransitions().contains(incomingTransition),
 						"The destination port "
-								+ destinationPort
+								+ incomingTransition
 								+ " must be contained into the set of the incoming port of the sub-property");
 
-		this.overApproximationReachabilityRelation.addTransition(sourcePort,
-				destinationPort, accepting,  modelAcceptingState,  claimAcceptingState);
+		this.overApproximationReachabilityRelation.addTransition(outgoingTransition,
+				incomingTransition, accepting,  modelAcceptingState,  claimAcceptingState);
 	}
 
 	@Override
@@ -330,4 +332,6 @@ public class SubProperty extends Component {
 	public void setIndispensable(boolean indispensable) {
 		this.indispensable = indispensable;
 	}
+
+	
 }

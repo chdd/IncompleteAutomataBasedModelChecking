@@ -1,5 +1,8 @@
 package it.polimi;
 
+import it.polimi.console.CHIAAutomataConsole;
+import it.polimi.console.CHIAReplacementConsole;
+
 import java.io.IOException;
 
 import asg.cliche.Command;

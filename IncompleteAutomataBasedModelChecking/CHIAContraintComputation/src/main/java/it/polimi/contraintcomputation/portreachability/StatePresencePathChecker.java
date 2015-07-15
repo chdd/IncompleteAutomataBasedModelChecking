@@ -33,6 +33,8 @@ public class StatePresencePathChecker {
 	 */
 	private final Set<State> states;
 
+	private final Set<State> intersetingStates;
+	
 	/**
 	 * This map specifies for each accepting state the set of the states that
 	 * are reachable through a backward search
@@ -47,8 +49,7 @@ public class StatePresencePathChecker {
 	 */
 	private final Map<State, Set<State>> acceptingStateForwardReachability;
 	
-	private final Set<State> includedStates;
-
+	
 	/**
 	 * creates a new checker that aims to detect whether there exists a path
 	 * from the source to the destination that contains an accepting state
@@ -64,8 +65,7 @@ public class StatePresencePathChecker {
 	 * @throws NullPointerException
 	 *             if the BA under analysis is null
 	 */
-	public StatePresencePathChecker(BA ba, Set<State> states,
-			Set<State> includedStates) {
+	public StatePresencePathChecker(BA ba, Set<State> states, Set<State> intersetingStates) {
 		Preconditions.checkNotNull(ba, "The BA under analysis cannot be null");
 		Preconditions
 				.checkArgument(
@@ -77,7 +77,7 @@ public class StatePresencePathChecker {
 		this.states = Collections.unmodifiableSet(states);
 		this.reachability = new HashMap<State, Map<State, Boolean>>();
 		performed = false;
-		this.includedStates=includedStates;
+		this.intersetingStates=intersetingStates;
 	}
 
 	/**
@@ -114,30 +114,38 @@ public class StatePresencePathChecker {
 						"The destination state must be contained into the set of the states that can be traversed");
 		if (!this.performed) {
 
-			includedStates.retainAll(states);
-			for (State s : includedStates) {
+			for (State interestingState : this.intersetingStates) {
 
-				this.acceptingStateBackwardReachability.put(s,
+				
+				this.acceptingStateBackwardReachability.put(interestingState, new HashSet<State>());
+				this.acceptingStateForwardReachability.put(interestingState, new HashSet<State>());
+				
+				backwardCheck(interestingState);
+				forwardCheck(interestingState);
+				
+				
+				this.acceptingStateBackwardReachability.put(interestingState,
 						new HashSet<State>());
-				this.acceptingStateForwardReachability.put(s,
+				this.acceptingStateForwardReachability.put(interestingState,
 						new HashSet<State>());
 
-				backwardCheck(s);
-				forwardCheck(s);
+				backwardCheck(interestingState);
+				forwardCheck(interestingState);
 			}
 			performed = true;
 		}
 		if (this.hasBeenAlreadyChecked(source, destination)) {
 			return reachability.get(source).get(destination);
 		} else {
-			for (State s : includedStates) {
+			for (State interestingState : this.intersetingStates) {
 
-				if (this.acceptingStateBackwardReachability.containsKey(s)
-						&& this.acceptingStateBackwardReachability.get(s)
+
+				if (this.acceptingStateBackwardReachability.containsKey(interestingState)
+						&& this.acceptingStateBackwardReachability.get(interestingState)
 								.contains(source)
 						&& this.acceptingStateForwardReachability
-								.containsKey(s)
-						&& this.acceptingStateForwardReachability.get(s)
+								.containsKey(interestingState)
+						&& this.acceptingStateForwardReachability.get(interestingState)
 								.contains(destination)) {
 					if (reachability.containsKey(source)) {
 						reachability.get(source).put(destination, true);
@@ -168,11 +176,7 @@ public class StatePresencePathChecker {
 	 * @return
 	 */
 	private void backwardCheck(State state) {
-		Preconditions
-				.checkArgument(
-						this.states.contains(state),
-						"The accepting state must be contained into the set of the states that can be traversed");
-
+		
 		this.acceptingStateBackwardReachability.get(state).add(
 				state);
 		Set<State> nextStates = new HashSet<State>();
@@ -199,11 +203,7 @@ public class StatePresencePathChecker {
 	 * @return
 	 */
 	private void forwardCheck(State state) {
-		Preconditions
-				.checkArgument(
-						this.states.contains(state),
-						"The accepting state must be contained into the set of the states that can be traversed");
-
+		
 		this.acceptingStateForwardReachability.get(state).add(
 				state);
 		Set<State> nextStates = new HashSet<State>();

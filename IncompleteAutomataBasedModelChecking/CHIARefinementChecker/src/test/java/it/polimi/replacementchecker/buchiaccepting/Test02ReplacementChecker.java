@@ -51,7 +51,7 @@ public class Test02ReplacementChecker {
 				.getResource(path + "buchiaccepting/test02/claim.xml").getFile())).perform();
 		this.model=new IBAReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test02/model.xml").getFile())).perform();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 	}
 	@Test
 	public void test() throws ParserConfigurationException, Exception {

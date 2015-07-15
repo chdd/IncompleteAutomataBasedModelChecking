@@ -53,7 +53,7 @@ public class Test04ConstraintComputation {
 		this.replacement=new ReplacementReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test04/replacement.xml").getFile())).perform();
 		this.intersectionStateFactory=new IntersectionStateFactory();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 	}
 
 	@Test

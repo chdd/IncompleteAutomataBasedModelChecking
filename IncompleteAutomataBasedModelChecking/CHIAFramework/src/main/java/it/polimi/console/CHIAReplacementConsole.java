@@ -1,4 +1,4 @@
-package it.polimi;
+package it.polimi.console;
 
 import it.polimi.automata.io.out.IntersectionToStringTransformer;
 import it.polimi.checker.SatisfactionValue;
@@ -65,7 +65,7 @@ public class CHIAReplacementConsole {
 	 * creates a new replacement console
 	 */
 	public CHIAReplacementConsole() {
-		this.policy = AcceptingPolicy.getAcceptingPolicy(AcceptingType.KRIPKE);
+		this.policy = AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 	}
 
 	@Command(name = "loadReplacement", abbrev = "lR", description = "It is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
@@ -141,10 +141,18 @@ public class CHIAReplacementConsole {
 						+ Long.toString(TimeUnit.MILLISECONDS.convert(
 								(endTime - startTime), TimeUnit.NANOSECONDS))
 						+ " ms");
-				logger.info("Dimension of the intersection automaton (states+transitions): "
-						+ (this.replacementChecker.getUpperIntersectionBA()
-								.size() + this.replacementChecker
-								.getLowerIntersectionBA().size()));
+				if(result.equals(SatisfactionValue.NOTSATISFIED)){
+					logger.info("COUNTEREXAMPLE: "+this.replacementChecker.getCouterexample());
+					logger.info("COUNTEREXAMPLE: "+this.replacementChecker.getTransitionCouterexample());
+					
+				}
+				if(!result.equals(SatisfactionValue.NOTSATISFIED)){
+					logger.info("Dimension of the intersection automaton (states+transitions): "
+							+ (this.replacementChecker.getUpperIntersectionBA()
+									.size() + this.replacementChecker
+									.getLowerIntersectionBA().size()));
+				}
+				
 				this.chiaState = chiaState.perform(ReplacementChecker.class);
 
 			} catch (CHIAException e) {

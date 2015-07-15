@@ -17,9 +17,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
@@ -41,11 +38,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 
 	private final Set<IGraphProposition> stutteringPropositions;
 
-	/**
-	 * is the logger of the SubAutomataIdentifier class
-	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubPropertyIdentifier.class);
+	
 
 	/**
 	 * contains the subProperty that refers to the transparent state
@@ -124,8 +117,6 @@ public class SubPropertyIdentifier extends CHIAOperation {
 		this.stutteringPropositions = new HashSet<IGraphProposition>();
 		this.stutteringPropositions.add(new GraphProposition(
 				AutomataConstants.STUTTERING_CHARACTER, false));
-
-		logger.info("SubAutomataIdentifier created");
 
 	}
 

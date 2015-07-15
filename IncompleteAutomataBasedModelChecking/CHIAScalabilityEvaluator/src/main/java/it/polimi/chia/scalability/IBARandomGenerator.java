@@ -38,7 +38,7 @@ import com.google.common.collect.Maps;
  * automaton obtained by replacing the encapsulated parts with the corresponding
  * transparent states. The transparent state density ($t=|T|/|Q|$) specifies the
  * number of transparent states which must be inserted into the BA. The
- * replacement density ($r=\sum_{t \in T}|Q_t|/|Q|$) specifies the number of
+ * replacement density ($r=(\sum_{t \in T}|Q_t|)/|Q|$) specifies the number of
  * states of the automaton to be injected inside the replacement of each
  * transparent state.
  * 
@@ -327,10 +327,10 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 				} else {
 					this.iba.addTransition(transparentSource,
 							transparentDestination, transition);
-					replacementSource.addOutComingPort(new PluggingTransition(
+					replacementSource.addOutComingTransition(new PluggingTransition(
 							source, transparentDestination, transition, false));
 					replacementDestination
-							.addIncomingPort(new PluggingTransition(
+							.addIncomingTransition(new PluggingTransition(
 									transparentSource, destination, transition,
 									true));
 				}
@@ -343,7 +343,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 
 					this.iba.addTransition(transparentSource, destination,
 							transition);
-					replacementSource.addOutComingPort(new PluggingTransition(
+					replacementSource.addOutComingTransition(new PluggingTransition(
 							source, destination, transition, false));
 				} else {
 					if (stateReplacementMap.containsKey(destination)) {
@@ -355,7 +355,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 						this.iba.addTransition(source, transparentDestination,
 								transition);
 						replacementDestination
-								.addIncomingPort(new PluggingTransition(source,
+								.addIncomingTransition(new PluggingTransition(source,
 										destination, transition, true));
 					} else {
 						this.iba.addTransition(source, destination, transition);

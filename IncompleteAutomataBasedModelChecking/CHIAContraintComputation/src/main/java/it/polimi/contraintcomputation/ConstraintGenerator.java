@@ -9,13 +9,10 @@ import it.polimi.constraints.components.SubProperty;
 import it.polimi.contraintcomputation.portreachability.ReachabilityIdentifier;
 import it.polimi.contraintcomputation.subpropertyidentifier.IntersectionCleaner;
 import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertyIdentifier;
-import it.polimi.contraintcomputation.subpropertyidentifier.coloring.Coloring;
+import it.polimi.contraintcomputation.subpropertyidentifier.coloring.TransitionLabeler;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import action.CHIAAction;
 
@@ -32,11 +29,7 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 	private final static String NAME = "CONSTRAINT GENERATION";
 
-	/**
-	 * is the logger of the ConstraintGenerator class
-	 */
-	private static final Logger logger = LoggerFactory
-			.getLogger(ConstraintGenerator.class);
+	
 
 	private final Checker checker;
 
@@ -84,7 +77,6 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 	 */
 	public Constraint perform() {
 
-		logger.info("Computing the constraint");
 		/*
 		 * removes from the intersection automaton the states from which it is
 		 * not possible to reach an accepting state since these states are not
@@ -102,7 +94,6 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 		}
 
-		logger.info("Constraint computed");
 		return constraint;
 
 	}
@@ -139,7 +130,7 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 		for (java.util.Map.Entry<SubProperty, SubPropertyIdentifier> entry : this.subpropetySubPropertyIdentifierMap
 				.entrySet()) {
-			Coloring coloring = new Coloring(entry.getValue());
+			TransitionLabeler coloring = new TransitionLabeler(entry.getValue());
 			coloring.startColoring();
 		}
 	}
@@ -152,7 +143,6 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 	 * @return the constraints where the color of the ports have been updated
 	 */
 	public Constraint computePortReachability() {
-		logger.info("Udating the Port reachability relation");
 		
 		for(Map.Entry<SubProperty, SubPropertyIdentifier> e: subpropetySubPropertyIdentifierMap.entrySet()){
 			ReachabilityIdentifier reachability = new ReachabilityIdentifier(this.checker.getUpperIntersectionBuilder(),
@@ -161,7 +151,6 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 		}
 		
-		logger.info("Port reachability relation updated");
 		return constraint;
 
 	}

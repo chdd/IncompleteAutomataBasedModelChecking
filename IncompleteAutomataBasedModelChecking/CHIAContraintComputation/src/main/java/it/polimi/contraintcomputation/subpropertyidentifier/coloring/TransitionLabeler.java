@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
  * @author Claudio1
  *
  */
-public class Coloring {
+public class TransitionLabeler {
 
 	/**
 	 * contains the identifier which has been used to generate the sub-property
@@ -34,7 +34,7 @@ public class Coloring {
 	 * @throws NullPointerException
 	 *             if the subPropertyIdentifier is null
 	 */
-	public Coloring(SubPropertyIdentifier subPropertyIdentifier) {
+	public TransitionLabeler(SubPropertyIdentifier subPropertyIdentifier) {
 		Preconditions.checkNotNull(subPropertyIdentifier,
 				"The subproperty identified cannot be null");
 		this.subPropertyIdentifier = subPropertyIdentifier;

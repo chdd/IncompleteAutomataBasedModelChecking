@@ -1,17 +1,13 @@
 package it.polimi.constraints.reachability;
 
+import it.polimi.automata.state.State;
 import it.polimi.constraints.transitions.ColoredPluggingTransition;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
+import java.util.Collection;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * contains the reachability relation. The reachability relation specified
@@ -23,21 +19,25 @@ import com.google.common.collect.SetMultimap;
  */
 public class ReachabilityRelation {
 
+	@Override
+	public String toString() {
+		return "ReachabilityRelation [acceptingMap=" + acceptingMap + "]";
+	}
 	/**
 	 * is the map that specifies for each incoming transition the corresponding
 	 * outgoing transition
 	 */
-	private final SetMultimap<ColoredPluggingTransition, ColoredPluggingTransition> map;
 
-	private final Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>> acceptingMap;
+	private final Multimap<State, ReachabilityEntry> acceptingMap;
+	
+	
 	/**
 	 * creates a new empty reachability relation. The reachability relation is
 	 * used to map the incoming transitions which are reachable from the
 	 * outgoing transition of the same component
 	 */
 	public ReachabilityRelation() {
-		this.map = HashMultimap.create();
-		this.acceptingMap = new HashMap<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>>();
+		this.acceptingMap = HashMultimap.create();
 	}
 
 	/**
@@ -53,28 +53,24 @@ public class ReachabilityRelation {
 	 * @throws NullPointerException
 	 *             if one of the two transitions is null
 	 */
-	public void addTransition(ColoredPluggingTransition sourceTransition,
-			ColoredPluggingTransition destinationTransition, Boolean accepting, Boolean modelAccepting, Boolean claimAccepting) {
-		Preconditions.checkNotNull(sourceTransition,
-				"The source transition cannot be null");
-		Preconditions.checkNotNull(destinationTransition,
+	public void addTransition(ColoredPluggingTransition outgoingTransition,
+			ColoredPluggingTransition incomingTransition, Boolean accepting, Boolean modelAccepting, Boolean claimAccepting) {
+		Preconditions.checkNotNull(outgoingTransition,
+				"The outgoing transition cannot be null");
+		Preconditions.checkNotNull(incomingTransition,
 				"The destination transition cannot be null");
-
-		this.map.put(sourceTransition, destinationTransition);
-		this.acceptingMap
-				.put(new AbstractMap.SimpleEntry<ColoredPluggingTransition, ColoredPluggingTransition>(
-						sourceTransition, destinationTransition), new ImmutableTriple<Boolean, Boolean, Boolean>(accepting, modelAccepting, claimAccepting));
+		Preconditions.checkArgument(!outgoingTransition.isIncoming(), "The source of the reachability relation must be an outgoingTransition");
+		Preconditions.checkArgument(incomingTransition.isIncoming(), "The destination of the reachability relation must be an incomingTransition");
+		
+		ReachabilityEntry reachabilityEntry=new ReachabilityEntry(incomingTransition, outgoingTransition, accepting, modelAccepting, claimAccepting);
+		this.acceptingMap.put(outgoingTransition.getSource(), reachabilityEntry);
 	}
 
-	/**
-	 * returns a multimap which specifies for each transition its successors
-	 * 
-	 * @return a multimap which specifies for each transition its successors
-	 */
-	public SetMultimap<ColoredPluggingTransition, ColoredPluggingTransition> getMap() {
-		return this.map;
-	}
-	public Map<Map.Entry<ColoredPluggingTransition, ColoredPluggingTransition>, Triple<Boolean, Boolean, Boolean>> getReachabilityAcceptingMap(){
+	
+	public Multimap<State, ReachabilityEntry> getReachabilityAcceptingMap(){
 		return this.acceptingMap;
+	}
+	public Collection<ReachabilityEntry> get(State subPropertyState){
+		return this.acceptingMap.get(subPropertyState);
 	}
 }

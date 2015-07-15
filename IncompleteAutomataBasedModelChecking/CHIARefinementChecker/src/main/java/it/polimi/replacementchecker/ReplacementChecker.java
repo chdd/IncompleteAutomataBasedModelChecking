@@ -1,6 +1,10 @@
 package it.polimi.replacementchecker;
 
+import java.util.Stack;
+
 import it.polimi.automata.IntersectionBA;
+import it.polimi.automata.state.State;
+import it.polimi.automata.transition.Transition;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
@@ -49,6 +53,10 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 	private IntersectionBA lowerIntersectionBA;
 	
 	private boolean isTriviallySatisfied;
+	
+	private Stack<State> couterexample;
+	private Stack<Transition> transitionCouterexample;
+
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -116,14 +124,16 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 	private boolean checkNotSatisfied() {
 
-		UnderApproximationBuilder overApproximationBuilder = new UnderApproximationBuilder(
+		UnderApproximationBuilder underApproximationBuilder = new UnderApproximationBuilder(
 				replacement, subproperty, acceptingPolicy);
 
-		this.lowerIntersectionBA = overApproximationBuilder.perform();
+		this.lowerIntersectionBA = underApproximationBuilder.perform();
 		EmptinessChecker emptinessChecker = new EmptinessChecker(
 				this.lowerIntersectionBA);
 
 		if (!emptinessChecker.isEmpty()) {
+			this.couterexample=emptinessChecker.getCounterExample();
+			this.transitionCouterexample=emptinessChecker.getTransitionCounterExample();
 			return true;
 		}
 		return false;
@@ -212,4 +222,19 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 	public void setTriviallySatisfied(boolean isTriviallySatisfied) {
 		this.isTriviallySatisfied = isTriviallySatisfied;
 	}
+
+	/**
+	 * @return the couterexample
+	 */
+	public Stack<State> getCouterexample() {
+		return couterexample;
+	}
+	
+	/**
+	 * @return the couterexample
+	 */
+	public Stack<Transition> getTransitionCouterexample() {
+		return this.transitionCouterexample;
+	}
+
 }

@@ -76,7 +76,7 @@ public class ElementToReachabilityRelationTransformer implements
 			reachabilityRelation.addTransition(
 					this.mapIdPort.get(sourcePortId),
 					this.mapIdPort.get(destinationPortId),
-					accepting, claimaccepting, modelaccepting);
+					accepting, modelaccepting, claimaccepting);
 		}
 
 		return reachabilityRelation;

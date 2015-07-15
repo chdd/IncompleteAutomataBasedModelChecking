@@ -11,9 +11,14 @@ import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 public class Test03ReplacementChecker {
 	private static final String path = "it.polimi.replacementchecker/";
@@ -24,13 +29,13 @@ public class Test03ReplacementChecker {
 	
 	
 	@Before
-	public void setUp(){
+	public void setUp() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test03/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test03/constraint.xml").getFile())).perform();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL);
+		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 	}
 	@Test
 	public void test() {

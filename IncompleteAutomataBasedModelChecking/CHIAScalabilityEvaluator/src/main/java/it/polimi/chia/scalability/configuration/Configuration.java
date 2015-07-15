@@ -1,5 +1,7 @@
 package it.polimi.chia.scalability.configuration;
 
+import it.polimi.automata.BA;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +22,10 @@ import com.google.common.base.Preconditions;
  */
 public class Configuration {
 
+	
+	private final int testNumber;
+	
+	private final int claimNumber;
 	/**
 	 * is the identifier of the configuration
 	 */
@@ -51,6 +57,7 @@ public class Configuration {
 	 */
 	private final Set<IGraphProposition> propositions;
 
+	private final BA currentClaim;
 
 	/**
 	 * creates a new test configuration
@@ -72,7 +79,8 @@ public class Configuration {
 	 */
 	public Configuration(int configurationId,int nStates, double transitionDensity,
 			double acceptingDensity, double transparentDensity,
-			double replacementDensity) {
+			double replacementDensity, BA currentClaim, int testNumber, int claimNumber) {
+		Preconditions.checkArgument(claimNumber>=1, "The claim number: "+claimNumber+"must be grater or equal to 1");
 		Preconditions.checkArgument(nStates >= 0,
 				"The number of the states must be grather or equal to zero");
 		Preconditions.checkArgument(transitionDensity >= 0,
@@ -96,6 +104,9 @@ public class Configuration {
 		this.nStates = nStates;
 		this.transparentDensity = transparentDensity;
 		this.replacementDensity = replacementDensity;
+		this.currentClaim=currentClaim;
+		this.testNumber=testNumber;
+		this.claimNumber=claimNumber;
 	}
 
 	/**
@@ -157,6 +168,27 @@ public class Configuration {
 	 */
 	public int getConfigurationId() {
 		return configurationId;
+	}
+
+	/**
+	 * @return the currentClaim
+	 */
+	public BA getCurrentClaim() {
+		return currentClaim;
+	}
+
+	/**
+	 * @return the testNumber
+	 */
+	public int getTestNumber() {
+		return testNumber;
+	}
+
+	/**
+	 * @return the claimNumber
+	 */
+	public int getClaimNumber() {
+		return claimNumber;
 	}
 
 }

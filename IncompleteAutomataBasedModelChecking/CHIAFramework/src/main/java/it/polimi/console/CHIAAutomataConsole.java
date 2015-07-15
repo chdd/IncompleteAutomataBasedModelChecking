@@ -1,4 +1,4 @@
-package it.polimi;
+package it.polimi.console;
 
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
@@ -57,13 +57,13 @@ public class CHIAAutomataConsole {
 	private ConstraintGenerator cg;
 
 	public CHIAAutomataConsole() {
-		policy =AcceptingPolicy.getAcceptingPolicy(AcceptingType.KRIPKE);
+		policy =AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 		chiaState = CHIAAutomataState.INIT;
 	}
 
 	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
 	public void changePolicy(
-			@Param(name = "policy", description = "is the policy to be used KRIPKE or NORMAL") String policy) {
+			@Param(name = "policy", description = "is the policy to be used KRIPKE or BA") String policy) {
 		try{
 			this.policy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.valueOf(policy));
 		} catch(Exception e) {
@@ -145,7 +145,12 @@ public class CHIAAutomataConsole {
 					+ Long.toString(TimeUnit.MILLISECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS)) + " ms");
 			logger.info("Dimension of the intersection automaton (states+transitions): "
 					+ this.checker.getIntersectionAutomataSize());
-			;
+			if(result.equals(SatisfactionValue.NOTSATISFIED)){
+				logger.info("State counterexample:"+this.checker.getStateCounterexample());
+				logger.info("Transition counterexample:"+this.checker.getTransitionCounterexample());
+				
+			}
+			
 
 		} catch (CHIAException e) {
 			logger.info(e.toString());

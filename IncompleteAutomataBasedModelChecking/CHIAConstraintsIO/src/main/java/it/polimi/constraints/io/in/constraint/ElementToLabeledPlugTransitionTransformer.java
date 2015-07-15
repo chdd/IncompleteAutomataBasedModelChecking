@@ -21,14 +21,14 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ElementToColoredPlugTransitionTransformer {
+public class ElementToLabeledPlugTransitionTransformer {
 
 	private final boolean incoming;
 	/**
 	 * creates a new Transformer which converts an XML element into the corresponding
 	 * port
 	 */
-	public ElementToColoredPlugTransitionTransformer( boolean incoming) {
+	public ElementToLabeledPlugTransitionTransformer( boolean incoming) {
 		this.incoming=incoming;
 	}
 

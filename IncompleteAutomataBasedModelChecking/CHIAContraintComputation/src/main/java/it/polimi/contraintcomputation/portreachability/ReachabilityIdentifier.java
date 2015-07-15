@@ -82,11 +82,11 @@ public class ReachabilityIdentifier {
 	 * updates the reachability relation insider the constraint
 	 */
 	public void computeReachability() {
-		this.computeLowerBoundTransitionGraph();
+		this.computeLowerBoundRechabilityRelation();
 		this.computeUpperBoundTransitionGraph();
 	}
 
-	private void computeLowerBoundTransitionGraph() {
+	private void computeLowerBoundRechabilityRelation() {
 
 		IntersectionBA intersectionAutomaton = this.intersectionBuilder
 				.getIntersectionAutomaton();
@@ -101,9 +101,9 @@ public class ReachabilityIdentifier {
 		Collection<GraphPath<State, Transition>> paths = new FloydWarshallShortestPaths<State, Transition>(
 				graph).getShortestPaths();
 
-		AcceptingStatePathChecker acceptingPathChecker = new AcceptingStatePathChecker(
-				intersectionAutomaton,
-				intersectionAutomaton.getPurelyRegularStates());
+		//AcceptingStatePathChecker acceptingPathChecker = new AcceptingStatePathChecker(
+		//		this.intersectionBuilder, intersectionAutomaton,
+		//		intersectionAutomaton.getPurelyRegularStates());
 
 		AcceptingClaimStatePathChecker acceptingClaimStatePathChecker = new AcceptingClaimStatePathChecker(
 				intersectionAutomaton,
@@ -115,7 +115,8 @@ public class ReachabilityIdentifier {
 				intersectionAutomaton.getPurelyRegularStates(),
 				intersectionBuilder);
 
-		for (Entry<State, State> path : this.getReachabilityRelation(paths, intersectionAutomaton.getPurelyRegularStates())) {
+		for (Entry<State, State> path : this.getReachabilityRelation(paths,
+				intersectionAutomaton.getPurelyRegularStates())) {
 
 			for (Transition outTransition : intersectionAutomaton
 					.getInTransitions(path.getKey())) {
@@ -141,31 +142,31 @@ public class ReachabilityIdentifier {
 						this.subPropertiesIdentifier.getSubProperty()
 								.addReachabilityRelation(
 										subPropertyOuttransition,
-										subPropertyInTransition,
-										acceptingPathChecker.perform(source,
-												destination),
-										acceptingClaimStatePathChecker.perform(
-												source, destination),
+										subPropertyInTransition,false,
 										acceptingModelStatePathChecker.perform(
+												source, destination),
+										acceptingClaimStatePathChecker.perform(
 												source, destination));
 					}
 				}
 			}
 
 		}
-			
+
 	}
 
 	private Set<Entry<State, State>> getReachabilityRelation(
 			Collection<GraphPath<State, Transition>> paths, Set<State> states) {
-
+		Preconditions.checkNotNull(paths, "The paths cannot be null");
+		Preconditions.checkNotNull(states, "The states cannot be null");
 		Set<Entry<State, State>> reachabilityMap = new HashSet<Map.Entry<State, State>>();
 		for (GraphPath<State, Transition> path : paths) {
 			reachabilityMap.add(new AbstractMap.SimpleEntry<State, State>(path
 					.getStartVertex(), path.getEndVertex()));
 		}
-		for(State s: states){
-			reachabilityMap.add(new AbstractMap.SimpleEntry<State, State>(s,s));
+		for (State s : states) {
+			reachabilityMap
+					.add(new AbstractMap.SimpleEntry<State, State>(s, s));
 		}
 		return reachabilityMap;
 	}
@@ -217,7 +218,7 @@ public class ReachabilityIdentifier {
 	 * acceptingClaimStatePathChecker.perform(source, destination),
 	 * acceptingModelStatePathChecker.perform(source, destination)); } } }
 	 */
-	
+
 	private void computeUpperBoundTransitionGraph() {
 
 		IntersectionBA intersectionAutomaton = this.intersectionBuilder
@@ -228,8 +229,7 @@ public class ReachabilityIdentifier {
 				.getAutomaton().getStates());
 
 		IntersectionBA abstractedIntersection = new Abstractor<IntersectionBA>()
-				.perform(intersectionAutomaton,
-						states);
+				.perform(intersectionAutomaton, states);
 
 		DirectedGraph<State, Transition> graph = abstractedIntersection
 				.getGraph();
@@ -237,21 +237,17 @@ public class ReachabilityIdentifier {
 		Collection<GraphPath<State, Transition>> paths = new FloydWarshallShortestPaths<State, Transition>(
 				graph).getShortestPaths();
 
-		AcceptingStatePathChecker acceptingPathChecker = new AcceptingStatePathChecker(
-				intersectionAutomaton,
-				states);
+		//AcceptingStatePathChecker acceptingPathChecker = new AcceptingStatePathChecker(
+		//		this.intersectionBuilder, intersectionAutomaton, states);
 
 		AcceptingClaimStatePathChecker acceptingClaimStatePathChecker = new AcceptingClaimStatePathChecker(
-				intersectionAutomaton,
-				states,
-				intersectionBuilder);
+				intersectionAutomaton, states, intersectionBuilder);
 
 		AcceptingModelStatePathChecker acceptingModelStatePathChecker = new AcceptingModelStatePathChecker(
-				intersectionAutomaton,
-				states,
-				intersectionBuilder);
+				intersectionAutomaton, states, intersectionBuilder);
 
-		for (Entry<State, State> path : this.getReachabilityRelation(paths, states)) {
+		for (Entry<State, State> path : this.getReachabilityRelation(paths,
+				states)) {
 
 			for (Transition outTransition : intersectionAutomaton
 					.getInTransitions(path.getKey())) {
@@ -278,11 +274,10 @@ public class ReachabilityIdentifier {
 								.addPossibleReachabilityRelation(
 										subPropertyOuttransition,
 										subPropertyInTransition,
-										acceptingPathChecker.perform(source,
-												destination),
-										acceptingClaimStatePathChecker.perform(
-												source, destination),
+										false,
 										acceptingModelStatePathChecker.perform(
+												source, destination),
+										acceptingClaimStatePathChecker.perform(
 												source, destination));
 					}
 				}
@@ -291,61 +286,53 @@ public class ReachabilityIdentifier {
 		}
 	}
 
-	/*private void computeUpperBoundTransitionGraph() {
-
-		IntersectionBA intersectionAutomaton = this.intersectionBuilder
-				.getIntersectionAutomaton();
-		Set<State> states = new HashSet<State>(
-				intersectionAutomaton.getStates());
-		states.removeAll(this.subPropertiesIdentifier.getSubProperty()
-				.getAutomaton().getStates());
-
-		DirectedGraph<Transition, DefaultEdge> graph = new TransitionGraph(
-				subPropertiesIdentifier
-						.getMapIntersectionTransitionOutgoingPorts().keySet(),
-				subPropertiesIdentifier
-						.getMapIntersectionTransitionIncomingPort().keySet(),
-				states, intersectionAutomaton).getTransitionGraph();
-
-		Collection<GraphPath<Transition, DefaultEdge>> paths = new FloydWarshallShortestPaths<Transition, DefaultEdge>(
-				graph).getShortestPaths();
-		AcceptingStatePathChecker acceptingPathChecker = new AcceptingStatePathChecker(
-				intersectionAutomaton, states);
-		AcceptingClaimStatePathChecker acceptingClaimStatePathChecker = new AcceptingClaimStatePathChecker(
-				intersectionAutomaton, states, intersectionBuilder);
-
-		AcceptingModelStatePathChecker acceptingModelStatePathChecker = new AcceptingModelStatePathChecker(
-				intersectionAutomaton, states, intersectionBuilder);
-		for (GraphPath<Transition, DefaultEdge> path : paths) {
-
-			Transition outTransition = path.getStartVertex();
-			Transition inTransition = path.getEndVertex();
-			if (subPropertiesIdentifier
-					.getMapIntersectionTransitionOutgoingPorts().keySet()
-					.contains(outTransition)
-					&& subPropertiesIdentifier
-							.getMapIntersectionTransitionIncomingPort()
-							.keySet().contains(inTransition)) {
-				ColoredPluggingTransition subPropertyOuttransition = this.subPropertiesIdentifier
-						.getOutgoingPort(outTransition);
-				ColoredPluggingTransition subPropertyInTransition = this.subPropertiesIdentifier
-						.getIncomingPort(inTransition);
-				State source = intersectionAutomaton
-						.getTransitionDestination(outTransition);
-				State destination = intersectionAutomaton
-						.getTransitionSource(inTransition);
-				this.subPropertiesIdentifier.getSubProperty()
-						.addPossibleReachabilityRelation(
-								subPropertyOuttransition,
-								subPropertyInTransition,
-								acceptingPathChecker.perform(source,
-										destination),
-								acceptingClaimStatePathChecker.perform(source,
-										destination),
-								acceptingModelStatePathChecker.perform(source,
-										destination));
-			}
-		}
-	}*/
+	/*
+	 * private void computeUpperBoundTransitionGraph() {
+	 * 
+	 * IntersectionBA intersectionAutomaton = this.intersectionBuilder
+	 * .getIntersectionAutomaton(); Set<State> states = new HashSet<State>(
+	 * intersectionAutomaton.getStates());
+	 * states.removeAll(this.subPropertiesIdentifier.getSubProperty()
+	 * .getAutomaton().getStates());
+	 * 
+	 * DirectedGraph<Transition, DefaultEdge> graph = new TransitionGraph(
+	 * subPropertiesIdentifier
+	 * .getMapIntersectionTransitionOutgoingPorts().keySet(),
+	 * subPropertiesIdentifier
+	 * .getMapIntersectionTransitionIncomingPort().keySet(), states,
+	 * intersectionAutomaton).getTransitionGraph();
+	 * 
+	 * Collection<GraphPath<Transition, DefaultEdge>> paths = new
+	 * FloydWarshallShortestPaths<Transition, DefaultEdge>(
+	 * graph).getShortestPaths(); AcceptingStatePathChecker acceptingPathChecker
+	 * = new AcceptingStatePathChecker( intersectionAutomaton, states);
+	 * AcceptingClaimStatePathChecker acceptingClaimStatePathChecker = new
+	 * AcceptingClaimStatePathChecker( intersectionAutomaton, states,
+	 * intersectionBuilder);
+	 * 
+	 * AcceptingModelStatePathChecker acceptingModelStatePathChecker = new
+	 * AcceptingModelStatePathChecker( intersectionAutomaton, states,
+	 * intersectionBuilder); for (GraphPath<Transition, DefaultEdge> path :
+	 * paths) {
+	 * 
+	 * Transition outTransition = path.getStartVertex(); Transition inTransition
+	 * = path.getEndVertex(); if (subPropertiesIdentifier
+	 * .getMapIntersectionTransitionOutgoingPorts().keySet()
+	 * .contains(outTransition) && subPropertiesIdentifier
+	 * .getMapIntersectionTransitionIncomingPort()
+	 * .keySet().contains(inTransition)) { ColoredPluggingTransition
+	 * subPropertyOuttransition = this.subPropertiesIdentifier
+	 * .getOutgoingPort(outTransition); ColoredPluggingTransition
+	 * subPropertyInTransition = this.subPropertiesIdentifier
+	 * .getIncomingPort(inTransition); State source = intersectionAutomaton
+	 * .getTransitionDestination(outTransition); State destination =
+	 * intersectionAutomaton .getTransitionSource(inTransition);
+	 * this.subPropertiesIdentifier.getSubProperty()
+	 * .addPossibleReachabilityRelation( subPropertyOuttransition,
+	 * subPropertyInTransition, acceptingPathChecker.perform(source,
+	 * destination), acceptingClaimStatePathChecker.perform(source,
+	 * destination), acceptingModelStatePathChecker.perform(source,
+	 * destination)); } } }
+	 */
 
 }

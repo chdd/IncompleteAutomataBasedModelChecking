@@ -57,18 +57,18 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="inports">
+				<xs:element name="intransitions">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="port" type="port" minOccurs="0"
+							<xs:element name="plugtransition" type="port" minOccurs="0"
 								maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="outports">
+				<xs:element name="outtransitions">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="port" type="port" minOccurs="0"
+							<xs:element name="plugtransition" type="port" minOccurs="0"
 								maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>

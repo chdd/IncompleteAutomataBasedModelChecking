@@ -39,7 +39,7 @@ public class Test1ConstraintComputation {
 	@Test
 	public void test() throws ParserConfigurationException, Exception {
 		
-		Checker checker=new Checker(model, claim, AcceptingPolicy.getAcceptingPolicy(AcceptingType.NORMAL));
+		Checker checker=new Checker(model, claim, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
 		SatisfactionValue returnValue=checker.perform();
 		assertTrue("The property must be possibly satisfied", returnValue==SatisfactionValue.POSSIBLYSATISFIED);
 		

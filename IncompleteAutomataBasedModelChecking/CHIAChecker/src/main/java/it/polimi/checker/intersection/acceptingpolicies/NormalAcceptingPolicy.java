@@ -13,10 +13,10 @@ public class NormalAcceptingPolicy extends AcceptingPolicy{
 	public int comuteNumber(State modelState, State claimState, int prevNumber) {
 		int num = prevNumber;
 
-		if (prevNumber == 0 && claim.getAcceptStates().contains(claimState)) {
+		if (prevNumber == 0 && model.getAcceptStates().contains(modelState)) {
 			num = 1;
 		}
-		if (prevNumber == 1 && model.getAcceptStates().contains(modelState)) {
+		if (prevNumber == 1 && claim.getAcceptStates().contains(claimState)) {
 			num = 2;
 		}
 		

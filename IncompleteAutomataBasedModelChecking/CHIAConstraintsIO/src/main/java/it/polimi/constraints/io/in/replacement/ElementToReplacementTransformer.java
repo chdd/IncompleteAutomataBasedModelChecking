@@ -50,9 +50,9 @@ public class ElementToReplacementTransformer implements Transformer<Element, Rep
 		
 		Set<PluggingTransition> outcomingPorts=new HashSet<PluggingTransition>();
 		Element xmlOutComingPorts = (Element) input
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORTS_OUT).item(0);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT).item(0);
 		NodeList xmlOutComingPortsList = xmlOutComingPorts
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORT);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 		for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 			Element xmlOutComingPort = (Element) xmlOutComingPortsList
 					.item(portId);
@@ -63,9 +63,9 @@ public class ElementToReplacementTransformer implements Transformer<Element, Rep
 
 		Set<PluggingTransition> incomingPorts=new HashSet<PluggingTransition>();
 		Element xmlInComingPorts = (Element) input
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORTS_IN).item(0);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN).item(0);
 		NodeList xmlInComingPortsList = xmlInComingPorts
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PORT);
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 		for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 			Element xmlInComingPort = (Element) xmlInComingPortsList
 					.item(portId);

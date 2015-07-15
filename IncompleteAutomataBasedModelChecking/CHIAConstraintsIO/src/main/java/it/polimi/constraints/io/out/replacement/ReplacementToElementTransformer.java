@@ -57,13 +57,13 @@ public class ReplacementToElementTransformer extends XMLTrasformer<Replacement, 
 
 		// adding the incoming Ports
 		Element inComingPorts = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_IN);
+				.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN);
 		constraintElement.appendChild(inComingPorts);
 		this.addPorts(inComingPorts, input.getIncomingPorts(), doc);
 
 		// adding the outComing Ports
 		Element outComingPorts = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_PORTS_OUT);
+				.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT);
 		constraintElement.appendChild(outComingPorts);
 		this.addPorts(outComingPorts, input.getOutcomingTransition(), doc);
 
@@ -84,7 +84,7 @@ public class ReplacementToElementTransformer extends XMLTrasformer<Replacement, 
 		Preconditions.checkNotNull(portsElement, "The element where the ports must be added cannot be null");
 		Preconditions.checkNotNull(ports, "The set of the ports to be added cannot be null");
 		// create a new port transformed
-		PortToElementTransformer transformer = new PortToElementTransformer(
+		PluggingTransitionToElementTransformer transformer = new PluggingTransitionToElementTransformer(
 				doc);
 		// transforms each port into the corresponding port element 
 		for (PluggingTransition port : ports) {
