@@ -15,14 +15,35 @@ public class Record {
 	private final long replacementVerificationTime;
 	private final long refinementVerificationTime;
 	private final boolean triviallySatisfied;
+	private final int numReplacementStates;
+	private final int numReplacementIncomingTransitions;
+	private final int numReplacementOutgoingTransitions;
+	private final int subPropertyStates;
+	private final int subPropertyGreenIncomingTransitions;
+	private final int subPropertyYellowIncomingTransitions;
+	private final int subPropertyNumIncomingTransitions;
+	private final int subPropertyRedOutgoingTransitions;
+	private final int subPropertyYellowOutgingTransition;
+	private final int subPropertyNumOutgoingTransition;
 
 
 	public Record(Configuration configuration, SatisfactionValue initialSatisfactioValue) {
-		this(configuration, initialSatisfactioValue, null, false, 0, 0, 0, 0);
+		this(configuration, initialSatisfactioValue, null, false, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0);
 	}
 	
 	public Record(Configuration configuration, SatisfactionValue initialSatisfactioValue, SatisfactionValue finalSatisfactioValue,  boolean triviallySatisfied,
-			int sizeOfTheRefinementVerification, int sizeOfTheReplacementVerification, long replacementVerificationTime, long refinementVerificationTime){
+			int sizeOfTheRefinementVerification, int sizeOfTheReplacementVerification,
+			long replacementVerificationTime, long refinementVerificationTime,
+			int numReplacementStates,
+	int numReplacementIncomingTransitions,
+	 int numReplacementOutgoingTransitions,
+	int subPropertyStates,
+	 int subPropertyGreenIncomingTransitions,
+	 int subPropertyYellowIncomingTransitions,
+	 int subPropertyNumIncomingTransitions,
+	int subPropertyRedOutgoingTransitions,
+	int subPropertyYellowOutgingTransition,
+	 int subPropertyNumOutgoingTransition){
 		Preconditions.checkNotNull(configuration,
 				"The condiguration under analysis cannot be null");
 		Preconditions.checkNotNull(initialSatisfactioValue, "The initial satisfaction value cannot be null");
@@ -39,6 +60,16 @@ public class Record {
 		this.replacementVerificationTime=replacementVerificationTime;
 		this.refinementVerificationTime=refinementVerificationTime;
 		this.triviallySatisfied=triviallySatisfied;
+		this.numReplacementStates=numReplacementStates;
+		this.numReplacementIncomingTransitions=numReplacementIncomingTransitions;
+		this.numReplacementOutgoingTransitions=numReplacementOutgoingTransitions;
+		this.subPropertyStates=subPropertyStates;
+		this.subPropertyGreenIncomingTransitions=subPropertyGreenIncomingTransitions;
+		this.subPropertyYellowIncomingTransitions=subPropertyYellowIncomingTransitions;
+		this.subPropertyNumIncomingTransitions=subPropertyNumIncomingTransitions;
+		this.subPropertyRedOutgoingTransitions=subPropertyRedOutgoingTransitions;
+		this.subPropertyYellowOutgingTransition=subPropertyYellowOutgingTransition;
+		this.subPropertyNumOutgoingTransition=subPropertyNumOutgoingTransition;
 				
 	}
 
@@ -87,6 +118,76 @@ public class Record {
 	 */
 	public boolean isTriviallySatisfied() {
 		return triviallySatisfied;
+	}
+
+	/**
+	 * @return the numReplacementStates
+	 */
+	public int getReplacementAutomataSize() {
+		return numReplacementStates;
+	}
+
+	/**
+	 * @return the numReplacementIncomingTransitions
+	 */
+	public int getReplacementIncomingTransitions() {
+		return numReplacementIncomingTransitions;
+	}
+
+	/**
+	 * @return the subPropertyStates
+	 */
+	public int getSubPropertyAutomataSize() {
+		return subPropertyStates;
+	}
+
+	/**
+	 * @return the subPropertyYellowIncomingTransitions
+	 */
+	public int getSubPropertyYellowIncomingTransitions() {
+		return subPropertyYellowIncomingTransitions;
+	}
+
+	/**
+	 * @return the numReplacementOutgoingTransitions
+	 */
+	public int getReplacementOutgoingTransitions() {
+		return numReplacementOutgoingTransitions;
+	}
+
+	/**
+	 * @return the subPropertyGreenIncomingTransitions
+	 */
+	public int getSubPropertyGreenIncomingTransitions() {
+		return subPropertyGreenIncomingTransitions;
+	}
+
+	/**
+	 * @return the subPropertyNumIncomingTransitions
+	 */
+	public int getSubPropertyIncomingTransitions() {
+		return subPropertyNumIncomingTransitions;
+	}
+
+	/**
+	 * @return the subPropertyRedOutgoingTransitions
+	 */
+	public int getSubPropertyRedOutgoingTransitions() {
+		return subPropertyRedOutgoingTransitions;
+	}
+
+	/**
+	 * @return the subPropertyYellowOutgingTransition
+	 */
+	public int getSubPropertyYellowOutgingTransition() {
+		return subPropertyYellowOutgingTransition;
+	}
+
+	/**
+	 * @return the subPropertyNumOutgoingTransition
+	 */
+	public int getSubPropertyOutgoingTransitions() {
+		return subPropertyNumOutgoingTransition;
 	}
 
 }

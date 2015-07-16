@@ -83,7 +83,7 @@ public class Replacement extends Component {
 	 * 
 	 * @return the incomingPorts of the component
 	 */
-	public Set<PluggingTransition> getIncomingPorts() {
+	public Set<PluggingTransition> getIncomingTransitions() {
 		return Collections.unmodifiableSet(incomingPorts);
 	}
 
@@ -130,10 +130,10 @@ public class Replacement extends Component {
 	public void removePort(PluggingTransition p) {
 		Preconditions.checkNotNull(p, "The port p cannot be null");
 		Preconditions
-				.checkArgument(this.getIncomingPorts().contains(p)
+				.checkArgument(this.getIncomingTransitions().contains(p)
 						|| this.getOutcomingTransition().contains(p),
 						"The port must be contained in the set of incoming or utcoming ports");
-		if(this.getIncomingPorts().contains(p)){
+		if(this.getIncomingTransitions().contains(p)){
 			this.incomingPorts.remove(p);
 		}
 		if(this.getOutcomingTransition().contains(p)){

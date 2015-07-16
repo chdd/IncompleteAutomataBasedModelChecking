@@ -70,7 +70,7 @@ public class Utils {
 
 		Set<State> modelInitialStates = new HashSet<State>();
 		for (PluggingTransition initTransitionReplacement : replacement
-				.getIncomingPorts()) {
+				.getIncomingTransitions()) {
 			if (!model.getInitialStates().contains(
 					initTransitionReplacement.getDestination())) {
 				State newInitialState = initTransitionReplacement

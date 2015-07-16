@@ -59,7 +59,7 @@ public class ReplacementToElementTransformer extends XMLTrasformer<Replacement, 
 		Element inComingPorts = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN);
 		constraintElement.appendChild(inComingPorts);
-		this.addPorts(inComingPorts, input.getIncomingPorts(), doc);
+		this.addPorts(inComingPorts, input.getIncomingTransitions(), doc);
 
 		// adding the outComing Ports
 		Element outComingPorts = doc

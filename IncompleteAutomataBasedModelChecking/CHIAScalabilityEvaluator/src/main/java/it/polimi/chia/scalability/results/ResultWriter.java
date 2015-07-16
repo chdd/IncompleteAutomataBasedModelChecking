@@ -67,7 +67,7 @@ public class ResultWriter {
 					.write("tRepv: replacementVerificationTime the time required to verify the replacement \n \n");
 
 			this.fileWriter
-					.write("id \t td \t ad \t ns \t tsd \t rd \t propositions \t ist \t fst \t ts\t sRefv \t sRepv \t tRefv \t tRepv \n");
+					.write("id \t td \t ad \t ns \t tsd \t rd \t propositions \t ist \t fst \t ts\t sRefv \t sRepv \t tRefv \t tRepv \t repSize \t repInSize \t repOutSize \t subSize \t subGreenInSize \t subYellowInSize \t subInSize \t subRedOutSize \t sub YellowOutSize \t subOutSize \n");
 
 		} else {
 			this.fileWriter = new FileWriter(filePath,true);
@@ -113,6 +113,17 @@ public class ResultWriter {
 		stringRecord += record.getSizeOfTheReplacementVerification() + "\t";
 		stringRecord += record.getRefinementVerificationTime() + "\t";
 		stringRecord += record.getReplacementVerificationTime() + "\t";
+		stringRecord += record.getReplacementAutomataSize() + "\t";
+		stringRecord += record.getReplacementIncomingTransitions() + "\t";
+		stringRecord += record.getReplacementOutgoingTransitions() + "\t";
+		stringRecord += record.getSubPropertyAutomataSize() + "\t";
+		stringRecord += record.getSubPropertyGreenIncomingTransitions() + "\t";
+		stringRecord += record.getSubPropertyYellowIncomingTransitions() + "\t";
+		stringRecord += record.getSubPropertyIncomingTransitions() + "\t";
+		stringRecord += record.getSubPropertyRedOutgoingTransitions() + "\t";
+		stringRecord += record.getSubPropertyYellowOutgingTransition()+ "\t";
+		stringRecord += record.getSubPropertyOutgoingTransitions()+ "\t";
+		
 		stringRecord += "\n";
 		this.fileWriter.write(stringRecord);
 		this.fileWriter.flush();

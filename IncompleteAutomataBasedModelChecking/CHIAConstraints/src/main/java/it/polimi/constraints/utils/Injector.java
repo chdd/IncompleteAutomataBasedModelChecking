@@ -62,7 +62,7 @@ public class Injector extends CHIAAction<IBA> {
 		State transparentState = replacement.getModelState();
 
 		for (PluggingTransition incomingTransition : replacement
-				.getIncomingPorts()) {
+				.getIncomingTransitions()) {
 			if (!model.getPredecessors(transparentState).contains(
 					incomingTransition.getSource())) {
 				throw new IllegalArgumentException(
@@ -115,7 +115,7 @@ public class Injector extends CHIAAction<IBA> {
 		// processing the incoming transitions
 		// for each incoming transition
 		for (PluggingTransition pluggingTransition : replacement
-				.getIncomingPorts()) {
+				.getIncomingTransitions()) {
 			newIBA.addTransition(pluggingTransition.getSource(),
 					pluggingTransition.getDestination(),
 					pluggingTransition.getTransition());

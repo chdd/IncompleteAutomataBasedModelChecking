@@ -329,7 +329,7 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 							subpropertyReachabilityEntry.getOutgoingTransition())) {
 
 						for (PluggingTransition incomingTransition : this.replacement
-								.getIncomingPorts()) {
+								.getIncomingTransitions()) {
 							if (Utils.isIncomingEqual(incomingTransition,
 									subpropertyReachabilityEntry.getIncomingTransition())) {
 
@@ -493,7 +493,7 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 			if ((underApproximation && initTransitionSubProperty.getColor() == Color.GREEN) ||
 					(!underApproximation && ( initTransitionSubProperty.getColor() == Color.GREEN ||  initTransitionSubProperty.getColor() == Color.YELLOW))) {
 				for (PluggingTransition initTransitionReplacement : this.replacement
-						.getIncomingPorts()) {
+						.getIncomingTransitions()) {
 					// if the two incoming transitions have the same source and
 					// the same label
 					if (initTransitionSubProperty.getSource().equals(
