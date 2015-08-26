@@ -17,8 +17,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-
-				<plugin>
+			<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<configuration>
 						<archive>
@@ -41,7 +40,7 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin> 
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -58,7 +57,7 @@
 		</dependency>
 		<dependency>
 			<groupId>it.polimi.chia</groupId>
-			<artifactId>CHIAContraintComputation</artifactId>
+			<artifactId>CHIAConstraintComputation</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -74,25 +73,13 @@
      	
 		
 		
-		<!--<dependency> <groupId>it.polimi.chia</groupId> <artifactId>CHIAContraintComputation</artifactId> 
-			<version>0.0.1-SNAPSHOT</version> </dependency> -->
 		<dependency>
 			<groupId>com.googlecode.clichemaven</groupId>
 			<artifactId>cliche</artifactId>
 			<version>110413</version>
 		</dependency>
-		<!-- <dependency> <groupId>it.polimi.chia</groupId> <artifactId>CHIAConstraintsIO</artifactId> 
-			<version>0.0.1-SNAPSHOT</version> </dependency> -->
-		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.47</version>
-		</dependency>
-		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.47</version>
-		</dependency>
+	
+	
 
 	</dependencies>
 </project>

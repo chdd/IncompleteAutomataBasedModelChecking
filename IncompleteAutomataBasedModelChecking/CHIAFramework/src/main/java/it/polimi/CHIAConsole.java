@@ -8,9 +8,13 @@ import java.io.IOException;
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
 
-public class CHIAConsole {
+
+public class CHIAConsole{
 
 	
+	public CHIAConsole() {
+		super();
+	}
 	@Command(name = "automata", abbrev = "aut", description = "Enters the automata mode", header = "automata mode")
 	public void automataMode() throws IOException{
 		ShellFactory.createConsoleShell("CHIAAutomata", null, new CHIAAutomataConsole())
@@ -24,4 +28,6 @@ public class CHIAConsole {
 	@Command(name ="exit", abbrev = "exit", description = "Exits CHIA", header = "exit CHIA")
 	public void exit(){
 	}
+	
+	
 }

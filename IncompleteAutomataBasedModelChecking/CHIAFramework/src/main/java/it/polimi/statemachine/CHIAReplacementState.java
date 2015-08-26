@@ -9,6 +9,14 @@ import it.polimi.replacementchecker.ReplacementChecker;
 import action.CHIAAction;
 import action.CHIAException;
 
+
+/**
+ * represents a possible state of CHIA. It offers a method perform that given
+ * the current state and a <code>CHIAAction</code> returns the next state of the
+ * automaton.
+ * 
+ * @author Claudio
+ */
 public enum CHIAReplacementState implements CHIAState{
 	
 	/**
