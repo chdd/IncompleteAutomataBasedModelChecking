@@ -109,7 +109,7 @@ public class IBATest {
 		this.ba.addProposition(l2);
 		this.ba.addTransition(state1, state2, t1);
 		this.ba.addTransition(state2, state3, t2);
-		this.ba.addTransparentState(state2);
+		this.ba.addBlackBoxState(state2);
 		
 		Set<IGraphProposition> returnSet=new HashSet<IGraphProposition>();
 		returnSet.add(l3);
@@ -123,7 +123,7 @@ public class IBATest {
 		this.baInject.addProposition(l2);
 		this.baInject.addTransition(state1Inject, state2Inject, t1Inject);
 		this.baInject.addTransition(state2Inject, state3Inject, t2Inject);
-		this.baInject.addTransparentState(state2Inject);
+		this.baInject.addBlackBoxState(state2Inject);
 		
 		Set<Entry<Transition, State>> incomingTransition=new HashSet<Entry<Transition, State>>();
 		incomingTransition.add(new AbstractMap.SimpleEntry<Transition, State>(inConnection1, state1Inject));
@@ -147,60 +147,60 @@ public class IBATest {
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.IBA#isTransparent(Null)}.
+	 * Test method for {@link it.polimi.automata.IBA#isBlackBox(Null)}.
 	 */
 	@Test(expected=NullPointerException.class)
-	public void testIsTransparentNull() {
-		this.ba.isTransparent(null);
+	public void testIsBlackBoxStateNull() {
+		this.ba.isBlackBox(null);
 		
 	}
 	/**
-	 * Test method for {@link it.polimi.automata.IBA#isTransparent(Illegal)}.
+	 * Test method for {@link it.polimi.automata.IBA#isBlackBox(Illegal)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testIsTransparentIllegal() {
-		this.ba.isTransparent(state4);
+	public void testIsBlackBoxStateIllegal() {
+		this.ba.isBlackBox(state4);
 		
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.IBA#isTransparent(it.polimi.automata.state.State)}.
+	 * Test method for {@link it.polimi.automata.IBA#isBlackBox(it.polimi.automata.state.State)}.
 	 */
 	@Test
-	public void testIsTransparent() {
-		assertTrue(this.ba.isTransparent(state2));
-		assertFalse(this.ba.isTransparent(state1));
-		assertFalse(this.ba.isTransparent(state3));
+	public void testIsBlackBoxState() {
+		assertTrue(this.ba.isBlackBox(state2));
+		assertFalse(this.ba.isBlackBox(state1));
+		assertFalse(this.ba.isBlackBox(state3));
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.IBA#getTransparentStates()}.
+	 * Test method for {@link it.polimi.automata.IBA#getBlackBoxStates()}.
 	 */
 	@Test
-	public void testGetTransparentStates() {
-		assertTrue(this.ba.getTransparentStates().contains(state2));
-		assertFalse(this.ba.getTransparentStates().contains(state1));
-		assertFalse(this.ba.getTransparentStates().contains(state3));
+	public void testGetBlackBoxStateStates() {
+		assertTrue(this.ba.getBlackBoxStates().contains(state2));
+		assertFalse(this.ba.getBlackBoxStates().contains(state1));
+		assertFalse(this.ba.getBlackBoxStates().contains(state3));
 	}
 
 	/**
-	 * Test method for {@link it.polimi.automata.IBA#addTransparentState(null)}.
+	 * Test method for {@link it.polimi.automata.IBA#addBlackBoxState(null)}.
 	 */
 	@Test(expected=NullPointerException.class)
-	public void testAddTransparentStateNull() {
-		this.ba.addTransparentState(null);
+	public void testAddBlackBoxStateStateNull() {
+		this.ba.addBlackBoxState(null);
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.automata.IBA#addTransparentState(it.polimi.automata.state.State)}.
+	 * Test method for {@link it.polimi.automata.IBA#addBlackBoxState(it.polimi.automata.state.State)}.
 	 */
 	@Test
-	public void testAddTransparentState() {
-		this.ba.addTransparentState(state4);
-		assertTrue(this.ba.getTransparentStates().contains(state2));
-		assertTrue(this.ba.getTransparentStates().contains(state4));
-		assertFalse(this.ba.getTransparentStates().contains(state1));
-		assertFalse(this.ba.getTransparentStates().contains(state3));
+	public void testAddBlackBoxStateState() {
+		this.ba.addBlackBoxState(state4);
+		assertTrue(this.ba.getBlackBoxStates().contains(state2));
+		assertTrue(this.ba.getBlackBoxStates().contains(state4));
+		assertFalse(this.ba.getBlackBoxStates().contains(state1));
+		assertFalse(this.ba.getBlackBoxStates().contains(state3));
 		assertTrue(this.ba.getStates().contains(state1));
 		assertTrue(this.ba.getStates().contains(state2));
 		assertTrue(this.ba.getStates().contains(state3));

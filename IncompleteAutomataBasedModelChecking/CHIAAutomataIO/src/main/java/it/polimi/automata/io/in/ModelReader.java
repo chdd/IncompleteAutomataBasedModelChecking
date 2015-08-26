@@ -22,7 +22,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class IBAReader extends XMLReader<IBA> {
+public class ModelReader extends XMLReader<IBA> {
 
 	private final static String NAME="READ MODEL";
 	
@@ -30,7 +30,7 @@ public class IBAReader extends XMLReader<IBA> {
 	 * is the logger of the BAReader class
 	 */
 	private static final Logger logger = LoggerFactory
-			.getLogger(IBAReader.class);
+			.getLogger(ModelReader.class);
 	/**
 	 * is the File from which the IBA must be read
 	 */
@@ -47,7 +47,7 @@ public class IBAReader extends XMLReader<IBA> {
 	 * @throws NullPointerException
 	 *             if the path is null
 	 */
-	public IBAReader(String filePath) {
+	public ModelReader(String filePath) {
 		super(NAME);
 		Preconditions.checkNotNull(filePath,
 				"The path of the file cannot be null");
@@ -58,14 +58,14 @@ public class IBAReader extends XMLReader<IBA> {
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
 	 * 
-	 * @see BAReader#read()
+	 * @see ClaimReader#read()
 	 * 
 	 * @param file
 	 *            is the reader from which the Buchi automaton must be loaded
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public IBAReader(File file) {
+	public ModelReader(File file) {
 		super(NAME);
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
 

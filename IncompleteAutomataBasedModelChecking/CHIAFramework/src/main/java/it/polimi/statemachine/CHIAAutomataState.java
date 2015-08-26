@@ -2,15 +2,15 @@ package it.polimi.statemachine;
 
 import action.CHIAAction;
 import action.CHIAException;
-import it.polimi.automata.io.in.BAReader;
-import it.polimi.automata.io.in.IBAReader;
-import it.polimi.automata.io.out.BAToStringTrasformer;
+import it.polimi.automata.io.in.ClaimReader;
+import it.polimi.automata.io.in.ModelReader;
+import it.polimi.automata.io.out.ClaimToStringTrasformer;
 import it.polimi.automata.io.out.IntersectionWriter;
 import it.polimi.checker.Checker;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.constraint.ConstraintWriter;
 import it.polimi.contraintcomputation.ConstraintGenerator;
-import it.polimi.model.ltltoba.LTLReader;
+import it.polimi.model.ltltoba.ClaimLTLReader;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 
 /**
@@ -19,7 +19,6 @@ import it.polimi.model.ltltoba.LTLtoBATransformer;
  * automaton.
  * 
  * @author Claudio
- *
  */
 public enum CHIAAutomataState implements CHIAState {
 	
@@ -27,85 +26,72 @@ public enum CHIAAutomataState implements CHIAState {
 	 * is the initial state of the automaton
 	 */
 	INIT {
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
 			/**
-			 * Whenever a BA reading action is executed the system moves to the CLAIMLOADED state 
+			 * in the initial state it is possible to load the model or the claim of interest
 			 */
-			if (chiaAction==BAReader.class) {
-				return true;
-			}
-			/**
-			 * Whenever a LTLReader reading action is executed the system moves to the CLAIMLOADED state 
-			 */
-			if (chiaAction==LTLReader.class) {
-				return true;
-			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return true;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class || isAClaimReadingAction(chiaAction)) {
 				return true;
 			}
 			return false;
 		}
 		
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 			/**
-			 * Whenever a BA reading action is executed the system moves to the CLAIMLOADED state 
+			 * if the action concerns the model reading, the model loaded state is reached
 			 */
-			if (chiaAction==BAReader.class) {
-				return CLAIMLOADED;
-			}
-			/**
-			 * Whenever a LTLReader reading action is executed the system moves to the CLAIMLOADED state 
-			 */
-			if (chiaAction==LTLReader.class) {
-				return CLAIMLOADED;
-			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return CLAIMLOADED;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return MODELLOADED;
 			}
+			if(isAClaimReadingAction(chiaAction)){
+				return CLAIMLOADED;
+			}
+			
 			throw new CHIAException("You cannot perform the action: "
 					+ chiaAction.getName() + " into the state "
 					+ this.toString());
-
 		}
+
+		
 	},
+
+	/**
+	 * in this state the model has been already loaded 
+	 */
 	MODELLOADED {
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
-			if (chiaAction==LTLtoBATransformer.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return true;
 			}
-			if (chiaAction==BAReader.class) {
-				return true;
-			}
-			if (chiaAction==LTLReader.class) {
-				return true;
-			}
-			if (chiaAction==IBAReader.class) {
+			/**
+			 * if the action concerns the model reading, the model loaded state is reached
+			 */
+			if (chiaAction==ModelReader.class) {
 				return true;
 			}
 			return false;
 		}
-		
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
-			if (chiaAction==LTLtoBATransformer.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return READY;
 			}
-			if (chiaAction==BAReader.class) {
-				return READY;
-			}
-			if (chiaAction==LTLReader.class) {
-				return READY;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return MODELLOADED;
 			}
 			throw new CHIAException("You cannot perform the action: "
@@ -115,40 +101,31 @@ public enum CHIAAutomataState implements CHIAState {
 		}
 	},
 	CLAIMLOADED {
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return true;
 			}
-			if (chiaAction==LTLtoBATransformer.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return true;
 			}
-			if (chiaAction==LTLReader.class) {
-				return true;
-			}
-			if (chiaAction==BAReader.class) {
-				return true;
-			}
-			if (chiaAction==BAToStringTrasformer.class) {
+			if (chiaAction==ClaimToStringTrasformer.class) {
 				return true;
 			}
 			return false;
 		}
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return READY;
 			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return CLAIMLOADED;
-			}
-			if (chiaAction==LTLReader.class) {
-				return CLAIMLOADED;
-			}
-			if (chiaAction==BAReader.class) {
-				return CLAIMLOADED;
-			}
-			if (chiaAction==BAToStringTrasformer.class) {
+			if (isAClaimReadingAction(chiaAction) || chiaAction==ClaimToStringTrasformer.class) {
 				return CLAIMLOADED;
 			}
 			throw new CHIAException("You cannot perform the action: "
@@ -156,47 +133,42 @@ public enum CHIAAutomataState implements CHIAState {
 					+ this.toString());
 		}
 	},
+	
 	READY {
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
 			if (chiaAction==Checker.class) {
 				return true;
 			}
-			if (chiaAction==LTLReader.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return true;
 			}
-			if (chiaAction==BAToStringTrasformer.class) {
+			if (chiaAction==ModelReader.class) {
 				return true;
 			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return true;
-			}
-			if (chiaAction==BAReader.class) {
-				return true;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ClaimToStringTrasformer.class) {
 				return true;
 			}
 			return false;
 		}
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
 			if (chiaAction==Checker.class) {
 				return CHECKED;
 			}
-			if (chiaAction==LTLReader.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return READY;
 			}
-			if (chiaAction==BAToStringTrasformer.class) {
+			if (chiaAction==ClaimToStringTrasformer.class) {
 				return READY;
 			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return READY;
-			}
-			if (chiaAction==BAReader.class) {
-				return READY;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return READY;
 			}
 			throw new CHIAException("You cannot perform the action: "
@@ -205,54 +177,45 @@ public enum CHIAAutomataState implements CHIAState {
 		}
 	},
 	CHECKED {
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
-			if(chiaAction.getClass().equals(ConstraintGenerator.class)){
+			
+			if (isAClaimReadingAction(chiaAction)) {
 				return true;
 			}
-				
-			if (chiaAction==LTLReader.class) {
+			if (chiaAction==ClaimToStringTrasformer.class) {
 				return true;
 			}
-			if (chiaAction==BAToStringTrasformer.class) {
-				return true;
-			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return true;
-			}
-			if (chiaAction==BAReader.class) {
-				return true;
-			}
-			if (chiaAction==IBAReader.class) {
-				return true;
-			}
-			if (chiaAction==IntersectionWriter.class) {
+			if (chiaAction==ModelReader.class) {
 				return true;
 			}
 			if(chiaAction==ConstraintGenerator.class){
 				return true;
 			}
+			if (chiaAction==IntersectionWriter.class) {
+				return true;
+			}
 			return false;
 		}
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
-			if(chiaAction.getClass().equals(ConstraintGenerator.class)){
+			if(chiaAction==ConstraintGenerator.class){
 				return CONSTRAINTCOMPUTED;
 			}
 				
-			if (chiaAction==LTLReader.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return READY;
 			}
-			if (chiaAction==BAToStringTrasformer.class) {
+			if (chiaAction==ClaimToStringTrasformer.class) {
 				return CHECKED;
 			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return READY;
-			}
-			if (chiaAction==BAReader.class) {
-				return READY;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return READY;
 			}
 			if (chiaAction==IntersectionWriter.class) {
@@ -267,21 +230,15 @@ public enum CHIAAutomataState implements CHIAState {
 		}
 	},
 	CONSTRAINTCOMPUTED {
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
-			if (chiaAction== LTLReader.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return true;
 			}
-			if (chiaAction==BAToStringTrasformer.class) {
-				return true;
-			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return true;
-			}
-			if (chiaAction==BAReader.class) {
-				return true;
-			}
-			if (chiaAction==IBAReader.class) {
+			if (chiaAction==ModelReader.class) {
 				return true;
 			}
 			if (chiaAction==IntersectionWriter.class) {
@@ -298,22 +255,19 @@ public enum CHIAAutomataState implements CHIAState {
 			}
 			return false;
 		}
+		/**
+		 *  {@inheritDoc}
+		 */
 		@Override
 		public CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction) throws CHIAException {
-			if (chiaAction== LTLReader.class) {
+			if (isAClaimReadingAction(chiaAction)) {
 				return READY;
 			}
-			if (chiaAction==BAToStringTrasformer.class) {
+			if (chiaAction==ModelReader.class) {
+				return READY;
+			}
+			if (chiaAction==ClaimToStringTrasformer.class) {
 				return CONSTRAINTCOMPUTED;
-			}
-			if (chiaAction==LTLtoBATransformer.class) {
-				return READY;
-			}
-			if (chiaAction==BAReader.class) {
-				return READY;
-			}
-			if (chiaAction==IBAReader.class) {
-				return READY;
 			}
 			if (chiaAction==IntersectionWriter.class) {
 				return CONSTRAINTCOMPUTED;
@@ -332,10 +286,31 @@ public enum CHIAAutomataState implements CHIAState {
 					+ this.toString());
 		}
 	};
+	
+	/**
+	 * @param chiaAction
+	 */
+	private static boolean isAClaimReadingAction(
+			Class<? extends CHIAAction<?>> chiaAction) {
+		/**
+		 * if the action concerns the claim readin, the claim loaded state is reached
+		 */
+		if (chiaAction==ClaimReader.class || chiaAction==ClaimLTLReader.class || chiaAction==LTLtoBATransformer.class) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 *  {@inheritDoc}
+	 */
 	@Override
 	public abstract CHIAAutomataState perform(Class<? extends CHIAAction<?>> chiaAction)
 				throws CHIAException;
 	
+	/**
+	 *  {@inheritDoc}
+	 */
 	@Override
 	public abstract boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction);
 }

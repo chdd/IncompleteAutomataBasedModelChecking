@@ -5,7 +5,7 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.BA;
-import it.polimi.automata.io.in.BAReader;
+import it.polimi.automata.io.in.ClaimReader;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
@@ -63,7 +63,7 @@ public class BAReaderTest {
 
 	@Test
 	public void test() throws JAXBException, ParserConfigurationException, SAXException, IOException {
-		BAReader reader = new BAReader(new File(getClass().getClassLoader()
+		ClaimReader reader = new ClaimReader(new File(getClass().getClassLoader()
 				.getResource("SendingMessageClaim.xml").getFile()));
 
 		BA sendingMessage = reader.perform();

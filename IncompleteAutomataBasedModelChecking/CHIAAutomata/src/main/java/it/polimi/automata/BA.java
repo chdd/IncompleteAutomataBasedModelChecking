@@ -1,6 +1,7 @@
 package it.polimi.automata;
 
 import it.polimi.automata.state.State;
+import it.polimi.automata.transition.PropositionalLogicConstants;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
 
@@ -765,7 +766,7 @@ public class BA implements Cloneable{
 								+ " must be contained into the set of the states of the automaton ");
 		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
 		propositions.add(new GraphProposition(
-				AutomataConstants.STUTTERING_CHARACTER, false));
+				PropositionalLogicConstants.STUTTERING_CHARACTER, false));
 		this.addPropositions(propositions);
 		Transition stutteringTransition = ((TransitionFactory<State, Transition>) this.automataGraph
 				.getEdgeFactory()).create(propositions);

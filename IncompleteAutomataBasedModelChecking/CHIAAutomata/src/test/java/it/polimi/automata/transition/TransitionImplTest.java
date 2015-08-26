@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import it.polimi.automata.AutomataConstants;
 import it.polimi.automata.transition.Transition;
 
 import java.util.HashSet;
@@ -108,8 +107,8 @@ public class TransitionImplTest {
 		labels.add(label1);
 		labels.add(label2);
 		Transition t=new Transition(labels, 1);
-		assertTrue(t.toString().equals("{1} "+"a"+AutomataConstants.AND+"b") 
-				|| t.toString().equals("{1} "+"b"+AutomataConstants.AND+"a"));
+		assertTrue(t.toString().equals("{1} "+"a"+PropositionalLogicConstants.AND+"b") 
+				|| t.toString().equals("{1} "+"b"+PropositionalLogicConstants.AND+"a"));
 	}
 
 	/**

@@ -16,88 +16,87 @@ import com.google.common.base.Preconditions;
  * <p>
  * The \texttt{IBA} class contains the class which describes an Incomplete Buchi
  * Automaton. The \texttt{IBA} class extends \texttt{BA} by storing the set of
- * the \emph{transparent} states. <br>
+ * the \emph{black box} states. <br>
  * 
  * @author claudiomenghi
  */
 public class IBA extends BA {
 
 	/**
-	 * contains the set of the transparent states of the automaton
+	 * contains the set of the black box states of the automaton
 	 */
-	private Set<State> transparentStates;
+	private Set<State> blackBoxesStates;
 
 	/**
 	 * creates a new incomplete Buchi automaton
 	 */
 	public IBA(TransitionFactory<State, Transition> transitionFactory) {
 		super(transitionFactory);
-		this.transparentStates = new HashSet<State>();
+		this.blackBoxesStates = new HashSet<State>();
 	}
 
 	/**
-	 * check if the state is transparent
+	 * check if the state is a black box of the automaton
 	 * 
 	 * @param s
-	 *            is the state to be checked if transparent
-	 * @return true if the state s is transparent, false otherwise
+	 *            is the state to be checked if it is a black box of the
+	 *            automaton
+	 * @return true if the state s is a black box of the automaton, false
+	 *         otherwise
 	 * @throws NullPointerException
 	 *             if the state s is null
 	 * @throws IllegalArgumentException
 	 *             if the state is not contained into the set of the states of
 	 *             the automaton
 	 */
-	public boolean isTransparent(State s) {
+	public boolean isBlackBox(State s) {
 		Preconditions.checkNotNull(s, "The state to be added cannot be null");
 		Preconditions
 				.checkArgument(this.getStates().contains(s),
 						"The state is not contained into the set of the states of the IBA");
 
-		return this.transparentStates.contains(s);
+		return this.blackBoxesStates.contains(s);
 	}
 
 	/**
-	 * returns the set of the transparent states of the Incomplete Buchi
-	 * Automaton
+	 * returns the set of the black box states of the Incomplete Buchi Automaton
 	 * 
-	 * @return the set of the transparent states of the Incomplete Buchi
-	 *         Automaton (if no transparent states are present an empty set is
-	 *         returned)
+	 * @return the set of the black box states of the Incomplete Buchi Automaton
+	 *         (if no black box states are present an empty set is returned)
 	 */
-	public Set<State> getTransparentStates() {
-		return Collections.unmodifiableSet(this.transparentStates);
+	public Set<State> getBlackBoxStates() {
+		return Collections.unmodifiableSet(this.blackBoxesStates);
 	}
 
 	/**
-	 * returns the set of the transparent states of the Incomplete Buchi
-	 * Automaton
+	 * returns the set of the regular states of the Incomplete Buchi Automaton
 	 * 
-	 * @return the set of the transparent states of the Incomplete Buchi
-	 *         Automaton
+	 * @return the set of the regular states of the Incomplete Buchi Automaton
 	 */
 	public Set<State> getRegularStates() {
 		Set<State> states = new HashSet<State>();
 		states.addAll(this.getStates());
-		states.removeAll(this.getTransparentStates());
+		states.removeAll(this.getBlackBoxStates());
 		return states;
 	}
 
 	/**
-	 * adds the transparent state s to the states of the {@link IBA} and to the
-	 * set of the transparent state<br>
-	 * if the state is already transparent no action is performed <br>
-	 * if the state is a state of the BA but is not transparent, it is also
-	 * added to the set of the transparent state
+	 * adds the black box state s to the states of the {@link IBA} and to the
+	 * set of the black box state<br>
+	 * if the state is already a black box no action is performed <br>
+	 * if the state is a state of the BA but is not a black box, it is also
+	 * added to the set of the black box states
 	 * 
 	 * @param s
-	 *            the state to be added in the {@link IBA}
+	 *            the state to be added in the black box states of the
+	 *            {@link IBA}
 	 * @throws NullPointerException
 	 *             if the state s is null
 	 */
-	public void addTransparentState(State s) {
+	public void addBlackBoxState(State s) {
 		Preconditions.checkNotNull(s, "The state to be added cannot be null");
 
-		this.transparentStates.add(s);
+		this.blackBoxesStates.add(s);
 		if (!this.getStates().contains(s)) {
 			this.addState(s);
 		}
@@ -125,8 +124,8 @@ public class IBA extends BA {
 		for (State s : this.getInitialStates()) {
 			clone.addInitialState(s);
 		}
-		for (State s : this.getTransparentStates()) {
-			clone.addTransparentState(s);
+		for (State s : this.getBlackBoxStates()) {
+			clone.addBlackBoxState(s);
 		}
 		for (Transition t : this.getTransitions()) {
 			clone.addTransition(this.getTransitionSource(t),
@@ -136,10 +135,19 @@ public class IBA extends BA {
 		return clone;
 	}
 
+	/**
+	 * {@inheritDoc} removes the state from the IBA. If the state is also
+	 * contained in the set of black box state it is removed from this set
+	 * 
+	 * @param state
+	 *            the state to be removed from the IBA
+	 * @throws NullPointerException
+	 *             if the state to be removed is null
+	 */
 	public void removeState(State state) {
 		super.removeState(state);
-		if (this.transparentStates.contains(state)) {
-			this.transparentStates.remove(state);
+		if (this.blackBoxesStates.contains(state)) {
+			this.blackBoxesStates.remove(state);
 		}
 	}
 
@@ -154,7 +162,7 @@ public class IBA extends BA {
 		ret = ret + "STATES: " + this.automataGraph.vertexSet() + "\n";
 		ret = ret + "INITIAL STATES: " + this.getInitialStates() + "\n";
 		ret = ret + "ACCEPTING STATES: " + this.getAcceptStates() + "\n";
-		ret = ret + "TRANSPARENT STATES: " + this.getTransparentStates() + "\n";
+		ret = ret + "BLACK BOX STATES: " + this.getBlackBoxStates() + "\n";
 		ret = ret + "TRANSITIONS\n";
 		for (State s : this.automataGraph.vertexSet()) {
 			ret = ret + "state " + s + " ->\n";

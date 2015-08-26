@@ -1,6 +1,11 @@
-package it.polimi.automata;
+package it.polimi.automata.transition;
 
-public final class AutomataConstants {
+/**
+ * contains the constants used to store the propositional logic formula
+ * 
+ * @author Claudio Menghi
+ */
+public final class PropositionalLogicConstants {
 	
 
 	public static final String AND = "^";
@@ -12,8 +17,7 @@ public final class AutomataConstants {
 	
 	public static final String STUTTERING_CHARACTER="stuttering";
 	
-	private AutomataConstants() {
+	private PropositionalLogicConstants() {
 		// Utility classes should always be final and have an private constructor
 	}
-
 }

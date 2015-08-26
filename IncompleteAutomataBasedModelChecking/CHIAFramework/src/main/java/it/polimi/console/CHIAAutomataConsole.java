@@ -3,9 +3,9 @@ package it.polimi.console;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.io.in.BAReader;
-import it.polimi.automata.io.in.IBAReader;
-import it.polimi.automata.io.out.BAToStringTrasformer;
+import it.polimi.automata.io.in.ClaimReader;
+import it.polimi.automata.io.in.ModelReader;
+import it.polimi.automata.io.out.ClaimToStringTrasformer;
 import it.polimi.automata.io.out.ElementToStringTransformer;
 import it.polimi.automata.io.out.IBAToElementTrasformer;
 import it.polimi.automata.io.out.IntersectionWriter;
@@ -19,7 +19,7 @@ import it.polimi.constraints.io.out.constraint.ConstraintWriter;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 //import it.polimi.model.ltltoba.LTLReader;
 //import it.polimi.model.ltltoba.LTLtoBATransformer;
-import it.polimi.model.ltltoba.LTLReader;
+import it.polimi.model.ltltoba.ClaimLTLReader;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.statemachine.CHIAAutomataState;
 
@@ -76,9 +76,9 @@ public class CHIAAutomataConsole {
 			@Param(name = "modelFilePath", description = "is the path of the file that contains the model to be checked") String modelFilePath)
 			throws Exception {
 		try {
-			this.chiaState = chiaState.perform(IBAReader.class);
+			this.chiaState = chiaState.perform(ModelReader.class);
 
-			IBAReader action = new IBAReader(modelFilePath);
+			ModelReader action = new ModelReader(modelFilePath);
 			this.model = action.perform();
 
 		} catch (CHIAException e) {
@@ -94,8 +94,8 @@ public class CHIAAutomataConsole {
 			SAXException, IOException {
 		try {
 
-			this.chiaState = chiaState.perform(BAReader.class);
-			BAReader action = new BAReader(claimFilePath);
+			this.chiaState = chiaState.perform(ClaimReader.class);
+			ClaimReader action = new ClaimReader(claimFilePath);
 			this.claim = action.perform();
 
 		} catch (CHIAException e) {
@@ -122,9 +122,9 @@ public class CHIAAutomataConsole {
 			@Param(name = "file", description = "is the path of the file from which the formula must be loaded") String file)
 			throws IOException {
 		try {
-			this.chiaState = chiaState.perform(LTLReader.class);
+			this.chiaState = chiaState.perform(ClaimLTLReader.class);
 
-			LTLReader action = new LTLReader(file);
+			ClaimLTLReader action = new ClaimLTLReader(file);
 			this.claim = action.perform();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
@@ -252,8 +252,8 @@ public class CHIAAutomataConsole {
 	public void dispClaim() throws ParserConfigurationException, Exception {
 		try {
 
-			this.chiaState = chiaState.perform(BAToStringTrasformer.class);
-			BAToStringTrasformer action = new BAToStringTrasformer(this.claim);
+			this.chiaState = chiaState.perform(ClaimToStringTrasformer.class);
+			ClaimToStringTrasformer action = new ClaimToStringTrasformer(this.claim);
 			logger.info(action.perform());
 		} catch (CHIAException e) {
 			logger.info(e.toString());

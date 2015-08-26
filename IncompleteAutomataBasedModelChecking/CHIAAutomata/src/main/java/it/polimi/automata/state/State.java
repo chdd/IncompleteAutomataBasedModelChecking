@@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
 
 /**
  * <p>
- * Represents a state of an automaton. <br>
- * A state is identified by an id and has a name
+ * IF is used to represent a state of an automaton. Each state has two final
+ * attributes, the <code>id</code> and the <code>name</code> which are returned
+ * through the corresponding methods <code>int getId()</code> and
+ * <code>String getName()</code>.
  * </p>
  * 
  * @author claudiomenghi
@@ -123,8 +125,13 @@ public class State {
 			return false;
 		return true;
 	}
-	
-	public State clone(){
+
+	/**
+	 * returns a copy of the current state
+	 * 
+	 * @return a copy of the current state
+	 */
+	public State clone() {
 		return new State(this.name, this.id);
 	}
 }

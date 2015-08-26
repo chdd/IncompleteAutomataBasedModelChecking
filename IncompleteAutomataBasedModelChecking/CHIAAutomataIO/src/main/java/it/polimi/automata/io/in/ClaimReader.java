@@ -31,7 +31,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  * 
  */
-public class BAReader extends XMLReader<BA>{
+public class ClaimReader extends XMLReader<BA>{
 
 	private final static String NAME="READ CLAIM";
 	
@@ -39,7 +39,7 @@ public class BAReader extends XMLReader<BA>{
 	 * is the logger of the BAReader class
 	 */
 	private static final Logger logger = LoggerFactory
-			.getLogger(BAReader.class);
+			.getLogger(ClaimReader.class);
 
 	/**
 	 * contains the file from which the Buchi automaton must be reader
@@ -53,14 +53,14 @@ public class BAReader extends XMLReader<BA>{
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
-	 * @see BAReader#read()
+	 * @see ClaimReader#read()
 	 * 
 	 * @param filePath
 	 *            is the path of the file from which the automaton must be read
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public BAReader(String filePath) {
+	public ClaimReader(String filePath) {
 		super(NAME);
 		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
 		this.file = new File(filePath);
@@ -70,14 +70,14 @@ public class BAReader extends XMLReader<BA>{
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
 	 * 
-	 * @see BAReader#read()
+	 * @see ClaimReader#read()
 	 * 
 	 * @param file
 	 *            is the file from which the automaton must be read
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public BAReader(File file) {
+	public ClaimReader(File file) {
 		super(NAME);
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
 		this.file = file;

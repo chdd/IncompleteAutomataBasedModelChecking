@@ -5,7 +5,7 @@ package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;
-import it.polimi.automata.io.in.IBAReader;
+import it.polimi.automata.io.in.ModelReader;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
@@ -78,7 +78,7 @@ public class IBAReaderTest {
 	@Test
 	public void test() throws Exception {
 
-		IBAReader reader=new IBAReader(
+		ModelReader reader=new ModelReader(
 				 new File(getClass().getClassLoader()
 						.getResource("SendingMessageModel.xml").getFile()));
 		
@@ -98,9 +98,9 @@ public class IBAReaderTest {
 		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q3", 5)));
 		assertTrue(sendingMessage.getAcceptStates().size()==2);
 		
-		assertTrue(sendingMessage.getTransparentStates().contains(stateFactory.create("send1", 2)));
-		assertTrue(sendingMessage.getTransparentStates().contains(stateFactory.create("send2", 3)));
-		assertTrue(sendingMessage.getTransparentStates().size()==2);
+		assertTrue(sendingMessage.getBlackBoxStates().contains(stateFactory.create("send1", 2)));
+		assertTrue(sendingMessage.getBlackBoxStates().contains(stateFactory.create("send2", 3)));
+		assertTrue(sendingMessage.getBlackBoxStates().size()==2);
 		
 		assertTrue(sendingMessage.getTransitions().contains(t1));
 		assertTrue(sendingMessage.getTransitions().contains(t2));
