@@ -80,7 +80,7 @@ public class Utils {
 			}
 		}
 		for (PluggingTransition outTransitionReplacement : replacement
-				.getOutcomingTransition()) {
+				.getOutgoingTransitions()) {
 			if (!model.getInitialStates().contains(
 					outTransitionReplacement.getSource())) {
 				State newInitialState = outTransitionReplacement.getSource();

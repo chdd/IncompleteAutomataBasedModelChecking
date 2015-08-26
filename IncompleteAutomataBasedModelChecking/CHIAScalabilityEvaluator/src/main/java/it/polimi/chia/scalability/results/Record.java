@@ -25,15 +25,18 @@ public class Record {
 	private final int subPropertyRedOutgoingTransitions;
 	private final int subPropertyYellowOutgingTransition;
 	private final int subPropertyNumOutgoingTransition;
+	private final int sizeModel;
+	private final int numTransparentStatesModel;
 
 
 	public Record(Configuration configuration, SatisfactionValue initialSatisfactioValue) {
-		this(configuration, initialSatisfactioValue, null, false, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0);
+		this(configuration, initialSatisfactioValue, null, false, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0);
 	}
 	
 	public Record(Configuration configuration, SatisfactionValue initialSatisfactioValue, SatisfactionValue finalSatisfactioValue,  boolean triviallySatisfied,
-			int sizeOfTheRefinementVerification, int sizeOfTheReplacementVerification,
-			long replacementVerificationTime, long refinementVerificationTime,
+			int sizeOfTheRefinementVerification, int sizeOfTheReplacementVerification, 
+			long refinementVerificationTime,
+			long replacementVerificationTime, 
 			int numReplacementStates,
 	int numReplacementIncomingTransitions,
 	 int numReplacementOutgoingTransitions,
@@ -43,7 +46,9 @@ public class Record {
 	 int subPropertyNumIncomingTransitions,
 	int subPropertyRedOutgoingTransitions,
 	int subPropertyYellowOutgingTransition,
-	 int subPropertyNumOutgoingTransition){
+	 int subPropertyNumOutgoingTransition,
+	 int sizeModel,
+	 int numTransparentStatesModel){
 		Preconditions.checkNotNull(configuration,
 				"The condiguration under analysis cannot be null");
 		Preconditions.checkNotNull(initialSatisfactioValue, "The initial satisfaction value cannot be null");
@@ -64,13 +69,22 @@ public class Record {
 		this.numReplacementIncomingTransitions=numReplacementIncomingTransitions;
 		this.numReplacementOutgoingTransitions=numReplacementOutgoingTransitions;
 		this.subPropertyStates=subPropertyStates;
+		
+		if(!(subPropertyGreenIncomingTransitions+subPropertyYellowIncomingTransitions<=subPropertyNumIncomingTransitions)){
+			throw new InternalError("The sum of the green and yellow incoming transition cannot exceed the number of incoming transitions");
+		}
 		this.subPropertyGreenIncomingTransitions=subPropertyGreenIncomingTransitions;
 		this.subPropertyYellowIncomingTransitions=subPropertyYellowIncomingTransitions;
 		this.subPropertyNumIncomingTransitions=subPropertyNumIncomingTransitions;
+		
+		if(!(subPropertyRedOutgoingTransitions+subPropertyYellowOutgingTransition<=subPropertyNumOutgoingTransition)){
+			throw new InternalError("The sum of the red and yellow outgoing transition cannot exceed the number of outgoing transitions");
+		}
 		this.subPropertyRedOutgoingTransitions=subPropertyRedOutgoingTransitions;
 		this.subPropertyYellowOutgingTransition=subPropertyYellowOutgingTransition;
 		this.subPropertyNumOutgoingTransition=subPropertyNumOutgoingTransition;
-				
+		this.sizeModel=sizeModel;
+		this.numTransparentStatesModel=numTransparentStatesModel;
 	}
 
 	/**
@@ -188,6 +202,20 @@ public class Record {
 	 */
 	public int getSubPropertyOutgoingTransitions() {
 		return subPropertyNumOutgoingTransition;
+	}
+
+	/**
+	 * @return the sizeModel
+	 */
+	public int getSizeModel() {
+		return sizeModel;
+	}
+
+	/**
+	 * @return the numTransparentStatesModel
+	 */
+	public int getNumTransparentStatesModel() {
+		return numTransparentStatesModel;
 	}
 
 }

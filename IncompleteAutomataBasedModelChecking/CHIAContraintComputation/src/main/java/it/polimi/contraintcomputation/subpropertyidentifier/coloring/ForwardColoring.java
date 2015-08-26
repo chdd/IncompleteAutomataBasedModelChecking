@@ -4,6 +4,7 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.transitions.Color;
+import it.polimi.constraints.transitions.ColoredPluggingTransition;
 import it.polimi.contraintcomputation.subpropertyidentifier.SubPropertyIdentifier;
 
 import java.util.HashSet;
@@ -111,11 +112,20 @@ public class ForwardColoring {
 			} else {
 				if(this.subPropertyIdentifier.isInTransition(outTransition)){
 					if(this.color==Color.GREEN){
-						subPropertyIdentifier.getIncomingPort(outTransition).setColor(this.color);
+						if(subPropertyIdentifier.getIncomingTransition(outTransition).getColor().equals(Color.YELLOW)){
+							this.subPropertyIdentifier.getSubProperty().decrementNumberYellowIncomingTransitions();
+						}
+						if(!subPropertyIdentifier.getIncomingTransition(outTransition).getColor().equals(Color.GREEN)){
+							ColoredPluggingTransition incomingTransition=subPropertyIdentifier.getIncomingTransition(outTransition);
+							incomingTransition.setColor(this.color);
+							this.subPropertyIdentifier.getSubProperty().setGreenIncomingTransition(incomingTransition);
+						}
 					}
 					else{
-						if(subPropertyIdentifier.getIncomingPort(outTransition).getColor()!=Color.GREEN){
-							subPropertyIdentifier.getIncomingPort(outTransition).setColor(Color.YELLOW);
+						if(subPropertyIdentifier.getIncomingTransition(outTransition).getColor()!=Color.GREEN &&
+								subPropertyIdentifier.getIncomingTransition(outTransition).getColor()!=Color.YELLOW ){
+							subPropertyIdentifier.getIncomingTransition(outTransition).setColor(Color.YELLOW);
+							this.subPropertyIdentifier.getSubProperty().incrementNumberYellowIncomingTransitions();;
 						}
 					}
 				}

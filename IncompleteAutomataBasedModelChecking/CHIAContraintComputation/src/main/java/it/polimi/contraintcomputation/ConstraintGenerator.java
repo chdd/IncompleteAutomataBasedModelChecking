@@ -29,8 +29,6 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 	private final static String NAME = "CONSTRAINT GENERATION";
 
-	
-
 	private final Checker checker;
 
 	private final Constraint constraint;
@@ -40,6 +38,10 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 	 * using to compute the sub-property
 	 */
 	private final Map<SubProperty, SubPropertyIdentifier> subpropetySubPropertyIdentifierMap;
+
+	private final Map<State, SubProperty> mapTransparentStateSubProperty;
+
+	private final Map<State, SubPropertyIdentifier> mapTransparentStateSubPropertyIdentifier;
 
 	/**
 	 * creates a new ConstraintGenerator object which starting from the
@@ -68,6 +70,8 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 		this.checker = checker;
 		this.constraint = new Constraint();
 		this.subpropetySubPropertyIdentifierMap = new HashMap<SubProperty, SubPropertyIdentifier>();
+		this.mapTransparentStateSubProperty = new HashMap<State, SubProperty>();
+		this.mapTransparentStateSubPropertyIdentifier = new HashMap<State, SubPropertyIdentifier>();
 	}
 
 	/**
@@ -86,8 +90,9 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 				this.checker.getUpperIntersectionBuilder());
 		intersectionCleaner.clean();
 
-		for (State transparentState : this.checker.getUpperIntersectionBuilder()
-				.getModel().getTransparentStates()) {
+		for (State transparentState : this.checker
+				.getUpperIntersectionBuilder().getModel()
+				.getTransparentStates()) {
 
 			constraint.addSubProperty(this
 					.generateSubProperty(transparentState));
@@ -123,7 +128,24 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 		SubProperty subProperty = subPropertiesIdentifier.getSubProperty();
 		this.subpropetySubPropertyIdentifierMap.put(subProperty,
 				subPropertiesIdentifier);
+		this.mapTransparentStateSubProperty.put(transparentState, subProperty);
+		this.mapTransparentStateSubPropertyIdentifier.put(transparentState,
+				subPropertiesIdentifier);
 		return subProperty;
+	}
+
+	public void coloring(State transparentState) {
+
+		Preconditions.checkNotNull(transparentState,
+				"The transparent state cannot be null");
+		Preconditions.checkArgument(this.mapTransparentStateSubProperty
+				.containsKey(transparentState), "The transparent state "
+				+ transparentState + " is not contained in the map");
+		TransitionLabeler coloring = new TransitionLabeler(
+				this.mapTransparentStateSubPropertyIdentifier
+						.get(transparentState));
+		coloring.startColoring();
+
 	}
 
 	public void coloring() {
@@ -143,34 +165,86 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 	 * @return the constraints where the color of the ports have been updated
 	 */
 	public Constraint computePortReachability() {
-		
-		for(Map.Entry<SubProperty, SubPropertyIdentifier> e: subpropetySubPropertyIdentifierMap.entrySet()){
-			ReachabilityIdentifier reachability = new ReachabilityIdentifier(this.checker.getUpperIntersectionBuilder(),
-					e.getValue());
+
+		for (Map.Entry<SubProperty, SubPropertyIdentifier> e : subpropetySubPropertyIdentifierMap
+				.entrySet()) {
+			ReachabilityIdentifier reachability = new ReachabilityIdentifier(
+					this.checker.getUpperIntersectionBuilder(), e.getValue());
 			reachability.computeReachability();
 
 		}
-		
+
 		return constraint;
 
 	}
-	public void computeIndispensable(){
+
+	public Constraint computePortReachability(State transparentState) {
+
+		Preconditions.checkNotNull(transparentState,
+				"The transparent state cannot be null");
+		Preconditions.checkArgument(
+				this.mapTransparentStateSubPropertyIdentifier
+						.containsKey(transparentState),
+				"The transparent state " + transparentState
+						+ " is not contained in the map");
+		ReachabilityIdentifier reachability = new ReachabilityIdentifier(
+				this.checker.getUpperIntersectionBuilder(),
+				this.mapTransparentStateSubPropertyIdentifier
+						.get(transparentState));
+		reachability.computeReachability();
+
+		return constraint;
+
+	}
+
+	public void computeIndispensable(State transparentState) {
+		Preconditions.checkNotNull(transparentState,
+				"The transparent state cannot be null");
+		Preconditions.checkArgument(this.mapTransparentStateSubProperty
+				.containsKey(transparentState), "The transparent state "
+				+ transparentState + " is not contained in the map");
+		SubProperty subProperty=this.mapTransparentStateSubProperty.get(transparentState);
+		State modelState = subProperty.getModelState();
+		IBA model = checker.getUpperIntersectionBuilder().getModel().clone();
+		model.removeState(modelState);
+		SatisfactionValue value = new Checker(model, checker
+				.getUpperIntersectionBuilder().getClaim(), checker
+				.getUpperIntersectionBuilder().getAcceptingPolicy()).perform();
+		if (value == SatisfactionValue.NOTSATISFIED) {
+			throw new InternalError(
+					"It is not possible that removing a transparent state of the model makes the property not satisfied");
+		}
+		if (value == SatisfactionValue.POSSIBLYSATISFIED) {
+			subProperty.setIndispensable(false);
+		}
+		if (value == SatisfactionValue.SATISFIED) {
+			subProperty.setIndispensable(true);
+		}
+
+	}
+
+	public void computeIndispensable() {
 		for (java.util.Map.Entry<SubProperty, SubPropertyIdentifier> entry : this.subpropetySubPropertyIdentifierMap
 				.entrySet()) {
-			State modelState=entry.getKey().getModelState();
-			IBA model=checker.getUpperIntersectionBuilder().getModel().clone();
+			State modelState = entry.getKey().getModelState();
+			IBA model = checker.getUpperIntersectionBuilder().getModel()
+					.clone();
 			model.removeState(modelState);
-			SatisfactionValue value=new Checker(model, checker.getUpperIntersectionBuilder().getClaim(), checker.getUpperIntersectionBuilder().getAcceptingPolicy()).perform();
-			if(value==SatisfactionValue.NOTSATISFIED){
-				throw new InternalError("It is not possible that removing a transparent state of the model makes the property not satisfied");
+			SatisfactionValue value = new Checker(model, checker
+					.getUpperIntersectionBuilder().getClaim(), checker
+					.getUpperIntersectionBuilder().getAcceptingPolicy())
+					.perform();
+			if (value == SatisfactionValue.NOTSATISFIED) {
+				throw new InternalError(
+						"It is not possible that removing a transparent state of the model makes the property not satisfied");
 			}
-			if(value==SatisfactionValue.POSSIBLYSATISFIED){
+			if (value == SatisfactionValue.POSSIBLYSATISFIED) {
 				entry.getKey().setIndispensable(false);
 			}
-			if(value==SatisfactionValue.SATISFIED){
+			if (value == SatisfactionValue.SATISFIED) {
 				entry.getKey().setIndispensable(true);
 			}
 		}
-		
+
 	}
 }

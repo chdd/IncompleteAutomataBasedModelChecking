@@ -1,7 +1,6 @@
 package it.polimi.constraints.components;
 
 import it.polimi.automata.state.State;
-import it.polimi.constraints.transitions.ColoredPluggingTransition;
 
 import com.google.common.base.Preconditions;
 

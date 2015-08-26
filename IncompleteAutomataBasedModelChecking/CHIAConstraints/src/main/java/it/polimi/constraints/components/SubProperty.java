@@ -32,9 +32,9 @@ public class SubProperty extends Component {
 	/**
 	 * contains the incoming ports of the component
 	 */
-	private final Map<Integer, ColoredPluggingTransition> incomingPorts;
+	private final Map<Integer, ColoredPluggingTransition> incomingTransitions;
 
-	private int numGreenIncomingTransitions;
+	private final Set<ColoredPluggingTransition> greenIncomingTransitions;
 	private int numYellowIncomingTransitions;
 	private int numIncomingTransitions;
 	private int numRedOutgoingTransitions;
@@ -79,12 +79,13 @@ public class SubProperty extends Component {
 		Preconditions.checkNotNull(automaton,
 				"The name of the state cannot be null");
 		this.automaton = automaton;
-		this.incomingPorts = new HashMap<Integer, ColoredPluggingTransition>();
+		this.incomingTransitions = new HashMap<Integer, ColoredPluggingTransition>();
 		this.outcomingPorts = new HashMap<Integer, ColoredPluggingTransition>();
+		this.greenIncomingTransitions = new HashSet<ColoredPluggingTransition>();
+
 		this.lowerApproximationReachabilityRelation = new ReachabilityRelation();
 		this.overApproximationReachabilityRelation = new ReachabilityRelation();
 		this.setIndispensable(true);
-		this.numGreenIncomingTransitions = 0;
 		this.numYellowIncomingTransitions = 0;
 		this.setNumIncomingTransitions(0);
 		numRedOutgoingTransitions = 0;
@@ -124,15 +125,14 @@ public class SubProperty extends Component {
 	public Set<ColoredPluggingTransition> getIncomingTransitions() {
 		return Collections
 				.unmodifiableSet(new HashSet<ColoredPluggingTransition>(
-						incomingPorts.values()));
+						incomingTransitions.values()));
 	}
 
 	/**
-	 * adds an incoming port to the component
+	 * adds an incoming transition to the sub-property
 	 * 
 	 * @param transition
-	 *            is the port to be added as an in-coming port
-	 * 
+	 *            is the incoming transition to be added to the sub-property *
 	 * @throws NullPointerException
 	 *             if the port is null
 	 */
@@ -140,15 +140,17 @@ public class SubProperty extends Component {
 
 		Preconditions.checkNotNull(transition,
 				"The incoming transition to be added cannot be null");
+		// updating the number of green incoming transitions
 		if (transition.getColor().equals(Color.GREEN)) {
-			this.setNumGreenIncomingTransitions(numGreenIncomingTransitions + 1);
+			this.greenIncomingTransitions.add(transition);
 		}
+		// updating the number of yellow incoming transitions
 		if (transition.getColor().equals(Color.YELLOW)) {
 			this.setNumYellowIncomingTransitions(numYellowIncomingTransitions + 1);
 		}
 
 		this.setNumIncomingTransitions(this.numIncomingTransitions + 1);
-		this.incomingPorts.put(transition.hashCode(), transition);
+		this.incomingTransitions.put(transition.hashCode(), transition);
 
 	}
 
@@ -158,9 +160,9 @@ public class SubProperty extends Component {
 				"The incoming transition cannot be null");
 		Preconditions
 				.checkArgument(
-						this.incomingPorts.containsKey(port.hashCode()),
+						this.incomingTransitions.containsKey(port.hashCode()),
 						"The incoming transition must be contained into the incoming transitions of the sub-property");
-		return this.incomingPorts.get(port.hashCode());
+		return this.incomingTransitions.get(port.hashCode());
 	}
 
 	public ColoredPluggingTransition getOutgoingTransition(
@@ -184,13 +186,15 @@ public class SubProperty extends Component {
 	 */
 	public void addOutgoingTransition(ColoredPluggingTransition port) {
 
-		if(port.getColor().equals(Color.RED)){
-			this.setNumRedOutgoingTransitions(this.getNumRedOutgoingTransitions()+1);
+		if (port.getColor().equals(Color.RED)) {
+			this.setNumRedOutgoingTransitions(this
+					.getNumRedOutgoingTransitions() + 1);
 		}
-		if(port.getColor().equals(Color.YELLOW)){
-			this.setNumYellowOutgoingTransitions(this.getNumYellowOutgoingTransitions()+1);
+		if (port.getColor().equals(Color.YELLOW)) {
+			this.setNumYellowOutgoingTransitions(this
+					.getNumYellowOutgoingTransitions() + 1);
 		}
-		this.setNumOutgoingTransitions(this.getNumOutgoingTransitions()+1);
+		this.setNumOutgoingTransitions(this.getNumOutgoingTransitions() + 1);
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
 		this.outcomingPorts.put(port.hashCode(), port);
 	}
@@ -213,7 +217,7 @@ public class SubProperty extends Component {
 						|| this.getOutgoingTransitions().contains(p),
 						"The port must be contained in the set of incoming or utcoming ports");
 		if (this.getIncomingTransitions().contains(p)) {
-			this.incomingPorts.remove(p);
+			this.incomingTransitions.remove(p);
 		}
 		if (this.getOutgoingTransitions().contains(p)) {
 			this.outcomingPorts.remove(p);
@@ -240,7 +244,7 @@ public class SubProperty extends Component {
 	 */
 	public void addReachabilityRelation(
 			ColoredPluggingTransition outgoingTransition,
-			ColoredPluggingTransition incomingTransition, Boolean accepting,
+			ColoredPluggingTransition incomingTransition, 
 			Boolean modelAcceptingState, Boolean claimAcceptingState) {
 		// validates the parameters
 		Preconditions.checkNotNull(outgoingTransition,
@@ -263,7 +267,7 @@ public class SubProperty extends Component {
 								+ " must be contained into the set of the incoming port of the sub-property");
 
 		this.lowerApproximationReachabilityRelation.addTransition(
-				outgoingTransition, incomingTransition, accepting,
+				outgoingTransition, incomingTransition, 
 				modelAcceptingState, claimAcceptingState);
 	}
 
@@ -295,7 +299,7 @@ public class SubProperty extends Component {
 	 */
 	public void addPossibleReachabilityRelation(
 			ColoredPluggingTransition outgoingTransition,
-			ColoredPluggingTransition incomingTransition, Boolean accepting,
+			ColoredPluggingTransition incomingTransition, 
 			Boolean modelAcceptingState, Boolean claimAcceptingState) {
 		// validates the parameters
 		Preconditions.checkNotNull(outgoingTransition,
@@ -318,7 +322,7 @@ public class SubProperty extends Component {
 								+ " must be contained into the set of the incoming port of the sub-property");
 
 		this.overApproximationReachabilityRelation.addTransition(
-				outgoingTransition, incomingTransition, accepting,
+				outgoingTransition, incomingTransition, 
 				modelAcceptingState, claimAcceptingState);
 	}
 
@@ -328,8 +332,10 @@ public class SubProperty extends Component {
 		int result = super.hashCode();
 		result = prime * result
 				+ ((automaton == null) ? 0 : automaton.hashCode());
-		result = prime * result
-				+ ((incomingPorts == null) ? 0 : incomingPorts.hashCode());
+		result = prime
+				* result
+				+ ((incomingTransitions == null) ? 0 : incomingTransitions
+						.hashCode());
 		result = prime * result
 				+ ((outcomingPorts == null) ? 0 : outcomingPorts.hashCode());
 		return result;
@@ -349,10 +355,10 @@ public class SubProperty extends Component {
 				return false;
 		} else if (!automaton.equals(other.automaton))
 			return false;
-		if (incomingPorts == null) {
-			if (other.incomingPorts != null)
+		if (incomingTransitions == null) {
+			if (other.incomingTransitions != null)
 				return false;
-		} else if (!incomingPorts.equals(other.incomingPorts))
+		} else if (!incomingTransitions.equals(other.incomingTransitions))
 			return false;
 		if (outcomingPorts == null) {
 			if (other.outcomingPorts != null)
@@ -371,18 +377,59 @@ public class SubProperty extends Component {
 	}
 
 	/**
-	 * @return the numGreenIncomingTransitions
+	 * returns the set of the green incoming transitions
+	 * 
+	 * @return the set of the green incoming transitions
 	 */
-	public int getNumGreenIncomingTransitions() {
-		return numGreenIncomingTransitions;
+	public Set<ColoredPluggingTransition> getGreenIncomingTransitions() {
+		return Collections.unmodifiableSet(this.greenIncomingTransitions);
 	}
 
 	/**
-	 * @param numGreenIncomingTransitions
-	 *            the numGreenIncomingTransitions to set
+	 * sets the color of the incoming transition to green. The incoming
+	 * transition must already be inserted into the set of the incoming
+	 * transitions of the sub-property. If the incoming transition was already a
+	 * yellow transition it is removed from the set of the yellow transitions
+	 * 
+	 * @param incomingTransition
+	 *            the incoming transition whose color must be modified to green
+	 * @throws NullPointerException
+	 *             if the incoming transition is green
+	 * @throws IllegalArgumentException
+	 *             if the incoming transition is not contained into the set of
+	 *             incoming transitions of the sub-property
 	 */
-	private void setNumGreenIncomingTransitions(int numGreenIncomingTransitions) {
-		this.numGreenIncomingTransitions = numGreenIncomingTransitions;
+	public void setGreenIncomingTransition(
+			ColoredPluggingTransition incomingTransition) {
+		Preconditions.checkNotNull(incomingTransition,
+				"The incoming transition cannot be null");
+		Preconditions
+				.checkArgument(
+						this.incomingTransitions.values().contains(
+								incomingTransition),
+						"The incoming transition must be contained into the set of incoming transitions of the sub-property");
+		this.greenIncomingTransitions.add(incomingTransition);
+
+	}
+
+	public void incrementNumberYellowIncomingTransitions() {
+		this.numYellowIncomingTransitions++;
+	}
+
+	public void decrementNumberYellowIncomingTransitions() {
+		this.numYellowIncomingTransitions--;
+	}
+
+	public void incrementNumberRedOutgoingTransitions() {
+		this.numRedOutgoingTransitions++;
+	}
+
+	public void incrementNumberYellowOutgoingTransitions() {
+		this.numYellowOutgoingTransitions++;
+	}
+
+	public void decrementNumberYellowOutgoingTransitions() {
+		this.numYellowOutgoingTransitions--;
 	}
 
 	/**
@@ -396,8 +443,7 @@ public class SubProperty extends Component {
 	 * @param numYellowIncomingTransitions
 	 *            the numYellowIncomingTransitions to set
 	 */
-	private void setNumYellowIncomingTransitions(
-			int numYellowIncomingTransitions) {
+	public void setNumYellowIncomingTransitions(int numYellowIncomingTransitions) {
 		this.numYellowIncomingTransitions = numYellowIncomingTransitions;
 	}
 
@@ -412,7 +458,7 @@ public class SubProperty extends Component {
 	 * @param numIncomingTransitions
 	 *            the numIncomingTransitions to set
 	 */
-	private void setNumIncomingTransitions(int numIncomingTransitions) {
+	public void setNumIncomingTransitions(int numIncomingTransitions) {
 		this.numIncomingTransitions = numIncomingTransitions;
 	}
 
@@ -427,7 +473,7 @@ public class SubProperty extends Component {
 	 * @param numRedOutgoingTransitions
 	 *            the numRedOutgoingTransitions to set
 	 */
-	private void setNumRedOutgoingTransitions(int numRedOutgoingTransitions) {
+	public void setNumRedOutgoingTransitions(int numRedOutgoingTransitions) {
 		this.numRedOutgoingTransitions = numRedOutgoingTransitions;
 	}
 
@@ -442,7 +488,7 @@ public class SubProperty extends Component {
 	 * @param numYellowOutgoingTransitions
 	 *            the numYellowOutgoingTransitions to set
 	 */
-	private void setNumYellowOutgoingTransitions(int numYellowOutgoingTransitions) {
+	public void setNumYellowOutgoingTransitions(int numYellowOutgoingTransitions) {
 		this.numYellowOutgoingTransitions = numYellowOutgoingTransitions;
 	}
 
@@ -457,7 +503,7 @@ public class SubProperty extends Component {
 	 * @param numOutgoingTransitions
 	 *            the numOutgoingTransitions to set
 	 */
-	private void setNumOutgoingTransitions(int numOutgoingTransitions) {
+	public void setNumOutgoingTransitions(int numOutgoingTransitions) {
 		this.numOutgoingTransitions = numOutgoingTransitions;
 	}
 

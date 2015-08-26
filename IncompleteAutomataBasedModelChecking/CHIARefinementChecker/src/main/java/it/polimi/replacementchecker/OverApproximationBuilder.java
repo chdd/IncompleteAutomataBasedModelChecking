@@ -11,18 +11,6 @@ import com.google.common.base.Preconditions;
 
 public class OverApproximationBuilder {
 
-	/**
-	 * contains the replacement to be verified
-	 */
-	private final Replacement replacement;
-
-	/**
-	 * the sub-property to be considered
-	 */
-	private final SubProperty subproperty;
-
-	private final AcceptingPolicy acceptingPolicy;
-	
 	private final ReplacementIntersectionBuilder replacementIntersectionBuilder;
 	
 	/**
@@ -49,17 +37,12 @@ public class OverApproximationBuilder {
 		Preconditions.checkNotNull(acceptingPolicy,
 				"The accepting policy to be considered cannot be null");
 
-		this.replacement = replacement;
-		this.subproperty = subproperty;
-		this.acceptingPolicy = acceptingPolicy;
-		replacementIntersectionBuilder=new ReplacementIntersectionBuilder(replacement, subproperty, new IntersectionStateFactory(), new IntersectionTransitionBuilder(), this.subproperty.getUpperReachabilityRelation(),false);
+		replacementIntersectionBuilder=new ReplacementIntersectionBuilder(replacement, subproperty, new IntersectionStateFactory(), new IntersectionTransitionBuilder(), subproperty.getUpperReachabilityRelation(),false);
 	}
 
 	public IntersectionBA perform() {
 		return replacementIntersectionBuilder.perform(); 
 	}
-	
-	
 }
 
 

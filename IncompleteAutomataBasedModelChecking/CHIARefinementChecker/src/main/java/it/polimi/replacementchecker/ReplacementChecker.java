@@ -15,17 +15,32 @@ import action.CHIAAction;
 import com.google.common.base.Preconditions;
 
 /**
+ * Checking whether a replacement satisfies a constraint can be reduced to two
+ * emptiness checking problems. The first emptiness checking procedure considers
+ * an automaton which encodes the set of behaviors the system is going to
+ * exhibit at run-time (an under approximation), and checks whether the property
+ * is violated, the second analyzes an automaton which also contains the
+ * behaviors the system may exhibit (an over approximation).
+ * 
+ * <p>
  * Is used to check the replacement of a transparent state i.e., check whether
  * the original property is satisfied, possibly satisfied or not satisfied given
- * a specific replacement.
+ * a specific replacement. It uses the {@link UnderApproximationBuilder} and the
+ * {@link OverApproximationBuilder} to build the lower and the upper
+ * intersection automaton.
+ * </p>
  * 
+ * <p>
  * It takes as input the constraint and a replacement for one of the transparent
- * states involved in the constraint. The method check returns 1 if the property
- * is satisfied given the current replacement, -1 if the property is possibly
- * satisfied or 0 if the property is not satisfied. When a -1 value is generated
+ * states involved in the constraint. The method check returns the
+ * {@link SatisfactionValue} SATISFIED if the property is satisfied given the
+ * current replacement, the {@link SatisfactionValue} POSSIBLYSATISFIED if the
+ * property is possibly satisfied or the {@link SatisfactionValue} NOTSATISFIED
+ * if the property is not satisfied. When a POSSIBLYSATISFIED value is generated
  * the satisfaction of the property may depends on the refinement of other
  * transparent states involved in the constraint or on the refinement of the
  * transparent states of the model specified into the replacement itself.
+ * </p>
  * 
  * 
  * @author claudiomenghi
@@ -50,13 +65,12 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 	private IntersectionBA upperIntersectionBA;
 
-	private IntersectionBA lowerIntersectionBA;
-	
+	private IntersectionBA underApproximationIntersectionBA;
+
 	private boolean isTriviallySatisfied;
-	
+
 	private Stack<State> couterexample;
 	private Stack<Transition> transitionCouterexample;
-
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -127,13 +141,15 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 		UnderApproximationBuilder underApproximationBuilder = new UnderApproximationBuilder(
 				replacement, subproperty, acceptingPolicy);
 
-		this.lowerIntersectionBA = underApproximationBuilder.perform();
+		this.underApproximationIntersectionBA = underApproximationBuilder
+				.perform();
 		EmptinessChecker emptinessChecker = new EmptinessChecker(
-				this.lowerIntersectionBA);
+				this.underApproximationIntersectionBA);
 
 		if (!emptinessChecker.isEmpty()) {
-			this.couterexample=emptinessChecker.getCounterExample();
-			this.transitionCouterexample=emptinessChecker.getTransitionCounterExample();
+			this.couterexample = emptinessChecker.getCounterExample();
+			this.transitionCouterexample = emptinessChecker
+					.getTransitionCounterExample();
 			return true;
 		}
 		return false;
@@ -193,9 +209,9 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 		Preconditions
 				.checkArgument(this.isPerformed(),
 						"You must check the replacement before getting the intersection ");
-		Preconditions.checkState(this.lowerIntersectionBA != null,
+		Preconditions.checkState(this.underApproximationIntersectionBA != null,
 				"The lower intersection BA cannot be null");
-		return this.lowerIntersectionBA;
+		return this.underApproximationIntersectionBA;
 	}
 
 	public int getIntersectionAutomataSize() {
@@ -203,8 +219,8 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 		if (this.upperIntersectionBA != null) {
 			res = res + this.upperIntersectionBA.size();
 		}
-		if (this.lowerIntersectionBA != null) {
-			res = res + this.lowerIntersectionBA.size();
+		if (this.underApproximationIntersectionBA != null) {
+			res = res + this.underApproximationIntersectionBA.size();
 		}
 		return res;
 	}
@@ -217,21 +233,30 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 	}
 
 	/**
-	 * @param isTriviallySatisfied the isTriviallySatisfied to set
+	 * @param isTriviallySatisfied
+	 *            the isTriviallySatisfied to set
 	 */
 	public void setTriviallySatisfied(boolean isTriviallySatisfied) {
 		this.isTriviallySatisfied = isTriviallySatisfied;
 	}
 
 	/**
-	 * @return the couterexample
+	 * returns the counterexample, i.e., the set of states included in the
+	 * violating run
+	 * 
+	 * @return the counterexample, i.e., the set of states included in the
+	 *         violating run
 	 */
 	public Stack<State> getCouterexample() {
 		return couterexample;
 	}
-	
+
 	/**
-	 * @return the couterexample
+	 * returns the counterexample, i.e., the set of transitions included in the
+	 * violating run
+	 * 
+	 * @return the counterexample, i.e., the set of transitions included in the
+	 *         violating run
 	 */
 	public Stack<Transition> getTransitionCouterexample() {
 		return this.transitionCouterexample;

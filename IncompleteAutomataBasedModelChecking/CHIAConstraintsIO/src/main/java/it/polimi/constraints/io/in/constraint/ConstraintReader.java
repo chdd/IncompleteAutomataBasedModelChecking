@@ -178,12 +178,12 @@ public class ConstraintReader extends XMLReader<Constraint>{
  			ReachabilityRelation lowerReachabilityRelation=new ElementToReachabilityRelationTransformer(mapIdPort).transform(lowerReachability);
 			
 			for(ReachabilityEntry entry: lowerReachabilityRelation.getReachabilityAcceptingMap().values()){
-				subProperty.addReachabilityRelation(entry.getOutgoingTransition(), entry.getIncomingTransition(), entry.isAccepting(), entry.isModelAccepting(), entry.isClaimAccepting());
+				subProperty.addReachabilityRelation(entry.getOutgoingTransition(), entry.getIncomingTransition(), entry.isModelAccepting(), entry.isClaimAccepting());
 			}
 			Element upperReachability=(Element) xmlSubPropertyElement.getElementsByTagName(AutomataIOConstants.XML_UPPER_REACHABILITY).item(0);
 			ReachabilityRelation upperReachabilityRelation=new ElementToReachabilityRelationTransformer(mapIdPort).transform(upperReachability);
 			for(ReachabilityEntry entry: upperReachabilityRelation.getReachabilityAcceptingMap().values()){
-				subProperty.addPossibleReachabilityRelation(entry.getOutgoingTransition(), entry.getIncomingTransition(), entry.isAccepting(), entry.isModelAccepting(), entry.isClaimAccepting());
+				subProperty.addPossibleReachabilityRelation(entry.getOutgoingTransition(), entry.getIncomingTransition(),  entry.isModelAccepting(), entry.isClaimAccepting());
 			}
 		}
 		

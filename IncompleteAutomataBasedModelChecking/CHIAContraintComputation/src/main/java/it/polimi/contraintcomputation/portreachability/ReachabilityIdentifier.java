@@ -133,7 +133,7 @@ public class ReachabilityIdentifier {
 						ColoredPluggingTransition subPropertyOuttransition = this.subPropertiesIdentifier
 								.getOutgoingPort(outTransition);
 						ColoredPluggingTransition subPropertyInTransition = this.subPropertiesIdentifier
-								.getIncomingPort(inTransition);
+								.getIncomingTransition(inTransition);
 
 						State source = intersectionAutomaton
 								.getTransitionDestination(outTransition);
@@ -142,7 +142,7 @@ public class ReachabilityIdentifier {
 						this.subPropertiesIdentifier.getSubProperty()
 								.addReachabilityRelation(
 										subPropertyOuttransition,
-										subPropertyInTransition,false,
+										subPropertyInTransition,
 										acceptingModelStatePathChecker.perform(
 												source, destination),
 										acceptingClaimStatePathChecker.perform(
@@ -264,7 +264,7 @@ public class ReachabilityIdentifier {
 						ColoredPluggingTransition subPropertyOuttransition = this.subPropertiesIdentifier
 								.getOutgoingPort(outTransition);
 						ColoredPluggingTransition subPropertyInTransition = this.subPropertiesIdentifier
-								.getIncomingPort(inTransition);
+								.getIncomingTransition(inTransition);
 
 						State source = intersectionAutomaton
 								.getTransitionDestination(outTransition);
@@ -274,7 +274,6 @@ public class ReachabilityIdentifier {
 								.addPossibleReachabilityRelation(
 										subPropertyOuttransition,
 										subPropertyInTransition,
-										false,
 										acceptingModelStatePathChecker.perform(
 												source, destination),
 										acceptingClaimStatePathChecker.perform(

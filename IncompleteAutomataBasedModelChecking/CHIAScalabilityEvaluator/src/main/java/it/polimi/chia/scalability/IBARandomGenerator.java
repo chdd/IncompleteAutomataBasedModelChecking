@@ -68,6 +68,12 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 	 * replacement
 	 */
 	private BiMap<State, Replacement> transparentStateReplacementMap;
+	
+	/**
+	 * the map specifies for each transparent state the corresponding
+	 * replacement
+	 */
+	private final BiMap<State, Replacement> transparentStateNonEmptyReplacementMap;
 
 	/**
 	 * if a state of the BA is encapsulated into the replacement it maps the
@@ -147,6 +153,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 				* transparentStateDensity);
 		this.ba = ba;
 		this.transparentStateReplacementMap = HashBiMap.create();
+		this.transparentStateNonEmptyReplacementMap=HashBiMap.create();
 		this.stateReplacementMap = new HashMap<State, Replacement>();
 		this.numEncapsulatedStates = (int) Math.abs((ba.getStates().size() - 1)
 				* replacementDensity);
@@ -254,6 +261,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 				Replacement replacement = this.transparentStateReplacementMap
 						.get(transparentState);
 				replacement.getAutomaton().addState(baState);
+				this.transparentStateNonEmptyReplacementMap.put(transparentState, replacement);
 				this.stateReplacementMap.put(baState,
 						this.transparentStateReplacementMap.get(transparentState));
 				if (this.ba.getInitialStates().contains(baState)) {
@@ -327,7 +335,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 				} else {
 					this.iba.addTransition(transparentSource,
 							transparentDestination, transition);
-					replacementSource.addOutComingTransition(new PluggingTransition(
+					replacementSource.addOutgoingTransition(new PluggingTransition(
 							source, transparentDestination, transition, false));
 					replacementDestination
 							.addIncomingTransition(new PluggingTransition(
@@ -343,7 +351,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 
 					this.iba.addTransition(transparentSource, destination,
 							transition);
-					replacementSource.addOutComingTransition(new PluggingTransition(
+					replacementSource.addOutgoingTransition(new PluggingTransition(
 							source, destination, transition, false));
 				} else {
 					if (stateReplacementMap.containsKey(destination)) {
@@ -400,5 +408,24 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 								+ ACTION_NAME
 								+ " must be performed before getting the map between transparent states and replacements");
 		return Maps.unmodifiableBiMap(this.transparentStateReplacementMap);
+	}
+	
+	/**
+	 * returns a Bidirectional map which specifies for each transparent state
+	 * the corresponding replacement
+	 * 
+	 * @return a Bidirectional map which specifies for each transparent state
+	 *         the corresponding replacement
+	 * @throws IllegalStateException
+	 *             if the IBA generation has not been already performed
+	 */
+	public List<Replacement> getNonEmptyReplacements() {
+		Preconditions
+				.checkState(
+						this.isPerformed(),
+						"The action "
+								+ ACTION_NAME
+								+ " must be performed before getting the map between transparent states and replacements");
+		return new ArrayList<Replacement>(this.transparentStateNonEmptyReplacementMap.values());
 	}
 }

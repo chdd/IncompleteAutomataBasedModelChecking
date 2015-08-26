@@ -4,6 +4,7 @@ import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.out.IBAToElementTrasformer;
 import it.polimi.automata.io.out.XMLWriter;
+import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
@@ -65,7 +66,7 @@ public class ScalabilityTest {
 
 			File dir = new File(testDirectory + "Test" + testNumber);
 			dir.mkdir();
-			for (int claimNum = 1; claimNum <= claims.size(); claimNum++) {
+			for (int claimNum = 0; claimNum < claims.size(); claimNum++) {
 				File claimdir = new File(testDirectory + "Test" + testNumber
 						+ "/Claim" + claimNum);
 				claimdir.mkdir();
@@ -162,16 +163,17 @@ public class ScalabilityTest {
 			if (value == SatisfactionValue.POSSIBLYSATISFIED) {
 				stat.incNumPossibly();
 				// compute the constraint
-				Constraint constraint = computeConstraint(
-						configuration.getCurrentClaim(), model, checker);
-
+				
 				// choose a random replacement
-				List<Replacement> replacements = new ArrayList<Replacement>(
-						ibaGenerator.getTransparentStateReplacementMap()
-								.values());
+				List<Replacement> replacements = ibaGenerator.getNonEmptyReplacements();
+				if(replacements.isEmpty()){
+					throw new InternalError("There are no non empty replacements");
+				}
 				Collections.shuffle(replacements);
 
 				Replacement replacement = replacements.iterator().next();
+				Constraint constraint = computeConstraint(
+						configuration.getCurrentClaim(), model, checker, replacement.getModelState());
 
 				// VERIFICATION OF THE REFINEMENT
 				IBA refinedModel = new Injector(model, replacement).perform();
@@ -199,9 +201,11 @@ public class ScalabilityTest {
 
 				long replacementVerificationTime = timer
 						.elapsed(TimeUnit.NANOSECONDS);
-
+				if(refinementChecker.getIntersectionAutomataSize()>=replacementChecker.getIntersectionAutomataSize()){
+					stat.incRepIsMoreEfficientSpace();
+				}
 				if (refinementVerificationTime >= replacementVerificationTime) {
-					stat.incRepIsMoreEfficient();
+					stat.incRepIsMoreEfficientTime();
 				}
 				
 				SubProperty subProperty = constraint.getSubProperty(replacement
@@ -214,21 +218,22 @@ public class ScalabilityTest {
 						refinementVerificationTime,
 						replacementVerificationTime, replacement.getAutomaton()
 								.size(), replacement.getIncomingTransitions()
-								.size(), replacement.getOutcomingTransition()
+								.size(), replacement.getOutgoingTransitions()
 								.size(), subProperty.getAutomaton().size(),
 						subProperty.getNumGreenIncomingTransitions(),
 						subProperty.getNumYellowIncomingTransitions(),
 						subProperty.getNumIncomingTransitions(),
 						subProperty.getNumRedOutgoingTransitions(),
 						subProperty.getNumYellowOutgoingTransitions(),
-						subProperty.getNumRedOutgoingTransitions());
+						subProperty.getNumOutgoingTransitions(),
+						model.size(),
+						model.getTransparentStates().size());
 				resultPossiblyWriter.append(record);
 				if (refinementSatisfactionvalue != replacementSatisfactionvalue) {
 					printError(testDirectory, configuration, replacement,
 							refinedModel, constraint, model,
 							refinementSatisfactionvalue,
 							replacementSatisfactionvalue);
-
 				}
 			} else {
 				if (value.equals(SatisfactionValue.NOTSATISFIED)) {
@@ -311,12 +316,12 @@ public class ScalabilityTest {
 	}
 
 	private static Constraint computeConstraint(BA claim, IBA model,
-			Checker checker) {
+			Checker checker, State transparentState) {
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
-		cg.coloring();
-		cg.computePortReachability();
-		cg.computeIndispensable();
+		cg.coloring(transparentState);
+		cg.computePortReachability(transparentState);
+		cg.computeIndispensable(transparentState);
 
 		return constraint;
 	}

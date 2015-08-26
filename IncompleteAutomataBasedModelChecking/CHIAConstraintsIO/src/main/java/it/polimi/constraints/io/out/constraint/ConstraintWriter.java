@@ -4,7 +4,6 @@ import it.polimi.constraints.Constraint;
 
 import java.io.File;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;

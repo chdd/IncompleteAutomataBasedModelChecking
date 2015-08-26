@@ -80,7 +80,7 @@ public class Configuration {
 	public Configuration(int configurationId,int nStates, double transitionDensity,
 			double acceptingDensity, double transparentDensity,
 			double replacementDensity, BA currentClaim, int testNumber, int claimNumber) {
-		Preconditions.checkArgument(claimNumber>=1, "The claim number: "+claimNumber+"must be grater or equal to 1");
+		Preconditions.checkArgument(claimNumber>=0, "The claim number: "+claimNumber+"must be grater or equal to 1");
 		Preconditions.checkArgument(nStates >= 0,
 				"The number of the states must be grather or equal to zero");
 		Preconditions.checkArgument(transitionDensity >= 0,
@@ -155,12 +155,17 @@ public class Configuration {
 		return Collections.unmodifiableSet(propositions);
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "TestConfiguration [nStates=" + nStates + ", transitionDensity="
-				+ transitionDensity + ", acceptingDensity=" + acceptingDensity
-				+ ", transparentDensity=" + transparentDensity
-				+ ", replacementDensity=" + replacementDensity + "]";
+		return "Configuration [testNumber=" + testNumber + ", claimNumber="
+				+ claimNumber + ", configurationId=" + configurationId
+				+ ", transitionDensity=" + transitionDensity
+				+ ", acceptingDensity=" + acceptingDensity + ", nStates="
+				+ nStates + ", transparentDensity=" + transparentDensity
+				+ ", replacementDensity=" + replacementDensity
+				+ ", propositions=" + propositions +"]";
 	}
 
 	/**

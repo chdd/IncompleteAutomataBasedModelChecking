@@ -53,8 +53,6 @@ public class ElementToReachabilityRelationTransformer implements
 			int destinationPortId = Integer
 					.parseInt(portElement
 							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_DESTINATION));
-			Boolean accepting=Boolean.parseBoolean(portElement
-							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING));
 			Boolean claimaccepting=Boolean.parseBoolean(portElement
 					.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING_CLAIM));
 	
@@ -76,7 +74,7 @@ public class ElementToReachabilityRelationTransformer implements
 			reachabilityRelation.addTransition(
 					this.mapIdPort.get(sourcePortId),
 					this.mapIdPort.get(destinationPortId),
-					accepting, modelaccepting, claimaccepting);
+					 modelaccepting, claimaccepting);
 		}
 
 		return reachabilityRelation;

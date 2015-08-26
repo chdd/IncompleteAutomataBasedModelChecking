@@ -71,7 +71,7 @@ public class Injector extends CHIAAction<IBA> {
 		}
 
 		for (PluggingTransition outgoingTransition : replacement
-				.getOutcomingTransition()) {
+				.getOutgoingTransitions()) {
 			if (!model.getSuccessors(transparentState).contains(
 					outgoingTransition.getDestination())) {
 				throw new IllegalArgumentException(
@@ -79,7 +79,7 @@ public class Injector extends CHIAAction<IBA> {
 			}
 		}
 
-		this.model = model;
+		this.model = model.clone();
 		this.replacement = replacement;
 	}
 
@@ -135,7 +135,7 @@ public class Injector extends CHIAAction<IBA> {
 		Preconditions.checkNotNull(newIBA, "The newIBA cannot be null");
 		// processing the out-coming transitions
 		for (PluggingTransition pluggingTransition : replacement
-				.getOutcomingTransition()) {
+				.getOutgoingTransitions()) {
 			newIBA.addTransition(pluggingTransition.getSource(),
 					pluggingTransition.getDestination(),
 					pluggingTransition.getTransition());

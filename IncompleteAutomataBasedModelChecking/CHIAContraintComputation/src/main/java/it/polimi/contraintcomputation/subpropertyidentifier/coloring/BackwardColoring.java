@@ -122,7 +122,16 @@ public class BackwardColoring {
 				if (this.subPropertyIntifier.getSubProperty().getAutomaton()
 						.getStates().contains(source)) {
 					if (!(this.subPropertyIntifier.getOutgoingPort(t).getColor() == Color.RED)) {
+						
+						
+						if(color.equals(Color.YELLOW) && !(this.subPropertyIntifier.getOutgoingPort(t).getColor() == Color.YELLOW)){
+							this.subPropertyIntifier.getSubProperty().incrementNumberYellowOutgoingTransitions();
+						}
+						if(color.equals(Color.RED) && !(this.subPropertyIntifier.getOutgoingPort(t).getColor() == Color.RED)){
+							this.subPropertyIntifier.getSubProperty().incrementNumberRedOutgoingTransitions();
+						}
 						this.subPropertyIntifier.getOutgoingPort(t).setColor(color);
+
 					}
 				} else {
 					if (!visitedStates.contains(source) && this.states.contains(source)) {

@@ -416,7 +416,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 * @throws IllegalArgumentException
 	 *             if the transition t is not associated with a port
 	 */
-	public ColoredPluggingTransition getIncomingPort(Transition t) {
+	public ColoredPluggingTransition getIncomingTransition(Transition t) {
 		Preconditions
 				.checkState(this.isPerformed(),
 						"You must compute the subproperties before performing this operation");

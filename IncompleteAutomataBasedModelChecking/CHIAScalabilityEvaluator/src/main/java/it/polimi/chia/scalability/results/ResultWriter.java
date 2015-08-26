@@ -64,10 +64,16 @@ public class ResultWriter {
 			this.fileWriter
 					.write("tRefv: refinementVerificationTime the time required to verify the refinement \n");
 			this.fileWriter
-					.write("tRepv: replacementVerificationTime the time required to verify the replacement \n \n");
+					.write("tRepv: replacementVerificationTime the time required to verify the replacement \n ");
+			
+			this.fileWriter
+			.write("modSize: size of the model \n ");
 
 			this.fileWriter
-					.write("id \t td \t ad \t ns \t tsd \t rd \t propositions \t ist \t fst \t ts\t sRefv \t sRepv \t tRefv \t tRepv \t repSize \t repInSize \t repOutSize \t subSize \t subGreenInSize \t subYellowInSize \t subInSize \t subRedOutSize \t sub YellowOutSize \t subOutSize \n");
+			.write("numTransparent: numero di transparent states of the model \n \n");
+
+			this.fileWriter
+					.write("id \t td \t ad \t ns \t tsd \t rd \t propositions \t ist \t fst \t ts\t sRefv \t sRepv \t tRefv \t tRepv \t repSize \t repInSize \t repOutSize \t subSize \t subGreenInSize \t subYellowInSize \t subInSize \t subRedOutSize \t sub YellowOutSize \t subOutSize \t modSize \t numTransparent \n");
 
 		} else {
 			this.fileWriter = new FileWriter(filePath,true);
@@ -123,6 +129,8 @@ public class ResultWriter {
 		stringRecord += record.getSubPropertyRedOutgoingTransitions() + "\t";
 		stringRecord += record.getSubPropertyYellowOutgingTransition()+ "\t";
 		stringRecord += record.getSubPropertyOutgoingTransitions()+ "\t";
+		stringRecord += record.getSizeModel()+ "\t";
+		stringRecord += record.getNumTransparentStatesModel()+ "\t";
 		
 		stringRecord += "\n";
 		this.fileWriter.write(stringRecord);

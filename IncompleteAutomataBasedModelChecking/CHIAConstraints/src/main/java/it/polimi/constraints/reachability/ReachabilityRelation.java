@@ -54,7 +54,7 @@ public class ReachabilityRelation {
 	 *             if one of the two transitions is null
 	 */
 	public void addTransition(ColoredPluggingTransition outgoingTransition,
-			ColoredPluggingTransition incomingTransition, Boolean accepting, Boolean modelAccepting, Boolean claimAccepting) {
+			ColoredPluggingTransition incomingTransition, Boolean modelAccepting, Boolean claimAccepting) {
 		Preconditions.checkNotNull(outgoingTransition,
 				"The outgoing transition cannot be null");
 		Preconditions.checkNotNull(incomingTransition,
@@ -62,7 +62,7 @@ public class ReachabilityRelation {
 		Preconditions.checkArgument(!outgoingTransition.isIncoming(), "The source of the reachability relation must be an outgoingTransition");
 		Preconditions.checkArgument(incomingTransition.isIncoming(), "The destination of the reachability relation must be an incomingTransition");
 		
-		ReachabilityEntry reachabilityEntry=new ReachabilityEntry(incomingTransition, outgoingTransition, accepting, modelAccepting, claimAccepting);
+		ReachabilityEntry reachabilityEntry=new ReachabilityEntry(incomingTransition, outgoingTransition,  modelAccepting, claimAccepting);
 		this.acceptingMap.put(outgoingTransition.getSource(), reachabilityEntry);
 	}
 

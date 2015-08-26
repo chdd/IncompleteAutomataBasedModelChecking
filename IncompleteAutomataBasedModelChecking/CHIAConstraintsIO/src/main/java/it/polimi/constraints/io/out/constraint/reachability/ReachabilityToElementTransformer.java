@@ -28,7 +28,6 @@ public class ReachabilityToElementTransformer extends XMLTrasformer<Reachability
 					.createElement(AutomataIOConstants.XML_ELEMENT_REACHABILITY_ELEMENT);
 			currentReachabilityElement.setAttribute(AutomataIOConstants.XML_ELEMENT_REACHABILITY_ELEMENT_SOURCE, Integer.toString(entry.getOutgoingTransition().getId()));
 			currentReachabilityElement.setAttribute(AutomataIOConstants.XML_ELEMENT_REACHABILITY_ELEMENT_DESTINATION, Integer.toString(entry.getIncomingTransition().getId()));
-			currentReachabilityElement.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING, Boolean.toString(entry.isAccepting()));
 			currentReachabilityElement.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING_CLAIM, Boolean.toString(entry.isClaimAccepting()));
 			currentReachabilityElement.setAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING_MODEL, Boolean.toString(entry.isModelAccepting()));
 			
