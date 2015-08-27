@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="3" name="t0">
+    <iba>
+        <propositions>
+            <proposition value="b"/>
+            <proposition value="a"/>
+        </propositions>
+        <states>
+            <state accepting="true" id="4" name="4"/>
+        </states>
+        <transitions>
+            <transition destination="4" id="5920" propositions="b" source="4"/>
+        </transitions>
+    </iba>
+    <inports>
+        <port id="105">
+            <sourcestate>
+                <state id="1" name="1"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="4" name="4"/>
+            </destinationstate>
+            <transition id="5921" propositions="a"/>
+        </port>
+        <port id="109">
+            <sourcestate>
+                <state id="2" name="2"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="4" name="4"/>
+            </destinationstate>
+            <transition id="5924" propositions="a"/>
+        </port>
+    </inports>
+    <outports>
+        <port id="107">
+            <sourcestate>
+                <state id="4" name="4"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="1" name="1"/>
+            </destinationstate>
+            <transition id="5922" propositions="a"/>
+        </port>
+        <port id="103">
+            <sourcestate>
+                <state id="4" name="4"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="1" name="1"/>
+            </destinationstate>
+            <transition id="5919" propositions="b"/>
+        </port>
+    </outports>
+</replacement>
