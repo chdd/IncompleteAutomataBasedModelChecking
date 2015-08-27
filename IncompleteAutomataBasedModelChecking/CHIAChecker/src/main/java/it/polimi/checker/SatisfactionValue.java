@@ -9,19 +9,19 @@ public enum SatisfactionValue {
 	SATISFIED {
 		@Override
 		public String toString() {
-			return "Y";
+			return "SATISFIED";
 		}
 	},
 	POSSIBLYSATISFIED {
 		@Override
 		public String toString() {
-			return "P";
+			return "POSSIBLY SATISFIED";
 		}
 	},
 	NOTSATISFIED {
 		@Override
 		public String toString() {
-			return "N";
+			return "NOT SATISFIED";
 		}
 	};
 }
