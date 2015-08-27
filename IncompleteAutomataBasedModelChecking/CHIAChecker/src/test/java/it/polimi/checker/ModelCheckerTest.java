@@ -344,7 +344,7 @@ public class ModelCheckerTest {
 	public void testCheck6() {
 		model1.addInitialState(model1State1);
 		model1.addAcceptState(model1State3);
-		model1.addTransparentState(model1State2);
+		model1.addBlackBoxState(model1State2);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
@@ -361,7 +361,7 @@ public class ModelCheckerTest {
 	public void testGetVerificationTimes() {
 		model1.addInitialState(model1State1);
 		model1.addAcceptState(model1State3);
-		model1.addTransparentState(model1State2);
+		model1.addBlackBoxState(model1State2);
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(

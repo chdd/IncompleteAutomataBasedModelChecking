@@ -59,9 +59,9 @@ public class ModelCheckingResults {
 	 */
 	private int numTransitionModel;
 	/**
-	 * contains the number of the transparent states of the model
+	 * contains the number of the black box states of the model
 	 */
-	private int numTransparentStatesModel;
+	private int numBlackBoxStatesModel;
 
 	// Intersection
 	/**
@@ -117,7 +117,7 @@ public class ModelCheckingResults {
 		this.setNumStatesModel(0);
 		this.setNumAcceptStatesModel(0);
 		this.setNumTransitionModel(0);
-		this.setNumTransparentStatesModel(0);
+		this.setNumBlackBoxStatesModel(0);
 		this.setNumStatesIntersection(0);
 		this.setNumAcceptingStatesIntersection(0);
 		this.setNumInitialStatesIntersection(0);
@@ -138,7 +138,7 @@ public class ModelCheckingResults {
 		this.setNumStatesModel(0);
 		this.setNumAcceptStatesModel(0);
 		this.setNumTransitionModel(0);
-		this.setNumTransparentStatesModel(0);
+		this.setNumBlackBoxStatesModel(0);
 		this.setNumStatesIntersection(0);
 		this.setNumAcceptingStatesIntersection(0);
 		this.setNumInitialStatesIntersection(0);
@@ -316,18 +316,18 @@ public class ModelCheckingResults {
 	}
 
 	/**
-	 * @return the numTransparentStatesModel
+	 * @return the numBlackBoxStatesModel
 	 */
-	public int getNumTransparentStatesModel() {
-		return numTransparentStatesModel;
+	public int getNumBlackBoxStatesModel() {
+		return numBlackBoxStatesModel;
 	}
 
 	/**
-	 * @param numTransparentStatesModel
-	 *            the numTransparentStatesModel to set
+	 * @param numBlackBoxStatesModel
+	 *            the numBlackBoxStatesModel to set
 	 */
-	public void setNumTransparentStatesModel(int numTransparentStatesModel) {
-		this.numTransparentStatesModel = numTransparentStatesModel;
+	public void setNumBlackBoxStatesModel(int numBlackBoxStatesModel) {
+		this.numBlackBoxStatesModel = numBlackBoxStatesModel;
 	}
 
 	/*
@@ -338,8 +338,8 @@ public class ModelCheckingResults {
 	public String toStringHeader() {
 		return "1)numStatesMode, 2)result, 3)intersectionTime, 4)emptyTime, 5)constraintComputationTime, 6)numStatesSpecification, "
 				+ "7)numAcceptStatesSpecification, "
-				+ "8)numTransitionSpecification, 9)numAcceptStatesModel, 10)numTransitionModel, 11)numTransparentStatesModel, "
-				+ "12)setNumStatesIntersection, 13)setNumAcceptingStatesIntersection, 14)setNumInitialStatesIntersection, 15)setNumMixedStatesIntersection, 16)TransparentStatesModel, 17)totalTime";
+				+ "8)numTransitionSpecification, 9)numAcceptStatesModel, 10)numTransitionModel, 11)numBlackBoxStatesModel, "
+				+ "12)setNumStatesIntersection, 13)setNumAcceptingStatesIntersection, 14)setNumInitialStatesIntersection, 15)setNumMixedStatesIntersection, 16)BlackBoxStatesModel, 17)totalTime";
 	}
 
 	/*
@@ -354,11 +354,11 @@ public class ModelCheckingResults {
 				+ ", " + numStatesSpecification + ", "
 				+ numAcceptStatesSpecification + ", "
 				+ numTransitionSpecification + ", " + numAcceptStatesModel
-				+ ", " + numTransitionModel + ", " + numTransparentStatesModel
+				+ ", " + numTransitionModel + ", " + numBlackBoxStatesModel
 				+ ", " + numStatesIntersection + ", "
 				+ numAcceptingStatesIntersection + ", "
 				+ numInitialStatesIntersection + ", "
-				+ numMixedStatesIntersection + ", " + numTransparentStatesModel
+				+ numMixedStatesIntersection + ", " + numBlackBoxStatesModel
 				+ ", " + this.getTotalVerificationTime();
 	}
 

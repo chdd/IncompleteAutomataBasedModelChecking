@@ -44,7 +44,7 @@ public class Abstractor<A extends BA> {
 		// clones the incomplete Buchi Automaton
 		@SuppressWarnings("unchecked")
 		A retIba = (A) ba.clone();
-		// removes the transparent states from the Buchi Automaton
+		// removes the black box states from the Buchi Automaton
 		for (State s : ba.getStates()) {
 			if (!states.contains(s)) {
 				retIba.removeState(s);

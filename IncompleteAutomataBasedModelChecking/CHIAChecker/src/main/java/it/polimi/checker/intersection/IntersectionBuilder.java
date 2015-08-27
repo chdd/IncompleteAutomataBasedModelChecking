@@ -56,8 +56,8 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 	 * contains a map that associate to each constraint transition the
 	 * corresponding model state
 	 */
-	private final Map<Transition, State> mapConstrainedTransitionModelTransparentState;
-	private final SetMultimap<State, Transition> mapTransparentStateConstrainedTransition;
+	private final Map<Transition, State> mapConstrainedTransitionModelBlackBoxState;
+	private final SetMultimap<State, Transition> mapBlackBoxStateConstrainedTransition;
 
 	/**
 	 * Keeps track of the created states. For each couple of state of the model
@@ -144,7 +144,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 		this.modelStateintersectionStateMap = HashMultimap.create();
 		this.intersectionStateClaimStateMap = new HashMap<State, State>();
 		this.claimStateintersectionStateMap = HashMultimap.create();
-		this.mapTransparentStateConstrainedTransition = HashMultimap.create();
+		this.mapBlackBoxStateConstrainedTransition = HashMultimap.create();
 		this.acceptingPolicy = acceptingPolicy;
 		this.acceptingPolicy.setClaim(claim);
 		this.acceptingPolicy.setModel(model);
@@ -159,7 +159,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 		this.intersection = new IntersectionBA();
 		this.model = model;
 		this.claim = claim;
-		this.mapConstrainedTransitionModelTransparentState = new HashMap<Transition, State>();
+		this.mapConstrainedTransitionModelBlackBoxState = new HashMap<Transition, State>();
 		this.visitedStates = new HashSet<Triple<State, State, Integer>>();
 		this.createdStates = new HashMap<State, Map<State, Map<Integer, State>>>();
 		this.intersectionStateFactory = intersectionStateFactory;
@@ -193,8 +193,8 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 			Multimaps
 					.invertFrom(
 							Multimaps
-									.forMap(this.mapConstrainedTransitionModelTransparentState),
-							this.mapTransparentStateConstrainedTransition);
+									.forMap(this.mapConstrainedTransitionModelBlackBoxState),
+							this.mapBlackBoxStateConstrainedTransition);
 
 			this.performed();
 		}
@@ -285,8 +285,8 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 				}
 			}
 
-			// if the current state of the extended automaton is transparent
-			if (model.isTransparent(modelState)) {
+			// if the current state of the extended automaton is black box state
+			if (model.isBlackBox(modelState)) {
 				// for each transition in the automaton a2
 				for (Transition claimTransition : claim
 						.getOutTransitions(claimState)) {
@@ -307,7 +307,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 							intersectionState, nextState,
 							intersectionTransition);
 
-					this.mapConstrainedTransitionModelTransparentState.put(
+					this.mapConstrainedTransitionModelBlackBoxState.put(
 							intersectionTransition, modelState);
 
 				}
@@ -319,9 +319,9 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 	/**
 	 * @return the mapModelStateIntersectionTransitions
 	 */
-	public Map<Transition, State> getIntersectionTransitionsTransparentStatesMap() {
+	public Map<Transition, State> getIntersectionTransitionsBlackBoxStatesMap() {
 		return Collections
-				.unmodifiableMap(mapConstrainedTransitionModelTransparentState);
+				.unmodifiableMap(mapConstrainedTransitionModelBlackBoxState);
 	}
 
 	private boolean checkVisitedStates(State modelState, State claimState,
@@ -390,7 +390,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 		if (number == 2) {
 			this.intersection.addAcceptState(intersectionState);
 		}
-		if (this.model.isTransparent(modelState)) {
+		if (this.model.isBlackBox(modelState)) {
 			this.intersection.addMixedState(intersectionState);
 		}
 	}
@@ -422,7 +422,7 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 		this.intersectionStateClaimStateMap.remove(intersectionState);
 		this.intersectionStateModelStateMap.remove(intersectionState);
-		this.mapTransparentStateConstrainedTransition
+		this.mapBlackBoxStateConstrainedTransition
 				.removeAll(intersectionState);
 
 		this.claimStateintersectionStateMap = HashMultimap.create();
@@ -437,25 +437,25 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 		for (Transition t : this.intersection
 				.getInTransitions(intersectionState)) {
-			if (this.mapConstrainedTransitionModelTransparentState
+			if (this.mapConstrainedTransitionModelBlackBoxState
 					.containsKey(t)) {
-				State transparentState = this.mapConstrainedTransitionModelTransparentState
+				State blackboxState = this.mapConstrainedTransitionModelBlackBoxState
 						.get(t);
-				this.mapTransparentStateConstrainedTransition.get(
-						transparentState).remove(t);
-				this.mapConstrainedTransitionModelTransparentState.remove(t);
+				this.mapBlackBoxStateConstrainedTransition.get(
+						blackboxState).remove(t);
+				this.mapConstrainedTransitionModelBlackBoxState.remove(t);
 			}
 		}
 
 		for (Transition t : this.intersection
 				.getOutTransitions(intersectionState)) {
-			if (this.mapConstrainedTransitionModelTransparentState
+			if (this.mapConstrainedTransitionModelBlackBoxState
 					.containsKey(t)) {
-				State transparentState = this.mapConstrainedTransitionModelTransparentState
+				State blackBoxState = this.mapConstrainedTransitionModelBlackBoxState
 						.get(t);
-				this.mapTransparentStateConstrainedTransition.get(
-						transparentState).remove(t);
-				this.mapConstrainedTransitionModelTransparentState.remove(t);
+				this.mapBlackBoxStateConstrainedTransition.get(
+						blackBoxState).remove(t);
+				this.mapConstrainedTransitionModelBlackBoxState.remove(t);
 			}
 		}
 		this.intersection.removeState(intersectionState);
@@ -663,33 +663,33 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 	/**
 	 * returns the set of constrained transitions associated with the
-	 * transparent state
+	 * black box state
 	 * 
-	 * @param transparentState
-	 *            is the transparent state of the model to be considered
-	 * @return the set of transition associated with the transparent state
+	 * @param blackBoxState
+	 *            is the black box state of the model to be considered
+	 * @return the set of transition associated with the black box state
 	 * @throws NullPointerException
-	 *             if the transparent state is null
+	 *             if the black box state is null
 	 * @throws IllegalArgumentException
-	 *             if the transparent state is not a transparent state of the
+	 *             if the black box state is not a black box state of the
 	 *             model
 	 */
-	public Set<Transition> getConstrainedTransitions(State transparentState) {
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state to be considered cannot be null");
+	public Set<Transition> getConstrainedTransitions(State blackBoxState) {
+		Preconditions.checkNotNull(blackBoxState,
+				"The black box state to be considered cannot be null");
 		Preconditions.checkArgument(
-				this.model.getTransparentStates().contains(transparentState),
-				"The state " + transparentState + " is not transparent");
+				this.model.getBlackBoxStates().contains(blackBoxState),
+				"The state " + blackBoxState + " is not black box");
 		Preconditions
 				.checkState(
 						this.intersection.getTransitions().containsAll(
-								this.mapTransparentStateConstrainedTransition
-										.get(transparentState)),
-						"Internal error there are transitions associated to the transparent state "
-								+ transparentState
+								this.mapBlackBoxStateConstrainedTransition
+										.get(blackBoxState)),
+						"Internal error there are transitions associated to the black box state "
+								+ blackBoxState
 								+ " which do not belongs to the intersection automaton");
-		return this.mapTransparentStateConstrainedTransition
-				.get(transparentState);
+		return this.mapBlackBoxStateConstrainedTransition
+				.get(blackBoxState);
 	}
 
 	public AcceptingPolicy getAcceptingPolicy() {

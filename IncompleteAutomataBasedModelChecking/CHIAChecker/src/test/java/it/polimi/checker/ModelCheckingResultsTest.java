@@ -260,25 +260,25 @@ public class ModelCheckingResultsTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumTransparentStatesModel()}
+	 * {@link it.polimi.checker.ModelCheckingResults#getNumBlackBoxStatesModel()}
 	 * .
 	 */
 	@Test
-	public void testGetNumTransparentStatesModel() {
+	public void testGetNumBlackBoxStatesModel() {
 		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
-		assertTrue(results.getNumTransparentStatesModel() == 0);
+		assertTrue(results.getNumBlackBoxStatesModel() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumTransparentStatesModel(int)}
+	 * {@link it.polimi.checker.ModelCheckingResults#setNumBlackBoxStatesModel(int)}
 	 * .
 	 */
 	@Test
-	public void testSetNumTransparentStatesModel() {
+	public void testSetNumBlackBoxStatesModel() {
 		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
-		results.setNumTransparentStatesModel(2);
-		assertTrue(results.getNumTransparentStatesModel() == 2);
+		results.setNumBlackBoxStatesModel(2);
+		assertTrue(results.getNumBlackBoxStatesModel() == 2);
 	}
 
 	/**

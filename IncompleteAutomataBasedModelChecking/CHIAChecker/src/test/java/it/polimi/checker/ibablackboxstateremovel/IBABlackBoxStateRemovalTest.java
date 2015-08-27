@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.checker.ibatransparentstateremoval;
+package it.polimi.checker.ibablackboxstateremovel;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,7 @@ import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
+import it.polimi.checker.ibablackboxstateremove.IBABlackBoxRemover;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import org.junit.Test;
  * @author claudiomenghi
  *
  */
-public class IBATransparentStateRemovalTest {
+public class IBABlackBoxStateRemovalTest {
 
 	private IBA ba;
 	private State state1;
@@ -53,21 +54,21 @@ public class IBATransparentStateRemovalTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#removeTransparentStates(null)}.
+	 * Test method for {@link it.polimi.checker.ibablackboxstateremove.IBABlackBoxRemover#removeBlackBoxes(null)}.
 	 */
 	@Test(expected = NullPointerException.class)
-	public void testTransparentStateRemovalNull() {
-		new IBATransparentStateRemoval().removeTransparentStates(null);
+	public void testBlackBoxRemovalNull() {
+		new IBABlackBoxRemover(null).removeBlackBoxes();
 	}
 
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#removeTransparentStates(it.polimi.automata.IBA)}.
+	 * Test method for {@link it.polimi.checker.ibablackboxstateremove.IBABlackBoxRemover#removeBlackBoxes(it.polimi.automata.IBA)}.
 	 */
 	@Test
-	public void testTransparentStateRemoval() {
+	public void testBlackBoxStateRemoval() {
 
-		IBA ret=new IBATransparentStateRemoval().removeTransparentStates(this.ba);
+		IBA ret=new IBABlackBoxRemover(this.ba).removeBlackBoxes();
 		assertTrue(ret.getStates().contains(state1));
 		assertTrue(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));
@@ -75,13 +76,13 @@ public class IBATransparentStateRemovalTest {
 	}
 	
 	/**
-	 * Test method for {@link it.polimi.checker.ibatransparentstateremoval.IBATransparentStateRemoval#removeTransparentStates(it.polimi.automata.IBA)}.
+	 * Test method for {@link it.polimi.checker.ibablackboxstateremove.IBABlackBoxRemover#removeBlackBoxes(it.polimi.automata.IBA)}.
 	 */
 	@Test
-	public void testTransparentStateRemoval2() {
+	public void testBlackBoxStateRemoval2() {
 
-		this.ba.addTransparentState(state2);
-		IBA ret=new IBATransparentStateRemoval().removeTransparentStates(this.ba);
+		this.ba.addBlackBoxState(state2);
+		IBA ret=new IBABlackBoxRemover(this.ba).removeBlackBoxes();
 		assertTrue(ret.getStates().contains(state1));
 		assertFalse(ret.getStates().contains(state2));
 		assertTrue(ret.getStates().contains(state3));

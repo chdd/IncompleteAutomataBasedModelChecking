@@ -1,8 +1,8 @@
 package it.polimi.checker.intersection;
 
-import it.polimi.automata.AutomataConstants;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.PropositionalLogicConstants;
 import it.polimi.automata.transition.Transition;
 
 import java.util.Set;
@@ -75,7 +75,7 @@ public class IntersectionTransitionBuilder {
 				.checkNotNull(claimLabel, "The claim label cannot be null");
 
 		IGraphProposition stuttering = new GraphProposition(
-				AutomataConstants.STUTTERING_CHARACTER, false);
+				PropositionalLogicConstants.STUTTERING_CHARACTER, false);
 		if (modelLabel.contains(stuttering)) {
 			return claimLabel.contains(stuttering);
 		}

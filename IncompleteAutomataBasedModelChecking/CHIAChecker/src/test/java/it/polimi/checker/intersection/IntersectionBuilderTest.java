@@ -406,7 +406,7 @@ public class IntersectionBuilderTest {
 	public void testComputeIntersection7() {
 
 		this.model2.addInitialState(model2State1);
-		this.model2.addTransparentState(model2State2);
+		this.model2.addBlackBoxState(model2State2);
 		this.model2.addAcceptState(model2State3);
 		this.claim1.addInitialState(claim1State1);
 		this.claim1.addAcceptState(claim1State3);
