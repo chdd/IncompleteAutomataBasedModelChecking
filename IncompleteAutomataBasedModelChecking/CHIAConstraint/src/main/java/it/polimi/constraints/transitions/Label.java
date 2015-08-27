@@ -10,23 +10,23 @@ package it.polimi.constraints.transitions;
  * @author claudiomenghi
  *
  */
-public enum Color {
+public enum Label {
 	/**
 	 * indicates a port from which the accepting state can be reached
 	 */
-	RED,
+	R,
 	/**
 	 * indicates a port that can be reached from an initial state
 	 */
-	GREEN,
+	G,
 	/**
 	 * indicates a port from which an initial/final state can be reached by
 	 * passing some transparent state
 	 */
-	YELLOW,
+	Y,
 	/**
 	 * indicates a port from which an initial/final state can be reached by
 	 * passing some transparent state
 	 */
-	BLACK,
+	B,
 }

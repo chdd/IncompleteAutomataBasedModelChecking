@@ -1,7 +1,7 @@
 package it.polimi.constraints.reachability;
 
 import it.polimi.automata.state.State;
-import it.polimi.constraints.transitions.ColoredPluggingTransition;
+import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
 import java.util.Collection;
 
@@ -19,15 +19,13 @@ import com.google.common.collect.Multimap;
  */
 public class ReachabilityRelation {
 
-	@Override
-	public String toString() {
-		return "ReachabilityRelation [acceptingMap=" + acceptingMap + "]";
-	}
+	
+	
+	
 	/**
 	 * is the map that specifies for each incoming transition the corresponding
 	 * outgoing transition
 	 */
-
 	private final Multimap<State, ReachabilityEntry> acceptingMap;
 	
 	
@@ -53,8 +51,8 @@ public class ReachabilityRelation {
 	 * @throws NullPointerException
 	 *             if one of the two transitions is null
 	 */
-	public void addTransition(ColoredPluggingTransition outgoingTransition,
-			ColoredPluggingTransition incomingTransition, Boolean modelAccepting, Boolean claimAccepting) {
+	public void addTransition(LabeledPluggingTransition outgoingTransition,
+			LabeledPluggingTransition incomingTransition, Boolean modelAccepting, Boolean claimAccepting) {
 		Preconditions.checkNotNull(outgoingTransition,
 				"The outgoing transition cannot be null");
 		Preconditions.checkNotNull(incomingTransition,
@@ -72,5 +70,10 @@ public class ReachabilityRelation {
 	}
 	public Collection<ReachabilityEntry> get(State subPropertyState){
 		return this.acceptingMap.get(subPropertyState);
+	}
+	
+	@Override
+	public String toString() {
+		return "ReachabilityRelation [acceptingMap=" + acceptingMap + "]";
 	}
 }

@@ -2,7 +2,7 @@ package it.polimi.constraints.reachability;
 
 import com.google.common.base.Preconditions;
 
-import it.polimi.constraints.transitions.ColoredPluggingTransition;
+import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
 /**
  * Contains a reachability entry. The reachability entry specifies the
@@ -18,13 +18,13 @@ public class ReachabilityEntry {
 	/**
 	 * is the outgoing transition
 	 */
-	private final ColoredPluggingTransition outgoingTransition;
+	private final LabeledPluggingTransition outgoingTransition;
 
 	/**
 	 * is the incoming transition reachable from the outgoing transition of the
 	 * sub-property
 	 */
-	private final ColoredPluggingTransition incomingTransition;
+	private final LabeledPluggingTransition incomingTransition;
 
 	/**
 	 * is true if there is an accepting state for the model in one of the runs
@@ -55,8 +55,8 @@ public class ReachabilityEntry {
 	 * @throws NullPointerException
 	 *             if the incoming or the outgoing transition is null
 	 */
-	public ReachabilityEntry(ColoredPluggingTransition incomingTransition,
-			ColoredPluggingTransition outgoingTransition,
+	public ReachabilityEntry(LabeledPluggingTransition incomingTransition,
+			LabeledPluggingTransition outgoingTransition,
 			boolean modelAccepting, boolean claimAccepting) {
 		Preconditions.checkNotNull(incomingTransition,
 				"The incoming transition cannot be null");
@@ -72,14 +72,14 @@ public class ReachabilityEntry {
 	/**
 	 * @return the incomingTransition of the reachability entry
 	 */
-	public ColoredPluggingTransition getIncomingTransition() {
+	public LabeledPluggingTransition getIncomingTransition() {
 		return incomingTransition;
 	}
 
 	/**
 	 * @return the outgoingTransition of the reachability entry
 	 */
-	public ColoredPluggingTransition getOutgoingTransition() {
+	public LabeledPluggingTransition getOutgoingTransition() {
 		return outgoingTransition;
 	}
 	

@@ -9,7 +9,7 @@ import it.polimi.automata.transition.Transition;
 
 import org.junit.Test;
 
-public class ColoredPluggingTransitionTest {
+public class LabeledPluggingTransitionTest {
 
 	@Test
 	public void testEquals() {

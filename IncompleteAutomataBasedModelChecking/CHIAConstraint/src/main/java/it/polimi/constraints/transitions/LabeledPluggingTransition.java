@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ColoredPluggingTransition extends PluggingTransition {
+public class LabeledPluggingTransition extends PluggingTransition {
 
 	/**
 	 * Is the counter which is used to associate to each new port a new Id
@@ -35,10 +35,10 @@ public class ColoredPluggingTransition extends PluggingTransition {
 	 * port is possible to reach an accepting state or is reached from an
 	 * initial state.
 	 */
-	private Color color;
+	private Label color;
 
-	public ColoredPluggingTransition(int id, State source, State destination, Transition transition,
-			boolean incoming, Color color) {
+	public LabeledPluggingTransition(int id, State source, State destination, Transition transition,
+			boolean incoming, Label color) {
 		super(id, source, destination, transition, incoming);
 		Preconditions.checkNotNull(color,
 				"The color of the transitionc cannot be null");
@@ -63,10 +63,10 @@ public class ColoredPluggingTransition extends PluggingTransition {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public ColoredPluggingTransition(State source, State destination, Transition transition,
-			boolean incoming, Color color) {
-		this(ColoredPluggingTransition.ID_COUNTER, source, destination, transition, incoming, color);
-		ColoredPluggingTransition.ID_COUNTER = ColoredPluggingTransition.ID_COUNTER + 1;
+	public LabeledPluggingTransition(State source, State destination, Transition transition,
+			boolean incoming, Label color) {
+		this(LabeledPluggingTransition.ID_COUNTER, source, destination, transition, incoming, color);
+		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
 		
 	}
 	
@@ -77,27 +77,7 @@ public class ColoredPluggingTransition extends PluggingTransition {
 				+ ", color=" + color + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((color == null) ? 0 : color.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ColoredPluggingTransition other = (ColoredPluggingTransition) obj;
-		if (color != other.color)
-			return false;
-		return true;
-	}
+	
 
 
 
@@ -106,7 +86,7 @@ public class ColoredPluggingTransition extends PluggingTransition {
 	 * 
 	 * @return the color of the port
 	 */
-	public Color getColor() {
+	public Label getColor() {
 		return color;
 	}
 
@@ -118,7 +98,7 @@ public class ColoredPluggingTransition extends PluggingTransition {
 	 * @throws NullPointerException
 	 *             if the color is null
 	 */
-	public void setColor(Color color) {
+	public void setColor(Label color) {
 		Preconditions.checkNotNull(color,
 				"The color of the port cannot be null");
 		this.color = color;

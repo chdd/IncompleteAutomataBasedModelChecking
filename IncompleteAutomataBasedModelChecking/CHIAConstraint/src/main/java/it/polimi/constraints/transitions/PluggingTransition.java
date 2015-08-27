@@ -42,7 +42,7 @@ public class PluggingTransition extends State {
 	protected PluggingTransition(int id, State source, State destination, Transition transition,
 			boolean incoming) {
 		super(id);
-		ColoredPluggingTransition.ID_COUNTER = ColoredPluggingTransition.ID_COUNTER + 1;
+		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
 		Preconditions.checkNotNull(source,
 				"The source of the port cannot be null");
 		Preconditions.checkNotNull(destination,
@@ -77,8 +77,8 @@ public class PluggingTransition extends State {
 	 */
 	public PluggingTransition(State source, State destination, Transition transition,
 			boolean incoming) {
-		this(ColoredPluggingTransition.ID_COUNTER, source, destination, transition, incoming);
-		ColoredPluggingTransition.ID_COUNTER = ColoredPluggingTransition.ID_COUNTER + 1;
+		this(LabeledPluggingTransition.ID_COUNTER, source, destination, transition, incoming);
+		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
 
 	}
 
