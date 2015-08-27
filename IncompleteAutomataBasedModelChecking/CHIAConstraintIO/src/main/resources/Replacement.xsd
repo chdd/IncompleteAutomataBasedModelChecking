@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<!-- defining the replacement of a transparent state of an Incomplete Buchi 
+	<!-- defining the replacement of a black boc state of an Incomplete Buchi 
 		Automaton -->
 	<xs:element name="replacement">
 		<xs:complexType>
@@ -29,7 +29,7 @@
 												<xs:attribute name="id" type="xs:integer" use="required" />
 												<xs:attribute name="name" type="xs:string" />
 												<xs:attribute name="initial" type="xs:boolean" />
-												<xs:attribute name="transparent" type="xs:boolean" />
+												<xs:attribute name="blackbox" type="xs:boolean" />
 												<xs:attribute name="accepting" type="xs:boolean" />
 											</xs:complexType>
 										</xs:element>

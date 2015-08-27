@@ -62,12 +62,17 @@ public class ElementToLabeledPlugTransitionTransformer {
 		Element transitionElement=(Element) e.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PORT_TRANSITION).item(0);
 		Transition transition=this.loadTransition(transitionElement);
 		
-		Label color = Label.valueOf(e
-				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR));
-
+		try{
+			Label label = Label.valueOf(e
+				.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL));
+			return new LabeledPluggingTransition(portId, sourceState, destinationState, transition, incoming,
+					label);
+		}
+		catch(IllegalArgumentException exception){
+			throw new IllegalArgumentException("The value "+ConstraintsIOConstants.XML_ATTRIBUTE_LABEL+" is not a valid label for the incoming/outgoing transition "+e.toString(), exception);
+		}
 		
-		return new LabeledPluggingTransition(portId, sourceState, destinationState, transition, incoming,
-				color);
+		
 		
 	}
 	

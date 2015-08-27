@@ -4,6 +4,7 @@ import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.automata.io.out.IBAToElementTrasformer;
 import it.polimi.constraints.components.Replacement;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 import it.polimi.constraints.transitions.PluggingTransition;
 
 import java.util.Set;
@@ -36,20 +37,20 @@ public class ReplacementToElementTransformer extends XMLTrasformer<Replacement, 
 		
 		// root elements
 		Element constraintElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_REPLACEMENT);
+				.createElement(ConstraintsIOConstants.XML_ELEMENT_REPLACEMENT);
 
 		// adding the id
-		Attr modelTransparentStateIDd = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID);
-		modelTransparentStateIDd.setValue(Integer.toString(input
+		Attr modelBlackBoxStateIDd = doc
+				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID);
+		modelBlackBoxStateIDd.setValue(Integer.toString(input
 				.getModelState().getId()));
-		constraintElement.setAttributeNode(modelTransparentStateIDd);
+		constraintElement.setAttributeNode(modelBlackBoxStateIDd);
 
 		// adding the name of the state
-		Attr modelTransparentStateName = doc
+		Attr modelBlackBoxStateName = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
-		modelTransparentStateName.setValue(input.getModelState().getName());
-		constraintElement.setAttributeNode(modelTransparentStateName);
+		modelBlackBoxStateName.setValue(input.getModelState().getName());
+		constraintElement.setAttributeNode(modelBlackBoxStateName);
 
 		Element baElement = new IBAToElementTrasformer(doc).transform(input
 				.getAutomaton());

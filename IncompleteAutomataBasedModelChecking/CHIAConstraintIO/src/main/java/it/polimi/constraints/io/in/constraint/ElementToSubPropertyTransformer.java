@@ -7,6 +7,7 @@ import it.polimi.automata.io.in.ElementToBATransformer;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.constraints.components.SubProperty;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -27,10 +28,10 @@ public class ElementToSubPropertyTransformer implements
 				"The subproperty to be converted cannot be null");
 		int componentId = Integer
 				.parseInt(input
-						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID));
+						.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID));
 
 		boolean indispensable = Boolean.parseBoolean(input
-				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE));
+				.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE));
 
 		String stateName = input
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);

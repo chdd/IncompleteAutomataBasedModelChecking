@@ -127,7 +127,7 @@ public class ConstraintReader extends XMLReader<Constraint>{
 
 		// contains the list of sub-properties
 		NodeList xmlSubproperties = doc
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
+				.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_SUBPROPERTY);
 
 		logger.debug(xmlSubproperties.getLength()
 				+ " subproperties present in the file " + file.getName());
@@ -149,7 +149,7 @@ public class ConstraintReader extends XMLReader<Constraint>{
 					.getElementsByTagName(
 							AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT).item(0);
 			NodeList xmlOutComingPortsList = xmlOutComingPorts
-					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
+					.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 				Element xmlOutComingPort = (Element) xmlOutComingPortsList
 						.item(portId);
@@ -164,7 +164,7 @@ public class ConstraintReader extends XMLReader<Constraint>{
 					.getElementsByTagName(
 							AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN).item(0);
 			NodeList xmlInComingPortsList = xmlInComingPorts
-					.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
+					.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 				Element xmlInComingPort = (Element) xmlInComingPortsList
 						.item(portId);

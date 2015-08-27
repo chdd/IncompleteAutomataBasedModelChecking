@@ -4,6 +4,7 @@ import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.automata.io.out.BAToElementTrasformer;
 import it.polimi.constraints.components.SubProperty;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 import it.polimi.constraints.io.out.constraint.reachability.ReachabilityRelationToElementTransformer;
 import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
@@ -42,24 +43,24 @@ public class SubPropertyToElementTrasformer extends XMLTrasformer<SubProperty, E
 		Document doc=this.getDocument();
 		// root elements
 		Element constraintElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_SUBPROPERTY);
+				.createElement(ConstraintsIOConstants.XML_ELEMENT_SUBPROPERTY);
 
 		// adding the id
-		Attr modelTransparentStateIDd = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID);
-		modelTransparentStateIDd.setValue(Integer.toString(input
+		Attr modelBlackBoxStateIDd = doc
+				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID);
+		modelBlackBoxStateIDd.setValue(Integer.toString(input
 				.getModelState().getId()));
-		constraintElement.setAttributeNode(modelTransparentStateIDd);
+		constraintElement.setAttributeNode(modelBlackBoxStateIDd);
 
 		Attr indispensable = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE);
+				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE);
 		indispensable.setValue(Boolean.toString(input.isIndispensable()));
 		constraintElement.setAttributeNode(indispensable);
 		// adding the name of the state
-		Attr modelTransparentStateName = doc
+		Attr modelBlackBoxStateName = doc
 				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
-		modelTransparentStateName.setValue(input.getModelState().getName());
-		constraintElement.setAttributeNode(modelTransparentStateName);
+		modelBlackBoxStateName.setValue(input.getModelState().getName());
+		constraintElement.setAttributeNode(modelBlackBoxStateName);
 
 		Element baElement = new BAToElementTrasformer(doc).transform(input
 				.getAutomaton());

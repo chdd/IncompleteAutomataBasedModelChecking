@@ -2,6 +2,7 @@ package it.polimi.constraints.io.in.constraint;
 
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 import it.polimi.constraints.reachability.ReachabilityRelation;
 import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
@@ -54,10 +55,10 @@ public class ElementToReachabilityRelationTransformer implements
 					.parseInt(portElement
 							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_PORT_DESTINATION));
 			Boolean claimaccepting=Boolean.parseBoolean(portElement
-					.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING_CLAIM));
+					.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_ACCEPTING_CLAIM));
 	
 			Boolean modelaccepting=Boolean.parseBoolean(portElement
-					.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_ACCEPTING_MODEL));
+					.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_ACCEPTING_MODEL));
 	
 			if (!this.mapIdPort.containsKey(sourcePortId)) {
 				throw new IllegalArgumentException(

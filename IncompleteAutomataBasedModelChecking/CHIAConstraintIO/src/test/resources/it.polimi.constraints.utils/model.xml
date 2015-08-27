@@ -5,7 +5,7 @@
         <proposition value="a"/>
     </propositions>
     <states>
-        <state id="1127" initial="true" name="t0" transparent="true"/>
+        <state id="1127" initial="true" name="t0" blackbox="true"/>
         <state accepting="true" id="1122" name="1122"/>
         <state id="1120" name="1120"/>
         <state accepting="true" id="1121" name="1121"/>

@@ -40,20 +40,20 @@ public class LabeledPluggingTransitionToElementTransformer extends XMLTrasformer
 		Preconditions.checkNotNull(port, "The port element cannot be null");
 		Document doc=this.getDocument();
 		Element portElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
+				.createElement(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 
 		Attr portId = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
 		portId.setValue(Integer.toString(port.getId()));
 		portElement.setAttributeNode(portId);
 
 		Attr portColor = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
+				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL);
 		portColor.setValue(port.getColor().toString());
 		portElement.setAttributeNode(portColor);
 
 		// transition source
 		Attr nextPortColor = doc
-				.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_COLOR);
+				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL);
 		nextPortColor.setValue(port.getColor().toString());
 		portElement.setAttributeNode(nextPortColor);
 

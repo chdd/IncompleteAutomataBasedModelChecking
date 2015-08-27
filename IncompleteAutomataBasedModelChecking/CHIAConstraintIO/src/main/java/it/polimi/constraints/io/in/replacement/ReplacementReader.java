@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Preconditions;
 
 /**
- * The ReplacementReader loads the replacement of a transparent state of the
+ * The ReplacementReader loads the replacement of a black box state of the
  * model from the specified XML file. The XML files must be conform with respect
  * to the XSD file Replacement.xsd. The ReplacementReader uses the
  * ElementToReplacement transformers which converts an XML element into the

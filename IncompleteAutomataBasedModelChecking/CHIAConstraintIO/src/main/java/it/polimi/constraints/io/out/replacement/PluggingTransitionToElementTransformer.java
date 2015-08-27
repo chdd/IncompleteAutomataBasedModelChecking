@@ -34,7 +34,7 @@ public class PluggingTransitionToElementTransformer implements Transformer<Plugg
 	public Element transform(PluggingTransition port) {
 		Preconditions.checkNotNull(port, "The port element cannot be null");
 		Element portElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_PLUG_TRANSITION);
+				.createElement(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 
 		Attr portId = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
 		portId.setValue(Integer.toString(port.getId()));
