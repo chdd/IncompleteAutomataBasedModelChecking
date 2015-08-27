@@ -45,7 +45,7 @@ public class Injector extends CHIAAction<IBA> {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 * @throws IllegalArgumentException
-	 *             if the replacement is not associated with a transparent state
+	 *             if the replacement is not associated with a black box state
 	 *             of the model
 	 */
 	public Injector(IBA model, Replacement replacement) {
@@ -58,24 +58,24 @@ public class Injector extends CHIAAction<IBA> {
 				.checkArgument(
 						model.getBlackBoxStates().contains(
 								replacement.getModelState()),
-						"The replacement must be associated with a transparent state of the model");
-		State transparentState = replacement.getModelState();
+						"The replacement must be associated with a black box state of the model");
+		State blackBoxState = replacement.getModelState();
 
 		for (PluggingTransition incomingTransition : replacement
 				.getIncomingTransitions()) {
-			if (!model.getPredecessors(transparentState).contains(
+			if (!model.getPredecessors(blackBoxState).contains(
 					incomingTransition.getSource())) {
 				throw new IllegalArgumentException(
-						"The source of an incoming transition to be injected was not connected to the transparent state");
+						"The source of an incoming transition to be injected was not connected to the black box state");
 			}
 		}
 
 		for (PluggingTransition outgoingTransition : replacement
 				.getOutgoingTransitions()) {
-			if (!model.getSuccessors(transparentState).contains(
+			if (!model.getSuccessors(blackBoxState).contains(
 					outgoingTransition.getDestination())) {
 				throw new IllegalArgumentException(
-						"the destination of an out-coming transition was not connected to the transparent state");
+						"the destination of an out-coming transition was not connected to the black box state");
 			}
 		}
 

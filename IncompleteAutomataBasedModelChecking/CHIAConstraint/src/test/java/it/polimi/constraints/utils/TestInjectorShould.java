@@ -60,12 +60,12 @@ public class TestInjectorShould {
 	}
 
 	@Test
-	public void notRemoveTransparentStatesFromTheIBA() throws Exception {
+	public void notRemoveBlackBoxStatesFromTheIBA() throws Exception {
 
-		Set<State> transparentStates = new HashSet<State>(
+		Set<State> blackBoxStates = new HashSet<State>(
 				model.getBlackBoxStates());
-		transparentStates.remove(replacement.getModelState());
-		assertTrue(result.getBlackBoxStates().containsAll(transparentStates));
+		blackBoxStates.remove(replacement.getModelState());
+		assertTrue(result.getBlackBoxStates().containsAll(blackBoxStates));
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class TestInjectorShould {
 				replacement.getAutomaton().getStates()));
 	}
 	@Test
-	public void insertTheTransparentReplacementStatesIntoTheIBA() throws Exception {
+	public void insertTheBlackBoxReplacementStatesIntoTheIBA() throws Exception {
 		assertTrue(result.getBlackBoxStates().containsAll(
 				replacement.getAutomaton().getBlackBoxStates()));
 	}

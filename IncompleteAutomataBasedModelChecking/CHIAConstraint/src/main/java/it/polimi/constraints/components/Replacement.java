@@ -22,7 +22,7 @@ import com.google.common.collect.Multimap;
 
 /**
  * The Replacement class extends the Component class and specifies the IBA which
- * represent the model that describes the replacement of the transparent state.
+ * represent the model that describes the replacement of the black box state.
  * 
  * @author claudiomenghi
  *

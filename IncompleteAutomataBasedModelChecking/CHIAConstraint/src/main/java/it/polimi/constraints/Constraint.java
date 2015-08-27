@@ -14,7 +14,7 @@ import com.google.common.collect.HashBiMap;
 /**
  * The Constraint class describes the constraint associated with the
  * satisfaction of a claim on a model. The constraint contains the set of
- * sub-properties associated with the transparent states of the model, a map
+ * sub-properties associated with the black box states of the model, a map
  * that contains for each sub-property how they are connected with the original
  * model (i.e., the in-coming and out-coming) transitions of the sub-property,
  * the color of this ports and a graph that describes how the sub-property are
@@ -27,12 +27,12 @@ public class Constraint {
 
 	/**
 	 * is the set sub-property to be considered in the refinement of the
-	 * transparent state
+	 * black box state
 	 */
 	private final Set<SubProperty> subProperties;
 
 	/**
-	 * is a map that specifies for each transparent state the corresponding
+	 * is a map that specifies for each black box state the corresponding
 	 * sub-property and viceversa
 	 */
 	private final BiMap<State, SubProperty> stateSubPropertyMap;
@@ -92,7 +92,7 @@ public class Constraint {
 				"The sub-Property to be considered cannot be null");
 		Preconditions.checkArgument(!this.stateSubPropertyMap
 				.containsKey(subProperty.getModelState()),
-				"A sub-property is already associated with the transparent state"
+				"A sub-property is already associated with the black box state"
 						+ subProperty.getModelState());
 		this.subProperties.add(subProperty);
 		this.stateSubPropertyMap.put(subProperty.getModelState(), subProperty);

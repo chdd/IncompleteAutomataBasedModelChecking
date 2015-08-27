@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * The Port class is used to describe how the IBA/BA that refers to the
- * sub-property/replacement to the a transparent state of the model is connected
+ * sub-property/replacement to the a black box state of the model is connected
  * with the states of the original model. The port class stores in the source,
  * destination and transition attributes, the source and the destinations state
  * of the port, and the corresponding transition. Depending on whether the port
