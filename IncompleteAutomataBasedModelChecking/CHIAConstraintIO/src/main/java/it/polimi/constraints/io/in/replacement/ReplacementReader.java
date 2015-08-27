@@ -83,8 +83,7 @@ public class ReplacementReader extends XMLReader<Replacement>{
 					.getResource(ConstraintsIOConstants.REPLACEMENT_XSD_PATH)==null){
 				throw new InternalError("It was not possible to load the BA.xsd from "+ConstraintsIOConstants.REPLACEMENT_XSD_PATH);
 			}
-			File xsd = new File(this.getClass().getClassLoader().getResource(ConstraintsIOConstants.REPLACEMENT_XSD_PATH).getFile());
-			this.validateAgainstXSD(new FileInputStream(this.file), new FileInputStream(xsd));
+			this.validateAgainstXSD(new FileInputStream(this.file),ClassLoader.getSystemResourceAsStream(ConstraintsIOConstants.REPLACEMENT_XSD_PATH));
 			// parse using the builder to get the DOM mapping of the
 			// XML file
 			dom = db.parse(file);
