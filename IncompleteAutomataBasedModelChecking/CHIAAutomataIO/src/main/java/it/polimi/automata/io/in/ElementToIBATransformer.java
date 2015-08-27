@@ -61,7 +61,7 @@ public class ElementToIBATransformer implements Transformer<Element, IBA>  {
 			Node xmlstate = xmlstates.item(stateid);
 			Element eElement = (Element) xmlstate;
 
-			Set<IGraphProposition> proposition= propositionParser.transform(eElement.getAttribute(AutomataIOConstants.XML_ELEMENT_PROPOSITION_VALUE));
+			Set<IGraphProposition> proposition= propositionParser.transform(eElement.getAttribute(AutomataIOConstants.XML_ELEMENT_PROPOSITION_NAME));
 			ba.addPropositions(proposition);
 
 		}

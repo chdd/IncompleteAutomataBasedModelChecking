@@ -13,7 +13,7 @@
 							<xs:element name="proposition" minOccurs="0"
 								maxOccurs="unbounded">
 								<xs:complexType>
-									<xs:attribute name="value" type="xs:string" use="required" />
+									<xs:attribute name="name" type="xs:string" use="required" />
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
@@ -28,7 +28,7 @@
 									<xs:attribute name="id" type="xs:integer" use="required" />
 									<xs:attribute name="name" type="xs:string" />
 									<xs:attribute name="initial" type="xs:boolean" />
-									<xs:attribute name="transparent" type="xs:boolean" />
+									<xs:attribute name="blackbox" type="xs:boolean" />
 									<xs:attribute name="accepting" type="xs:boolean" />
 								</xs:complexType>
 							</xs:element>

@@ -26,7 +26,7 @@ public class PropositionToElementTrasformer implements Transformer<IGraphProposi
 		Element propositionXMLElement = doc
 				.createElement(AutomataIOConstants.XML_ELEMENT_PROPOSITION);
 
-		propositionXMLElement.setAttribute(AutomataIOConstants.XML_ELEMENT_PROPOSITION_VALUE, input.getFullLabel());
+		propositionXMLElement.setAttribute(AutomataIOConstants.XML_ELEMENT_PROPOSITION_NAME, input.getFullLabel());
 		return propositionXMLElement;
 	}
 }

@@ -80,14 +80,11 @@ public class ModelReader extends XMLReader<IBA> {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		
-		if(this.getClass().getClassLoader()
-				.getResource(IBA_XSD_PATH)==null){
+		if(ClassLoader.getSystemResourceAsStream(IBA_XSD_PATH)==null){
 			throw new InternalError("It was not possible to load the IBA.xsd from "+IBA_XSD_PATH);
 		}
-		File xsd = new File(this.getClass().getClassLoader()
-				.getResource(IBA_XSD_PATH).getFile());
 		this.validateAgainstXSD(new FileInputStream(this.file),
-				new FileInputStream(xsd));
+				ClassLoader.getSystemResourceAsStream(IBA_XSD_PATH));
 
 		// use the factory to take an instance of the document builder
 		DocumentBuilder db = dbf.newDocumentBuilder();

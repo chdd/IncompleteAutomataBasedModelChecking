@@ -90,12 +90,10 @@ public class ClaimReader extends XMLReader<BA>{
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		if(this.getClass().getClassLoader()
-				.getResource(BA_XSD_PATH)==null){
+		if(ClassLoader.getSystemResourceAsStream(BA_XSD_PATH)==null){
 			throw new InternalError("It was not possible to load the BA.xsd from "+BA_XSD_PATH);
 		}
-		File xsd = new File(this.getClass().getClassLoader().getResource(BA_XSD_PATH).getFile());
-		this.validateAgainstXSD(new FileInputStream(this.file), new FileInputStream(xsd));
+		this.validateAgainstXSD(new FileInputStream(this.file), ClassLoader.getSystemResourceAsStream(BA_XSD_PATH));
 
 		// use the factory to take an instance of the document builder
 		DocumentBuilder db = dbf.newDocumentBuilder();

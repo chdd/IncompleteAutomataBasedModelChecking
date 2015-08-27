@@ -24,10 +24,10 @@ public class IBAStateToElementTransformer extends BAStateToElementTransformer {
 
 		
 		if (((IBA) this.automaton).getBlackBoxStates().contains(input)) {
-			Attr transparent = doc
-					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSPARENT);
-			transparent.setValue(AutomataIOConstants.TRUEVALUE);
-			stateXMLElement.setAttributeNode(transparent);
+			Attr blackbox = doc
+					.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_BLACKBOX);
+			blackbox.setValue(AutomataIOConstants.TRUEVALUE);
+			stateXMLElement.setAttributeNode(blackbox);
 
 		}
 		return stateXMLElement;

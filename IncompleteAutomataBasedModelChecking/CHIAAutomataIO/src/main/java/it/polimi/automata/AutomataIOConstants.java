@@ -8,7 +8,7 @@ public final class AutomataIOConstants {
 	public final static String XML_ELEMENT_PORTS_COLORS="portscolors";
 	public final static String XML_ELEMENT_PROPOSITIONS="propositions";
 	public final static String XML_ELEMENT_PROPOSITION="proposition";
-	public final static String XML_ELEMENT_PROPOSITION_VALUE="value";
+	public final static String XML_ELEMENT_PROPOSITION_NAME="name";
 	public final static String XML_ELEMENT_PORTS_OUT_REACHABILITY="outcomingreachability";
 	public final static String XML_ELEMENT_TRANSITIONS_OUT="outtransitions";
 	public final static String XML_ELEMENT_TRANSITIONS_IN="intransitions";
@@ -18,9 +18,6 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_VALUE_IN="inport";
 	public final static String XML_ATTRIBUTE_VALUE_OUT="outport";
 	
-	public final static String XML_ELEMENT_PLUG_TRANSITION="plugtransition";
-	public final static String XML_ELEMENT_SUBPROPERTY="subproperty";
-	public final static String XML_ELEMENT_REPLACEMENT="replacement";
 	
 	public final static String XML_ELEMENT_REFINEMENT="refinement";
 	public final static String XML_ELEMENT_STATES="states";
@@ -43,15 +40,11 @@ public final class AutomataIOConstants {
 	public final static String XML_ATTRIBUTE_PORT_DESTINATION="destination";
 	public final static String XML_ATTRIBUTE_INCOMING="incoming";
 	public final static String XML_ATTRIBUTE_NAME="name";
-	public final static String XML_ATTRIBUTE_COLOR="color";
+
 	
-	public final static String XML_ATTRIBUTE_MODEL_STATE_ID="modelstateId";
-	public final static String XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE="indispensable";
 	public final static String XML_ATTRIBUTE_INITIAL="initial";
 	public final static String XML_ATTRIBUTE_ACCEPTING="accepting";
-	public final static String XML_ATTRIBUTE_ACCEPTING_CLAIM="acceptingclaim";
-	public final static String XML_ATTRIBUTE_ACCEPTING_MODEL="acceptingmodel";
-	public final static String XML_ATTRIBUTE_TRANSPARENT="transparent";
+	public final static String XML_ATTRIBUTE_BLACKBOX="blackbox";
 	public final static String XML_ATTRIBUTE_MIXED="mixed";
 	public final static String XML_ATTRIBUTE_CONSTRAINED="constrained";
 	
@@ -78,7 +71,7 @@ public final class AutomataIOConstants {
 	public static final String INITIALTAG = "initial";
 	public static final String ACCEPTINGTAG = "accepting";
 	public static final String LABELSTAG = "labels";
-	public static final String TRANSPARENTTAG = "transparent";
+	public static final String BLACKBOXELEMENT = "blackbox";
 	public static final String NAMETAG = "name";
 	/**
 	 * defaults

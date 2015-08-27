@@ -46,7 +46,7 @@ public class IBAElementToStateTransformer implements Transformer<Element, State>
 				.isEmpty()) {
 			iba.addAcceptState(s);
 		}
-		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSPARENT)
+		if (!eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_BLACKBOX)
 				.isEmpty()) {
 			iba.addBlackBoxState(s);
 		}
