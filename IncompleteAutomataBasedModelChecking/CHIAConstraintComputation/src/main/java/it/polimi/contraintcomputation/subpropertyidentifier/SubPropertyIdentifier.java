@@ -24,11 +24,11 @@ import com.google.common.base.Preconditions;
 
 /**
  * This class identifies the sub-automata of the automaton that refer to the
- * <b>transparent</b> states of the original model. In particular it isolates
- * the portions of the state space that refer to the transparent states of the
+ * <b>black box</b> states of the original model. In particular it isolates
+ * the portions of the state space that refer to the black box states of the
  * model into components. <br>
  * 
- * Each component includes the refinements of the transparent states that make
+ * Each component includes the refinements of the black box states that make
  * the intersection not empty
  *
  * @author claudiomenghi
@@ -41,7 +41,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	
 
 	/**
-	 * contains the subProperty that refers to the transparent state
+	 * contains the subProperty that refers to the black box state
 	 */
 	private final SubProperty subProperty;
 
@@ -52,15 +52,15 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	private final Checker checker;
 
 	/**
-	 * the transparent state that is considered
+	 * the black box state that is considered
 	 */
-	private final State transparentState;
+	private final State blackBoxState;
 
 	/**
 	 * The incoming transitions are the transitions that enters the current
 	 * refinement level: they can be initial transition, i.e., transitions that
 	 * arrives from the outside or transition that reaches the current level
-	 * from the refinement of a transparent state
+	 * from the refinement of a black box state
 	 */
 	private final Map<Transition, LabeledPluggingTransition> mapIntersectionTransitionOutcomingPort;
 
@@ -68,34 +68,34 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 * The out-coming transitions are the transition that leave the current
 	 * refinement level: they can be final transition, i.e., transitions that
 	 * leaves the current refinement level to an ``upper level" component or
-	 * transitions that enter the transparent state
+	 * transitions that enter the black box state
 	 */
 	private final Map<Transition, LabeledPluggingTransition> mapIntersectionTransitionIncomingPort;
 
 	/**
 	 * creates an identifier that is used to isolate the sub-property that
-	 * refers to the transparentState
+	 * refers to the blackBoxState
 	 * 
 	 * @param checker
 	 *            is the checker that has been used to check the model and the
 	 *            claim
-	 * @param transparentState
-	 *            is the transparent state of interest
+	 * @param blackBoxState
+	 *            is the black box state of interest
 	 * @throws NullPointerException
-	 *             if the checker is null or the transparentState is null
+	 *             if the checker is null or the blackBoxState is null
 	 * @throws IllegalArgumentException
-	 *             the transparentState must be a transparent state of the model
+	 *             the blackBoxState must be a black box state of the model
 	 * @throws IllegalStateException
 	 *             the checking activity must be performed before the
 	 *             sub-property identification
 	 * 
 	 */
-	public SubPropertyIdentifier(Checker checker, State transparentState) {
+	public SubPropertyIdentifier(Checker checker, State blackBoxState) {
 
 		super();
 		Preconditions.checkNotNull(checker, "The checker cannot be null");
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state to be considered cannot be null");
+		Preconditions.checkNotNull(blackBoxState,
+				"The black box state to be considered cannot be null");
 
 		Preconditions
 				.checkState(
@@ -103,13 +103,13 @@ public class SubPropertyIdentifier extends CHIAOperation {
 						"The checking activity must be performed before the computation of the sub-property");
 		Preconditions
 				.checkArgument(checker.getUpperIntersectionBuilder().getModel()
-						.getBlackBoxStates().contains(transparentState),
-						"The state to be considered must be a transparent state of the model");
+						.getBlackBoxStates().contains(blackBoxState),
+						"The state to be considered must be a black box state of the model");
 
-		this.transparentState = transparentState;
+		this.blackBoxState = blackBoxState;
 		this.checker = checker;
 
-		this.subProperty = new SubProperty(transparentState, new BA(
+		this.subProperty = new SubProperty(blackBoxState, new BA(
 				new ClaimTransitionFactory()));
 
 		this.mapIntersectionTransitionOutcomingPort = new HashMap<Transition, LabeledPluggingTransition>();
@@ -124,9 +124,9 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 * returns an abstracted version of the intersection automaton, where each
 	 * state is a component and represents a state of the original model and
 	 * aggregates the states of the intersection automaton which refer to the
-	 * same transparent state
+	 * same black box state
 	 * 
-	 * @return the sub-automata of the automaton that refer to the transparent
+	 * @return the sub-automata of the automaton that refer to the black box
 	 *         states of M.
 	 */
 	public SubProperty getSubProperty() {
@@ -167,7 +167,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 		 * modelState
 		 */
 		for (State intersectionState : this.checker.getUpperIntersectionBuilder()
-				.getModelIntersectionStates(this.transparentState)) {
+				.getModelIntersectionStates(this.blackBoxState)) {
 			this.subProperty.getAutomaton().addState(intersectionState);
 			if (this.checker.getUpperIntersectionBuilder()
 					.getIntersectionAutomaton().getInitialStates()
@@ -192,12 +192,12 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	/**
 	 * creates the transitions to be inserted into the automaton that refines
 	 * the sub-property. These transitions include all the transitions that are
-	 * associated to a transparent state of the model
+	 * associated to a black box state of the model
 	 */
 	private void createInternalTransitions() {
 		for (Transition internalTransition : this.checker
 				.getUpperIntersectionBuilder().getConstrainedTransitions(
-						this.transparentState)) {
+						this.blackBoxState)) {
 			if (!internalTransition.getPropositions().equals(
 					stutteringPropositions)) {
 
@@ -221,20 +221,20 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	 */
 	private void createIncomingTransitions() {
 		for (State intersectionState : this.checker.getUpperIntersectionBuilder()
-				.getModelIntersectionStates(this.transparentState)) {
+				.getModelIntersectionStates(this.blackBoxState)) {
 
 			/*
 			 * first the algorithm searches for out-coming transition. The
 			 * transition that reaches an intersection state associated with a
-			 * transparent state of the model are POTENTIAL out-coming
+			 * black box state of the model are POTENTIAL out-coming
 			 * transitions since they leaves the current level of refinement,
-			 * i.e., they enter the refinement of the transparent state
+			 * i.e., they enter the refinement of the black box state
 			 */
 			for (Transition incomingTransition : this.checker
 					.getUpperIntersectionBuilder().getIntersectionAutomaton()
 					.getInTransitions(intersectionState)) {
 				
-				if(!this.checker.getUpperIntersectionBuilder().getConstrainedTransitions(this.transparentState).contains(incomingTransition)){
+				if(!this.checker.getUpperIntersectionBuilder().getConstrainedTransitions(this.blackBoxState).contains(incomingTransition)){
 					State sourceIntersectionState = this.checker
 							.getUpperIntersectionBuilder().getIntersectionAutomaton()
 							.getTransitionSource(incomingTransition);
@@ -281,11 +281,11 @@ public class SubPropertyIdentifier extends CHIAOperation {
 	private void createOutgoingTransitions() {
 
 		for (State intersectionState : this.checker.getUpperIntersectionBuilder()
-				.getModelIntersectionStates(this.transparentState)) {
+				.getModelIntersectionStates(this.blackBoxState)) {
 			/*
 			 * The transitions that exit a mixed state are potential incoming
 			 * transitions since they are potential transitions that moves from
-			 * the refinement of the transparent state to the current level of
+			 * the refinement of the black box state to the current level of
 			 * abstraction
 			 */
 			for (Transition outcomingTransition : this.checker
@@ -302,7 +302,7 @@ public class SubPropertyIdentifier extends CHIAOperation {
 						/*
 						 * the source state is an intersection state since I leaved
 						 * the previous level of the refinement to go to the current
-						 * one (exit the transparent)
+						 * one (exit the black box)
 						 */
 						LabeledPluggingTransition outcomingPort = new LabeledPluggingTransition(
 								intersectionState, this.checker

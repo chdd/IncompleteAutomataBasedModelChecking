@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * The constraint generator computes a constraint. A constraint specifies the
- * behavior the replacement of the transparent state must satisfy
+ * behavior the replacement of the black box state must satisfy
  * 
  * @author claudiomenghi
  * 
@@ -39,9 +39,9 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 	 */
 	private final Map<SubProperty, SubPropertyIdentifier> subpropetySubPropertyIdentifierMap;
 
-	private final Map<State, SubProperty> mapTransparentStateSubProperty;
+	private final Map<State, SubProperty> mapBlackBoxStateSubProperty;
 
-	private final Map<State, SubPropertyIdentifier> mapTransparentStateSubPropertyIdentifier;
+	private final Map<State, SubPropertyIdentifier> mapBlackBoxStateSubPropertyIdentifier;
 
 	/**
 	 * creates a new ConstraintGenerator object which starting from the
@@ -70,8 +70,8 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 		this.checker = checker;
 		this.constraint = new Constraint();
 		this.subpropetySubPropertyIdentifierMap = new HashMap<SubProperty, SubPropertyIdentifier>();
-		this.mapTransparentStateSubProperty = new HashMap<State, SubProperty>();
-		this.mapTransparentStateSubPropertyIdentifier = new HashMap<State, SubPropertyIdentifier>();
+		this.mapBlackBoxStateSubProperty = new HashMap<State, SubProperty>();
+		this.mapBlackBoxStateSubPropertyIdentifier = new HashMap<State, SubPropertyIdentifier>();
 	}
 
 	/**
@@ -90,12 +90,12 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 				this.checker.getUpperIntersectionBuilder());
 		intersectionCleaner.clean();
 
-		for (State transparentState : this.checker
+		for (State blackBoxState : this.checker
 				.getUpperIntersectionBuilder().getModel()
 				.getBlackBoxStates()) {
 
 			constraint.addSubProperty(this
-					.generateSubProperty(transparentState));
+					.generateSubProperty(blackBoxState));
 
 		}
 
@@ -104,46 +104,46 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 	}
 
 	/**
-	 * returns the sub-property associated with the specific transparent state
+	 * returns the sub-property associated with the specific black box state
 	 * 
-	 * @param transparentState
-	 *            the transparent state to be considered
-	 * @return the sub-property associated with the transparent state
+	 * @param blackBoxState
+	 *            the black box state to be considered
+	 * @return the sub-property associated with the black box state
 	 * @throws NullPointerException
-	 *             if the transparent state is null
+	 *             if the black box state is null
 	 */
-	private SubProperty generateSubProperty(State transparentState) {
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state to be considered cannot be null");
+	private SubProperty generateSubProperty(State blackBoxState) {
+		Preconditions.checkNotNull(blackBoxState,
+				"The black box state to be considered cannot be null");
 		/*
 		 * extract the sub-properties from the intersection automaton. It
 		 * identifies the portions of the state space (the set of the mixed
 		 * states and the transitions between them) that refer to the same
-		 * transparent states of the model. It also compute the corresponding
+		 * black box states of the model. It also compute the corresponding
 		 * ports, i.e., the set of the transition that connect the sub-property
 		 * to the original model.
 		 */
 		SubPropertyIdentifier subPropertiesIdentifier = new SubPropertyIdentifier(
-				this.checker, transparentState);
+				this.checker, blackBoxState);
 		SubProperty subProperty = subPropertiesIdentifier.getSubProperty();
 		this.subpropetySubPropertyIdentifierMap.put(subProperty,
 				subPropertiesIdentifier);
-		this.mapTransparentStateSubProperty.put(transparentState, subProperty);
-		this.mapTransparentStateSubPropertyIdentifier.put(transparentState,
+		this.mapBlackBoxStateSubProperty.put(blackBoxState, subProperty);
+		this.mapBlackBoxStateSubPropertyIdentifier.put(blackBoxState,
 				subPropertiesIdentifier);
 		return subProperty;
 	}
 
-	public void coloring(State transparentState) {
+	public void coloring(State blackBoxState) {
 
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state cannot be null");
-		Preconditions.checkArgument(this.mapTransparentStateSubProperty
-				.containsKey(transparentState), "The transparent state "
-				+ transparentState + " is not contained in the map");
+		Preconditions.checkNotNull(blackBoxState,
+				"The black box state cannot be null");
+		Preconditions.checkArgument(this.mapBlackBoxStateSubProperty
+				.containsKey(blackBoxState), "The black box state "
+				+ blackBoxState + " is not contained in the map");
 		TransitionLabeler coloring = new TransitionLabeler(
-				this.mapTransparentStateSubPropertyIdentifier
-						.get(transparentState));
+				this.mapBlackBoxStateSubPropertyIdentifier
+						.get(blackBoxState));
 		coloring.startColoring();
 
 	}
@@ -178,32 +178,32 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 
 	}
 
-	public Constraint computePortReachability(State transparentState) {
+	public Constraint computePortReachability(State blackBoxState) {
 
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state cannot be null");
+		Preconditions.checkNotNull(blackBoxState,
+				"The black box state cannot be null");
 		Preconditions.checkArgument(
-				this.mapTransparentStateSubPropertyIdentifier
-						.containsKey(transparentState),
-				"The transparent state " + transparentState
+				this.mapBlackBoxStateSubPropertyIdentifier
+						.containsKey(blackBoxState),
+				"The black box state " + blackBoxState
 						+ " is not contained in the map");
 		ReachabilityIdentifier reachability = new ReachabilityIdentifier(
 				this.checker.getUpperIntersectionBuilder(),
-				this.mapTransparentStateSubPropertyIdentifier
-						.get(transparentState));
+				this.mapBlackBoxStateSubPropertyIdentifier
+						.get(blackBoxState));
 		reachability.computeReachability();
 
 		return constraint;
 
 	}
 
-	public void computeIndispensable(State transparentState) {
-		Preconditions.checkNotNull(transparentState,
-				"The transparent state cannot be null");
-		Preconditions.checkArgument(this.mapTransparentStateSubProperty
-				.containsKey(transparentState), "The transparent state "
-				+ transparentState + " is not contained in the map");
-		SubProperty subProperty=this.mapTransparentStateSubProperty.get(transparentState);
+	public void computeIndispensable(State blackBoxState) {
+		Preconditions.checkNotNull(blackBoxState,
+				"The black box state cannot be null");
+		Preconditions.checkArgument(this.mapBlackBoxStateSubProperty
+				.containsKey(blackBoxState), "The black box state "
+				+ blackBoxState + " is not contained in the map");
+		SubProperty subProperty=this.mapBlackBoxStateSubProperty.get(blackBoxState);
 		State modelState = subProperty.getModelState();
 		IBA model = checker.getUpperIntersectionBuilder().getModel().clone();
 		model.removeState(modelState);
@@ -212,7 +212,7 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 				.getUpperIntersectionBuilder().getAcceptingPolicy()).perform();
 		if (value == SatisfactionValue.NOTSATISFIED) {
 			throw new InternalError(
-					"It is not possible that removing a transparent state of the model makes the property not satisfied");
+					"It is not possible that removing a black box state of the model makes the property not satisfied");
 		}
 		if (value == SatisfactionValue.POSSIBLYSATISFIED) {
 			subProperty.setIndispensable(false);
@@ -236,7 +236,7 @@ public class ConstraintGenerator extends CHIAAction<Constraint> {
 					.perform();
 			if (value == SatisfactionValue.NOTSATISFIED) {
 				throw new InternalError(
-						"It is not possible that removing a transparent state of the model makes the property not satisfied");
+						"It is not possible that removing a black box state of the model makes the property not satisfied");
 			}
 			if (value == SatisfactionValue.POSSIBLYSATISFIED) {
 				entry.getKey().setIndispensable(false);
