@@ -4,7 +4,7 @@ import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.automata.io.out.BAToElementTrasformer;
 import it.polimi.constraints.components.SubProperty;
-import it.polimi.constraints.io.out.constraint.reachability.ReachabilityToElementTransformer;
+import it.polimi.constraints.io.out.constraint.reachability.ReachabilityRelationToElementTransformer;
 import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
 import java.util.Set;
@@ -77,13 +77,13 @@ public class SubPropertyToElementTrasformer extends XMLTrasformer<SubProperty, E
 		constraintElement.appendChild(outComingPorts);
 		this.addPorts(outComingPorts, input.getOutgoingTransitions());
 
-		Element lowerReachability=new ReachabilityToElementTransformer(this.getDocument()).transform(input.getLowerReachabilityRelation());
+		Element lowerReachability=new ReachabilityRelationToElementTransformer(this.getDocument()).transform(input.getLowerReachabilityRelation());
 		Element lower = doc
 				.createElement(AutomataIOConstants.XML_LOWER_REACHABILITY);
 		lower.appendChild(lowerReachability);
 		constraintElement.appendChild(lower);
 		
-		Element higherReachability=new ReachabilityToElementTransformer(this.getDocument()).transform(input.getUpperReachabilityRelation());
+		Element higherReachability=new ReachabilityRelationToElementTransformer(this.getDocument()).transform(input.getUpperReachabilityRelation());
 		Element upper = doc
 				.createElement(AutomataIOConstants.XML_UPPER_REACHABILITY);
 		upper.appendChild(higherReachability);

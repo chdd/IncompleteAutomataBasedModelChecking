@@ -10,9 +10,9 @@ import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
 
-public class ReachabilityToElementTransformer extends XMLTrasformer<ReachabilityRelation, Element>{
+public class ReachabilityRelationToElementTransformer extends XMLTrasformer<ReachabilityRelation, Element>{
 
-	public ReachabilityToElementTransformer(Document doc){
+	public ReachabilityRelationToElementTransformer(Document doc){
 		super(doc);
 	}
 
