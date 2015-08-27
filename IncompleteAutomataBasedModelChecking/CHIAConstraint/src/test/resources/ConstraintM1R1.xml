@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<constraints>
+    <constraint modelstateId="4" name="BeforeRetracting">
+        <ba>
+            <state id="13" name="BeforeRetracting - 10 - 0" />
+            <transition destination="13" id="32" propositions="SIGMA"
+                source="13" />
+        </ba>
+        <outports>
+            <port destination="2" id="13" propositions="actretract" source="13" />
+            <port destination="2" id="31" propositions="actretract" source="13" />
+        </outports>
+        <inports>
+            <port destination="13" id="12" propositions="distart" source="1" />
+        </inports>
+    </constraint>
+    <constraint modelstateId="5" name="AfterRetracting">
+        <ba>
+            <state id="17" name="AfterRetracting - 8 - 0" />
+            <state id="21" name="AfterRetracting - 10 - 0" />
+            <state id="16" name="AfterRetracting - 9 - 0" />
+            <transition destination="17" id="19"
+                propositions="!stackinitialized^actextend" source="16" />
+            <transition destination="16" id="18" propositions="!stackinitialized"
+                source="16" />
+            <transition destination="17" id="24" propositions="SIGMA"
+                source="17" />
+            <transition destination="17" id="28"
+                propositions="!stackinitialized^actretract^actextend" source="21" />
+            <transition destination="16" id="30"
+                propositions="!stackinitialized^actretract" source="21" />
+            <transition destination="21" id="29" propositions="SIGMA"
+                source="21" />
+        </ba>
+        <outports>
+            <port destination="3" id="20" propositions="stackinitialized"
+                source="17" />
+        </outports>
+        <inports>
+            <port destination="16" id="17" propositions="diretracted"
+                source="2" />
+            <port destination="21" id="25" propositions="diretracted"
+                source="2" />
+        </inports>
+    </constraint>
+    <portsReachability>
+        <outcomingreachability>
+            <port constraint="4" id="13">
+                <port constraint="5" id="17" />
+                <port constraint="5" id="25" />
+            </port>
+            <port constraint="4" id="31">
+                <port constraint="5" id="17" />
+            </port>
+        </outcomingreachability>
+    </portsReachability>
+    <portscolors>
+        <port color="YELLOW" id="31" />
+        <port color="YELLOW" id="13" />
+        <port color="RED" id="20" />
+        <port color="GREEN" id="12" />
+        <port color="YELLOW" id="17" />
+        <port color="YELLOW" id="25" />
+    </portscolors>
+</constraints>
