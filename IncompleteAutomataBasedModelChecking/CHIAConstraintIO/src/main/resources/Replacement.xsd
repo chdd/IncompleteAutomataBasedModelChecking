@@ -14,7 +14,7 @@
 										<xs:element name="proposition" minOccurs="0"
 											maxOccurs="unbounded">
 											<xs:complexType>
-												<xs:attribute name="value" type="xs:string"
+												<xs:attribute name="name" type="xs:string"
 													use="required" />
 											</xs:complexType>
 										</xs:element>
@@ -60,7 +60,7 @@
 				<xs:element name="intransitions">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="plugtransition" type="port" minOccurs="0"
+							<xs:element name="plugtransition" type="plugtransition" minOccurs="0"
 								maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
@@ -68,7 +68,7 @@
 				<xs:element name="outtransitions">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="plugtransition" type="port" minOccurs="0"
+							<xs:element name="plugtransition" type="plugtransition" minOccurs="0"
 								maxOccurs="unbounded" />
 						</xs:sequence>
 					</xs:complexType>
@@ -86,7 +86,7 @@
 		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
 		<xs:attribute name="propositions" type="xs:string" />
 	</xs:complexType>
-	<xs:complexType name="port">
+	<xs:complexType name="plugtransition">
 		<xs:sequence>
 			<xs:element name="sourcestate">
 				<xs:complexType>
