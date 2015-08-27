@@ -27,7 +27,6 @@ import java.io.File;
 import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
