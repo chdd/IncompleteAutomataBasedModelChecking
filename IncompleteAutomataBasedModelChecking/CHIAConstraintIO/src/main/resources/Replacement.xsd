@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- defining the replacement of a transparent state of an Incomplete Buchi 
+		Automaton -->
+	<xs:element name="replacement">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="iba">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="propositions">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="proposition" minOccurs="0"
+											maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:attribute name="value" type="xs:string"
+													use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="states">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="state" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:attribute name="id" type="xs:integer" use="required" />
+												<xs:attribute name="name" type="xs:string" />
+												<xs:attribute name="initial" type="xs:boolean" />
+												<xs:attribute name="transparent" type="xs:boolean" />
+												<xs:attribute name="accepting" type="xs:boolean" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="transitions">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="transition" minOccurs="0"
+											maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:attribute name="id" type="xs:positiveInteger"
+													use="required" />
+												<xs:attribute name="source" type="xs:integer"
+													use="required" />
+												<xs:attribute name="destination" type="xs:integer"
+													use="required" />
+												<xs:attribute name="propositions" type="xs:string" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="intransitions">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="plugtransition" type="port" minOccurs="0"
+								maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="outtransitions">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="plugtransition" type="port" minOccurs="0"
+								maxOccurs="unbounded" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="modelstateId" type="xs:integer" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="state">
+		<xs:attribute name="id" type="xs:integer" use="required" />
+		<xs:attribute name="name" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="transition">
+		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
+		<xs:attribute name="propositions" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="port">
+		<xs:sequence>
+			<xs:element name="sourcestate">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="state" type="state" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="destinationstate">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="state" type="state" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="transition" type="transition" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:positiveInteger" use="required" />
+	</xs:complexType>
+</xs:schema>
