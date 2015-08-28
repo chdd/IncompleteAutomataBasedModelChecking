@@ -10,7 +10,7 @@ import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
-public class LTLReader extends CHIAAction<BA>{
+public class ClaimLTLReader extends CHIAAction<BA>{
 	
 	private String filePath;
 	
@@ -20,7 +20,7 @@ public class LTLReader extends CHIAAction<BA>{
 	 * creates a new reader that reads the LTL formula from a file
 	 * @param filePath
 	 */
-	public LTLReader(String filePath){
+	public ClaimLTLReader(String filePath){
 		super(NAME);
 		Preconditions.checkNotNull(filePath, "The path of the file cannot be null");
 

@@ -2,8 +2,8 @@
     <subproperty indispensable="true" modelstateId="441" name="t0">
         <ba>
             <propositions>
-                <proposition value="b"/>
-                <proposition value="a"/>
+                <proposition name="b"/>
+                <proposition name="a"/>
             </propositions>
             <states>
                 <state id="536" name="441 - 1 - 1"/>

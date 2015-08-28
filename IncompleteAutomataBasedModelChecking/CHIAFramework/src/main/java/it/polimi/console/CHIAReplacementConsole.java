@@ -67,40 +67,9 @@ public class CHIAReplacementConsole {
 	public CHIAReplacementConsole() {
 		this.policy = AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
 	}
+	
 
-	@Command(name = "loadReplacement", abbrev = "lR", description = "It is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
-	public void loadReplacement(
-			@Param(name = "replacementFilePath", description = "is the path of the file that contains the replacement to be considered") String replacementFilePath)
-			throws FileNotFoundException, ParserConfigurationException,
-			SAXException, IOException {
-
-		if (this.chiaState.isPerformable(ReplacementReader.class)) {
-			try {
-				this.replacement = new ReplacementReader(replacementFilePath)
-						.perform();
-				this.chiaState = chiaState.perform(ReplacementReader.class);
-
-			} catch (CHIAException e) {
-				logger.info(e.toString());
-			}
-		} else {
-			PrintStream out = System.out;
-			out.println("The replacement reading action cannot be performed into the state "
-					+ this.chiaState.name());
-		}
-	}
-
-	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
-	public void changePolicy(
-			@Param(name = "policy", description = "is the policy to be used KRIPKE or NORMAL") String policy) {
-		try{
-			this.policy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.valueOf(policy));
-		} catch(Exception e) {
-				System.out.println("Parameter: " + policy + " not accepted the policy must be one of "+AcceptingType.values().toString());
-		}
-	}
-
-	@Command(name = "loadConstraint", abbrev = "lC", description = "It is used to load the constraint from an XML file. The XML file must mach the Constraint.xsd", header = "constraint loaded")
+	@Command(name = "loadConstraint", abbrev = "lc", description = "is used to load the constraint from an XML file. The XML file must mach the Constraint.xsd", header = "constraint loaded")
 	public void loadConstraint(
 			@Param(name = "constraintFilePath", description = "is the path of the file that contains the constraint to be considered") String constraintFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
@@ -121,8 +90,67 @@ public class CHIAReplacementConsole {
 					+ this.chiaState.name());
 		}
 	}
+	
+	@Command(name = "displayConstraint", abbrev = "dispc", description = "is used to display the constraint into the console.", header = "Constraint displayed")
+	public void dispConstraint() throws Exception {
 
-	@Command(name = "replacementChecking", abbrev = "ck", description = "Is used to check the replacement against the constraint previously generated.", header = "Performing the replacement checking")
+		if (this.chiaState.isPerformable(ConstraintToStringTrasformer.class)) {
+			try {
+				ConstraintToStringTrasformer action = new ConstraintToStringTrasformer(
+						this.constraint);
+				this.chiaState = chiaState
+						.perform(ConstraintToStringTrasformer.class);
+				logger.info(action.perform());
+			} catch (CHIAException e) {
+				logger.info(e.toString());
+			}
+		} else {
+			this.printNotExecutableMessage(ConstraintToStringTrasformer.class);
+		}
+	}
+
+	@Command(name = "loadReplacement", abbrev = "lr", description = "is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
+	public void loadReplacement(
+			@Param(name = "replacementFilePath", description = "is the path of the file that contains the replacement to be considered") String replacementFilePath)
+			throws FileNotFoundException, ParserConfigurationException,
+			SAXException, IOException {
+
+		if (this.chiaState.isPerformable(ReplacementReader.class)) {
+			try {
+				this.replacement = new ReplacementReader(replacementFilePath)
+						.perform();
+				this.chiaState = chiaState.perform(ReplacementReader.class);
+
+			} catch (CHIAException e) {
+				logger.info(e.toString());
+			}
+		} else {
+			PrintStream out = System.out;
+			out.println("The replacement reading action cannot be performed into the state "
+					+ this.chiaState.name());
+		}
+	}
+	
+
+	@Command(name = "displayReplacement", abbrev = "dispr", description = "is used to display the replacement into the console.", header = "Replacement displayed")
+	public void dispReplacement() throws Exception {
+
+		if (this.chiaState.isPerformable(ReplacementToStringTransformer.class)) {
+			try {
+				ReplacementToStringTransformer action = new ReplacementToStringTransformer(
+						this.replacement);
+				this.chiaState = chiaState
+						.perform(ReplacementToStringTransformer.class);
+				logger.info(action.perform());
+			} catch (CHIAException e) {
+				logger.info(e.toString());
+			}
+		} else {
+			this.printNotExecutableMessage(ReplacementToStringTransformer.class);
+		}
+	}
+	
+	@Command(name = "check", abbrev = "ck", description = "used to check the replacement against the constraint previously generated.", header = "Performing the replacement checking")
 	public void replacementChecking() {
 		if (this.chiaState.isPerformable(ReplacementChecker.class)) {
 			try {
@@ -162,42 +190,24 @@ public class CHIAReplacementConsole {
 			this.printNotExecutableMessage(ReplacementChecker.class);
 		}
 	}
-
-	@Command(name = "displayReplacement", abbrev = "dispR", description = "It is used to display the replacement into the console.", header = "Replacement displayed")
-	public void dispReplacement() throws Exception {
-
-		if (this.chiaState.isPerformable(ReplacementToStringTransformer.class)) {
-			try {
-				ReplacementToStringTransformer action = new ReplacementToStringTransformer(
-						this.replacement);
-				this.chiaState = chiaState
-						.perform(ReplacementToStringTransformer.class);
-				logger.info(action.perform());
-			} catch (CHIAException e) {
-				logger.info(e.toString());
-			}
-		} else {
-			this.printNotExecutableMessage(ReplacementToStringTransformer.class);
+	
+	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
+	public void changePolicy(
+			@Param(name = "policy", description = "is the policy to be used KRIPKE or NORMAL") String policy) {
+		try{
+			this.policy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.valueOf(policy));
+		} catch(Exception e) {
+				System.out.println("Parameter: " + policy + " not accepted the policy must be one of "+AcceptingType.values().toString());
 		}
 	}
 
-	@Command(name = "displayConstraint", abbrev = "dispCon", description = "It is used to display the constraint into the console.", header = "Constraint displayed")
-	public void dispConstraint() throws Exception {
+	
 
-		if (this.chiaState.isPerformable(ConstraintToStringTrasformer.class)) {
-			try {
-				ConstraintToStringTrasformer action = new ConstraintToStringTrasformer(
-						this.constraint);
-				this.chiaState = chiaState
-						.perform(ConstraintToStringTrasformer.class);
-				logger.info(action.perform());
-			} catch (CHIAException e) {
-				logger.info(e.toString());
-			}
-		} else {
-			this.printNotExecutableMessage(ConstraintToStringTrasformer.class);
-		}
-	}
+	
+
+	
+
+	
 
 	@Command(name = "displayUpperIntersection", abbrev = "dispUpInt", description = "It is used to display the upper intersection into the console.", header = "Intersection displayed")
 	public void displayUpperIntersection() throws Exception {

@@ -52,7 +52,7 @@ public enum CHIAAutomataState implements CHIAState {
 				return MODELLOADED;
 			}
 			if(isAClaimReadingAction(chiaAction)){
-				return CLAIMLOADED;
+				return PROPERTYLOADED;
 			}
 			
 			throw new CHIAException("You cannot perform the action: "
@@ -100,7 +100,7 @@ public enum CHIAAutomataState implements CHIAState {
 
 		}
 	},
-	CLAIMLOADED {
+	PROPERTYLOADED {
 		/**
 		 *  {@inheritDoc}
 		 */
@@ -126,7 +126,7 @@ public enum CHIAAutomataState implements CHIAState {
 				return READY;
 			}
 			if (isAClaimReadingAction(chiaAction) || chiaAction==ClaimToStringTrasformer.class) {
-				return CLAIMLOADED;
+				return PROPERTYLOADED;
 			}
 			throw new CHIAException("You cannot perform the action: "
 					+ chiaAction.getName() + " into the state "
