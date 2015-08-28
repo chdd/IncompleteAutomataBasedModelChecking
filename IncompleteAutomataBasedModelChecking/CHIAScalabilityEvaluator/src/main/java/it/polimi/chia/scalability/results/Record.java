@@ -11,7 +11,7 @@ public class Record {
 	private final SatisfactionValue initialSatisfactioValue;
 	private final SatisfactionValue finalSatisfactioValue;
 	private final int sizeOfTheRefinementVerification;
-	private final int sizeOfTheReplacementVerification; 
+	private final int sizeOfTheReplacementVerification;
 	private final long replacementVerificationTime;
 	private final long refinementVerificationTime;
 	private final boolean triviallySatisfied;
@@ -28,63 +28,76 @@ public class Record {
 	private final int sizeModel;
 	private final int numTransparentStatesModel;
 
-
-	public Record(Configuration configuration, SatisfactionValue initialSatisfactioValue) {
-		this(configuration, initialSatisfactioValue, null, false, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0,0,0);
+	public Record(Configuration configuration,
+			SatisfactionValue initialSatisfactioValue) {
+		this(configuration, initialSatisfactioValue, null, false, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
-	
-	public Record(Configuration configuration, SatisfactionValue initialSatisfactioValue, SatisfactionValue finalSatisfactioValue,  boolean triviallySatisfied,
-			int sizeOfTheRefinementVerification, int sizeOfTheReplacementVerification, 
-			long refinementVerificationTime,
-			long replacementVerificationTime, 
-			int numReplacementStates,
-	int numReplacementIncomingTransitions,
-	 int numReplacementOutgoingTransitions,
-	int subPropertyStates,
-	 int subPropertyGreenIncomingTransitions,
-	 int subPropertyYellowIncomingTransitions,
-	 int subPropertyNumIncomingTransitions,
-	int subPropertyRedOutgoingTransitions,
-	int subPropertyYellowOutgingTransition,
-	 int subPropertyNumOutgoingTransition,
-	 int sizeModel,
-	 int numTransparentStatesModel){
+
+	public Record(Configuration configuration,
+			SatisfactionValue initialSatisfactioValue,
+			SatisfactionValue finalSatisfactioValue,
+			boolean triviallySatisfied, int sizeOfTheRefinementVerification,
+			int sizeOfTheReplacementVerification,
+			long refinementVerificationTime, long replacementVerificationTime,
+			int numReplacementStates, int numReplacementIncomingTransitions,
+			int numReplacementOutgoingTransitions, int subPropertyStates,
+			int subPropertyGreenIncomingTransitions,
+			int subPropertyYellowIncomingTransitions,
+			int subPropertyNumIncomingTransitions,
+			int subPropertyRedOutgoingTransitions,
+			int subPropertyYellowOutgingTransition,
+			int subPropertyNumOutgoingTransition, int sizeModel,
+			int numTransparentStatesModel) {
 		Preconditions.checkNotNull(configuration,
 				"The condiguration under analysis cannot be null");
-		Preconditions.checkNotNull(initialSatisfactioValue, "The initial satisfaction value cannot be null");
-		Preconditions.checkArgument(finalSatisfactioValue!=null || initialSatisfactioValue!=SatisfactionValue.POSSIBLYSATISFIED, "The final satisfaction value cannot be null");
-		Preconditions.checkArgument(this.sizeOfTheRefinementVerification>=0, "The size of the refinement verification must be >=0");
-		Preconditions.checkArgument(this.sizeOfTheReplacementVerification>=0, "The size of the replacement verification must be >=0");
-		Preconditions.checkArgument(this.refinementVerificationTime>=0, "The verification of the refinement must take a time >=0");
-		Preconditions.checkArgument(this.sizeOfTheReplacementVerification>=0, "The verification of the replacement must take a time  >=0");
-		this.configuration=configuration;
-		this.initialSatisfactioValue=initialSatisfactioValue;
-		this.finalSatisfactioValue=finalSatisfactioValue;
-		this.sizeOfTheRefinementVerification=sizeOfTheRefinementVerification;
-		this.sizeOfTheReplacementVerification=sizeOfTheReplacementVerification;
-		this.replacementVerificationTime=replacementVerificationTime;
-		this.refinementVerificationTime=refinementVerificationTime;
-		this.triviallySatisfied=triviallySatisfied;
-		this.numReplacementStates=numReplacementStates;
-		this.numReplacementIncomingTransitions=numReplacementIncomingTransitions;
-		this.numReplacementOutgoingTransitions=numReplacementOutgoingTransitions;
-		this.subPropertyStates=subPropertyStates;
-		
-		if(!(subPropertyGreenIncomingTransitions+subPropertyYellowIncomingTransitions<=subPropertyNumIncomingTransitions)){
-			throw new InternalError("The sum of the green and yellow incoming transition cannot exceed the number of incoming transitions");
+		Preconditions.checkNotNull(initialSatisfactioValue,
+				"The initial satisfaction value cannot be null");
+		Preconditions
+				.checkArgument(
+						finalSatisfactioValue != null
+								|| initialSatisfactioValue != SatisfactionValue.POSSIBLYSATISFIED,
+						"The final satisfaction value cannot be null");
+		Preconditions.checkArgument(sizeOfTheRefinementVerification >= 0,
+				"The size of the refinement verification must be >=0");
+		Preconditions.checkArgument(sizeOfTheReplacementVerification >= 0,
+				"The size of the replacement verification must be >=0");
+		Preconditions.checkArgument(refinementVerificationTime >= 0,
+				"The verification of the refinement must take a time >=0");
+		Preconditions.checkArgument(sizeOfTheReplacementVerification >= 0,
+				"The verification of the replacement must take a time  >=0");
+		this.configuration = configuration;
+		this.initialSatisfactioValue = initialSatisfactioValue;
+		this.finalSatisfactioValue = finalSatisfactioValue;
+		this.sizeOfTheRefinementVerification = sizeOfTheRefinementVerification;
+		this.sizeOfTheReplacementVerification = sizeOfTheReplacementVerification;
+		this.replacementVerificationTime = replacementVerificationTime;
+		this.refinementVerificationTime = refinementVerificationTime;
+		this.triviallySatisfied = triviallySatisfied;
+		this.numReplacementStates = numReplacementStates;
+		this.numReplacementIncomingTransitions = numReplacementIncomingTransitions;
+		this.numReplacementOutgoingTransitions = numReplacementOutgoingTransitions;
+		this.subPropertyStates = subPropertyStates;
+
+		if (!(subPropertyGreenIncomingTransitions
+				+ subPropertyYellowIncomingTransitions <= subPropertyNumIncomingTransitions)) {
+			throw new InternalError(
+					"The sum of the green and yellow incoming transition cannot exceed the number of incoming transitions");
 		}
-		this.subPropertyGreenIncomingTransitions=subPropertyGreenIncomingTransitions;
-		this.subPropertyYellowIncomingTransitions=subPropertyYellowIncomingTransitions;
-		this.subPropertyNumIncomingTransitions=subPropertyNumIncomingTransitions;
-		
-		if(!(subPropertyRedOutgoingTransitions+subPropertyYellowOutgingTransition<=subPropertyNumOutgoingTransition)){
-			throw new InternalError("The sum of the red and yellow outgoing transition cannot exceed the number of outgoing transitions");
+		this.subPropertyGreenIncomingTransitions = subPropertyGreenIncomingTransitions;
+		this.subPropertyYellowIncomingTransitions = subPropertyYellowIncomingTransitions;
+		this.subPropertyNumIncomingTransitions = subPropertyNumIncomingTransitions;
+
+		if (!(subPropertyRedOutgoingTransitions
+				+ subPropertyYellowOutgingTransition <= subPropertyNumOutgoingTransition)) {
+			throw new InternalError(
+					"The sum of the red and yellow outgoing transition cannot exceed the number of outgoing transitions");
 		}
-		this.subPropertyRedOutgoingTransitions=subPropertyRedOutgoingTransitions;
-		this.subPropertyYellowOutgingTransition=subPropertyYellowOutgingTransition;
-		this.subPropertyNumOutgoingTransition=subPropertyNumOutgoingTransition;
-		this.sizeModel=sizeModel;
-		this.numTransparentStatesModel=numTransparentStatesModel;
+		this.subPropertyRedOutgoingTransitions = subPropertyRedOutgoingTransitions;
+		this.subPropertyYellowOutgingTransition = subPropertyYellowOutgingTransition;
+		this.subPropertyNumOutgoingTransition = subPropertyNumOutgoingTransition;
+		this.sizeModel = sizeModel;
+		this.numTransparentStatesModel = numTransparentStatesModel;
 	}
 
 	/**
@@ -114,7 +127,7 @@ public class Record {
 	public long getReplacementVerificationTime() {
 		return replacementVerificationTime;
 	}
-	
+
 	public int getSizeOfTheRefinementVerification() {
 		return sizeOfTheRefinementVerification;
 	}

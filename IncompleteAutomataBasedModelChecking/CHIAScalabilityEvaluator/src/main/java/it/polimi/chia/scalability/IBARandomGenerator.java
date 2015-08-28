@@ -245,7 +245,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 		List<State> transparentStates = new ArrayList<State>(
 				this.transparentStateReplacementMap.keySet());
 		for(State transparentState: transparentStates){
-			iba.addTransparentState(transparentState);
+			iba.addBlackBoxState(transparentState);
 		}
 		
 		Iterator<State> baStatesIterator = states.iterator();

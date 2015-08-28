@@ -220,14 +220,14 @@ public class ScalabilityTest {
 								.size(), replacement.getIncomingTransitions()
 								.size(), replacement.getOutgoingTransitions()
 								.size(), subProperty.getAutomaton().size(),
-						subProperty.getNumGreenIncomingTransitions(),
+						subProperty.getGreenIncomingTransitions().size(),
 						subProperty.getNumYellowIncomingTransitions(),
 						subProperty.getNumIncomingTransitions(),
 						subProperty.getNumRedOutgoingTransitions(),
 						subProperty.getNumYellowOutgoingTransitions(),
 						subProperty.getNumOutgoingTransitions(),
 						model.size(),
-						model.getTransparentStates().size());
+						model.getBlackBoxStates().size());
 				resultPossiblyWriter.append(record);
 				if (refinementSatisfactionvalue != replacementSatisfactionvalue) {
 					printError(testDirectory, configuration, replacement,

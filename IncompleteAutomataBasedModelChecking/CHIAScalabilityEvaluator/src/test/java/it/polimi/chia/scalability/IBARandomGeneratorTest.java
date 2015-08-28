@@ -34,7 +34,7 @@ public class IBARandomGeneratorTest {
 
 		assertTrue(
 				"The number of transparent states of the iba must be consistent with the transparent state density",
-				iba.getTransparentStates().size() == Math.round(ba.getStates()
+				iba.getBlackBoxStates().size() == Math.round(ba.getStates()
 						.size() * transparentStateDensity));
 		assertTrue(
 				"The number of transparent states of the iba must be consistent with the replacement density",
