@@ -13,16 +13,13 @@ import java.util.Stack;
 import com.google.common.base.Preconditions;
 
 /**
- * Checks the emptiness of an automaton. The automaton must extend the Buchi
- * Automaton Interface. An automaton is empty when it does not exists an
- * infinite path that contains an accepting state of the automaton infinitely
- * often.<br>
- * For more information about the emptiness checker the reader can consult the
- * book Model checking, of Clark, Grumberg and Peled pag 130
+ * Checks the emptiness of a BA automaton. An automaton is empty when it does
+ * not exists an infinite run that contains an accepting state of the automaton
+ * which is entered infinitely often.<br>
  * 
  * @see {@link BA}
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  */
 public class EmptinessChecker {
 
@@ -159,10 +156,10 @@ public class EmptinessChecker {
 	}
 
 	public Stack<State> getCounterExample() {
-		if(!this.firstStack.isEmpty()){
+		if (!this.firstStack.isEmpty()) {
 			this.firstStack.pop();
 		}
-		if(this.secondStack!=null){
+		if (this.secondStack != null) {
 			List<State> list = new ArrayList<State>(this.secondStack);
 
 			for (State x : list) {
@@ -170,7 +167,7 @@ public class EmptinessChecker {
 			}
 
 		}
-		
+
 		return firstStack;
 	}
 

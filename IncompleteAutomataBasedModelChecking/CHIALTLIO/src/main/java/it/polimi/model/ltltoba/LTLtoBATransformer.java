@@ -24,55 +24,76 @@ import com.google.common.base.Preconditions;
  * contains the transformer which transforms an LTL formula into the
  * corresponding Buchi automaton
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
-public class LTLtoBATransformer extends CHIAAction<BA>{
+public class LTLtoBATransformer extends CHIAAction<BA> {
 
-	private static final String NAME="CONVERTING LTL TO AUTOMATON";
-	
-	protected String ltlFormula;
+	/**
+	 * The name of the LTLtoBaTransformer action
+	 */
+	private static final String NAME = "CONVERTING LTL TO AUTOMATON";
+
+	/**
+	 * contains the formula to be converted
+	 */
+	protected final String ltlFormula;
+
+	protected final String syntax = "Propositonal Symbols:\r\n"
+			+ "        true, false\r\n" + "        any lowercase string\r\n"
+			+ "\r\n" + "Boolean operators:\r\n" + "        !   (negation)\r\n"
+			+ "        ->  (implication)\r\n" + "        <-> (equivalence)\r\n"
+			+ "        ^  (and)\r\n" + "        V  (or)\r\n" + "\r\n"
+			+ "Temporal operators:\r\n" + "        []  (always)\r\n"
+			+ "        <>  (eventually)\r\n" + "        U   (until)\r\n"
+			+ "        V   (release)\r\n" + "        X   (next)";
+
 	/**
 	 * creates the LTL to Buchi automaton transformer
 	 * 
+	 * @param ltlFormula
+	 *            is the formula to be converted
+	 * @throws NullPointerException
+	 *             if the ltlFormula is null
 	 */
 	public LTLtoBATransformer(String ltlFormula) {
 		super(NAME);
 		Preconditions.checkNotNull(ltlFormula,
 				"The LTL formula to be converted cannot be null");
-		this.ltlFormula=ltlFormula;
+		this.ltlFormula = ltlFormula.replace("^", "&&");
 
 	}
-	
-	
-	
 
 	/**
 	 * transforms the LTL formula into the corresponding Buchi Automaton
 	 * 
-	 * @param ltlFormula
-	 *            contains the LTL formula to be converted
-	 * @throws NullPointerException
-	 *             if the LTL formula to be transformed is null
+	 * @return the BA corresponding to the LTL formula specified as parameter
 	 */
 	public BA perform() {
-		
+
 		/*
 		 * creates a new Buchi automaton
 		 */
 		BA ba = new BA(new ClaimTransitionFactory());
 
-		/*
-		 * calls the LTL2BA4J that transforms the LTL formula into the
-		 * corresponding automaton. The tool returns the transitions of the
-		 * Buchi automaton
-		 */
-		Collection<ITransition> transitions = LTL2BA4J.formulaToBA(ltlFormula);
-
-		/*
-		 * populates the BA to be returned with the specified set of transitions
-		 */
-		this.addTransitionsToTheBA(ba, transitions);
+		try {
+			/*
+			 * calls the LTL2BA4J that transforms the LTL formula into the
+			 * corresponding automaton. The tool returns the transitions of the
+			 * Buchi automaton
+			 */
+			Collection<ITransition> transitions = LTL2BA4J
+					.formulaToBA(ltlFormula);
+			/*
+			 * populates the BA to be returned with the specified set of
+			 * transitions
+			 */
+			this.addTransitionsToTheBA(ba, transitions);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(
+					"Your string must be consistent with the following syntax\\"
+							+ syntax + "\\" + e.getMessage());
+		}
 
 		// returns the Buchi automaton
 		return ba;
@@ -92,14 +113,12 @@ public class LTLtoBATransformer extends CHIAAction<BA>{
 	 */
 	private void addTransitionsToTheBA(BA ba,
 			Collection<ITransition> transitions) {
-		if (ba == null) {
-			throw new NullPointerException(
-					"The Buchi automaton to be converted cannot be null");
-		}
-		if (transitions == null) {
-			throw new NullPointerException(
-					"The set of transitions cannot be null");
-		}
+		Preconditions.checkNotNull(ba,
+				"The Buchi automaton to be converted cannot be null");
+
+		Preconditions.checkNotNull(transitions,
+				"The set of transitions cannot be null");
+
 		/*
 		 * maps each end point (state) of an ITransition to the corresponding
 		 * state of the Buchi Automaton
@@ -208,16 +227,15 @@ public class LTLtoBATransformer extends CHIAAction<BA>{
 		Transition t = transitionFactory.create(label);
 
 		// adds the label to the current buchi automaton
-		
-		for(IGraphProposition p: t.getPropositions()){
-			if(!p.isNegated()){
+
+		for (IGraphProposition p : t.getPropositions()) {
+			if (!p.isNegated()) {
 				ba.addProposition(p);
-			}
-			else{
+			} else {
 				ba.addProposition(new GraphProposition(p.getLabel(), false));
 			}
 		}
-		
+
 		// add the transition from the source state to the destination state
 		ba.addTransition(source, destination, t);
 
