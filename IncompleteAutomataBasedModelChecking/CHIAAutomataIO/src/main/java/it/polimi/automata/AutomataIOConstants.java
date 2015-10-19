@@ -90,7 +90,7 @@ public final class AutomataIOConstants {
 	public static final String AP="("+APREGEX+")|("+NOTAPREGEX+")";
 	public static final String CLAIM_PROPOSITIONAL_FORMULA="("+AutomataIOConstants.SIGMA +")|(("+AP+")("+AutomataIOConstants.AND+"("+AP+"))*)";
 	public static final String MODELAP=APREGEX;
-	public static final String MODEL_PROPOSITIONS="("+AutomataIOConstants.SIGMA +")|(("+MODELAP+")("+AutomataIOConstants.AND+"("+MODELAP+"))*)";
+	public static final String MODEL_PROPOSITIONS="(("+MODELAP+")("+AutomataIOConstants.AND+"("+MODELAP+"))*)";
 	
 	
 	public static final String REGEXAND="\\"+AutomataIOConstants.AND+"";

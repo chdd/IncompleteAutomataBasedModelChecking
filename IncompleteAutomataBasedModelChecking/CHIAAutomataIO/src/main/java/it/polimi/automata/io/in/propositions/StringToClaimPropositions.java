@@ -12,12 +12,21 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 import com.google.common.base.Preconditions;
 
-public class StringToClaimPropositions implements Transformer<String, Set<IGraphProposition>>{
+/**
+ * Transforms the input string into the corresponding transition label, i.e., it
+ * computes the set of propositions that must label the transition of the claim
+ * 
+ * @author Claudio Menghi
+ *
+ */
+public class StringToClaimPropositions implements
+		Transformer<String, Set<IGraphProposition>> {
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
-	 * string must satisfy the regular expression {@link AutomataIOConstants#APREGEX} or
-	 * the regular expression {@link AutomataIOConstants#NOTAPREGEX}
+	 * string must satisfy the regular expression
+	 * {@link AutomataIOConstants#APREGEX} or the regular expression
+	 * {@link AutomataIOConstants#NOTAPREGEX}
 	 * 
 	 * @param input
 	 *            is the input to be computed
@@ -25,18 +34,20 @@ public class StringToClaimPropositions implements Transformer<String, Set<IGraph
 	 *             if the input is null
 	 * @throws IllegalArgumentException
 	 *             if the input does not match the regular expression
-	 *             {@link AutomataIOConstants#APREGEX} or the regular expression
-	 *             {@link AutomataIOConstants#NOTAPREGEX}
+	 *             {@link AutomataIOConstants#APREGEX} nor the regular
+	 *             expression {@link AutomataIOConstants#NOTAPREGEX}
 	 */
 	public Set<IGraphProposition> transform(String input) {
 
 		Preconditions.checkNotNull("The input must be not null");
-		Preconditions.checkArgument(input.matches(AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA), "The input " + input
-				+ " must match the claim regular expression: "
-				+ AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA);
-		
+		Preconditions.checkArgument(
+				input.matches(AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA),
+				"The input " + input
+						+ " must match the claim regular expression: "
+						+ AutomataIOConstants.CLAIM_PROPOSITIONAL_FORMULA);
+
 		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
-		
+
 		if (input.equals(AutomataIOConstants.SIGMA)) {
 			propositions.add(new SigmaProposition());
 		} else {
@@ -44,8 +55,10 @@ public class StringToClaimPropositions implements Transformer<String, Set<IGraph
 
 			for (String ap : apsStrings) {
 				if (ap.startsWith(AutomataIOConstants.NOT)) {
-					propositions.add(new GraphProposition(ap
-							.substring(AutomataIOConstants.NOT.length()), true));
+					propositions
+							.add(new GraphProposition(
+									ap.substring(AutomataIOConstants.NOT
+											.length()), true));
 				} else {
 					propositions.add(new GraphProposition(ap, false));
 				}

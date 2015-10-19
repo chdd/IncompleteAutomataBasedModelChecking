@@ -34,6 +34,7 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
  */
 public class BAReaderTest {
 
+	/*
 	private StateFactory stateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 
@@ -83,5 +84,5 @@ public class BAReaderTest {
 		assertTrue(sendingMessage.getTransitions().contains(t2));
 		assertTrue(sendingMessage.getTransitions().contains(t3));
 
-	}
+	}*/
 }

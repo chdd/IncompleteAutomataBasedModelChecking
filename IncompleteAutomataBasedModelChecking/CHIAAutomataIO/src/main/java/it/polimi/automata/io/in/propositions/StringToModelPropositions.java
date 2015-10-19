@@ -8,17 +8,24 @@ import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 import com.google.common.base.Preconditions;
 
-
-public class StringToModelPropositions implements Transformer<String, Set<IGraphProposition>>{
+/**
+ * Transforms the input string into the corresponding transition label, i.e., it
+ * computes the set of propositions that must label the transition of the model
+ * 
+ * @author Claudio Menghi
+ *
+ */
+public class StringToModelPropositions implements
+		Transformer<String, Set<IGraphProposition>> {
 
 	/**
 	 * Starting from the string computes the corresponding proposition. The
-	 * string must satisfy the regular expression {@link AutomataIOConstants#APREGEX} or
-	 * the regular expression {@link AutomataIOConstants#NOTAPREGEX}
+	 * string must satisfy the regular expression
+	 * {@link AutomataIOConstants#APREGEX} or the regular expression
+	 * {@link AutomataIOConstants#NOTAPREGEX}
 	 * 
 	 * @param input
 	 *            is the input to be computed
@@ -32,21 +39,19 @@ public class StringToModelPropositions implements Transformer<String, Set<IGraph
 	public Set<IGraphProposition> transform(String input) {
 
 		Preconditions.checkNotNull("The input must be not null");
-		Preconditions.checkArgument(input.matches(AutomataIOConstants.MODEL_PROPOSITIONS), "The input "+input+" must match the regular expression: "
-				+ AutomataIOConstants.MODEL_PROPOSITIONS);
-		
-		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
-		
-		if(input.equals("("+AutomataIOConstants.SIGMA+")")){
-			propositions.add(new SigmaProposition());
+		Preconditions.checkArgument(
+				input.matches(AutomataIOConstants.MODEL_PROPOSITIONS),
+				"The input " + input + " must match the regular expression: "
+						+ AutomataIOConstants.MODEL_PROPOSITIONS);
+
+		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
+
+		String[] apsStrings = input.split(AutomataIOConstants.AND);
+
+		for (String ap : apsStrings) {
+			propositions.add(new GraphProposition(ap, false));
 		}
-		else{
-			String[] apsStrings=input.split(AutomataIOConstants.AND);
-			
-			for(String ap: apsStrings){
-				propositions.add(new GraphProposition(ap, false));
-			}
-		}
+
 		return propositions;
 	}
 }

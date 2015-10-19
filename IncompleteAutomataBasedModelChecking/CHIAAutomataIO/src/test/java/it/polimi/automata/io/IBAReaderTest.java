@@ -29,7 +29,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  */
 public class IBAReaderTest {
 
-	private StateFactory stateFactory;
+	/*private StateFactory stateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 	
 	private Transition t1;
@@ -111,5 +111,5 @@ public class IBAReaderTest {
 		assertTrue(sendingMessage.getTransitions().contains(t7));
 		
 		
-	}
+	}*/
 }
