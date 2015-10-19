@@ -79,10 +79,8 @@ public class StateFactory extends AbstractStateFactory implements VertexFactory<
 	 * 
 	 * @return a new state with an auto assigned id and an empty name
 	 */
+	@Override
 	public State createVertex() {
-		State s = new State(Integer.toString(StateFactory.stateCount),
-				StateFactory.stateCount);
-		StateFactory.stateCount = StateFactory.stateCount + 1;
-		return s;
+		return this.create();
 	}
 }

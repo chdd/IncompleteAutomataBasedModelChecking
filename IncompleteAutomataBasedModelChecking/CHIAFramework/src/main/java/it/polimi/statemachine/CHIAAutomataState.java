@@ -18,9 +18,9 @@ import it.polimi.model.ltltoba.LTLtoBATransformer;
  * the current state and a <code>CHIAAction</code> returns the next state of the
  * automaton.
  * 
- * @author Claudio
+ * @author Claudio Menghi
  */
-public enum CHIAAutomataState implements CHIAState {
+public enum CHIAAutomataState implements CHIAStateInterface {
 	
 	/**
 	 * is the initial state of the automaton

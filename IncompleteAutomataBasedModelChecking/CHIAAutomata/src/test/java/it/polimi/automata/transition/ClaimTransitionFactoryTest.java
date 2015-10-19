@@ -19,7 +19,7 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
  * @author claudiomenghi
  * 
  */
-public class ClaimTransitionFactoryImplTest {
+public class ClaimTransitionFactoryTest {
 
 	private ClaimTransitionFactory claim;
 	private Set<IGraphProposition> labels;

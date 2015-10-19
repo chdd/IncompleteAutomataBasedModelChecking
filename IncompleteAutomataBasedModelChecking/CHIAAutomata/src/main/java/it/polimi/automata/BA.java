@@ -37,7 +37,7 @@ import com.google.common.base.Preconditions;
  * 
  * @author claudiomenghi
  */
-public class BA implements Cloneable{
+public class BA implements Cloneable {
 
 	/**
 	 * contains the initial states of the Buchi automaton
@@ -146,12 +146,6 @@ public class BA implements Cloneable{
 								+ state
 								+ " is not contained into the set of the states of the automaton");
 
-		if (this.automataGraph.outgoingEdgesOf(state) == null) {
-			return Collections.unmodifiableSet(new HashSet<Transition>());
-		}
-		if (this.automataGraph.outgoingEdgesOf(state) == null) {
-			return Collections.unmodifiableSet(new HashSet<Transition>());
-		}
 		return Collections.unmodifiableSet(this.automataGraph
 				.outgoingEdgesOf(state));
 	}
@@ -179,9 +173,6 @@ public class BA implements Cloneable{
 								+ state
 								+ " is not contained into the set of the states of the automaton");
 
-		if (this.automataGraph.incomingEdgesOf(state) == null) {
-			return Collections.unmodifiableSet(new HashSet<Transition>());
-		}
 		return this.automataGraph.incomingEdgesOf(state);
 	}
 
@@ -507,7 +498,7 @@ public class BA implements Cloneable{
 				transition);
 
 		if (result == false) {
-			throw new IllegalArgumentException(
+			throw new InternalError(
 					"It was not possible to insert the transition "
 							+ transition + " with source " + source
 							+ " and destination " + destination);
@@ -515,12 +506,29 @@ public class BA implements Cloneable{
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * check if the state source is a predecessor of the state destination,
+	 * i.e., there exist a transition from the source to the destination
+	 * 
+	 * @param source
+	 *            the source of the transition
+	 * @param destination
+	 *            the destination of the transition
+	 * @throws NullPointerException
+	 *             if the source of the destination is null
+	 * @throws IllegalArgumentException
+	 *             if the source or the destination are not contained into the
+	 *             set of the states of the BA
 	 */
 	public boolean isPredecessor(State source, State destination) {
 		Preconditions.checkNotNull(source, "The source state cannot be null");
 		Preconditions.checkNotNull(destination,
 				"The destination state cannot be null");
+		Preconditions
+				.checkArgument(this.getStates().contains(source),
+						"The source must be contained into the set of the states of the BA");
+		Preconditions
+				.checkArgument(this.getStates().contains(destination),
+						"The destination must be contained into the set of the states of the BA");
 		return this.automataGraph.containsEdge(source, destination);
 	}
 
@@ -755,6 +763,11 @@ public class BA implements Cloneable{
 	 * 
 	 * @param s
 	 *            the state to be stuttered
+	 * @throws NullPointerException
+	 *             if the state s is null
+	 * @throws IllegalArgumentException
+	 *             if the state s is not contained into the set of the states of
+	 *             the automaton
 	 */
 	public void addStuttering(State s) {
 		Preconditions.checkNotNull(s, "The state s cannot be null");
@@ -774,6 +787,13 @@ public class BA implements Cloneable{
 
 	}
 
+	/**
+	 * returns the reference of the {@link TransitionFactory} on which the BA is
+	 * based
+	 * 
+	 * @return the reference of the {@link TransitionFactory} on which the BA is
+	 *         based
+	 */
 	public TransitionFactory<State, Transition> getTransitionFactory() {
 		return (TransitionFactory<State, Transition>) this.automataGraph
 				.getEdgeFactory();

@@ -19,7 +19,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author claudiomenghi
  *
  */
-public class ModelTransitionFactoryImplTest {
+public class ModelTransitionFactoryTest {
 
 	private ModelTransitionFactory modelFactory;
 	private Set<IGraphProposition> labels1;

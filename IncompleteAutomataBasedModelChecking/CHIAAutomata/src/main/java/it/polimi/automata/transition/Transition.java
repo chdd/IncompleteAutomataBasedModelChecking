@@ -36,12 +36,7 @@ public class Transition extends DefaultEdge {
 	 */
 	protected static int transition_counter = 1;
 
-	public Transition() {
-		this.id = transition_counter;
-		transition_counter++;
-		this.labels = new HashSet<IGraphProposition>();
-	}
-
+	
 	/**
 	 * Creates a new transition
 	 * 
@@ -70,8 +65,6 @@ public class Transition extends DefaultEdge {
 			this.labels.add(l);
 		}
 	}
-
-	
 
 	/**
 	 * <p>
@@ -108,8 +101,8 @@ public class Transition extends DefaultEdge {
 			ret = ret + label.toString() + PropositionalLogicConstants.AND;
 		}
 		if (ret.endsWith(PropositionalLogicConstants.AND)) {
-			ret = ret.substring(0,
-					ret.length() - PropositionalLogicConstants.AND.length());
+			ret = ret.substring(0, ret.length()
+					- PropositionalLogicConstants.AND.length());
 		}
 
 		return "{" + Integer.toString(this.id) + "} " + ret + "";

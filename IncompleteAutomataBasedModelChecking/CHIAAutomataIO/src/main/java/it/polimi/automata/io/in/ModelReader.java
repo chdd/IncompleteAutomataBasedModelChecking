@@ -4,14 +4,18 @@ import it.polimi.automata.IBA;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
@@ -24,8 +28,8 @@ import com.google.common.base.Preconditions;
  */
 public class ModelReader extends XMLReader<IBA> {
 
-	private final static String NAME="READ MODEL";
-	
+	private final static String NAME = "READ MODEL";
+
 	/**
 	 * is the logger of the BAReader class
 	 */
@@ -35,7 +39,6 @@ public class ModelReader extends XMLReader<IBA> {
 	 * is the File from which the IBA must be read
 	 */
 	private final File file;
-	
 
 	private static final String IBA_XSD_PATH = "IBA.xsd";
 
@@ -68,22 +71,29 @@ public class ModelReader extends XMLReader<IBA> {
 	public ModelReader(File file) {
 		super(NAME);
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
+		Preconditions.checkArgument(file.exists(),
+				"Check if the file actually exists");
 
 		this.file = file;
+
 	}
 
 	@Override
-	public IBA  perform() throws Exception {
-		logger.info("Reding the Model");
+	public IBA perform() throws SAXException, IOException,
+			ParserConfigurationException {
+		logger.debug("Reding the Model");
 
 		Document dom;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		
-		if(ClassLoader.getSystemResourceAsStream(IBA_XSD_PATH)==null){
-			throw new InternalError("It was not possible to load the IBA.xsd from "+IBA_XSD_PATH);
+
+		if (ClassLoader.getSystemResourceAsStream(IBA_XSD_PATH) == null) {
+			throw new InternalError(
+					"It was not possible to load the IBA.xsd from "
+							+ IBA_XSD_PATH);
 		}
-		this.validateAgainstXSD(new FileInputStream(this.file),
+		FileInputStream fileInputStream = new FileInputStream(this.file);
+		this.validateAgainstXSD(fileInputStream,
 				ClassLoader.getSystemResourceAsStream(IBA_XSD_PATH));
 
 		// use the factory to take an instance of the document builder
@@ -96,7 +106,7 @@ public class ModelReader extends XMLReader<IBA> {
 
 		IBA iba = new ElementToIBATransformer().transform(doc);
 		this.performed();
-		logger.info("Model readed");
+		logger.debug("Model readed");
 		return iba;
 	}
 }
