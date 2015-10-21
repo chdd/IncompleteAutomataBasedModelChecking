@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import com.google.common.base.Preconditions;
 
 /**
- * transforms an object of type Node into an object of type State
+ * transforms an object of type Node into an object of type State and populates the corresponding BA
  * 
  * @author Claudio Menghi
  *
@@ -30,7 +30,7 @@ public class BAElementToStateTransformer implements Transformer<Element, State> 
 
 	/**
 	 * creates a new transformer in charge of populating the BA passed as
-	 * paremeter with the parsed states
+	 * parameter with the parsed states
 	 * 
 	 * @param ba
 	 *            is the BA to be populated
