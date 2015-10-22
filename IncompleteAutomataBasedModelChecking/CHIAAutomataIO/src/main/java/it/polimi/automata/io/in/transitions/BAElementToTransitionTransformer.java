@@ -54,9 +54,9 @@ public class BAElementToTransitionTransformer implements
 	 *            corresponding state
 	 * @throws NullPointerException
 	 *             if the automaton or the map is empty
-	 * @throws if
-	 *             the set of the states in the map does not corresponds to the
-	 *             states of the automaton
+	 * @throws IllegalArgumentException
+	 *             if the set of the states in the map does not corresponds to
+	 *             the states of the automaton
 	 */
 	public BAElementToTransitionTransformer(BA automaton,
 			Map<Integer, State> idStateMap) {
@@ -85,7 +85,12 @@ public class BAElementToTransitionTransformer implements
 	 * @throws NullPointerException
 	 *             if the element passed as parameter is null
 	 * @throws IllegalArgumentException
+	 *             if the transition does not have a source attribute if the
+	 *             transition does not have a destination attribute
 	 *             if the transition is not associated with an id
+	 * @throws NumberFormatException
+	 *             if the source attribute is not an integer if the destination
+	 *             attribute is not an integer
 	 */
 	@Override
 	public Transition transform(Element eElement) {
@@ -94,13 +99,15 @@ public class BAElementToTransitionTransformer implements
 		Preconditions.checkArgument(eElement
 				.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID),
 				"The transition must contain an id attribute");
-		Preconditions.checkArgument(eElement
-				.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE),
-				"The transition must have a source");
-		Preconditions.checkArgument(eElement
-				.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_DESTINATION),
-				"The transition must have a destination");
-		
+		Preconditions
+				.checkArgument(
+						eElement.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE),
+						"The transition must have a source");
+		Preconditions
+				.checkArgument(
+						eElement.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_DESTINATION),
+						"The transition must have a destination");
+
 		int sourceId = Integer
 				.parseInt(eElement
 						.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_SOURCE));
@@ -119,28 +126,29 @@ public class BAElementToTransitionTransformer implements
 						"The id: "
 								+ destinationId
 								+ " is not contained into the set of the id of the states");
-		
+
 		int id = 0;
 		try {
 			id = Integer
 					.parseInt(eElement
 							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID));
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException(eElement
-					.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID)+" is not a valid id for a transition. The id must be an integer.");
+			throw new IllegalArgumentException(
+					eElement.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_ID)
+							+ " is not a valid id for a transition. The id must be an integer.");
 		}
 
-		Set<IGraphProposition> propositions=new HashSet<IGraphProposition>();
-		if(eElement.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS)){
+		Set<IGraphProposition> propositions = new HashSet<IGraphProposition>();
+		if (eElement
+				.hasAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS)) {
 			propositions = new StringToClaimPropositions()
-			.transform(eElement
-					.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
+					.transform(eElement
+							.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_TRANSITION_PROPOSITIONS));
 
 		}
-		
+
 		Transition t = transitionFactory.create(id, propositions);
 
-		
 		automaton.addTransition(idStateMap.get(sourceId),
 				idStateMap.get(destinationId), t);
 		return t;
