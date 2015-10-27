@@ -1,11 +1,9 @@
 package it.polimi.automata.io.out.states;
 
 import static org.junit.Assert.*;
-import it.polimi.automata.IBA;
+import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
-import it.polimi.automata.transition.ModelTransitionFactory;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,15 +11,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
-/**
- * @author Claudio Menghi
- *
- */
-public class IBAStateToElementTransformerTest {
+public class IntBAStateToElementTransformerTest {
+
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.io.out.states.IBAStateToElementTransformer#IBAStateToElementTransformer(Document)}
+	 * {@link it.polimi.automata.io.out.states.IntBAStateToElementTransformerTest#IBAStateToElementTransformer(Document)}
 	 * .
 	 * 
 	 * @throws ParserConfigurationException
@@ -29,13 +24,14 @@ public class IBAStateToElementTransformerTest {
 	@Test(expected = NullPointerException.class)
 	public void testIBAStateToElementTransformerNull()
 			throws ParserConfigurationException {
-		new IBAStateToElementTransformer(null, DocumentBuilderFactory
+	
+		new IntBAStateToElementTransformer(null, DocumentBuilderFactory
 				.newInstance().newDocumentBuilder().newDocument());
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.io.out.states.IBAStateToElementTransformer#IBAStateToElementTransformer(Document)}
+	 * {@link it.polimi.automata.io.out.states.IntBAStateToElementTransformerTest#IntBAStateToElementTransformerTest(Document)}
 	 * .
 	 * 
 	 * @throws ParserConfigurationException
@@ -45,14 +41,13 @@ public class IBAStateToElementTransformerTest {
 			throws ParserConfigurationException {
 		assertNotNull(
 				"The constructor of the BAStateToElementTransformer class creates a new document",
-				new IBAStateToElementTransformer(new IBA(
-						new ModelTransitionFactory()), DocumentBuilderFactory
+				new IntBAStateToElementTransformer(new IntersectionBA(), DocumentBuilderFactory
 						.newInstance().newDocumentBuilder().newDocument()));
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.io.out.states.IBAStateToElementTransformer#transform(Document)}
+	 * {@link it.polimi.automata.io.out.states.IntBAStateToElementTransformerTest#transform(Document)}
 	 * .
 	 * 
 	 * @throws ParserConfigurationException
@@ -60,14 +55,14 @@ public class IBAStateToElementTransformerTest {
 	@Test(expected = NullPointerException.class)
 	public void testStateToElementTrasformerNull()
 			throws ParserConfigurationException {
-		new IBAStateToElementTransformer(new IBA(new ModelTransitionFactory()),
+		new IntBAStateToElementTransformer(new IntersectionBA(),
 				DocumentBuilderFactory.newInstance().newDocumentBuilder()
 						.newDocument()).transform(null);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.io.out.states.IBAStateToElementTransformer#transform(Document)}
+	 * {@link it.polimi.automata.io.out.states.IntBAStateToElementTransformerTest#transform(Document)}
 	 * .
 	 * 
 	 * @throws ParserConfigurationException
@@ -76,15 +71,15 @@ public class IBAStateToElementTransformerTest {
 	public void testStateToElementTrasformerNotBAState()
 			throws ParserConfigurationException {
 		State state1 = new StateFactory().create("nome", 1);
-		IBA iba = new IBA(new ModelTransitionFactory());
-		new IBAStateToElementTransformer(iba, DocumentBuilderFactory
+		IntersectionBA intersectionBA = new IntersectionBA();
+		new IntBAStateToElementTransformer(intersectionBA, DocumentBuilderFactory
 				.newInstance().newDocumentBuilder().newDocument())
 				.transform(state1);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.io.out.states.IBAStateToElementTransformer#transform(Document)}
+	 * {@link it.polimi.automata.io.out.states.IntBAStateToElementTransformerTest#transform(Document)}
 	 * .
 	 * 
 	 * @throws ParserConfigurationException
@@ -93,9 +88,9 @@ public class IBAStateToElementTransformerTest {
 	public void testStateToElementTrasformerNotInitialNotAcceptingState()
 			throws ParserConfigurationException {
 		State state1 = new StateFactory().create("nome", 1);
-		IBA iba = new IBA(new ClaimTransitionFactory());
-		iba.addState(state1);
-		Element element = new IBAStateToElementTransformer(iba,
+		IntersectionBA intersectionBA = new IntersectionBA();
+		intersectionBA.addState(state1);
+		Element element = new IntBAStateToElementTransformer(intersectionBA,
 				DocumentBuilderFactory.newInstance().newDocumentBuilder()
 						.newDocument()).transform(state1);
 		assertTrue("It must not exist the initial attribute",
@@ -112,7 +107,7 @@ public class IBAStateToElementTransformerTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.automata.io.out.states.IBAStateToElementTransformer#transform(Document)}
+	 * {@link it.polimi.automata.io.out.states.IntBAStateToElementTransformerTest#transform(Document)}
 	 * .
 	 * 
 	 * @throws ParserConfigurationException
@@ -121,12 +116,12 @@ public class IBAStateToElementTransformerTest {
 	public void testStateToElementTrasformerInitialAcceptingState()
 			throws ParserConfigurationException {
 		State state1 = new StateFactory().create("nome", 1);
-		IBA iba = new IBA(new ClaimTransitionFactory());
-		iba.addState(state1);
-		iba.addInitialState(state1);
-		iba.addAcceptState(state1);
-		iba.addBlackBoxState(state1);
-		Element element = new IBAStateToElementTransformer(iba,
+		IntersectionBA intersectionBa = new IntersectionBA();
+		intersectionBa.addState(state1);
+		intersectionBa.addInitialState(state1);
+		intersectionBa.addAcceptState(state1);
+		intersectionBa.addMixedState(state1);
+		Element element = new IntBAStateToElementTransformer(intersectionBa,
 				DocumentBuilderFactory.newInstance().newDocumentBuilder()
 						.newDocument()).transform(state1);
 		assertTrue("It must  exist the initial attribute",
@@ -136,6 +131,7 @@ public class IBAStateToElementTransformerTest {
 
 		assertTrue("The accepting attribute must be true", Boolean.parseBoolean(element.getAttribute("accepting")));
 		assertTrue("The initial attribute must be true", Boolean.parseBoolean(element.getAttribute("initial")));
-		assertTrue("The blackbox attribute must be true", Boolean.parseBoolean(element.getAttribute("blackbox")));
+		assertTrue("The mixed attribute must be true", Boolean.parseBoolean(element.getAttribute("mixed")));
 	}
+
 }

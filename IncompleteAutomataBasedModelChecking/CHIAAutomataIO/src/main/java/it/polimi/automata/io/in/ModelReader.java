@@ -4,7 +4,6 @@ import it.polimi.automata.IBA;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -81,7 +80,7 @@ public class ModelReader extends XMLReader<IBA> {
 	@Override
 	public IBA perform() throws SAXException, IOException,
 			ParserConfigurationException {
-		logger.debug("Reding the Model");
+		logger.info("Reding the Model");
 
 		Document dom;
 
@@ -106,7 +105,7 @@ public class ModelReader extends XMLReader<IBA> {
 
 		IBA iba = new ElementToIBATransformer().transform(doc);
 		this.performed();
-		logger.debug("Model readed");
+		logger.info("Model readed");
 		return iba;
 	}
 }

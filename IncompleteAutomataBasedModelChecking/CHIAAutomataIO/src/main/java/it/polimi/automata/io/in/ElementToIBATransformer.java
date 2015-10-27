@@ -8,8 +8,6 @@ import it.polimi.automata.io.in.propositions.StringToModelPropositions;
 import it.polimi.automata.io.in.states.IBAElementToStateTransformer;
 import it.polimi.automata.io.in.transitions.IBAElementToTransitionTransformer;
 import it.polimi.automata.state.State;
-import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 
 import java.util.HashMap;
@@ -68,7 +66,7 @@ public class ElementToIBATransformer implements Transformer<Element, IBA>  {
 	}
 	private void loadStates(Element doc, IBA ba) {
 		
-		IBAElementToStateTransformer stateElementParser=new IBAElementToStateTransformer(new StateFactory(), ba);
+		IBAElementToStateTransformer stateElementParser=new IBAElementToStateTransformer(ba);
 		NodeList xmlstates = doc
 				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_STATE);
 
@@ -84,7 +82,7 @@ public class ElementToIBATransformer implements Transformer<Element, IBA>  {
 	}
 
 	private void loadTransitions(Element doc, IBA ba) {
-		IBAElementToTransitionTransformer transitionElementParser=new IBAElementToTransitionTransformer(new ClaimTransitionFactory(), ba, this.mapIdState);
+		IBAElementToTransitionTransformer transitionElementParser=new IBAElementToTransitionTransformer(ba, this.mapIdState);
 		NodeList xmltransitions = doc
 				.getElementsByTagName(AutomataIOConstants.XML_TAG_TRANSITION);
 

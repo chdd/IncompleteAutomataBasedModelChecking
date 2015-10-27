@@ -40,6 +40,15 @@ public class TransitionToElementTransformer implements
 		this.doc = doc;
 	}
 
+	/**
+	 * transforms the transition into the corresponding XML element. The XML
+	 * element has two attributes the ID and the propositions of the transition
+	 * 
+	 * @param transition
+	 *            the transition to be transformed
+	 * @throws NullPointerException
+	 *             if the transition is null
+	 */
 	@Override
 	public Element transform(Transition transition) {
 		Preconditions.checkNotNull(transition,

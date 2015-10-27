@@ -1,7 +1,7 @@
 package it.polimi.automata.io.in;
 
-import it.polimi.automata.BA;
 import it.polimi.automata.AutomataIOConstants;
+import it.polimi.automata.BA;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.in.propositions.StringToModelPropositions;
 import it.polimi.automata.io.in.states.BAElementToStateTransformer;
