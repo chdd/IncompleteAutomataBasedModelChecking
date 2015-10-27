@@ -16,6 +16,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,12 +27,12 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
 
 /**
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
-public class IBAReaderTest {
-
-	/*private StateFactory stateFactory;
+public class ModelReaderTest {
+	
+	private StateFactory stateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 	
 	private Transition t1;
@@ -75,6 +78,38 @@ public class IBAReaderTest {
 		t7=this.transitionFactory.create(7, propositions7);
 	}
 	
+	
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ModelReader#ModelReader()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testModelReaderNullString() throws JAXBException,
+			ParserConfigurationException {
+		new ModelReader((String) null);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ModelReader#ModelReader()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testModelReaderNullFile() throws JAXBException,
+			ParserConfigurationException {
+		new ModelReader((File) null);
+	}
+
+
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ModelReader#perform()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
 	@Test
 	public void test() throws Exception {
 
@@ -109,7 +144,49 @@ public class IBAReaderTest {
 		assertTrue(sendingMessage.getTransitions().contains(t5));
 		assertTrue(sendingMessage.getTransitions().contains(t6));
 		assertTrue(sendingMessage.getTransitions().contains(t7));
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ModelReader#perform()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
+	@Test
+	public void testPerformStringPath() throws Exception {
+
+		ModelReader reader=new ModelReader(
+				 getClass().getClassLoader()
+						.getResource("SendingMessageModel.xml").getFile());
+		
+		IBA sendingMessage=reader.perform();
+		
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q1", 1)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("send1", 2)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("send2", 3)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q2", 4)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q3", 5)));
+		assertTrue(sendingMessage.getStates().size()==5);
+		
+		assertTrue(sendingMessage.getInitialStates().contains(stateFactory.create("q1", 1)));
+		assertTrue(sendingMessage.getInitialStates().size()==1);
+		
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q2", 4)));
+		assertTrue(sendingMessage.getStates().contains(stateFactory.create("q3", 5)));
+		assertTrue(sendingMessage.getAcceptStates().size()==2);
+		
+		assertTrue(sendingMessage.getBlackBoxStates().contains(stateFactory.create("send1", 2)));
+		assertTrue(sendingMessage.getBlackBoxStates().contains(stateFactory.create("send2", 3)));
+		assertTrue(sendingMessage.getBlackBoxStates().size()==2);
+		
+		assertTrue(sendingMessage.getTransitions().contains(t1));
+		assertTrue(sendingMessage.getTransitions().contains(t2));
+		assertTrue(sendingMessage.getTransitions().contains(t3));
+		assertTrue(sendingMessage.getTransitions().contains(t4));
+		assertTrue(sendingMessage.getTransitions().contains(t5));
+		assertTrue(sendingMessage.getTransitions().contains(t6));
+		assertTrue(sendingMessage.getTransitions().contains(t7));
 		
 		
-	}*/
+	}
 }

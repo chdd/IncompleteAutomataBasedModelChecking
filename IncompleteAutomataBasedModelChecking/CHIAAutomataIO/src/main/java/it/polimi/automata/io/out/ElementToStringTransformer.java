@@ -17,8 +17,8 @@ public class ElementToStringTransformer {
 	/**
 	 * transforms the constraint into the corresponding String representation
 	 * 
-	 * @param constraint
-	 *            the constraint to be transformed
+	 * @param element
+	 *            the element to be transformed
 	 * @return the string representation of the constraint
 	 * @throws Exception
 	 *             if a problem occurs during the transformation

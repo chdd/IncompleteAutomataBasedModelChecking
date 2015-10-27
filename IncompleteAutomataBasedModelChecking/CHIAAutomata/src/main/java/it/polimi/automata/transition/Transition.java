@@ -36,7 +36,16 @@ public class Transition extends DefaultEdge {
 	 */
 	protected static int transition_counter = 1;
 
-	
+	/**
+	 * creates a new Transition. Do not remove this constructor. Do not change
+	 * the public modifier to this constructor
+	 */
+	public Transition() {
+		this.id = Transition.transition_counter;
+		this.labels = new HashSet<IGraphProposition>();
+		Transition.transition_counter++;
+	}
+
 	/**
 	 * Creates a new transition
 	 * 

@@ -28,13 +28,13 @@ import com.google.common.base.Preconditions;
  * to transform a String into the corresponding set of propositions, and an XML
  * element into the corresponding state and transition, respectively.
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  * 
  */
-public class ClaimReader extends XMLReader<BA>{
+public class ClaimReader extends XMLReader<BA> {
 
-	private final static String NAME="READ CLAIM";
-	
+	private final static String NAME = "READ CLAIM";
+
 	/**
 	 * is the logger of the BAReader class
 	 */
@@ -46,13 +46,15 @@ public class ClaimReader extends XMLReader<BA>{
 	 */
 	private final File file;
 
+	/**
+	 * contains the name of the XSD associated with the BA XML class
+	 */
 	private static final String BA_XSD_PATH = "BA.xsd";
 
-	
-	
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
+	 * 
 	 * @see ClaimReader#read()
 	 * 
 	 * @param filePath
@@ -65,7 +67,7 @@ public class ClaimReader extends XMLReader<BA>{
 		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
 		this.file = new File(filePath);
 	}
-	
+
 	/**
 	 * creates a new Buchi automaton reader which can be used to read a Buchi
 	 * automaton through the method
@@ -83,17 +85,26 @@ public class ClaimReader extends XMLReader<BA>{
 		this.file = file;
 	}
 
+	/**
+	 * loads the BA from the corresponding file
+	 * 
+	 * @return the BA loaded from the file
+	 */
 	@Override
-	public BA perform() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+	public BA perform() throws FileNotFoundException, SAXException,
+			IOException, ParserConfigurationException {
 		logger.info("Reding the Claim");
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		if(ClassLoader.getSystemResourceAsStream(BA_XSD_PATH)==null){
-			throw new InternalError("It was not possible to load the BA.xsd from "+BA_XSD_PATH);
+		if (ClassLoader.getSystemResourceAsStream(BA_XSD_PATH) == null) {
+			throw new InternalError(
+					"It was not possible to load the BA.xsd from "
+							+ BA_XSD_PATH);
 		}
-		this.validateAgainstXSD(new FileInputStream(this.file), ClassLoader.getSystemResourceAsStream(BA_XSD_PATH));
+		this.validateAgainstXSD(new FileInputStream(this.file),
+				ClassLoader.getSystemResourceAsStream(BA_XSD_PATH));
 
 		// use the factory to take an instance of the document builder
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -102,8 +113,8 @@ public class ClaimReader extends XMLReader<BA>{
 		dom = db.parse(file);
 
 		Element doc = dom.getDocumentElement();
-		BA ba=new ElementToBATransformer().transform(doc);
-		
+		BA ba = new ElementToBATransformer().transform(doc);
+
 		logger.info("Claim Readed");
 		this.performed();
 		return ba;

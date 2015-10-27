@@ -20,7 +20,5 @@ public class ClaimToStringTrasformer extends CHIAAction<String>{
 	@Override
 	public String perform() throws Exception {
 		return new ElementToStringTransformer().transform(new BAToElementTrasformer().transform(claim));
-		
-		
 	}
 }

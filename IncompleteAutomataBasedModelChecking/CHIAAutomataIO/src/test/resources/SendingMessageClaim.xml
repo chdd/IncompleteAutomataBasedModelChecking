@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ba>
 	<propositions>
-		<proposition value="SIGMA" />
-		<proposition value="send" />
-		<proposition value="success" />
+		<proposition name="send" />
+		<proposition name="success" />
 	</propositions>
 	<states>
 		<state id="1" name="p1" initial="true" />

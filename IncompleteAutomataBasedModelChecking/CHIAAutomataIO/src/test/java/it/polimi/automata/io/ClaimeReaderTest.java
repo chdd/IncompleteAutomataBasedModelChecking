@@ -1,6 +1,3 @@
-/**
- * 
- */
 package it.polimi.automata.io;
 
 import static org.junit.Assert.assertTrue;
@@ -29,12 +26,11 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 /**
- * @author claudiomenghi
+ * @author Claudio Menghi
  * 
  */
-public class BAReaderTest {
+public class ClaimeReaderTest {
 
-	/*
 	private StateFactory stateFactory;
 	private TransitionFactory<State, Transition> transitionFactory;
 
@@ -62,10 +58,42 @@ public class BAReaderTest {
 		t3 = this.transitionFactory.create(3, propositions3);
 	}
 
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ClaimeReader#ClaimeReader()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testClaimeReaderNullString() throws JAXBException,
+			ParserConfigurationException {
+		new ClaimReader((String) null);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ClaimeReader#ClaimeReader()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testClaimeReaderNullFile() throws JAXBException,
+			ParserConfigurationException {
+		new ClaimReader((File) null);
+	}
+
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ClaimeReader#transform()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
 	@Test
-	public void test() throws JAXBException, ParserConfigurationException, SAXException, IOException {
-		ClaimReader reader = new ClaimReader(new File(getClass().getClassLoader()
-				.getResource("SendingMessageClaim.xml").getFile()));
+	public void testTransform() throws JAXBException,
+			ParserConfigurationException, SAXException, IOException {
+		ClaimReader reader = new ClaimReader(new File(getClass()
+				.getClassLoader().getResource("SendingMessageClaim.xml")
+				.getFile()));
 
 		BA sendingMessage = reader.perform();
 
@@ -84,5 +112,36 @@ public class BAReaderTest {
 		assertTrue(sendingMessage.getTransitions().contains(t2));
 		assertTrue(sendingMessage.getTransitions().contains(t3));
 
-	}*/
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.automata.io.in.ClaimeReader#transform()}
+	 * .
+	 * 
+	 * @throws ParserConfigurationException
+	 */
+	@Test
+	public void testTransformStringPath() throws JAXBException,
+			ParserConfigurationException, SAXException, IOException {
+		ClaimReader reader = new ClaimReader(getClass()
+				.getClassLoader().getResource("SendingMessageClaim.xml").getFile());
+
+		BA sendingMessage = reader.perform();
+
+		assertTrue(sendingMessage.getStates().contains(
+				stateFactory.create("p1", 1)));
+		assertTrue(sendingMessage.getStates().contains(
+				stateFactory.create("p2", 2)));
+
+		assertTrue(sendingMessage.getInitialStates().contains(
+				stateFactory.create("p1", 1)));
+		assertTrue(sendingMessage.getAcceptStates().contains(
+				stateFactory.create("p1", 2)));
+
+		assertTrue(sendingMessage.getTransitions().contains(t1));
+
+		assertTrue(sendingMessage.getTransitions().contains(t2));
+		assertTrue(sendingMessage.getTransitions().contains(t3));
+
+	}
 }

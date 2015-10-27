@@ -21,6 +21,12 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * Transforms the Element into the corresponding BA
+ * 
+ * @author Claudio Menghi
+ *
+ */
 public class ElementToBATransformer implements Transformer<Element, BA> {
 
 	/**
@@ -28,10 +34,22 @@ public class ElementToBATransformer implements Transformer<Element, BA> {
 	 */
 	protected Map<Integer, State> mapIdState;
 
+	/**
+	 * Creates the ElementToBATransformer. The ElementToBATransformer transforms
+	 * an XML element into the corresponding BA
+	 */
 	public ElementToBATransformer() {
 		this.mapIdState = new HashMap<Integer, State>();
 	}
 
+	/**
+	 * transforms the element into the corresponding BA
+	 * 
+	 * @param input
+	 *            the element to be transformed into the corresponding BA
+	 * @throws NullPointerException
+	 *             if the element to be converted is null
+	 */
 	@Override
 	public BA transform(Element input) {
 		Preconditions.checkNotNull(input,

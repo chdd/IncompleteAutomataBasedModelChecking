@@ -77,6 +77,11 @@ public class ModelReader extends XMLReader<IBA> {
 
 	}
 
+	/**
+	 * loads the IBA from the corresponding file
+	 * 
+	 * @return the IBA loaded from the file
+	 */
 	@Override
 	public IBA perform() throws SAXException, IOException,
 			ParserConfigurationException {
