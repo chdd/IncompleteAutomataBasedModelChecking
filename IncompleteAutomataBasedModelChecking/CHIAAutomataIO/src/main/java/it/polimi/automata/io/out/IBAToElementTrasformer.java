@@ -19,10 +19,6 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 public class IBAToElementTrasformer extends XMLTrasformer<IBA, Element> {
 
-	public IBAToElementTrasformer(Document doc) {
-		super(doc);
-	}
-	
 	public IBAToElementTrasformer() throws ParserConfigurationException {
 		super();
 	}

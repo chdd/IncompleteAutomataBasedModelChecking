@@ -3,11 +3,11 @@
  */
 package it.polimi.automata.io.out;
 
-import static org.junit.Assert.*;
-import it.polimi.automata.BA;
+import static org.junit.Assert.assertNotNull;
+import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
-import it.polimi.automata.transition.ClaimTransitionFactory;
+import it.polimi.automata.transition.ModelTransitionFactory;
 
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author Claudio1
  *
  */
-public class ClaimToStringTrasformerTest {
+public class ModelToStringTrasformerTest {
 
 	/**
 	 * Test method for
@@ -25,10 +25,10 @@ public class ClaimToStringTrasformerTest {
 	 * .
 	 */
 	@Test
-	public void testClaimToStringTrasformer() {
+	public void testModelToStringTrasformer() {
 		assertNotNull("The constructor returns a not null object",
-				new ClaimToStringTrasformer(
-						new BA(new ClaimTransitionFactory())));
+				new ModelToStringTrasformer(
+						new IBA(new ModelTransitionFactory())));
 	}
 
 	/**
@@ -37,8 +37,8 @@ public class ClaimToStringTrasformerTest {
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
-	public void testClaimToStringTrasformerNull() {
-		new ClaimToStringTrasformer(null);
+	public void testModelToStringTrasformerNull() {
+		new ModelToStringTrasformer(null);
 	}
 
 	/**
@@ -49,18 +49,19 @@ public class ClaimToStringTrasformerTest {
 	@Test
 	public void testPerform() throws Exception {
 		
-		BA ba=new BA(new ClaimTransitionFactory());
-		ba.addProposition(new GraphProposition("label", false));
+		IBA iba=new IBA(new ModelTransitionFactory());
+		iba.addProposition(new GraphProposition("label", false));
+		
 		State state1=new StateFactory().create("state1", 1);
 		State state2=new StateFactory().create("state2", 2);
 		State state3=new StateFactory().create("state3", 3);
 		
+		iba.addInitialState(state1);
+		iba.addState(state2);
+		iba.addAcceptState(state3);
 		
-		ba.addInitialState(state1);
-		ba.addState(state2);
-		ba.addAcceptState(state3);
-		ba.addTransition(state1, state2, new ClaimTransitionFactory().create());
-		assertNotNull(new ClaimToStringTrasformer(ba).perform());
+		iba.addTransition(state1, state2, new ModelTransitionFactory().create());
+		assertNotNull(new ModelToStringTrasformer(iba).perform());
 	}
 
 }
