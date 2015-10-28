@@ -1,17 +1,16 @@
 package it.polimi.statemachine;
 
-import action.CHIAAction;
-import action.CHIAException;
 import it.polimi.automata.io.in.ClaimReader;
 import it.polimi.automata.io.in.ModelReader;
 import it.polimi.automata.io.out.ClaimToStringTrasformer;
-import it.polimi.automata.io.out.IntersectionWriter;
 import it.polimi.checker.Checker;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.constraint.ConstraintWriter;
 import it.polimi.contraintcomputation.ConstraintGenerator;
 import it.polimi.model.ltltoba.ClaimLTLReader;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
+import action.CHIAAction;
+import action.CHIAException;
 
 /**
  * represents a possible state of CHIA. It offers a method perform that given
@@ -195,9 +194,7 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 			if(chiaAction==ConstraintGenerator.class){
 				return true;
 			}
-			if (chiaAction==IntersectionWriter.class) {
-				return true;
-			}
+			
 			return false;
 		}
 		/**
@@ -218,9 +215,7 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 			if (chiaAction==ModelReader.class) {
 				return READY;
 			}
-			if (chiaAction==IntersectionWriter.class) {
-				return CHECKED;
-			}
+			
 			if(chiaAction==ConstraintGenerator.class){
 				return CONSTRAINTCOMPUTED;
 			}
@@ -239,9 +234,6 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 				return true;
 			}
 			if (chiaAction==ModelReader.class) {
-				return true;
-			}
-			if (chiaAction==IntersectionWriter.class) {
 				return true;
 			}
 			if (chiaAction==ConstraintToStringTrasformer.class){
@@ -269,9 +261,7 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 			if (chiaAction==ClaimToStringTrasformer.class) {
 				return CONSTRAINTCOMPUTED;
 			}
-			if (chiaAction==IntersectionWriter.class) {
-				return CONSTRAINTCOMPUTED;
-			}
+			
 			if (chiaAction==ConstraintToStringTrasformer.class){
 				return CONSTRAINTCOMPUTED;
 			}

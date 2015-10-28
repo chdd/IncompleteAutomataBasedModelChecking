@@ -19,6 +19,9 @@ import rwth.i2.ltl2ba4j.model.impl.SigmaProposition;
 
 public class BAToElementTrasformer extends XMLTrasformer<BA, Element> {
 
+	public BAToElementTrasformer(Document doc){
+		super(doc);
+	}
 	public BAToElementTrasformer() throws ParserConfigurationException {
 		super();
 	}
