@@ -26,6 +26,7 @@ public abstract class XMLReader<O> extends CHIAAction<O> {
 		Schema schema = factory.newSchema(new StreamSource(xsd));
 		Validator validator = schema.newValidator();
 		validator.validate(new StreamSource(xml));
+		
 		return true;
 
 	}

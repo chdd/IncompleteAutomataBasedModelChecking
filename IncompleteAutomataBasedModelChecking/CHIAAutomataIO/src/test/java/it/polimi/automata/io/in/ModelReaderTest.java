@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.polimi.automata.io;
+package it.polimi.automata.io.in;
 
 import static org.junit.Assert.assertTrue;
 import it.polimi.automata.IBA;

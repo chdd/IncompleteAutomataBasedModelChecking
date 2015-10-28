@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
+<!-- defining an Incomplete Buchi Automaton -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:chia="http://NamespaceTest.com/CHIA" elementFormDefault="qualified">
 
-	<!-- defining a Buchi Automaton -->
 	<xs:element name="iba">
 		<xs:complexType>
 			<xs:sequence>
@@ -26,7 +26,7 @@
 							<xs:element name="state" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
 									<xs:attribute name="id" type="xs:integer" use="required" />
-									<xs:attribute name="name" type="xs:string" />
+									<xs:attribute name="name" type="xs:string" use="required" />
 									<xs:attribute name="initial" type="xs:boolean" />
 									<xs:attribute name="blackbox" type="xs:boolean" />
 									<xs:attribute name="accepting" type="xs:boolean" />

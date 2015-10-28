@@ -111,6 +111,7 @@ public class ClaimReader extends XMLReader<BA> {
 		// parse using the builder to get the DOM mapping of the
 		// XML file
 		dom = db.parse(file);
+		
 
 		Element doc = dom.getDocumentElement();
 		BA ba = new ElementToBATransformer().transform(doc);
