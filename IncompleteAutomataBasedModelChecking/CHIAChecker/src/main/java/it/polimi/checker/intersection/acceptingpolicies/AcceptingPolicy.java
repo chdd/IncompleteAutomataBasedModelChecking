@@ -15,6 +15,25 @@ public abstract class AcceptingPolicy {
 	protected IBA model;
 	protected BA claim;
 
+	/**
+	 * creates a new Accepting policy
+	 * 
+	 * @param model
+	 *            is the model to be considered
+	 * @param claim
+	 *            is the claim to be considered
+	 * @throws NullPointerException
+	 *             if the model or the claim is null
+	 */
+	public AcceptingPolicy(IBA model, BA claim) {
+		Preconditions.checkNotNull(model,
+				"The model to be considered cannot be null");
+		Preconditions.checkNotNull(claim,
+				"The claim to be considered cannot be null");
+		this.model = model;
+		this.claim = claim;
+	}
+
 	public void setClaim(BA claim) {
 		Preconditions.checkNotNull(claim,
 				"The claim to be considered cannot be null");
@@ -27,6 +46,14 @@ public abstract class AcceptingPolicy {
 		this.model = model;
 	}
 
+	public BA getClaim() {
+		return this.claim;
+	}
+
+	public IBA getModel() {
+		return this.model;
+	}
+	
 	/**
 	 * given the number of the previous state, the current model state, the
 	 * claim state and the model and the claim returns the number to be
@@ -59,14 +86,14 @@ public abstract class AcceptingPolicy {
 	 *             if the accepting type does not correspond to any accepting
 	 *             policy
 	 */
-	public static AcceptingPolicy getAcceptingPolicy(AcceptingType acceptingType) {
+	public static AcceptingPolicy getAcceptingPolicy(AcceptingType acceptingType, IBA model, BA claim) {
 		Preconditions.checkNotNull(acceptingType,
 				"The accepting policy to be considered cannot be null");
 		if (acceptingType.equals(AcceptingType.KRIPKE)) {
-			return new KripkeAcceptingPolicy();
+			return new KripkeAcceptingPolicy(model, claim);
 		}
 		if (acceptingType.equals(AcceptingType.BA)) {
-			return new NormalAcceptingPolicy();
+			return new BAAcceptingPolicy(model, claim);
 		}
 		throw new IllegalArgumentException("The accepting policy "
 				+ acceptingType + " is not supported");
