@@ -4,9 +4,11 @@ import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
@@ -40,10 +42,33 @@ public class EmptinessChecker {
 	 */
 	private final Set<State> flaggedStates;
 
-	private Stack<State> firstStack;
-	private Stack<State> secondStack;
+	/**
+	 * contains the set of couple state, next transition that allow reaching an
+	 * accepting states
+	 */
+	private Stack<Entry<State, Transition>> firstStack;
 
-	private Stack<Transition> transitionStack;
+	/**
+	 * The first stack used in the emptiness checking
+	 */
+	private Stack<State> stack1;
+
+	/**
+	 * The second stack used in the emptiness checking
+	 */
+	private Stack<State> stack2;
+
+	/**
+	 * contains the set of couple state, next transition that allow looping over
+	 * an accepting states
+	 */
+	private Stack<Entry<State, Transition>> secondStack;
+
+	/**
+	 * contains a flag that indicates whether a counterexample has been founded
+	 * or not
+	 */
+	private boolean counterexampleFounded;
 
 	/**
 	 * creates a new Emptiness checker
@@ -60,8 +85,10 @@ public class EmptinessChecker {
 		this.automaton = automaton;
 		this.hashedStates = new HashSet<State>();
 		this.flaggedStates = new HashSet<State>();
-		this.firstStack = new Stack<State>();
-		this.transitionStack = new Stack<Transition>();
+		this.firstStack = new Stack<Entry<State, Transition>>();
+		this.stack1 = new Stack<State>();
+		this.stack2 = new Stack<State>();
+		this.counterexampleFounded = false;
 	}
 
 	/**
@@ -74,8 +101,9 @@ public class EmptinessChecker {
 	public boolean isEmpty() {
 
 		for (State init : this.automaton.getInitialStates()) {
-			this.firstStack = new Stack<State>();
-			if (firstDFS(init, this.firstStack)) {
+			this.firstStack = new Stack<Entry<State, Transition>>();
+			if (!firstDFS(init, this.firstStack)) {
+				this.counterexampleFounded = true;
 				return false;
 			}
 		}
@@ -87,36 +115,41 @@ public class EmptinessChecker {
 	 * 
 	 * @param currState
 	 *            is the current states under analysis
+	 * @param firstDFSStack
+	 *            is the first DFS stack
 	 * @return true if an accepting path is found, false otherwise
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	private boolean firstDFS(State currState, Stack<State> firstDFSStack) {
+	private boolean firstDFS(State currState,
+			Stack<Entry<State, Transition>> firstDFSStack) {
 		Preconditions.checkNotNull(currState,
 				"The current state cannot be null");
 		Preconditions.checkNotNull(firstDFSStack, "The stack cannot be null");
 
 		this.hashedStates.add(currState);
-		firstDFSStack.push(currState);
+		this.stack1.push(currState);
 
 		for (Transition t : automaton.getOutTransitions(currState)) {
-			this.transitionStack.push(t);
+			firstDFSStack.push(new AbstractMap.SimpleEntry<State, Transition>(
+					currState, t));
 			State next = automaton.getTransitionDestination(t);
 			if (!this.hashedStates.contains(next)) {
-				if (this.firstDFS(next, firstDFSStack))
-					return true;
+				if (!this.firstDFS(next, firstDFSStack))
+					return false;
 			}
-			this.transitionStack.pop();
+			firstDFSStack.pop();
 
 		}
+
 		if (this.automaton.getAcceptStates().contains(currState)) {
-			secondStack = new Stack<State>();
-			if (this.secondDFS(currState, firstDFSStack)) {
-				return true;
+			secondStack = new Stack<Entry<State, Transition>>();
+			if (!this.secondDFS(currState, firstDFSStack)) {
+				return false;
 			}
 		}
-		firstDFSStack.pop();
-		return false;
+		this.stack1.pop();
+		return true;
 	}
 
 	/**
@@ -124,54 +157,66 @@ public class EmptinessChecker {
 	 * 
 	 * @param currState
 	 *            is the current states under analysis
+	 * @param firstDFSStack
+	 *            is the first DFS stack
 	 * @return true if an accepting path is found, false otherwise
 	 * @throws NullPointerException
 	 *             if the current state, the graph or the stack is null
 	 */
-	private boolean secondDFS(State currState, Stack<State> firstDFSStack) {
+	private boolean secondDFS(State currState,
+			Stack<Entry<State, Transition>> firstDFSStack) {
 		Preconditions.checkNotNull(currState,
 				"The current state cannot be null");
 		Preconditions.checkNotNull(firstDFSStack,
 				"The first stack cannot be null");
-		secondStack.push(currState);
+
+		this.stack2.push(currState);
+
 		this.flaggedStates.add(currState);
+
 		for (Transition t : automaton.getOutTransitions(currState)) {
-			this.transitionStack.push(t);
+
 			State next = automaton.getTransitionDestination(t);
-			if (firstDFSStack.contains(next)) {
-				secondStack.push(next);
 
-				return true;
+			if (this.stack1.contains(next)) {
+				secondStack
+						.push(new AbstractMap.SimpleEntry<State, Transition>(
+								currState, t));
+				return false;
 			} else {
-				if (!this.flaggedStates.contains(next)) {
-					if (this.secondDFS(next, firstDFSStack))
-						return true;
+				secondStack
+						.push(new AbstractMap.SimpleEntry<State, Transition>(
+								currState, t));
+				if (!this.flaggedStates.contains(next)
+						&& !this.secondDFS(next, firstDFSStack)) {
+					return false;
+
 				}
+				secondStack.pop();
 			}
-			this.transitionStack.pop();
 		}
-		secondStack.pop();
 
-		return false;
+		this.stack2.pop();
+
+		return true;
 	}
 
-	public Stack<State> getCounterExample() {
-		if (!this.firstStack.isEmpty()) {
-			this.firstStack.pop();
+	/**
+	 * returns a stack of states and transitions that contains the
+	 * counterexample It must be used after the method is empty is run
+	 * 
+	 * @return a stack of states and transitions that contains the
+	 *         counterexample
+	 */
+	public List<Entry<State, Transition>> getCounterExample() {
+
+		if (!counterexampleFounded) {
+			throw new InternalError(
+					"A counterexample has not been founder or you must run the emptiness checker before getting the counterexample");
 		}
-		if (this.secondStack != null) {
-			List<State> list = new ArrayList<State>(this.secondStack);
-
-			for (State x : list) {
-				this.firstStack.push(x);
-			}
-
-		}
-
-		return firstStack;
-	}
-
-	public Stack<Transition> getTransitionCounterExample() {
-		return this.transitionStack;
+		List<Entry<State, Transition>> counterexample = new ArrayList<Entry<State, Transition>>();
+		counterexample.addAll(firstStack);
+		counterexample.addAll(secondStack);
+		return counterexample;
 	}
 }
