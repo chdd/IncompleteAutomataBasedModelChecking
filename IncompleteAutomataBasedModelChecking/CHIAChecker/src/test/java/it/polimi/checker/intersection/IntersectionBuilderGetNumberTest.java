@@ -1,25 +1,20 @@
-/**
- * 
- */
 package it.polimi.checker.intersection;
 
 import static org.junit.Assert.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
-import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.automata.transition.TransitionFactory;
-import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,11 +22,7 @@ import org.junit.Test;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
 
-/**
- * @author claudiomenghi
- * 
- */
-public class IntersectionBuilderTest {
+public class IntersectionBuilderGetNumberTest {
 
 	/*
 	 * Claim 1
@@ -231,178 +222,14 @@ public class IntersectionBuilderTest {
 		this.model2
 				.addTransition(model2State3, model2State3, model2Transition3);
 	}
-
+	
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#IntersectionBuilder(it.polimi.checker.intersection.IntersectionRule, it.polimi.automata.state.StateFactory, it.polimi.automata.IntersectionBAFactory, it.polimi.automata.transition.TransitionFactory, null, it.polimi.automata.BA)}
+	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
 	 * .
 	 */
 	@Test(expected = NullPointerException.class)
-	public void testIntersectionBuilderNullModel() {
-		new IntersectionBuilder(null, claim1,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1));
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#IntersectionBuilder(it.polimi.checker.intersection.IntersectionRule, it.polimi.automata.state.StateFactory, it.polimi.automata.IntersectionBAFactory, it.polimi.automata.transition.TransitionFactory, it.polimi.automata.IBA, null)}
-	 * .
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testIntersectionBuilderNullClaim() {
-		new IntersectionBuilder(model1, null,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1));
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection() {
-		IntersectionBA intersection = new IntersectionBuilder(model1, claim1,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1)).perform();
-		assertTrue(intersection.getInitialStates().isEmpty());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection1() {
-		this.model1.addInitialState(model1State1);
-		IntersectionBA intersection = new IntersectionBuilder(model1, claim1,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1)).perform();
-		assertTrue(intersection.getInitialStates().isEmpty());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection2() {
-		this.claim1.addInitialState(claim1State1);
-		IntersectionBA intersection = new IntersectionBuilder(model1, claim1,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1)).perform();
-		assertTrue(intersection.getInitialStates().isEmpty());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection3() {
-
-		this.model1.addInitialState(model1State1);
-		this.claim1.addInitialState(claim1State1);
-		IntersectionBA intersection = new IntersectionBuilder(model1, claim1,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1)).perform();
-		assertEquals(model1State1.getId() + " - " + claim1State1.getId()
-				+ " - " + 0,
-				new ArrayList<State>(intersection.getInitialStates()).get(0)
-						.getName());
-		assertTrue(intersection.getStates().size() == 3);
-		assertTrue(new EmptinessChecker(intersection).isEmpty());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection4() {
-
-		this.model1.addInitialState(model1State1);
-		this.model1.addAcceptState(model1State3);
-		this.claim1.addInitialState(claim1State1);
-		this.claim1.addAcceptState(claim1State3);
-		IntersectionBA intersection = new IntersectionBuilder(model1, claim1,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model1, this.claim1)).perform();
-		assertEquals(model1State1.getId() + " - " + claim1State1.getId()
-				+ " - " + 0,
-				new ArrayList<State>(intersection.getInitialStates()).get(0)
-						.getName());
-		assertTrue(intersection.getStates().size() == 5);
-		assertFalse(new EmptinessChecker(intersection).isEmpty());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection5() {
-		this.model1.addInitialState(model1State1);
-		this.model1.addAcceptState(model1State3);
-		this.claim1.addInitialState(claim1State1);
-		this.claim1.addAcceptState(claim1State3);
-		Transition int1 = new ArrayList<Transition>(
-				this.model1.getOutTransitions(new ArrayList<State>(this.model1
-						.getInitialStates()).get(0))).get(0);
-
-		assertEquals(this.propositionsT1, int1.getPropositions());
-		Transition int2 = new ArrayList<Transition>(
-				this.model1.getOutTransitions(this.model1
-						.getTransitionDestination(int1))).get(0);
-		assertEquals(this.propositionsT2, int2.getPropositions());
-		Transition int3 = new ArrayList<Transition>(
-				this.model1.getOutTransitions(this.model1
-						.getTransitionDestination(int2))).get(0);
-		assertEquals(this.propositionsT3, int3.getPropositions());
-
-		Transition int4 = new ArrayList<Transition>(
-				this.model1.getOutTransitions(this.model1
-						.getTransitionDestination(int3))).get(0);
-		assertEquals(this.propositionsT3, int4.getPropositions());
-		Transition int5 = new ArrayList<Transition>(
-				this.model1.getOutTransitions(this.model1
-						.getTransitionDestination(int4))).get(0);
-		assertEquals(this.propositionsT3, int5.getPropositions());
-
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection6() {
-
-		this.model1.addInitialState(model1State1);
-		this.model1.addAcceptState(model1State3);
-		this.claim2.addInitialState(claim2State1);
-		this.claim2.addAcceptState(claim2State3);
-		IntersectionBA intersection = new IntersectionBuilder(model1, claim2,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
-						this.model2, this.claim1)).perform();
-		assertTrue(new EmptinessChecker(intersection).isEmpty());
-	}
-
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
-	 * .
-	 */
-	@Test
-	public void testComputeIntersection7() {
-
+	public void testGetNumberNullArgument() {
 		this.model2.addInitialState(model2State1);
 		this.model2.addBlackBoxState(model2State2);
 		this.model2.addAcceptState(model2State3);
@@ -412,12 +239,53 @@ public class IntersectionBuilderTest {
 				model2, claim1, AcceptingPolicy.getAcceptingPolicy(
 						AcceptingType.BA, this.model2, this.claim1));
 
-		IntersectionBA intersection = intersectionBuilder.perform();
-		assertFalse(new EmptinessChecker(intersection).isEmpty());
-		assertTrue(intersection.getStates().size() == 6);
-		assertFalse(intersection.getInitialStates().isEmpty());
+		intersectionBuilder.perform();
+		intersectionBuilder.getNumber(null);
 	}
 
-	
+	/**
+	 * Test method for
+	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
+	 * .
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetNumberIllegalArgument() {
+		this.model2.addInitialState(model2State1);
+		this.model2.addBlackBoxState(model2State2);
+		this.model2.addAcceptState(model2State3);
+		this.claim1.addInitialState(claim1State1);
+		this.claim1.addAcceptState(claim1State3);
+		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
+				model2, claim1, AcceptingPolicy.getAcceptingPolicy(
+						AcceptingType.BA, this.model2, this.claim1));
+
+		intersectionBuilder.perform();
+		intersectionBuilder.getNumber(new StateFactory().create());
+	}
+
+	/**
+	 * Test method for
+	 * {@link it.polimi.checker.intersection.IntersectionBuilder#computeIntersection()}
+	 * .
+	 */
+	@Test
+	public void testGetNumber() {
+		this.model2.addInitialState(model2State1);
+		this.model2.addBlackBoxState(model2State2);
+		this.model2.addAcceptState(model2State3);
+		this.claim1.addInitialState(claim1State1);
+		this.claim1.addAcceptState(claim1State3);
+		IntersectionBuilder intersectionBuilder = new IntersectionBuilder(
+				model2, claim1, AcceptingPolicy.getAcceptingPolicy(
+						AcceptingType.BA, this.model2, this.claim1));
+
+		intersectionBuilder.perform();
+
+		State intersectionState = intersectionBuilder.getIntersectionState(
+				model2State1, claim1State1, 0);
+		assertEquals(
+				"The number of the intersection state corresponds to the number -",
+				0, intersectionBuilder.getNumber(intersectionState));
+	}
 
 }
