@@ -72,5 +72,5 @@ public class AcceptingPolicyTest {
 		model.addState(modelState);
 		assertTrue("A Kripke accepting policy is returned", AcceptingPolicy.getAcceptingPolicy(AcceptingType.KRIPKE, model, claim) instanceof KripkeAcceptingPolicy);
 	}
-
+	
 }
