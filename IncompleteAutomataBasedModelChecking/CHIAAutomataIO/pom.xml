@@ -4,15 +4,13 @@
 	<artifactId>CHIAAutomataIO</artifactId>
 	<packaging>jar</packaging>
 	<name>CHIAAutomataIO</name>
+	<url>http://maven.apache.org</url>
 
 	<parent>
 		<groupId>it.polimi.chia</groupId>
 		<artifactId>CHIA</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-
 	</parent>
-
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<!-- contains the version of java used in the development -->
@@ -27,6 +25,7 @@
 		<surefire.version>2.17</surefire.version>
 		<testng.version>6.8.8</testng.version>
 	</properties>
+	
 	<build>
 		<!-- is the directory where the source code is located -->
 		<sourceDirectory>src/main/java</sourceDirectory>
