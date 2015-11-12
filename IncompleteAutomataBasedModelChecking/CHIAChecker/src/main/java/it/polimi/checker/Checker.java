@@ -1,18 +1,18 @@
 package it.polimi.checker;
 
-import java.util.Stack;
-
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.state.IntersectionStateFactory;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.ibablackboxstateremove.IBABlackBoxRemover;
 import it.polimi.checker.intersection.IntersectionBuilder;
-import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
+
+import java.util.List;
+import java.util.Map.Entry;
+
 import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
@@ -47,55 +47,20 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 	 */
 	private IntersectionBuilder upperIntersectionBuilder;
 
+	/**
+	 * The accepting policy to be used in the model checking procedure
+	 */
 	private final AcceptingPolicy acceptingPolicy;
+	
+	/**
+	 * the result of the model checking procedure
+	 */
 	private SatisfactionValue satisfactionValue;
-
-	private final IntersectionStateFactory intersectionStateFactory;
 	
 	/**
-	 * is the intersection transition builder to be used in the computation of the intersection automaton
+	 * The counterexample in the case in which the property is not satisfied
 	 */
-	private final IntersectionTransitionBuilder intersectionTransitionBuilder;
-	
-	private Stack<State> stateCounterexample;
-	private Stack<Transition> transitionCounterexample;
-
-	/**
-	 * creates a new {@link Checker}
-	 * 
-	 * @param model
-	 *            is the model to be analyzed by the model checker
-	 * @param claim
-	 *            is the specification to be considered by the model checker
-	 * @param acceptingPolicy
-	 *            specifies the acceptingPolicy to be used in the intersection
-	 *            procedure
-	 * @param intersectionStateFactory
-	 *            is the factory to be used in the creation of the states of the
-	 *            intersection automaton
-	 * @throws NullPointerException
-	 *             if the model, the specification or the model checking
-	 *             parameters are null
-	 */
-	public Checker(IBA model, BA claim, AcceptingPolicy acceptingPolicy,
-			IntersectionStateFactory intersectionStateFactory, IntersectionTransitionBuilder intersectionTransitionBuilder) {
-		super(NAME);
-		Preconditions.checkNotNull(model,
-				"The model to be checked cannot be null");
-		Preconditions.checkNotNull(claim,
-				"The specification to be checked cannot be null");
-		Preconditions.checkNotNull(acceptingPolicy,
-				"The accepting policy cannot be null");
-		Preconditions.checkNotNull(intersectionStateFactory,
-				"The intersection state factory cannot be null");
-		Preconditions.checkNotNull(intersectionTransitionBuilder, "the intersection transition builder cannot be null");
-
-		this.claim = claim;
-		this.model = model;
-		this.acceptingPolicy = acceptingPolicy;
-		this.intersectionStateFactory = intersectionStateFactory;
-		this.intersectionTransitionBuilder=intersectionTransitionBuilder;
-	}
+	private List<Entry<State, Transition>> counterexample;
 
 	/**
 	 * creates a new {@link Checker}
@@ -123,8 +88,6 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 		this.claim = claim;
 		this.model = model;
 		this.acceptingPolicy = acceptingPolicy;
-		this.intersectionStateFactory = new IntersectionStateFactory();
-		this.intersectionTransitionBuilder=new IntersectionTransitionBuilder();
 	}
 
 	/**
@@ -170,8 +133,8 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 
 	/**
 	 * performs the checking activity described at the points 2 and 3 of the
-	 * paper: It removes from the model the black box states and it computes
-	 * the intersection with the claim if a path is founded a <code>true</code>
+	 * paper: It removes from the model the black box states and it computes the
+	 * intersection with the claim if a path is founded a <code>true</code>
 	 * result is returned meaning that the model violates the claim
 	 * 
 	 * @return <code>true</code> if the claim is violated in the model
@@ -179,37 +142,38 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 	private boolean checkEmptyIntersectionMc() {
 
 		// removes the black box states from the model
-		IBA mc = new IBABlackBoxRemover(model)
-				.removeBlackBoxes();
+		IBA mc = new IBABlackBoxRemover(model).removeBlackBoxes();
 
 		// associating the intersectionBuilder
 		this.lowerIntersectionBuilder = new IntersectionBuilder(mc, claim,
-				acceptingPolicy, this.intersectionStateFactory, this.intersectionTransitionBuilder);
+				acceptingPolicy);
 
 		// computing the intersection
 		IntersectionBA intersectionAutomaton = this.lowerIntersectionBuilder
 				.perform();
 
-		EmptinessChecker mcEmptinessChecker=new EmptinessChecker(intersectionAutomaton);
-		boolean result=mcEmptinessChecker.isEmpty();
-		this.stateCounterexample=mcEmptinessChecker.getCounterExample();
-		this.transitionCounterexample=mcEmptinessChecker.getTransitionCounterExample();
-		return result;
+		EmptinessChecker mcEmptinessChecker = new EmptinessChecker(
+				intersectionAutomaton);
+		boolean isEmpty = mcEmptinessChecker.isEmpty();
+		if (!isEmpty) {
+			this.counterexample = mcEmptinessChecker.getCounterExample();
+
+		}
+		return isEmpty;
 	}
 
 	/**
 	 * performs the checking activity described at the points 4 and 5 of the
-	 * paper: It checks the intersection of the model with the black box
-	 * states and intersection with the claim. If a path is founded a
-	 * <code>true</code> result is returned meaning that the model possibly
-	 * violates the claim
+	 * paper: It checks the intersection of the model with the black box states
+	 * and intersection with the claim. If a path is founded a <code>true</code>
+	 * result is returned meaning that the model possibly violates the claim
 	 * 
 	 * @return <code>true</code> if the claim is possibly violated in the model
 	 */
 	private boolean checkEmptyIntersection() {
 
 		this.upperIntersectionBuilder = new IntersectionBuilder(this.model,
-				claim, acceptingPolicy, this.intersectionStateFactory, this.intersectionTransitionBuilder);
+				claim, acceptingPolicy);
 
 		// computing the intersection
 		IntersectionBA intersectionAutomaton = this.upperIntersectionBuilder
@@ -245,19 +209,26 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 		Preconditions
 				.checkState(this.isPerformed(),
 						"You must run the model checker before performing this operation");
-		Preconditions.checkState(this.lowerIntersectionBuilder != null,
-				"The lower intersection autonaton has not been computed");
 		return this.lowerIntersectionBuilder.getIntersectionAutomaton();
 
 	}
 
+	/**
+	 * returns the size of the automata generated during the model checking
+	 * procedure
+	 * 
+	 * @return the size of the automata generated during the model checking
+	 *         procedure
+	 */
 	public int getIntersectionAutomataSize() {
+		Preconditions
+				.checkState(this.isPerformed(),
+						"You must run the model checker before performing this operation");
+
 		int size = 0;
-		if (this.lowerIntersectionBuilder != null) {
-			size = size
-					+ this.lowerIntersectionBuilder.getIntersectionAutomaton()
-							.size();
-		}
+		size = size
+				+ this.lowerIntersectionBuilder.getIntersectionAutomaton()
+						.size();
 		if (this.upperIntersectionBuilder != null) {
 			size = size
 					+ this.upperIntersectionBuilder.getIntersectionAutomaton()
@@ -267,18 +238,11 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 	}
 
 	/**
-	 * @return the stateCounterexample
+	 * returns one of the counterexamples that makes the property violated
+	 * 
+	 * @return the counterexamples that makes the property violated
 	 */
-	public Stack<State> getStateCounterexample() {
-		return stateCounterexample;
-	}
-
-	
-
-	/**
-	 * @return the transitionCounterexample
-	 */
-	public Stack<Transition> getTransitionCounterexample() {
-		return transitionCounterexample;
+	public List<Entry<State, Transition>> getCounterexample() {
+		return this.counterexample;
 	}
 }

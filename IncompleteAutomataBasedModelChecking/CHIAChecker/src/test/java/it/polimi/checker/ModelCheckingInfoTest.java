@@ -11,23 +11,23 @@ import org.junit.Test;
  * @author claudiomenghi
  * 
  */
-public class ModelCheckingResultsTest {
+public class ModelCheckingInfoTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#ModelCheckingResults()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#ModelCheckingResults()}.
 	 */
 	@Test
 	public void testModelCheckingResults() {
-		assertNotNull(new ModelCheckingResults(true, true, true));
+		assertNotNull(new ModelCheckingInfo(true, true, true));
 	}
 
 	/**
-	 * Test method for {@link it.polimi.checker.ModelCheckingResults#reset()}.
+	 * Test method for {@link it.polimi.checker.ModelCheckingInfo#reset()}.
 	 */
 	@Test
 	public void testReset() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		
 		results.reset();
 		assertTrue(results.getSubpropertyTime()==0);
@@ -38,399 +38,399 @@ public class ModelCheckingResultsTest {
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getViolationTime()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#getViolationTime()}.
 	 */
 	@Test
 	public void testGetViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getViolationTime() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setViolationTime(double)}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#setViolationTime(double)}.
 	 */
 	@Test
 	public void testSetViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setViolationTime(2);
 		assertTrue(results.getViolationTime() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getPossibleViolationTime()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getPossibleViolationTime()}
 	 * .
 	 */
 	@Test
 	public void testGetPossibleViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getPossibleViolationTime() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setPossibleViolationTime(double)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setPossibleViolationTime(double)}
 	 * .
 	 */
 	@Test
 	public void testSetPossibleViolationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setPossibleViolationTime(2);
 		assertTrue(results.getPossibleViolationTime() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getResult()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#getResult()}.
 	 */
 	@Test
 	public void testGetResult() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getResult() == SatisfactionValue.NOTSATISFIED);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setResult(int)}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#setResult(int)}.
 	 */
 	@Test
 	public void testSetResult() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setResult(SatisfactionValue.SATISFIED);
 		assertTrue(results.getResult() == SatisfactionValue.SATISFIED);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getSubpropertyTime()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getSubpropertyTime()}
 	 * .
 	 */
 	@Test
 	public void testGetConstraintComputationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getSubpropertyTime() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setSubPropertyComputationTime(double)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setSubPropertyComputationTime(double)}
 	 * .
 	 */
 	@Test
 	public void testSetConstraintComputationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setSubPropertyComputationTime(2);
 		assertTrue(results.getSubpropertyTime() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumStatesSpecification()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumStatesSpecification()}
 	 * .
 	 */
 	@Test
 	public void testGetNumStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumStatesSpecification() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumStatesSpecification(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumStatesSpecification(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumStatesSpecification(2);
 		assertTrue(results.getNumStatesSpecification() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumAcceptStatesSpecification()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumAcceptStatesSpecification()}
 	 * .
 	 */
 	@Test
 	public void testGetNumAcceptStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumAcceptStatesSpecification() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumAcceptStatesSpecification(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumAcceptStatesSpecification(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumAcceptStatesSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumAcceptStatesSpecification(2);
 		assertTrue(results.getNumAcceptStatesSpecification() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumTransitionSpecification()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumTransitionSpecification()}
 	 * .
 	 */
 	@Test
 	public void testGetNumTransitionSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumTransitionSpecification() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumTransitionSpecification(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumTransitionSpecification(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumTransitionSpecification() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumTransitionSpecification(2);
 		assertTrue(results.getNumTransitionSpecification() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumStatesModel()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumStatesModel()}.
 	 */
 	@Test
 	public void testGetNumStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumStatesModel() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumStatesModel(int)}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumStatesModel(int)}.
 	 */
 	@Test
 	public void testSetNumStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumStatesModel(2);
 		assertTrue(results.getNumStatesModel() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumAcceptStatesModel()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumAcceptStatesModel()}.
 	 */
 	@Test
 	public void testGetNumAcceptStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumAcceptStatesModel() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumAcceptStatesModel(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumAcceptStatesModel(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumAcceptStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumAcceptStatesModel(2);
 		assertTrue(results.getNumAcceptStatesModel() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumTransitionModel()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumTransitionModel()}.
 	 */
 	@Test
 	public void testGetNumTransitionModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumTransitionModel() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumTransitionModel(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumTransitionModel(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumTransitionModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumTransitionModel(2);
 		assertTrue(results.getNumTransitionModel() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumBlackBoxStatesModel()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumBlackBoxStatesModel()}
 	 * .
 	 */
 	@Test
 	public void testGetNumBlackBoxStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumBlackBoxStatesModel() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumBlackBoxStatesModel(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumBlackBoxStatesModel(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumBlackBoxStatesModel() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumBlackBoxStatesModel(2);
 		assertTrue(results.getNumBlackBoxStatesModel() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#toStringHeader()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#toStringHeader()}.
 	 */
 	@Test
 	public void testToStringHeader() {
-		assertNotNull(new ModelCheckingResults(true, true, true).toStringHeader());
+		assertNotNull(new ModelCheckingInfo(true, true, true).toStringHeader());
 	}
 
 	/**
-	 * Test method for {@link it.polimi.checker.ModelCheckingResults#toString()}
+	 * Test method for {@link it.polimi.checker.ModelCheckingInfo#toString()}
 	 * .
 	 */
 	@Test
 	public void testToString() {
-		assertNotNull(new ModelCheckingResults(true, true, true).toString());
+		assertNotNull(new ModelCheckingInfo(true, true, true).toString());
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumStatesIntersection()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumStatesIntersection()}
 	 * .
 	 */
 	@Test
 	public void testGetNumStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumStatesIntersection() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumStatesIntersection(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumStatesIntersection(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumStatesIntersection(2);
 		assertTrue(results.getNumStatesIntersection() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumAcceptingStatesIntersection()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumAcceptingStatesIntersection()}
 	 * .
 	 */
 	@Test
 	public void testGetNumAcceptingStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumAcceptingStatesIntersection() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumAcceptingStatesIntersection(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumAcceptingStatesIntersection(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumAcceptingStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumAcceptingStatesIntersection(2);
 		assertTrue(results.getNumAcceptingStatesIntersection() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumInitialStatesIntersection()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumInitialStatesIntersection()}
 	 * .
 	 */
 	@Test
 	public void testGetNumInitialStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumInitialStatesIntersection() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumInitialStatesIntersection(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumInitialStatesIntersection(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumInitialStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumInitialStatesIntersection(2);
 		assertTrue(results.getNumInitialStatesIntersection() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getNumMixedStatesIntersection()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getNumMixedStatesIntersection()}
 	 * .
 	 */
 	@Test
 	public void testGetNumMixedStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getNumMixedStatesIntersection() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setNumMixedStatesIntersection(int)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setNumMixedStatesIntersection(int)}
 	 * .
 	 */
 	@Test
 	public void testSetNumMixedStatesIntersection() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setNumMixedStatesIntersection(2);
 		assertTrue(results.getNumMixedStatesIntersection() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getTotalVerificationTime()}
+	 * {@link it.polimi.checker.ModelCheckingInfo#getTotalVerificationTime()}
 	 * .
 	 */
 	@Test
 	public void testGetTotalVerificationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getTotalVerificationTime() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setTotalTime(double)}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#setTotalTime(double)}.
 	 */
 	@Test
 	public void testSetTotalTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setTotalTime(2);
 		assertTrue(results.getTotalVerificationTime() == 2);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#getSimplificationTime()}.
+	 * {@link it.polimi.checker.ModelCheckingInfo#getSimplificationTime()}.
 	 */
 	@Test
 	public void testGetSimplificationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		assertTrue(results.getSimplificationTime() == 0);
 	}
 
 	/**
 	 * Test method for
-	 * {@link it.polimi.checker.ModelCheckingResults#setSimplificationTime(double)}
+	 * {@link it.polimi.checker.ModelCheckingInfo#setSimplificationTime(double)}
 	 * .
 	 */
 	@Test
 	public void testSetSimplificationTime() {
-		ModelCheckingResults results = new ModelCheckingResults(true, true, true);
+		ModelCheckingInfo results = new ModelCheckingInfo(true, true, true);
 		results.setSimplificationTime(2);
 		assertTrue(results.getSimplificationTime() == 2);
 	}

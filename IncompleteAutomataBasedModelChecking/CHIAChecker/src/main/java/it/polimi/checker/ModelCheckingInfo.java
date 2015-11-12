@@ -1,9 +1,11 @@
 package it.polimi.checker;
 
 /**
- * @author Claudio Menghi contains the report of the model checking parameters
+ * Contains the report of the model checking parameters
+ * 
+ * @author Claudio Menghi 
  */
-public class ModelCheckingResults {
+public class ModelCheckingInfo {
 
 	/**
 	 * contains the result of the verification
@@ -101,7 +103,7 @@ public class ModelCheckingResults {
 	private final boolean subproperties;
 	private final boolean portReachability;
 
-	public ModelCheckingResults(boolean checking, boolean subproperties, boolean portReachability) {
+	public ModelCheckingInfo(boolean checking, boolean subproperties, boolean portReachability) {
 		this.checking=checking;
 		this.subproperties=subproperties;
 		this.portReachability=portReachability;

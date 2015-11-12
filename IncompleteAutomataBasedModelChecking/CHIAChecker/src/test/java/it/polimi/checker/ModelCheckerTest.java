@@ -3,8 +3,7 @@
  */
 package it.polimi.checker;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
@@ -126,7 +125,7 @@ public class ModelCheckerTest {
 		// --------------------------------------
 		// CLAIM 2
 		// --------------------------------------
-		this.claim2 = new IBA(transitionFactory); 
+		this.claim2 = new BA(new ClaimTransitionFactory()); 
 		
 		statefactory = new StateFactory();
 		claim2State1 = statefactory.create("claimState1");
@@ -148,9 +147,9 @@ public class ModelCheckerTest {
 		claim2Transition3Labels.add(new GraphProposition("c", false));
 		claim2Transition3 = transitionFactory.create(claim2Transition3Labels);
 
-		this.claim2.addPropositions(claim2Transition1Labels);
-		this.claim2.addPropositions(claim2Transition2Labels);
-		this.claim2.addPropositions(claim2Transition3Labels);
+		this.claim2.addProposition(new GraphProposition("a", false));
+		this.claim2.addProposition(new GraphProposition("b", false));
+		this.claim2.addProposition(new GraphProposition("c", false));
 		this.claim2
 				.addTransition(claim2State1, claim2State2, claim2Transition1);
 		this.claim2
@@ -193,12 +192,12 @@ public class ModelCheckerTest {
 		this.model1
 				.addTransition(model1State2, model1State3, model1Transition2);
 		this.model1
-				.addTransition(model1State3, model1State3, model1Transition3);
+			.addTransition(model1State3, model1State3, model1Transition3);
 
 		/*
 		 * MODEL
 		 */
-		this.model2 = new IBA(modelTransitionFactory);
+	this.model2 = new IBA(modelTransitionFactory);
 
 		modelStateFactory = new StateFactory();
 		this.model2State1 = modelStateFactory.create("modelState1");
@@ -239,7 +238,7 @@ public class ModelCheckerTest {
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullModel() {
 		new Checker(
-				null, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
+				null, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
 	}
 
 	/**
@@ -250,33 +249,10 @@ public class ModelCheckerTest {
 	@Test(expected = NullPointerException.class)
 	public void testModelCheckerNullClaim() {
 			new Checker(
-				model1, null, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
+				model1, null, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
 	}
 
 	
-	
-	
-	/**
-	 * Test method for {@link it.polimi.checker.Checker#check()}.
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testCheckNullIntersectionResults() {
-		Checker mck = new Checker(
-				model1, claim1,  AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(1, mck.perform());
-	}
-	
-	/**
-	 * Test method for
-	 * {@link it.polimi.checker.Checker#ModelChecker(it.polimi.automata.IBA, it.polimi.automata.BA, null)}
-	 * .
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testModelCheckerNullResutls() {
-		new Checker(
-				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-	}
-
 	/**
 	 * Test method for {@link it.polimi.checker.Checker#check()}.
 	 */
@@ -284,8 +260,8 @@ public class ModelCheckerTest {
 	public void testCheck() {
 
 		Checker mck = new Checker(
-				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(1, mck.perform());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.SATISFIED, mck.perform());
 	}
 	
 	/**
@@ -296,8 +272,8 @@ public class ModelCheckerTest {
 		model1.addInitialState(model1State1);
 		claim1.addInitialState(claim1State1);
 		Checker mck = new Checker(
-				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(1, mck.perform());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.SATISFIED, mck.perform());
 	}
 	
 	/**
@@ -310,8 +286,10 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(0, mck.perform());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.NOTSATISFIED, mck.perform());
+		assertNotNull(mck.getCounterexample());
+		assertEquals(10, mck.getIntersectionAutomataSize());
 	}
 	
 	/**
@@ -320,8 +298,8 @@ public class ModelCheckerTest {
 	@Test
 	public void testCheck3() {
 		Checker mck = new Checker(
-				model2, claim2, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(1, mck.perform());
+				model2, claim2, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.SATISFIED, mck.perform());
 	}
 	
 	/**
@@ -333,8 +311,8 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model2, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(1, mck.perform());
+				model2, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.SATISFIED, mck.perform());
 	}
 	
 	/**
@@ -348,8 +326,8 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
-		assertEquals(-1, mck.perform());
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.POSSIBLYSATISFIED, mck.perform());
 	}
 	
 
@@ -365,7 +343,114 @@ public class ModelCheckerTest {
 		claim1.addInitialState(claim1State1);
 		claim1.addAcceptState(claim1State3);
 		Checker mck = new Checker(
-				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA));
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
 		assertNotNull(mck);
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test
+	public void testCheck7() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		model1.addBlackBoxState(model1State2);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.POSSIBLYSATISFIED, mck.perform());
+		assertEquals(SatisfactionValue.POSSIBLYSATISFIED, mck.perform());
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test
+	public void testCheckSize() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		model1.addBlackBoxState(model1State2);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		assertEquals(SatisfactionValue.POSSIBLYSATISFIED, mck.perform());
+		assertEquals(13 ,mck.getUpperIntersectionBA().size());
+		assertEquals(1,mck.getLowerIntersectionBA().size());
+		assertEquals(14, mck.getIntersectionAutomataSize());
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test(expected=IllegalStateException.class)
+	public void testCheckUpperIntersectionBuilderException() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		mck.perform();
+		mck.getUpperIntersectionBA();
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test(expected=IllegalStateException.class)
+	public void testCheckLowerIntersectionBuilderNotPerformedException() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		mck.getUpperIntersectionBA();
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test(expected=IllegalStateException.class)
+	public void testCheckUpperIntersectionBuilderNotPerformedException() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		mck.getUpperIntersectionBA();
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test(expected=IllegalStateException.class)
+	public void testGetUpperIntersectionBuilderException() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		mck.getUpperIntersectionBuilder();
+	}
+	
+	/**
+	 * Test method for {@link it.polimi.checker.Checker#check()}.
+	 */
+	@Test
+	public void testGetUpperIntersectionBuilder() {
+		model1.addInitialState(model1State1);
+		model1.addAcceptState(model1State3);
+		model1.addBlackBoxState(model1State2);
+		claim1.addInitialState(claim1State1);
+		claim1.addAcceptState(claim1State3);
+		Checker mck = new Checker(
+				model1, claim1, AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model1, claim1));
+		mck.perform();
+		assertNotNull(mck.getUpperIntersectionBuilder());
 	}
 }
