@@ -5,6 +5,13 @@ import it.polimi.automata.transition.Transition;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * The PluggingTransition represents the transition that connects the automaton
+ * associated with a black box state with the original model M
+ * 
+ * @author Claudio Menghi
+ *
+ */
 public class PluggingTransition extends State {
 
 	/**
@@ -38,9 +45,28 @@ public class PluggingTransition extends State {
 	 */
 	private final Transition transition;
 
-
-	protected PluggingTransition(int id, State source, State destination, Transition transition,
-			boolean incoming) {
+	/**
+	 * creates a new plugging transition
+	 * 
+	 * @param id
+	 *            is the id of the transition
+	 * @param source
+	 *            is the source of the transition of the port it can be a state
+	 *            of the refinement of the model or an already specified state
+	 *            of the model
+	 * @param destination
+	 *            is the destination of the transition of the port it can be a
+	 *            state of the refinement of the model or an already specified
+	 *            state of the model
+	 * @param transition
+	 *            is the transition that connect the source with the destination
+	 * @param component
+	 *            the component to which the port belongs
+	 * @throws NullPointerException
+	 *             if one of the parameters is null
+	 */
+	protected PluggingTransition(int id, State source, State destination,
+			Transition transition, boolean incoming) {
 		super(id);
 		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
 		Preconditions.checkNotNull(source,
@@ -56,9 +82,9 @@ public class PluggingTransition extends State {
 		this.transition = transition;
 		this.incoming = incoming;
 	}
-	
+
 	/**
-	 * creates a new port
+	 * creates a new plugging transition
 	 * 
 	 * @param source
 	 *            is the source of the transition of the port it can be a state
@@ -75,9 +101,10 @@ public class PluggingTransition extends State {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public PluggingTransition(State source, State destination, Transition transition,
-			boolean incoming) {
-		this(LabeledPluggingTransition.ID_COUNTER, source, destination, transition, incoming);
+	public PluggingTransition(State source, State destination,
+			Transition transition, boolean incoming) {
+		this(LabeledPluggingTransition.ID_COUNTER, source, destination,
+				transition, incoming);
 		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
 
 	}
@@ -126,8 +153,6 @@ public class PluggingTransition extends State {
 		return incoming;
 	}
 
-	
-
 	/**
 	 * Returns true if two ports are equals two ports are equal if and only if
 	 * they refer to the same transition, i.e., a transition with the same id
@@ -136,7 +161,6 @@ public class PluggingTransition extends State {
 	 *            is the Port to which the current port must be compared
 	 * @return true if the two ports are equals
 	 */
-	
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -148,6 +172,9 @@ public class PluggingTransition extends State {
 				+ "]";
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -156,11 +183,16 @@ public class PluggingTransition extends State {
 				+ ((destination == null) ? 0 : destination.hashCode());
 		result = prime * result + (incoming ? 1231 : 1237);
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime * result
-				+ ((transition == null) ? 0 : transition.getPropositions().hashCode());
+		result = prime
+				* result
+				+ ((transition == null) ? 0 : transition.getPropositions()
+						.hashCode());
 		return result;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -185,7 +217,8 @@ public class PluggingTransition extends State {
 		if (transition == null) {
 			if (other.transition != null)
 				return false;
-		} else if (!transition.getPropositions().equals(other.transition.getPropositions()))
+		} else if (!transition.getPropositions().equals(
+				other.transition.getPropositions()))
 			return false;
 		return true;
 	}
