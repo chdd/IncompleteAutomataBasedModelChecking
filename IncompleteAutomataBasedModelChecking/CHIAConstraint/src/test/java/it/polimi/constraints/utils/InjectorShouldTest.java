@@ -26,7 +26,7 @@ import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
  * @author Claudio1
  *
  */
-public class TestInjectorShould {
+public class InjectorShouldTest {
 
 	private IBA result;
 	private IBA model;
@@ -36,6 +36,7 @@ public class TestInjectorShould {
 	private State send2;
 	private State q2;
 	private State q3;
+	private State state14;
 
 	private StateFactory stateFactory;
 
@@ -46,14 +47,13 @@ public class TestInjectorShould {
 		model = this.createSendModel();
 		replacement = this.createSend1ReplacementModel();
 
-		Injector injector = new Injector(model, replacement);
-		result = injector.perform();
-
 	}
 
 	@Test
 	public void notRemoveStatesFromTheIBA() throws Exception {
 
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		Set<State> states = new HashSet<State>(model.getStates());
 		states.remove(replacement.getModelState());
 		assertTrue(result.getStates().containsAll(states));
@@ -62,6 +62,8 @@ public class TestInjectorShould {
 	@Test
 	public void notRemoveBlackBoxStatesFromTheIBA() throws Exception {
 
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		Set<State> blackBoxStates = new HashSet<State>(
 				model.getBlackBoxStates());
 		blackBoxStates.remove(replacement.getModelState());
@@ -71,6 +73,8 @@ public class TestInjectorShould {
 	@Test
 	public void notRemoveAcceptingStatesFromTheIBA() throws Exception {
 
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		Set<State> acceptingStates = new HashSet<State>(model.getAcceptStates());
 		acceptingStates.remove(replacement.getModelState());
 		assertTrue(result.getAcceptStates().containsAll(acceptingStates));
@@ -79,6 +83,8 @@ public class TestInjectorShould {
 	@Test
 	public void notRemoveInitialStatesFromTheIBA() throws Exception {
 
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		Set<State> initialStates = new HashSet<State>(model.getInitialStates());
 		initialStates.remove(replacement.getModelState());
 		assertTrue(result.getInitialStates().containsAll(initialStates));
@@ -86,48 +92,121 @@ public class TestInjectorShould {
 
 	@Test
 	public void insertTheReplacementStatesIntoTheIBA() throws Exception {
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		assertTrue(result.getStates().containsAll(
 				replacement.getAutomaton().getStates()));
 	}
+
 	@Test
 	public void insertTheBlackBoxReplacementStatesIntoTheIBA() throws Exception {
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		assertTrue(result.getBlackBoxStates().containsAll(
 				replacement.getAutomaton().getBlackBoxStates()));
 	}
-	
+
 	@Test
-	public void insertTheInitialReplacementStatesIntoTheIBA() throws Exception {
+	public void notRemoveTheInitialStatesOfTheReplacement() throws Exception {
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		assertTrue(result.getInitialStates().containsAll(
 				replacement.getAutomaton().getInitialStates()));
 	}
-	
+
 	@Test
-	public void insertTheAcceptingReplacementStatesIntoTheIBA() throws Exception {
+	public void notAddOtherAcceTheInitialReplacementStatesIntoTheIBA()
+			throws Exception {
+
+		replacement.getAutomaton().addInitialState(state14);
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
+		assertTrue(result.getInitialStates().containsAll(
+				replacement.getAutomaton().getInitialStates()));
+		assertTrue(result.getInitialStates().contains(state14));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void throwAnExceptionIfThePredecessorOfTheIncomingTransitionWasNotAPredecessorOfTheBlackBoxState()
+			throws Exception {
+
+		State state = new StateFactory().create();
+		replacement.getAutomaton().addState(state);
+		replacement.addIncomingTransition(new PluggingTransition(q3, state,
+				new ModelTransitionFactory().create(), true));
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void throwAnExceptionIfThePredecessorOfTheOutgoingTransitionWasNotAPredecessorOfTheBlackBoxState()
+			throws Exception {
+
+		State state = new StateFactory().create();
+		replacement.getAutomaton().addState(state);
+		replacement.addOutgoingTransition(new PluggingTransition(state, q1,
+				new ModelTransitionFactory().create(), true));
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
+
+	}
+
+	@Test
+	public void insertTheAcceptingReplacementStatesIntoTheIBA()
+			throws Exception {
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		assertTrue(result.getAcceptStates().containsAll(
 				replacement.getAutomaton().getAcceptStates()));
 	}
-	
+
 	@Test
 	public void insertTheReplacementTransitionsIntoTheIBA() throws Exception {
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
 		assertTrue(result.getTransitions().containsAll(
 				replacement.getAutomaton().getTransitions()));
 	}
-	
+
 	@Test
 	public void injectTheIncomingTransitionsOfTheReplacement() throws Exception {
-		for(PluggingTransition plugTransition: replacement.getIncomingTransitions()){
-			assertTrue(result.getTransitions().contains(plugTransition.getTransition()));
-			assertTrue(result.getTransitionSource(plugTransition.getTransition()).equals(plugTransition.getSource()));
-			assertTrue(result.getTransitionDestination(plugTransition.getTransition()).equals(plugTransition.getDestination()));
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
+		for (PluggingTransition plugTransition : replacement
+				.getIncomingTransitions()) {
+			assertTrue(result.getTransitions().contains(
+					plugTransition.getTransition()));
+			assertTrue(result.getTransitionSource(
+					plugTransition.getTransition()).equals(
+					plugTransition.getSource()));
+			assertTrue(result.getTransitionDestination(
+					plugTransition.getTransition()).equals(
+					plugTransition.getDestination()));
 		}
 	}
-	
+
 	@Test
 	public void injectTheOutgoingTransitionsOfTheReplacement() throws Exception {
-		for(PluggingTransition plugTransition: replacement.getOutgoingTransitions()){
-			assertTrue(result.getTransitions().contains(plugTransition.getTransition()));
-			assertTrue(result.getTransitionSource(plugTransition.getTransition()).equals(plugTransition.getSource()));
-			assertTrue(result.getTransitionDestination(plugTransition.getTransition()).equals(plugTransition.getDestination()));
+
+		Injector injector = new Injector(model, replacement);
+		result = injector.perform();
+		for (PluggingTransition plugTransition : replacement
+				.getOutgoingTransitions()) {
+			assertTrue(result.getTransitions().contains(
+					plugTransition.getTransition()));
+			assertTrue(result.getTransitionSource(
+					plugTransition.getTransition()).equals(
+					plugTransition.getSource()));
+			assertTrue(result.getTransitionDestination(
+					plugTransition.getTransition()).equals(
+					plugTransition.getDestination()));
 		}
 	}
 
@@ -195,13 +274,13 @@ public class TestInjectorShould {
 
 		Set<IGraphProposition> propositionsTransition6 = new HashSet<IGraphProposition>();
 		propositionsTransition6.add(successProposition);
-		Transition transition6 = transitionFactory.create(5,
+		Transition transition6 = transitionFactory.create(6,
 				propositionsTransition6);
 		model.addTransition(q3, q3, transition6);
 
 		Set<IGraphProposition> propositionsTransition7 = new HashSet<IGraphProposition>();
 		propositionsTransition7.add(abortProposition);
-		Transition transition7 = transitionFactory.create(5,
+		Transition transition7 = transitionFactory.create(7,
 				propositionsTransition7);
 		model.addTransition(q2, q2, transition7);
 		return model;
@@ -228,7 +307,7 @@ public class TestInjectorShould {
 		automaton.addProposition(timeoutProposition);
 		automaton.addProposition(ackProposition);
 
-		State state14 = stateFactory.create("q14", 14);
+		state14 = stateFactory.create("q14", 14);
 		State q15 = stateFactory.create("q15", 15);
 		State state16 = stateFactory.create("q16", 16);
 		State state17 = stateFactory.create("q17", 17);

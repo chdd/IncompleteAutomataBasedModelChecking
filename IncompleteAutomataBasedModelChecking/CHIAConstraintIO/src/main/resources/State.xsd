@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:chia="http://NamespaceTest.com/CHIA" 
+	elementFormDefault="qualified">
+
+
+	<xs:element name="state">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:integer" use="required" />
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="initial" type="xs:boolean" />
+			<xs:attribute name="accepting" type="xs:boolean" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

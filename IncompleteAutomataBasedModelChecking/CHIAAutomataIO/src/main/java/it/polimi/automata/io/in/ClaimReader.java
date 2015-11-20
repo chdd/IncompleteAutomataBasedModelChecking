@@ -11,8 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -38,7 +37,7 @@ public class ClaimReader extends XMLReader<BA> {
 	/**
 	 * is the logger of the BAReader class
 	 */
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(ClaimReader.class);
 
 	/**
@@ -66,6 +65,7 @@ public class ClaimReader extends XMLReader<BA> {
 		super(NAME);
 		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
 		this.file = new File(filePath);
+
 	}
 
 	/**
@@ -93,14 +93,14 @@ public class ClaimReader extends XMLReader<BA> {
 	@Override
 	public BA perform() throws FileNotFoundException, SAXException,
 			IOException, ParserConfigurationException {
-		logger.info("Reding the Claim");
+		logger.debug("Reding the Claim");
 
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		if (ClassLoader.getSystemResourceAsStream(BA_XSD_PATH) == null) {
 			throw new InternalError(
-					"It was not possible to load the BA.xsd from "
+					"It was not possible to load the "
 							+ BA_XSD_PATH);
 		}
 		this.validateAgainstXSD(new FileInputStream(this.file),
@@ -116,7 +116,7 @@ public class ClaimReader extends XMLReader<BA> {
 		Element doc = dom.getDocumentElement();
 		BA ba = new ElementToBATransformer().transform(doc);
 
-		logger.info("Claim Readed");
+		logger.debug("Claim Readed");
 		this.performed();
 		return ba;
 	}

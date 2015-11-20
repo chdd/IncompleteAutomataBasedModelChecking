@@ -39,14 +39,14 @@ public class SubProperty extends Component {
 	 */
 	private final Set<LabeledPluggingTransition> greenIncomingTransitions;
 	private final Set<LabeledPluggingTransition> yellowIncomingTransitions;
-	
+
 	private int numRedOutgoingTransitions;
 	private int numYellowOutgoingTransitions;
 	private int numOutgoingTransitions;
 	/**
 	 * contains the out-coming ports of the component
 	 */
-	private final Map<Integer, LabeledPluggingTransition> outcomingPorts;
+	private final Map<Integer, LabeledPluggingTransition> outgoingTransitions;
 
 	/**
 	 * contains the self-reachability relation based on purely regular states
@@ -83,9 +83,9 @@ public class SubProperty extends Component {
 				"The name of the state cannot be null");
 		this.automaton = automaton;
 		this.incomingTransitions = new HashMap<Integer, LabeledPluggingTransition>();
-		this.outcomingPorts = new HashMap<Integer, LabeledPluggingTransition>();
+		this.outgoingTransitions = new HashMap<Integer, LabeledPluggingTransition>();
 		this.greenIncomingTransitions = new HashSet<LabeledPluggingTransition>();
-		this.yellowIncomingTransitions =new HashSet<LabeledPluggingTransition>();
+		this.yellowIncomingTransitions = new HashSet<LabeledPluggingTransition>();
 
 		this.lowerApproximationReachabilityRelation = new ReachabilityRelation();
 		this.overApproximationReachabilityRelation = new ReachabilityRelation();
@@ -114,7 +114,7 @@ public class SubProperty extends Component {
 	public Set<LabeledPluggingTransition> getOutgoingTransitions() {
 		return Collections
 				.unmodifiableSet(new HashSet<LabeledPluggingTransition>(
-						outcomingPorts.values()));
+						outgoingTransitions.values()));
 	}
 
 	/**
@@ -172,9 +172,9 @@ public class SubProperty extends Component {
 				"The outgoing transition cannot be null");
 		Preconditions
 				.checkArgument(
-						this.outcomingPorts.containsKey(port.hashCode()),
+						this.outgoingTransitions.containsKey(port.hashCode()),
 						"The outgoing transition must be contained into the outgoing transitions of the sub-property");
-		return this.outcomingPorts.get(port.hashCode());
+		return this.outgoingTransitions.get(port.hashCode());
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class SubProperty extends Component {
 		}
 		this.setNumOutgoingTransitions(this.getNumOutgoingTransitions() + 1);
 		Preconditions.checkNotNull(port, "The port to be added cannot be null");
-		this.outcomingPorts.put(port.hashCode(), port);
+		this.outgoingTransitions.put(port.hashCode(), port);
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class SubProperty extends Component {
 			this.incomingTransitions.remove(p);
 		}
 		if (this.getOutgoingTransitions().contains(p)) {
-			this.outcomingPorts.remove(p);
+			this.outgoingTransitions.remove(p);
 		}
 	}
 
@@ -245,7 +245,7 @@ public class SubProperty extends Component {
 	 */
 	public void addReachabilityRelation(
 			LabeledPluggingTransition outgoingTransition,
-			LabeledPluggingTransition incomingTransition, 
+			LabeledPluggingTransition incomingTransition,
 			Boolean modelAcceptingState, Boolean claimAcceptingState) {
 		// validates the parameters
 		Preconditions.checkNotNull(outgoingTransition,
@@ -268,8 +268,8 @@ public class SubProperty extends Component {
 								+ " must be contained into the set of the incoming port of the sub-property");
 
 		this.lowerApproximationReachabilityRelation.addTransition(
-				outgoingTransition, incomingTransition, 
-				modelAcceptingState, claimAcceptingState);
+				outgoingTransition, incomingTransition, modelAcceptingState,
+				claimAcceptingState);
 	}
 
 	public ReachabilityRelation getLowerReachabilityRelation() {
@@ -300,7 +300,7 @@ public class SubProperty extends Component {
 	 */
 	public void addPossibleReachabilityRelation(
 			LabeledPluggingTransition outgoingTransition,
-			LabeledPluggingTransition incomingTransition, 
+			LabeledPluggingTransition incomingTransition,
 			Boolean modelAcceptingState, Boolean claimAcceptingState) {
 		// validates the parameters
 		Preconditions.checkNotNull(outgoingTransition,
@@ -323,8 +323,16 @@ public class SubProperty extends Component {
 								+ " must be contained into the set of the incoming port of the sub-property");
 
 		this.overApproximationReachabilityRelation.addTransition(
-				outgoingTransition, incomingTransition, 
-				modelAcceptingState, claimAcceptingState);
+				outgoingTransition, incomingTransition, modelAcceptingState,
+				claimAcceptingState);
+	}
+
+	@Override
+	public String toString() {
+		return "SubProperty [automaton=" + automaton + ",\n "
+				+ "incomingTransitions=" + incomingTransitions + ",\n "
+				+ "outgoingTransitions=" + outgoingTransitions +",\n"
+				+ " indispensable=" + indispensable + "]";
 	}
 
 	@Override
@@ -337,8 +345,10 @@ public class SubProperty extends Component {
 				* result
 				+ ((incomingTransitions == null) ? 0 : incomingTransitions
 						.hashCode());
-		result = prime * result
-				+ ((outcomingPorts == null) ? 0 : outcomingPorts.hashCode());
+		result = prime
+				* result
+				+ ((outgoingTransitions == null) ? 0 : outgoingTransitions
+						.hashCode());
 		return result;
 	}
 
@@ -361,10 +371,10 @@ public class SubProperty extends Component {
 				return false;
 		} else if (!incomingTransitions.equals(other.incomingTransitions))
 			return false;
-		if (outcomingPorts == null) {
-			if (other.outcomingPorts != null)
+		if (outgoingTransitions == null) {
+			if (other.outgoingTransitions != null)
 				return false;
-		} else if (!outcomingPorts.equals(other.outcomingPorts))
+		} else if (!outgoingTransitions.equals(other.outgoingTransitions))
 			return false;
 		return true;
 	}
@@ -409,13 +419,13 @@ public class SubProperty extends Component {
 						this.incomingTransitions.values().contains(
 								incomingTransition),
 						"The incoming transition must be contained into the set of incoming transitions of the sub-property");
-		if(this.yellowIncomingTransitions.contains(incomingTransition)){
+		if (this.yellowIncomingTransitions.contains(incomingTransition)) {
 			this.yellowIncomingTransitions.remove(incomingTransition);
 		}
 		this.greenIncomingTransitions.add(incomingTransition);
 
 	}
-	
+
 	public void setYellowIncomingTransition(
 			LabeledPluggingTransition incomingTransition) {
 		Preconditions.checkNotNull(incomingTransition,
@@ -425,15 +435,13 @@ public class SubProperty extends Component {
 						this.incomingTransitions.values().contains(
 								incomingTransition),
 						"The incoming transition must be contained into the set of incoming transitions of the sub-property");
-		if(this.greenIncomingTransitions.contains(incomingTransition)){
-			throw new InternalError("It is not possible to change the label of an incoming transition from G to Y");
+		if (this.greenIncomingTransitions.contains(incomingTransition)) {
+			throw new InternalError(
+					"It is not possible to change the label of an incoming transition from G to Y");
 		}
 		this.yellowIncomingTransitions.add(incomingTransition);
 
 	}
-
-	
-
 
 	public void incrementNumberRedOutgoingTransitions() {
 		this.numRedOutgoingTransitions++;
@@ -454,8 +462,6 @@ public class SubProperty extends Component {
 		return this.yellowIncomingTransitions.size();
 	}
 
-	
-
 	/**
 	 * @return the numIncomingTransitions
 	 */
@@ -463,7 +469,6 @@ public class SubProperty extends Component {
 		return this.incomingTransitions.size();
 	}
 
-	
 	/**
 	 * @return the numRedOutgoingTransitions
 	 */

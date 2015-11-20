@@ -4,7 +4,6 @@ import it.polimi.automata.BA;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 
 import action.CHIAAction;
 
@@ -50,8 +49,9 @@ public class ClaimLTLReader extends CHIAAction<BA> {
 	 * returns the BA corresponding to the LTL formula stored in the file
 	 * 
 	 * @return the BA corresponding to the LTL formula stored in the file
+	 * @throws Exception 
 	 */
-	public BA perform() throws IOException {
+	public BA perform() throws Exception {
 
 		String ltlFormula = "";
 		BufferedReader br = new BufferedReader(new FileReader(filePath));

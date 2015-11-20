@@ -155,8 +155,8 @@ public class ModelReaderTest {
 	@Test
 	public void testPerformStringPath() throws Exception {
 
-		ModelReader reader=new ModelReader(
-				 getClass().getClassLoader()
+		ModelReader reader=new ModelReader(getClass()
+				.getClassLoader()
 						.getResource("SendingMessageModel.xml").getFile());
 		
 		IBA sendingMessage=reader.perform();

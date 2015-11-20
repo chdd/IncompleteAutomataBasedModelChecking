@@ -2,8 +2,8 @@
     <subproperty indispensable="true" modelstateId="1" name="t0">
         <ba>
             <propositions>
-                <proposition value="b"/>
-                <proposition value="a"/>
+                <proposition name="b"/>
+                <proposition name="a"/>
             </propositions>
             <states>
                 <state id="5" initial="true" name="1 - 2 - 0"/>
@@ -18,18 +18,18 @@
                 <transition destination="7" id="6256" propositions="!b^!a" source="6"/>
             </transitions>
         </ba>
-        <inports/>
-        <outports>
-            <port color="RED" id="98">
+        <intransitions/>
+        <outtransitions>
+            <labeledplugtransition label="R" id="98">
                 <sourcestate>
                     <state id="7" name="1 - 1 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="2"/>
                 </destinationstate>
-                <transition id="6254" propositions="a"/>
-            </port>
-        </outports>
+                <trans id="6254" propositions="a"/>
+            </labeledplugtransition>
+        </outtransitions>
         <lowerReachability>
             <reachabilityElements/>
         </lowerReachability>

@@ -206,11 +206,9 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 					Multimaps.forMap(this.intersectionStateModelStateMap),
 					this.modelStateintersectionStateMap);
 
-			Multimaps
-					.invertFrom(
-							Multimaps
-									.forMap(this.mapConstrainedTransitionModelBlackBoxState),
-							this.mapBlackBoxStateConstrainedTransition);
+			Multimaps.invertFrom(Multimaps
+					.forMap(this.mapConstrainedTransitionModelBlackBoxState),
+					this.mapBlackBoxStateConstrainedTransition);
 
 			this.performed();
 		}
@@ -296,8 +294,7 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 								nextModelState, nextClaimState, nextNumber);
 
 						Transition t = this.intersectionTransitionBuilder
-								.getIntersectionTransition(intersectionState,
-										nextState, modelTransition,
+								.getIntersectionTransition(modelTransition,
 										claimTransition);
 						this.intersection.addTransition(intersectionState,
 								nextState, t);
@@ -357,26 +354,28 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 					outgoingTransition.getDestination(), outgoingTransition
 							.getTransition().getPropositions())) {
 
-				LabeledPluggingTransition coloredReachabilityIncomingTransition=subpropertyReachabilityEntry.getIncomingTransition();
-				
-				for(PluggingTransition replacementIncomingTransition : this.replacement.getIncomingTransitions(coloredReachabilityIncomingTransition.getSource(), coloredReachabilityIncomingTransition.getTransition().getPropositions())){
-					int nextnumber = this.acceptingPolicy
-							.getNumber(
-									subpropertyReachabilityEntry
-											.isClaimAccepting(),
-									subpropertyReachabilityEntry
-											.isModelAccepting(), number,
-									subpropertyReachabilityEntry
-											.getIncomingTransition()
-											.getDestination(),
-									replacementIncomingTransition.getDestination());
+				LabeledPluggingTransition coloredReachabilityIncomingTransition = subpropertyReachabilityEntry
+						.getIncomingTransition();
+
+				for (PluggingTransition replacementIncomingTransition : this.replacement
+						.getIncomingTransitions(
+								coloredReachabilityIncomingTransition
+										.getSource(),
+								coloredReachabilityIncomingTransition
+										.getTransition().getPropositions())) {
+					int nextnumber = this.acceptingPolicy.getNumber(
+							subpropertyReachabilityEntry.isClaimAccepting(),
+							subpropertyReachabilityEntry.isModelAccepting(),
+							number, subpropertyReachabilityEntry
+									.getIncomingTransition().getDestination(),
+							replacementIncomingTransition.getDestination());
 
 					State nextModelState = replacementIncomingTransition
 							.getDestination();
 					State nextClaimState = subpropertyReachabilityEntry
 							.getIncomingTransition().getDestination();
-					State nextState = this.computeIntersection(
-							nextModelState, nextClaimState, nextnumber);
+					State nextState = this.computeIntersection(nextModelState,
+							nextClaimState, nextnumber);
 
 					Transition t = new ModelTransitionFactory().create();
 					this.intersection.addTransition(intersectionState,
@@ -618,8 +617,7 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 		this.intersectionStateClaimStateMap.remove(intersectionState);
 		this.intersectionStateModelStateMap.remove(intersectionState);
-		this.mapBlackBoxStateConstrainedTransition
-				.removeAll(intersectionState);
+		this.mapBlackBoxStateConstrainedTransition.removeAll(intersectionState);
 
 		this.claimStateintersectionStateMap = HashMultimap.create();
 		this.modelStateintersectionStateMap = HashMultimap.create();
@@ -633,24 +631,22 @@ public class ReplacementIntersectionBuilder extends CHIAAction<IntersectionBA> {
 
 		for (Transition t : this.intersection
 				.getInTransitions(intersectionState)) {
-			if (this.mapConstrainedTransitionModelBlackBoxState
-					.containsKey(t)) {
+			if (this.mapConstrainedTransitionModelBlackBoxState.containsKey(t)) {
 				State blackBoxState = this.mapConstrainedTransitionModelBlackBoxState
 						.get(t);
-				this.mapBlackBoxStateConstrainedTransition.get(
-						blackBoxState).remove(t);
+				this.mapBlackBoxStateConstrainedTransition.get(blackBoxState)
+						.remove(t);
 				this.mapConstrainedTransitionModelBlackBoxState.remove(t);
 			}
 		}
 
 		for (Transition t : this.intersection
 				.getOutTransitions(intersectionState)) {
-			if (this.mapConstrainedTransitionModelBlackBoxState
-					.containsKey(t)) {
+			if (this.mapConstrainedTransitionModelBlackBoxState.containsKey(t)) {
 				State blackBoxState = this.mapConstrainedTransitionModelBlackBoxState
 						.get(t);
-				this.mapBlackBoxStateConstrainedTransition.get(
-						blackBoxState).remove(t);
+				this.mapBlackBoxStateConstrainedTransition.get(blackBoxState)
+						.remove(t);
 				this.mapConstrainedTransitionModelBlackBoxState.remove(t);
 			}
 		}

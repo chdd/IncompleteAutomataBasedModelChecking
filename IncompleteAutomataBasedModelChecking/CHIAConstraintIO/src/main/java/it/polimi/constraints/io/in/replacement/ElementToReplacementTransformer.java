@@ -18,64 +18,77 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Preconditions;
 
-public class ElementToReplacementTransformer implements Transformer<Element, Replacement> {
+/**
+ * Transforms an XML element into the corresponding object
+ * 
+ * @author Claudio Menghi
+ *
+ */
+public class ElementToReplacementTransformer implements
+		Transformer<Element, Replacement> {
 
-	
-	public ElementToReplacementTransformer(){
-		
+	/**
+	 * Transforms an XML element into a corresponding object
+	 */
+	public ElementToReplacementTransformer() {
 	}
-	
+
+	/**
+	 * transforms the XML element into the corresponding object
+	 * 
+	 * @param input
+	 *            is the input of the element
+	 * @throws NullPointerException
+	 *             if the input is null
+	 */
 	@Override
 	public Replacement transform(Element input) {
 
 		Preconditions.checkNotNull(input, "The input element cannot be null");
-		
-		int componentId = Integer.parseInt(input
-				.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID));
 
-		String stateName = input.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
-		
-		
-		ElementToIBATransformer elementToIBATransformer=new ElementToIBATransformer();
-		
-		NodeList list=input.getElementsByTagName(
-				AutomataIOConstants.XML_ELEMENT_IBA);
-		if(list.getLength()==0){
-			throw new InternalError("No BA element inside the component");
-		}
-		IBA ba=elementToIBATransformer.transform((Element) (input.getElementsByTagName(
-				AutomataIOConstants.XML_ELEMENT_IBA).item(0)));
-		
-		State modelState = new StateFactory().create(stateName,
-				componentId);
-		
-		Set<PluggingTransition> outcomingPorts=new HashSet<PluggingTransition>();
-		Element xmlOutComingPorts = (Element) input
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT).item(0);
+		int componentId = Integer
+				.parseInt(input
+						.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID));
+
+		String stateName = input
+				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);
+
+		ElementToIBATransformer elementToIBATransformer = new ElementToIBATransformer();
+
+		IBA ba = elementToIBATransformer.transform((Element) (input
+				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_IBA)
+				.item(0)));
+
+		State modelState = new StateFactory().create(stateName, componentId);
+
+		Set<PluggingTransition> outcomingPorts = new HashSet<PluggingTransition>();
+		Element xmlOutComingPorts = (Element) input.getElementsByTagName(
+				AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT).item(0);
 		NodeList xmlOutComingPortsList = xmlOutComingPorts
 				.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 		for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
 			Element xmlOutComingPort = (Element) xmlOutComingPortsList
 					.item(portId);
-			PluggingTransition port = new ElementToPluggingTransitionTransformer(false)
-					.transform(xmlOutComingPort);
+			PluggingTransition port = new ElementToPluggingTransitionTransformer(
+					false).transform(xmlOutComingPort);
 			outcomingPorts.add(port);
 		}
 
-		Set<PluggingTransition> incomingPorts=new HashSet<PluggingTransition>();
-		Element xmlInComingPorts = (Element) input
-				.getElementsByTagName(AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN).item(0);
+		Set<PluggingTransition> incomingPorts = new HashSet<PluggingTransition>();
+		Element xmlInComingPorts = (Element) input.getElementsByTagName(
+				AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN).item(0);
 		NodeList xmlInComingPortsList = xmlInComingPorts
 				.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
 		for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
 			Element xmlInComingPort = (Element) xmlInComingPortsList
 					.item(portId);
-			PluggingTransition port = new ElementToPluggingTransitionTransformer(true)
-					.transform(xmlInComingPort);
+			PluggingTransition port = new ElementToPluggingTransitionTransformer(
+					true).transform(xmlInComingPort);
 			incomingPorts.add(port);
 		}
-		
-		Replacement replacement=new Replacement(modelState, ba, incomingPorts, outcomingPorts);
+
+		Replacement replacement = new Replacement(modelState, ba,
+				incomingPorts, outcomingPorts);
 		return replacement;
 	}
 }

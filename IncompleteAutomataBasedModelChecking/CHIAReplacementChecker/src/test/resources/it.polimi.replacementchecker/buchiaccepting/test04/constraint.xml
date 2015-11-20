@@ -2,8 +2,8 @@
     <subproperty indispensable="false" modelstateId="2" name="t1">
         <ba>
             <propositions>
-                <proposition value="b"/>
-                <proposition value="a"/>
+                <proposition name="b"/>
+                <proposition name="a"/>
             </propositions>
             <states>
                 <state id="28" name="2 - 2 - 1"/>
@@ -25,181 +25,181 @@
                 <transition destination="35" id="101108" propositions="SIGMA" source="38"/>
             </transitions>
         </ba>
-        <inports>
-            <port color="YELLOW" id="23248">
+        <intransitions>
+            <labeledplugtransition label="Y" id="23248">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="35" name="2 - 1 - 2"/>
                 </destinationstate>
-                <transition id="101102" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23236">
+                <trans id="101102" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23236">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="38" name="2 - 1 - 1"/>
                 </destinationstate>
-                <transition id="101109" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23252">
+                <trans id="101109" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23252">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="29" name="2 - 2 - 2"/>
                 </destinationstate>
-                <transition id="101096" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23246">
+                <trans id="101096" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23246">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="35" name="2 - 1 - 2"/>
                 </destinationstate>
-                <transition id="101101" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23230">
+                <trans id="101101" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23230">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="28" name="2 - 2 - 1"/>
                 </destinationstate>
-                <transition id="101125" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23232">
+                <trans id="101125" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23232">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="28" name="2 - 2 - 1"/>
                 </destinationstate>
-                <transition id="101135" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23242">
+                <trans id="101135" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23242">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="33" name="2 - 1 - 0"/>
                 </destinationstate>
-                <transition id="101115" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23244">
+                <trans id="101115" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23244">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="33" name="2 - 1 - 0"/>
                 </destinationstate>
-                <transition id="101116" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23238">
+                <trans id="101116" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23238">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="38" name="2 - 1 - 1"/>
                 </destinationstate>
-                <transition id="101118" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23240">
+                <trans id="101118" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23240">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="38" name="2 - 1 - 1"/>
                 </destinationstate>
-                <transition id="101119" propositions="a"/>
-            </port>
-            <port color="GREEN" id="23254">
+                <trans id="101119" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="G" id="23254">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="29" name="2 - 2 - 2"/>
                 </destinationstate>
-                <transition id="101142" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23250">
+                <trans id="101142" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23250">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="35" name="2 - 1 - 2"/>
                 </destinationstate>
-                <transition id="101112" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23234">
+                <trans id="101112" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23234">
                 <sourcestate>
                     <state id="3" name="t0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="27" name="2 - 2 - 0"/>
                 </destinationstate>
-                <transition id="101133" propositions="a"/>
-            </port>
-        </inports>
-        <outports>
-            <port color="YELLOW" id="23258">
+                <trans id="101133" propositions="a"/>
+            </labeledplugtransition>
+        </intransitions>
+        <outtransitions>
+            <labeledplugtransition label="Y" id="23258">
                 <sourcestate>
                     <state id="27" name="2 - 2 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101094" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23264">
+                <trans id="101094" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23264">
                 <sourcestate>
                     <state id="35" name="2 - 1 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101110" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23256">
+                <trans id="101110" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23256">
                 <sourcestate>
                     <state id="28" name="2 - 2 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101095" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23260">
+                <trans id="101095" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23260">
                 <sourcestate>
                     <state id="38" name="2 - 1 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101107" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23266">
+                <trans id="101107" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23266">
                 <sourcestate>
                     <state id="29" name="2 - 2 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101126" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23262">
+                <trans id="101126" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23262">
                 <sourcestate>
                     <state id="33" name="2 - 1 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101113" propositions="a"/>
-            </port>
-        </outports>
+                <trans id="101113" propositions="a"/>
+            </labeledplugtransition>
+        </outtransitions>
         <lowerReachability>
             <reachabilityElements>
                 <reachabilityElement accepting="false" destination="23250" source="23262"/>
@@ -304,199 +304,199 @@
                 <transition destination="39" id="101140" propositions="!b^!a" source="26"/>
             </transitions>
         </ba>
-        <inports>
-            <port color="YELLOW" id="23194">
+        <intransitions>
+            <labeledplugtransition label="Y" id="23194">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="32" name="3 - 1 - 2"/>
                 </destinationstate>
-                <transition id="101099" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23188">
+                <trans id="101099" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23188">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="37" name="3 - 1 - 1"/>
                 </destinationstate>
-                <transition id="101105" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23198">
+                <trans id="101105" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23198">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="31" name="3 - 2 - 1"/>
                 </destinationstate>
-                <transition id="101124" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23190">
+                <trans id="101124" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23190">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="37" name="3 - 1 - 1"/>
                 </destinationstate>
-                <transition id="101106" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23196">
+                <trans id="101106" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23196">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="32" name="3 - 1 - 2"/>
                 </destinationstate>
-                <transition id="101100" propositions="a"/>
-            </port>
-            <port color="GREEN" id="23192">
+                <trans id="101100" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="G" id="23192">
                 <sourcestate>
                     <state id="4" name="4"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="26" name="3 - 2 - 2"/>
                 </destinationstate>
-                <transition id="101141" propositions="a"/>
-            </port>
-        </inports>
-        <outports>
-            <port color="YELLOW" id="23216">
+                <trans id="101141" propositions="a"/>
+            </labeledplugtransition>
+        </intransitions>
+        <outtransitions>
+            <labeledplugtransition label="Y" id="23216">
                 <sourcestate>
                     <state id="40" name="3 - 2 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101135" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23214">
+                <trans id="101135" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23214">
                 <sourcestate>
                     <state id="39" name="3 - 1 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101120" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23226">
+                <trans id="101120" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23226">
                 <sourcestate>
                     <state id="31" name="3 - 2 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101096" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23202">
+                <trans id="101096" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23202">
                 <sourcestate>
                     <state id="37" name="3 - 1 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101102" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23222">
+                <trans id="101102" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23222">
                 <sourcestate>
                     <state id="32" name="3 - 1 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101116" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23204">
+                <trans id="101116" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23204">
                 <sourcestate>
                     <state id="37" name="3 - 1 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101103" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23206">
+                <trans id="101103" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23206">
                 <sourcestate>
                     <state id="26" name="3 - 2 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101133" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23220">
+                <trans id="101133" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23220">
                 <sourcestate>
                     <state id="32" name="3 - 1 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101115" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23212">
+                <trans id="101115" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23212">
                 <sourcestate>
                     <state id="39" name="3 - 1 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101119" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23224">
+                <trans id="101119" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23224">
                 <sourcestate>
                     <state id="32" name="3 - 1 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101117" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23218">
+                <trans id="101117" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23218">
                 <sourcestate>
                     <state id="40" name="3 - 2 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101136" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23228">
+                <trans id="101136" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23228">
                 <sourcestate>
                     <state id="31" name="3 - 2 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101097" propositions="a"/>
-            </port>
-            <port color="YELLOW" id="23210">
+                <trans id="101097" propositions="a"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23210">
                 <sourcestate>
                     <state id="39" name="3 - 1 - 0"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101118" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23200">
+                <trans id="101118" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23200">
                 <sourcestate>
                     <state id="37" name="3 - 1 - 1"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="2" name="t1"/>
                 </destinationstate>
-                <transition id="101101" propositions="b"/>
-            </port>
-            <port color="YELLOW" id="23208">
+                <trans id="101101" propositions="b"/>
+            </labeledplugtransition>
+            <labeledplugtransition label="Y" id="23208">
                 <sourcestate>
                     <state id="26" name="3 - 2 - 2"/>
                 </sourcestate>
                 <destinationstate>
                     <state id="4" name="4"/>
                 </destinationstate>
-                <transition id="101134" propositions="a"/>
-            </port>
-        </outports>
+                <trans id="101134" propositions="a"/>
+            </labeledplugtransition>
+        </outtransitions>
         <lowerReachability>
             <reachabilityElements>
                 <reachabilityElement accepting="false" destination="23192" source="23218"/>

@@ -31,6 +31,7 @@ public final class AutomataIOConstants {
 
 	public final static String XML_ELEMENT_TRANSITIONS="transitions";
 	public final static String XML_ELEMENT_TRANSITION="transition";
+	public final static String XML_ELEMENT_TRANS="trans";
 	public final static String XML_ELEMENT_REACHABILITY="reachabilityElement";
 	public final static String XML_ELEMENT_REACHABILITIES="reachabilityElements";
 	

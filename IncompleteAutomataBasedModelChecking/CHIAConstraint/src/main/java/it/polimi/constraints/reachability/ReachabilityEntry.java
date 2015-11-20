@@ -62,6 +62,10 @@ public class ReachabilityEntry {
 				"The incoming transition cannot be null");
 		Preconditions.checkNotNull(outgoingTransition,
 				"The outgoing transition cannot be null");
+		Preconditions.checkArgument(incomingTransition.isIncoming(),
+				"The incoming transition must effectively be incoming");
+		Preconditions.checkArgument(!outgoingTransition.isIncoming(),
+				"THe outgoing transition must effectively be outgoing");
 		this.incomingTransition = incomingTransition;
 		this.outgoingTransition = outgoingTransition;
 		this.claimAccepting = claimAccepting;
@@ -82,16 +86,20 @@ public class ReachabilityEntry {
 	public LabeledPluggingTransition getOutgoingTransition() {
 		return outgoingTransition;
 	}
-	
+
 	/**
-	 * @return the true if there is an accepting state of the model in one of the runs that connect the outgoing and incoming transition of the sub-property
+	 * @return the true if there is an accepting state of the model in one of
+	 *         the runs that connect the outgoing and incoming transition of the
+	 *         sub-property
 	 */
 	public boolean isModelAccepting() {
 		return modelAccepting;
 	}
 
 	/**
-	 * @return the true if there is an accepting state of the claim in one of the runs that connect the outgoing and incoming transition of the sub-property
+	 * @return the true if there is an accepting state of the claim in one of
+	 *         the runs that connect the outgoing and incoming transition of the
+	 *         sub-property
 	 */
 	public boolean isClaimAccepting() {
 		return claimAccepting;

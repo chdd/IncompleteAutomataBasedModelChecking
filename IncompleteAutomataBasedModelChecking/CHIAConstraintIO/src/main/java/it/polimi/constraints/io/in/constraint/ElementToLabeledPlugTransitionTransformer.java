@@ -69,7 +69,8 @@ public class ElementToLabeledPlugTransitionTransformer {
 					label);
 		}
 		catch(IllegalArgumentException exception){
-			throw new IllegalArgumentException("The value "+ConstraintsIOConstants.XML_ATTRIBUTE_LABEL+" is not a valid label for the incoming/outgoing transition "+e.toString(), exception);
+			throw new IllegalArgumentException("The value \""+e
+					.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL)+"\" of the plugging transition "+portId+" is not a valid label for the incoming/outgoing transition ", exception);
 		}
 		
 		

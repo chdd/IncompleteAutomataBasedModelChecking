@@ -1,13 +1,22 @@
 package it.polimi.replacementchecker.buchiaccepting;
 
 import static org.junit.Assert.assertTrue;
+import it.polimi.automata.BA;
+import it.polimi.automata.IBA;
+import it.polimi.automata.io.in.ClaimReader;
+import it.polimi.automata.io.in.ModelReader;
+import it.polimi.automata.io.out.ElementToStringTransformer;
+import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
+import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
+import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
+import it.polimi.contraintcomputation.ConstraintGenerator;
 import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
@@ -25,24 +34,80 @@ public class Test03ReplacementChecker {
 
 	private Constraint constraint;
 	private Replacement replacement;
-	private AcceptingPolicy acceptingPolicy; 
-	
-	
+	private AcceptingType acceptingPolicy;
+
+	private IBA model;
+	private IBA refinement;
+	private BA claim;
+
 	@Before
-	public void setUp() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException{
-		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test03/replacement.xml").getFile())).perform();
-		
-		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test03/constraint.xml").getFile())).perform();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
+	public void setUp() throws FileNotFoundException, SAXException,
+			IOException, ParserConfigurationException {
+		this.replacement = new ReplacementReader(new File(getClass()
+				.getClassLoader()
+				.getResource(path + "buchiaccepting/test03/replacement.xml")
+				.getFile())).perform();
+
+		this.constraint = new ConstraintReader(new File(getClass()
+				.getClassLoader()
+				.getResource(path + "buchiaccepting/test03/constraint.xml")
+				.getFile())).perform();
+		this.acceptingPolicy = AcceptingType.BA;
+		this.model = new ModelReader(new File(getClass().getClassLoader()
+				.getResource(path + "buchiaccepting/test03/model.xml")
+				.getFile())).perform();
+		this.refinement = new ModelReader(new File(getClass().getClassLoader()
+				.getResource(path + "buchiaccepting/test03/refinement.xml")
+				.getFile())).perform();
+
+		this.claim = new ClaimReader(new File(getClass().getClassLoader()
+				.getResource(path + "buchiaccepting/test03/claim.xml")
+				.getFile())).perform();
 	}
+
 	@Test
-	public void test() {
-		ReplacementChecker replacementChecker=new ReplacementChecker(this.constraint.getSubProperty(this.replacement.getModelState()), replacement, this.acceptingPolicy);
+	public void test() throws ParserConfigurationException, Exception {
+
+		Checker checker = new Checker(model, claim,
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model,
+						claim));
+		SatisfactionValue returnValue = checker.perform();
+		assertTrue("The property must be possibly satisfied",
+				returnValue == SatisfactionValue.POSSIBLYSATISFIED);
+
+		System.out.println(checker.getUpperIntersectionBA().toString());
+
+		ConstraintGenerator cg = new ConstraintGenerator(checker);
+		Constraint constraint = cg.perform();
+		cg.computeIndispensable();
+		cg.computePortReachability();
+		cg.coloring();
+
+		System.out.println(new ElementToStringTransformer()
+				.transform(new ConstraintToElementTransformer()
+						.transform(constraint)));
+
+		SubProperty subproperty = this.constraint
+				.getSubProperty(this.replacement.getModelState());
+		System.out.println(subproperty);
+
+		Checker refinementChecker = new Checker(refinement, claim,
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model,
+						claim));
+		 returnValue = refinementChecker.perform();
+		assertTrue("The property must be possibly satisfied",
+				returnValue == SatisfactionValue.NOTSATISFIED);
 		
-		SatisfactionValue retValue=replacementChecker.perform();
+		ReplacementChecker replacementChecker = new ReplacementChecker(
+				subproperty, replacement, AcceptingPolicy.getAcceptingPolicy(
+						this.acceptingPolicy, this.replacement.getAutomaton(),
+						subproperty.getAutomaton()));
+
+		SatisfactionValue retValue = replacementChecker.perform();
 		System.out.println(replacementChecker.getLowerIntersectionBA());
-		assertTrue(retValue==SatisfactionValue.NOTSATISFIED);
+		assertTrue(retValue == SatisfactionValue.NOTSATISFIED);
+		
+
+		
 	}
 }

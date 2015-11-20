@@ -6,6 +6,7 @@ import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
+import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.replacementchecker.ReplacementChecker;
@@ -26,24 +27,36 @@ public class Test01ReplacementChecker {
 
 	private Constraint constraint;
 	private Replacement replacement;
-	
-	private AcceptingPolicy acceptingPolicy; 
+
+	private AcceptingType acceptingPolicy;
+
 	@Before
-	public void setUp() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException{
-		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test01/replacement.xml").getFile())).perform();
-		
-		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test01/constraint.xml").getFile())).perform();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
+	public void setUp() throws FileNotFoundException, SAXException,
+			IOException, ParserConfigurationException {
+		this.replacement = new ReplacementReader(new File(getClass()
+				.getClassLoader()
+				.getResource(path + "buchiaccepting/test01/replacement.xml")
+				.getFile())).perform();
+
+		this.constraint = new ConstraintReader(new File(getClass()
+				.getClassLoader()
+				.getResource(path + "buchiaccepting/test01/constraint.xml")
+				.getFile())).perform();
+		this.acceptingPolicy = AcceptingType.BA;
 	}
+
 	@Test
 	public void test() {
-		ReplacementChecker replacementChecker=new ReplacementChecker(this.constraint.getSubProperty(this.replacement.getModelState()), replacement, acceptingPolicy);
-		
-		SatisfactionValue retValue=replacementChecker.perform();
+		SubProperty subproperty = this.constraint
+				.getSubProperty(this.replacement.getModelState());
+		ReplacementChecker replacementChecker = new ReplacementChecker(
+				subproperty, replacement, AcceptingPolicy.getAcceptingPolicy(
+						acceptingPolicy, replacement.getAutomaton(),
+						subproperty.getAutomaton()));
+
+		SatisfactionValue retValue = replacementChecker.perform();
 		System.out.println(replacementChecker.getLowerIntersectionBA());
-		assertTrue(retValue==SatisfactionValue.NOTSATISFIED);
+		assertTrue(retValue == SatisfactionValue.NOTSATISFIED);
 	}
 
 }

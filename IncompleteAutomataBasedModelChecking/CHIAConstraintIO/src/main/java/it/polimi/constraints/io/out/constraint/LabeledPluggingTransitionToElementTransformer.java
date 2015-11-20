@@ -3,8 +3,8 @@ package it.polimi.constraints.io.out.constraint;
 import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.XMLTrasformer;
 import it.polimi.automata.io.out.states.StateToElementTrasformer;
-import it.polimi.automata.io.out.transitions.TransitionToElementTransformer;
 import it.polimi.constraints.io.ConstraintsIOConstants;
+import it.polimi.constraints.io.out.TransToElementTransformer;
 import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,25 +36,25 @@ public class LabeledPluggingTransitionToElementTransformer extends XMLTrasformer
 		super(doc);
 	}
 
-	public Element transform(LabeledPluggingTransition port) throws ParserConfigurationException {
-		Preconditions.checkNotNull(port, "The port element cannot be null");
+	public Element transform(LabeledPluggingTransition labeledPlugTransition) throws ParserConfigurationException {
+		Preconditions.checkNotNull(labeledPlugTransition, "The port element cannot be null");
 		Document doc=this.getDocument();
 		Element portElement = doc
-				.createElement(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
+				.createElement(ConstraintsIOConstants.XML_ELEMENT_LABELED_PLUG_TRANSITION);
 
 		Attr portId = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
-		portId.setValue(Integer.toString(port.getId()));
+		portId.setValue(Integer.toString(labeledPlugTransition.getId()));
 		portElement.setAttributeNode(portId);
 
 		Attr portColor = doc
 				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL);
-		portColor.setValue(port.getColor().toString());
+		portColor.setValue(labeledPlugTransition.getColor().toString());
 		portElement.setAttributeNode(portColor);
 
 		// transition source
 		Attr nextPortColor = doc
 				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL);
-		nextPortColor.setValue(port.getColor().toString());
+		nextPortColor.setValue(labeledPlugTransition.getColor().toString());
 		portElement.setAttributeNode(nextPortColor);
 
 		Element transitionSourceStateContainer = doc
@@ -68,16 +68,16 @@ public class LabeledPluggingTransitionToElementTransformer extends XMLTrasformer
 		// contains the element which corresponds to the source of the
 		// transition
 		Element transitionSource = new StateToElementTrasformer(doc)
-				.transform(port.getSource());
+				.transform(labeledPlugTransition.getSource());
 		// contains the element which corresponds to the destination of the
 		// transition
 		Element transitionDestination = new StateToElementTrasformer(doc)
-				.transform(port.getDestination());
+				.transform(labeledPlugTransition.getDestination());
 
 		transitionSourceStateContainer.appendChild(transitionSource);
 		transitionDestinationStateContainer.appendChild(transitionDestination);
-		Element transitionElement = new TransitionToElementTransformer(doc)
-				.transform(port.getTransition());
+		Element transitionElement = new TransToElementTransformer(doc)
+				.transform(labeledPlugTransition.getTransition());
 
 		portElement.appendChild(transitionElement);
 

@@ -19,16 +19,12 @@ import com.google.common.collect.Multimap;
  */
 public class ReachabilityRelation {
 
-	
-	
-	
 	/**
-	 * is the map that specifies for each incoming transition the corresponding
-	 * outgoing transition
+	 * If a state is the source of a reachability relation, contains the state
+	 * and the corresponding reabhability entry
 	 */
 	private final Multimap<State, ReachabilityEntry> acceptingMap;
-	
-	
+
 	/**
 	 * creates a new empty reachability relation. The reachability relation is
 	 * used to map the incoming transitions which are reachable from the
@@ -50,28 +46,57 @@ public class ReachabilityRelation {
 	 *            is the destination of the transition
 	 * @throws NullPointerException
 	 *             if one of the two transitions is null
+	 * @throws IllegalArgumentException
+	 *             if the incoming or the outgoing transition is not
+	 *             incoming/outgoing
 	 */
 	public void addTransition(LabeledPluggingTransition outgoingTransition,
-			LabeledPluggingTransition incomingTransition, Boolean modelAccepting, Boolean claimAccepting) {
+			LabeledPluggingTransition incomingTransition,
+			Boolean modelAccepting, Boolean claimAccepting) {
 		Preconditions.checkNotNull(outgoingTransition,
 				"The outgoing transition cannot be null");
 		Preconditions.checkNotNull(incomingTransition,
 				"The destination transition cannot be null");
-		Preconditions.checkArgument(!outgoingTransition.isIncoming(), "The source of the reachability relation must be an outgoingTransition");
-		Preconditions.checkArgument(incomingTransition.isIncoming(), "The destination of the reachability relation must be an incomingTransition");
-		
-		ReachabilityEntry reachabilityEntry=new ReachabilityEntry(incomingTransition, outgoingTransition,  modelAccepting, claimAccepting);
-		this.acceptingMap.put(outgoingTransition.getSource(), reachabilityEntry);
+		Preconditions
+				.checkArgument(!outgoingTransition.isIncoming(),
+						"The source of the reachability relation must be an outgoingTransition");
+		Preconditions
+				.checkArgument(incomingTransition.isIncoming(),
+						"The destination of the reachability relation must be an incomingTransition");
+
+		ReachabilityEntry reachabilityEntry = new ReachabilityEntry(
+				incomingTransition, outgoingTransition, modelAccepting,
+				claimAccepting);
+		this.acceptingMap
+				.put(outgoingTransition.getSource(), reachabilityEntry);
 	}
 
-	
-	public Multimap<State, ReachabilityEntry> getReachabilityAcceptingMap(){
+	/**
+	 * returns the map that associates for each state the corresponding
+	 * reachability entries
+	 * 
+	 * @return the map that associates for each state the corresponding
+	 *         reachability entries
+	 */
+	public Multimap<State, ReachabilityEntry> getReachabilityAcceptingMap() {
 		return this.acceptingMap;
 	}
-	public Collection<ReachabilityEntry> get(State subPropertyState){
+
+	/**
+	 * returns the collection of reachability entries associated to one state
+	 * 
+	 * @param subPropertyState
+	 *            the state of the sub-property to be considered
+	 * @return the set of the reachability entries whose source is the specified
+	 *         property state
+	 */
+	public Collection<ReachabilityEntry> get(State subPropertyState) {
 		return this.acceptingMap.get(subPropertyState);
 	}
-	
+
+	/**
+	 * {@inheritDoc} 
+	 */
 	@Override
 	public String toString() {
 		return "ReachabilityRelation [acceptingMap=" + acceptingMap + "]";

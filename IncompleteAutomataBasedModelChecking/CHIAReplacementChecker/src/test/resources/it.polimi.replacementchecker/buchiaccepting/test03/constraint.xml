@@ -1,152 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <constraint>
-    <subproperty indispensable="true" modelstateId="3" name="t0">
-        <ba>
-            <propositions>
-                <proposition value="b"/>
-                <proposition value="a"/>
-            </propositions>
-            <states>
-                <state accepting="true" id="19" name="19"/>
-                <state id="12" name="12"/>
-                <state accepting="true" id="18" name="18"/>
-                <state id="10" name="10"/>
-                <state id="16" name="16"/>
-                <state id="14" name="14"/>
-            </states>
-            <transitions>
-                <transition destination="18" id="5947" propositions="!b^!a" source="10"/>
-                <transition destination="16" id="5945" propositions="!b^!a" source="19"/>
-                <transition destination="19" id="5946" propositions="!b" source="10"/>
-                <transition destination="10" id="5933" propositions="!b" source="12"/>
-                <transition destination="16" id="5940" propositions="SIGMA" source="18"/>
-                <transition destination="14" id="5938" propositions="SIGMA" source="16"/>
-                <transition destination="12" id="5944" propositions="!b" source="19"/>
-                <transition destination="18" id="5941" propositions="SIGMA" source="14"/>
-                <transition destination="14" id="5942" propositions="!b^!a" source="12"/>
-            </transitions>
-        </ba>
-        <inports>
-            <port color="GREEN" id="5">
-                <sourcestate>
-                    <state id="2" name="2"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="10" name="10"/>
-                </destinationstate>
-                <transition id="5928" propositions="a"/>
-            </port>
-            <port color="BLACK" id="1">
-                <sourcestate>
-                    <state id="1" name="1"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="12" name="12"/>
-                </destinationstate>
-                <transition id="5930" propositions="a"/>
-            </port>
-            <port color="BLACK" id="3">
-                <sourcestate>
-                    <state id="1" name="1"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="10" name="10"/>
-                </destinationstate>
-                <transition id="5932" propositions="a"/>
-            </port>
-            <port color="BLACK" id="7">
-                <sourcestate>
-                    <state id="1" name="1"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="16" name="16"/>
-                </destinationstate>
-                <transition id="5935" propositions="a"/>
-            </port>
-            <port color="BLACK" id="9">
-                <sourcestate>
-                    <state id="1" name="1"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="14" name="14"/>
-                </destinationstate>
-                <transition id="5937" propositions="a"/>
-            </port>
-        </inports>
-        <outports>
-            <port color="BLACK" id="19">
-                <sourcestate>
-                    <state id="16" name="16"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="1" name="1"/>
-                </destinationstate>
-                <transition id="5936" propositions="a"/>
-            </port>
-            <port color="BLACK" id="21">
-                <sourcestate>
-                    <state id="14" name="14"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="1" name="1"/>
-                </destinationstate>
-                <transition id="5934" propositions="a"/>
-            </port>
-            <port color="BLACK" id="17">
-                <sourcestate>
-                    <state id="10" name="10"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="1" name="1"/>
-                </destinationstate>
-                <transition id="5929" propositions="a"/>
-            </port>
-            <port color="BLACK" id="15">
-                <sourcestate>
-                    <state id="18" name="18"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="1" name="1"/>
-                </destinationstate>
-                <transition id="5939" propositions="a"/>
-            </port>
-            <port color="BLACK" id="13">
-                <sourcestate>
-                    <state id="12" name="12"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="1" name="1"/>
-                </destinationstate>
-                <transition id="5931" propositions="a"/>
-            </port>
-            <port color="BLACK" id="11">
-                <sourcestate>
-                    <state id="19" name="19"/>
-                </sourcestate>
-                <destinationstate>
-                    <state id="1" name="1"/>
-                </destinationstate>
-                <transition id="5943" propositions="a"/>
-            </port>
-        </outports>
-        <lowerReachability>
-            <reachabilityElements>
-                <reachabilityElement accepting="true" destination="7" source="21"/>
-                <reachabilityElement accepting="false" destination="9" source="15"/>
-                <reachabilityElement accepting="false" destination="3" source="13"/>
-                <reachabilityElement accepting="true" destination="1" source="17"/>
-                <reachabilityElement accepting="false" destination="3" source="11"/>
-                <reachabilityElement accepting="false" destination="9" source="19"/>
-            </reachabilityElements>
-        </lowerReachability>
-        <upperReachability>
-            <reachabilityElements>
-                <reachabilityElement accepting="true" destination="7" source="21"/>
-                <reachabilityElement accepting="false" destination="9" source="15"/>
-                <reachabilityElement accepting="false" destination="3" source="13"/>
-                <reachabilityElement accepting="true" destination="1" source="17"/>
-                <reachabilityElement accepting="false" destination="3" source="11"/>
-                <reachabilityElement accepting="false" destination="9" source="19"/>
-            </reachabilityElements>
-        </upperReachability>
-    </subproperty>
+	<subproperty indispensable="true" modelstateId="3" name="t0">
+		<ba>
+			<propositions>
+				<proposition name="b" />
+				<proposition name="a" />
+			</propositions>
+			<states>
+				<state id="2330" name="3 - 1 - 0" />
+				<state id="2332" name="3 - 2 - 1" />
+				<state id="2334" name="3 - 2 - 0" />
+				<state accepting="true" id="2336" name="3 - 2 - 2" />
+				<state accepting="true" id="2337" name="3 - 1 - 2" />
+				<state id="2328" name="3 - 1 - 1" />
+			</states>
+			<transitions>
+				<transition destination="2332" id="6213" propositions="!b^!a"
+					source="2330" />
+				<transition destination="2336" id="6212" propositions="SIGMA"
+					source="2332" />
+				<transition destination="2334" id="6211" propositions="SIGMA"
+					source="2336" />
+				<transition destination="2332" id="6205" propositions="SIGMA"
+					source="2334" />
+				<transition destination="2336" id="6220" propositions="!b^!a"
+					source="2328" />
+				<transition destination="2328" id="6201" propositions="!b"
+					source="2330" />
+				<transition destination="2337" id="6219" propositions="!b"
+					source="2328" />
+				<transition destination="2334" id="6218" propositions="!b^!a"
+					source="2337" />
+				<transition destination="2330" id="6217" propositions="!b"
+					source="2337" />
+			</transitions>
+		</ba>
+		<intransitions>
+			<labeledplugtransition id="321" label="B">
+				<sourcestate>
+					<state id="2" name="2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2334" name="3 - 2 - 0" />
+				</destinationstate>
+				<trans id="6206" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="323" label="B">
+				<sourcestate>
+					<state id="2" name="2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2328" name="3 - 1 - 1" />
+				</destinationstate>
+				<trans id="6199" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="325" label="G">
+				<sourcestate>
+					<state id="1" name="1" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2328" name="3 - 1 - 1" />
+				</destinationstate>
+				<trans id="6221" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="319" label="B">
+				<sourcestate>
+					<state id="2" name="2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2332" name="3 - 2 - 1" />
+				</destinationstate>
+				<trans id="6202" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="317" label="B">
+				<sourcestate>
+					<state id="2" name="2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2330" name="3 - 1 - 0" />
+				</destinationstate>
+				<trans id="6214" propositions="a" />
+			</labeledplugtransition>
+		</intransitions>
+		<outtransitions>
+			<labeledplugtransition id="337" label="B">
+				<sourcestate>
+					<state id="2336" name="3 - 2 - 2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6209" propositions="b" />
+			</labeledplugtransition>
+			<labeledplugtransition id="331" label="B">
+				<sourcestate>
+					<state id="2332" name="3 - 2 - 1" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6208" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="327" label="B">
+				<sourcestate>
+					<state id="2330" name="3 - 1 - 0" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6200" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="343" label="B">
+				<sourcestate>
+					<state id="2328" name="3 - 1 - 1" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6215" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="329" label="B">
+				<sourcestate>
+					<state id="2332" name="3 - 2 - 1" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6207" propositions="b" />
+			</labeledplugtransition>
+			<labeledplugtransition id="335" label="B">
+				<sourcestate>
+					<state id="2334" name="3 - 2 - 0" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6204" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="339" label="B">
+				<sourcestate>
+					<state id="2336" name="3 - 2 - 2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6210" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition id="333" label="B">
+				<sourcestate>
+					<state id="2334" name="3 - 2 - 0" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6203" propositions="b" />
+			</labeledplugtransition>
+			<labeledplugtransition id="341" label="B">
+				<sourcestate>
+					<state id="2337" name="3 - 1 - 2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="2" />
+				</destinationstate>
+				<trans id="6216" propositions="a" />
+			</labeledplugtransition>
+		</outtransitions>
+		<lowerReachability>
+			<reachabilityElements>
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="317" source="343" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="323" source="341" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="323" source="327" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="321" source="331" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="321" source="329" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="335" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="333" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="339" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="337" />
+			</reachabilityElements>
+		</lowerReachability>
+		<upperReachability>
+			<reachabilityElements>
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="317" source="343" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="323" source="341" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="323" source="327" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="321" source="331" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="321" source="329" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="333" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="335" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="339" />
+				<reachabilityElement acceptingclaim="true"
+					acceptingmodel="false" destination="319" source="337" />
+			</reachabilityElements>
+		</upperReachability>
+	</subproperty>
 </constraint>

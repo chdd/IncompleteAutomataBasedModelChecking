@@ -1,4 +1,4 @@
-package it.polimi.statemachine;
+package it.polimi.statemachine.states;
 
 import it.polimi.automata.io.in.ClaimReader;
 import it.polimi.automata.io.in.ModelReader;

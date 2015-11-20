@@ -3,62 +3,70 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-
 	<artifactId>CHIALTLIO</artifactId>
-	<name>CHIALTLIO</name>
 
 	<parent>
 		<groupId>it.polimi.chia</groupId>
 		<artifactId>CHIA</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
+	<packaging>jar</packaging>
+	<name>CHIALTLIO</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<!-- contains the version of java used in this project -->
+		<!-- specifies the version of Java used in the CHIAChecker -->
 		<java.version>1.7</java.version>
-		<!-- contains the encoding of the source code -->
+		<!-- is the character encoding of the source code -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
+		<!-- Github server corresponds to entry in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
+		<!-- sonar -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.language>java</sonar.language>
+		<sonar.host.url> http://localhost:9000/ </sonar.host.url>
+		<jacoco.version>0.7.2.201409121644</jacoco.version>
+		<surefire.version>2.17</surefire.version>
+		<testng.version>6.8.8</testng.version>
 	</properties>
 
 	<build>
-		<!-- contains the directory where the source code is contained -->
+		<!-- contains the directory where the source code is placed -->
 		<sourceDirectory>src/main/java</sourceDirectory>
-		<!-- contains the directory where the tests are contained -->
+		<!-- contains the directory where the test cases are located -->
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>2.3</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<runOrder>random</runOrder>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
-					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<resources>
 			<resource>
-				<directory>src/test/resources</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
+		<plugins>
+			<!--This plugin's configuration is used to store Eclipse m2e settings 
+				only. It has no influence on the Maven build itself. -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 	<profiles>
 		<profile>
@@ -74,7 +82,6 @@
 				<sonar.jdbc.driverClassName>com.mysql.jdbc.Driver</sonar.jdbc.driverClassName>
 				<sonar.jdbc.username>sonar</sonar.jdbc.username>
 				<sonar.jdbc.password>sonar</sonar.jdbc.password>
-
 				<!-- optional URL to server. Default value is http://localhost:9000 -->
 				<sonar.host.url>
 					http://localhost:9000/
@@ -84,30 +91,6 @@
 			</properties>
 			<build>
 				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.13</version>
-						<configuration>
-							<!-- same configuration as in the regular test execution goal -->
-							<!-- plus argLine parameter configured by JaCoCo prepare-agent -->
-							<argLine>${argLine} -XX:-UseSplitVerifier</argLine>
-							<includes>
-								<include>**/*Test.java</include>
-								<include>**/*Tests.java</include>
-							</includes>
-							<excludes>
-								<exclude>**/it/*IT.java</exclude>
-							</excludes>
-							<!-- new configuration needed for coverage per test -->
-							<properties>
-								<property>
-									<name>listener</name>
-									<value>org.sonar.java.jacoco.JUnitListener</value>
-								</property>
-							</properties>
-						</configuration>
-					</plugin>
 					<plugin>
 						<groupId>com.github.github</groupId>
 						<artifactId>site-maven-plugin</artifactId>
@@ -144,6 +127,11 @@
 						</configuration>
 					</plugin>
 				</plugins>
+				<resources>
+					<resource>
+						<directory>src/test/resources</directory>
+					</resource>
+				</resources>
 			</build>
 			<dependencies>
 				<dependency>
@@ -171,13 +159,7 @@
 			<url>https://github.com/deib-polimi/deib-polimi-mvn-repo/raw/master/releases</url>
 		</repository>
 	</repositories>
-	<distributionManagement>
-		<repository>
-			<id>internal.repo</id>
-			<name>Temporary Staging Repository</name>
-			<url>file://${project.build.directory}/mvn-repo</url>
-		</repository>
-	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -197,4 +179,15 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
+
+
+
 </project>

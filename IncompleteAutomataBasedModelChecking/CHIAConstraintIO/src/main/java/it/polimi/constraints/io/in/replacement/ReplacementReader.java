@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -20,9 +21,9 @@ import org.xml.sax.SAXException;
 import com.google.common.base.Preconditions;
 
 /**
- * The ReplacementReader loads the replacement of a black box state of the
- * model from the specified XML file. The XML files must be conform with respect
- * to the XSD file Replacement.xsd. The ReplacementReader uses the
+ * The ReplacementReader loads the replacement of a black box state of the model
+ * from the specified XML file. The XML files must be conform with respect to
+ * the XSD file Replacement.xsd. The ReplacementReader uses the
  * ElementToReplacement transformers which converts an XML element into the
  * corresponding JAVA object which uses the ElementToPort} transformers and
  * other transformers previously described, such as the ElementToIBA
@@ -31,29 +32,16 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ReplacementReader extends XMLReader<Replacement>{
+public class ReplacementReader extends XMLReader<Replacement> {
 
-	
-	private final static String NAME="READ REPLACEMENT";
-	
-	
-	private final File file;
-	
+	private final static String NAME = "READ REPLACEMENT";
+
 	/**
-	 * creates a new Replacement reader which can be used to read a Replacement
-	 * automaton through the method
-	 * @see Replacement#read()
-	 * 
-	 * @param filePath
-	 *            is the path of the file from which the automaton must be read
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
+	 * is the logger of the BAReader class
 	 */
-	public ReplacementReader(String filePath) {
-		super(NAME);
-		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
-		this.file = new File(filePath);
-	}
+	private static final Logger logger = Logger
+			.getLogger(ReplacementReader.class);
+	private final File file;
 
 	/**
 	 * creates a new constraint reader
@@ -72,31 +60,28 @@ public class ReplacementReader extends XMLReader<Replacement>{
 		this.file = file;
 	}
 
-	public Replacement perform() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+	public Replacement perform() throws FileNotFoundException, SAXException,
+			IOException, ParserConfigurationException {
 
+		logger.debug("reading the replacement");
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			// use the factory to take an instance of the document builder
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			if(this.getClass().getClassLoader()
-					.getResource(ConstraintsIOConstants.REPLACEMENT_XSD_PATH)==null){
-				throw new InternalError("It was not possible to load the BA.xsd from "+ConstraintsIOConstants.REPLACEMENT_XSD_PATH);
-			}
-			this.validateAgainstXSD(new FileInputStream(this.file),ClassLoader.getSystemResourceAsStream(ConstraintsIOConstants.REPLACEMENT_XSD_PATH));
-			// parse using the builder to get the DOM mapping of the
-			// XML file
-			dom = db.parse(file);
+		// use the factory to take an instance of the document builder
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		this.validateAgainstXSD(
+				new FileInputStream(this.file),
+				ClassLoader.getSystemResourceAsStream(ConstraintsIOConstants.REPLACEMENT_XSD_PATH));
+		// parse using the builder to get the DOM mapping of the
+		// XML file
+		dom = db.parse(file);
 
-			Element doc = dom.getDocumentElement();
+		Element doc = dom.getDocumentElement();
 
-			Replacement ret = this.loadReplacement(doc);
-			if(ret==null){
-				throw new InternalError("The read replacement is null");
-			}
-			return ret;
+		Replacement ret = this.loadReplacement(doc);
 
-	
+		logger.debug("replacement loaded");
+		return ret;
 
 	}
 
@@ -106,9 +91,6 @@ public class ReplacementReader extends XMLReader<Replacement>{
 		Replacement replacement = new ElementToReplacementTransformer()
 				.transform(doc);
 
-		if(replacement==null){
-			throw new InternalError("The read replacement is null");
-		}
 		return replacement;
 
 	}

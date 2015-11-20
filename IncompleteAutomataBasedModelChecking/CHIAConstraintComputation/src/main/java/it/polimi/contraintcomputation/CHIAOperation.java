@@ -4,7 +4,7 @@ package it.polimi.contraintcomputation;
  * contains the abstract description of a CHIA checking operation. It contains a
  * flag that specifies whenever the operation has been performed
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
 public abstract class CHIAOperation {

@@ -1,6 +1,5 @@
-package it.polimi.statemachine;
+package it.polimi.statemachine.states;
 
-import it.polimi.automata.io.out.IntersectionToStringTransformer;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
@@ -17,7 +16,7 @@ import action.CHIAException;
  * 
  * @author Claudio
  */
-public enum CHIAReplacementState implements CHIAState{
+public enum CHIAReplacementState implements CHIAStateInterface{
 	
 	/**
 	 * is the initial state of the automaton
@@ -164,9 +163,7 @@ public enum CHIAReplacementState implements CHIAState{
 			if(chiaAction==ReplacementToStringTransformer.class){
 				return true;
 			}
-			if(chiaAction==IntersectionToStringTransformer.class){
-				return true;
-			}
+			
 			if(chiaAction==ConstraintReader.class){
 				return true;
 			}
@@ -183,9 +180,7 @@ public enum CHIAReplacementState implements CHIAState{
 			if(chiaAction==ReplacementToStringTransformer.class){
 				return CHECKED;
 			}
-			if(chiaAction==IntersectionToStringTransformer.class){
-				return CHECKED;
-			}
+			
 			if(chiaAction==ConstraintReader.class){
 				return READY;
 			}

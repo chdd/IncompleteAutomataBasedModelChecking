@@ -65,7 +65,7 @@ public class PluggingTransition extends State {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	protected PluggingTransition(int id, State source, State destination,
+	public PluggingTransition(int id, State source, State destination,
 			Transition transition, boolean incoming) {
 		super(id);
 		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
@@ -167,9 +167,9 @@ public class PluggingTransition extends State {
 	 */
 	@Override
 	public String toString() {
-		return "Port [source=" + source + ", incoming=" + incoming
-				+ ", destination=" + destination + ", transition=" + transition
-				+ "]";
+		return "Plugging transition [source=" + source + ", incoming="
+				+ incoming + ", destination=" + destination + ", transition="
+				+ transition + "]";
 	}
 
 	/**
@@ -180,13 +180,13 @@ public class PluggingTransition extends State {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((destination == null) ? 0 : destination.hashCode());
+				+ destination.hashCode();
 		result = prime * result + (incoming ? 1231 : 1237);
-		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		result = prime * result + source.hashCode();
 		result = prime
 				* result
-				+ ((transition == null) ? 0 : transition.getPropositions()
-						.hashCode());
+				+ transition.getPropositions()
+						.hashCode();
 		return result;
 	}
 
@@ -202,22 +202,13 @@ public class PluggingTransition extends State {
 		if (getClass() != obj.getClass())
 			return false;
 		PluggingTransition other = (PluggingTransition) obj;
-		if (destination == null) {
-			if (other.destination != null)
-				return false;
-		} else if (!destination.equals(other.destination))
+		if (!destination.equals(other.destination))
 			return false;
 		if (incoming != other.incoming)
 			return false;
-		if (source == null) {
-			if (other.source != null)
-				return false;
-		} else if (!source.equals(other.source))
+		if (!source.equals(other.source))
 			return false;
-		if (transition == null) {
-			if (other.transition != null)
-				return false;
-		} else if (!transition.getPropositions().equals(
+		if (!transition.getPropositions().equals(
 				other.transition.getPropositions()))
 			return false;
 		return true;

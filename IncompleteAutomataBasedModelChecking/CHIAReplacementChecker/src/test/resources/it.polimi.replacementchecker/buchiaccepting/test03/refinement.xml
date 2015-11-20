@@ -1,19 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?><iba>
-    <propositions>
-        <proposition value="b"/>
-        <proposition value="a"/>
-    </propositions>
-    <states>
-        <state id="2209" name="2209"/>
-        <state id="2211" initial="true" name="2211"/>
-        <state accepting="true" id="2210" name="2210"/>
-    </states>
-    <transitions>
-        <transition destination="2209" id="5923" propositions="b" source="2211"/>
-        <transition destination="2210" id="5920" propositions="b" source="2210"/>
-        <transition destination="2210" id="5921" propositions="a" source="2209"/>
-        <transition destination="2210" id="5924" propositions="a" source="2211"/>
-        <transition destination="2209" id="5922" propositions="a" source="2210"/>
-        <transition destination="2209" id="5919" propositions="b" source="2210"/>
-    </transitions>
+<?xml version="1.0" encoding="UTF-8"?>
+<iba>
+	<propositions>
+		<proposition name="b" />
+		<proposition name="a" />
+	</propositions>
+	<states>
+		<state id="2" name="2" />
+		<state id="1" initial="true" name="1" />
+		<state accepting="true" id="4" name="4" />
+	</states>
+	<transitions>
+		<transition destination="4" id="6" propositions="b" source="4" />
+		<transition destination="4" id="3" propositions="a" source="2" />
+		<transition destination="4" id="5" propositions="a" source="1" />
+		<transition destination="2" id="2" propositions="a" source="4" />
+		<transition destination="2" id="1" propositions="b" source="4" />
+		<transition destination="1" id="4" propositions="b" source="2" />
+	</transitions>
 </iba>

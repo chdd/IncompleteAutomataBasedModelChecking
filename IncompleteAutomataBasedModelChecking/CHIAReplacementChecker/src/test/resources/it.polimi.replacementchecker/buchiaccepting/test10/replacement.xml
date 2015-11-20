@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="1" name="t0">
     <iba>
         <propositions>
-            <proposition value="b"/>
-            <proposition value="a"/>
+            <proposition name="b"/>
+            <proposition name="a"/>
         </propositions>
         <states>
             <state accepting="true" id="4" name="4"/>
@@ -13,35 +13,35 @@
             <transition destination="5" id="125999" propositions="a" source="5"/>
         </transitions>
     </iba>
-    <inports>
-        <port id="23761">
+    <intransitions>
+        <plugtransition id="23761">
             <sourcestate>
                 <state id="37817" name="37817"/>
             </sourcestate>
             <destinationstate>
                 <state id="5" name="5"/>
             </destinationstate>
-            <transition id="126008" propositions="a"/>
-        </port>
-        <port id="23757">
+            <trans id="126008" propositions="a"/>
+        </plugtransition>
+        <plugtransition id="23757">
             <sourcestate>
                 <state id="37814" name="37814"/>
             </sourcestate>
             <destinationstate>
                 <state id="4" name="4"/>
             </destinationstate>
-            <transition id="126004" propositions="a"/>
-        </port>
-    </inports>
-    <outports>
-        <port id="23755">
+            <trans id="126004" propositions="a"/>
+        </plugtransition>
+    </intransitions>
+    <outtransitions>
+        <plugtransition id="23755">
             <sourcestate>
                 <state id="4" name="4"/>
             </sourcestate>
             <destinationstate>
                 <state id="37814" name="37814"/>
             </destinationstate>
-            <transition id="126003" propositions="a"/>
-        </port>
-    </outports>
+            <trans id="126003" propositions="a"/>
+        </plugtransition>
+    </outtransitions>
 </replacement>

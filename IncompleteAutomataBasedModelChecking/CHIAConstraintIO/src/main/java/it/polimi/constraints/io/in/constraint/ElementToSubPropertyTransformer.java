@@ -14,13 +14,31 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * Transforms an XML element passed as input into the corresponding sub-property
+ * 
+ * @author Claudio Menghi
+ *
+ */
 public class ElementToSubPropertyTransformer implements
 		Transformer<Element, SubProperty> {
 
+	/**
+	 * Creates a new ElementToSubPropertyTransformer. The transformer given an
+	 * XML element generates the corresponding sub-property
+	 */
 	public ElementToSubPropertyTransformer() {
 
 	}
 
+	/**
+	 * Given an XML element returns the corresponding sub-property
+	 * 
+	 * @param input
+	 *            the XML input element to be transformed
+	 * @throws NullPointerException
+	 *             if the element in input is null
+	 */
 	@Override
 	public SubProperty transform(Element input) {
 
@@ -30,8 +48,9 @@ public class ElementToSubPropertyTransformer implements
 				.parseInt(input
 						.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_STATE_ID));
 
-		boolean indispensable = Boolean.parseBoolean(input
-				.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE));
+		boolean indispensable = Boolean
+				.parseBoolean(input
+						.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_SUBPROPERTY_INDISPESNABLE));
 
 		String stateName = input
 				.getAttribute(AutomataIOConstants.XML_ATTRIBUTE_NAME);

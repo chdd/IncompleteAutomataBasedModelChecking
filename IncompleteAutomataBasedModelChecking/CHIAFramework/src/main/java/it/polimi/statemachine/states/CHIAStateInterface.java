@@ -1,4 +1,4 @@
-package it.polimi.statemachine;
+package it.polimi.statemachine.states;
 
 import action.CHIAAction;
 import action.CHIAException;
@@ -9,7 +9,7 @@ import action.CHIAException;
  * @author Claudio Menghi
  *
  */
-public interface CHIAState {
+public interface CHIAStateInterface {
 
 	/**
 	 * returns true if the CHIAAction is performable, false otherwise
@@ -29,6 +29,6 @@ public interface CHIAState {
 	 * @throws CHIAException
 	 *             if the action is not performable
 	 */
-	public CHIAState perform(Class<? extends CHIAAction<?>> chiaAction)
+	public CHIAStateInterface perform(Class<? extends CHIAAction<?>> chiaAction)
 			throws CHIAException;
 }

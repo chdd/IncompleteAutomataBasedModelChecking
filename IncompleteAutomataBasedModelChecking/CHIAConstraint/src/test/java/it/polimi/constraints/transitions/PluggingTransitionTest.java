@@ -4,8 +4,10 @@
 package it.polimi.constraints.transitions;
 
 import static org.junit.Assert.*;
+import it.polimi.automata.io.in.propositions.StringToClaimPropositions;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
+import it.polimi.automata.transition.ClaimTransitionFactory;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 
@@ -66,7 +68,7 @@ public class PluggingTransitionTest {
 		State sourceState=new StateFactory().create();
 		State destinationState=new StateFactory().create();
 		Transition transition=new ModelTransitionFactory().create();
-		assertNotNull(new PluggingTransition(sourceState, destinationState, transition, true));
+		assertNotNull(new PluggingTransition(sourceState, destinationState, transition, true).toString());
 	}
 
 	/**
@@ -154,5 +156,170 @@ public class PluggingTransitionTest {
 		PluggingTransition pluggingTransition=new PluggingTransition(sourceState, destinationState, transition, true);
 		PluggingTransition copyOfThePluggingTransition=new PluggingTransition(sourceState, destinationState, transition, true);
 		assertEquals(pluggingTransition.hashCode(), copyOfThePluggingTransition.hashCode());
+	}
+	
+	@Test
+	public void testEquals() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		Transition transition2 = new ClaimTransitionFactory().create(74,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+				destination, transition2, true);
+		assertTrue(incomingTransition1.equals(incomingTransition2));
+	}
+
+	@Test
+	public void testEqualHashCode() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		Transition transition2 = new ClaimTransitionFactory().create(74,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+				destination, transition2, true);
+		assertTrue(incomingTransition1.hashCode() == incomingTransition2
+				.hashCode());
+
+		assertTrue(incomingTransition1.hashCode()==incomingTransition2.hashCode());
+	}
+
+	@Test
+	public void testEqualHashCode2() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		assertTrue(incomingTransition1.equals(incomingTransition1));
+		assertTrue(incomingTransition1.hashCode()==incomingTransition1.hashCode());
+	}
+
+	@Test
+	public void testEqualHashCode3() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		Transition transition2 = new ClaimTransitionFactory().create(74,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+				destination, transition2, false);
+		assertFalse(incomingTransition1.equals(incomingTransition2));
+		assertFalse(incomingTransition1.hashCode()==incomingTransition2.hashCode());
+	}
+
+	@Test
+	public void testEqualHashCode4() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+	
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		assertFalse(incomingTransition1.equals(null));
+	}
+
+	@Test
+	public void testEqualHashCode5() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		Transition transition2 = new ClaimTransitionFactory().create(74,
+				new StringToClaimPropositions().transform("tro"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+				destination, transition2, true);
+		assertFalse(incomingTransition1.equals(incomingTransition2));
+		assertFalse(incomingTransition1.hashCode()==incomingTransition2.hashCode());
+	}
+
+	@Test
+	public void testEqualHashCode6() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		Transition transition2 = new ClaimTransitionFactory().create(74,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(
+				new StateFactory().create(), destination, transition2, true);
+		assertFalse(incomingTransition1.equals(incomingTransition2));
+		assertFalse(incomingTransition1.hashCode()==incomingTransition2.hashCode());
+	}
+	
+	@Test
+	public void testEqualHashCode7() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		Transition transition2 = new ClaimTransitionFactory().create(74,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+				new StateFactory().create(), transition2, true);
+		assertFalse(incomingTransition1.equals(incomingTransition2));
+		assertFalse(incomingTransition1.hashCode()==incomingTransition2.hashCode());
+	}
+
+	@Test
+	public void testEqualHashCode8() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+				destination, new ModelTransitionFactory().create(), true);
+		assertFalse(incomingTransition1.equals(incomingTransition2));
+		assertFalse(incomingTransition1.hashCode()==incomingTransition2.hashCode());
+	}
+	
+	@Test
+	public void testEqualHashCode9() {
+
+		State source = new StateFactory().create("q8", 8);
+		State destination = new StateFactory().create("10 - 2 - 2", 40);
+		Transition transition1 = new ClaimTransitionFactory().create(63,
+				new StringToClaimPropositions().transform("tro^to^ntz"));
+		
+		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+				destination, transition1, true);
+		assertFalse(incomingTransition1.equals(new StateFactory().create()));
 	}
 }

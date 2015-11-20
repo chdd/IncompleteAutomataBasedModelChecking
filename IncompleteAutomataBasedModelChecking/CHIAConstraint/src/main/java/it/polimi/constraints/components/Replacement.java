@@ -24,7 +24,7 @@ import com.google.common.collect.Multimap;
  * The Replacement class extends the Component class and specifies the IBA which
  * represent the model that describes the replacement of the black box state.
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
 public class Replacement extends Component {
@@ -49,7 +49,10 @@ public class Replacement extends Component {
 	 */
 	private final Multimap<Triple<State, State, Set<IGraphProposition>>, PluggingTransition> mapOutgoingTransitions;
 
-	private final Multimap<Entry<State,  Set<IGraphProposition>>, PluggingTransition> mapIncomingTransitions;
+	/**
+	 * 
+	 */
+	private final Multimap<Entry<State, Set<IGraphProposition>>, PluggingTransition> mapIncomingTransitions;
 
 	/**
 	 * creates a new sub-property that refers to a specific model state and
@@ -60,6 +63,10 @@ public class Replacement extends Component {
 	 *            corresponds with
 	 * @param automaton
 	 *            is the automaton related with the sub-property
+	 * @param incomingTransitions
+	 *            the incoming transitions of the replacement
+	 * @param outcomingTransitions
+	 *            the outgoing transitions of the replacement
 	 * 
 	 * @throws NullPointerException
 	 *             is generated when the name of the state or when the state of
@@ -75,6 +82,7 @@ public class Replacement extends Component {
 				"The set of the incoming ports cannot be null");
 		Preconditions.checkNotNull(outcomingTransitions,
 				"The set of the outcoming ports cannot be null");
+
 		this.incomingTransitions = new HashSet<PluggingTransition>();
 		this.outgoingTransitions = new HashSet<PluggingTransition>();
 		this.mapOutgoingTransitions = HashMultimap.create();
@@ -228,10 +236,9 @@ public class Replacement extends Component {
 
 		this.incomingTransitions.add(transition);
 		this.mapIncomingTransitions.put(
-				new AbstractMap.SimpleEntry<State,  Set<IGraphProposition>>(
-						transition.getSource(), 
-						transition.getTransition().getPropositions()),
-				transition);
+				new AbstractMap.SimpleEntry<State, Set<IGraphProposition>>(
+						transition.getSource(), transition.getTransition()
+								.getPropositions()), transition);
 
 	}
 
@@ -251,10 +258,11 @@ public class Replacement extends Component {
 	 * propositions an empty collection is returned
 	 * 
 	 * @param modelState
-	 *            the state of the model from which the incoming
-	 *            transitions is fired
+	 *            the state of the model which is the source from which the incoming transitions is
+	 *            fired
 	 * @param destinationState
-	 *            the state of the automaton which is reached by the specified transition
+	 *            the state of the automaton which is reached by the specified
+	 *            transition
 	 * @return the collection of the incoming transitions which have the
 	 *         specifiedmodelState, destinationState and the set of propositions
 	 * @throws NullPointerException
@@ -264,48 +272,45 @@ public class Replacement extends Component {
 	 *             automaton
 	 */
 	public Collection<PluggingTransition> getIncomingTransitions(
-			State modelState, 
-			Set<IGraphProposition> propositions) {
+			State modelState, Set<IGraphProposition> propositions) {
 		Preconditions.checkNotNull(modelState, "The modelState cannot be null");
-	
+
 		return this.mapIncomingTransitions
-				.get(new AbstractMap.SimpleEntry<State,  Set<IGraphProposition>>(
-						modelState,  propositions));
+				.get(new AbstractMap.SimpleEntry<State, Set<IGraphProposition>>(
+						modelState, propositions));
 	}
 
 	/**
 	 * returns the true if there is an incoming transition of the replacement
-	 * which has the specified source and destination states and is labeled with
-	 * the specified propositions
+	 * which has the specified destination state and is labeled with the
+	 * specified propositions
 	 * 
 	 * @param modelState
-	 *            the state of the replacement from which the outgoing
-	 *            transitions are fired
-	 * @return the collection of the incoming transitions which have the
-	 *         modelState as source state
+	 *            the state of the model which is the source of the
+	 *            incoming transition
+	 * @param propositions
+	 *            the propositions that label the replacement
+	 * @return true if there is whose destination is the specified state and the
+	 *         transition is labeled according to the propositions specified as
+	 *         parameter
 	 * @throws NullPointerException
 	 *             if the model state is null
 	 * @throws IllegalArgumentException
 	 *             if the model state is not a state of the replacement
 	 *             automaton
 	 */
-	public boolean hasIncomingTransition(State modelState, Set<IGraphProposition> propositions) {
+	public boolean hasIncomingTransition(State modelState,
+			Set<IGraphProposition> propositions) {
 		Preconditions.checkNotNull(modelState, "The modelState cannot be null");
 		Preconditions.checkNotNull(propositions,
 				"The set of the propositions cannot be null");
-		Preconditions
-				.checkArgument(
-						this.automaton.getStates().contains(modelState),
-						"The modelState "
-								+ modelState
-								+ " must be contained into the set of the states of the automaton associated with the replacement");
 
-		return !this.getIncomingTransitions(modelState, 
-				propositions).isEmpty();
+		return !this.getIncomingTransitions(modelState, propositions).isEmpty();
 	}
-	
+
 	/**
-	 * removes the port from the set of incoming or outcoming port
+	 * removes the incoming or outgoing transitions from the set of incoming or
+	 * outgoing transitions
 	 * 
 	 * @param p
 	 *            is the port to be removed
@@ -313,9 +318,9 @@ public class Replacement extends Component {
 	 *             if the port p is null
 	 * @throws IllegalArgumentException
 	 *             if the port is not contained into the set of incoming or
-	 *             outcoming ports
+	 *             outgoing transitions
 	 */
-	public void removePort(PluggingTransition p) {
+	public void removePluggingTransition(PluggingTransition p) {
 		Preconditions.checkNotNull(p, "The port p cannot be null");
 		Preconditions
 				.checkArgument(this.getIncomingTransitions().contains(p)
@@ -323,9 +328,19 @@ public class Replacement extends Component {
 						"The port must be contained in the set of incoming or utcoming ports");
 		if (this.getIncomingTransitions().contains(p)) {
 			this.incomingTransitions.remove(p);
+			
+			this.mapIncomingTransitions
+					.get(new AbstractMap.SimpleEntry<State, Set<IGraphProposition>>(p
+							.getDestination(), p.getTransition().getPropositions())).remove(p);
 		}
 		if (this.getOutgoingTransitions().contains(p)) {
 			this.outgoingTransitions.remove(p);
+			this.mapOutgoingTransitions.remove(
+					new ImmutableTriple<State, State, Set<IGraphProposition>>(
+							p.getSource(), p.getDestination(),
+							p.getTransition().getPropositions())
+					, p);
+			
 		}
 	}
 

@@ -4,7 +4,7 @@ public class ConstraintsIOConstants {
 	
 	public final static String XML_ELEMENT_PORT_SOURCE_STATE="sourcestate";
 	public final static String XML_ELEMENT_PORT_DESTINATION_STATE="destinationstate";
-	public final static String XML_ELEMENT_PORT_TRANSITION="transition";
+	public final static String XML_ELEMENT_PORT_TRANSITION="trans";
 
 	public final static String XML_ATTRIBUTE_TRANSITION_ID="id";
 	public final static String XML_ATTRIBUTE_PROPOSITIONS="propositions";
@@ -14,7 +14,8 @@ public class ConstraintsIOConstants {
 	public static final String REPLACEMENT_XSD_PATH = "Replacement.xsd";
 	
 	public final static String XML_ATTRIBUTE_LABEL="label";
-	
+
+	public final static String XML_ELEMENT_LABELED_PLUG_TRANSITION="labeledplugtransition";
 	public final static String XML_ELEMENT_PLUG_TRANSITION="plugtransition";
 	public final static String XML_ELEMENT_SUBPROPERTY="subproperty";
 	public final static String XML_ELEMENT_REPLACEMENT="replacement";

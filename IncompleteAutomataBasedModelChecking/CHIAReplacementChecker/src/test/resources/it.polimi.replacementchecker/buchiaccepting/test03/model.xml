@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?><iba>
     <propositions>
-        <proposition value="b"/>
-        <proposition value="a"/>
+        <proposition name="b"/>
+        <proposition name="a"/>
     </propositions>
     <states>
-        <state accepting="true" id="2212" name="t0" blackbox="true"/>
-        <state id="2209" name="2209"/>
-        <state id="2211" initial="true" name="2211"/>
+        <state accepting="true" id="3" name="t0" blackbox="true"/>
+        <state id="2" name="2"/>
+        <state id="1" initial="true" name="1"/>
     </states>
     <transitions>
-        <transition destination="2209" id="5919" propositions="b" source="2212"/>
-        <transition destination="2212" id="5921" propositions="a" source="2209"/>
-        <transition destination="2209" id="5922" propositions="a" source="2212"/>
-        <transition destination="2209" id="5923" propositions="b" source="2211"/>
-        <transition destination="2212" id="5924" propositions="a" source="2211"/>
+        <transition destination="2" id="1" propositions="b" source="3"/>
+        <transition destination="3" id="2" propositions="a" source="2"/>
+        <transition destination="2" id="3" propositions="a" source="3"/>
+        <transition destination="2" id="4" propositions="b" source="1"/>
+        <transition destination="3" id="5" propositions="a" source="1"/>
     </transitions>
 </iba>

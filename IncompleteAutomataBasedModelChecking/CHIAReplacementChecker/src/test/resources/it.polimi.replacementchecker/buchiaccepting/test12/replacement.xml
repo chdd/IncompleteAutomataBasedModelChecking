@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="1" name="t0">
     <iba>
         <propositions>
-            <proposition value="b"/>
-            <proposition value="a"/>
+            <proposition name="b"/>
+            <proposition name="a"/>
         </propositions>
         <states>
             <state accepting="true" id="5" name="5"/>
@@ -12,45 +12,44 @@
             <transition destination="5" id="120639" propositions="a" source="6"/>
         </transitions>
     </iba>
-    <inports>
-      
-        <port id="10759">
+    <intransitions>
+        <plugtransition id="10759">
             <sourcestate>
                 <state id="2" name="2"/>
             </sourcestate>
             <destinationstate>
                 <state id="6" name="6"/>
             </destinationstate>
-            <transition id="120640" propositions="a"/>
-        </port>
-        <port id="10763">
+            <trans id="120640" propositions="a"/>
+        </plugtransition>
+        <plugtransition id="10763">
             <sourcestate>
                 <state id="3" name="3"/>
             </sourcestate>
             <destinationstate>
                 <state id="5" name="5"/>
             </destinationstate>
-            <transition id="120643" propositions="a"/>
-        </port>
-    </inports>
-    <outports>
-        <port id="10757">
+            <trans id="120643" propositions="a"/>
+        </plugtransition>
+    </intransitions>
+    <outtransitions>
+        <plugtransition id="10757">
             <sourcestate>
                 <state id="5" name="5"/>
             </sourcestate>
             <destinationstate>
                 <state id="2" name="2"/>
             </destinationstate>
-            <transition id="120638" propositions="a"/>
-        </port>
-        <port id="10751">
+            <trans id="120638" propositions="a"/>
+        </plugtransition>
+        <plugtransition id="10751">
             <sourcestate>
                 <state id="5" name="5"/>
             </sourcestate>
             <destinationstate>
                 <state id="4" name="4"/>
             </destinationstate>
-            <transition id="120634" propositions="b"/>
-        </port>
-    </outports>
+            <trans id="120634" propositions="b"/>
+        </plugtransition>
+    </outtransitions>
 </replacement>

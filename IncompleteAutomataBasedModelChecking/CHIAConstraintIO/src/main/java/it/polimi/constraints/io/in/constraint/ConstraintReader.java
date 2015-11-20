@@ -10,6 +10,7 @@ import it.polimi.constraints.reachability.ReachabilityRelation;
 import it.polimi.constraints.transitions.LabeledPluggingTransition;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,37 +37,19 @@ import com.google.common.base.Preconditions;
  * @author claudiomenghi
  *
  */
-public class ConstraintReader extends XMLReader<Constraint>{
+public class ConstraintReader extends XMLReader<Constraint> {
 
-	
-	private static final String NAME="READ CONSTRAINT";
+	private static final String NAME = "READ CONSTRAINT";
 	/**
 	 * is the logger of the BAReader class
 	 */
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(ConstraintReader.class);
 
 	/**
 	 * is the file from which the constraint must be read
 	 */
 	private final File file;
-
-	
-	/**
-	 * creates a new constraint reader which can be used to read a constraint
-	 * automaton through the method
-	 * @see Constraint#read()
-	 * 
-	 * @param filePath
-	 *            is the path of the file from which the automaton must be read
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
-	 */
-	public ConstraintReader(String filePath) {
-		super(NAME);
-		Preconditions.checkNotNull(filePath, "The fileReader cannot be null");
-		this.file = new File(filePath);
-	}
 
 	/**
 	 * creates a new constraint reader
@@ -89,17 +71,23 @@ public class ConstraintReader extends XMLReader<Constraint>{
 	public Constraint perform() {
 		Constraint ret = new Constraint();
 
-		
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
-			if(this.getClass().getClassLoader()
-					.getResource(ConstraintsIOConstants.CONSTRAINT_XSD_PATH)==null){
-				throw new InternalError("It was not possible to load the BA.xsd from "+ConstraintsIOConstants.CONSTRAINT_XSD_PATH);
+			
+			if(ClassLoader.getSystemResourceAsStream(ConstraintsIOConstants.CONSTRAINT_XSD_PATH)==null){
+				throw new NullPointerException("The resource "+ConstraintsIOConstants.CONSTRAINT_XSD_PATH+" cannot be founded");
 			}
-			//File xsdFile = new File(this.getClass().getClassLoader().getResource(ConstraintsIOConstants.CONSTRAINT_XSD_PATH).getFile());
-			//this.validateAgainstXSD(new FileInputStream(this.file), new FileInputStream(xsdFile));
+			
+			this.validateAgainstXSD(
+					new FileInputStream(this.file),
+					ClassLoader.getSystemResourceAsStream(ConstraintsIOConstants.CONSTRAINT_XSD_PATH));
+			
+			// File xsdFile = new
+			// File(this.getClass().getClassLoader().getResource(ConstraintsIOConstants.CONSTRAINT_XSD_PATH).getFile());
+			// this.validateAgainstXSD(new FileInputStream(this.file), new
+			// FileInputStream(xsdFile));
 
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			// parse using the builder to get the DOM mapping of the
@@ -132,9 +120,9 @@ public class ConstraintReader extends XMLReader<Constraint>{
 		logger.debug(xmlSubproperties.getLength()
 				+ " subproperties present in the file " + file.getName());
 		for (int stateid = 0; stateid < xmlSubproperties.getLength(); stateid++) {
-			
-			 Map<Integer, LabeledPluggingTransition> mapIdPort=new HashMap<Integer, LabeledPluggingTransition>();
-			
+
+			Map<Integer, LabeledPluggingTransition> mapIdPort = new HashMap<Integer, LabeledPluggingTransition>();
+
 			// considers each sub-property
 			Node xmlSubproperty = xmlSubproperties.item(stateid);
 			Element xmlSubPropertyElement = (Element) xmlSubproperty;
@@ -144,50 +132,89 @@ public class ConstraintReader extends XMLReader<Constraint>{
 					.transform(xmlSubPropertyElement);
 			constraint.addSubProperty(subProperty);
 
-			// loads the out-coming ports
-			Element xmlOutComingPorts = (Element) xmlSubPropertyElement
-					.getElementsByTagName(
-							AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT).item(0);
-			NodeList xmlOutComingPortsList = xmlOutComingPorts
-					.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
-			for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
-				Element xmlOutComingPort = (Element) xmlOutComingPortsList
-						.item(portId);
-				LabeledPluggingTransition port = new ElementToLabeledPlugTransitionTransformer(false)
-						.transform(xmlOutComingPort);
-				mapIdPort.put(port.getId(), port);
-				subProperty.addOutgoingTransition(port);
-			}
+			loadOutgoingTransitions(mapIdPort, xmlSubPropertyElement,
+					subProperty);
 
-			// loads the incoming ports
-			Element xmlInComingPorts = (Element) xmlSubPropertyElement
+			this.loadIncomingTransitions(mapIdPort, xmlSubPropertyElement, subProperty);
+
+			Element lowerReachability = (Element) xmlSubPropertyElement
 					.getElementsByTagName(
-							AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN).item(0);
-			NodeList xmlInComingPortsList = xmlInComingPorts
-					.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PLUG_TRANSITION);
-			for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
-				Element xmlInComingPort = (Element) xmlInComingPortsList
-						.item(portId);
-				LabeledPluggingTransition port = new ElementToLabeledPlugTransitionTransformer(true)
-						.transform(xmlInComingPort);
-				mapIdPort.put(port.getId(), port);
-				subProperty.addIncomingTransition(port);
+							AutomataIOConstants.XML_LOWER_REACHABILITY).item(0);
+			ReachabilityRelation lowerReachabilityRelation = new ElementToReachabilityRelationTransformer(
+					mapIdPort).transform(lowerReachability);
+
+			for (ReachabilityEntry entry : lowerReachabilityRelation
+					.getReachabilityAcceptingMap().values()) {
+				subProperty.addReachabilityRelation(
+						entry.getOutgoingTransition(),
+						entry.getIncomingTransition(),
+						entry.isModelAccepting(), entry.isClaimAccepting());
 			}
-			
-			Element lowerReachability=(Element) xmlSubPropertyElement.getElementsByTagName(AutomataIOConstants.XML_LOWER_REACHABILITY).item(0);
- 			ReachabilityRelation lowerReachabilityRelation=new ElementToReachabilityRelationTransformer(mapIdPort).transform(lowerReachability);
-			
-			for(ReachabilityEntry entry: lowerReachabilityRelation.getReachabilityAcceptingMap().values()){
-				subProperty.addReachabilityRelation(entry.getOutgoingTransition(), entry.getIncomingTransition(), entry.isModelAccepting(), entry.isClaimAccepting());
-			}
-			Element upperReachability=(Element) xmlSubPropertyElement.getElementsByTagName(AutomataIOConstants.XML_UPPER_REACHABILITY).item(0);
-			ReachabilityRelation upperReachabilityRelation=new ElementToReachabilityRelationTransformer(mapIdPort).transform(upperReachability);
-			for(ReachabilityEntry entry: upperReachabilityRelation.getReachabilityAcceptingMap().values()){
-				subProperty.addPossibleReachabilityRelation(entry.getOutgoingTransition(), entry.getIncomingTransition(),  entry.isModelAccepting(), entry.isClaimAccepting());
+			Element upperReachability = (Element) xmlSubPropertyElement
+					.getElementsByTagName(
+							AutomataIOConstants.XML_UPPER_REACHABILITY).item(0);
+			ReachabilityRelation upperReachabilityRelation = new ElementToReachabilityRelationTransformer(
+					mapIdPort).transform(upperReachability);
+			for (ReachabilityEntry entry : upperReachabilityRelation
+					.getReachabilityAcceptingMap().values()) {
+				subProperty.addPossibleReachabilityRelation(
+						entry.getOutgoingTransition(),
+						entry.getIncomingTransition(),
+						entry.isModelAccepting(), entry.isClaimAccepting());
 			}
 		}
-		
+
 		logger.debug("constraint loaded ");
 
+	}
+
+	/**
+	 * @param mapIdPort
+	 * @param xmlSubPropertyElement
+	 * @param subProperty
+	 */
+	private void loadOutgoingTransitions(
+			Map<Integer, LabeledPluggingTransition> mapIdPort,
+			Element xmlSubPropertyElement, SubProperty subProperty) {
+		// loads the out-coming ports
+		Element xmlOutComingPorts = (Element) xmlSubPropertyElement
+				.getElementsByTagName(
+						AutomataIOConstants.XML_ELEMENT_TRANSITIONS_OUT)
+				.item(0);
+		NodeList xmlOutComingPortsList = xmlOutComingPorts
+				.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_LABELED_PLUG_TRANSITION);
+		for (int portId = 0; portId < xmlOutComingPortsList.getLength(); portId++) {
+			Element xmlOutComingPort = (Element) xmlOutComingPortsList
+					.item(portId);
+			LabeledPluggingTransition port = new ElementToLabeledPlugTransitionTransformer(
+					false).transform(xmlOutComingPort);
+			mapIdPort.put(port.getId(), port);
+			subProperty.addOutgoingTransition(port);
+		}
+	}
+
+	/**
+	 * @param mapIdPort
+	 * @param xmlSubPropertyElement
+	 * @param subProperty
+	 */
+	private void loadIncomingTransitions(
+			Map<Integer, LabeledPluggingTransition> mapIdPort,
+			Element xmlSubPropertyElement, SubProperty subProperty) {
+		// loads the incoming ports
+		Element xmlInComingPorts = (Element) xmlSubPropertyElement
+				.getElementsByTagName(
+						AutomataIOConstants.XML_ELEMENT_TRANSITIONS_IN)
+				.item(0);
+		NodeList xmlInComingPortsList = xmlInComingPorts
+				.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_LABELED_PLUG_TRANSITION);
+		for (int portId = 0; portId < xmlInComingPortsList.getLength(); portId++) {
+			Element xmlInComingPort = (Element) xmlInComingPortsList
+					.item(portId);
+			LabeledPluggingTransition port = new ElementToLabeledPlugTransitionTransformer(
+					true).transform(xmlInComingPort);
+			mapIdPort.put(port.getId(), port);
+			subProperty.addIncomingTransition(port);
+		}
 	}
 }

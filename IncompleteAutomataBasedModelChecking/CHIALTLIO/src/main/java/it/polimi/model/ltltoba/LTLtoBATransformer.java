@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import rwth.i2.ltl2ba4j.LTL2BA4J;
+import rwth.i2.ltl2ba4j.internal.jnibridge.BAJni;
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
@@ -68,8 +68,10 @@ public class LTLtoBATransformer extends CHIAAction<BA> {
 	 * transforms the LTL formula into the corresponding Buchi Automaton
 	 * 
 	 * @return the BA corresponding to the LTL formula specified as parameter
+	 * @throws SecurityException
+	 * @throws Exception
 	 */
-	public BA perform() {
+	public BA perform() throws Exception {
 
 		/*
 		 * creates a new Buchi automaton
@@ -82,8 +84,12 @@ public class LTLtoBATransformer extends CHIAAction<BA> {
 			 * corresponding automaton. The tool returns the transitions of the
 			 * Buchi automaton
 			 */
-			Collection<ITransition> transitions = LTL2BA4J
-					.formulaToBA(ltlFormula);
+			// call ltl2ba over JNI
+			BAJni b = new BAJni(ltlFormula);
+
+			Collection<ITransition> transitions = b.getTransitions();
+			// Collection<ITransition> transitions = LTL2BA4J
+			// .formulaToBA(ltlFormula);
 			/*
 			 * populates the BA to be returned with the specified set of
 			 * transitions

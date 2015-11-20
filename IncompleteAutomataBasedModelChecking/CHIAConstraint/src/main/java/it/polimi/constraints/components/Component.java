@@ -30,8 +30,6 @@ public abstract class Component {
 	 */
 	private final State modelState;
 
-	
-
 	/**
 	 * creates a new component which refers to a specific model state has a set
 	 * of incomingPorts and out-comingPorts
@@ -48,7 +46,7 @@ public abstract class Component {
 	public Component(State modelState) {
 		Preconditions.checkNotNull(modelState,
 				"The name of the state cannot be null");
-		
+
 		this.id = counter;
 		counter++;
 		this.modelState = modelState;
@@ -72,7 +70,6 @@ public abstract class Component {
 		return modelState;
 	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -81,16 +78,21 @@ public abstract class Component {
 		return this.getId() + ": " + this.getModelState().getName();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result
-				+ ((modelState == null) ? 0 : modelState.hashCode());
+		result = prime * result + modelState.hashCode();
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -100,12 +102,9 @@ public abstract class Component {
 		if (getClass() != obj.getClass())
 			return false;
 		Component other = (Component) obj;
-		if (id != other.id)
+		if (!modelState.equals(other.modelState))
 			return false;
-		if (modelState == null) {
-			if (other.modelState != null)
-				return false;
-		} else if (!modelState.equals(other.modelState))
+		if (id != other.id)
 			return false;
 		return true;
 	}

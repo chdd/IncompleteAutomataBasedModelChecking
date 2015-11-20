@@ -15,7 +15,7 @@ public class RandomConfigurationGeneratorTest {
 	
 	
 	@Test
-	public void test1() {
+	public void test1() throws Exception {
 	
 		List<BA> bas=Main.getClaimToBeConsidered();
 		RandomConfigurationGenerator configurationGenerator=new RandomConfigurationGenerator(bas);
@@ -36,7 +36,7 @@ public class RandomConfigurationGeneratorTest {
 	}
 	
 	@Test
-	public void test2() {
+	public void test2() throws Exception {
 	
 		List<BA> bas=Main.getClaimToBeConsidered();
 		RandomConfigurationGenerator configurationGenerator=new RandomConfigurationGenerator(bas);

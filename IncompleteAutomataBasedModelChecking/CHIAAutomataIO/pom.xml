@@ -2,9 +2,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>CHIAAutomataIO</artifactId>
-	<packaging>jar</packaging>
-	<name>CHIAAutomataIO</name>
-	<url>http://maven.apache.org</url>
 
 	<parent>
 		<groupId>it.polimi.chia</groupId>
@@ -12,68 +9,40 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
+	<packaging>jar</packaging>
+	<name>CHIAAutomataIO</name>
+	<url>http://maven.apache.org</url>
+
 	<properties>
-		<!-- contains the version of java used in the development -->
+		<!-- specifies the version of Java used in the CHIAChecker -->
 		<java.version>1.7</java.version>
-		<!-- contains the encoding of the source code -->
+		<!-- is the character encoding of the source code -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
+		<!-- Github server corresponds to entry in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
+		<!-- sonar -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.language>java</sonar.language>
 		<sonar.host.url> http://localhost:9000/ </sonar.host.url>
 		<jacoco.version>0.7.2.201409121644</jacoco.version>
 		<surefire.version>2.17</surefire.version>
 		<testng.version>6.8.8</testng.version>
 	</properties>
-	
+
 	<build>
-		<!-- is the directory where the source code is located -->
+		<!-- contains the directory where the source code is placed -->
 		<sourceDirectory>src/main/java</sourceDirectory>
-		<!-- is the directory where the tests are located -->
+		<!-- contains the directory where the test cases are located -->
 		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.1</version>
-					<configuration>
-						<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>2.3</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<runOrder>random</runOrder>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
-					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<!-- The testResources element block contains testResource elements. Their 
-			definitions are similar to resource elements, but are naturally used during 
-			test phases. -->
-		<testResources>
-			<testResource>
-				<directory>${project.basedir}/src/test/resources</directory>
-			</testResource>
-		</testResources>
-		<!--This plugin's configuration is used to store Eclipse m2e settings only. 
-			It has no influence on the Maven build itself. -->
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<plugins>
+			<!--This plugin's configuration is used to store Eclipse m2e settings 
+				only. It has no influence on the Maven build itself. -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -111,7 +80,6 @@
 				<sonar.jdbc.driverClassName>com.mysql.jdbc.Driver</sonar.jdbc.driverClassName>
 				<sonar.jdbc.username>sonar</sonar.jdbc.username>
 				<sonar.jdbc.password>sonar</sonar.jdbc.password>
-
 				<!-- optional URL to server. Default value is http://localhost:9000 -->
 				<sonar.host.url>
 					http://localhost:9000/
@@ -121,29 +89,6 @@
 			</properties>
 			<build>
 				<plugins>
-					<!--This plugin's configuration is used to store Eclipse m2e settings 
-						only. It has no influence on the Maven build itself. -->
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>${jacoco.version}</version>
-
-						<executions>
-							<execution>
-								<id>default-prepare-agent</id>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>default-report</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 					<plugin>
 						<groupId>com.github.github</groupId>
 						<artifactId>site-maven-plugin</artifactId>
@@ -172,7 +117,19 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<version>2.8.1</version>
+						<configuration>
+							<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+						</configuration>
+					</plugin>
 				</plugins>
+				<resources>
+					<resource>
+						<directory>src/test/resources</directory>
+					</resource>
+				</resources>
 			</build>
 			<dependencies>
 				<dependency>
@@ -186,17 +143,12 @@
 	</profiles>
 	<repositories>
 		<repository>
-			<id>CHIAAutomata-mvn-repo</id>
-			<url>https://github.com/claudiomenghi/IncompleteAutomataBasedModelChecking/tree/mvn-repo</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
+			<id>it.polimi.chia</id>
+			<url>https://github.com/deib-polimi/deib-polimi-mvn-repo/raw/master/releases</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
-
-
 
 		<!-- contains the dependency to the Buchi Automaton -->
 		<dependency>

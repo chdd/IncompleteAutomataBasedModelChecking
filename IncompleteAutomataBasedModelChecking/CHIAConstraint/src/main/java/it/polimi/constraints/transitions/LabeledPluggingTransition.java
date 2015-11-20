@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
  * boolean flag that specifies if the port is in-coming or out-coming and the
  * corresponding transition
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
 public class LabeledPluggingTransition extends PluggingTransition {
@@ -37,14 +37,35 @@ public class LabeledPluggingTransition extends PluggingTransition {
 	 */
 	private Label color;
 
-	public LabeledPluggingTransition(int id, State source, State destination, Transition transition,
-			boolean incoming, Label color) {
+	/**
+	 * creates a new {@link LabeledPluggingTransition}
+	 * 
+	 * @param id
+	 *            the id of the transition to be plugged
+	 * @param source
+	 *            is the source of the transition of the port it can be a state
+	 *            of the refinement of the model or an already specified state
+	 *            of the model
+	 * @param destination
+	 *            is the destination of the transition of the port it can be a
+	 *            state of the refinement of the model or an already specified
+	 *            state of the model
+	 * @param transition
+	 *            is the transition that connect the source with the destination
+	 * @param color
+	 *            the color of the LabeledPluggingTransition
+	 * @throws NullPointerException
+	 *             if one of the parameters is null
+	 */
+	public LabeledPluggingTransition(int id, State source, State destination,
+			Transition transition, boolean incoming, Label color) {
 		super(id, source, destination, transition, incoming);
 		Preconditions.checkNotNull(color,
 				"The color of the transitionc cannot be null");
 
 		this.setColor(color);
 	}
+
 	/**
 	 * creates a new port
 	 * 
@@ -63,23 +84,24 @@ public class LabeledPluggingTransition extends PluggingTransition {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	public LabeledPluggingTransition(State source, State destination, Transition transition,
-			boolean incoming, Label color) {
-		this(LabeledPluggingTransition.ID_COUNTER, source, destination, transition, incoming, color);
+	public LabeledPluggingTransition(State source, State destination,
+			Transition transition, boolean incoming, Label color) {
+		this(LabeledPluggingTransition.ID_COUNTER, source, destination,
+				transition, incoming, color);
 		LabeledPluggingTransition.ID_COUNTER = LabeledPluggingTransition.ID_COUNTER + 1;
-		
+
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
-		return "Port [source=" + this.getSource() + ", incoming=" + this.isIncoming()
-				+ ", destination=" + this.getDestination() + ", transition=" + this.getTransition()
-				+ ", color=" + color + "]";
+		return "Plugging transition [source=" + this.getSource() + ", incoming="
+				+ this.isIncoming() + ", destination=" + this.getDestination()
+				+ ", transition=" + this.getTransition() + ", color=" + color
+				+ "]";
 	}
-
-	
-
-
 
 	/**
 	 * returns the color associated with the port

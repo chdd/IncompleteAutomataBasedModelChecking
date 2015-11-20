@@ -13,11 +13,11 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
-import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
+import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
@@ -39,7 +39,7 @@ public class Test05ConstraintComputation {
 	private IBA model;
 	private BA claim;
 	
-	private AcceptingPolicy acceptingPolicy; 
+	private AcceptingType acceptingPolicy; 
 	
 
 	private Replacement replacement;
@@ -77,7 +77,7 @@ public class Test05ConstraintComputation {
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
+		this.acceptingPolicy=AcceptingType.BA;
 
 		this.model = new ModelReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test05/model.xml").getFile())).perform();
@@ -152,8 +152,7 @@ public class Test05ConstraintComputation {
 	public void test() throws ParserConfigurationException, Exception {
 
 		Checker checker = new Checker(model, claim,
-				this.acceptingPolicy, intersectionStateFactory,
-				new IntersectionTransitionBuilder());
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model, claim));
 		SatisfactionValue returnValue = checker.perform();
 		assertTrue("The property must be possibly satisfied",
 				returnValue == SatisfactionValue.POSSIBLYSATISFIED);
@@ -172,9 +171,11 @@ public class Test05ConstraintComputation {
 				.transform(new ConstraintToElementTransformer()
 						.transform(constraint)));
 
+		SubProperty subproperty=constraint.getSubProperty(replacement.getModelState());
 		ReplacementChecker rc = new ReplacementChecker(
-				constraint.getSubProperty(replacement.getModelState()),
-				replacement, this.acceptingPolicy);
+				subproperty,
+				replacement, 
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subproperty.getAutomaton()));
 
 		SatisfactionValue satisfactionValue = rc.perform();
 		System.out.println(rc.getLowerIntersectionBA());

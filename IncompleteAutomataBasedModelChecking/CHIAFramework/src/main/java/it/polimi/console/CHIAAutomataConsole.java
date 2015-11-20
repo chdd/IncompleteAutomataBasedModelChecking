@@ -15,9 +15,8 @@ import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.constraint.ConstraintWriter;
 import it.polimi.contraintcomputation.ConstraintGenerator;
-import it.polimi.model.ltltoba.ClaimLTLReader;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
-import it.polimi.statemachine.CHIAAutomataState;
+import it.polimi.statemachine.states.CHIAAutomataState;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,13 +31,10 @@ import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import action.CHIAException;
-import asg.cliche.Command;
-import asg.cliche.Param;
 
 import com.google.common.base.Preconditions;
 
@@ -51,7 +47,7 @@ import com.google.common.base.Preconditions;
  */
 public class CHIAAutomataConsole {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(CHIAAutomataConsole.class);
 
 	/**
@@ -59,7 +55,7 @@ public class CHIAAutomataConsole {
 	 * loaded
 	 */
 	protected IBA model;
-	
+
 	private final PrintStream out;
 
 	/**
@@ -88,7 +84,7 @@ public class CHIAAutomataConsole {
 	 * contains the accepting policy which specifies how the accepting states of
 	 * the intersection automata are computed
 	 */
-	private AcceptingPolicy policy;
+	private AcceptingType policy;
 
 	/**
 	 * contains the engine used to compute the constraint
@@ -97,9 +93,9 @@ public class CHIAAutomataConsole {
 
 	public CHIAAutomataConsole(PrintStream out) {
 		Preconditions.checkNotNull(out, "The output stream cannot be null");
-		policy = AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
+		policy = AcceptingType.BA;
 		chiaState = CHIAAutomataState.INIT;
-		this.out=out;
+		this.out = out;
 	}
 
 	/**
@@ -114,7 +110,7 @@ public class CHIAAutomataConsole {
 	 *             if the file does not exist
 	 * @throws Exception
 	 */
-	public void loadModel(String modelFilePath){
+	public void loadModel(String modelFilePath) {
 
 		com.google.common.base.Preconditions.checkNotNull(modelFilePath,
 				"The path of the model cannot be null");
@@ -127,9 +123,9 @@ public class CHIAAutomataConsole {
 
 			ModelReader action = new ModelReader(modelFilePath);
 			this.model = action.perform();
-			out.println("Model readed");
+			logger.info("Model readed");
 
-		} catch (FileNotFoundException fileNotFound){
+		} catch (FileNotFoundException fileNotFound) {
 			logger.info(fileNotFound.toString());
 			out.println(fileNotFound.getMessage());
 		} catch (CHIAException e) {
@@ -147,6 +143,16 @@ public class CHIAAutomataConsole {
 		}
 	}
 
+	/**
+	 * loads the property in form of automaton from the specified file path
+	 * 
+	 * @param claimFilePath
+	 *            the path of the file from which the property must be loaded
+	 * @throws FileNotFoundException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public void loadProperty(String claimFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
@@ -155,61 +161,76 @@ public class CHIAAutomataConsole {
 			this.chiaState = chiaState.perform(ClaimReader.class);
 			ClaimReader action = new ClaimReader(claimFilePath);
 			this.claim = action.perform();
+			logger.info("Property loaded");
 
-		} catch (CHIAException e) {
-			logger.info(e.toString());
-		}
-	}
-
-	@Command(name = "loadLTLProperty", abbrev = "lpLTL", description = "It is used to load the property from an LTL formula", header = "loading the LTL property")
-	public void loadLTLProperty(
-			@Param(name = "-f", description = "is the flag that specify that the formula must be loaded from file") String flag,
-			@Param(name = "file", description = "is the path of the file from which the formula must be loaded") String file)
-			throws Exception {
-		try {
-			this.chiaState = chiaState.perform(ClaimLTLReader.class);
-
-			ClaimLTLReader action = new ClaimLTLReader(file);
-			this.claim = action.perform();
-			System.out.println("LTL property loaded");
-		} catch (CHIAException e) {
-			logger.info(e.toString());
-		}
-	}
-
-	@Command(name = "loadLTLProperty", abbrev = "lpLTL", description = "It is used to load the property from an LTL formula", header = "loading the LTL property")
-	public void loadLTLProperty(
-			@Param(name = "LTLFormula", description = "is the LTL formula that represents the property") String ltlProperty)
-			throws Exception {
-		try {
-			this.chiaState = chiaState.perform(LTLtoBATransformer.class);
-			LTLtoBATransformer action = new LTLtoBATransformer("!("
-					+ ltlProperty + ")");
-			this.claim = action.perform();
-			System.out.println("LTL property loaded");
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
 	}
 
 	/**
+	 * loads the automaton that corresponds to the property of interest from the
+	 * specified LTL formula
+	 * 
+	 * @param ltlProperty
+	 *            is the LTL property to be converted into the corresponding
+	 *            automaton
+	 * @throws Exception
+	 */
+	public void loadLTLProperty(String ltlProperty) {
+		try {
+			this.chiaState = chiaState.perform(LTLtoBATransformer.class);
+			LTLtoBATransformer action = new LTLtoBATransformer("!("
+					+ ltlProperty + ")");
+			this.claim = action.perform();
+			System.out.println("LTL property loaded");
+
+		} catch (UnsatisfiedLinkError e) {
+			logger.info(e.getMessage());
+			logger.info(e.toString());
+			logger.info("The convertion of an LTL formula into the corresponding automaton is based on the LTL2BA4J library.");
+			logger.info("The LTL2BA4J library uses the ltl2ba tool. ltl2ba is written in ANSI C");
+			logger.info("The library must be available at the specified path");
+
+		} catch (Exception e) {
+			logger.info(e.toString());
+			logger.info("The convertion of an LTL formula into the corresponding automaton is based on the LTL2BA4J library.");
+			logger.info("The LTL2BA4J library uses the ltl2ba tool. ltl2ba is written in ANSI C");
+			logger.info("If the compiled version of the library is not compatible with your operating system "
+					+ "you must download the source of ltl2ba from http://www.sable.mcgill.ca/~ebodde/rv/ltl2ba4j/ltl2ba4j.tgz"
+					+ " and recompile the source of ltl2ba");
+		}catch(NoClassDefFoundError e){
+			logger.info(e.toString());
+			logger.info("The convertion of an LTL formula into the corresponding automaton is based on the LTL2BA4J library.");
+			logger.info("The LTL2BA4J library uses the ltl2ba tool. ltl2ba is written in ANSI C");
+			logger.info("If the compiled version of the library is not compatible with your operating system "
+					+ "you must download the source of ltl2ba from http://www.sable.mcgill.ca/~ebodde/rv/ltl2ba4j/ltl2ba4j.tgz"
+					+ " and recompile the source of ltl2ba");
+		}
+		
+	}
+
+	/**
 	 * displays the model of the system
 	 * 
-	 * @throws ParserConfigurationException 
+	 * @throws ParserConfigurationException
 	 * 
 	 * @throws Exception
 	 */
-	public void dispModel() throws ParserConfigurationException, Exception   {
+	public void dispModel() throws ParserConfigurationException, Exception {
 
-		Preconditions.checkNotNull(model, "The model of the system must be loaded before being displayed");
-		
-		out.println(new ElementToStringTransformer()
+		Preconditions
+				.checkNotNull(model,
+						"The model of the system must be loaded before being displayed");
+
+		logger.info(new ElementToStringTransformer()
 				.transform(new IBAToElementTrasformer().transform(this.model)));
 	}
 
 	public void dispClaim() throws ParserConfigurationException, Exception {
 		try {
 
+			
 			this.chiaState = chiaState.perform(ClaimToStringTrasformer.class);
 			ClaimToStringTrasformer action = new ClaimToStringTrasformer(
 					this.claim);
@@ -219,14 +240,12 @@ public class CHIAAutomataConsole {
 		}
 	}
 
-	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
-	public void changePolicy(
-			@Param(name = "policy", description = "is the policy to be used KRIPKE or BA") String policy) {
+	public void changePolicy(String policy) {
 		try {
-			this.policy = AcceptingPolicy.getAcceptingPolicy(AcceptingType
-					.valueOf(policy));
+
+			this.policy = AcceptingType.valueOf(policy);
 		} catch (Exception e) {
-			System.out.println("Parameter: " + policy
+			logger.info("Parameter: " + policy
 					+ " not accepted the policy must be one of "
 					+ AcceptingType.values().toString());
 		}
@@ -237,7 +256,8 @@ public class CHIAAutomataConsole {
 			this.chiaState = chiaState.perform(Checker.class);
 			ThreadMXBean thradBean = ManagementFactory.getThreadMXBean();
 			long startTime = thradBean.getCurrentThreadCpuTime();
-			checker = new Checker(model, claim, policy);
+			checker = new Checker(model, claim,
+					AcceptingPolicy.getAcceptingPolicy(policy, model, claim));
 			SatisfactionValue result = checker.perform();
 			long endTime = thradBean.getCurrentThreadCpuTime();
 			logger.info("Verification result: " + result.toString());
@@ -249,9 +269,9 @@ public class CHIAAutomataConsole {
 					+ this.checker.getIntersectionAutomataSize());
 			if (result.equals(SatisfactionValue.NOTSATISFIED)) {
 				logger.info("State counterexample:"
-						+ this.checker.getStateCounterexample());
+						+ this.checker.getCounterexample());
 				logger.info("Transition counterexample:"
-						+ this.checker.getTransitionCounterexample());
+						+ this.checker.getCounterexample());
 
 			}
 
@@ -269,6 +289,7 @@ public class CHIAAutomataConsole {
 			cg.coloring();
 			cg.computePortReachability();
 			cg.computeIndispensable();
+			logger.info("Constraint computed");
 			// this.constraint = this.chia.generateConstraint();
 		} catch (CHIAException e) {
 			logger.info(e.toString());
@@ -283,6 +304,7 @@ public class CHIAAutomataConsole {
 			ConstraintWriter constraintWriter = new ConstraintWriter(
 					this.constraint, constraintFilePath);
 			constraintWriter.perform();
+			logger.info("Constraint saved");
 		} catch (CHIAException e) {
 			logger.info(e.toString());
 		}
@@ -302,7 +324,5 @@ public class CHIAAutomataConsole {
 
 	public void exit() {
 	}
-
-	
 
 }

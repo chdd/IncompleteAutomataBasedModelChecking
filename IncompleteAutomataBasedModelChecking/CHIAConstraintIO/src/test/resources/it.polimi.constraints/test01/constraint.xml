@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<constraint>
+	<subproperty indispensable="true" modelstateId="441" name="t0">
+		<ba>
+			<propositions>
+				<proposition name="b" />
+				<proposition name="a" />
+			</propositions>
+			<states>
+				<state id="536" name="536" />
+				<state id="509" name="509" />
+				<state accepting="true" id="528" name="528" />
+				<state id="503" name="503" />
+				<state accepting="true" id="507" name="507" />
+				<state id="514" name="514" />
+			</states>
+			<transitions>
+				<transition destination="528" id="2582" propositions="!b^!a"
+					source="536" />
+				<transition destination="503" id="2460" propositions="!b"
+					source="507" />
+				<transition destination="507" id="2581" propositions="!b"
+					source="536" />
+				<transition destination="509" id="2506" propositions="SIGMA"
+					source="528" />
+				<transition destination="509" id="2558" propositions="!b^!a"
+					source="507" />
+				<transition destination="514" id="2557" propositions="SIGMA"
+					source="509" />
+				<transition destination="528" id="2544" propositions="SIGMA"
+					source="514" />
+				<transition destination="514" id="2587" propositions="!b^!a"
+					source="503" />
+				<transition destination="536" id="2586" propositions="!b"
+					source="503" />
+			</transitions>
+		</ba>
+		<intransitions>
+			<labeledplugtransition label="B" id="197">
+				<sourcestate>
+					<state id="431" name="431" />
+				</sourcestate>
+				<destinationstate>
+					<state id="514" name="441 - 0 - 1" />
+				</destinationstate>
+				<trans id="2473" propositions="b" />
+			</labeledplugtransition>
+			<labeledplugtransition label="B" id="185">
+				<sourcestate>
+					<state id="436" name="436" />
+				</sourcestate>
+				<destinationstate>
+					<state id="509" name="441 - 0 - 0" />
+				</destinationstate>
+				<trans id="2511" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition label="G" id="179">
+				<sourcestate>
+					<state id="436" name="436" />
+				</sourcestate>
+				<destinationstate>
+					<state id="536" name="441 - 1 - 1" />
+				</destinationstate>
+				<trans id="2563" propositions="a" />
+			</labeledplugtransition>
+		</intransitions>
+		<outtransitions>
+			<labeledplugtransition label="R" id="223">
+				<sourcestate>
+					<state id="528" name="441 - 0 - 2" />
+				</sourcestate>
+				<destinationstate>
+					<state id="433" name="433" />
+				</destinationstate>
+				<trans id="2501" propositions="b" />
+			</labeledplugtransition>
+			<labeledplugtransition label="R" id="215">
+				<sourcestate>
+					<state id="509" name="441 - 0 - 0" />
+				</sourcestate>
+				<destinationstate>
+					<state id="432" name="432" />
+				</destinationstate>
+				<trans id="2553" propositions="a" />
+			</labeledplugtransition>
+			<labeledplugtransition label="Y" id="249">
+				<sourcestate>
+					<state id="514" name="441 - 0 - 1" />
+				</sourcestate>
+				<destinationstate>
+					<state id="433" name="433" />
+				</destinationstate>
+				<trans id="2467" propositions="b" />
+			</labeledplugtransition>
+		</outtransitions>
+		<lowerReachability>
+			<reachabilityElements>
+				<reachabilityElement destination="197" source="223" />
+				<reachabilityElement destination="197" source="215" />
+				<reachabilityElement destination="185" source="215" />
+				<reachabilityElement destination="185" source="249" />
+			</reachabilityElements>
+		</lowerReachability>
+		<upperReachability>
+			<reachabilityElements>
+				<reachabilityElement destination="197" source="223" />
+				<reachabilityElement destination="185" source="223" />
+				<reachabilityElement destination="197" source="215" />
+				<reachabilityElement destination="185" source="215" />
+				<reachabilityElement destination="197" source="249" />
+				<reachabilityElement destination="185" source="249" />
+			</reachabilityElements>
+		</upperReachability>
+	</subproperty>
+</constraint>

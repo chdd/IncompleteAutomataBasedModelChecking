@@ -6,14 +6,13 @@ import it.polimi.automata.IBA;
 import it.polimi.automata.io.in.ClaimReader;
 import it.polimi.automata.io.in.ModelReader;
 import it.polimi.automata.io.out.ElementToStringTransformer;
-import it.polimi.automata.state.IntersectionStateFactory;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
-import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
+import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.contraintcomputation.ConstraintGenerator;
@@ -33,13 +32,8 @@ public class Test04ConstraintComputation {
 	private IBA model;
 	private BA claim;
 
-	
-
-	private IntersectionStateFactory intersectionStateFactory;
-
 	private Replacement replacement;
-	
-	private AcceptingPolicy acceptingPolicy; 
+	private AcceptingType acceptingPolicy; 
 	
 
 	@Before
@@ -52,15 +46,14 @@ public class Test04ConstraintComputation {
 
 		this.replacement=new ReplacementReader(new File(getClass().getClassLoader()
 				.getResource(path + "buchiaccepting/test04/replacement.xml").getFile())).perform();
-		this.intersectionStateFactory=new IntersectionStateFactory();
-		this.acceptingPolicy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
+		this.acceptingPolicy=AcceptingType.BA;
 	}
 
 	@Test
 	public void test() throws ParserConfigurationException, Exception {
 
 		Checker checker = new Checker(model, claim,
-				this.acceptingPolicy, intersectionStateFactory, new IntersectionTransitionBuilder());
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model,claim ));
 		SatisfactionValue returnValue = checker.perform();
 		assertTrue("The property must be possibly satisfied",
 				returnValue == SatisfactionValue.POSSIBLYSATISFIED);
@@ -77,7 +70,9 @@ public class Test04ConstraintComputation {
 		System.out.println(new ElementToStringTransformer()
 				.transform(new ConstraintToElementTransformer()
 						.transform(constraint)));
-		ReplacementChecker rc=new ReplacementChecker(constraint.getSubProperty(replacement.getModelState()), replacement, this.acceptingPolicy);
+		SubProperty subproperty=constraint.getSubProperty(replacement.getModelState());
+		ReplacementChecker rc=new ReplacementChecker(subproperty, replacement, 
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subproperty.getAutomaton()));
 		
 		SatisfactionValue satisfactionValue=rc.perform();
 

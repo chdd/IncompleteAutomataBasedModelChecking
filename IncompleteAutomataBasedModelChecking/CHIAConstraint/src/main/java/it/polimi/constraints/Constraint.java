@@ -20,7 +20,7 @@ import com.google.common.collect.HashBiMap;
  * the color of this ports and a graph that describes how the sub-property are
  * related, i.e., how the ports of the sub-properties are connected.
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
 public class Constraint {

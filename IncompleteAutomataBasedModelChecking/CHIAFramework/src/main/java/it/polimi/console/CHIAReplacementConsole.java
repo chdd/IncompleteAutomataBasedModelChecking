@@ -1,18 +1,19 @@
 package it.polimi.console;
 
-import it.polimi.automata.io.out.IntersectionToStringTransformer;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
+import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.replacement.ReplacementToStringTransformer;
 import it.polimi.replacementchecker.ReplacementChecker;
-import it.polimi.statemachine.CHIAReplacementState;
+import it.polimi.statemachine.states.CHIAReplacementState;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -22,13 +23,10 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import action.CHIAException;
-import asg.cliche.Command;
-import asg.cliche.Param;
 
 /**
  * contains the console which is used for the replacement checking
@@ -38,7 +36,7 @@ import asg.cliche.Param;
  */
 public class CHIAReplacementConsole {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(CHIAReplacementConsole.class);
 
 	private CHIAReplacementState chiaState = CHIAReplacementState.INIT;
@@ -59,39 +57,35 @@ public class CHIAReplacementConsole {
 	 */
 	protected ReplacementChecker replacementChecker;
 
-	protected AcceptingPolicy policy;
+	protected AcceptingType policy;
 
 	/**
 	 * creates a new replacement console
 	 */
 	public CHIAReplacementConsole() {
-		this.policy = AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA);
+		this.policy = AcceptingType.BA;
 	}
-	
 
-	@Command(name = "loadConstraint", abbrev = "lc", description = "is used to load the constraint from an XML file. The XML file must mach the Constraint.xsd", header = "constraint loaded")
-	public void loadConstraint(
-			@Param(name = "constraintFilePath", description = "is the path of the file that contains the constraint to be considered") String constraintFilePath)
+	public void loadConstraint(String constraintFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
 
 		if (this.chiaState.isPerformable(ConstraintReader.class)) {
 			try {
-				this.constraint = new ConstraintReader(constraintFilePath)
-						.perform();
+				this.constraint = new ConstraintReader(new File(
+						constraintFilePath)).perform();
 				this.chiaState = chiaState.perform(ConstraintReader.class);
 
+				logger.info("Constraint Loaded");
 			} catch (CHIAException e) {
 				logger.info(e.toString());
 			}
 		} else {
-			PrintStream out = System.out;
-			out.println("The constraint reading action cannot be performed into the state "
+			logger.info("The constraint reading action cannot be performed into the state "
 					+ this.chiaState.name());
 		}
 	}
-	
-	@Command(name = "displayConstraint", abbrev = "dispc", description = "is used to display the constraint into the console.", header = "Constraint displayed")
+
 	public void dispConstraint() throws Exception {
 
 		if (this.chiaState.isPerformable(ConstraintToStringTrasformer.class)) {
@@ -109,17 +103,16 @@ public class CHIAReplacementConsole {
 		}
 	}
 
-	@Command(name = "loadReplacement", abbrev = "lr", description = "is used to load the replacement from an XML file. The XML file must mach the Replacement.xsd", header = "replacement loaded")
-	public void loadReplacement(
-			@Param(name = "replacementFilePath", description = "is the path of the file that contains the replacement to be considered") String replacementFilePath)
+	public void loadReplacement(String replacementFilePath)
 			throws FileNotFoundException, ParserConfigurationException,
 			SAXException, IOException {
 
 		if (this.chiaState.isPerformable(ReplacementReader.class)) {
 			try {
-				this.replacement = new ReplacementReader(replacementFilePath)
-						.perform();
+				this.replacement = new ReplacementReader(new File(
+						replacementFilePath)).perform();
 				this.chiaState = chiaState.perform(ReplacementReader.class);
+				logger.info("Replacement Loaded");
 
 			} catch (CHIAException e) {
 				logger.info(e.toString());
@@ -130,9 +123,7 @@ public class CHIAReplacementConsole {
 					+ this.chiaState.name());
 		}
 	}
-	
 
-	@Command(name = "displayReplacement", abbrev = "dispr", description = "is used to display the replacement into the console.", header = "Replacement displayed")
 	public void dispReplacement() throws Exception {
 
 		if (this.chiaState.isPerformable(ReplacementToStringTransformer.class)) {
@@ -149,16 +140,17 @@ public class CHIAReplacementConsole {
 			this.printNotExecutableMessage(ReplacementToStringTransformer.class);
 		}
 	}
-	
-	@Command(name = "check", abbrev = "ck", description = "used to check the replacement against the constraint previously generated.", header = "Performing the replacement checking")
+
 	public void replacementChecking() {
 		if (this.chiaState.isPerformable(ReplacementChecker.class)) {
 			try {
 
-				this.replacementChecker = new ReplacementChecker(
-						this.constraint.getSubProperty(this.replacement
-								.getModelState()), this.replacement,
-						this.policy);
+				SubProperty subProperty = this.constraint
+						.getSubProperty(this.replacement.getModelState());
+				this.replacementChecker = new ReplacementChecker(subProperty,
+						this.replacement, AcceptingPolicy.getAcceptingPolicy(
+								this.policy, this.replacement.getAutomaton(),
+								subProperty.getAutomaton()));
 
 				ThreadMXBean thradBean = ManagementFactory.getThreadMXBean();
 				long startTime = thradBean.getCurrentThreadCpuTime();
@@ -169,18 +161,18 @@ public class CHIAReplacementConsole {
 						+ Long.toString(TimeUnit.MILLISECONDS.convert(
 								(endTime - startTime), TimeUnit.NANOSECONDS))
 						+ " ms");
-				if(result.equals(SatisfactionValue.NOTSATISFIED)){
-					logger.info("COUNTEREXAMPLE: "+this.replacementChecker.getCouterexample());
-					logger.info("COUNTEREXAMPLE: "+this.replacementChecker.getTransitionCouterexample());
-					
+				if (result.equals(SatisfactionValue.NOTSATISFIED)) {
+					logger.info("COUNTEREXAMPLE: "
+							+ this.replacementChecker.getCouterexample());
+
 				}
-				if(!result.equals(SatisfactionValue.NOTSATISFIED)){
+				if (!result.equals(SatisfactionValue.NOTSATISFIED)) {
 					logger.info("Dimension of the intersection automaton (states+transitions): "
 							+ (this.replacementChecker.getUpperIntersectionBA()
 									.size() + this.replacementChecker
 									.getLowerIntersectionBA().size()));
 				}
-				
+
 				this.chiaState = chiaState.perform(ReplacementChecker.class);
 
 			} catch (CHIAException e) {
@@ -190,63 +182,15 @@ public class CHIAReplacementConsole {
 			this.printNotExecutableMessage(ReplacementChecker.class);
 		}
 	}
-	
-	@Command(name = "changePolicy", abbrev = "cp", description = "Is used to change the accepting policy.", header = "policy changed")
-	public void changePolicy(
-			@Param(name = "policy", description = "is the policy to be used KRIPKE or NORMAL") String policy) {
-		try{
-			this.policy=AcceptingPolicy.getAcceptingPolicy(AcceptingType.valueOf(policy));
-		} catch(Exception e) {
-				System.out.println("Parameter: " + policy + " not accepted the policy must be one of "+AcceptingType.values().toString());
+
+	public void changePolicy(String policy) {
+		try {
+			this.policy = AcceptingType.valueOf(policy);
+		} catch (Exception e) {
+			System.out.println("Parameter: " + policy
+					+ " not accepted the policy must be one of "
+					+ AcceptingType.values().toString());
 		}
-	}
-
-	
-
-	
-
-	
-
-	
-
-	@Command(name = "displayUpperIntersection", abbrev = "dispUpInt", description = "It is used to display the upper intersection into the console.", header = "Intersection displayed")
-	public void displayUpperIntersection() throws Exception {
-
-		if (this.chiaState.isPerformable(IntersectionToStringTransformer.class)) {
-			try {
-				IntersectionToStringTransformer action = new IntersectionToStringTransformer(
-						this.replacementChecker.getUpperIntersectionBA());
-				this.chiaState = chiaState
-						.perform(IntersectionToStringTransformer.class);
-				logger.info(action.perform());
-			} catch (CHIAException e) {
-				logger.info(e.toString());
-			}
-		} else {
-			this.printNotExecutableMessage(IntersectionToStringTransformer.class);
-		}
-	}
-
-	@Command(name = "displayLowerIntersection", abbrev = "dispLwInt", description = "It is used to display the lower intersection into the console.", header = "Intersection displayed")
-	public void displayLowerIntersection() throws Exception {
-
-		if (this.chiaState.isPerformable(IntersectionToStringTransformer.class)) {
-			try {
-				IntersectionToStringTransformer action = new IntersectionToStringTransformer(
-						this.replacementChecker.getLowerIntersectionBA());
-				logger.info(action.perform());
-				this.chiaState = chiaState
-						.perform(IntersectionToStringTransformer.class);
-			} catch (CHIAException e) {
-				logger.info(e.toString());
-			}
-		} else {
-			this.printNotExecutableMessage(IntersectionToStringTransformer.class);
-		}
-	}
-
-	@Command(name = "exit", abbrev = "exit", description = "Returns to the CHIA main console", header = "CHIA Automata console exit")
-	public void exit() {
 	}
 
 	private void printNotExecutableMessage(Class<?> action) {
@@ -255,4 +199,5 @@ public class CHIAReplacementConsole {
 				+ " action cannot be performed into the state "
 				+ this.chiaState.name());
 	}
+
 }

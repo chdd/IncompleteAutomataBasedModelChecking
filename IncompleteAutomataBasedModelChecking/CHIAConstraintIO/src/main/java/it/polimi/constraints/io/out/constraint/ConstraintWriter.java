@@ -12,8 +12,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import action.CHIAAction;
@@ -30,7 +29,7 @@ public class ConstraintWriter extends CHIAAction<Void> {
 	/**
 	 * is the logger of the SubAutomataIdentifier class
 	 */
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(ConstraintWriter.class);
 
 	
@@ -88,7 +87,7 @@ public class ConstraintWriter extends CHIAAction<Void> {
 
 	public Void perform() throws Exception {
 
-		logger.info("Writing the constraint automaton");
+		logger.debug("Writing the constraint automaton");
 		try {
 
 			Element constraintElement=new ConstraintToElementTransformer().transform(this.constraint);
@@ -103,7 +102,7 @@ public class ConstraintWriter extends CHIAAction<Void> {
 
 			StreamResult result = new StreamResult(file);
 			transformer.transform(source, result);
-			logger.info("Constraint written");
+			logger.debug("Constraint written");
 
 		} catch (ParserConfigurationException pce) {
 			logger.error(pce.getMessage());

@@ -1,7 +1,5 @@
 package it.polimi.replacementchecker;
 
-import java.util.Stack;
-
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -10,6 +8,10 @@ import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
+
+import java.util.List;
+import java.util.Map.Entry;
+
 import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
@@ -69,8 +71,7 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 	private boolean isTriviallySatisfied;
 
-	private Stack<State> couterexample;
-	private Stack<Transition> transitionCouterexample;
+	private List<Entry<State, Transition>> couterexample;
 
 	/**
 	 * creates a new Refinement Checker. The refinement checker is used to check
@@ -148,8 +149,7 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 		if (!emptinessChecker.isEmpty()) {
 			this.couterexample = emptinessChecker.getCounterExample();
-			this.transitionCouterexample = emptinessChecker
-					.getTransitionCounterExample();
+			
 			return true;
 		}
 		return false;
@@ -247,19 +247,7 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 	 * @return the counterexample, i.e., the set of states included in the
 	 *         violating run
 	 */
-	public Stack<State> getCouterexample() {
+	public List<Entry<State, Transition>> getCouterexample() {
 		return couterexample;
 	}
-
-	/**
-	 * returns the counterexample, i.e., the set of transitions included in the
-	 * violating run
-	 * 
-	 * @return the counterexample, i.e., the set of transitions included in the
-	 *         violating run
-	 */
-	public Stack<Transition> getTransitionCouterexample() {
-		return this.transitionCouterexample;
-	}
-
 }

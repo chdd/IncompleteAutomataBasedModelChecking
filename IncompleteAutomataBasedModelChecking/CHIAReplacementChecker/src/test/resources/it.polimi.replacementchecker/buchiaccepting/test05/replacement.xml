@@ -2,8 +2,8 @@
 <replacement modelstateId="3" name="t0">
 	<iba>
 		<propositions>
-			<proposition value="b" />
-			<proposition value="a" />
+			<proposition name="b" />
+			<proposition name="a" />
 		</propositions>
 		<states>
 			<state accepting="true" id="5" name="5" />
@@ -11,26 +11,26 @@
 		<transitions>
 		</transitions>
 	</iba>
-	<inports>
-		<port id="23167">
+	<intransitions>
+		<plugtransition id="23167">
 			<sourcestate>
 				<state id="4" name="4" />
 			</sourcestate>
 			<destinationstate>
 				<state id="5" name="5" />
 			</destinationstate>
-			<transition id="101083" propositions="a" />
-		</port>
-	</inports>
-	<outports>
-		<port id="23177">
+			<trans id="101083" propositions="a" />
+		</plugtransition>
+	</intransitions>
+	<outtransitions>
+		<plugtransition id="23177">
 			<sourcestate>
 				<state id="5" name="5" />
 			</sourcestate>
 			<destinationstate>
 				<state id="4" name="4" />
 			</destinationstate>
-			<transition id="101088" propositions="a" />
-		</port>
-	</outports>
+			<trans id="101088" propositions="a" />
+		</plugtransition>
+	</outtransitions>
 </replacement>

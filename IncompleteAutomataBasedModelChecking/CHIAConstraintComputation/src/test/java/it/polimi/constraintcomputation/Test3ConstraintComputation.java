@@ -13,7 +13,6 @@ import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
 import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
-import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
@@ -120,7 +119,7 @@ public class Test3ConstraintComputation {
 	public void test() throws ParserConfigurationException, Exception {
 
 		Checker checker = new Checker(model, claim,
-				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA), intersectionStateFactory, new IntersectionTransitionBuilder());
+				AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA, model, claim));
 		SatisfactionValue returnValue = checker.perform();
 		assertTrue("The property must be possibly satisfied",
 				returnValue == SatisfactionValue.POSSIBLYSATISFIED);

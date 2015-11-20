@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><iba>
     <propositions>
-        <proposition value="b"/>
-        <proposition value="a"/>
+        <proposition name="b"/>
+        <proposition name="a"/>
     </propositions>
     <states>
         <state id="2" initial="true" name="2"/>
@@ -9,12 +9,9 @@
         <state id="4" name="4"/>
     </states>
     <transitions>
-        <transition destination="4" id="13397" propositions="a" source="4"/>
-        
-        <transition destination="4" id="13401" propositions="a" source="2"/>
-        
-        <transition destination="4" id="13398" propositions="a" source="3"/>
-        
-        <transition destination="3" id="13396" propositions="a" source="4"/>
+        <transition destination="4" id="4" propositions="a" source="4"/>
+        <transition destination="4" id="2" propositions="a" source="2"/>
+        <transition destination="4" id="3" propositions="a" source="3"/>
+        <transition destination="3" id="1" propositions="a" source="4"/>
     </transitions>
 </iba>

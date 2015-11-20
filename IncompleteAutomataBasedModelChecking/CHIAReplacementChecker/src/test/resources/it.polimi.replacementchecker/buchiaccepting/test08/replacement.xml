@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="1" name="t0">
     <iba>
         <propositions>
-            <proposition value="b"/>
-            <proposition value="a"/>
+            <proposition name="b"/>
+            <proposition name="a"/>
         </propositions>
         <states>
             <state accepting="true" id="4" name="4"/>
         </states>
         <transitions/>
     </iba>
-    <inports>
-    	<port id="8155">
+    <intransitions>
+    	<plugtransition id="8155">
             <sourcestate>
                 <state id="2" name="2"/>
             </sourcestate>
             <destinationstate>
                 <state id="4" name="4"/>
             </destinationstate>
-            <transition id="47989" propositions="b"/>
-        </port>
-       <port id="8155">
+            <trans id="47989" propositions="b"/>
+        </plugtransition>
+       <plugtransition id="8155">
             <sourcestate>
                 <state id="3" name="3"/>
             </sourcestate>
             <destinationstate>
                 <state id="4" name="4"/>
             </destinationstate>
-            <transition id="47989" propositions="a"/>
-        </port>
-    </inports>
-    <outports>
-        <port id="8145">
+            <trans id="47989" propositions="a"/>
+        </plugtransition>
+    </intransitions>
+    <outtransitions>
+        <plugtransition id="8145">
             <sourcestate>
                 <state id="4" name="4"/>
             </sourcestate>
             <destinationstate>
                 <state id="2" name="t1"/>
             </destinationstate>
-            <transition id="47984" propositions="a"/>
-        </port>
-    </outports>
+            <trans id="47984" propositions="a"/>
+        </plugtransition>
+    </outtransitions>
 </replacement>

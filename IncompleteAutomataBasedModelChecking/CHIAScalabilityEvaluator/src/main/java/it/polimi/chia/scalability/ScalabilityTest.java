@@ -32,14 +32,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.google.common.base.Stopwatch;
 
 public class ScalabilityTest {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(ScalabilityTest.class);
 
 	private final static String resultsFile = "results.txt";
@@ -47,8 +46,8 @@ public class ScalabilityTest {
 
 	private final static int N_TESTS = 20;
 
-	private final static AcceptingPolicy acceptingPolicy = AcceptingPolicy
-			.getAcceptingPolicy(AcceptingType.BA);
+	private final static AcceptingType acceptingPolicy = 
+			AcceptingType.BA;
 
 	public static void main(String[] args) throws Exception {
 
@@ -77,7 +76,7 @@ public class ScalabilityTest {
 
 	}
 
-	private static List<BA> getClaimToBeConsidered() {
+	private static List<BA> getClaimToBeConsidered() throws Exception {
 
 		List<BA> claims = new ArrayList<BA>();
 		LTLtoBATransformer action = new LTLtoBATransformer("!((a)U(b))");
@@ -157,7 +156,9 @@ public class ScalabilityTest {
 
 			// check whether the model possibly satisfies the claim
 			Checker checker = new Checker(model,
-					configuration.getCurrentClaim(), acceptingPolicy);
+					configuration.getCurrentClaim(), 
+					AcceptingPolicy
+					.getAcceptingPolicy(acceptingPolicy, model, configuration.getCurrentClaim()));
 			SatisfactionValue value = checker.perform();
 
 			if (value == SatisfactionValue.POSSIBLYSATISFIED) {
@@ -178,7 +179,9 @@ public class ScalabilityTest {
 				// VERIFICATION OF THE REFINEMENT
 				IBA refinedModel = new Injector(model, replacement).perform();
 				Checker refinementChecker = new Checker(refinedModel,
-						configuration.getCurrentClaim(), acceptingPolicy);
+						configuration.getCurrentClaim(), 
+						AcceptingPolicy
+						.getAcceptingPolicy(acceptingPolicy, refinedModel, configuration.getCurrentClaim()));
 
 				timer.reset();
 				timer.start();
@@ -188,10 +191,13 @@ public class ScalabilityTest {
 				long refinementVerificationTime = timer
 						.elapsed(TimeUnit.NANOSECONDS);
 
+				SubProperty subProperty1=constraint.getSubProperty(replacement.getModelState());
 				// VERIFICATION OF THE REPLACEMENT
 				ReplacementChecker replacementChecker = new ReplacementChecker(
-						constraint.getSubProperty(replacement.getModelState()),
-						replacement, acceptingPolicy);
+						subProperty1,
+						replacement, 
+						AcceptingPolicy
+						.getAcceptingPolicy(acceptingPolicy, replacement.getAutomaton(), subProperty1.getAutomaton()));
 
 				timer.reset();
 				timer.start();

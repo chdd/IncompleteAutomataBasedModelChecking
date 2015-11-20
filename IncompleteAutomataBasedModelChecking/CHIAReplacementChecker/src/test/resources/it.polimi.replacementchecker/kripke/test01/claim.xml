@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><ba>
     <propositions>
-        <proposition value="b"/>
-        <proposition value="a"/>
+        <proposition name="b"/>
+        <proposition name="a"/>
     </propositions>
     <states>
         <state accepting="true" id="1" name="1"/>

@@ -2,22 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.polimi.chia</groupId>
 	<artifactId>CHIA</artifactId>
+
+	<groupId>it.polimi.chia</groupId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>CHIA</name>
 	<packaging>pom</packaging>
 
 	<properties>
+		<!-- specifies the version of Java used in the CHIAChecker -->
 		<java.version>1.7</java.version>
-		<jdk.version>1.7</jdk.version>
+		<!-- is the character encoding of the source code -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- github Server corresponds to entry in ~/.m2/settings.xml -->
+		<!-- Github server corresponds to entry in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
-		<project.buid.sourceEncodint>UTF-8</project.buid.sourceEncodint>
+		<!-- sonar -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.language>java</sonar.language>
-		<sonar.host.url>http://localhost:9000/</sonar.host.url>
-
+		<sonar.host.url> http://localhost:9000/ </sonar.host.url>
+		<jacoco.version>0.7.2.201409121644</jacoco.version>
+		<surefire.version>2.17</surefire.version>
+		<testng.version>6.8.8</testng.version>
 	</properties>
 	<build>
 
@@ -124,12 +129,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <configuration> 
-				<archive> <manifest> <mainClass> Main </mainClass> <packageName>it.polimi</packageName> 
-				</manifest> </archive> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
-				</descriptorRefs> </configuration> <executions> <execution> <id>make-assembly</id> 
-				<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
-				</executions> </plugin> -->
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.8.1</version>
@@ -175,6 +174,10 @@
 			<id>deib-polimi-releases</id>
 			<url>https://github.com/deib-polimi/deib-polimi-mvn-repo/raw/master/releases</url>
 		</repository>
+		<repository>
+			<id>it.polimi.chia</id>
+			<url>https://github.com/deib-polimi/deib-polimi-mvn-repo/raw/master/releases</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -212,19 +215,6 @@
 			<version>1.0.0</version>
 		</dependency>
 
-
-		<!-- logback -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>1.1.2</version>
-		</dependency>
 		<dependency>
 			<groupId>org.javabits.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
@@ -283,4 +273,5 @@
 		<!-- <module>CHIAVisualization</module> -->
 
 	</modules>
+
 </project>

@@ -16,7 +16,7 @@ import com.google.common.base.Preconditions;
  * id of the transition and its proposition (it does not add attribute for its
  * source and destination)
  * 
- * @author Claudio1
+ * @author Claudio Menghi
  *
  */
 public class TransitionToElementTransformer implements

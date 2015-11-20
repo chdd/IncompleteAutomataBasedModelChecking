@@ -10,8 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -32,7 +31,7 @@ public class ModelReader extends XMLReader<IBA> {
 	/**
 	 * is the logger of the BAReader class
 	 */
-	private static final Logger logger = LoggerFactory
+	private static final Logger logger = Logger
 			.getLogger(ModelReader.class);
 	/**
 	 * is the File from which the IBA must be read
@@ -85,7 +84,7 @@ public class ModelReader extends XMLReader<IBA> {
 	@Override
 	public IBA perform() throws SAXException, IOException,
 			ParserConfigurationException {
-		logger.info("Reding the Model");
+		logger.debug("Reading the Model");
 
 		Document dom;
 
@@ -110,7 +109,7 @@ public class ModelReader extends XMLReader<IBA> {
 
 		IBA iba = new ElementToIBATransformer().transform(doc);
 		this.performed();
-		logger.info("Model readed");
+		logger.debug("Model readed");
 		return iba;
 	}
 }
