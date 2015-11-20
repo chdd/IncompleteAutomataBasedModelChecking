@@ -1,161 +1,172 @@
 package it.polimi;
 
-import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
-import it.polimi.checker.Checker;
-import it.polimi.checker.ModelCheckingResults;
-import it.polimi.checker.SatisfactionValue;
-import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
-import it.polimi.constraints.Constraint;
-import it.polimi.contraintcomputation.CHIAOperation;
-import it.polimi.contraintcomputation.ConstraintGenerator;
+import it.polimi.console.CHIAAutomataConsole;
+import it.polimi.console.CHIAReplacementConsole;
+import it.polimi.statemachine.events.AutomataEvent;
+import it.polimi.statemachine.events.ReplacementEvent;
+import it.polimi.statemachine.states.CHIAState;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.ParseException;
+import java.util.List;
 
-import com.google.common.base.Preconditions;
+import jline.console.ConsoleReader;
+import jline.console.completer.AggregateCompleter;
+import jline.console.completer.CandidateListCompletionHandler;
+import jline.console.completer.Completer;
+import jline.console.completer.StringsCompleter;
+import jline.console.history.FileHistory;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
- * contains the implementation of the CHIA checker
+ * is the main file of CHIA
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
-public class CHIA extends CHIAOperation{
+public class CHIA {
+
+	private ConsoleReader console;
 
 	/**
-	 * is the logger of the ModelChecker class
+	 * contains the CHIA logger
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(CHIA.class);
+	private static final Logger logger = Logger.getLogger(CHIA.class);
 
 	/**
-	 * is the Buchi Automaton that contains the claim to be verified
+	 * getting the output stream
 	 */
-	private final BA claim;
+	private static final PrintStream out = System.out;
 
 	/**
-	 * is the Incomplete Buchi Automaton which contains the model that must be
-	 * considered in the verification procedure
+	 * print the CHIA usage information
 	 */
-	private final IBA model;
-	
-	private final AcceptingPolicy acceptingPolicy;
+	public void usage() {
 
-	/**
-	 * Is the model checker in charge of verifying whether the property is
-	 * satisfied, not satisfied or possibly satisfied
-	 */
-	private Checker modelChecker;
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder
+				.append("********************************************************************\n");
+		stringBuilder
+				.append("WELCOME in CHIA (Checker for Incomplete Automata)\n");
+		stringBuilder
+				.append("You can change between the replacement and the automata mode at any time\n");
+		stringBuilder.append("rep: enables replacement mode\n");
+		stringBuilder.append("aut: enables repautomata mode\n");
+		stringBuilder
+				.append("********************************************************************\n");
+		stringBuilder.append("aut: automata mode enabled\n");
+		out.println(stringBuilder);
 
-	/**
-	 * Contains the model checking results, the verification times the
-	 * constraint computes etc
-	 */
-	private final ModelCheckingResults mcResults;
-
-	/**
-	 * @return the mcResults
-	 */
-	public ModelCheckingResults getMcResults() {
-		return mcResults;
 	}
 
-	/**
-	 * creates a new CHIA checker
-	 * 
-	 * @param claim
-	 *            is the claim to be verified
-	 * @param model
-	 *            is the model of the system to be considered in the
-	 *            verification procedure
-	 * @param results
-	 *            is the object in which the model checking results are stored
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
-	 */
-	public CHIA(BA claim, IBA model, AcceptingPolicy acceptingPolicy, ModelCheckingResults results) {
+	public CHIA() throws IOException {
 
-		Preconditions.checkNotNull(claim, "The claim cannot  be null");
-		Preconditions.checkNotNull(model, "The model cannot  be null");
-		Preconditions.checkNotNull(results, "The model cannot  be null");
-		Preconditions.checkNotNull(acceptingPolicy, "The acceptingPolicy cannot  be null");
+		this.console = new ConsoleReader();
+		console.setPrompt("CHIA> ");
+		usage();
 
-		this.acceptingPolicy=acceptingPolicy;
-		this.claim = claim;
-		this.model = model;
-		this.mcResults = results;
-	}
-
-	/**
-	 * computes whether the claim is satisfied, not satisfied or possibly
-	 * satisfied in the model
-	 * 
-	 * @return 1 if the claim is satisfied in the model. 0 if the claim is not
-	 *         satisfied in the model. -1 if the claim is possibly satisfied in
-	 *         the model
-	 */
-	public SatisfactionValue check() {
-		logger.info("Running CHIA");
-
-		modelChecker = new Checker(model, claim, acceptingPolicy);
-		mcResults.setResult(modelChecker.perform());
-
-		logger.info("CHIA model checking phase ended");
-		return mcResults.getResult();
-	}
-
-	public Constraint generateConstraint(){
-		if(this.modelChecker==null){
-			this.check();
+		if (ClassLoader.getSystemResource("History.txt") != null) {
+			console.setHistory(new FileHistory(new File(ClassLoader
+					.getSystemResource("History.txt").getPath())));
+		} else {
+			logger.warn("The History file cannot be loaded");
 		}
-		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
-		constraintGenerator.perform();
-		//return constraintGenerator.computePortReachability();
-		return null;
+		logger.info("CHIA Started");
+		PropertyConfigurator.configure(ClassLoader
+				.getSystemResource("log4j.properties"));
+
 	}
-	
-	public Constraint generateConstraintNoPortReachability(){
-		if(this.modelChecker==null){
-			this.check();
+
+	public void run() throws IOException {
+		CHIAState chiaState = CHIAState.AUTOMATAMODE;
+
+		CandidateListCompletionHandler ch = new CandidateListCompletionHandler();
+		console.setCompletionHandler(ch);
+		ch.setPrintSpaceAfterFullCompletion(false);
+
+		CHIAAutomataConsole chiaAutomataConsole = new CHIAAutomataConsole(out);
+		CHIAReplacementConsole chiaReplacementConsole = new CHIAReplacementConsole();
+
+		List<Completer> chiaCompletors = AutomataEvent.computeCompleters();
+		chiaCompletors.add(new StringsCompleter("rep"));
+		console.addCompleter(new AggregateCompleter(chiaCompletors));
+
+		String line;
+
+		while ((line = console.readLine()) != null) {
+			try {
+				if (line.equals("rep")) {
+
+					chiaState = CHIAState.REPLACEMENTMODE;
+					this.removeCompleter();
+					chiaCompletors = ReplacementEvent.computeCompleters();
+					chiaCompletors.add(new StringsCompleter("aut"));
+					console.addCompleter(new AggregateCompleter(chiaCompletors));
+					logger.info("replacement mode enabled");
+
+				} else {
+					if (line.equals("aut")) {
+						chiaState = CHIAState.AUTOMATAMODE;
+						this.removeCompleter();
+						chiaCompletors = AutomataEvent.computeCompleters();
+						chiaCompletors.add(new StringsCompleter("rep"));
+						console.addCompleter(new AggregateCompleter(
+								chiaCompletors));
+						logger.info("automata mode enabled");
+
+					} else {
+						if (line.equalsIgnoreCase("quit")
+								|| line.equalsIgnoreCase("exit")) {
+
+						} else {
+							if (line.equalsIgnoreCase("cls")) {
+								console.clearScreen();
+							} else {
+								if (chiaState.equals(CHIAState.REPLACEMENTMODE)) {
+									try {
+										ReplacementEvent.parse(line,
+												chiaReplacementConsole);
+									} catch (ParseException e) {
+										logger.info(e.getMessage());
+									}
+
+								} else {
+									if (chiaState
+											.equals(CHIAState.AUTOMATAMODE)) {
+										try {
+											AutomataEvent.parse(line,
+													chiaAutomataConsole);
+										} catch (ParseException e) {
+											logger.info(e.getMessage());
+										}
+
+									}
+								}
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				logger.info(e.getMessage());
+			}
+
 		}
-		ConstraintGenerator constraintGenerator=new ConstraintGenerator(this.modelChecker);
-		return constraintGenerator.perform();
-	}
-	
-	/**
-	 * returns the model checker used by CHIA
-	 * 
-	 * @return the model checker used by CHIA
-	 */
-	public Checker getModelChecker() {
-		return this.modelChecker;
 	}
 
-	/**
-	 * returns the constraint associated with the satisfaction of the claim in
-	 * the current model
-	 * 
-	 * @return a String which describes the constraint associated with the
-	 *         satisfaction of the claim in the current model
-	 * @throws IllegalStateException
-	 *             if the property is not possibly satisfied
-	 */
-	/*public Constraint getConstraint() {
+	private void removeCompleter() {
+		for (Completer completer : console.getCompleters()) {
+			console.removeCompleter(completer);
 
-		logger.info("Computing the constraint");
+		}
+	}
 
-		Preconditions
-				.checkArgument(
-						mcResults.getResult() == -1,
-						"It is not possible to get the constraint if the property is not possibly satisfied");
+	public static void main(String[] args) throws IOException {
+		CHIA chia = new CHIA();
+		chia.run();
+	}
 
-		ConstraintGenerator constraintGenerator = new ConstraintGenerator(
-				modelChecker.getIntersectionBuilder(), mcResults);
-
-		Constraint constraint = constraintGenerator.generateConstraint();
-		logger.info("Constraint computed");
-
-		return constraint;
-
-	}*/
 }

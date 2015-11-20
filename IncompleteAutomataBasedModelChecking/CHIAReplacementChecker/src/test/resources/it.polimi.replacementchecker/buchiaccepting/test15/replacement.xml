@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<replacement modelstateId="3" name="t0">
+    <iba>
+        <propositions>
+            <proposition name="b"/>
+            <proposition name="a"/>
+        </propositions>
+        <states>
+            <state id="5" name="5"/>
+        </states>
+        <transitions>
+        </transitions>
+    </iba>
+    <intransitions>
+        <plugtransition id="1">
+            <sourcestate>
+                <state id="3" name="t0"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="5" name="5"/>
+            </destinationstate>
+            <trans id="1" propositions="a"/>
+        </plugtransition>
+    </intransitions>
+    <outtransitions>
+        <plugtransition id="2">
+            <sourcestate>
+                <state id="5" name="5"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="2" name="2"/>
+            </destinationstate>
+            <trans id="2" propositions="a"/>
+        </plugtransition>
+    </outtransitions>
+</replacement>
