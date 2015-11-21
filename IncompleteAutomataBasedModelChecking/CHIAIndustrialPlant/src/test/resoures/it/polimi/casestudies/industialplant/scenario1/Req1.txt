@@ -1,1 +1,0 @@
-[]((actretract)->((!actextend)U(stackinitialized)))
