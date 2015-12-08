@@ -1,0 +1,16 @@
+<!-- the stream boiler ground example has ben taken from http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.46.949&rep=rep1&type=pdf -->
+<iba>
+	 <propositions>
+	    <proposition name="c"/>
+        <proposition name="b"/>
+        <proposition name="a"/>
+    </propositions>
+    <states>
+        <state id="1" name="t0" initial="true" blackbox="true" accepting="true" />
+        <state id="2" name="t1" accepting="true" />
+    </states>
+    <transitions>
+        <transition destination="2" id="1" propositions="b" source="1"/>
+        <transition destination="2" id="2" propositions="c" source="2"/>
+    </transitions>
+</iba>
