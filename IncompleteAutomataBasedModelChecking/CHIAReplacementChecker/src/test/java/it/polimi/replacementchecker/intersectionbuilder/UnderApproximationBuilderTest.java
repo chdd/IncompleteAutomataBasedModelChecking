@@ -418,8 +418,9 @@ public class UnderApproximationBuilderTest {
         replacement.addIncomingTransition(new PluggingTransition(modelState,
                 replacementState, new ModelTransitionFactory()
                         .create(propositions), false));
-        ReplacementIntersectionBuilder builder = new ReplacementIntersectionBuilder(
-                replacement, sub, false);
+        UnderApproximationBuilder builder = new UnderApproximationBuilder(replacement, sub,
+                AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
+                        replacement.getAutomaton(), subBA));
         IntersectionBA intersection=builder.perform();
 
         assertNotNull(new UnderApproximationBuilder(replacement, sub,
@@ -491,8 +492,9 @@ public class UnderApproximationBuilderTest {
         replacement.addIncomingTransition(new PluggingTransition(modelState,
                 replacementState, new ModelTransitionFactory()
                         .create(propositions), false));
-        ReplacementIntersectionBuilder builder = new ReplacementIntersectionBuilder(
-                replacement, sub, false);
+        UnderApproximationBuilder builder = new UnderApproximationBuilder(replacement, sub,
+                AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
+                        replacement.getAutomaton(), subBA));
         IntersectionBA intersection=builder.perform();
 
         assertNotNull(new UnderApproximationBuilder(replacement, sub,
@@ -564,8 +566,9 @@ public class UnderApproximationBuilderTest {
         replacement.addIncomingTransition(new PluggingTransition(modelState,
                 replacementState, new ModelTransitionFactory()
                         .create(propositions), false));
-        ReplacementIntersectionBuilder builder = new ReplacementIntersectionBuilder(
-                replacement, sub, true);
+        UnderApproximationBuilder builder = new UnderApproximationBuilder(replacement, sub,
+                AcceptingPolicy.getAcceptingPolicy(AcceptingType.BA,
+                        replacement.getAutomaton(), subBA));
         IntersectionBA intersection=builder.perform();
 
         assertNotNull(new UnderApproximationBuilder(replacement, sub,
