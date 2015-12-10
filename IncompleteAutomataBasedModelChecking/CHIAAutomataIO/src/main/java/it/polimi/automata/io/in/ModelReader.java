@@ -70,7 +70,7 @@ public class ModelReader extends XMLReader<IBA> {
 		super(NAME);
 		Preconditions.checkNotNull(file, "The fileReader cannot be null");
 		Preconditions.checkArgument(file.exists(),
-				"Check if the file actually exists");
+				"Check if the file "+file+" actually exists");
 
 		this.file = file;
 
