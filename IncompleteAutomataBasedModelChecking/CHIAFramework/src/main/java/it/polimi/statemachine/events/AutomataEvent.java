@@ -213,7 +213,7 @@ public enum AutomataEvent implements CommandEvent<CHIAAutomataConsole> {
 					"\t -> (implication) \n"+
 					"\t <-> (equivalence) \n"+
 					"\t ^ (and)\n"+
-					"\t v (or),"+
+					"\t V (or),"+
 					"A set of temporal operators,\n"+ 
 					"\t [] (always)\n"+
 					"\t <> (eventually)"+

@@ -1,9 +1,13 @@
 package it.polimi.console;
 
+import it.polimi.automata.IBA;
+import it.polimi.automata.io.out.IBAToElementTrasformer;
+import it.polimi.automata.io.out.XMLWriter;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraints.Constraint;
+import it.polimi.constraints.components.RefinementGenerator;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
@@ -48,6 +52,7 @@ public class CHIAReplacementConsole {
 	 * contains the replacement to be considered
 	 */
 	protected Replacement replacement;
+
 	/**
 	 * contains the new constraint computed
 	 */
@@ -56,6 +61,16 @@ public class CHIAReplacementConsole {
 	 * is the checker used in the replacement checking activity
 	 */
 	protected ReplacementChecker replacementChecker;
+
+	/**
+	 * is the model from which the replacement is obtained
+	 */
+	protected IBA model;
+
+	/**
+	 * contains the refinement obtained by the current model and the replacement
+	 */
+	protected IBA refinement;
 
 	protected AcceptingType policy;
 
@@ -109,12 +124,14 @@ public class CHIAReplacementConsole {
 
 		if (this.chiaState.isPerformable(ReplacementReader.class)) {
 			try {
-				this.replacement = new ReplacementReader(new File(
-						replacementFilePath)).perform();
+				ReplacementReader rr=new ReplacementReader(new File(
+						replacementFilePath));
+				this.replacement = rr.perform();
+				this.model=rr.getModel();
 				this.chiaState = chiaState.perform(ReplacementReader.class);
 				logger.info("Replacement Loaded");
 
-			} catch (CHIAException e) {
+			} catch (Exception e) {
 				logger.info(e.toString());
 			}
 		} else {
@@ -141,14 +158,33 @@ public class CHIAReplacementConsole {
 		}
 	}
 
+	public void saveRefinement(String filePath) {
+		if (this.chiaState.isPerformable(RefinementGenerator.class)) {
+			try {
+				RefinementGenerator action = new RefinementGenerator(
+						this.model, this.replacement);
+				this.refinement = action.perform();
+
+				new XMLWriter(new File(filePath),
+						new IBAToElementTrasformer().transform(this.refinement)).perform();
+				this.chiaState = chiaState.perform(RefinementGenerator.class);
+
+			} catch (Exception e) {
+				logger.info(e.toString());
+			}
+		} else {
+			this.printNotExecutableMessage(ReplacementToStringTransformer.class);
+		}
+	}
+
 	public void replacementChecking() {
 		if (this.chiaState.isPerformable(ReplacementChecker.class)) {
 			try {
 
 				SubProperty subProperty = this.constraint
 						.getSubProperty(this.replacement.getModelState());
-				this.replacementChecker = new ReplacementChecker(subProperty,
-						this.replacement, AcceptingPolicy.getAcceptingPolicy(
+				this.replacementChecker = new ReplacementChecker(
+						this.replacement, subProperty, AcceptingPolicy.getAcceptingPolicy(
 								this.policy, this.replacement.getAutomaton(),
 								subProperty.getAutomaton()));
 

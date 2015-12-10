@@ -1,5 +1,6 @@
 package it.polimi.statemachine.states;
 
+import it.polimi.constraints.components.RefinementGenerator;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
@@ -60,6 +61,9 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 			if(chiaAction==ReplacementToStringTransformer.class){
 				return true;
 			}
+			if(chiaAction==RefinementGenerator.class){
+				return true;
+			}
 			return false;
 		}
 		@Override
@@ -74,6 +78,10 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 			if(chiaAction==ReplacementToStringTransformer.class){
 				return REPLACEMENTLOADED;
 			}
+			if(chiaAction==RefinementGenerator.class){
+				return REPLACEMENTLOADED;
+			}
+			
 			throw new CHIAException("You cannot perform the action: "
 					+ chiaAction.getName() + " into the state "
 					+ this.toString());
@@ -105,11 +113,13 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 			if(chiaAction==ConstraintToStringTrasformer.class){
 				return CONSTRAINTLOADED;
 			}
+			
 			throw new CHIAException("You cannot perform the action: "
 					+ chiaAction.getName() + " into the state "
 					+ this.toString());
 		}
 	},
+	
 	READY {
 		@Override
 		public boolean isPerformable(Class<? extends CHIAAction<?>> chiaAction){
@@ -128,6 +138,10 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 			if(chiaAction==ReplacementReader.class){
 				return true;
 			}
+			if(chiaAction==RefinementGenerator.class){
+				return true;
+			}
+			
 			return false;
 		}
 		@Override
@@ -146,6 +160,9 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 				return READY;
 			}
 			if(chiaAction==ReplacementReader.class){
+				return READY;
+			}
+			if(chiaAction==RefinementGenerator.class){
 				return READY;
 			}
 			
@@ -170,6 +187,9 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 			if(chiaAction==ReplacementReader.class){
 				return true;
 			}
+			if(chiaAction==RefinementGenerator.class){
+				return true;
+			}
 			return false;
 		}
 		@Override
@@ -186,6 +206,9 @@ public enum CHIAReplacementState implements CHIAStateInterface{
 			}
 			if(chiaAction==ReplacementReader.class){
 				return READY;
+			}
+			if(chiaAction==RefinementGenerator.class){
+				return CHECKED;
 			}
 			throw new CHIAException("You cannot perform the action: "
 					+ chiaAction.getName() + " into the state "

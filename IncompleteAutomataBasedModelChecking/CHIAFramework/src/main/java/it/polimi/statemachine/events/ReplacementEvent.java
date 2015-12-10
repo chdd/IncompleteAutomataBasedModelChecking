@@ -327,20 +327,58 @@ public enum ReplacementEvent implements CommandEvent<CHIAReplacementConsole> {
 					+ "\n \t" + this.getDescription() + " \n ";
 		}
 
+	},
+	SAVEREFINEMENT {
+
+		@Override
+		public String getCommandMeaning() {
+			return "save refinement";
+		}
+
+		@Override
+		public String getCommand() {
+			return "sref";
+		}
+
+		@Override
+		public String getDescription() {
+			return "starting from the intial model and the replacement associated to one of its black box states generate the corresponding"
+					+ "refinement.";
+		}
+
+		@Override
+		public String getParams() {
+			return "The path of the file where the refinement must be saved";
+		}
+
+		@Override
+		public boolean requiresParams() {
+			return true;
+		}
+
+		@Override
+		public void executeCommand(String command,
+				CHIAReplacementConsole console) throws Exception {
+			
+			console.saveRefinement(command.substring(command.indexOf(" ") + 1)
+					.replaceAll(" +$", ""));
+		}
+
 	};
 	public static void parse(String toBeParsed, CHIAReplacementConsole console)
 			throws Exception {
 
-		boolean founded=false;
+		boolean founded = false;
 		for (ReplacementEvent command : ReplacementEvent.values()) {
 			if (toBeParsed.split(" ")[0].equals(command.getCommand())
 					|| toBeParsed.equals(command.getCommand())) {
 				command.executeCommand(toBeParsed, console);
-				founded=true;
+				founded = true;
 			}
 		}
-		if(!founded){
-			throw new ParseException("The command "+toBeParsed+" is not a valid command", 0);
+		if (!founded) {
+			throw new ParseException("The command " + toBeParsed
+					+ " is not a valid command", 0);
 		}
 	}
 

@@ -11,10 +11,10 @@ import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
+import it.polimi.constraintcomputation.ConstraintGenerator;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.constraint.ConstraintWriter;
-import it.polimi.contraintcomputation.ConstraintGenerator;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.statemachine.states.CHIAAutomataState;
 
@@ -124,6 +124,8 @@ public class CHIAAutomataConsole {
 			ModelReader action = new ModelReader(modelFilePath);
 			this.model = action.perform();
 			logger.info("Model readed");
+			logger.info("N° states: "+this.model.getStates().size());
+			logger.info("N° transitions:"+this.model.getTransitions().size());
 
 		} catch (FileNotFoundException fileNotFound) {
 			logger.info(fileNotFound.toString());
@@ -143,6 +145,7 @@ public class CHIAAutomataConsole {
 		}
 	}
 
+	
 	/**
 	 * loads the property in form of automaton from the specified file path
 	 * 
@@ -162,6 +165,8 @@ public class CHIAAutomataConsole {
 			ClaimReader action = new ClaimReader(claimFilePath);
 			this.claim = action.perform();
 			logger.info("Property loaded");
+			logger.info("N° states: "+this.model.getStates().size());
+			logger.info("N° transitions:"+this.model.getTransitions().size());
 
 		} catch (CHIAException e) {
 			logger.info(e.toString());
@@ -268,9 +273,7 @@ public class CHIAAutomataConsole {
 			logger.info("Dimension of the intersection automaton (states+transitions): "
 					+ this.checker.getIntersectionAutomataSize());
 			if (result.equals(SatisfactionValue.NOTSATISFIED)) {
-				logger.info("State counterexample:"
-						+ this.checker.getCounterexample());
-				logger.info("Transition counterexample:"
+				logger.info("Counterexample:"
 						+ this.checker.getCounterexample());
 
 			}
@@ -286,9 +289,7 @@ public class CHIAAutomataConsole {
 			this.chiaState = chiaState.perform(ConstraintGenerator.class);
 			cg = new ConstraintGenerator(this.checker);
 			this.constraint = cg.perform();
-			cg.coloring();
-			cg.computePortReachability();
-			cg.computeIndispensable();
+			
 			logger.info("Constraint computed");
 			// this.constraint = this.chia.generateConstraint();
 		} catch (CHIAException e) {

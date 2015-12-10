@@ -60,12 +60,14 @@ public class CHIA {
 				.append("********************************************************************\n");
 		stringBuilder.append("aut: automata mode enabled\n");
 		out.println(stringBuilder);
+		
 
 	}
 
 	public CHIA() throws IOException {
 
 		this.console = new ConsoleReader();
+		this.console.setExpandEvents(false);
 		console.setPrompt("CHIA> ");
 		usage();
 
