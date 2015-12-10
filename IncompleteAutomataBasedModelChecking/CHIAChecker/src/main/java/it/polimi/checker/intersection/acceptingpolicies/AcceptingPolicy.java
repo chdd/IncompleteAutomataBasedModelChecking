@@ -1,10 +1,9 @@
 package it.polimi.checker.intersection.acceptingpolicies;
 
-import com.google.common.base.Preconditions;
-
 import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
+
+import com.google.common.base.Preconditions;
 
 public abstract class AcceptingPolicy {
 
@@ -12,7 +11,7 @@ public abstract class AcceptingPolicy {
 		KRIPKE, BA
 	}
 
-	protected IBA model;
+	protected BA model;
 	protected BA claim;
 
 	/**
@@ -25,7 +24,7 @@ public abstract class AcceptingPolicy {
 	 * @throws NullPointerException
 	 *             if the model or the claim is null
 	 */
-	public AcceptingPolicy(IBA model, BA claim) {
+	public AcceptingPolicy(BA model, BA claim) {
 		Preconditions.checkNotNull(model,
 				"The model to be considered cannot be null");
 		Preconditions.checkNotNull(claim,
@@ -40,7 +39,7 @@ public abstract class AcceptingPolicy {
 		this.claim = claim;
 	}
 
-	public void setModel(IBA model) {
+	public void setModel(BA model) {
 		Preconditions.checkNotNull(model,
 				"The claim to be considered cannot be null");
 		this.model = model;
@@ -50,7 +49,7 @@ public abstract class AcceptingPolicy {
 		return this.claim;
 	}
 
-	public IBA getModel() {
+	public BA getModel() {
 		return this.model;
 	}
 	
@@ -86,7 +85,7 @@ public abstract class AcceptingPolicy {
 	 *             if the accepting type does not correspond to any accepting
 	 *             policy
 	 */
-	public static AcceptingPolicy getAcceptingPolicy(AcceptingType acceptingType, IBA model, BA claim) {
+	public static AcceptingPolicy getAcceptingPolicy(AcceptingType acceptingType, BA model, BA claim) {
 		Preconditions.checkNotNull(acceptingType,
 				"The accepting policy to be considered cannot be null");
 		if (acceptingType.equals(AcceptingType.KRIPKE)) {

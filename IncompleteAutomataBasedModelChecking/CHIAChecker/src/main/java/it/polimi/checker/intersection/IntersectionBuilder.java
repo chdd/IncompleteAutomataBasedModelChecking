@@ -224,11 +224,9 @@ public class IntersectionBuilder extends CHIAAction<IntersectionBA> {
 						"It is not possible to remove an intersection state if the intersection has still to be computed");
 		Preconditions.checkNotNull(intersectionState,
 				"The intersection state cannot be null");
-		Preconditions.checkArgument(
-				this.intersection.getStates().contains(intersectionState),
-				"The state " + intersectionState
-						+ " is not a state of the intersection automaton");
-
+		
+		Preconditions.checkArgument(this.intersection.getStates().contains(intersectionState),
+		        "The state "+intersectionState+" to be removed must be contained into the set of the states of the automaton");
 		this.intersectionStateClaimStateMap.remove(intersectionState);
 		this.intersectionStateModelStateMap.remove(intersectionState);
 		this.mapBlackBoxStateConstrainedTransition.removeAll(intersectionState);

@@ -245,4 +245,6 @@ public class Checker extends CHIAAction<SatisfactionValue> {
 	public List<Entry<State, Transition>> getCounterexample() {
 		return this.counterexample;
 	}
+	
+	
 }

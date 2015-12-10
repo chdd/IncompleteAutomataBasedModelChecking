@@ -1,7 +1,6 @@
 package it.polimi.checker.intersection.acceptingpolicies;
 
 import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 
 import com.google.common.base.Preconditions;
@@ -26,7 +25,7 @@ public class KripkeAcceptingPolicy extends AcceptingPolicy {
 	 * @throws NullPointerException
 	 *             if the model or the claim is null
 	 */
-	protected KripkeAcceptingPolicy(IBA model, BA claim) {
+	protected KripkeAcceptingPolicy(BA model, BA claim) {
 		super(model, claim);
 	}
 

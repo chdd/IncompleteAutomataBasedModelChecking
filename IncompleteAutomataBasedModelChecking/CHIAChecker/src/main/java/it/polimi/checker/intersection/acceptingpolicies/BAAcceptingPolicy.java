@@ -1,10 +1,9 @@
 package it.polimi.checker.intersection.acceptingpolicies;
 
-import com.google.common.base.Preconditions;
-
 import it.polimi.automata.BA;
-import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
+
+import com.google.common.base.Preconditions;
 
 /**
  * creates a BA accepting policy. The BA accepting policy given a state of the
@@ -33,7 +32,7 @@ public class BAAcceptingPolicy extends AcceptingPolicy {
 	 * @throws NullPointerException
 	 *             if one of the parameters is null
 	 */
-	protected BAAcceptingPolicy(IBA model, BA claim) {
+	protected BAAcceptingPolicy(BA model, BA claim) {
 		super(model, claim);
 
 	}
