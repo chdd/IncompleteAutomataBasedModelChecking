@@ -62,11 +62,11 @@ public class ModelReaderTest {
 		t3=this.transitionFactory.create(3, propositions3);
 		
 		Set<IGraphProposition> propositions4=new HashSet<IGraphProposition>();
-		propositions4.add(new GraphProposition("fail", false));
+		propositions4.add(new GraphProposition("ok", false));
 		t4=this.transitionFactory.create(4, propositions4);
 		
 		Set<IGraphProposition> propositions5=new HashSet<IGraphProposition>();
-		propositions5.add(new GraphProposition("ok", false));
+		propositions5.add(new GraphProposition("fail", false));
 		t5=this.transitionFactory.create(5, propositions5);
 		
 		Set<IGraphProposition> propositions6=new HashSet<IGraphProposition>();
@@ -137,6 +137,7 @@ public class ModelReaderTest {
 		assertTrue(sendingMessage.getBlackBoxStates().contains(stateFactory.create("send2", 3)));
 		assertTrue(sendingMessage.getBlackBoxStates().size()==2);
 		
+		System.out.println(sendingMessage.getTransitions());
 		assertTrue(sendingMessage.getTransitions().contains(t1));
 		assertTrue(sendingMessage.getTransitions().contains(t2));
 		assertTrue(sendingMessage.getTransitions().contains(t3));
