@@ -135,7 +135,7 @@ public class TransitionTest {
 		assertTrue(t.equals(t));
 		assertFalse(t.equals(t2));
 		assertTrue(t.equals(t3));
-		assertTrue(t.equals(t4));
+		assertFalse(t.equals(t4));
 	}
 
 	/**

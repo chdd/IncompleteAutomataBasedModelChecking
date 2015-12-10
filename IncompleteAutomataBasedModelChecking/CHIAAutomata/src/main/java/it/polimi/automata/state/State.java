@@ -10,7 +10,7 @@ import com.google.common.base.Preconditions;
  * <code>String getName()</code>.
  * </p>
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  */
 public class State {
 

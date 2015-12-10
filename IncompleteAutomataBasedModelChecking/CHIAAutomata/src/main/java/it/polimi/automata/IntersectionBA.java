@@ -102,6 +102,7 @@ public class IntersectionBA extends BA {
 	 * @throws NullPointerException
 	 *             if the transition is null
 	 */
+	@Override
 	public void removeTransition(Transition transition) {
 		super.removeTransition(transition);
 		if (this.constrainedTransitions.contains(transition)) {
@@ -118,6 +119,7 @@ public class IntersectionBA extends BA {
 	 * @throws NullPointerException
 	 *             if the state is null
 	 */
+	@Override
 	public void removeState(State state) {
 		super.removeState(state);
 		if (this.mixedStates.contains(state)) {

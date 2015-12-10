@@ -150,6 +150,9 @@ public class Transition extends DefaultEdge {
 		Transition other = (Transition) obj;
 		if (id != other.id)
 			return false;
+		if(!this.labels.equals(other.labels)){
+			return false;
+		}
 		return true;
 	}
 }
