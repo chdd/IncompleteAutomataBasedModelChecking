@@ -26,7 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test10ConstraintComputation {
+public class ReplacementChecker10Test {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -79,7 +79,7 @@ public class Test10ConstraintComputation {
 		assertTrue(ret==SatisfactionValue.SATISFIED);
 		
 		SubProperty subproperty=this.constraint.getSubProperty(this.replacement.getModelState());
-		ReplacementChecker replacementChecker=new ReplacementChecker(subproperty, replacement, 
+		ReplacementChecker replacementChecker=new ReplacementChecker( replacement, subproperty,
 				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subproperty.getAutomaton()));
 		
 		SatisfactionValue retValue=replacementChecker.perform();

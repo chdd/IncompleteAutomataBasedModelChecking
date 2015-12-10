@@ -79,7 +79,7 @@ public class Test01ReplacementChecker {
 		assertTrue(ret==SatisfactionValue.NOTSATISFIED);
 		
 		SubProperty subProperty=this.constraint.getSubProperty(this.replacement.getModelState());
-		ReplacementChecker replacementChecker=new ReplacementChecker(subProperty, replacement, 
+		ReplacementChecker replacementChecker=new ReplacementChecker( replacement, subProperty,
 				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subProperty.getAutomaton()));
 		
 		SatisfactionValue retValue=replacementChecker.perform();

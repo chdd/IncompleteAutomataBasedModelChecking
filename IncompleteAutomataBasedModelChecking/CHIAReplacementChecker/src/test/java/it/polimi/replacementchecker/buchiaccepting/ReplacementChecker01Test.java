@@ -16,7 +16,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test15ReplacementChecker {
+public class ReplacementChecker01Test {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -29,12 +29,12 @@ public class Test15ReplacementChecker {
 	public void setUp() throws Exception {
 		this.replacement = new ReplacementReader(new File(getClass()
 				.getClassLoader()
-				.getResource(path + "buchiaccepting/test15/replacement.xml")
+				.getResource(path + "buchiaccepting/test01/replacement.xml")
 				.getFile())).perform();
 
 		this.constraint = new ConstraintReader(new File(getClass()
 				.getClassLoader()
-				.getResource(path + "buchiaccepting/test15/constraint.xml")
+				.getResource(path + "buchiaccepting/test01/constraint.xml")
 				.getFile())).perform();
 		this.acceptingPolicy = AcceptingType.BA;
 	}
@@ -44,13 +44,13 @@ public class Test15ReplacementChecker {
 		SubProperty subproperty = this.constraint
 				.getSubProperty(this.replacement.getModelState());
 		ReplacementChecker replacementChecker = new ReplacementChecker(
-				subproperty, replacement, AcceptingPolicy.getAcceptingPolicy(
+		        replacement, subproperty,  AcceptingPolicy.getAcceptingPolicy(
 						acceptingPolicy, replacement.getAutomaton(),
 						subproperty.getAutomaton()));
 
 		SatisfactionValue retValue = replacementChecker.perform();
 		System.out.println(replacementChecker.getLowerIntersectionBA());
-		assertTrue(retValue == SatisfactionValue.NOTSATISFIED);
+		assertTrue(retValue == SatisfactionValue.SATISFIED);
 	}
 
 }

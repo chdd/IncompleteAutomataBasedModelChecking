@@ -26,7 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test06ConstraintComputation {
+public class ReplacementChecker14Test {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -42,17 +42,17 @@ public class Test06ConstraintComputation {
 	@Before
 	public void setUp() throws Exception{
 		this.replacement = new ReplacementReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test06/replacement.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test14/replacement.xml").getFile())).perform();
 		
 		this.constraint=new ConstraintReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test06/constraint.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test14/constraint.xml").getFile())).perform();
 		this.refinement=new ModelReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test06/refinement.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test14/refinement.xml").getFile())).perform();
 		
 		this.claim=new ClaimReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test06/claim.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test14/claim.xml").getFile())).perform();
 		this.model=new ModelReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test06/model.xml").getFile())).perform();
+				.getResource(path + "buchiaccepting/test14/model.xml").getFile())).perform();
 		this.acceptingPolicy=AcceptingType.BA;
 	}
 	@Test
@@ -63,6 +63,7 @@ public class Test06ConstraintComputation {
 				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model, claim));
 		
 		checker.perform();
+		
 		System.out.println(checker.getUpperIntersectionBA());
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
@@ -74,17 +75,17 @@ public class Test06ConstraintComputation {
 		checker=new Checker(refinement, claim, 
 				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, refinement, claim));
 		SatisfactionValue ret=checker.perform();
-		System.out.println(checker.getLowerIntersectionBA());
-		assertTrue(ret==SatisfactionValue.NOTSATISFIED);
+		assertTrue(ret==SatisfactionValue.SATISFIED);
 		
-		SubProperty subProperty=this.constraint.getSubProperty(this.replacement.getModelState());
-		ReplacementChecker replacementChecker=new ReplacementChecker(subProperty, replacement, 
-				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subProperty.getAutomaton())
-				);
+		SubProperty subproperty=this.constraint.getSubProperty(this.replacement.getModelState());
+		ReplacementChecker replacementChecker=new ReplacementChecker( replacement, subproperty,
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subproperty.getAutomaton()));
 		
 		SatisfactionValue retValue=replacementChecker.perform();
+		System.out.println(retValue);
 		System.out.println(replacementChecker.getLowerIntersectionBA());
-		assertTrue(retValue==SatisfactionValue.NOTSATISFIED);
+		
+		assertTrue(retValue==SatisfactionValue.SATISFIED);
 		
 		
 	}

@@ -45,7 +45,7 @@
             <destinationstate>
                 <state id="439" name="439"/>
             </destinationstate>
-            <trans id="2282" propositions="a"/>
+            <trans id="2282" propositions="b"/>
         </plugtransition>
     </intransitions>
     <outtransitions>

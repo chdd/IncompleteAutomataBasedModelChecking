@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="1" name="t0">
+<?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="1" name="t0" modelFilePath="model.xml">
     <iba>
         <propositions>
             <proposition name="b"/>
@@ -41,15 +41,6 @@
                 <state id="2" name="2"/>
             </destinationstate>
             <trans id="120638" propositions="a"/>
-        </plugtransition>
-        <plugtransition id="10751">
-            <sourcestate>
-                <state id="5" name="5"/>
-            </sourcestate>
-            <destinationstate>
-                <state id="4" name="4"/>
-            </destinationstate>
-            <trans id="120634" propositions="b"/>
         </plugtransition>
     </outtransitions>
 </replacement>

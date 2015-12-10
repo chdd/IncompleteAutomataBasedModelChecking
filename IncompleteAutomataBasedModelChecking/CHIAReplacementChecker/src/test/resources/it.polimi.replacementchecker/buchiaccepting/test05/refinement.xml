@@ -9,8 +9,8 @@
         <state accepting="true" id="5" name="5"/>
     </states>
     <transitions>
-        <transition destination="4" id="101090" propositions="a" source="1"/>
-        <transition destination="5" id="101083" propositions="a" source="4"/>
-    	<transition destination="4" id="101088" propositions="a" source="5"/>
+        <transition destination="4" id="9" propositions="a" source="1"/>
+        <transition destination="5" id="23167" propositions="a" source="4"/>
+        <transition destination="4" id="23177" propositions="a" source="5"/>
     </transitions>
 </iba>

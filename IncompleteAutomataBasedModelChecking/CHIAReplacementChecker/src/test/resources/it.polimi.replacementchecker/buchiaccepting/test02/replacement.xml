@@ -1,61 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?><replacement modelstateId="1" name="t0">
-    <iba>
-        <propositions>
-            <proposition name="b"/>
-            <proposition name="a"/>
-        </propositions>
-        <states>
-            <state id="4" name="4"/>
-            <state accepting="true" id="5" name="5"/>
-        </states>
-        <transitions>
-            <transition destination="4" id="106422" propositions="a" source="4"/>
-        
-            <transition destination="4" id="106427" propositions="a" source="5"/>
-            <transition destination="4" id="106419" propositions="b" source="5"/>
-        
-            <transition destination="5" id="106413" propositions="b" source="5"/>
-            <transition destination="5" id="106428" propositions="a" source="5"/>
-        </transitions>
-    </iba>
-    <intransitions>
-        <plugtransition id="24809">
-            <sourcestate>
-                <state id="28830" name="28830"/>
-            </sourcestate>
-            <destinationstate>
-                <state id="4" name="4"/>
-            </destinationstate>
-            <trans id="106432" propositions="a"/>
-        </plugtransition>
-    </intransitions>
-    <outtransitions>
-        <plugtransition id="24803">
-            <sourcestate>
-                <state id="5" name="5"/>
-            </sourcestate>
-            <destinationstate>
-                <state id="28827" name="28827"/>
-            </destinationstate>
-            <trans id="106421" propositions="b"/>
-        </plugtransition>
-        <plugtransition id="24805">
-            <sourcestate>
-                <state id="5" name="5"/>
-            </sourcestate>
-            <destinationstate>
-                <state id="28827" name="28827"/>
-            </destinationstate>
-            <trans id="106423" propositions="a"/>
-        </plugtransition>
-        <plugtransition id="24799">
-            <sourcestate>
-                <state id="4" name="4"/>
-            </sourcestate>
-            <destinationstate>
-                <state id="28827" name="28827"/>
-            </destinationstate>
-            <trans id="106416" propositions="b"/>
-        </plugtransition>
-    </outtransitions>
+<?xml version="1.0" encoding="UTF-8"?>
+<replacement modelstateId="1" name="t0" modelFilePath="model.xml">
+	<iba>
+		<propositions>
+			<proposition name="b" />
+			<proposition name="a" />
+		</propositions>
+		<states>
+			<state id="4" name="4" />
+			<state accepting="true" id="5" name="5" />
+		</states>
+		<transitions>
+			<transition destination="4" id="106422" propositions="a"
+				source="4" />
+
+			<transition destination="4" id="106427" propositions="a"
+				source="5" />
+			<transition destination="4" id="106419" propositions="b"
+				source="5" />
+
+			<transition destination="5" id="106413" propositions="b"
+				source="5" />
+			<transition destination="5" id="106428" propositions="a"
+				source="5" />
+		</transitions>
+	</iba>
+	<intransitions>
+		<plugtransition id="24809">
+			<sourcestate>
+				<state id="3" name="3" />
+			</sourcestate>
+			<destinationstate>
+				<state id="4" name="4" />
+			</destinationstate>
+			<trans id="106429" propositions="a" />
+		</plugtransition>
+		<plugtransition id="24809">
+			<sourcestate>
+				<state id="2" name="32" />
+			</sourcestate>
+			<destinationstate>
+				<state id="4" name="4" />
+			</destinationstate>
+			<trans id="106432" propositions="a" />
+		</plugtransition>
+	</intransitions>
+	<outtransitions>
+		<plugtransition id="24803">
+			<sourcestate>
+				<state id="5" name="5" />
+			</sourcestate>
+			<destinationstate>
+				<state id="3" name="3" />
+			</destinationstate>
+			<trans id="106423" propositions="a" />
+		</plugtransition>
+		
+	</outtransitions>
 </replacement>

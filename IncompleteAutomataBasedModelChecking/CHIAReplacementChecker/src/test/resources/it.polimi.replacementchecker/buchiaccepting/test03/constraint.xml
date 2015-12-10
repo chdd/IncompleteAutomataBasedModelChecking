@@ -1,213 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<constraint>
-	<subproperty indispensable="true" modelstateId="3" name="t0">
-		<ba>
-			<propositions>
-				<proposition name="b" />
-				<proposition name="a" />
-			</propositions>
-			<states>
-				<state id="2330" name="3 - 1 - 0" />
-				<state id="2332" name="3 - 2 - 1" />
-				<state id="2334" name="3 - 2 - 0" />
-				<state accepting="true" id="2336" name="3 - 2 - 2" />
-				<state accepting="true" id="2337" name="3 - 1 - 2" />
-				<state id="2328" name="3 - 1 - 1" />
-			</states>
-			<transitions>
-				<transition destination="2332" id="6213" propositions="!b^!a"
-					source="2330" />
-				<transition destination="2336" id="6212" propositions="SIGMA"
-					source="2332" />
-				<transition destination="2334" id="6211" propositions="SIGMA"
-					source="2336" />
-				<transition destination="2332" id="6205" propositions="SIGMA"
-					source="2334" />
-				<transition destination="2336" id="6220" propositions="!b^!a"
-					source="2328" />
-				<transition destination="2328" id="6201" propositions="!b"
-					source="2330" />
-				<transition destination="2337" id="6219" propositions="!b"
-					source="2328" />
-				<transition destination="2334" id="6218" propositions="!b^!a"
-					source="2337" />
-				<transition destination="2330" id="6217" propositions="!b"
-					source="2337" />
-			</transitions>
-		</ba>
-		<intransitions>
-			<labeledplugtransition id="321" label="B">
-				<sourcestate>
-					<state id="2" name="2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2334" name="3 - 2 - 0" />
-				</destinationstate>
-				<trans id="6206" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="323" label="B">
-				<sourcestate>
-					<state id="2" name="2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2328" name="3 - 1 - 1" />
-				</destinationstate>
-				<trans id="6199" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="325" label="G">
-				<sourcestate>
-					<state id="1" name="1" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2328" name="3 - 1 - 1" />
-				</destinationstate>
-				<trans id="6221" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="319" label="B">
-				<sourcestate>
-					<state id="2" name="2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2332" name="3 - 2 - 1" />
-				</destinationstate>
-				<trans id="6202" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="317" label="B">
-				<sourcestate>
-					<state id="2" name="2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2330" name="3 - 1 - 0" />
-				</destinationstate>
-				<trans id="6214" propositions="a" />
-			</labeledplugtransition>
-		</intransitions>
-		<outtransitions>
-			<labeledplugtransition id="337" label="B">
-				<sourcestate>
-					<state id="2336" name="3 - 2 - 2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6209" propositions="b" />
-			</labeledplugtransition>
-			<labeledplugtransition id="331" label="B">
-				<sourcestate>
-					<state id="2332" name="3 - 2 - 1" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6208" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="327" label="B">
-				<sourcestate>
-					<state id="2330" name="3 - 1 - 0" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6200" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="343" label="B">
-				<sourcestate>
-					<state id="2328" name="3 - 1 - 1" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6215" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="329" label="B">
-				<sourcestate>
-					<state id="2332" name="3 - 2 - 1" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6207" propositions="b" />
-			</labeledplugtransition>
-			<labeledplugtransition id="335" label="B">
-				<sourcestate>
-					<state id="2334" name="3 - 2 - 0" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6204" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="339" label="B">
-				<sourcestate>
-					<state id="2336" name="3 - 2 - 2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6210" propositions="a" />
-			</labeledplugtransition>
-			<labeledplugtransition id="333" label="B">
-				<sourcestate>
-					<state id="2334" name="3 - 2 - 0" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6203" propositions="b" />
-			</labeledplugtransition>
-			<labeledplugtransition id="341" label="B">
-				<sourcestate>
-					<state id="2337" name="3 - 1 - 2" />
-				</sourcestate>
-				<destinationstate>
-					<state id="2" name="2" />
-				</destinationstate>
-				<trans id="6216" propositions="a" />
-			</labeledplugtransition>
-		</outtransitions>
-		<lowerReachability>
-			<reachabilityElements>
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="317" source="343" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="323" source="341" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="323" source="327" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="321" source="331" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="321" source="329" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="335" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="333" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="339" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="337" />
-			</reachabilityElements>
-		</lowerReachability>
-		<upperReachability>
-			<reachabilityElements>
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="317" source="343" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="323" source="341" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="323" source="327" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="321" source="331" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="321" source="329" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="333" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="335" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="339" />
-				<reachabilityElement acceptingclaim="true"
-					acceptingmodel="false" destination="319" source="337" />
-			</reachabilityElements>
-		</upperReachability>
-	</subproperty>
+<?xml version="1.0" encoding="UTF-8"?><constraint>
+    <subproperty indispensable="true" modelstateId="3" name="t0">
+        <ba>
+            <propositions>
+                <proposition name="b"/>
+                <proposition name="a"/>
+            </propositions>
+            <states>
+                <state id="2382" name="3 - 1 - 0"/>
+                <state id="2383" name="3 - 2 - 1"/>
+                <state id="2378" name="3 - 1 - 1"/>
+                <state accepting="true" id="2385" name="3 - 2 - 2"/>
+                <state accepting="true" id="2380" name="3 - 1 - 2"/>
+                <state id="2387" name="3 - 2 - 0"/>
+            </states>
+            <transitions>
+                <transition destination="2382" id="6266" propositions="!b" source="2380"/>
+                <transition destination="2383" id="6265" propositions="!b^!a" source="2382"/>
+                <transition destination="2380" id="6268" propositions="!b" source="2378"/>
+                <transition destination="2387" id="6267" propositions="!b^!a" source="2380"/>
+                <transition destination="2385" id="6269" propositions="!b^!a" source="2378"/>
+                <transition destination="2378" id="6255" propositions="!b" source="2382"/>
+                <transition destination="2383" id="6262" propositions="SIGMA" source="2387"/>
+                <transition destination="2385" id="6264" propositions="SIGMA" source="2383"/>
+                <transition destination="2387" id="6263" propositions="SIGMA" source="2385"/>
+            </transitions>
+        </ba>
+        <intransitions>
+            <labeledplugtransition id="355" label="G">
+                <sourcestate>
+                    <state id="1" name="1"/>
+                </sourcestate>
+                <destinationstate>
+                    <state id="2378" name="3 - 1 - 1"/>
+                </destinationstate>
+                <trans id="6270" propositions="a"/>
+            </labeledplugtransition>
+        </intransitions>
+        <outtransitions/>
+        <lowerReachability>
+            <reachabilityElements/>
+        </lowerReachability>
+        <upperReachability>
+            <reachabilityElements/>
+        </upperReachability>
+    </subproperty>
 </constraint>

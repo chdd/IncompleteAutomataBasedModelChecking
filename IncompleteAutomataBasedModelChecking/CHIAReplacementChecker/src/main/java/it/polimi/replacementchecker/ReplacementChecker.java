@@ -52,232 +52,284 @@ import com.google.common.base.Preconditions;
  */
 public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
-	/**
-	 * the name of the action
-	 */
-	private static final String NAME = "REPLACEMENT CHECKER";
-	/**
-	 * contains the replacement to be verified
-	 */
-	private final Replacement replacement;
+    /**
+     * the name of the action
+     */
+    private static final String NAME = "REPLACEMENT CHECKER";
+    /**
+     * contains the replacement to be verified
+     */
+    private final Replacement replacement;
 
-	/**
-	 * the sub-property to be considered
-	 */
-	private final SubProperty subproperty;
+    /**
+     * the sub-property to be considered
+     */
+    private final SubProperty subproperty;
 
-	private UnderApproximationBuilder underApproximationBuilder;
+    private UnderApproximationBuilder underApproximationBuilder;
 
-	private final AcceptingPolicy acceptingPolicy;
+    private final AcceptingPolicy acceptingPolicy;
 
-	private IntersectionBA upperIntersectionBA;
+    private IntersectionBA upperIntersectionBA;
 
-	private IntersectionBA underApproximationIntersectionBA;
+    private IntersectionBA underApproximationIntersectionBA;
 
-	private boolean isTriviallySatisfied;
+    private boolean isTriviallySatisfied;
 
-	private List<Entry<State, Transition>> couterexample;
+    private List<Entry<State, Transition>> couterexample;
 
-	/**
-	 * creates a new Refinement Checker. The refinement checker is used to check
-	 * the refinement of a black box state. The refinement checker updates the
-	 * constraint associated with the black box state and the constraints
-	 * associated with the other black box states.
-	 * 
-	 * @param constraint
-	 *            is the constraint that must be considered by the
-	 *            RefinementChecker
-	 * @param component
-	 *            is the replacement to be considered by the refinement checker
-	 * @param acceptingPolicy
-	 *            is the policy to be used in computing the accepting states
-	 * @throws NullPointerException
-	 *             if one of the parameters is null
-	 * @throws IllegalArgumentException
-	 *             if the sub-property and the replacement refer to different
-	 *             black box states
-	 */
-	public ReplacementChecker(SubProperty subProperty, Replacement replacement,
-			AcceptingPolicy acceptingPolicy) {
-		super(NAME);
-		Preconditions.checkNotNull(subProperty,
-				"The constraint to be checked cannot be null");
-		Preconditions.checkNotNull(replacement,
-				"The constraint to be checked cannot be null");
-		Preconditions.checkNotNull(acceptingPolicy,
-				"The acceptingPolicy cannot be null");
-		this.acceptingPolicy = acceptingPolicy;
-		Preconditions
-				.checkArgument(
-						subProperty.getModelState().equals(
-								replacement.getModelState()),
-						"The sub-property and the replacement must refer to the same model state\\"
-								+ "The sub-property refers to the model state"
-								+ subProperty.getModelState()
-								+ "\\"
-								+ "while the replacement refers to the model state"
-								+ replacement.getModelState());
-		this.replacement = replacement;
-		this.subproperty = subProperty;
-		this.setTriviallySatisfied(true);
-	}
+    /**
+     * contains if the replacement satisfies, possibly satisfies or does not
+     * satisfy the property of interest
+     */
+    private SatisfactionValue satisfaction;
 
-	/**
-	 * returns the updated constraint
-	 * 
-	 * @return the updated constraint
-	 */
-	public SatisfactionValue perform() {
+    /**
+     * creates a new Refinement Checker. The refinement checker is used to check
+     * the refinement of a black box state. The refinement checker updates the
+     * constraint associated with the black box state and the constraints
+     * associated with the other black box states.
+     * 
+     * @param constraint
+     *            is the constraint that must be considered by the
+     *            RefinementChecker
+     * @param component
+     *            is the replacement to be considered by the refinement checker
+     * @param acceptingPolicy
+     *            is the policy to be used in computing the accepting states
+     * @throws NullPointerException
+     *             if one of the parameters is null
+     * @throws IllegalArgumentException
+     *             if the sub-property and the replacement refer to different
+     *             black box states
+     */
+    public ReplacementChecker(Replacement replacement, SubProperty subProperty,
+            AcceptingPolicy acceptingPolicy) {
+        super(NAME);
+        Preconditions.checkNotNull(subProperty,
+                "The constraint to be checked cannot be null");
+        Preconditions.checkNotNull(replacement,
+                "The constraint to be checked cannot be null");
+        Preconditions.checkNotNull(acceptingPolicy,
+                "The acceptingPolicy cannot be null");
+        this.acceptingPolicy = acceptingPolicy;
+        Preconditions
+                .checkArgument(
+                        subProperty.getModelState().equals(
+                                replacement.getModelState()),
+                        "The sub-property and the replacement must refer to the same model state\\"
+                                + "The sub-property refers to the model state"
+                                + subProperty.getModelState()
+                                + "\\"
+                                + "while the replacement refers to the model state"
+                                + replacement.getModelState());
+        this.replacement = replacement;
+        this.subproperty = subProperty;
+        this.setTriviallySatisfied(true);
+    }
 
-		if (this.checkNotSatisfied()) {
-			this.performed();
-			return SatisfactionValue.NOTSATISFIED;
-		}
-		if (this.checkPossiblySatisfied()) {
-			this.performed();
-			return SatisfactionValue.POSSIBLYSATISFIED;
-		}
+    /**
+     * returns the updated constraint
+     * 
+     * @return the updated constraint
+     */
+    @Override
+    public SatisfactionValue perform() {
 
-		this.performed();
-		return SatisfactionValue.SATISFIED;
-	}
+        if (this.checkNotSatisfied()) {
+            this.performed();
+            satisfaction = SatisfactionValue.NOTSATISFIED;
+            return SatisfactionValue.NOTSATISFIED;
+        }
+        if (this.checkPossiblySatisfied()) {
+            this.performed();
+            satisfaction = SatisfactionValue.POSSIBLYSATISFIED;
+            return SatisfactionValue.POSSIBLYSATISFIED;
+        }
 
-	private boolean checkNotSatisfied() {
+        this.performed();
+        satisfaction = SatisfactionValue.SATISFIED;
+        return SatisfactionValue.SATISFIED;
+    }
 
-		underApproximationBuilder = new UnderApproximationBuilder(replacement,
-				subproperty, acceptingPolicy);
+    private boolean checkNotSatisfied() {
 
-		this.underApproximationIntersectionBA = underApproximationBuilder
-				.perform();
-		EmptinessChecker emptinessChecker = new EmptinessChecker(
-				this.underApproximationIntersectionBA);
+        underApproximationBuilder = new UnderApproximationBuilder(replacement,
+                subproperty, acceptingPolicy);
 
-		if (!emptinessChecker.isEmpty()) {
-			this.couterexample = emptinessChecker.getCounterExample();
+        this.underApproximationIntersectionBA = underApproximationBuilder
+                .perform();
+        EmptinessChecker emptinessChecker = new EmptinessChecker(
+                this.underApproximationIntersectionBA);
 
-			return true;
-		}
-		return false;
+        if (!emptinessChecker.isEmpty()) {
+            this.couterexample = emptinessChecker.getCounterExample();
 
-	}
+            return true;
+        }
+        return false;
 
-	private boolean checkPossiblySatisfied() {
+    }
 
-		if (!this.subproperty.isIndispensable()) {
-			this.upperIntersectionBA = new IntersectionBA();
-			this.setTriviallySatisfied(true);
-			return true;
+    private boolean checkPossiblySatisfied() {
 
-		}
-		this.setTriviallySatisfied(false);
-		OverApproximationBuilder overApproximationBuilder = new OverApproximationBuilder(
-				replacement, subproperty, acceptingPolicy);
+        if (!this.subproperty.isIndispensable()) {
+            this.upperIntersectionBA = new IntersectionBA();
+            this.setTriviallySatisfied(true);
+            return true;
 
-		this.upperIntersectionBA = overApproximationBuilder.perform();
+        }
+        this.setTriviallySatisfied(false);
+        OverApproximationBuilder overApproximationBuilder = new OverApproximationBuilder(
+                replacement, subproperty, acceptingPolicy);
 
-		EmptinessChecker emptinessChecker = new EmptinessChecker(
-				this.upperIntersectionBA);
+        this.upperIntersectionBA = overApproximationBuilder.perform();
 
-		if (!emptinessChecker.isEmpty()) {
-			return true;
-		}
-		return false;
+        EmptinessChecker emptinessChecker = new EmptinessChecker(
+                this.upperIntersectionBA);
 
-	}
+        if (!emptinessChecker.isEmpty()) {
+            return true;
+        }
+        return false;
 
-	/**
-	 * @return the replacement considered by the replacement checker
-	 */
-	public Replacement getReplacement() {
-		return replacement;
-	}
+    }
 
-	/**
-	 * @return the sub-property considered by the replacement checker
-	 */
-	public SubProperty getSubproperty() {
-		return subproperty;
-	}
+    /**
+     * @return the replacement considered by the replacement checker
+     */
+    public Replacement getReplacement() {
+        return replacement;
+    }
 
-	public IntersectionBA getUpperIntersectionBA() {
-		Preconditions
-				.checkArgument(this.isPerformed(),
-						"You must check the replacement before getting the intersection ");
-		Preconditions
-				.checkState(
-						this.upperIntersectionBA != null,
-						"The upper intersection BA cannot be null, you cannot get the upper intersection automaton if the property is not possibly satisfied");
-		return this.upperIntersectionBA;
-	}
+    /**
+     * @return the sub-property considered by the replacement checker
+     */
+    public SubProperty getSubproperty() {
+        return subproperty;
+    }
 
-	public IntersectionBA getLowerIntersectionBA() {
-		Preconditions
-				.checkArgument(this.isPerformed(),
-						"You must check the replacement before getting the intersection ");
-		Preconditions.checkState(this.underApproximationIntersectionBA != null,
-				"The lower intersection BA cannot be null");
-		return this.underApproximationIntersectionBA;
-	}
+    /**
+     * returns the upper intersection automaton
+     * 
+     * @return the upper intersection automaton
+     * @throws IllegalStateException
+     *             if the replacement checking procedure has not been completed
+     */
+    public IntersectionBA getUpperIntersectionBA() {
+        Preconditions
+                .checkState(this.isPerformed(),
+                        "You must check the replacement before getting the intersection ");
+        Preconditions
+                .checkState(
+                        this.upperIntersectionBA != null,
+                        "The upper intersection BA cannot be null, you cannot get the upper intersection automaton if the property is not possibly satisfied");
+        return this.upperIntersectionBA;
+    }
 
-	public int getIntersectionAutomataSize() {
-		int res = 0;
-		if (this.upperIntersectionBA != null) {
-			res = res + this.upperIntersectionBA.size();
-		}
-		if (this.underApproximationIntersectionBA != null) {
-			res = res + this.underApproximationIntersectionBA.size();
-		}
-		return res;
-	}
+    /**
+     * returns the lower intersection automaton
+     * 
+     * @return the lower intersection automaton
+     * @throws IllegalStateException
+     *             if the replacement checking procedure has not been completed
+     */
+    public IntersectionBA getLowerIntersectionBA() {
+        Preconditions
+                .checkState(this.isPerformed(),
+                        "You must check the replacement before getting the intersection ");
+        return this.underApproximationIntersectionBA;
+    }
 
-	/**
-	 * @return the isTriviallySatisfied
-	 */
-	public boolean isTriviallySatisfied() {
-		return isTriviallySatisfied;
-	}
+    /**
+     * returns the sum of the lower and the upper (if computed) automata size
+     * 
+     * @return the sum of the lower and the upper (if computed) automata size
+     * @throws IllegalStateException
+     *             if the replacement checking procedure has not been completed
+     */
+    public int getIntersectionAutomataSize() {
+        Preconditions
+                .checkState(this.isPerformed(),
+                        "You must check the replacement before getting the intersection ");
+        int res = this.underApproximationIntersectionBA.size();
+        if (this.upperIntersectionBA != null) {
+            res = res + this.upperIntersectionBA.size();
+        }
+        return res;
+    }
 
-	/**
-	 * @param isTriviallySatisfied
-	 *            the isTriviallySatisfied to set
-	 */
-	public void setTriviallySatisfied(boolean isTriviallySatisfied) {
-		this.isTriviallySatisfied = isTriviallySatisfied;
-	}
+    /**
+     * returns true if and only if the sub-property is possibly satisfied since
+     * another black box state which may violate the property is present
+     * 
+     * @return the isTriviallySatisfied flag. returns true if a sub-property is
+     *         possibly satisfied since another black box state which may
+     *         violate the property is present
+     */
+    public boolean isTriviallyPossiblySatisfied() {
+        return isTriviallySatisfied;
+    }
 
-	/**
-	 * returns the counterexample, i.e., the set of states included in the
-	 * violating run
-	 * 
-	 * @return the counterexample, i.e., the set of states included in the
-	 *         violating run
-	 */
-	public List<Entry<State, Transition>> getCouterexample() {
-		return couterexample;
-	}
+    /**
+     * @param isTriviallySatisfied
+     *            the isTriviallySatisfied to set
+     */
+    public void setTriviallySatisfied(boolean isTriviallySatisfied) {
+        this.isTriviallySatisfied = isTriviallySatisfied;
+    }
 
-	public String getFilteredCounterexample() {
-		String ret = "";
+    /**
+     * returns the counterexample, i.e., the set of states included in the
+     * violating run
+     * 
+     * @return the counterexample, i.e., the set of states included in the
+     *         violating run
+     * @throws IllegalStateException
+     *             if the sub-property is not NOT satisfied
+     */
+    public List<Entry<State, Transition>> getCouterexample() {
+        Preconditions
+                .checkState(satisfaction == SatisfactionValue.NOTSATISFIED,
+                        "To get the counterexample the sub-property must be not satisfied");
+        return couterexample;
+    }
 
-		Iterator<Entry<State, Transition>> iterator = this.getCouterexample()
-				.iterator();
-		while (iterator.hasNext()) {
-			Entry<State, Transition> next = iterator.next();
+    /**
+     * returns the counterexample, it shows only the state of the model in the
+     * counterexample trace
+     * 
+     * @return the counterexample, it shows only the state of the model in the
+     *         counterexample trace
+     * @throws IllegalStateException
+     *             if the sub-property is not NOT satisfied
+     */
+    public String getFilteredCounterexample() {
+        
+        Preconditions
+        .checkState(satisfaction == SatisfactionValue.NOTSATISFIED,
+                "To get the counterexample the sub-property must be not satisfied");
+        
+        StringBuilder builder=new StringBuilder();
 
-			if (this.underApproximationBuilder.isGreenState(next.getKey())) {
-				ret += "<G->"
-						+ next.getValue().getPropositions() + ">";
-			} else {
-				if (this.underApproximationBuilder.isRedState(next.getKey())) {
-					ret += "<R>";
-				} else {
-					State modelState = this.underApproximationBuilder
-							.getModelState(next.getKey());
-					ret += "<" + modelState.getId() + "->"
-							+ next.getValue().getPropositions() + ">";
-				}
-			}
-		}
-		return ret;
-	}
+        Iterator<Entry<State, Transition>> iterator = this.getCouterexample()
+                .iterator();
+        while (iterator.hasNext()) {
+            Entry<State, Transition> next = iterator.next();
+
+            if (this.underApproximationBuilder.isGreenState(next.getKey())) {
+                builder.append("<G->" + next.getValue().getPropositions() + ">");
+            } else {
+                if (this.underApproximationBuilder.isRedState(next.getKey())) {
+                    builder.append("<R>");
+                } else {
+                    State modelState = this.underApproximationBuilder
+                            .getModelState(next.getKey());
+                    builder.append("<" + modelState.getId() + "->"
+                            + next.getValue().getPropositions() + ">");
+                }
+            }
+        }
+        return builder.toString();
+    }
 }

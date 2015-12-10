@@ -8,6 +8,7 @@ import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.io.in.ClaimReader;
 import it.polimi.automata.io.in.ModelReader;
 import it.polimi.automata.io.out.ElementToStringTransformer;
+import it.polimi.automata.io.out.IBAToElementTrasformer;
 import it.polimi.automata.state.IntersectionStateFactory;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
@@ -17,6 +18,7 @@ import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
 import it.polimi.constraintcomputation.ConstraintGenerator;
 import it.polimi.constraints.Constraint;
+import it.polimi.constraints.components.RefinementGenerator;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
@@ -32,7 +34,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class Test05ConstraintComputation {
+public class ReplacementChecker05Test {
 
 	private static final String path = "it.polimi.replacementchecker/";
 
@@ -170,8 +172,7 @@ public class Test05ConstraintComputation {
 
 		SubProperty subproperty=constraint.getSubProperty(replacement.getModelState());
 		ReplacementChecker rc = new ReplacementChecker(
-				subproperty,
-				replacement, 
+				replacement, subproperty, 
 				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, replacement.getAutomaton(), subproperty.getAutomaton()));
 
 		SatisfactionValue satisfactionValue = rc.perform();
@@ -181,6 +182,24 @@ public class Test05ConstraintComputation {
 				.transform(new ConstraintToElementTransformer()
 						.transform(constraint)));
 		System.out.println(rc.perform());
+		IBA refinement = new RefinementGenerator(model, replacement).perform();
+
+        System.out.println(new ElementToStringTransformer()
+                .transform(new IBAToElementTrasformer().transform(refinement)));
+        
+        refinement = new ModelReader(new File(getClass().getClassLoader()
+                .getResource(path + "buchiaccepting/test05/refinement.xml")
+                .getFile())).perform();
+        
+        BA claim = new ClaimReader(new File(getClass().getClassLoader()
+                .getResource(path + "buchiaccepting/test05/claim.xml")
+                .getFile())).perform();
+        
+        Checker refinementChecker = new Checker(refinement, claim,
+                AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model,
+                        claim));
+        assertTrue("The property must be not satisfied",
+                refinementChecker.perform() == SatisfactionValue.NOTSATISFIED);
 
 	}
 	

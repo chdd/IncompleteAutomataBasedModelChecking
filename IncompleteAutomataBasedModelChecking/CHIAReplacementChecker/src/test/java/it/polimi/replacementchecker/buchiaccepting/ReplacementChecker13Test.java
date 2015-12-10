@@ -26,39 +26,40 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class Test03ReplacementChecker {
+public class ReplacementChecker13Test {
+
 	private static final String path = "it.polimi.replacementchecker/";
 
 	private Constraint constraint;
 	private Replacement replacement;
-	private AcceptingType acceptingPolicy;
 
-	private IBA model;
 	private IBA refinement;
 	private BA claim;
+	private IBA model;
+	private AcceptingType acceptingPolicy;
 
 	@Before
 	public void setUp() throws Exception {
 		this.replacement = new ReplacementReader(new File(getClass()
 				.getClassLoader()
-				.getResource(path + "buchiaccepting/test03/replacement.xml")
+				.getResource(path + "buchiaccepting/test13/replacement.xml")
 				.getFile())).perform();
 
 		this.constraint = new ConstraintReader(new File(getClass()
 				.getClassLoader()
-				.getResource(path + "buchiaccepting/test03/constraint.xml")
-				.getFile())).perform();
-		this.acceptingPolicy = AcceptingType.BA;
-		this.model = new ModelReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test03/model.xml")
+				.getResource(path + "buchiaccepting/test13/constraint.xml")
 				.getFile())).perform();
 		this.refinement = new ModelReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test03/refinement.xml")
+				.getResource(path + "buchiaccepting/test13/refinement.xml")
 				.getFile())).perform();
 
 		this.claim = new ClaimReader(new File(getClass().getClassLoader()
-				.getResource(path + "buchiaccepting/test03/claim.xml")
+				.getResource(path + "buchiaccepting/test13/claim.xml")
 				.getFile())).perform();
+		this.model = new ModelReader(new File(getClass().getClassLoader()
+				.getResource(path + "buchiaccepting/test13/model.xml")
+				.getFile())).perform();
+		this.acceptingPolicy = AcceptingType.BA;
 	}
 
 	@Test
@@ -67,12 +68,10 @@ public class Test03ReplacementChecker {
 		Checker checker = new Checker(model, claim,
 				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model,
 						claim));
-		SatisfactionValue returnValue = checker.perform();
-		assertTrue("The property must be possibly satisfied",
-				returnValue == SatisfactionValue.POSSIBLYSATISFIED);
 
-		System.out.println(checker.getUpperIntersectionBA().toString());
+		checker.perform();
 
+		System.out.println(checker.getUpperIntersectionBA());
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
 		
@@ -80,27 +79,24 @@ public class Test03ReplacementChecker {
 				.transform(new ConstraintToElementTransformer()
 						.transform(constraint)));
 
-		SubProperty subproperty = this.constraint
-				.getSubProperty(this.replacement.getModelState());
-		System.out.println(subproperty);
+		checker = new Checker(refinement, claim,
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy,
+						refinement, claim));
+		SatisfactionValue ret = checker.perform();
+		assertTrue(ret == SatisfactionValue.NOTSATISFIED);
 
-		Checker refinementChecker = new Checker(refinement, claim,
-				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, model,
-						claim));
-		 returnValue = refinementChecker.perform();
-		assertTrue("The property must be possibly satisfied",
-				returnValue == SatisfactionValue.NOTSATISFIED);
-		
+		SubProperty subproperty=this.constraint
+				.getSubProperty(this.replacement.getModelState());
 		ReplacementChecker replacementChecker = new ReplacementChecker(
-				subproperty, replacement, AcceptingPolicy.getAcceptingPolicy(
-						this.acceptingPolicy, this.replacement.getAutomaton(),
-						subproperty.getAutomaton()));
+				replacement,
+				subproperty,
+				AcceptingPolicy.getAcceptingPolicy(this.acceptingPolicy, this.replacement.getAutomaton(), subproperty.getAutomaton()));
 
 		SatisfactionValue retValue = replacementChecker.perform();
+		System.out.println(retValue);
 		System.out.println(replacementChecker.getLowerIntersectionBA());
-		assertTrue(retValue == SatisfactionValue.NOTSATISFIED);
-		
 
-		
+		assertTrue(retValue == SatisfactionValue.NOTSATISFIED);
+
 	}
 }

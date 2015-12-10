@@ -5,14 +5,15 @@
     </propositions>
     <states>
         <state id="1" name="t0" blackbox="true"/>
+        
         <state id="2" initial="true" name="t1" blackbox="true"/>
         <state accepting="true" id="3" name="3"/>
     </states>
     <transitions>
         <transition destination="3" id="14736" propositions="b" source="1"/>
+        
         <transition destination="3" id="14737" propositions="b" source="3"/>
         <transition destination="3" id="14740" propositions="a" source="3"/>
-        <transition destination="1" id="14744" propositions="b" source="2"/>
         <transition destination="3" id="14745" propositions="a" source="2"/>
     </transitions>
 </iba>

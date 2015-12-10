@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <?xml version="1.0" encoding="UTF-8"?><iba> <propositions> <proposition 
-	value="b"/> <proposition value="a"/> </propositions> <states> <state id="2291" 
-	initial="true" name="t0" blackbox="true"/> <state accepting="true" id="2289" 
-	name="2289"/> <state id="2288" name="2288"/> </states> <transitions> <transition 
-	destination="2289" id="6171" propositions="b" source="2288"/> <transition 
-	destination="2289" id="6172" propositions="b" source="2289"/> <transition 
-	destination="2288" id="6173" propositions="a" source="2289"/> <transition 
-	destination="2288" id="6174" propositions="a" source="2288"/> <transition 
-	destination="2288" id="6175" propositions="b" source="2291"/> <transition 
-	destination="2289" id="6176" propositions="a" source="2291"/> </transitions> 
-	</iba> -->
 <iba>
 	<propositions>
 		<proposition name="b" />

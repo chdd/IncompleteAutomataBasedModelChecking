@@ -29,9 +29,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class Test16ReplacementChecker {
+public class ReplacementChecker15Test {
 
-	private static final String path = "it.polimi.replacementchecker/buchiaccepting/test16/";
+	private static final String path = "it.polimi.replacementchecker/buchiaccepting/test15/";
 
 	private IBA model;
 	private BA claim;
@@ -67,7 +67,7 @@ public class Test16ReplacementChecker {
 
 		
 		SubProperty subproperty=constraint.getSubProperty(this.replacement.getModelState());
-		assertEquals(SatisfactionValue.SATISFIED, new ReplacementChecker(subproperty, replacement, 
+		assertEquals(SatisfactionValue.SATISFIED, new ReplacementChecker( replacement, subproperty,
 				AcceptingPolicy.getAcceptingPolicy(
 						AcceptingType.BA, replacement.getAutomaton(),
 						subproperty.getAutomaton())).perform());

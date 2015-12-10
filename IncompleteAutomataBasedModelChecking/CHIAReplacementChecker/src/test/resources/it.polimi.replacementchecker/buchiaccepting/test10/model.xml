@@ -11,7 +11,9 @@
     <transitions>
     
         <transition destination="1" id="126008" propositions="a" source="3"/>
+        
         <transition destination="2" id="126003" propositions="a" source="1"/>
+        
         <transition destination="1" id="126005" propositions="a" source="2"/>
        
     </transitions>

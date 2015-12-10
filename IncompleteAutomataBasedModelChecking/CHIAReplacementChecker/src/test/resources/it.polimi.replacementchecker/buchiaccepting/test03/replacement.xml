@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<replacement modelstateId="3" name="t0">
+<replacement modelstateId="3" name="t0" modelFilePath="model.xml">
 	<iba>
 		<propositions>
 			<proposition name="b" />
@@ -14,7 +14,7 @@
 		</transitions>
 	</iba>
 	<intransitions>
-		<plugtransition id="105">
+		<plugtransition id="103">
 			<sourcestate>
 				<state id="1" name="1" />
 			</sourcestate>
@@ -23,34 +23,26 @@
 			</destinationstate>
 			<trans id="5" propositions="a" />
 		</plugtransition>
-		<plugtransition id="109">
+	</intransitions>
+
+	<outtransitions>
+		<plugtransition id="105">
 			<sourcestate>
-				<state id="2" name="2" />
+				<state id="4" name="4" />
 			</sourcestate>
 			<destinationstate>
-				<state id="4" name="4" />
+				<state id="2" name="2" />
 			</destinationstate>
 			<trans id="1" propositions="b" />
 		</plugtransition>
-		<plugtransition id="107">
+		<plugtransition id="120">
 			<sourcestate>
-				<state id="2" name="2" />
+				<state id="4" name="4" />
 			</sourcestate>
 			<destinationstate>
-				<state id="4" name="4" />
+				<state id="2" name="2" />
 			</destinationstate>
 			<trans id="3" propositions="a" />
-		</plugtransition>
-	</intransitions>
-	<outtransitions>
-		<plugtransition id="103">
-			<sourcestate>
-				<state id="4" name="4" />
-			</sourcestate>
-			<destinationstate>
-				<state id="2" name="2" />
-			</destinationstate>
-			<trans id="2" propositions="a" />
 		</plugtransition>
 	</outtransitions>
 </replacement>
