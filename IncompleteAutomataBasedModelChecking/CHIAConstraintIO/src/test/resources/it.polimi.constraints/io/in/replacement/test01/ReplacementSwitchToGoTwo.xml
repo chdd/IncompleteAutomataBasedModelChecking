@@ -1,0 +1,43 @@
+<!-- the first refinement step reflects the domain knowledfe about a screw's driving motor and the sensors -->
+<replacement modelstateId="5" name="switch go two" modelFilePath="./GroundModel.xml">
+	<iba>
+		<propositions>
+			<proposition name="stoplightone"/>
+			<proposition name="golightwo"/>
+			<proposition name="golightwo" />
+		</propositions>
+		<states>
+			<!-- switches in the state in which the line 2 is prepared to go  -->
+			<state id="9" name="switch go light two"/>
+			<!-- the semaphore two is both green and red  -->
+			<state id="10" name="wait to go"/>
+        </states>
+		<transitions>
+			<!-- starts the motor -->
+			<transition id="9" propositions="stoplightone^golightwo^golightwo" source="9" destination="10"/>
+		</transitions>
+	</iba>
+	<intransitions>
+		<plugtransition id="1">
+			<sourcestate>
+				<state id="1" name="1 stop one stop two"/>
+			</sourcestate>
+			<destinationstate>
+				<state id="9" name="switch go light two"/>
+			</destinationstate>
+			<trans id="1" propositions="passedfiftysec"/>
+		</plugtransition>
+	</intransitions>
+	<outtransitions>
+		<plugtransition id="2">
+			<sourcestate>
+				<state id="10" name="wait to go"/>
+			</sourcestate>
+			<destinationstate>
+				<state id="2" name="stop one go two"/>
+			</destinationstate>
+			<trans id="2" propositions="switched^stoplightone^golightwo"/>
+		</plugtransition>
+	</outtransitions>
+</replacement>
+

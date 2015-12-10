@@ -55,7 +55,7 @@ public class ElementToPluggingTransitionTransformer {
 		Element transitionElement=(Element) e.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_PORT_TRANSITION).item(0);
 		Transition transition=this.loadTransition(transitionElement);
 		
-		return new PluggingTransition(sourceState, destinationState, transition, incoming);
+		return new PluggingTransition(portId, sourceState, destinationState, transition, incoming);
 		
 	}
 	

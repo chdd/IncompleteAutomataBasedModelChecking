@@ -1,22 +1,21 @@
 package it.polimi.constraints.io.in.replacement;
 
+import it.polimi.automata.IBA;
+import it.polimi.automata.io.in.ModelReader;
 import it.polimi.automata.io.in.XMLReader;
+import it.polimi.constraints.components.RefinementGenerator;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.io.ConstraintsIOConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
 
@@ -42,6 +41,9 @@ public class ReplacementReader extends XMLReader<Replacement> {
 	private static final Logger logger = Logger
 			.getLogger(ReplacementReader.class);
 	private final File file;
+	
+
+	private  IBA model;
 
 	/**
 	 * creates a new constraint reader
@@ -60,8 +62,7 @@ public class ReplacementReader extends XMLReader<Replacement> {
 		this.file = file;
 	}
 
-	public Replacement perform() throws FileNotFoundException, SAXException,
-			IOException, ParserConfigurationException {
+	public Replacement perform() throws Exception {
 
 		logger.debug("reading the replacement");
 		Document dom;
@@ -78,11 +79,18 @@ public class ReplacementReader extends XMLReader<Replacement> {
 
 		Element doc = dom.getDocumentElement();
 
-		Replacement ret = this.loadReplacement(doc);
+		model=new ModelReader(new File(file.getParent()+File.separator+doc.getAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_MODEL_FILE_PATH))).perform();
+		Replacement rep = this.loadReplacement(doc);
 
+		RefinementGenerator refinementChecker=new RefinementGenerator(model, rep);
+		refinementChecker.checkValidReplacement();
 		logger.debug("replacement loaded");
-		return ret;
+		return rep;
 
+	}
+	
+	public IBA getModel(){
+		return this.model;
 	}
 
 	private Replacement loadReplacement(Element doc) {

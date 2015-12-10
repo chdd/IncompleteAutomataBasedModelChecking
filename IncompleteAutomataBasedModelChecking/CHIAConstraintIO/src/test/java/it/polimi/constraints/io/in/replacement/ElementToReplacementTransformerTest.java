@@ -11,15 +11,10 @@ import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.transitions.PluggingTransition;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.Test;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
@@ -57,16 +52,11 @@ public class ElementToReplacementTransformerTest {
 	 * Test method for
 	 * {@link it.polimi.constraints.io.in.replacement.ElementToReplacementTransformer#transform(org.w3c.dom.Element)}
 	 * .
-	 * 
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws FileNotFoundException
+	 * @throws Exception 
 	 */
 	@Test
 	public void testTransformShouldCorrectlyLoadIBA()
-			throws FileNotFoundException, SAXException, IOException,
-			ParserConfigurationException {
+			throws Exception {
 		Replacement replacement = new ReplacementReader(new File(getClass()
 				.getClassLoader().getResource(path + "/test01/replacement.xml")
 				.getFile())).perform();
@@ -81,16 +71,11 @@ public class ElementToReplacementTransformerTest {
 	 * Test method for
 	 * {@link it.polimi.constraints.io.in.replacement.ElementToReplacementTransformer#transform(org.w3c.dom.Element)}
 	 * .
-	 * 
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws FileNotFoundException
+	 * @throws Exception 
 	 */
 	@Test
 	public void testTransformShouldCorrectlyLoadTheIncomingTransitions()
-			throws FileNotFoundException, SAXException, IOException,
-			ParserConfigurationException {
+			throws Exception {
 		Replacement replacement = new ReplacementReader(new File(getClass()
 				.getClassLoader().getResource(path + "/test01/replacement.xml")
 				.getFile())).perform();
@@ -127,16 +112,11 @@ public class ElementToReplacementTransformerTest {
 	 * Test method for
 	 * {@link it.polimi.constraints.io.in.replacement.ElementToReplacementTransformer#transform(org.w3c.dom.Element)}
 	 * .
-	 * 
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws FileNotFoundException
+	 * @throws Exception 
 	 */
 	@Test
 	public void testTransformShouldCorrectlyLoadTheOutgoingTransitions()
-			throws FileNotFoundException, SAXException, IOException,
-			ParserConfigurationException {
+			throws Exception {
 
 		Replacement replacement = new ReplacementReader(new File(getClass()
 				.getClassLoader().getResource(path + "/test01/replacement.xml")
@@ -216,15 +196,10 @@ public class ElementToReplacementTransformerTest {
 	 * Test method for
 	 * {@link it.polimi.constraints.io.in.replacement.ElementToReplacementTransformer#transform(org.w3c.dom.Element)}
 	 * .
-	 * 
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws FileNotFoundException
+	 * @throws Exception 
 	 */
 	@Test(expected=SAXParseException.class)
-	public void testNoIBA() throws FileNotFoundException, SAXException,
-			IOException, ParserConfigurationException {
+	public void testNoIBA() throws Exception {
 	new ReplacementReader(new File(getClass().getClassLoader()
 				.getResource(path + "/test01/replacementNoIBA.xml").getFile()))
 				.perform();

@@ -127,6 +127,7 @@ public class ConstraintReader extends XMLReader<Constraint> {
 			Node xmlSubproperty = xmlSubproperties.item(stateid);
 			Element xmlSubPropertyElement = (Element) xmlSubproperty;
 
+			
 			// loads the sub-property
 			SubProperty subProperty = new ElementToSubPropertyTransformer()
 					.transform(xmlSubPropertyElement);

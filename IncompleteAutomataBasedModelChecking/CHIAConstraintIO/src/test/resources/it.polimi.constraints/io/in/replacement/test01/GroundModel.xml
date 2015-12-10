@@ -1,0 +1,68 @@
+<!-- 
+ The traffic is controlled by a pair of simple portable traffic light units one
+ unit at each end of the one-way section connect(ed) to a small computer
+ that controls the sequence of lights.
+ Each unit has a Stop light and a Go light.
+ The computer controls the lights by emitting RPulses and GPulses, to which
+ the units respond by turning the light on and off.
+ The regime for the lights repeats a fixed cycle of four phases. First, for
+ 50 seconds, both units show Stop; then, for 120 seconds, one unit shows
+ Stop and the other Go; then for 50 seconds both show Stop again; then for
+ 120 seconds the unit that previously showed Go shows Stop, and the other
+ shows Go. Then the cycle is repeated.-->
+
+<!-- the sluice gate ground example has ben taken from http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.109.1254&rep=rep1&type=pdf -->
+<iba>
+	<propositions>
+		<!-- specifies that the light one is on stop -->
+		<proposition name="stoplightone"/>
+		<!-- specifies that the ligth two is on stop -->
+		<proposition name="stoplighttwo"/>
+		<!-- specifies that the light one is on go -->
+		<proposition name="golightone"/>
+		<!-- specifies that the light two is on go  -->
+		<proposition name="golightwo"/>
+        <!-- specifies that fifty secs have been passed  -->
+        <proposition name="passedfiftysec"/>
+        <!-- specifies that one hundread and twenty secs have been passed  -->
+        <proposition name="passedonetwozerosec"/>
+        <!-- specifies that the semaphore has been switched-->
+        <proposition name="switched"/>
+    </propositions>
+	<states>
+		<!-- specifies that both the semaphore are on stop  -->
+		<state id="1" name="1 stop one stop two" accepting="true" initial="true"/>
+        <!-- specifies that the semaphore one is on stop while the second is on go  -->
+        <state id="2" name="stop one go two" accepting="true" />
+        <!-- specifies that the semaphore one is on go while the second is on stop  -->
+        <state id="3" name="go one stop two" accepting="true" />
+        <!-- specifies that both the semaphore are on stop  -->
+        <state id="4" name="2 stop one stop two" accepting="true" />
+        <!-- specifies that the semaphore is switching to go two  -->
+        <state id="5" name="switch go two" accepting="true" blackbox="true" />
+        <!-- specifies that both the semaphores are switched on the stop state -->
+        <state id="6" name="switch to stop 2" accepting="true" />
+        <!-- specifies that the semaphore is switching to go one  -->
+        <state id="7" name="switch go one" accepting="true" blackbox="true"/>
+        <!-- specifies that the semaphore is switching to go one  -->
+        <state id="8" name="switch to stop one" accepting="true" />
+	</states>
+	<transitions>
+		<!-- after the closed period is passed, the system modes in the switch go two state -->
+		<transition id="1" propositions="passedfiftysec" source="1" destination="5"/>
+        <!-- after the closed period is passed, the system modes in the go two state -->
+        <transition id="2" propositions="switched^stoplightone^golightwo" source="5" destination="2"/>
+        <!-- after the timer elapses the state switch to stop is enabled -->
+        <transition id="3" propositions="passedonetwozerosec" source="2" destination="6"/>
+        <!-- after when the semaphore is switched it is turned to the state go one -->
+        <transition id="4" propositions="switched" source="6" destination="4"/>
+        <!-- after when the semaphore is switched it is turned to the state switch to go one -->
+        <transition id="5" propositions="passedfiftysec^stoplightone^stoplighttwo" source="4" destination="7"/>
+        <!-- after when the semaphore is switched it is turned to the state go one stop two-->
+        <transition id="6" propositions="switched^golightone^stoplighttwo" source="7" destination="3"/>
+        <!-- after the timer elapsed, the semaphore is switched into the switch to stop one state -->
+        <transition id="7" propositions="passedonetwozerosec" source="3" destination="8"/>
+        <!-- after the timer elapsed, the semaphore is switched into the stop one state -->
+        <transition id="8" propositions="switched^stoplightone^stoplighttwo" source="8" destination="1"/>
+	</transitions>
+</iba>

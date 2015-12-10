@@ -48,13 +48,13 @@ public class LabeledPluggingTransitionToElementTransformer extends XMLTrasformer
 
 		Attr portColor = doc
 				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL);
-		portColor.setValue(labeledPlugTransition.getColor().toString());
+		portColor.setValue(labeledPlugTransition.getLabel().toString());
 		portElement.setAttributeNode(portColor);
 
 		// transition source
 		Attr nextPortColor = doc
 				.createAttribute(ConstraintsIOConstants.XML_ATTRIBUTE_LABEL);
-		nextPortColor.setValue(labeledPlugTransition.getColor().toString());
+		nextPortColor.setValue(labeledPlugTransition.getLabel().toString());
 		portElement.setAttributeNode(nextPortColor);
 
 		Element transitionSourceStateContainer = doc
