@@ -60,8 +60,8 @@ public class LTLtoBATransformer extends CHIAAction<BA> {
 		super(NAME);
 		Preconditions.checkNotNull(ltlFormula,
 				"The LTL formula to be converted cannot be null");
-		this.ltlFormula = ltlFormula.replace("^", "&&");
-
+		String tmpltlFormula = ltlFormula.replace("^", "&&");
+		this.ltlFormula = tmpltlFormula.replace("V", "||");
 	}
 
 	/**
