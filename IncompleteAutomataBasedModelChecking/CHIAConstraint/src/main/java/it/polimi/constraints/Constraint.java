@@ -106,4 +106,13 @@ public class Constraint {
 	public Set<State> getConstrainedStates() {
 		return this.stateSubPropertyMap.keySet();
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Constraint [subProperties=" + subProperties+ "]";
+	}
+	
 }

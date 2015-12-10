@@ -23,7 +23,7 @@ public class ReachabilityRelation {
 	 * If a state is the source of a reachability relation, contains the state
 	 * and the corresponding reabhability entry
 	 */
-	private final Multimap<State, ReachabilityEntry> acceptingMap;
+	private final Multimap<State, ReachabilityEntry> reachabilityMap;
 
 	/**
 	 * creates a new empty reachability relation. The reachability relation is
@@ -31,7 +31,7 @@ public class ReachabilityRelation {
 	 * outgoing transition of the same component
 	 */
 	public ReachabilityRelation() {
-		this.acceptingMap = HashMultimap.create();
+		this.reachabilityMap = HashMultimap.create();
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ReachabilityRelation {
 		ReachabilityEntry reachabilityEntry = new ReachabilityEntry(
 				incomingTransition, outgoingTransition, modelAccepting,
 				claimAccepting);
-		this.acceptingMap
+		this.reachabilityMap
 				.put(outgoingTransition.getSource(), reachabilityEntry);
 	}
 
@@ -79,7 +79,7 @@ public class ReachabilityRelation {
 	 *         reachability entries
 	 */
 	public Multimap<State, ReachabilityEntry> getReachabilityAcceptingMap() {
-		return this.acceptingMap;
+		return this.reachabilityMap;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class ReachabilityRelation {
 	 *         property state
 	 */
 	public Collection<ReachabilityEntry> get(State subPropertyState) {
-		return this.acceptingMap.get(subPropertyState);
+		return this.reachabilityMap.get(subPropertyState);
 	}
 
 	/**
@@ -99,6 +99,6 @@ public class ReachabilityRelation {
 	 */
 	@Override
 	public String toString() {
-		return "ReachabilityRelation [acceptingMap=" + acceptingMap + "]";
+		return "ReachabilityRelation [acceptingMap=" + reachabilityMap + "]";
 	}
 }

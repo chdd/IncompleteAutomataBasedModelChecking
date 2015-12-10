@@ -143,11 +143,11 @@ public class SubProperty extends Component {
 		Preconditions.checkNotNull(transition,
 				"The incoming transition to be added cannot be null");
 		// updating the number of green incoming transitions
-		if (transition.getColor().equals(Label.G)) {
+		if (transition.getLabel().equals(Label.G)) {
 			this.greenIncomingTransitions.add(transition);
 		}
 		// updating the number of yellow incoming transitions
-		if (transition.getColor().equals(Label.Y)) {
+		if (transition.getLabel().equals(Label.Y)) {
 			this.yellowIncomingTransitions.add(transition);
 		}
 
@@ -187,11 +187,11 @@ public class SubProperty extends Component {
 	 */
 	public void addOutgoingTransition(LabeledPluggingTransition port) {
 
-		if (port.getColor().equals(Label.R)) {
+		if (port.getLabel().equals(Label.R)) {
 			this.setNumRedOutgoingTransitions(this
 					.getNumRedOutgoingTransitions() + 1);
 		}
-		if (port.getColor().equals(Label.Y)) {
+		if (port.getLabel().equals(Label.Y)) {
 			this.setNumYellowOutgoingTransitions(this
 					.getNumYellowOutgoingTransitions() + 1);
 		}
@@ -335,49 +335,6 @@ public class SubProperty extends Component {
 				+ " indispensable=" + indispensable + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ ((automaton == null) ? 0 : automaton.hashCode());
-		result = prime
-				* result
-				+ ((incomingTransitions == null) ? 0 : incomingTransitions
-						.hashCode());
-		result = prime
-				* result
-				+ ((outgoingTransitions == null) ? 0 : outgoingTransitions
-						.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SubProperty other = (SubProperty) obj;
-		if (automaton == null) {
-			if (other.automaton != null)
-				return false;
-		} else if (!automaton.equals(other.automaton))
-			return false;
-		if (incomingTransitions == null) {
-			if (other.incomingTransitions != null)
-				return false;
-		} else if (!incomingTransitions.equals(other.incomingTransitions))
-			return false;
-		if (outgoingTransitions == null) {
-			if (other.outgoingTransitions != null)
-				return false;
-		} else if (!outgoingTransitions.equals(other.outgoingTransitions))
-			return false;
-		return true;
-	}
 
 	public boolean isIndispensable() {
 		return indispensable;

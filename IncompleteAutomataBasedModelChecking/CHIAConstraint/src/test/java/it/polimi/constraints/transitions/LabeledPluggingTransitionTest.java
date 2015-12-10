@@ -58,11 +58,11 @@ public class LabeledPluggingTransitionTest {
 		LabeledPluggingTransition plugTransition = new LabeledPluggingTransition(
 				1, sourceState, destinationState, transition1, true, Label.Y);
 
-		assertEquals(Label.Y, plugTransition.getColor());
+		assertEquals(Label.Y, plugTransition.getLabel());
 
 		plugTransition.setColor(Label.G);
 
-		assertEquals(Label.G, plugTransition.getColor());
+		assertEquals(Label.G, plugTransition.getLabel());
 
 	}
 

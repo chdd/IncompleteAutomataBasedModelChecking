@@ -104,19 +104,19 @@ public class LabeledPluggingTransition extends PluggingTransition {
 	}
 
 	/**
-	 * returns the color associated with the port
+	 * returns the label associated with the incoming/outgoing transition
 	 * 
-	 * @return the color of the port
+	 * @return the label associated with the incoming/outgoing transition
 	 */
-	public Label getColor() {
+	public Label getLabel() {
 		return color;
 	}
 
 	/**
-	 * sets the color to the port
+	 * sets label of the incoming/outgoing transition
 	 * 
-	 * @param color
-	 *            the color to set
+	 * @param label
+	 *            the label to be set
 	 * @throws NullPointerException
 	 *             if the color is null
 	 */
