@@ -1,8 +1,6 @@
-package it.polimi.replacementchecker;
+package it.polimi.replacementchecker.intersectionbuilder;
 
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.state.IntersectionStateFactory;
-import it.polimi.checker.intersection.IntersectionTransitionBuilder;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
@@ -37,7 +35,8 @@ public class OverApproximationBuilder {
 		Preconditions.checkNotNull(acceptingPolicy,
 				"The accepting policy to be considered cannot be null");
 
-		replacementIntersectionBuilder=new ReplacementIntersectionBuilder(replacement, subproperty, new IntersectionStateFactory(), new IntersectionTransitionBuilder(), subproperty.getUpperReachabilityRelation(),false);
+		replacementIntersectionBuilder=new ReplacementIntersectionBuilder(replacement, subproperty,
+				false);
 	}
 
 	public IntersectionBA perform() {

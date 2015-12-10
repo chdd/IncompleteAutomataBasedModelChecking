@@ -10,13 +10,13 @@ import it.polimi.checker.Checker;
 import it.polimi.checker.SatisfactionValue;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy.AcceptingType;
+import it.polimi.constraintcomputation.ConstraintGenerator;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
-import it.polimi.contraintcomputation.ConstraintGenerator;
 import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
@@ -67,10 +67,7 @@ public class Test08ConstraintComputation {
 		System.out.println(checker.getUpperIntersectionBA());
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
-		cg.computeIndispensable();
-		cg.computePortReachability();
-		cg.coloring();
-
+	
 		System.out.println(new ElementToStringTransformer()
 				.transform(new ConstraintToElementTransformer()
 						.transform(constraint)));

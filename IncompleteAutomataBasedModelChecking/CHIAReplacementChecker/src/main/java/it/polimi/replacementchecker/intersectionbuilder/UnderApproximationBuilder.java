@@ -1,8 +1,7 @@
-package it.polimi.replacementchecker;
+package it.polimi.replacementchecker.intersectionbuilder;
 
 import it.polimi.automata.IntersectionBA;
-import it.polimi.automata.state.IntersectionStateFactory;
-import it.polimi.checker.intersection.IntersectionTransitionBuilder;
+import it.polimi.automata.state.State;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
@@ -10,16 +9,15 @@ import it.polimi.constraints.components.SubProperty;
 import com.google.common.base.Preconditions;
 
 /**
- * The UnderApproximationBuilder  
+ * The UnderApproximationBuilder
  * 
  * @author Claudio Menghi
  *
  */
 public class UnderApproximationBuilder {
 
-	
 	private final ReplacementIntersectionBuilder replacementIntersectionBuilder;
-	
+
 	/**
 	 * creates a new {@link UnderApproximationBuilder}. The over-approximation
 	 * builder computes an over approximation of the intersection automaton
@@ -44,10 +42,41 @@ public class UnderApproximationBuilder {
 		Preconditions.checkNotNull(acceptingPolicy,
 				"The accepting policy to be considered cannot be null");
 
-		replacementIntersectionBuilder=new ReplacementIntersectionBuilder(replacement, subproperty, new IntersectionStateFactory(), new IntersectionTransitionBuilder(), subproperty.getLowerReachabilityRelation(),true);
+	
+		replacementIntersectionBuilder = new ReplacementIntersectionBuilder(
+				replacement, subproperty, true);
 	}
 
 	public IntersectionBA perform() {
-		return replacementIntersectionBuilder.perform(); 
+		return replacementIntersectionBuilder.perform();
+	}
+
+	/**
+	 * returns true if the state of the intersection is the green state
+	 * 
+	 * @param intersectionState
+	 *            is the intersection state to be considered
+	 * @return true if the state is the green state
+	 */
+	public boolean isGreenState(State intersectionState) {
+		return this.replacementIntersectionBuilder
+				.isGreenState(intersectionState);
+	}
+
+	/**
+	 * returns true if the state of the intersection is the red state
+	 * 
+	 * @param intersectionState
+	 *            is the intersection state to be considered
+	 * @return true if the state is the red state
+	 */
+	public boolean isRedState(State intersectionState) {
+		return this.replacementIntersectionBuilder
+				.isRedState(intersectionState);
+	}
+
+	public State getModelState(State intersectionState) {
+		return this.replacementIntersectionBuilder
+				.getModelState(intersectionState);
 	}
 }

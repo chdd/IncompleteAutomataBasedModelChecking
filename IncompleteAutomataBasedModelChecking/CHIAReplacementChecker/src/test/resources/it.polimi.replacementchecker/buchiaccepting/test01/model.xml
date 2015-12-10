@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iba>
+	<propositions>
+		<proposition name="a" />
+		<proposition name="b" />
+	</propositions>
+	<states>
+
+		<state accepting="true" id="431" name="431" />
+		<state accepting="true" id="432" name="432" />
+		<state accepting="true" id="433" name="433" />
+		<state accepting="true" id="434" name="434" />
+		<state accepting="true" id="436" name="436" />
+		<state accepting="true" id="439" name="439" />
+		<state accepting="true" id="441" name="441" blackbox="true" />
+		<state accepting="true" id="437" name="437" />
+
+	</states>
+	<transitions>
+		<transition id="2250" source="431" destination="441"
+			propositions="b" />
+		<transition id="2265" source="432" destination="441"
+			propositions="b" />
+		<transition id="2261" source="434" destination="441"
+			propositions="b" />
+		<transition id="2282" source="436" destination="441"
+			propositions="b" />
+		<transition id="2255" source="441" destination="433"
+			propositions="b" />
+		<transition id="2283" source="441" destination="437"
+			propositions="a" />
+		<transition id="2274" source="441" destination="432"
+			propositions="a" />
+		<transition id="2276" source="441" destination="434"
+			propositions="a" />
+	</transitions>
+</iba>

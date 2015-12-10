@@ -8,7 +8,10 @@ import it.polimi.checker.emptiness.EmptinessChecker;
 import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
+import it.polimi.replacementchecker.intersectionbuilder.OverApproximationBuilder;
+import it.polimi.replacementchecker.intersectionbuilder.UnderApproximationBuilder;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -25,9 +28,9 @@ import com.google.common.base.Preconditions;
  * behaviors the system may exhibit (an over approximation).
  * 
  * <p>
- * Is used to check the replacement of a black box state i.e., check whether
- * the original property is satisfied, possibly satisfied or not satisfied given
- * a specific replacement. It uses the {@link UnderApproximationBuilder} and the
+ * Is used to check the replacement of a black box state i.e., check whether the
+ * original property is satisfied, possibly satisfied or not satisfied given a
+ * specific replacement. It uses the {@link UnderApproximationBuilder} and the
  * {@link OverApproximationBuilder} to build the lower and the upper
  * intersection automaton.
  * </p>
@@ -39,9 +42,9 @@ import com.google.common.base.Preconditions;
  * current replacement, the {@link SatisfactionValue} POSSIBLYSATISFIED if the
  * property is possibly satisfied or the {@link SatisfactionValue} NOTSATISFIED
  * if the property is not satisfied. When a POSSIBLYSATISFIED value is generated
- * the satisfaction of the property may depends on the refinement of other
- * black box states involved in the constraint or on the refinement of the
- * black box states of the model specified into the replacement itself.
+ * the satisfaction of the property may depends on the refinement of other black
+ * box states involved in the constraint or on the refinement of the black box
+ * states of the model specified into the replacement itself.
  * </p>
  * 
  * 
@@ -62,6 +65,8 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 	 * the sub-property to be considered
 	 */
 	private final SubProperty subproperty;
+
+	private UnderApproximationBuilder underApproximationBuilder;
 
 	private final AcceptingPolicy acceptingPolicy;
 
@@ -139,8 +144,8 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 	private boolean checkNotSatisfied() {
 
-		UnderApproximationBuilder underApproximationBuilder = new UnderApproximationBuilder(
-				replacement, subproperty, acceptingPolicy);
+		underApproximationBuilder = new UnderApproximationBuilder(replacement,
+				subproperty, acceptingPolicy);
 
 		this.underApproximationIntersectionBA = underApproximationBuilder
 				.perform();
@@ -149,7 +154,7 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 
 		if (!emptinessChecker.isEmpty()) {
 			this.couterexample = emptinessChecker.getCounterExample();
-			
+
 			return true;
 		}
 		return false;
@@ -249,5 +254,30 @@ public class ReplacementChecker extends CHIAAction<SatisfactionValue> {
 	 */
 	public List<Entry<State, Transition>> getCouterexample() {
 		return couterexample;
+	}
+
+	public String getFilteredCounterexample() {
+		String ret = "";
+
+		Iterator<Entry<State, Transition>> iterator = this.getCouterexample()
+				.iterator();
+		while (iterator.hasNext()) {
+			Entry<State, Transition> next = iterator.next();
+
+			if (this.underApproximationBuilder.isGreenState(next.getKey())) {
+				ret += "<G->"
+						+ next.getValue().getPropositions() + ">";
+			} else {
+				if (this.underApproximationBuilder.isRedState(next.getKey())) {
+					ret += "<R>";
+				} else {
+					State modelState = this.underApproximationBuilder
+							.getModelState(next.getKey());
+					ret += "<" + modelState.getId() + "->"
+							+ next.getValue().getPropositions() + ">";
+				}
+			}
+		}
+		return ret;
 	}
 }

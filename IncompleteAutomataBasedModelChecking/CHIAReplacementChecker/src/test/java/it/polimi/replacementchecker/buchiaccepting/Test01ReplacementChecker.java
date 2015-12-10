@@ -12,14 +12,9 @@ import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.replacementchecker.ReplacementChecker;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 public class Test01ReplacementChecker {
 
@@ -31,8 +26,7 @@ public class Test01ReplacementChecker {
 	private AcceptingType acceptingPolicy;
 
 	@Before
-	public void setUp() throws FileNotFoundException, SAXException,
-			IOException, ParserConfigurationException {
+	public void setUp() throws Exception {
 		this.replacement = new ReplacementReader(new File(getClass()
 				.getClassLoader()
 				.getResource(path + "buchiaccepting/test01/replacement.xml")
