@@ -99,6 +99,9 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 
 		}
 	},
+	/**
+	 * The property is loaded but the model still has to be loaded
+	 */
 	PROPERTYLOADED {
 		/**
 		 *  {@inheritDoc}
@@ -132,7 +135,9 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 					+ this.toString());
 		}
 	},
-	
+	/**
+	 * the property and the model have been loaded
+	 */
 	READY {
 		/**
 		 *  {@inheritDoc}
@@ -175,6 +180,9 @@ public enum CHIAAutomataState implements CHIAStateInterface {
 					+ this.toString());
 		}
 	},
+	/**
+	 * the model is checked versus the corresponding property
+	 */
 	CHECKED {
 		/**
 		 *  {@inheritDoc}

@@ -15,13 +15,13 @@ import it.polimi.chia.scalability.configuration.RandomConfigurationGenerator;
 import it.polimi.chia.scalability.results.Record;
 import it.polimi.chia.scalability.results.ResultWriter;
 import it.polimi.chia.scalability.results.Statistics;
+import it.polimi.constraintcomputation.ConstraintGenerator;
 import it.polimi.constraints.Constraint;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.io.out.constraint.ConstraintToElementTransformer;
 import it.polimi.constraints.io.out.replacement.ReplacementToElementTransformer;
 import it.polimi.constraints.utils.Injector;
-import it.polimi.contraintcomputation.ConstraintGenerator;
 import it.polimi.model.ltltoba.LTLtoBATransformer;
 import it.polimi.replacementchecker.ReplacementChecker;
 
@@ -194,8 +194,8 @@ public class ScalabilityTest {
 				SubProperty subProperty1=constraint.getSubProperty(replacement.getModelState());
 				// VERIFICATION OF THE REPLACEMENT
 				ReplacementChecker replacementChecker = new ReplacementChecker(
+						replacement,
 						subProperty1,
-						replacement, 
 						AcceptingPolicy
 						.getAcceptingPolicy(acceptingPolicy, replacement.getAutomaton(), subProperty1.getAutomaton()));
 
@@ -218,7 +218,7 @@ public class ScalabilityTest {
 						.getModelState());
 				record = new Record(configuration, value,
 						refinementSatisfactionvalue,
-						replacementChecker.isTriviallySatisfied(),
+						replacementChecker.isTriviallyPossiblySatisfied(),
 						refinementChecker.getIntersectionAutomataSize(),
 						replacementChecker.getIntersectionAutomataSize(),
 						refinementVerificationTime,
@@ -325,9 +325,7 @@ public class ScalabilityTest {
 			Checker checker, State transparentState) {
 		ConstraintGenerator cg = new ConstraintGenerator(checker);
 		Constraint constraint = cg.perform();
-		cg.coloring(transparentState);
-		cg.computePortReachability(transparentState);
-		cg.computeIndispensable(transparentState);
+		
 
 		return constraint;
 	}
