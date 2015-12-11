@@ -38,7 +38,7 @@ public class ReplacementReader extends XMLReader<Replacement> {
 	/**
 	 * is the logger of the BAReader class
 	 */
-	private static final Logger logger = Logger
+	private static final Logger LOGGER = Logger
 			.getLogger(ReplacementReader.class);
 	private final File file;
 	
@@ -64,7 +64,7 @@ public class ReplacementReader extends XMLReader<Replacement> {
 
 	public Replacement perform() throws Exception {
 
-		logger.debug("reading the replacement");
+		LOGGER.debug("reading the replacement");
 		Document dom;
 		// Make an instance of the DocumentBuilderFactory
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -84,7 +84,7 @@ public class ReplacementReader extends XMLReader<Replacement> {
 
 		RefinementGenerator refinementChecker=new RefinementGenerator(model, rep);
 		refinementChecker.checkValidReplacement();
-		logger.debug("replacement loaded");
+		LOGGER.debug("replacement loaded");
 		return rep;
 
 	}

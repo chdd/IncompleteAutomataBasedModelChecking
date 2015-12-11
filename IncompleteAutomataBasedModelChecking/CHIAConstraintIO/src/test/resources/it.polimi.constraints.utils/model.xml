@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <iba>
     <propositions>
-        <proposition value="b"/>
-        <proposition value="a"/>
+        <proposition name="b"/>
+        <proposition name="a"/>
     </propositions>
     <states>
         <state id="1127" initial="true" name="t0" blackbox="true"/>

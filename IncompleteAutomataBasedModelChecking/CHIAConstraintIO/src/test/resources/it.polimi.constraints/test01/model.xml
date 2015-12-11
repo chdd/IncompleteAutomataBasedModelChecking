@@ -21,7 +21,7 @@
 		<transition id="2261" source="434" destination="441"
 			propositions="b" />
 		<transition id="2282" source="436" destination="441"
-			propositions="b" />
+			propositions="a" />
 		<transition id="2255" source="441" destination="433"
 			propositions="b" />
 		<transition id="2283" source="441" destination="437"

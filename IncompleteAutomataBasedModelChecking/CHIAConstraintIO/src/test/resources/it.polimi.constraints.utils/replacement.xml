@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<replacement modelstateId="1127">
+<replacement modelstateId="1127" modelFilePath="model.xml" name="t0">
     <iba>
         <propositions>
-            <proposition value="b"/>
-            <proposition value="a"/>
+            <proposition name="b"/>
+            <proposition name="a"/>
         </propositions>
         <states>
             <state id="1126" initial="true" name="1126"/>
         </states>
         <transitions/>
     </iba>
-    <inports/>
-    <outports>
-        <port id="16036">
+    <intransitions/>
+    <outtransitions>
+        <plugtransition id="16036">
             <sourcestate>
                 <state id="1126" name="1126"/>
             </sourcestate>
             <destinationstate>
                 <state id="1117" name="1117"/>
             </destinationstate>
-            <transition id="16036" propositions="b"/>
-        </port>
-        <port id="16037">
+            <trans id="16036" propositions="b"/>
+        </plugtransition>
+        <plugtransition id="16037">
             <sourcestate>
                 <state id="1126" name="1126"/>
             </sourcestate>
             <destinationstate>
                 <state id="1118" name="1118"/>
             </destinationstate>
-            <transition id="16037" propositions="a"/>
-        </port>
-    </outports>
+            <trans id="16037" propositions="a"/>
+        </plugtransition>
+    </outtransitions>
 </replacement>
