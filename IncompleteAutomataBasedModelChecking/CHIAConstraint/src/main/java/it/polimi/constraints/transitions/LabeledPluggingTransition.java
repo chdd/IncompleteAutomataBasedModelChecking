@@ -63,7 +63,7 @@ public class LabeledPluggingTransition extends PluggingTransition {
 		Preconditions.checkNotNull(color,
 				"The color of the transitionc cannot be null");
 
-		this.setColor(color);
+		this.setLabel(color);
 	}
 
 	/**
@@ -120,9 +120,9 @@ public class LabeledPluggingTransition extends PluggingTransition {
 	 * @throws NullPointerException
 	 *             if the color is null
 	 */
-	public void setColor(Label color) {
-		Preconditions.checkNotNull(color,
+	public void setLabel(Label label) {
+		Preconditions.checkNotNull(label,
 				"The color of the port cannot be null");
-		this.color = color;
+		this.color = label;
 	}
 }

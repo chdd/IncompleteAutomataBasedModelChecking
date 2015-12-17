@@ -1,5 +1,7 @@
 package it.polimi.automata.io.in;
 
+import it.polimi.action.CHIAAction;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,8 +15,6 @@ import javax.xml.validation.Validator;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
-
-import action.CHIAAction;
 
 public abstract class XMLReader<O> extends CHIAAction<O> {
 

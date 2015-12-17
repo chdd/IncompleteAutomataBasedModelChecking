@@ -1,7 +1,7 @@
 package it.polimi.statemachine.states;
 
-import action.CHIAAction;
-import action.CHIAException;
+import it.polimi.action.CHIAAction;
+import it.polimi.action.CHIAException;
 
 /**
  * contains the current state of the state machine

@@ -79,8 +79,8 @@ public class PluggingTransitionTest {
 		State sourceState=new StateFactory().create();
 		State destinationState=new StateFactory().create();
 		Transition transition=new ModelTransitionFactory().create();
-		PluggingTransition pluggingTransition=new PluggingTransition(sourceState, destinationState, transition, true);
-		PluggingTransition copyOfThePluggingTransition=new PluggingTransition(sourceState, destinationState, transition, true);
+		PluggingTransition pluggingTransition=new PluggingTransition(1, sourceState, destinationState, transition, true);
+		PluggingTransition copyOfThePluggingTransition=new PluggingTransition(1, sourceState, destinationState, transition, true);
 		assertEquals(pluggingTransition, copyOfThePluggingTransition);
 	
 	}
@@ -153,8 +153,8 @@ public class PluggingTransitionTest {
 		State sourceState=new StateFactory().create();
 		State destinationState=new StateFactory().create();
 		Transition transition=new ModelTransitionFactory().create();
-		PluggingTransition pluggingTransition=new PluggingTransition(sourceState, destinationState, transition, true);
-		PluggingTransition copyOfThePluggingTransition=new PluggingTransition(sourceState, destinationState, transition, true);
+		PluggingTransition pluggingTransition=new PluggingTransition(1, sourceState, destinationState, transition, true);
+		PluggingTransition copyOfThePluggingTransition=new PluggingTransition(1, sourceState, destinationState, transition, true);
 		assertEquals(pluggingTransition.hashCode(), copyOfThePluggingTransition.hashCode());
 	}
 	
@@ -165,12 +165,12 @@ public class PluggingTransitionTest {
 		State destination = new StateFactory().create("10 - 2 - 2", 40);
 		Transition transition1 = new ClaimTransitionFactory().create(63,
 				new StringToClaimPropositions().transform("tro^to^ntz"));
-		Transition transition2 = new ClaimTransitionFactory().create(74,
+		Transition transition2 = new ClaimTransitionFactory().create(63,
 				new StringToClaimPropositions().transform("tro^to^ntz"));
 
-		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+		PluggingTransition incomingTransition1 = new PluggingTransition(1, source,
 				destination, transition1, true);
-		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+		PluggingTransition incomingTransition2 = new PluggingTransition(1, source,
 				destination, transition2, true);
 		assertTrue(incomingTransition1.equals(incomingTransition2));
 	}
@@ -182,12 +182,12 @@ public class PluggingTransitionTest {
 		State destination = new StateFactory().create("10 - 2 - 2", 40);
 		Transition transition1 = new ClaimTransitionFactory().create(63,
 				new StringToClaimPropositions().transform("tro^to^ntz"));
-		Transition transition2 = new ClaimTransitionFactory().create(74,
+		Transition transition2 = new ClaimTransitionFactory().create(63,
 				new StringToClaimPropositions().transform("tro^to^ntz"));
 
-		PluggingTransition incomingTransition1 = new PluggingTransition(source,
+		PluggingTransition incomingTransition1 = new PluggingTransition(1, source,
 				destination, transition1, true);
-		PluggingTransition incomingTransition2 = new PluggingTransition(source,
+		PluggingTransition incomingTransition2 = new PluggingTransition(1, source,
 				destination, transition2, true);
 		assertTrue(incomingTransition1.hashCode() == incomingTransition2
 				.hashCode());

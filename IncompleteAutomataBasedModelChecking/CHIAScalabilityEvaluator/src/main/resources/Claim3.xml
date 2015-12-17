@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- !(<>((a)U(b))) -->
+<ba>
+    <propositions>
+        <proposition name="b"/>
+    </propositions>
+    <states>
+        <state accepting="true" id="5" initial="true" name="5"/>
+    </states>
+    <transitions>
+        <transition destination="5" id="7" propositions="!b" source="5"/>
+    </transitions>
+</ba>

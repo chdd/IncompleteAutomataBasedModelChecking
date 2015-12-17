@@ -1,5 +1,6 @@
 package it.polimi.console;
 
+import it.polimi.action.CHIAException;
 import it.polimi.automata.IBA;
 import it.polimi.automata.io.out.IBAToElementTrasformer;
 import it.polimi.automata.io.out.XMLWriter;
@@ -30,8 +31,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
-import action.CHIAException;
-
 /**
  * contains the console which is used for the replacement checking
  * 
@@ -40,7 +39,7 @@ import action.CHIAException;
  */
 public class CHIAReplacementConsole {
 
-	private static final Logger logger = Logger
+	private static final Logger LOGGER = Logger
 			.getLogger(CHIAReplacementConsole.class);
 
 	private CHIAReplacementState chiaState = CHIAReplacementState.INIT;
@@ -91,12 +90,12 @@ public class CHIAReplacementConsole {
 						constraintFilePath)).perform();
 				this.chiaState = chiaState.perform(ConstraintReader.class);
 
-				logger.info("Constraint Loaded");
+				LOGGER.info("Constraint Loaded");
 			} catch (CHIAException e) {
-				logger.info(e.toString());
+				LOGGER.info(e.toString());
 			}
 		} else {
-			logger.info("The constraint reading action cannot be performed into the state "
+			LOGGER.info("The constraint reading action cannot be performed into the state "
 					+ this.chiaState.name());
 		}
 	}
@@ -109,9 +108,9 @@ public class CHIAReplacementConsole {
 						this.constraint);
 				this.chiaState = chiaState
 						.perform(ConstraintToStringTrasformer.class);
-				logger.info(action.perform());
+				LOGGER.info(action.perform());
 			} catch (CHIAException e) {
-				logger.info(e.toString());
+				LOGGER.info(e.toString());
 			}
 		} else {
 			this.printNotExecutableMessage(ConstraintToStringTrasformer.class);
@@ -129,10 +128,10 @@ public class CHIAReplacementConsole {
 				this.replacement = rr.perform();
 				this.model=rr.getModel();
 				this.chiaState = chiaState.perform(ReplacementReader.class);
-				logger.info("Replacement Loaded");
+				LOGGER.info("Replacement Loaded");
 
 			} catch (Exception e) {
-				logger.info(e.toString());
+				LOGGER.info(e.toString());
 			}
 		} else {
 			PrintStream out = System.out;
@@ -149,9 +148,9 @@ public class CHIAReplacementConsole {
 						this.replacement);
 				this.chiaState = chiaState
 						.perform(ReplacementToStringTransformer.class);
-				logger.info(action.perform());
+				LOGGER.info(action.perform());
 			} catch (CHIAException e) {
-				logger.info(e.toString());
+				LOGGER.info(e.toString());
 			}
 		} else {
 			this.printNotExecutableMessage(ReplacementToStringTransformer.class);
@@ -170,7 +169,7 @@ public class CHIAReplacementConsole {
 				this.chiaState = chiaState.perform(RefinementGenerator.class);
 
 			} catch (Exception e) {
-				logger.info(e.toString());
+				LOGGER.info(e.toString());
 			}
 		} else {
 			this.printNotExecutableMessage(ReplacementToStringTransformer.class);
@@ -192,18 +191,18 @@ public class CHIAReplacementConsole {
 				long startTime = thradBean.getCurrentThreadCpuTime();
 				SatisfactionValue result = this.replacementChecker.perform();
 				long endTime = thradBean.getCurrentThreadCpuTime();
-				logger.info("Verification result: " + result.toString());
-				logger.info("Verification time: "
+				LOGGER.info("Verification result: " + result.toString());
+				LOGGER.info("Verification time: "
 						+ Long.toString(TimeUnit.MILLISECONDS.convert(
 								(endTime - startTime), TimeUnit.NANOSECONDS))
 						+ " ms");
 				if (result.equals(SatisfactionValue.NOTSATISFIED)) {
-					logger.info("COUNTEREXAMPLE: "
+					LOGGER.info("COUNTEREXAMPLE: "
 							+ this.replacementChecker.getCouterexample());
 
 				}
 				if (!result.equals(SatisfactionValue.NOTSATISFIED)) {
-					logger.info("Dimension of the intersection automaton (states+transitions): "
+					LOGGER.info("Dimension of the intersection automaton (states+transitions): "
 							+ (this.replacementChecker.getUpperIntersectionBA()
 									.size() + this.replacementChecker
 									.getLowerIntersectionBA().size()));
@@ -212,22 +211,13 @@ public class CHIAReplacementConsole {
 				this.chiaState = chiaState.perform(ReplacementChecker.class);
 
 			} catch (CHIAException e) {
-				logger.info(e.toString());
+				LOGGER.info(e.toString());
 			}
 		} else {
 			this.printNotExecutableMessage(ReplacementChecker.class);
 		}
 	}
 
-	public void changePolicy(String policy) {
-		try {
-			this.policy = AcceptingType.valueOf(policy);
-		} catch (Exception e) {
-			System.out.println("Parameter: " + policy
-					+ " not accepted the policy must be one of "
-					+ AcceptingType.values().toString());
-		}
-	}
 
 	private void printNotExecutableMessage(Class<?> action) {
 		PrintStream out = System.out;

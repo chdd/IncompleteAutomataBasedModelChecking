@@ -4,6 +4,7 @@
 package action;
 
 import static org.junit.Assert.*;
+import it.polimi.action.CHIAAction;
 
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import org.junit.Test;
 public class CHIAActionTest {
 
     /**
-     * Test method for {@link action.CHIAAction#CHIAAction(java.lang.String)}.
+     * Test method for {@link it.polimi.action.CHIAAction#CHIAAction(java.lang.String)}.
      */
     @Test
     public void testCHIAAction() {
@@ -30,7 +31,7 @@ public class CHIAActionTest {
     }
 
     /**
-     * Test method for {@link action.CHIAAction#CHIAAction(java.lang.String)}.
+     * Test method for {@link it.polimi.action.CHIAAction#CHIAAction(java.lang.String)}.
      */
     @Test(expected = NullPointerException.class)
     public void testCHIAAction_NullName() {
@@ -46,7 +47,7 @@ public class CHIAActionTest {
     }
 
     /**
-     * Test method for {@link action.CHIAAction#isPerformed()}.
+     * Test method for {@link it.polimi.action.CHIAAction#isPerformed()}.
      */
     @Test
     public void testIsPerformed() {
@@ -62,7 +63,7 @@ public class CHIAActionTest {
     }
 
     /**
-     * Test method for {@link action.CHIAAction#perform()}.
+     * Test method for {@link it.polimi.action.CHIAAction#perform()}.
      * 
      * @throws Exception
      */
@@ -80,7 +81,7 @@ public class CHIAActionTest {
     }
 
     /**
-     * Test method for {@link action.CHIAAction#performed()}.
+     * Test method for {@link it.polimi.action.CHIAAction#performed()}.
      */
     @Test
     public void testPerformed() {
@@ -98,7 +99,7 @@ public class CHIAActionTest {
     }
 
     /**
-     * Test method for {@link action.CHIAAction#getName()}.
+     * Test method for {@link it.polimi.action.CHIAAction#getName()}.
      */
     @Test
     public void testGetName() {

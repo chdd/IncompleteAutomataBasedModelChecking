@@ -1,5 +1,6 @@
 package it.polimi.constraintcomputation.subpropertyidentifier;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ClaimTransitionFactory;
@@ -9,6 +10,7 @@ import it.polimi.checker.Checker;
 import it.polimi.constraints.components.SubProperty;
 import it.polimi.constraints.transitions.Label;
 import it.polimi.constraints.transitions.LabeledPluggingTransition;
+import it.polimi.constraints.transitions.PluggingTransition;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,7 +20,6 @@ import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
@@ -68,7 +69,7 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
      * leaves the current refinement level to an ``upper level" component or
      * transitions that enter the black box state
      */
-    private final Map<Transition, LabeledPluggingTransition> mapIntersectionTransitionIncomingPort;
+    private final Map<Transition, LabeledPluggingTransition> mapIntersectionTransitionIncomingTransition;
 
     /**
      * creates an identifier that is used to isolate the sub-property that
@@ -111,7 +112,7 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                 new ClaimTransitionFactory()));
 
         this.mapIntersectionTransitionOutgoingTransition = new HashMap<Transition, LabeledPluggingTransition>();
-        this.mapIntersectionTransitionIncomingPort = new HashMap<Transition, LabeledPluggingTransition>();
+        this.mapIntersectionTransitionIncomingTransition = new HashMap<Transition, LabeledPluggingTransition>();
         this.stutteringPropositions = new HashSet<IGraphProposition>();
         this.stutteringPropositions.add(new GraphProposition(
                 PropositionalLogicConstants.STUTTERING_CHARACTER, false));
@@ -270,24 +271,15 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                                 intersectionState, incomingTransition, true,
                                 Label.B);
 
-                        if (!this.subProperty.getIncomingTransitions()
-                                .contains(incomingPort)) {
-                            this.mapIntersectionTransitionIncomingPort.put(
-                                    incomingTransition, incomingPort);
-                            /*
-                             * the port outcomingPort is out-coming for the
-                             * current level of refinement but is an incoming
-                             * port with respect to the
-                             * intersectionStateComponent
-                             */
-                            this.subProperty
-                                    .addIncomingTransition(incomingPort);
-                        } else {
-                            this.mapIntersectionTransitionIncomingPort
-                                    .put(incomingTransition,
-                                            this.subProperty
-                                                    .getIncomingTransition(incomingPort));
-                        }
+                        this.mapIntersectionTransitionIncomingTransition.put(
+                                incomingTransition, incomingPort);
+                        /*
+                         * the port outcomingPort is out-coming for the current
+                         * level of refinement but is an incoming port with
+                         * respect to the intersectionStateComponent
+                         */
+                        this.subProperty.addIncomingTransition(incomingPort);
+
                     }
                 }
             }
@@ -331,19 +323,11 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                                     .getModelState(destinationIntersectionState),
                             outgoingTransition, false, Label.B);
 
-                    if (!this.subProperty.getOutgoingTransitions().contains(
-                            labeledOutgoingTransition)) {
-                        this.mapIntersectionTransitionOutgoingTransition.put(
-                                outgoingTransition, labeledOutgoingTransition);
+                    this.mapIntersectionTransitionOutgoingTransition.put(
+                            outgoingTransition, labeledOutgoingTransition);
 
-                        this.subProperty
-                                .addOutgoingTransition(labeledOutgoingTransition);
-                    } else {
-                        this.mapIntersectionTransitionOutgoingTransition
-                                .put(outgoingTransition,
-                                        this.subProperty
-                                                .getOutgoingTransition(labeledOutgoingTransition));
-                    }
+                    this.subProperty
+                            .addOutgoingTransition(labeledOutgoingTransition);
 
                 }
             }
@@ -369,7 +353,7 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                         "You must compute the subproperties before performing this operation");
         Preconditions.checkNotNull(intersectionTransition,
                 "The transition to be considered cannot be null");
-        if (mapIntersectionTransitionIncomingPort
+        if (mapIntersectionTransitionIncomingTransition
                 .containsKey(intersectionTransition)) {
             return true;
         }
@@ -426,8 +410,14 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                 this.isOutTransition(intersectionTransition), "The transition "
                         + intersectionTransition
                         + " must be associated with an outgoing transition");
-        return mapIntersectionTransitionOutgoingTransition
+        LabeledPluggingTransition pluggingTransition=mapIntersectionTransitionOutgoingTransition
                 .get(intersectionTransition);
+        if(!this.subProperty.getOutgoingTransitions().contains(pluggingTransition)){
+            System.out.println( this.subProperty.getOutgoingTransitions());
+            throw new InternalError("The transition "+pluggingTransition+" is not contained into the set of outgoing transitions of the subProperty");
+        }
+
+        return pluggingTransition;
     }
 
     /**
@@ -453,8 +443,13 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                 this.isInTransition(intersectionTransition), "The transition "
                         + intersectionTransition
                         + " must be associated with a port");
-        return mapIntersectionTransitionIncomingPort
+        LabeledPluggingTransition pluggingTransition=mapIntersectionTransitionIncomingTransition
                 .get(intersectionTransition);
+        if(!this.subProperty.getIncomingTransitions().contains(pluggingTransition)){
+            System.out.println( this.subProperty.getIncomingTransitions());
+            throw new InternalError("The transition "+pluggingTransition+" is not contained into the set of incoming transitions of the subProperty");
+        }
+        return pluggingTransition;
     }
 
     /**
@@ -478,7 +473,7 @@ public class SubPropertyIdentifier extends CHIAAction<SubProperty> {
                         "The map of the incoming ports can be obtained only after the sub-PropertyIdentifier has been performed");
 
         return Collections
-                .unmodifiableMap(mapIntersectionTransitionIncomingPort);
+                .unmodifiableMap(mapIntersectionTransitionIncomingTransition);
     }
 
     /**

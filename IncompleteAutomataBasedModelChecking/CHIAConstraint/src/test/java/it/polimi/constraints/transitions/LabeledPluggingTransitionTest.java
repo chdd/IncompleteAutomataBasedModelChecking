@@ -60,7 +60,7 @@ public class LabeledPluggingTransitionTest {
 
 		assertEquals(Label.Y, plugTransition.getLabel());
 
-		plugTransition.setColor(Label.G);
+		plugTransition.setLabel(Label.G);
 
 		assertEquals(Label.G, plugTransition.getLabel());
 

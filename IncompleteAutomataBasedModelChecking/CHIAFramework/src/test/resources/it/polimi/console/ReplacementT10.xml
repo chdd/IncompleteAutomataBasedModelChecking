@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<replacement modelstateId="10" name="t10" modelFilePath="./Model.xml">
+		<iba>
+			<propositions>
+				<!-- o stays for one -->
+				<!--  SEMAPHORE -->
+				<proposition name="tz" />	
+				<proposition name="to" />
+
+				<!-- PROCESS 0 -->
+				<proposition name="ntz" />
+				<proposition name="trz" />
+				<proposition name="crz" />
+		
+				<!-- PROCESS 1 -->
+				<proposition name="nto" />
+				<proposition name="tro" />
+				<proposition name="cro" />
+			</propositions>
+			<states>
+				<state accepting="true" id="11" name="q11" />
+				<state accepting="true" id="12" name="q12" />
+				<state accepting="true" id="13" name="q13" />
+				<state accepting="true" id="14" name="q14" />
+			</states>
+			<transitions>
+				<transition destination="13" id="17" propositions="to^trz^tro"
+					source="11" />
+				<transition destination="14" id="18" propositions="to^trz^cro"
+					source="13" />
+				<transition destination="12" id="19" propositions="to^ntz^cro"
+					source="11" />
+				<transition destination="14" id="20" propositions="to^trz^cro"
+					source="12" />
+			</transitions>
+		</iba>
+		<intransitions>
+			<plugtransition id="16">
+				<sourcestate>
+					<state id="7" name="q7" />
+				</sourcestate>
+				<destinationstate>
+					<state id="11" name="q11" />
+				</destinationstate>
+				<trans id="16" propositions="to^ntz^tro" />
+			</plugtransition>
+			<plugtransition  id="12">
+				<sourcestate>
+					<state id="8" name="q8" />
+				</sourcestate>
+				<destinationstate>
+					<state id="11" name="q11" />
+				</destinationstate>
+				<trans id="12" propositions="to^ntz^tro" />
+			</plugtransition>
+			<plugtransition  id="11">
+				<sourcestate>
+					<state id="9" name="q9" />
+				</sourcestate>
+				<destinationstate>
+					<state id="13" name="q13" />
+				</destinationstate>
+				<trans id="11" propositions="to^trz^tro" />
+			</plugtransition>
+		</intransitions>
+		<outtransitions>
+			<plugtransition  id="14">
+				<sourcestate>
+					<state id="12" name="q12" />
+				</sourcestate>
+				<destinationstate>
+					<state id="2" name="q2" />
+				</destinationstate>
+				<trans id="14" propositions="tz^ntz^nto" />
+			</plugtransition>
+			<plugtransition  id="19">
+				<sourcestate>
+					<state id="14" name="q14" />
+				</sourcestate>
+				<destinationstate>
+					<state id="4" name="q4" />
+				</destinationstate>
+				<trans id="15" propositions="tz^trz^nto" />
+			</plugtransition>
+		</outtransitions>
+</replacement>
+
+<!-- lR /Users/Claudio1/Desktop/CHIATests/SendingMessage/Scenario1/Replacement.xml -->

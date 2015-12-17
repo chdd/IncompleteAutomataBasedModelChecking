@@ -150,11 +150,11 @@ public class ForwardLabeler {
 
             this.subPropertyIdentifier.perform().setGreenIncomingTransition(
                     incomingTransition);
-            incomingTransition.setColor(this.label);
+            incomingTransition.setLabel(this.label);
         } else {
             if (incomingTransition.getLabel() != Label.G) {
                 subPropertyIdentifier.getIncomingTransition(outTransition)
-                        .setColor(Label.Y);
+                        .setLabel(Label.Y);
                 this.subPropertyIdentifier.perform()
                         .setYellowIncomingTransition(incomingTransition);
 

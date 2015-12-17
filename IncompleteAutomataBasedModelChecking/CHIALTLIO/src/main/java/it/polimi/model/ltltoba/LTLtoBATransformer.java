@@ -1,5 +1,6 @@
 package it.polimi.model.ltltoba;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
@@ -16,7 +17,6 @@ import rwth.i2.ltl2ba4j.model.IGraphProposition;
 import rwth.i2.ltl2ba4j.model.IState;
 import rwth.i2.ltl2ba4j.model.ITransition;
 import rwth.i2.ltl2ba4j.model.impl.GraphProposition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

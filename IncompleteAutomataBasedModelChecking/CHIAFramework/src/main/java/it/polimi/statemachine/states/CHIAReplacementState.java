@@ -1,13 +1,13 @@
 package it.polimi.statemachine.states;
 
+import it.polimi.action.CHIAAction;
+import it.polimi.action.CHIAException;
 import it.polimi.constraints.components.RefinementGenerator;
 import it.polimi.constraints.io.in.constraint.ConstraintReader;
 import it.polimi.constraints.io.in.replacement.ReplacementReader;
 import it.polimi.constraints.io.out.constraint.ConstraintToStringTrasformer;
 import it.polimi.constraints.io.out.replacement.ReplacementToStringTransformer;
 import it.polimi.replacementchecker.ReplacementChecker;
-import action.CHIAAction;
-import action.CHIAException;
 
 /**
  * represents a possible state of CHIA. It offers a method perform that given

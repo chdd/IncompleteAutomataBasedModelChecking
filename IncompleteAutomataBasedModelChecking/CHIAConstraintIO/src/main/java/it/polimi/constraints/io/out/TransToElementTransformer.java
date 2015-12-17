@@ -4,6 +4,7 @@ import it.polimi.automata.AutomataIOConstants;
 import it.polimi.automata.io.Transformer;
 import it.polimi.automata.io.out.propositions.IGraphPropositionsToStringTransformer;
 import it.polimi.automata.transition.Transition;
+import it.polimi.constraints.io.ConstraintsIOConstants;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -55,7 +56,7 @@ public class TransToElementTransformer implements
 				"The transition element to be converted cannot be null");
 
 		Element transitionElement = doc
-				.createElement(AutomataIOConstants.XML_ELEMENT_TRANS);
+				.createElement(ConstraintsIOConstants.XML_ELEMENT_PORT_TRANSITION);
 		// adding the id
 		Attr id = doc.createAttribute(AutomataIOConstants.XML_ATTRIBUTE_ID);
 		id.setValue(Integer.toString(transition.getId()));

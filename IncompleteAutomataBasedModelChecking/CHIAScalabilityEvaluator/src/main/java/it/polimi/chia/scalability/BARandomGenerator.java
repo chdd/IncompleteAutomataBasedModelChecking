@@ -1,5 +1,6 @@
 package it.polimi.chia.scalability;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.state.StateFactory;
@@ -13,7 +14,6 @@ import java.util.Random;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

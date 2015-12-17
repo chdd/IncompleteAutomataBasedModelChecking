@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<replacement modelstateId="4" name="t0" modelFilePath="./model.xml">
+    <iba>
+        <propositions>
+            <proposition name="b"/>
+            <proposition name="a"/>
+        </propositions>
+        <states>
+            <state accepting="true" id="10" name="10"/>
+        </states>
+        <transitions/>
+    </iba>
+    <intransitions>
+        <plugtransition id="672">
+            <sourcestate>
+                <state id="6" name="6"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="10" name="10"/>
+            </destinationstate>
+            <trans id="826064" propositions="a"/>
+        </plugtransition>
+        
+    </intransitions>
+    <outtransitions>
+        <plugtransition id="826045">
+            <sourcestate>
+                <state id="10" name="10"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="8" name="8"/>
+            </destinationstate>
+            <trans id="826045" propositions="b"/>
+        </plugtransition>
+        <plugtransition id="826066">
+            <sourcestate>
+                <state id="10" name="10"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="7" name="7"/>
+            </destinationstate>
+            <trans id="826066" propositions="a"/>
+        </plugtransition>
+        <plugtransition id="826061">
+            <sourcestate>
+                <state id="10" name="10"/>
+            </sourcestate>
+            <destinationstate>
+                <state id="2" name="2"/>
+            </destinationstate>
+            <trans id="826061" propositions="a"/>
+        </plugtransition>
+    </outtransitions>
+</replacement>

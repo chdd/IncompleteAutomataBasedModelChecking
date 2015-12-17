@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><ba>
+    <propositions>
+        <proposition name="b"/>
+        <proposition name="a"/>
+    </propositions>
+    <states>
+        <state accepting="true" id="8" name="8"/>
+        <state id="9" initial="true" name="9"/>
+    </states>
+    <transitions>
+        <transition destination="8" id="11" propositions="!b" source="8"/>
+        <transition destination="9" id="12" propositions="SIGMA" source="9"/>
+        <transition destination="8" id="13" propositions="!b^a" source="9"/>
+    </transitions>
+</ba>

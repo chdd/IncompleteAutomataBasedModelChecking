@@ -1,5 +1,6 @@
 package it.polimi.chia.scalability;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
@@ -20,7 +21,6 @@ import java.util.Random;
 import java.util.Set;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
@@ -51,7 +51,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 	 * contains the number of transparent states to be used in the IBA
 	 * computation
 	 */
-	private int numTransparentStates;
+	private int numBlackBoxStates;
 
 	/**
 	 * the number of states of the BA to be encapsulated into a replacement
@@ -67,13 +67,13 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 	 * the map specifies for each transparent state the corresponding
 	 * replacement
 	 */
-	private BiMap<State, Replacement> transparentStateReplacementMap;
+	private BiMap<State, Replacement> blackBoxStateReplacementMap;
 	
 	/**
 	 * the map specifies for each transparent state the corresponding
 	 * replacement
 	 */
-	private final BiMap<State, Replacement> transparentStateNonEmptyReplacementMap;
+	private final BiMap<State, Replacement> blackBoxStateNonEmptyReplacementMap;
 
 	/**
 	 * if a state of the BA is encapsulated into the replacement it maps the
@@ -149,11 +149,11 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 								+ "<"
 								+ ba.getStates().size());
 
-		this.numTransparentStates = (int) Math.abs(ba.getStates().size()
+		this.numBlackBoxStates = (int) Math.abs(ba.getStates().size()
 				* transparentStateDensity);
 		this.ba = ba;
-		this.transparentStateReplacementMap = HashBiMap.create();
-		this.transparentStateNonEmptyReplacementMap=HashBiMap.create();
+		this.blackBoxStateReplacementMap = HashBiMap.create();
+		this.blackBoxStateNonEmptyReplacementMap=HashBiMap.create();
 		this.stateReplacementMap = new HashMap<State, Replacement>();
 		this.numEncapsulatedStates = (int) Math.abs((ba.getStates().size() - 1)
 				* replacementDensity);
@@ -175,22 +175,22 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 		this.addPropositions();
 
 		// creates the transparent states and the corresponding replacements
-		this.createTransparentStatesAndReplacements();
+		this.createBlackBoxStatesAndReplacements();
 
-		Set<State> subset=new HashSet<State>();
-		if(this.transparentStateReplacementMap.keySet().size()>0){
+		Set<State> setOfTheInjectedStates=new HashSet<State>();
+		if(this.blackBoxStateReplacementMap.keySet().size()>0){
 			List<State> baStates = new ArrayList<State>(ba.getStates());
 			Collections.shuffle(baStates);
-			 subset = ImmutableSet.copyOf(Iterables.limit(baStates, numEncapsulatedStates));
+			 setOfTheInjectedStates = ImmutableSet.copyOf(Iterables.limit(baStates, numEncapsulatedStates));
 
 			// adds the subset of states to the replacement
-			this.addStatesToTheReplacements(subset);
+			this.addStatesToTheReplacements(setOfTheInjectedStates);
 
 		}
 		
 		// adds the remaining states to the IBA as regular states
 		Set<State> remainingBAStates = new HashSet<State>(ba.getStates());
-		remainingBAStates.removeAll(subset);
+		remainingBAStates.removeAll(setOfTheInjectedStates);
 		this.addStatesToTheIBA(remainingBAStates);
 
 		// generates the transition between the different states
@@ -229,11 +229,11 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 						"The set of states must be contained into the set of the states of the automaton");
 		Preconditions
 				.checkArgument(
-						this.transparentStateReplacementMap.keySet().size()
+						this.blackBoxStateReplacementMap.keySet().size()
 								+ numEncapsulatedStates <= this.ba.getStates()
 								.size(),
 						"The number of the transparent states ("
-								+ this.transparentStateReplacementMap.keySet()
+								+ this.blackBoxStateReplacementMap.keySet()
 										.size()
 								+ ")\n plus by the number of states added inside each replacement ("
 								+ numEncapsulatedStates
@@ -242,40 +242,38 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 
 		
 
-		List<State> transparentStates = new ArrayList<State>(
-				this.transparentStateReplacementMap.keySet());
-		for(State transparentState: transparentStates){
-			iba.addBlackBoxState(transparentState);
+		List<State> blackBoxStates = new ArrayList<State>(
+				this.blackBoxStateReplacementMap.keySet());
+		for(State blackBoxState: blackBoxStates){
+			iba.addBlackBoxState(blackBoxState);
 		}
 		
 		Iterator<State> baStatesIterator = states.iterator();
 
 		Random random=new Random();
 		
-		if(transparentStates.size()>0){
+		if(blackBoxStates.size()>0){
 			for (int i = 0; i < numEncapsulatedStates; i++) {
 
 				State baState = baStatesIterator.next();
-				State transparentState=transparentStates.get(random.nextInt(transparentStates.size()));
+				State blackBoxState=blackBoxStates.get(random.nextInt(blackBoxStates.size()));
 				
-				Replacement replacement = this.transparentStateReplacementMap
-						.get(transparentState);
+				Replacement replacement = this.blackBoxStateReplacementMap
+						.get(blackBoxState);
 				replacement.getAutomaton().addState(baState);
-				this.transparentStateNonEmptyReplacementMap.put(transparentState, replacement);
+				this.blackBoxStateNonEmptyReplacementMap.put(blackBoxState, replacement);
 				this.stateReplacementMap.put(baState,
-						this.transparentStateReplacementMap.get(transparentState));
+						this.blackBoxStateReplacementMap.get(blackBoxState));
 				if (this.ba.getInitialStates().contains(baState)) {
-					iba.addInitialState(transparentState);
+					iba.addInitialState(blackBoxState);
 					replacement.getAutomaton().addInitialState(baState);
 				}
 				if (this.ba.getAcceptStates().contains(baState)) {
-					iba.addAcceptState(transparentState);
+					iba.addAcceptState(blackBoxState);
 					replacement.getAutomaton().addAcceptState(baState);
 				}
 			}
 		}
-		
-
 	}
 
 	/**
@@ -324,49 +322,57 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 				Replacement replacementSource = stateReplacementMap.get(source);
 				Replacement replacementDestination = stateReplacementMap
 						.get(destination);
-				State transparentSource = transparentStateReplacementMap
+				State transparentSource = blackBoxStateReplacementMap
 						.inverse().get(replacementSource);
-				State transparentDestination = transparentStateReplacementMap
+				State transparentDestination = blackBoxStateReplacementMap
 						.inverse().get(replacementDestination);
 
-				if (replacementSource.equals(replacementDestination)) {
+				if (replacementSource==replacementDestination) {
 					replacementSource.getAutomaton().addTransition(source,
-							destination, transition);
+							destination, 
+							new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()));
 				} else {
 					this.iba.addTransition(transparentSource,
-							transparentDestination, transition);
-					replacementSource.addOutgoingTransition(new PluggingTransition(
-							source, transparentDestination, transition, false));
+							transparentDestination, new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()));
+					replacementSource.addOutgoingTransition(new PluggingTransition(transition.getId(),
+							source, transparentDestination, new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()), false));
 					replacementDestination
-							.addIncomingTransition(new PluggingTransition(
-									transparentSource, destination, transition,
+							.addIncomingTransition(new PluggingTransition(transition.getId(),
+									transparentSource, destination, new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()),
 									true));
 				}
 			} else {
 				if (stateReplacementMap.containsKey(source)) {
 					Replacement replacementSource = stateReplacementMap
 							.get(source);
-					State transparentSource = transparentStateReplacementMap
+					State blackBoxState = blackBoxStateReplacementMap
 							.inverse().get(replacementSource);
 
-					this.iba.addTransition(transparentSource, destination,
-							transition);
-					replacementSource.addOutgoingTransition(new PluggingTransition(
-							source, destination, transition, false));
+					this.iba.addTransition(blackBoxState, destination,
+	                         new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()));
+					replacementSource.addOutgoingTransition(new PluggingTransition(transition.getId(),
+							source, destination, new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()), false));
 				} else {
 					if (stateReplacementMap.containsKey(destination)) {
 						Replacement replacementDestination = stateReplacementMap
 								.get(destination);
-						State transparentDestination = transparentStateReplacementMap
+						State transparentDestination = blackBoxStateReplacementMap
 								.inverse().get(replacementDestination);
 
 						this.iba.addTransition(source, transparentDestination,
-								transition);
+	                            new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()));
 						replacementDestination
 								.addIncomingTransition(new PluggingTransition(source,
-										destination, transition, true));
+										destination, new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()), true));
 					} else {
-						this.iba.addTransition(source, destination, transition);
+					    if(this.iba.getBlackBoxStates().contains(source)){
+					        throw new InternalError("The source cannot be a black box");
+					    }
+					    if(this.iba.getBlackBoxStates().contains(destination)){
+                            throw new InternalError("The destination cannot be a black box");
+                            
+                        }
+						this.iba.addTransition(source, destination, new ModelTransitionFactory().create(transition.getId(), transition.getPropositions()));
 					}
 				}
 			}
@@ -376,18 +382,16 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 	/**
 	 * creates the transparent state and the corresponding replacements
 	 */
-	private void createTransparentStatesAndReplacements() {
+	private void createBlackBoxStatesAndReplacements() {
 
-		for (int i = 0; i < numTransparentStates; i++) {
-			State transparentState = stateFactory.create("t" + i);
-			Replacement rep = new Replacement(transparentState, new IBA(
+		for (int i = 0; i < numBlackBoxStates; i++) {
+			State blackBoxState = stateFactory.create("t" + i);
+			Replacement rep = new Replacement(blackBoxState, new IBA(
 					new ModelTransitionFactory()),
 					new HashSet<PluggingTransition>(),
 					new HashSet<PluggingTransition>());
-			for (IGraphProposition proposition : this.ba.getPropositions()) {
-				rep.getAutomaton().addProposition(proposition);
-			}
-			this.transparentStateReplacementMap.put(transparentState, rep);
+			rep.getAutomaton().addPropositions(this.ba.getPropositions());
+			this.blackBoxStateReplacementMap.put(blackBoxState, rep);
 		}
 	}
 
@@ -407,7 +411,7 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 						"The action "
 								+ ACTION_NAME
 								+ " must be performed before getting the map between transparent states and replacements");
-		return Maps.unmodifiableBiMap(this.transparentStateReplacementMap);
+		return Maps.unmodifiableBiMap(this.blackBoxStateReplacementMap);
 	}
 	
 	/**
@@ -426,6 +430,6 @@ public class IBARandomGenerator extends CHIAAction<IBA> {
 						"The action "
 								+ ACTION_NAME
 								+ " must be performed before getting the map between transparent states and replacements");
-		return new ArrayList<Replacement>(this.transparentStateNonEmptyReplacementMap.values());
+		return new ArrayList<Replacement>(this.blackBoxStateNonEmptyReplacementMap.values());
 	}
 }

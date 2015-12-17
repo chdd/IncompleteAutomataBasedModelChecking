@@ -256,16 +256,16 @@ public class SubProperty extends Component {
 				.checkArgument(
 						this.getOutgoingTransitions().contains(
 								outgoingTransition),
-						"The source port "
+						"The outgoing transition "
 								+ outgoingTransition
-								+ " must be contained into the set of the outgoing port of the sub-property");
+								+ " must be contained into the set of the outgoing transitions of the sub-property");
 		Preconditions
 				.checkArgument(
 						this.getIncomingTransitions().contains(
 								incomingTransition),
-						"The destination port "
+						"The destination transition "
 								+ incomingTransition
-								+ " must be contained into the set of the incoming port of the sub-property");
+								+ " must be contained into the set of the incoming transitions of the sub-property");
 
 		this.lowerApproximationReachabilityRelation.addTransition(
 				outgoingTransition, incomingTransition, modelAcceptingState,

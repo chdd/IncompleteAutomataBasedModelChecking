@@ -449,9 +449,8 @@ public class ReachabilityIdentifierTest {
         ReachabilityIdentifier labeler = new ReachabilityIdentifier(identifier);
         labeler.perform();
 
-
-        assertTrue(subProperty.getOutgoingTransitions().size() == 4);
-        assertTrue(subProperty.getIncomingTransitions().size() == 6);
+        assertTrue(subProperty.getOutgoingTransitions().size() == 6);
+        assertTrue(subProperty.getIncomingTransitions().size() == 9);
         System.out.println(subProperty.getLowerReachabilityRelation()
                 .getReachabilityAcceptingMap());
         System.out.println(subProperty.getUpperReachabilityRelation()

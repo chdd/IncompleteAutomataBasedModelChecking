@@ -1,11 +1,11 @@
 package it.polimi.constraints.components;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.ModelTransitionFactory;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.transitions.PluggingTransition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 
@@ -204,7 +204,7 @@ public class RefinementGenerator extends CHIAAction<IBA> {
 				throw new Exception(
 						"The outgoing transition <"
 								+ outgoingTransition
-								+ "> of the model is not associated with an outgoing transition of the replacement");
+								+ "> of the black box state <"+replacement.getModelState()+"> of the model is not associated with an outgoing transition of the replacement");
 			}
 		}
 		for (PluggingTransition outTransition : replacement
@@ -225,7 +225,7 @@ public class RefinementGenerator extends CHIAAction<IBA> {
 				throw new Exception(
 						"The outgoing transition <"
 								+ outTransition
-								+ "> of the replacement is not associated with an incoming transition of the model");
+								+ "> of the replacement is not associated with an outgoing transition of the model");
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package it.polimi.statemachine.states;
+package it.polimi;
 
 /**
  * contains the CHIA state. CHIA can be used in two working modes: automata and

@@ -4,6 +4,7 @@
 package action;
 
 import static org.junit.Assert.*;
+import it.polimi.action.CHIAException;
 
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class CHIAExceptionTest {
 
     /**
      * Test method for
-     * {@link action.CHIAException#CHIAException(java.lang.String)}.
+     * {@link it.polimi.action.CHIAException#CHIAException(java.lang.String)}.
      */
     @Test
     public void testCHIAException() {

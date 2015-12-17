@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CONTAINS A CLAIM FOR THE MUTEX EXAMPLE To load it perform lc /Users/Claudio1/Desktop/CHIAExamples/MUTEX/Scenario1/Aut/Liveness.xml -->
+<ba>
+	<propositions>
+		<!-- z stays for zero -->
+		<!-- o stays for one -->
+
+		<!-- PROCESS 0 -->
+		<proposition name="crz" />
+		
+		<!-- PROCESS 1 -->
+		<proposition name="cro" />
+	</propositions>
+	<states>
+		<state id="1" name="p1" initial="true" />
+		<state id="2" name="p2" accepting="true" />
+		<state id="3" name="p3" accepting="true" />
+	</states>
+	<transitions>
+		<transition id="1" source="1" destination="1" propositions="SIGMA" />
+		<transition id="2" source="1" destination="2" propositions="!crz" />
+		<transition id="3" source="2" destination="2" propositions="!crz" />
+		<transition id="4" source="1" destination="3" propositions="!cro" />	
+		<transition id="5" source="3" destination="3" propositions="!cro" />
+	</transitions>
+</ba>

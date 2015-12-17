@@ -4,7 +4,6 @@ import it.polimi.console.CHIAAutomataConsole;
 import it.polimi.console.CHIAReplacementConsole;
 import it.polimi.statemachine.events.AutomataEvent;
 import it.polimi.statemachine.events.ReplacementEvent;
-import it.polimi.statemachine.states.CHIAState;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +29,15 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class CHIA {
 
+    /**
+     * The console reader
+     */
 	private ConsoleReader console;
 
 	/**
 	 * contains the CHIA logger
 	 */
-	private static final Logger logger = Logger.getLogger(CHIA.class);
+	private static final Logger LOGGER = Logger.getLogger(CHIA.class);
 
 	/**
 	 * getting the output stream
@@ -45,7 +47,7 @@ public class CHIA {
 	/**
 	 * print the CHIA usage information
 	 */
-	public void usage() {
+	protected void usage() {
 
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
@@ -75,9 +77,9 @@ public class CHIA {
 			console.setHistory(new FileHistory(new File(ClassLoader
 					.getSystemResource("History.txt").getPath())));
 		} else {
-			logger.warn("The History file cannot be loaded");
+			LOGGER.warn("The History file cannot be loaded");
 		}
-		logger.info("CHIA Started");
+		LOGGER.info("CHIA Started");
 		PropertyConfigurator.configure(ClassLoader
 				.getSystemResource("log4j.properties"));
 
@@ -108,7 +110,7 @@ public class CHIA {
 					chiaCompletors = ReplacementEvent.computeCompleters();
 					chiaCompletors.add(new StringsCompleter("aut"));
 					console.addCompleter(new AggregateCompleter(chiaCompletors));
-					logger.info("replacement mode enabled");
+					LOGGER.info("replacement mode enabled");
 
 				} else {
 					if (line.equals("aut")) {
@@ -118,7 +120,7 @@ public class CHIA {
 						chiaCompletors.add(new StringsCompleter("rep"));
 						console.addCompleter(new AggregateCompleter(
 								chiaCompletors));
-						logger.info("automata mode enabled");
+						LOGGER.info("automata mode enabled");
 
 					} else {
 						if (line.equalsIgnoreCase("quit")
@@ -133,7 +135,7 @@ public class CHIA {
 										ReplacementEvent.parse(line,
 												chiaReplacementConsole);
 									} catch (ParseException e) {
-										logger.info(e.getMessage());
+										LOGGER.info(e.getMessage());
 									}
 
 								} else {
@@ -143,7 +145,7 @@ public class CHIA {
 											AutomataEvent.parse(line,
 													chiaAutomataConsole);
 										} catch (ParseException e) {
-											logger.info(e.getMessage());
+											LOGGER.info(e.getMessage());
 										}
 
 									}
@@ -153,7 +155,7 @@ public class CHIA {
 					}
 				}
 			} catch (Exception e) {
-				logger.info(e.getMessage());
+				LOGGER.info(e.getMessage());
 			}
 
 		}

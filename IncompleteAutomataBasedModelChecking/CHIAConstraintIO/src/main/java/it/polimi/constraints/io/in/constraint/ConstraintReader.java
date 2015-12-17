@@ -34,7 +34,7 @@ import com.google.common.base.Preconditions;
  * reader uses the ElementToPort, ElementToPortGraph and ElementToSubProperty
  * transformers to convert the XML elements into the corresponding Java objects.
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  *
  */
 public class ConstraintReader extends XMLReader<Constraint> {
@@ -43,7 +43,7 @@ public class ConstraintReader extends XMLReader<Constraint> {
 	/**
 	 * is the logger of the BAReader class
 	 */
-	private static final Logger logger = Logger
+	private static final Logger LOGGER = Logger
 			.getLogger(ConstraintReader.class);
 
 	/**
@@ -98,11 +98,11 @@ public class ConstraintReader extends XMLReader<Constraint> {
 			this.loadConstraint(doc, ret);
 
 		} catch (ParserConfigurationException pce) {
-			logger.error(pce.getMessage());
+			LOGGER.error(pce.getMessage());
 		} catch (SAXException se) {
-			logger.error(se.getMessage());
+			LOGGER.error(se.getMessage());
 		} catch (IOException ioe) {
-			logger.error(ioe.getMessage());
+			LOGGER.error(ioe.getMessage());
 		}
 
 		return ret;
@@ -117,7 +117,7 @@ public class ConstraintReader extends XMLReader<Constraint> {
 		NodeList xmlSubproperties = doc
 				.getElementsByTagName(ConstraintsIOConstants.XML_ELEMENT_SUBPROPERTY);
 
-		logger.debug(xmlSubproperties.getLength()
+		LOGGER.debug(xmlSubproperties.getLength()
 				+ " subproperties present in the file " + file.getName());
 		for (int stateid = 0; stateid < xmlSubproperties.getLength(); stateid++) {
 
@@ -165,7 +165,7 @@ public class ConstraintReader extends XMLReader<Constraint> {
 			}
 		}
 
-		logger.debug("constraint loaded ");
+		LOGGER.debug("constraint loaded ");
 
 	}
 

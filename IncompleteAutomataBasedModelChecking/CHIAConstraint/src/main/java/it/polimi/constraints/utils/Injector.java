@@ -4,12 +4,12 @@
 package it.polimi.constraints.utils;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.IBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
 import it.polimi.constraints.components.Replacement;
 import it.polimi.constraints.transitions.PluggingTransition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

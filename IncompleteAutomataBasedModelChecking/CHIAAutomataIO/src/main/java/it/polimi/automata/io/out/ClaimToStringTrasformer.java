@@ -1,7 +1,7 @@
 package it.polimi.automata.io.out;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

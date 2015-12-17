@@ -280,6 +280,11 @@
 			<version>2.13</version>
 		</dependency>
 		<dependency>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.googlecode.clichemaven</groupId>
 			<artifactId>cliche</artifactId>
 			<version>110413</version>

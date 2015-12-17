@@ -1,11 +1,10 @@
 package it.polimi.model.ltltoba;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

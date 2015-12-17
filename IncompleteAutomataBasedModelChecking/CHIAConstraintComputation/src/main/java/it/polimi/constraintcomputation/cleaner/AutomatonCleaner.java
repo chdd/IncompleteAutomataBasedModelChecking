@@ -114,6 +114,7 @@ public class AutomatonCleaner {
         }
 
         LOGGER.debug("The set of the visited states has size: "+visited.size());
+        LOGGER.debug("Visited states: "+visited.toString());
         // the states toBeRemoved contains the set of the states that are not contained
         // in an infinite path through which an accepting state can be entered infinitely often
         Set<State> toBeRemoved = new HashSet<State>(this.automaton.getStates());

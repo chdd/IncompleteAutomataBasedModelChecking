@@ -1,5 +1,6 @@
 package it.polimi.replacementchecker;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.State;
 import it.polimi.automata.transition.Transition;
@@ -14,8 +15,6 @@ import it.polimi.replacementchecker.intersectionbuilder.UnderApproximationBuilde
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

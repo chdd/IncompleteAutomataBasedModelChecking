@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CONTAINS A MODEL FOR THE MUTEX EXAMPLE To load it perform lm /Users/Claudio1/Desktop/CHIAExamples/MUTEX/Scenario1/Aut/Model.xml -->
+<iba>
+	<propositions>
+		<!-- z stays for zero -->
+		<!-- o stays for one -->
+		<!--  SEMAPHORE -->
+		<proposition name="tz" />
+		<proposition name="to" />
+
+		<!-- PROCESS 0 -->
+		<proposition name="ntz" />
+		<proposition name="trz" />
+		<proposition name="crz" />
+		
+		<!-- PROCESS 1 -->
+		<proposition name="nto" />
+		<proposition name="tro" />
+		<proposition name="cro" />
+	</propositions>
+	<states>
+		<state id="1" name="q1" accepting="true" initial="true" />
+		<state id="2" name="q2" accepting="true" />
+		<state id="3" name="q3" accepting="true" />
+		<state id="4" name="q4" accepting="true" />
+		<state id="5" name="q5" accepting="true" />
+		<state id="6" name="q6" accepting="true" />
+		<state id="7" name="q7" accepting="true" />
+		<state id="8" name="q8" accepting="true" />
+		<state id="9" name="q9" accepting="true" />
+		<state id="10" name="t10" accepting="true" blackbox="true"/>
+	</states>
+	<transitions>
+		<transition id="1" source="1" destination="2" propositions="tz^ntz^nto" />
+		<transition id="2" source="2" destination="3" propositions="tz^ntz^tro" />
+		<transition id="3" source="3" destination="5" propositions="tz^trz^tro" />
+		<transition id="4" source="5" destination="7" propositions="tz^crz^tro" />
+		<transition id="5" source="2" destination="4" propositions="tz^trz^nto" />
+		<transition id="6" source="4" destination="5" propositions="tz^trz^tro" />
+		<transition id="7" source="4" destination="6" propositions="tz^crz^nto" />
+		<transition id="8" source="6" destination="7" propositions="tz^crz^tro" />
+		<transition id="9" source="1" destination="8" propositions="to^ntz^nto" />
+		<transition id="10" source="8" destination="9" propositions="to^trz^nto" />
+		<transition id="11" source="9" destination="10" propositions="to^trz^tro" />
+		<transition id="12" source="8" destination="10" propositions="to^ntz^tro" />
+		<transition id="13" source="6" destination="8" propositions="to^ntz^nto" />
+		<transition id="14" source="10" destination="2" propositions="tz^ntz^nto" />
+		<transition id="15" source="10" destination="4" propositions="tz^trz^nto" />
+		<transition id="16" source="7" destination="10" propositions="to^ntz^tro" />
+	</transitions>
+</iba>

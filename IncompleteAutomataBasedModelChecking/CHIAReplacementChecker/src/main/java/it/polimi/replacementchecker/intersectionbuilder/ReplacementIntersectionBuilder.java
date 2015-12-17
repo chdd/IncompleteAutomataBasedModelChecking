@@ -1,5 +1,6 @@
 package it.polimi.replacementchecker.intersectionbuilder;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
 import it.polimi.automata.state.IntersectionStateFactory;
@@ -32,7 +33,6 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
 import rwth.i2.ltl2ba4j.model.IGraphProposition;
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;

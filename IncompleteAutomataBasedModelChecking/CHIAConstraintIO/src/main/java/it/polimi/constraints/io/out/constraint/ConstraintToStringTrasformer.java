@@ -1,11 +1,10 @@
 package it.polimi.constraints.io.out.constraint;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.io.out.ElementToStringTransformer;
 import it.polimi.constraints.Constraint;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import action.CHIAAction;
 
 public class ConstraintToStringTrasformer extends CHIAAction<String> {
 	private final static String NAME = "PRINT CONSTRAINT";

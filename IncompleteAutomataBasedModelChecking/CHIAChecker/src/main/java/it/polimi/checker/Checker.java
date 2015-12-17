@@ -1,5 +1,6 @@
 package it.polimi.checker;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
@@ -13,15 +14,13 @@ import it.polimi.checker.intersection.acceptingpolicies.AcceptingPolicy;
 import java.util.List;
 import java.util.Map.Entry;
 
-import action.CHIAAction;
-
 import com.google.common.base.Preconditions;
 
 /**
  * Contains the model checker used by the CHIA checker which checks whether the
  * property is satisfied, possibly satisfied or not satisfied
  * 
- * @author claudiomenghi
+ * @author Claudio Menghi
  */
 public class Checker extends CHIAAction<SatisfactionValue> {
 

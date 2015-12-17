@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><iba>
+    <propositions>
+        <proposition name="b"/>
+        <proposition name="a"/>
+    </propositions>
+    <states>
+        <state accepting="true" blackbox="true" id="4" name="t0"/>
+        
+        <state id="8" name="8"/>
+        <state accepting="true" id="7" name="7"/>
+        <state id="5" name="5"/>
+        <state id="1" initial="true" name="1"/>
+        <state id="3" name="3"/>
+        <state id="9" name="9"/>
+        <state id="2" name="2"/>
+        <state id="6" name="6"/>
+    </states>
+    <transitions>
+		<transition destination="8" id="826045" propositions="b" source="4"/>
+		<transition destination="9" id="826043" propositions="b" source="2"/>
+		<transition destination="7" id="826066" propositions="a" source="4"/>
+        <transition destination="5" id="826057" propositions="a" source="9"/>
+        <transition destination="6" id="826069" propositions="a" source="5"/>
+        <transition destination="2" id="826071" propositions="a" source="1"/>
+        <transition destination="6" id="826044" propositions="b" source="2"/>
+        <transition destination="4" id="826064" propositions="a" source="6"/>
+        <transition destination="2" id="826061" propositions="a" source="4"/>
+    </transitions>
+</iba>

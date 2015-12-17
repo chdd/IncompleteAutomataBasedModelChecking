@@ -1,4 +1,4 @@
-package action;
+package it.polimi.action;
 
 public class CHIAException extends Exception {
 

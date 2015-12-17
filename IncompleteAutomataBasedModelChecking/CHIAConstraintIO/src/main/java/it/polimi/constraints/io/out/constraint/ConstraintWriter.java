@@ -1,5 +1,6 @@
 package it.polimi.constraints.io.out.constraint;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.constraints.Constraint;
 
 import java.io.File;
@@ -14,8 +15,6 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 

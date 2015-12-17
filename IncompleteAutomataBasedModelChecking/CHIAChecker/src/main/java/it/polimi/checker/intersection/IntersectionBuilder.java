@@ -1,5 +1,6 @@
 package it.polimi.checker.intersection;
 
+import it.polimi.action.CHIAAction;
 import it.polimi.automata.BA;
 import it.polimi.automata.IBA;
 import it.polimi.automata.IntersectionBA;
@@ -18,8 +19,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
-
-import action.CHIAAction;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;

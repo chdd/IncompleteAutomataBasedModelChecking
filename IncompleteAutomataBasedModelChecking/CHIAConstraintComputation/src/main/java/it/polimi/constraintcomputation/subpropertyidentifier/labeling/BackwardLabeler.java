@@ -120,9 +120,19 @@ public class BackwardLabeler {
         for (Set<State> scc : connectedSets) {
             // if at least an accepting state is contained, its states are added
             // to the set next to be visited next
-            if (!Collections.disjoint(scc,
-                    abstractedIntersectionAutomaton.getAcceptStates())) {
-                next.addAll(scc);
+            if(states.containsAll(scc)){
+                if (!Collections.disjoint(scc,
+                        abstractedIntersectionAutomaton.getAcceptStates())) {
+                    if(scc.size()>1){
+                        next.addAll(scc);
+                    }
+                    else{
+                        State state=scc.iterator().next();
+                        if(abstractedIntersectionAutomaton.isSuccessor(state, state)){
+                            next.add(state);
+                        }
+                    }
+                }    
             }
         }
 
@@ -181,7 +191,7 @@ public class BackwardLabeler {
             }
             // performs the actual labeling
             this.subPropertyIntifier.getOutgoingTransition(outgoingTransition)
-                    .setColor(label);
+                    .setLabel(label);
         }
     }
 }
